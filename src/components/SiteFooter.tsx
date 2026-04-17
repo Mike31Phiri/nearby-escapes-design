@@ -1,0 +1,53 @@
+import { Link } from "@tanstack/react-router";
+import { Mail, MapPin, Phone } from "lucide-react";
+
+export function SiteFooter() {
+  return (
+    <footer className="mt-20 border-t border-border bg-foreground text-background">
+      <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-4">
+        <div>
+          <div className="flex items-center gap-2 mb-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[image:var(--gradient-hero)] font-bold">
+              N
+            </div>
+            <span className="font-bold text-lg">Nearby Escapes</span>
+          </div>
+          <p className="text-sm text-background/70 leading-relaxed">
+            Your trusted partner for accommodation and travel across Zambia.
+          </p>
+        </div>
+
+        <div>
+          <h4 className="font-semibold mb-3">Explore</h4>
+          <ul className="space-y-2 text-sm text-background/70">
+            <li><Link to="/accommodations" className="hover:text-background">Accommodations</Link></li>
+            <li><Link to="/bus-booking" className="hover:text-background">Bus Booking</Link></li>
+            <li><Link to="/packages" className="hover:text-background">Packages</Link></li>
+            <li><Link to="/gems" className="hover:text-background">Hidden Gems</Link></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-semibold mb-3">Contact</h4>
+          <ul className="space-y-2 text-sm text-background/70">
+            <li className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Lusaka, Zambia</li>
+            <li className="flex items-center gap-2"><Phone className="h-4 w-4" /> +260 211 123 456</li>
+            <li className="flex items-center gap-2"><Mail className="h-4 w-4" /> info@nearbyescapes.com</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-semibold mb-3">Hours</h4>
+          <ul className="space-y-2 text-sm text-background/70">
+            <li>Mon–Fri: 8am – 6pm</li>
+            <li>Saturday: 9am – 4pm</li>
+            <li>Sunday: 10am – 2pm</li>
+          </ul>
+        </div>
+      </div>
+      <div className="border-t border-background/10 py-5 text-center text-xs text-background/60">
+        © {new Date().getFullYear()} Nearby Escapes. All rights reserved.
+      </div>
+    </footer>
+  );
+}
