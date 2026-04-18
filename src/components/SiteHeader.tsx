@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Bed, Bus, MapPin, Package, Menu, User, LogOut, UserCircle, Briefcase } from "lucide-react";
+import { Bed, Bus, MapPin, Package, Menu, User, LogOut, UserCircle, Briefcase, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -75,6 +75,11 @@ export function SiteHeader() {
                 <DropdownMenuItem onClick={() => navigate({ to: "/profile/host" })}>
                   <Briefcase className="h-4 w-4 mr-2" /> Host dashboard
                 </DropdownMenuItem>
+                {user.role === "admin" && (
+                  <DropdownMenuItem onClick={() => navigate({ to: "/admin" })}>
+                    <ShieldCheck className="h-4 w-4 mr-2" /> Admin
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => { logout(); navigate({ to: "/" }); }}>
                   <LogOut className="h-4 w-4 mr-2" /> Sign out

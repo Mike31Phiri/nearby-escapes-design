@@ -17,11 +17,18 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as GemsRouteImport } from './routes/gems'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as BusBookingRouteImport } from './routes/bus-booking'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProfileIndexRouteImport } from './routes/profile.index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AccommodationsIndexRouteImport } from './routes/accommodations.index'
 import { Route as ProfileSettingsRouteImport } from './routes/profile.settings'
 import { Route as ProfileHostRouteImport } from './routes/profile.host'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminPaymentsRouteImport } from './routes/admin.payments'
+import { Route as AdminCommissionsRouteImport } from './routes/admin.commissions'
+import { Route as AdminBookingsRouteImport } from './routes/admin.bookings'
 import { Route as AccommodationsIdRouteImport } from './routes/accommodations.$id'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -64,6 +71,11 @@ const BusBookingRoute = BusBookingRouteImport.update({
   path: '/bus-booking',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -73,6 +85,11 @@ const ProfileIndexRoute = ProfileIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => ProfileRoute,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AccommodationsIndexRoute = AccommodationsIndexRouteImport.update({
   id: '/accommodations/',
@@ -89,6 +106,31 @@ const ProfileHostRoute = ProfileHostRouteImport.update({
   path: '/host',
   getParentRoute: () => ProfileRoute,
 } as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPaymentsRoute = AdminPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCommissionsRoute = AdminCommissionsRouteImport.update({
+  id: '/commissions',
+  path: '/commissions',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBookingsRoute = AdminBookingsRouteImport.update({
+  id: '/bookings',
+  path: '/bookings',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AccommodationsIdRoute = AccommodationsIdRouteImport.update({
   id: '/accommodations/$id',
   path: '/accommodations/$id',
@@ -97,6 +139,7 @@ const AccommodationsIdRoute = AccommodationsIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/bus-booking': typeof BusBookingRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/gems': typeof GemsRoute
@@ -106,9 +149,15 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/accommodations/$id': typeof AccommodationsIdRoute
+  '/admin/bookings': typeof AdminBookingsRoute
+  '/admin/commissions': typeof AdminCommissionsRoute
+  '/admin/payments': typeof AdminPaymentsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/profile/host': typeof ProfileHostRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/accommodations/': typeof AccommodationsIndexRoute
+  '/admin/': typeof AdminIndexRoute
   '/profile/': typeof ProfileIndexRoute
 }
 export interface FileRoutesByTo {
@@ -121,14 +170,21 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/accommodations/$id': typeof AccommodationsIdRoute
+  '/admin/bookings': typeof AdminBookingsRoute
+  '/admin/commissions': typeof AdminCommissionsRoute
+  '/admin/payments': typeof AdminPaymentsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/profile/host': typeof ProfileHostRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/accommodations': typeof AccommodationsIndexRoute
+  '/admin': typeof AdminIndexRoute
   '/profile': typeof ProfileIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/bus-booking': typeof BusBookingRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/gems': typeof GemsRoute
@@ -138,15 +194,22 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/accommodations/$id': typeof AccommodationsIdRoute
+  '/admin/bookings': typeof AdminBookingsRoute
+  '/admin/commissions': typeof AdminCommissionsRoute
+  '/admin/payments': typeof AdminPaymentsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/profile/host': typeof ProfileHostRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/accommodations/': typeof AccommodationsIndexRoute
+  '/admin/': typeof AdminIndexRoute
   '/profile/': typeof ProfileIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/bus-booking'
     | '/forgot-password'
     | '/gems'
@@ -156,9 +219,15 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/accommodations/$id'
+    | '/admin/bookings'
+    | '/admin/commissions'
+    | '/admin/payments'
+    | '/admin/settings'
+    | '/admin/users'
     | '/profile/host'
     | '/profile/settings'
     | '/accommodations/'
+    | '/admin/'
     | '/profile/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -171,13 +240,20 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/accommodations/$id'
+    | '/admin/bookings'
+    | '/admin/commissions'
+    | '/admin/payments'
+    | '/admin/settings'
+    | '/admin/users'
     | '/profile/host'
     | '/profile/settings'
     | '/accommodations'
+    | '/admin'
     | '/profile'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/bus-booking'
     | '/forgot-password'
     | '/gems'
@@ -187,14 +263,21 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/accommodations/$id'
+    | '/admin/bookings'
+    | '/admin/commissions'
+    | '/admin/payments'
+    | '/admin/settings'
+    | '/admin/users'
     | '/profile/host'
     | '/profile/settings'
     | '/accommodations/'
+    | '/admin/'
     | '/profile/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   BusBookingRoute: typeof BusBookingRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   GemsRoute: typeof GemsRoute
@@ -265,6 +348,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BusBookingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -278,6 +368,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/profile/'
       preLoaderRoute: typeof ProfileIndexRouteImport
       parentRoute: typeof ProfileRoute
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/accommodations/': {
       id: '/accommodations/'
@@ -300,6 +397,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileHostRouteImport
       parentRoute: typeof ProfileRoute
     }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/payments': {
+      id: '/admin/payments'
+      path: '/payments'
+      fullPath: '/admin/payments'
+      preLoaderRoute: typeof AdminPaymentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/commissions': {
+      id: '/admin/commissions'
+      path: '/commissions'
+      fullPath: '/admin/commissions'
+      preLoaderRoute: typeof AdminCommissionsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/bookings': {
+      id: '/admin/bookings'
+      path: '/bookings'
+      fullPath: '/admin/bookings'
+      preLoaderRoute: typeof AdminBookingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/accommodations/$id': {
       id: '/accommodations/$id'
       path: '/accommodations/$id'
@@ -309,6 +441,26 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AdminRouteChildren {
+  AdminBookingsRoute: typeof AdminBookingsRoute
+  AdminCommissionsRoute: typeof AdminCommissionsRoute
+  AdminPaymentsRoute: typeof AdminPaymentsRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminBookingsRoute: AdminBookingsRoute,
+  AdminCommissionsRoute: AdminCommissionsRoute,
+  AdminPaymentsRoute: AdminPaymentsRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminUsersRoute: AdminUsersRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface ProfileRouteChildren {
   ProfileHostRoute: typeof ProfileHostRoute
@@ -327,6 +479,7 @@ const ProfileRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   BusBookingRoute: BusBookingRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   GemsRoute: GemsRoute,
