@@ -26,6 +26,7 @@ type AuthContextValue = {
   resetPassword: (token: string, newPassword: string) => Promise<void>;
   updateProfile: (patch: Partial<Omit<User, "id" | "createdAt" | "role">>) => void;
   becomeHost: () => void;
+  setRole: (role: Role) => void;
 };
 
 const USERS_KEY = "ne.users";
@@ -134,6 +135,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const idx = users.findIndex((u) => u.id === user.id);
       if (idx === -1) return;
       users[idx].role = "host";
+      writeUsers(users);
+      setUser(publicUser(users[idx]));
+    },
+    setRole(role) {
+      if (!user) return;
+      const users = readUsers();
+      const idx = users.findIndex((u) => u.id === user.id);
+      if (idx === -1) return;
+      users[idx].role = role;
       writeUsers(users);
       setUser(publicUser(users[idx]));
     },
