@@ -9,21 +9,54 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PackagesRouteImport } from './routes/packages'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as GemsRouteImport } from './routes/gems'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as BusBookingRouteImport } from './routes/bus-booking'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProfileIndexRouteImport } from './routes/profile.index'
 import { Route as AccommodationsIndexRouteImport } from './routes/accommodations.index'
+import { Route as ProfileSettingsRouteImport } from './routes/profile.settings'
+import { Route as ProfileHostRouteImport } from './routes/profile.host'
 import { Route as AccommodationsIdRouteImport } from './routes/accommodations.$id'
 
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PackagesRoute = PackagesRouteImport.update({
   id: '/packages',
   path: '/packages',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GemsRoute = GemsRouteImport.update({
   id: '/gems',
   path: '/gems',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BusBookingRoute = BusBookingRouteImport.update({
@@ -36,10 +69,25 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileIndexRoute = ProfileIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProfileRoute,
+} as any)
 const AccommodationsIndexRoute = AccommodationsIndexRouteImport.update({
   id: '/accommodations/',
   path: '/accommodations/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileSettingsRoute = ProfileSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => ProfileRoute,
+} as any)
+const ProfileHostRoute = ProfileHostRouteImport.update({
+  id: '/host',
+  path: '/host',
+  getParentRoute: () => ProfileRoute,
 } as any)
 const AccommodationsIdRoute = AccommodationsIdRouteImport.update({
   id: '/accommodations/$id',
@@ -50,66 +98,138 @@ const AccommodationsIdRoute = AccommodationsIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bus-booking': typeof BusBookingRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/gems': typeof GemsRoute
+  '/login': typeof LoginRoute
   '/packages': typeof PackagesRoute
+  '/profile': typeof ProfileRouteWithChildren
+  '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/accommodations/$id': typeof AccommodationsIdRoute
+  '/profile/host': typeof ProfileHostRoute
+  '/profile/settings': typeof ProfileSettingsRoute
   '/accommodations/': typeof AccommodationsIndexRoute
+  '/profile/': typeof ProfileIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bus-booking': typeof BusBookingRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/gems': typeof GemsRoute
+  '/login': typeof LoginRoute
   '/packages': typeof PackagesRoute
+  '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/accommodations/$id': typeof AccommodationsIdRoute
+  '/profile/host': typeof ProfileHostRoute
+  '/profile/settings': typeof ProfileSettingsRoute
   '/accommodations': typeof AccommodationsIndexRoute
+  '/profile': typeof ProfileIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/bus-booking': typeof BusBookingRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/gems': typeof GemsRoute
+  '/login': typeof LoginRoute
   '/packages': typeof PackagesRoute
+  '/profile': typeof ProfileRouteWithChildren
+  '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/accommodations/$id': typeof AccommodationsIdRoute
+  '/profile/host': typeof ProfileHostRoute
+  '/profile/settings': typeof ProfileSettingsRoute
   '/accommodations/': typeof AccommodationsIndexRoute
+  '/profile/': typeof ProfileIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/bus-booking'
+    | '/forgot-password'
     | '/gems'
+    | '/login'
     | '/packages'
+    | '/profile'
+    | '/register'
+    | '/reset-password'
     | '/accommodations/$id'
+    | '/profile/host'
+    | '/profile/settings'
     | '/accommodations/'
+    | '/profile/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/bus-booking'
+    | '/forgot-password'
     | '/gems'
+    | '/login'
     | '/packages'
+    | '/register'
+    | '/reset-password'
     | '/accommodations/$id'
+    | '/profile/host'
+    | '/profile/settings'
     | '/accommodations'
+    | '/profile'
   id:
     | '__root__'
     | '/'
     | '/bus-booking'
+    | '/forgot-password'
     | '/gems'
+    | '/login'
     | '/packages'
+    | '/profile'
+    | '/register'
+    | '/reset-password'
     | '/accommodations/$id'
+    | '/profile/host'
+    | '/profile/settings'
     | '/accommodations/'
+    | '/profile/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BusBookingRoute: typeof BusBookingRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   GemsRoute: typeof GemsRoute
+  LoginRoute: typeof LoginRoute
   PackagesRoute: typeof PackagesRoute
+  ProfileRoute: typeof ProfileRouteWithChildren
+  RegisterRoute: typeof RegisterRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   AccommodationsIdRoute: typeof AccommodationsIdRoute
   AccommodationsIndexRoute: typeof AccommodationsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/packages': {
       id: '/packages'
       path: '/packages'
@@ -117,11 +237,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PackagesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/gems': {
       id: '/gems'
       path: '/gems'
       fullPath: '/gems'
       preLoaderRoute: typeof GemsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bus-booking': {
@@ -138,12 +272,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile/': {
+      id: '/profile/'
+      path: '/'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof ProfileIndexRouteImport
+      parentRoute: typeof ProfileRoute
+    }
     '/accommodations/': {
       id: '/accommodations/'
       path: '/accommodations'
       fullPath: '/accommodations/'
       preLoaderRoute: typeof AccommodationsIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/profile/settings': {
+      id: '/profile/settings'
+      path: '/settings'
+      fullPath: '/profile/settings'
+      preLoaderRoute: typeof ProfileSettingsRouteImport
+      parentRoute: typeof ProfileRoute
+    }
+    '/profile/host': {
+      id: '/profile/host'
+      path: '/host'
+      fullPath: '/profile/host'
+      preLoaderRoute: typeof ProfileHostRouteImport
+      parentRoute: typeof ProfileRoute
     }
     '/accommodations/$id': {
       id: '/accommodations/$id'
@@ -155,14 +310,43 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface ProfileRouteChildren {
+  ProfileHostRoute: typeof ProfileHostRoute
+  ProfileSettingsRoute: typeof ProfileSettingsRoute
+  ProfileIndexRoute: typeof ProfileIndexRoute
+}
+
+const ProfileRouteChildren: ProfileRouteChildren = {
+  ProfileHostRoute: ProfileHostRoute,
+  ProfileSettingsRoute: ProfileSettingsRoute,
+  ProfileIndexRoute: ProfileIndexRoute,
+}
+
+const ProfileRouteWithChildren =
+  ProfileRoute._addFileChildren(ProfileRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BusBookingRoute: BusBookingRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   GemsRoute: GemsRoute,
+  LoginRoute: LoginRoute,
   PackagesRoute: PackagesRoute,
+  ProfileRoute: ProfileRouteWithChildren,
+  RegisterRoute: RegisterRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   AccommodationsIdRoute: AccommodationsIdRoute,
   AccommodationsIndexRoute: AccommodationsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
