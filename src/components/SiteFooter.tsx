@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Facebook, Instagram, Mail, MapPin, Phone, Twitter } from "lucide-react";
 
 export function SiteFooter() {
   return (
@@ -45,8 +45,20 @@ export function SiteFooter() {
           </ul>
         </div>
       </div>
-      <div className="border-t border-background/10 py-5 text-center text-xs text-background/60">
-        © {new Date().getFullYear()} Nearby Escapes. All rights reserved.
+      <div className="border-t border-background/10">
+        <div className="mx-auto max-w-7xl px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-background/60">
+          <p>© {new Date().getFullYear()} Nearby Escapes. All rights reserved.</p>
+          <div className="flex items-center gap-4">
+            <Link to="/" className="hover:text-background">Privacy</Link>
+            <Link to="/" className="hover:text-background">Terms</Link>
+            <Link to="/" className="hover:text-background">Help</Link>
+          </div>
+          <div className="flex items-center gap-3">
+            <a href="#" aria-label="Facebook" className="hover:text-background"><Facebook className="h-4 w-4" /></a>
+            <a href="#" aria-label="Instagram" className="hover:text-background"><Instagram className="h-4 w-4" /></a>
+            <a href="#" aria-label="Twitter" className="hover:text-background"><Twitter className="h-4 w-4" /></a>
+          </div>
+        </div>
       </div>
     </footer>
   );
