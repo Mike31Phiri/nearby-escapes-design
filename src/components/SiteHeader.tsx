@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Bed, Bus, MapPin, Package, Menu, User, LogOut, UserCircle, Briefcase, ShieldCheck } from "lucide-react";
+import { Bed, Bus, MapPin, Package, Menu, User, LogOut, UserCircle, Briefcase, ShieldCheck, Settings as SettingsIcon, Globe, HelpCircle } from "lucide-react";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -81,6 +81,16 @@ export function SiteHeader() {
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate({ to: "/profile/settings" })}>
+                  <SettingsIcon className="h-4 w-4 mr-2" /> Settings
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/profile/settings", hash: "languages" })}>
+                  <Globe className="h-4 w-4 mr-2" /> Languages & currency
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/help" })}>
+                  <HelpCircle className="h-4 w-4 mr-2" /> Help
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => { logout(); navigate({ to: "/" }); }}>
                   <LogOut className="h-4 w-4 mr-2" /> Sign out
                 </DropdownMenuItem>
@@ -88,6 +98,24 @@ export function SiteHeader() {
             </DropdownMenu>
           ) : (
             <div className="hidden sm:flex items-center gap-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" aria-label="Settings menu" className="rounded-full">
+                    <SettingsIcon className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem onClick={() => navigate({ to: "/login" })}>
+                    <SettingsIcon className="h-4 w-4 mr-2" /> Settings
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate({ to: "/login" })}>
+                    <Globe className="h-4 w-4 mr-2" /> Languages & currency
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate({ to: "/help" })}>
+                    <HelpCircle className="h-4 w-4 mr-2" /> Help
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Button variant="ghost" size="sm" onClick={() => navigate({ to: "/login" })}>
                 Sign in
               </Button>
@@ -121,6 +149,12 @@ export function SiteHeader() {
                   <>
                     <Link to="/profile" onClick={() => setOpen(false)} className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium hover:bg-muted">
                       <UserCircle className="h-5 w-5" /> Profile
+                    </Link>
+                    <Link to="/profile/settings" onClick={() => setOpen(false)} className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium hover:bg-muted">
+                      <SettingsIcon className="h-5 w-5" /> Settings
+                    </Link>
+                    <Link to="/help" onClick={() => setOpen(false)} className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium hover:bg-muted">
+                      <HelpCircle className="h-5 w-5" /> Help
                     </Link>
                     <button
                       onClick={() => { setOpen(false); logout(); navigate({ to: "/" }); }}
