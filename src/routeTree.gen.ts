@@ -26,6 +26,7 @@ import { Route as ProfileSettingsRouteImport } from './routes/profile.settings'
 import { Route as ProfileHostRouteImport } from './routes/profile.host'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminProfileRouteImport } from './routes/admin.profile'
 import { Route as AdminPaymentsRouteImport } from './routes/admin.payments'
 import { Route as AdminCommissionsRouteImport } from './routes/admin.commissions'
 import { Route as AdminBookingsRouteImport } from './routes/admin.bookings'
@@ -116,6 +117,11 @@ const AdminSettingsRoute = AdminSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminProfileRoute = AdminProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPaymentsRoute = AdminPaymentsRouteImport.update({
   id: '/payments',
   path: '/payments',
@@ -152,6 +158,7 @@ export interface FileRoutesByFullPath {
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/commissions': typeof AdminCommissionsRoute
   '/admin/payments': typeof AdminPaymentsRoute
+  '/admin/profile': typeof AdminProfileRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/profile/host': typeof ProfileHostRoute
@@ -173,6 +180,7 @@ export interface FileRoutesByTo {
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/commissions': typeof AdminCommissionsRoute
   '/admin/payments': typeof AdminPaymentsRoute
+  '/admin/profile': typeof AdminProfileRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/profile/host': typeof ProfileHostRoute
@@ -197,6 +205,7 @@ export interface FileRoutesById {
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/commissions': typeof AdminCommissionsRoute
   '/admin/payments': typeof AdminPaymentsRoute
+  '/admin/profile': typeof AdminProfileRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/profile/host': typeof ProfileHostRoute
@@ -222,6 +231,7 @@ export interface FileRouteTypes {
     | '/admin/bookings'
     | '/admin/commissions'
     | '/admin/payments'
+    | '/admin/profile'
     | '/admin/settings'
     | '/admin/users'
     | '/profile/host'
@@ -243,6 +253,7 @@ export interface FileRouteTypes {
     | '/admin/bookings'
     | '/admin/commissions'
     | '/admin/payments'
+    | '/admin/profile'
     | '/admin/settings'
     | '/admin/users'
     | '/profile/host'
@@ -266,6 +277,7 @@ export interface FileRouteTypes {
     | '/admin/bookings'
     | '/admin/commissions'
     | '/admin/payments'
+    | '/admin/profile'
     | '/admin/settings'
     | '/admin/users'
     | '/profile/host'
@@ -411,6 +423,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSettingsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/profile': {
+      id: '/admin/profile'
+      path: '/profile'
+      fullPath: '/admin/profile'
+      preLoaderRoute: typeof AdminProfileRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/payments': {
       id: '/admin/payments'
       path: '/payments'
@@ -446,6 +465,7 @@ interface AdminRouteChildren {
   AdminBookingsRoute: typeof AdminBookingsRoute
   AdminCommissionsRoute: typeof AdminCommissionsRoute
   AdminPaymentsRoute: typeof AdminPaymentsRoute
+  AdminProfileRoute: typeof AdminProfileRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -455,6 +475,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminBookingsRoute: AdminBookingsRoute,
   AdminCommissionsRoute: AdminCommissionsRoute,
   AdminPaymentsRoute: AdminPaymentsRoute,
+  AdminProfileRoute: AdminProfileRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
