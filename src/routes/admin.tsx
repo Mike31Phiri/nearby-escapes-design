@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   LogOut,
   ChevronLeft,
+  UserCircle,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
@@ -48,6 +49,7 @@ const navItems = [
   { to: "/admin/bookings" as const, label: "Bookings", icon: CalendarCheck },
   { to: "/admin/payments" as const, label: "Payments", icon: CreditCard },
   { to: "/admin/commissions" as const, label: "Commissions", icon: Percent },
+  { to: "/admin/profile" as const, label: "Profile", icon: UserCircle },
   { to: "/admin/settings" as const, label: "Settings", icon: SettingsIcon },
 ];
 
