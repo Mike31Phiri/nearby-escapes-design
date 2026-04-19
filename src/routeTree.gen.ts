@@ -14,6 +14,7 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PackagesRouteImport } from './routes/packages'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as HelpRouteImport } from './routes/help'
 import { Route as GemsRouteImport } from './routes/gems'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as BusBookingRouteImport } from './routes/bus-booking'
@@ -55,6 +56,11 @@ const PackagesRoute = PackagesRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HelpRoute = HelpRouteImport.update({
+  id: '/help',
+  path: '/help',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GemsRoute = GemsRouteImport.update({
@@ -149,6 +155,7 @@ export interface FileRoutesByFullPath {
   '/bus-booking': typeof BusBookingRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/gems': typeof GemsRoute
+  '/help': typeof HelpRoute
   '/login': typeof LoginRoute
   '/packages': typeof PackagesRoute
   '/profile': typeof ProfileRouteWithChildren
@@ -172,6 +179,7 @@ export interface FileRoutesByTo {
   '/bus-booking': typeof BusBookingRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/gems': typeof GemsRoute
+  '/help': typeof HelpRoute
   '/login': typeof LoginRoute
   '/packages': typeof PackagesRoute
   '/register': typeof RegisterRoute
@@ -196,6 +204,7 @@ export interface FileRoutesById {
   '/bus-booking': typeof BusBookingRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/gems': typeof GemsRoute
+  '/help': typeof HelpRoute
   '/login': typeof LoginRoute
   '/packages': typeof PackagesRoute
   '/profile': typeof ProfileRouteWithChildren
@@ -222,6 +231,7 @@ export interface FileRouteTypes {
     | '/bus-booking'
     | '/forgot-password'
     | '/gems'
+    | '/help'
     | '/login'
     | '/packages'
     | '/profile'
@@ -245,6 +255,7 @@ export interface FileRouteTypes {
     | '/bus-booking'
     | '/forgot-password'
     | '/gems'
+    | '/help'
     | '/login'
     | '/packages'
     | '/register'
@@ -268,6 +279,7 @@ export interface FileRouteTypes {
     | '/bus-booking'
     | '/forgot-password'
     | '/gems'
+    | '/help'
     | '/login'
     | '/packages'
     | '/profile'
@@ -293,6 +305,7 @@ export interface RootRouteChildren {
   BusBookingRoute: typeof BusBookingRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   GemsRoute: typeof GemsRoute
+  HelpRoute: typeof HelpRoute
   LoginRoute: typeof LoginRoute
   PackagesRoute: typeof PackagesRoute
   ProfileRoute: typeof ProfileRouteWithChildren
@@ -337,6 +350,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/help': {
+      id: '/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof HelpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gems': {
@@ -504,6 +524,7 @@ const rootRouteChildren: RootRouteChildren = {
   BusBookingRoute: BusBookingRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   GemsRoute: GemsRoute,
+  HelpRoute: HelpRoute,
   LoginRoute: LoginRoute,
   PackagesRoute: PackagesRoute,
   ProfileRoute: ProfileRouteWithChildren,
