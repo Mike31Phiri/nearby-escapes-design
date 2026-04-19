@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Facebook, Instagram, Mail, MapPin, Phone, Twitter } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 export function SiteFooter() {
   return (
@@ -7,9 +8,11 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-4">
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[image:var(--gradient-hero)] font-bold">
-              N
-            </div>
+            <img
+              src={logo}
+              alt="Nearby Escapes Travel Agency"
+              className="h-10 w-10 rounded-xl object-contain bg-white"
+            />
             <span className="font-bold text-lg">Nearby Escapes</span>
           </div>
           <p className="text-sm text-background/70 leading-relaxed">

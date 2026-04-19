@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
+import logo from "@/assets/logo.png";
 import { Bed, Bus, MapPin, Package, Menu, User, LogOut, UserCircle, Briefcase, ShieldCheck, Settings as SettingsIcon, Globe, HelpCircle } from "lucide-react";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -32,9 +33,11 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-lg">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 md:px-6">
         <Link to="/" className="flex items-center gap-2 shrink-0">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[image:var(--gradient-hero)] text-primary-foreground font-bold shadow-[var(--shadow-elegant)]">
-            N
-          </div>
+          <img
+            src={logo}
+            alt="Nearby Escapes Travel Agency"
+            className="h-10 w-10 rounded-xl object-contain bg-white shadow-[var(--shadow-elegant)]"
+          />
           <span className="hidden sm:inline font-bold text-lg tracking-tight">Nearby Escapes</span>
         </Link>
 
