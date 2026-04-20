@@ -3,6 +3,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SearchBar } from "@/components/SearchBar";
 import { ListingCard } from "@/components/ListingCard";
+import { CategoryPills } from "@/components/CategoryPills";
 import { listings } from "@/lib/mock-data";
 import heroImage from "@/assets/hero-zambia.jpg";
 
