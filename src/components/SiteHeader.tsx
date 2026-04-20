@@ -59,8 +59,7 @@ export function SiteHeader() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2 rounded-full border border-border pl-2 pr-1 py-1 hover:shadow-sm transition" aria-label="Account menu">
-                  <Menu className="h-4 w-4 text-muted-foreground" />
+                <button className="flex items-center gap-2 rounded-full border border-border pl-2 pr-2 py-1 hover:shadow-sm transition" aria-label="Account menu">
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[image:var(--gradient-hero)] text-xs font-bold text-primary-foreground">
                     {initials || <User className="h-4 w-4" />}
                   </div>
@@ -85,13 +84,16 @@ export function SiteHeader() {
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => navigate({ to: "/profile/settings" })}>
+                  <SettingsIcon className="h-4 w-4 mr-2" /> Account settings
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/profile/settings" })}>
                   <SettingsIcon className="h-4 w-4 mr-2" /> Settings
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate({ to: "/profile/settings", hash: "languages" })}>
                   <Globe className="h-4 w-4 mr-2" /> Languages & currency
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate({ to: "/help" })}>
-                  <HelpCircle className="h-4 w-4 mr-2" /> Help
+                  <HelpCircle className="h-4 w-4 mr-2" /> Help Center
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => { logout(); navigate({ to: "/" }); }}>
@@ -101,24 +103,6 @@ export function SiteHeader() {
             </DropdownMenu>
           ) : (
             <div className="hidden sm:flex items-center gap-2">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" aria-label="Settings menu" className="rounded-full">
-                    <SettingsIcon className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem onClick={() => navigate({ to: "/login" })}>
-                    <SettingsIcon className="h-4 w-4 mr-2" /> Settings
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate({ to: "/login" })}>
-                    <Globe className="h-4 w-4 mr-2" /> Languages & currency
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate({ to: "/help" })}>
-                    <HelpCircle className="h-4 w-4 mr-2" /> Help
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
               <Button variant="ghost" size="sm" onClick={() => navigate({ to: "/login" })}>
                 Sign in
               </Button>
@@ -157,7 +141,7 @@ export function SiteHeader() {
                       <SettingsIcon className="h-5 w-5" /> Settings
                     </Link>
                     <Link to="/help" onClick={() => setOpen(false)} className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium hover:bg-muted">
-                      <HelpCircle className="h-5 w-5" /> Help
+                      <HelpCircle className="h-5 w-5" /> Help Center
                     </Link>
                     <button
                       onClick={() => { setOpen(false); logout(); navigate({ to: "/" }); }}

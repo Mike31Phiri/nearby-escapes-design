@@ -43,9 +43,6 @@ function HomePage() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/30 to-transparent" />
             <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center text-background">
-              <p className="mb-3 inline-block rounded-full bg-background/15 px-4 py-1 text-xs font-medium backdrop-blur-md">
-                ✨ Discover Zambia your way
-              </p>
               <h1 className="max-w-3xl text-4xl md:text-6xl font-bold tracking-tight leading-[1.05]">
                 Find your next escape, just nearby
               </h1>
