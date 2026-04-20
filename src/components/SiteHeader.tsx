@@ -122,11 +122,6 @@ export function SiteHeader() {
             </SheetTrigger>
             <SheetContent side="right" className="w-80 overflow-y-auto">
               <div className="mt-8 space-y-6">
-                <MobileGroup title="Discover">
-                  <MobileRowLink to="/" onSelect={() => setOpen(false)} icon={Home} label="Home" />
-                  <MobileRowLink to="/gems" onSelect={() => setOpen(false)} icon={MapPin} label="Hidden gems" />
-                </MobileGroup>
-
                 <MobileGroup title="Account">
                   {user ? (
                     <>
@@ -138,10 +133,12 @@ export function SiteHeader() {
                     </>
                   ) : (
                     <>
-                      <MobileRowAction onClick={() => { setOpen(false); navigate({ to: "/register" }); }} icon={Briefcase} label="List your property" />
                       <MobileRowAction onClick={() => { setOpen(false); navigate({ to: "/login" }); }} icon={UserCircle} label="Sign in" />
+                      <MobileRowAction onClick={() => { setOpen(false); navigate({ to: "/register" }); }} icon={Briefcase} label="List your property" />
                     </>
                   )}
+                  <MobileRowLink to="/gems" onSelect={() => setOpen(false)} icon={MapPin} label="Hidden gems" />
+                  <MobileRowLink to="/" onSelect={() => setOpen(false)} icon={Home} label="Home" />
                 </MobileGroup>
 
                 <MobileGroup title="Support">
