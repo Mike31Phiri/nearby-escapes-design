@@ -26,11 +26,11 @@ export function MobileBottomNav() {
             <li key={label}>
               <Link
                 to={to}
-                className="flex flex-col items-center justify-center gap-1 py-2.5 text-[11px] font-medium text-muted-foreground"
+                aria-label={label}
+                className="flex items-center justify-center py-3 text-muted-foreground"
                 activeProps={{ className: "text-primary" }}
               >
-                <Icon className="h-5 w-5" />
-                {label}
+                <Icon className="h-4 w-4" />
               </Link>
             </li>
           ))}
@@ -38,10 +38,10 @@ export function MobileBottomNav() {
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="flex w-full flex-col items-center justify-center gap-1 py-2.5 text-[11px] font-medium text-muted-foreground"
+              aria-label="More"
+              className="flex w-full items-center justify-center py-3 text-muted-foreground"
             >
-              <Menu className="h-5 w-5" />
-              More
+              <Menu className="h-4 w-4" />
             </button>
           </li>
         </ul>
