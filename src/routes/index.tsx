@@ -3,6 +3,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SearchBar } from "@/components/SearchBar";
 import { ListingCard } from "@/components/ListingCard";
+import { CategoryPills } from "@/components/CategoryPills";
 import { listings } from "@/lib/mock-data";
 import heroImage from "@/assets/hero-zambia.jpg";
 
@@ -43,6 +44,9 @@ function HomePage() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/30 to-transparent" />
             <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center text-background">
+              <div className="mb-6">
+                <CategoryPills variant="hero" />
+              </div>
               <h1 className="max-w-3xl text-4xl md:text-6xl font-bold tracking-tight leading-[1.05]">
                 Find your next escape, just nearby
               </h1>

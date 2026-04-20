@@ -1,7 +1,7 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useLocation } from "@tanstack/react-router";
 import logo from "@/assets/logo.png";
-import { Bed, Bus, MapPin, Package, Menu, User, LogOut, UserCircle, Briefcase, ShieldCheck, Settings as SettingsIcon, Globe, HelpCircle, Home, FileText } from "lucide-react";
-import { useState } from "react";
+import { MapPin, Menu, User, LogOut, UserCircle, Briefcase, ShieldCheck, Settings as SettingsIcon, Globe, HelpCircle, Home, FileText } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,18 +12,26 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/lib/auth";
-
-const categories = [
-  { label: "Stay", icon: Bed, to: "/accommodations" as const },
-  { label: "Transport", icon: Bus, to: "/bus-booking" as const },
-  { label: "Gems", icon: MapPin, to: "/gems" as const },
-  { label: "Packages", icon: Package, to: "/packages" as const },
-];
+import { CategoryPills } from "@/components/CategoryPills";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isHome = location.pathname === "/";
+  const [showCenterPills, setShowCenterPills] = useState(!isHome);
+
+  useEffect(() => {
+    if (!isHome) {
+      setShowCenterPills(true);
+      return;
+    }
+    const onScroll = () => setShowCenterPills(window.scrollY > 280);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isHome]);
 
   const initials = user?.fullName
     ? user.fullName.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase()
@@ -41,18 +49,12 @@ export function SiteHeader() {
           <span className="hidden sm:inline font-bold text-lg tracking-tight">Nearby Escapes</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-1">
-          {categories.map(({ label, icon: Icon, to }) => (
-            <Link
-              key={label}
-              to={to}
-              className="group flex flex-col items-center gap-0.5 rounded-xl px-4 py-2 text-xs font-medium text-muted-foreground transition-[var(--transition-smooth)] hover:bg-primary-soft hover:text-primary"
-              activeProps={{ className: "bg-primary-soft text-primary" }}
-            >
-              <Icon className="h-5 w-5" />
-              <span>{label}</span>
-            </Link>
-          ))}
+        <nav className="hidden md:flex items-center justify-center flex-1">
+          <div
+            className={`transition-all duration-300 ${showCenterPills ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"}`}
+          >
+            <CategoryPills variant="header" />
+          </div>
         </nav>
 
         <div className="flex items-center gap-2">
@@ -120,11 +122,6 @@ export function SiteHeader() {
             </SheetTrigger>
             <SheetContent side="right" className="w-80 overflow-y-auto">
               <div className="mt-8 space-y-6">
-                <MobileGroup title="Discover">
-                  <MobileRowLink to="/" onSelect={() => setOpen(false)} icon={Home} label="Home" />
-                  <MobileRowLink to="/gems" onSelect={() => setOpen(false)} icon={MapPin} label="Hidden gems" />
-                </MobileGroup>
-
                 <MobileGroup title="Account">
                   {user ? (
                     <>
@@ -136,10 +133,12 @@ export function SiteHeader() {
                     </>
                   ) : (
                     <>
-                      <MobileRowAction onClick={() => { setOpen(false); navigate({ to: "/register" }); }} icon={Briefcase} label="List your property" />
                       <MobileRowAction onClick={() => { setOpen(false); navigate({ to: "/login" }); }} icon={UserCircle} label="Sign in" />
+                      <MobileRowAction onClick={() => { setOpen(false); navigate({ to: "/register" }); }} icon={Briefcase} label="List your property" />
                     </>
                   )}
+                  <MobileRowLink to="/gems" onSelect={() => setOpen(false)} icon={MapPin} label="Hidden gems" />
+                  <MobileRowLink to="/" onSelect={() => setOpen(false)} icon={Home} label="Home" />
                 </MobileGroup>
 
                 <MobileGroup title="Support">
