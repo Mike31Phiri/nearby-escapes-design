@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import logo from "@/assets/logo.png";
-import { Bed, Bus, MapPin, Package, Menu, User, LogOut, UserCircle, Briefcase, ShieldCheck, Settings as SettingsIcon, Globe, HelpCircle } from "lucide-react";
+import { Bed, Bus, MapPin, Package, Menu, User, LogOut, UserCircle, Briefcase, ShieldCheck, Settings as SettingsIcon, Globe, HelpCircle, Home, FileText } from "lucide-react";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -118,47 +118,49 @@ export function SiteHeader() {
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-72">
-              <div className="mt-8 flex flex-col gap-1">
-                {categories.map(({ label, icon: Icon, to }) => (
-                  <Link
-                    key={label}
-                    to={to}
-                    onClick={() => setOpen(false)}
-                    className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium hover:bg-primary-soft hover:text-primary"
+            <SheetContent side="right" className="w-80 overflow-y-auto">
+              <div className="mt-8 space-y-6">
+                <MobileGroup title="Discover">
+                  <MobileRowLink to="/" onSelect={() => setOpen(false)} icon={Home} label="Home" />
+                  <MobileRowLink to="/gems" onSelect={() => setOpen(false)} icon={MapPin} label="Hidden gems" />
+                </MobileGroup>
+
+                <MobileGroup title="Account">
+                  {user ? (
+                    <>
+                      <MobileRowLink to="/profile" onSelect={() => setOpen(false)} icon={UserCircle} label="Profile" />
+                      <MobileRowLink to="/profile/host" onSelect={() => setOpen(false)} icon={Briefcase} label="List your property" />
+                      {user.role === "admin" && (
+                        <MobileRowLink to="/admin" onSelect={() => setOpen(false)} icon={ShieldCheck} label="Admin" />
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <MobileRowAction onClick={() => { setOpen(false); navigate({ to: "/register" }); }} icon={Briefcase} label="List your property" />
+                      <MobileRowAction onClick={() => { setOpen(false); navigate({ to: "/login" }); }} icon={UserCircle} label="Sign in" />
+                    </>
+                  )}
+                </MobileGroup>
+
+                <MobileGroup title="Support">
+                  <MobileRowLink to="/help" onSelect={() => setOpen(false)} icon={HelpCircle} label="Help & support" />
+                  <MobileRowLink to="/profile/settings" onSelect={() => setOpen(false)} icon={SettingsIcon} label="Settings" />
+                  <MobileRowLink to="/profile/settings" hash="languages" onSelect={() => setOpen(false)} icon={Globe} label="Languages & currency" />
+                </MobileGroup>
+
+                <MobileGroup title="Legal">
+                  <MobileRowLink to="/help" onSelect={() => setOpen(false)} icon={FileText} label="Terms of service" />
+                  <MobileRowLink to="/help" onSelect={() => setOpen(false)} icon={FileText} label="Privacy policy" />
+                  <MobileRowLink to="/help" onSelect={() => setOpen(false)} icon={FileText} label="Cookie policy" />
+                </MobileGroup>
+
+                {user && (
+                  <button
+                    onClick={() => { setOpen(false); logout(); navigate({ to: "/" }); }}
+                    className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium hover:bg-muted text-left text-destructive"
                   >
-                    <Icon className="h-5 w-5" />
-                    {label}
-                  </Link>
-                ))}
-                <div className="my-3 h-px bg-border" />
-                {user ? (
-                  <>
-                    <Link to="/profile" onClick={() => setOpen(false)} className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium hover:bg-muted">
-                      <UserCircle className="h-5 w-5" /> Profile
-                    </Link>
-                    <Link to="/profile/settings" onClick={() => setOpen(false)} className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium hover:bg-muted">
-                      <SettingsIcon className="h-5 w-5" /> Settings
-                    </Link>
-                    <Link to="/help" onClick={() => setOpen(false)} className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium hover:bg-muted">
-                      <HelpCircle className="h-5 w-5" /> Help Center
-                    </Link>
-                    <button
-                      onClick={() => { setOpen(false); logout(); navigate({ to: "/" }); }}
-                      className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium hover:bg-muted text-left"
-                    >
-                      <LogOut className="h-5 w-5" /> Sign out
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <Link to="/login" onClick={() => setOpen(false)} className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium hover:bg-muted">
-                      Sign in
-                    </Link>
-                    <Link to="/register" onClick={() => setOpen(false)} className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium hover:bg-muted">
-                      Sign up
-                    </Link>
-                  </>
+                    <LogOut className="h-5 w-5" /> Sign out
+                  </button>
                 )}
               </div>
             </SheetContent>
@@ -166,5 +168,63 @@ export function SiteHeader() {
         </div>
       </div>
     </header>
+  );
+}
+
+function MobileGroup({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <p className="px-3 mb-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+        {title}
+      </p>
+      <div className="space-y-0.5">{children}</div>
+    </div>
+  );
+}
+
+function MobileRowLink({
+  to,
+  hash,
+  icon: Icon,
+  label,
+  onSelect,
+}: {
+  to: string;
+  hash?: string;
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  onSelect: () => void;
+}) {
+  return (
+    <Link
+      to={to}
+      hash={hash}
+      onClick={onSelect}
+      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-muted"
+    >
+      <Icon className="h-5 w-5 text-muted-foreground" />
+      {label}
+    </Link>
+  );
+}
+
+function MobileRowAction({
+  onClick,
+  icon: Icon,
+  label,
+}: {
+  onClick: () => void;
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-muted text-left"
+    >
+      <Icon className="h-5 w-5 text-muted-foreground" />
+      {label}
+    </button>
   );
 }
