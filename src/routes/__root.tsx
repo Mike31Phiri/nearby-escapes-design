@@ -3,7 +3,6 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/r
 import appCss from "../styles.css?url";
 import { AuthProvider } from "@/lib/auth";
 import { Toaster } from "@/components/ui/sonner";
-import { MobileBottomNav } from "@/components/MobileBottomNav";
 
 function NotFoundComponent() {
   return (
@@ -75,7 +74,6 @@ function RootComponent() {
   return (
     <AuthProvider>
       <Outlet />
-      <MobileBottomNav />
       <Toaster />
     </AuthProvider>
   );
