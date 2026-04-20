@@ -27,10 +27,19 @@ export function SiteHeader() {
       setShowCenterPills(true);
       return;
     }
-    const onScroll = () => setShowCenterPills(window.scrollY > 280);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const heroPills = document.querySelector("[data-hero-pills]");
+    if (!heroPills) {
+      const onScroll = () => setShowCenterPills(window.scrollY > 280);
+      onScroll();
+      window.addEventListener("scroll", onScroll, { passive: true });
+      return () => window.removeEventListener("scroll", onScroll);
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowCenterPills(!entry.isIntersecting),
+      { rootMargin: "-80px 0px 0px 0px", threshold: 0 },
+    );
+    observer.observe(heroPills);
+    return () => observer.disconnect();
   }, [isHome]);
 
   const initials = user?.fullName
