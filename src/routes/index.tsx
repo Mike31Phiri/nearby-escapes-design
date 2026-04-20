@@ -44,6 +44,9 @@ function HomePage() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/30 to-transparent" />
             <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center text-background">
+              <div className="mb-6">
+                <CategoryPills variant="hero" />
+              </div>
               <h1 className="max-w-3xl text-4xl md:text-6xl font-bold tracking-tight leading-[1.05]">
                 Find your next escape, just nearby
               </h1>
