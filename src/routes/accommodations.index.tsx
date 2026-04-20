@@ -1,6 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { zodValidator, fallback } from "@tanstack/zod-adapter";
-import { z } from "zod";
 import { useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -19,12 +17,12 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Search, SlidersHorizontal } from "lucide-react";
 
-const searchSchema = z.object({
-  q: fallback(z.string(), "").default(""),
-});
+type SearchParams = { q?: string };
 
 export const Route = createFileRoute("/accommodations/")({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch: (search: Record<string, unknown>): SearchParams => ({
+    q: typeof search.q === "string" ? search.q : "",
+  }),
   head: () => ({
     meta: [
       { title: "Search accommodations — Nearby Escapes" },
@@ -46,7 +44,7 @@ type SortKey = "recommended" | "price-asc" | "price-desc" | "rating";
 
 function AccommodationsPage() {
   const { q } = Route.useSearch();
-  const [filters, setFilters] = useState<Filters>({ ...DEFAULT_FILTERS, query: q });
+  const [filters, setFilters] = useState<Filters>({ ...DEFAULT_FILTERS, query: q ?? "" });
   const [sort, setSort] = useState<SortKey>("recommended");
 
   const allCategories = useMemo(
