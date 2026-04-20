@@ -1,7 +1,7 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useLocation } from "@tanstack/react-router";
 import logo from "@/assets/logo.png";
-import { Bed, Bus, MapPin, Package, Menu, User, LogOut, UserCircle, Briefcase, ShieldCheck, Settings as SettingsIcon, Globe, HelpCircle, Home, FileText } from "lucide-react";
-import { useState } from "react";
+import { MapPin, Menu, User, LogOut, UserCircle, Briefcase, ShieldCheck, Settings as SettingsIcon, Globe, HelpCircle, Home, FileText } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,18 +12,26 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/lib/auth";
-
-const categories = [
-  { label: "Stay", icon: Bed, to: "/accommodations" as const },
-  { label: "Transport", icon: Bus, to: "/bus-booking" as const },
-  { label: "Gems", icon: MapPin, to: "/gems" as const },
-  { label: "Packages", icon: Package, to: "/packages" as const },
-];
+import { CategoryPills } from "@/components/CategoryPills";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isHome = location.pathname === "/";
+  const [showCenterPills, setShowCenterPills] = useState(!isHome);
+
+  useEffect(() => {
+    if (!isHome) {
+      setShowCenterPills(true);
+      return;
+    }
+    const onScroll = () => setShowCenterPills(window.scrollY > 280);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isHome]);
 
   const initials = user?.fullName
     ? user.fullName.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase()
