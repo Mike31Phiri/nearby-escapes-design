@@ -49,18 +49,12 @@ export function SiteHeader() {
           <span className="hidden sm:inline font-bold text-lg tracking-tight">Nearby Escapes</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-1">
-          {categories.map(({ label, icon: Icon, to }) => (
-            <Link
-              key={label}
-              to={to}
-              className="group flex flex-col items-center gap-0.5 rounded-xl px-4 py-2 text-xs font-medium text-muted-foreground transition-[var(--transition-smooth)] hover:bg-primary-soft hover:text-primary"
-              activeProps={{ className: "bg-primary-soft text-primary" }}
-            >
-              <Icon className="h-5 w-5" />
-              <span>{label}</span>
-            </Link>
-          ))}
+        <nav className="hidden md:flex items-center justify-center flex-1">
+          <div
+            className={`transition-all duration-300 ${showCenterPills ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"}`}
+          >
+            <CategoryPills variant="header" />
+          </div>
         </nav>
 
         <div className="flex items-center gap-2">
