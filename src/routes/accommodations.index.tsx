@@ -44,7 +44,7 @@ type SortKey = "recommended" | "price-asc" | "price-desc" | "rating";
 
 function AccommodationsPage() {
   const { q } = Route.useSearch();
-  const [filters, setFilters] = useState<Filters>({ ...DEFAULT_FILTERS, query: q });
+  const [filters, setFilters] = useState<Filters>({ ...DEFAULT_FILTERS, query: q ?? "" });
   const [sort, setSort] = useState<SortKey>("recommended");
 
   const allCategories = useMemo(
