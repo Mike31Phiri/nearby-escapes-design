@@ -142,16 +142,6 @@ export function SiteHeader() {
               </div>
             </SheetContent>
           </Sheet>
-                  <button
-                    onClick={() => { setOpen(false); logout(); navigate({ to: "/" }); }}
-                    className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium hover:bg-muted text-left text-destructive"
-                  >
-                    <LogOut className="h-5 w-5" /> Sign out
-                  </button>
-                )}
-              </div>
-            </SheetContent>
-          </Sheet>
         </div>
       </div>
     </header>
