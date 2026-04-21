@@ -4,23 +4,59 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ListingCard } from "@/components/ListingCard";
 import { Button } from "@/components/ui/button";
+import { ReportListingDialog } from "@/components/ReportListingDialog";
 import { getListing, listings } from "@/lib/mock-data";
+
+const SITE = "https://nearbyescapes.com";
 
 export const Route = createFileRoute("/accommodations/$id")({
   head: ({ params }) => {
     const listing = getListing(params.id);
-    return {
-      meta: [
-        { title: listing ? `${listing.name} — Nearby Escapes` : "Stay — Nearby Escapes" },
-        {
-          name: "description",
-          content: listing?.description ?? "Book your perfect stay in Zambia.",
-        },
-        { property: "og:title", content: listing?.name ?? "Stay" },
-        { property: "og:description", content: listing?.description ?? "" },
-        ...(listing ? [{ property: "og:image", content: listing.image }] : []),
-      ],
-    };
+    const canonical = `${SITE}/accommodations/${params.id}`;
+    const meta = [
+      { title: listing ? `${listing.name} — Nearby Escapes` : "Stay — Nearby Escapes" },
+      {
+        name: "description",
+        content: listing?.description ?? "Book your perfect stay in Zambia.",
+      },
+      { property: "og:title", content: listing?.name ?? "Stay" },
+      { property: "og:description", content: listing?.description ?? "" },
+      { property: "og:type", content: "product" },
+      { property: "og:url", content: canonical },
+      ...(listing ? [{ property: "og:image", content: listing.image }] : []),
+      ...(listing ? [{ name: "twitter:image", content: listing.image }] : []),
+    ];
+
+    const links = [{ rel: "canonical", href: canonical }];
+
+    const scripts = listing
+      ? [
+          {
+            type: "application/ld+json",
+            children: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "LodgingBusiness",
+              name: listing.name,
+              description: listing.description,
+              image: listing.image,
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: listing.location,
+                addressCountry: "ZM",
+              },
+              aggregateRating: {
+                "@type": "AggregateRating",
+                ratingValue: listing.rating,
+                reviewCount: listing.reviews,
+              },
+              priceRange: `$${listing.price}`,
+              url: canonical,
+            }),
+          },
+        ]
+      : [];
+
+    return { meta, links, scripts };
   },
   component: ListingDetail,
   notFoundComponent: () => (
@@ -82,9 +118,11 @@ function ListingDetail() {
         <div className="relative overflow-hidden rounded-3xl">
           <img
             src={listing.image}
-            alt={listing.name}
+            alt={`${listing.name} in ${listing.location}, Zambia`}
             width={1200}
             height={700}
+            fetchPriority="high"
+            decoding="async"
             className="h-[320px] md:h-[460px] w-full object-cover"
           />
           <div className="absolute top-4 left-4 rounded-full bg-background/90 px-3 py-1 text-xs font-semibold backdrop-blur">
@@ -159,6 +197,10 @@ function ListingDetail() {
             <ListingCard key={l.id} listing={l} />
           ))}
         </div>
+      </section>
+
+      <section className="mx-auto w-full max-w-6xl px-4 md:px-6 mt-10 flex justify-end">
+        <ReportListingDialog listingId={listing.id} listingName={listing.name} />
       </section>
 
       <div className="flex-1" />
