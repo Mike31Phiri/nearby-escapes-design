@@ -4,13 +4,6 @@ import { MapPin, Menu, User, LogOut, UserCircle, Briefcase, ShieldCheck, Setting
 import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/lib/auth";
 import { CategoryPills } from "@/components/CategoryPills";
 
