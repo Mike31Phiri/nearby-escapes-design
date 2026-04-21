@@ -37,9 +37,11 @@ function HomePage() {
           <div className="relative overflow-hidden rounded-3xl">
             <img
               src={heroImage}
-              alt="Victoria Falls at sunset"
+              alt="Victoria Falls at sunset, Zambia"
               width={1600}
               height={1024}
+              fetchPriority="high"
+              decoding="async"
               className="h-[420px] md:h-[520px] w-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/30 to-transparent" />

@@ -3,6 +3,20 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/r
 import appCss from "../styles.css?url";
 import { AuthProvider } from "@/lib/auth";
 import { Toaster } from "@/components/ui/sonner";
+import { CookieConsent } from "@/components/CookieConsent";
+
+const ORG_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "TravelAgency",
+  name: "Nearby Escapes",
+  url: "https://nearbyescapes.com",
+  logo: "https://nearbyescapes.com/favicon.png",
+  areaServed: "Zambia",
+  sameAs: [
+    "https://www.facebook.com/nearbyescapes",
+    "https://www.instagram.com/nearbyescapes",
+  ],
+};
 
 function NotFoundComponent() {
   return (
@@ -44,11 +58,20 @@ export const Route = createRootRoute({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "theme-color", content: "#0f766e" },
+      { name: "format-detection", content: "telephone=no" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "apple-touch-icon", href: "/favicon.png" },
+      { rel: "manifest", href: "/site.webmanifest" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(ORG_JSONLD),
+      },
     ],
   }),
   shellComponent: RootShell,
@@ -75,6 +98,7 @@ function RootComponent() {
     <AuthProvider>
       <Outlet />
       <Toaster />
+      <CookieConsent />
     </AuthProvider>
   );
 }

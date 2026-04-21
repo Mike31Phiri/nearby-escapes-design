@@ -52,9 +52,10 @@ export function SiteFooter() {
         <div className="mx-auto max-w-7xl px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-background/60">
           <p>© {new Date().getFullYear()} Nearby Escapes. All rights reserved.</p>
           <div className="flex items-center gap-4">
-            <Link to="/" className="hover:text-background">Privacy</Link>
-            <Link to="/" className="hover:text-background">Terms</Link>
-            <Link to="/" className="hover:text-background">Help</Link>
+            <Link to="/legal/privacy" className="hover:text-background">Privacy</Link>
+            <Link to="/legal/terms" className="hover:text-background">Terms</Link>
+            <Link to="/legal/cookies" className="hover:text-background">Cookies</Link>
+            <Link to="/help" className="hover:text-background">Help</Link>
           </div>
           <div className="flex items-center gap-3">
             <a href="#" aria-label="Facebook" className="hover:text-background"><Facebook className="h-4 w-4" /></a>
