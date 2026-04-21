@@ -25,6 +25,9 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AccommodationsIndexRouteImport } from './routes/accommodations.index'
 import { Route as ProfileSettingsRouteImport } from './routes/profile.settings'
 import { Route as ProfileHostRouteImport } from './routes/profile.host'
+import { Route as LegalTermsRouteImport } from './routes/legal.terms'
+import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
+import { Route as LegalCookiesRouteImport } from './routes/legal.cookies'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminProfileRouteImport } from './routes/admin.profile'
@@ -113,6 +116,21 @@ const ProfileHostRoute = ProfileHostRouteImport.update({
   path: '/host',
   getParentRoute: () => ProfileRoute,
 } as any)
+const LegalTermsRoute = LegalTermsRouteImport.update({
+  id: '/legal/terms',
+  path: '/legal/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalPrivacyRoute = LegalPrivacyRouteImport.update({
+  id: '/legal/privacy',
+  path: '/legal/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalCookiesRoute = LegalCookiesRouteImport.update({
+  id: '/legal/cookies',
+  path: '/legal/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
@@ -168,6 +186,9 @@ export interface FileRoutesByFullPath {
   '/admin/profile': typeof AdminProfileRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/legal/cookies': typeof LegalCookiesRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/terms': typeof LegalTermsRoute
   '/profile/host': typeof ProfileHostRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/accommodations/': typeof AccommodationsIndexRoute
@@ -191,6 +212,9 @@ export interface FileRoutesByTo {
   '/admin/profile': typeof AdminProfileRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/legal/cookies': typeof LegalCookiesRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/terms': typeof LegalTermsRoute
   '/profile/host': typeof ProfileHostRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/accommodations': typeof AccommodationsIndexRoute
@@ -217,6 +241,9 @@ export interface FileRoutesById {
   '/admin/profile': typeof AdminProfileRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/legal/cookies': typeof LegalCookiesRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/terms': typeof LegalTermsRoute
   '/profile/host': typeof ProfileHostRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/accommodations/': typeof AccommodationsIndexRoute
@@ -244,6 +271,9 @@ export interface FileRouteTypes {
     | '/admin/profile'
     | '/admin/settings'
     | '/admin/users'
+    | '/legal/cookies'
+    | '/legal/privacy'
+    | '/legal/terms'
     | '/profile/host'
     | '/profile/settings'
     | '/accommodations/'
@@ -267,6 +297,9 @@ export interface FileRouteTypes {
     | '/admin/profile'
     | '/admin/settings'
     | '/admin/users'
+    | '/legal/cookies'
+    | '/legal/privacy'
+    | '/legal/terms'
     | '/profile/host'
     | '/profile/settings'
     | '/accommodations'
@@ -292,6 +325,9 @@ export interface FileRouteTypes {
     | '/admin/profile'
     | '/admin/settings'
     | '/admin/users'
+    | '/legal/cookies'
+    | '/legal/privacy'
+    | '/legal/terms'
     | '/profile/host'
     | '/profile/settings'
     | '/accommodations/'
@@ -312,6 +348,9 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   AccommodationsIdRoute: typeof AccommodationsIdRoute
+  LegalCookiesRoute: typeof LegalCookiesRoute
+  LegalPrivacyRoute: typeof LegalPrivacyRoute
+  LegalTermsRoute: typeof LegalTermsRoute
   AccommodationsIndexRoute: typeof AccommodationsIndexRoute
 }
 
@@ -429,6 +468,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileHostRouteImport
       parentRoute: typeof ProfileRoute
     }
+    '/legal/terms': {
+      id: '/legal/terms'
+      path: '/legal/terms'
+      fullPath: '/legal/terms'
+      preLoaderRoute: typeof LegalTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/privacy': {
+      id: '/legal/privacy'
+      path: '/legal/privacy'
+      fullPath: '/legal/privacy'
+      preLoaderRoute: typeof LegalPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/cookies': {
+      id: '/legal/cookies'
+      path: '/legal/cookies'
+      fullPath: '/legal/cookies'
+      preLoaderRoute: typeof LegalCookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/users': {
       id: '/admin/users'
       path: '/users'
@@ -531,8 +591,20 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   AccommodationsIdRoute: AccommodationsIdRoute,
+  LegalCookiesRoute: LegalCookiesRoute,
+  LegalPrivacyRoute: LegalPrivacyRoute,
+  LegalTermsRoute: LegalTermsRoute,
   AccommodationsIndexRoute: AccommodationsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

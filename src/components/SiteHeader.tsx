@@ -4,13 +4,6 @@ import { MapPin, Menu, User, LogOut, UserCircle, Briefcase, ShieldCheck, Setting
 import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/lib/auth";
 import { CategoryPills } from "@/components/CategoryPills";
 
@@ -68,50 +61,15 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-2">
           {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2 rounded-full border border-border pl-2 pr-2 py-1 hover:shadow-sm transition" aria-label="Account menu">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[image:var(--gradient-hero)] text-xs font-bold text-primary-foreground">
-                    {initials || <User className="h-4 w-4" />}
-                  </div>
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <div className="px-2 py-1.5">
-                  <p className="text-sm font-semibold truncate">{user.fullName}</p>
-                  <p className="text-xs text-muted-foreground truncate">{user.email}</p>
-                </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate({ to: "/profile" })}>
-                  <UserCircle className="h-4 w-4 mr-2" /> Profile
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate({ to: "/profile/host" })}>
-                  <Briefcase className="h-4 w-4 mr-2" /> Host dashboard
-                </DropdownMenuItem>
-                {user.role === "admin" && (
-                  <DropdownMenuItem onClick={() => navigate({ to: "/admin" })}>
-                    <ShieldCheck className="h-4 w-4 mr-2" /> Admin
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate({ to: "/profile/settings" })}>
-                  <SettingsIcon className="h-4 w-4 mr-2" /> Account settings
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate({ to: "/profile/settings" })}>
-                  <SettingsIcon className="h-4 w-4 mr-2" /> Settings
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate({ to: "/profile/settings", hash: "languages" })}>
-                  <Globe className="h-4 w-4 mr-2" /> Languages & currency
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate({ to: "/help" })}>
-                  <HelpCircle className="h-4 w-4 mr-2" /> Help Center
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => { logout(); navigate({ to: "/" }); }}>
-                  <LogOut className="h-4 w-4 mr-2" /> Sign out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Link
+              to="/profile"
+              className="flex items-center gap-2 rounded-full border border-border pl-2 pr-2 py-1 hover:shadow-sm transition"
+              aria-label="Go to your profile"
+            >
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[image:var(--gradient-hero)] text-xs font-bold text-primary-foreground">
+                {initials || <User className="h-4 w-4" />}
+              </div>
+            </Link>
           ) : (
             <div className="hidden sm:flex items-center gap-2">
               <Button variant="ghost" size="sm" onClick={() => navigate({ to: "/login" })}>
@@ -131,35 +89,46 @@ export function SiteHeader() {
             </SheetTrigger>
             <SheetContent side="right" className="w-80 overflow-y-auto">
               <div className="mt-8 space-y-6">
+                {user && (
+                  <div className="px-3 pb-2 border-b border-border">
+                    <p className="text-sm font-semibold truncate">{user.fullName}</p>
+                    <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                  </div>
+                )}
+
                 <MobileGroup title="Account">
                   {user ? (
                     <>
                       <MobileRowLink to="/profile" onSelect={() => setOpen(false)} icon={UserCircle} label="Profile" />
-                      <MobileRowLink to="/profile/host" onSelect={() => setOpen(false)} icon={Briefcase} label="List your property" />
+                      <MobileRowLink to="/profile/host" onSelect={() => setOpen(false)} icon={Briefcase} label="Host dashboard" />
                       {user.role === "admin" && (
                         <MobileRowLink to="/admin" onSelect={() => setOpen(false)} icon={ShieldCheck} label="Admin" />
                       )}
+                      <MobileRowLink to="/profile/settings" onSelect={() => setOpen(false)} icon={SettingsIcon} label="Account settings" />
                     </>
                   ) : (
                     <>
                       <MobileRowAction onClick={() => { setOpen(false); navigate({ to: "/login" }); }} icon={UserCircle} label="Sign in" />
-                      <MobileRowAction onClick={() => { setOpen(false); navigate({ to: "/register" }); }} icon={Briefcase} label="List your property" />
+                      <MobileRowAction onClick={() => { setOpen(false); navigate({ to: "/register" }); }} icon={Briefcase} label="Sign up" />
+                      <MobileRowLink to="/profile/host" onSelect={() => setOpen(false)} icon={Briefcase} label="List your property" />
                     </>
                   )}
-                  <MobileRowLink to="/gems" onSelect={() => setOpen(false)} icon={MapPin} label="Hidden gems" />
+                </MobileGroup>
+
+                <MobileGroup title="Explore">
                   <MobileRowLink to="/" onSelect={() => setOpen(false)} icon={Home} label="Home" />
+                  <MobileRowLink to="/gems" onSelect={() => setOpen(false)} icon={MapPin} label="Hidden gems" />
                 </MobileGroup>
 
                 <MobileGroup title="Support">
                   <MobileRowLink to="/help" onSelect={() => setOpen(false)} icon={HelpCircle} label="Help & support" />
-                  <MobileRowLink to="/profile/settings" onSelect={() => setOpen(false)} icon={SettingsIcon} label="Settings" />
                   <MobileRowLink to="/profile/settings" hash="languages" onSelect={() => setOpen(false)} icon={Globe} label="Languages & currency" />
                 </MobileGroup>
 
                 <MobileGroup title="Legal">
-                  <MobileRowLink to="/help" onSelect={() => setOpen(false)} icon={FileText} label="Terms of service" />
-                  <MobileRowLink to="/help" onSelect={() => setOpen(false)} icon={FileText} label="Privacy policy" />
-                  <MobileRowLink to="/help" onSelect={() => setOpen(false)} icon={FileText} label="Cookie policy" />
+                  <MobileRowLink to="/legal/terms" onSelect={() => setOpen(false)} icon={FileText} label="Terms of service" />
+                  <MobileRowLink to="/legal/privacy" onSelect={() => setOpen(false)} icon={FileText} label="Privacy policy" />
+                  <MobileRowLink to="/legal/cookies" onSelect={() => setOpen(false)} icon={FileText} label="Cookie policy" />
                 </MobileGroup>
 
                 {user && (
