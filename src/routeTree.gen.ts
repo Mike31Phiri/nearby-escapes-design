@@ -9,34 +9,90 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SupportRouteImport } from './routes/support'
+import { Route as SpotlightRouteImport } from './routes/spotlight'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PackagesRouteImport } from './routes/packages'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as InboxRouteImport } from './routes/inbox'
+import { Route as HostRouteImport } from './routes/host'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as GemsRouteImport } from './routes/gems'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as CollectionsRouteImport } from './routes/collections'
 import { Route as BusBookingRouteImport } from './routes/bus-booking'
+import { Route as BookingRouteImport } from './routes/booking'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProfileIndexRouteImport } from './routes/profile.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AccommodationsIndexRouteImport } from './routes/accommodations.index'
+import { Route as SupportContactRouteImport } from './routes/support.contact'
+import { Route as SupportArticleIdRouteImport } from './routes/support.$articleId'
+import { Route as StaysStayIdRouteImport } from './routes/stays.$stayId'
+import { Route as SpotlightStoryIdRouteImport } from './routes/spotlight.$storyId'
+import { Route as ProfileVerificationRouteImport } from './routes/profile.verification'
 import { Route as ProfileSettingsRouteImport } from './routes/profile.settings'
 import { Route as ProfileHostRouteImport } from './routes/profile.host'
+import { Route as ProfileFeedbackRouteImport } from './routes/profile.feedback'
+import { Route as ProfileEditRouteImport } from './routes/profile.edit'
 import { Route as LegalTermsRouteImport } from './routes/legal.terms'
 import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
 import { Route as LegalCookiesRouteImport } from './routes/legal.cookies'
+import { Route as LegalCommunityStandardsRouteImport } from './routes/legal.community-standards'
+import { Route as HostPropertiesRouteImport } from './routes/host.properties'
+import { Route as HostPerformanceRouteImport } from './routes/host.performance'
+import { Route as HostInboxRouteImport } from './routes/host.inbox'
+import { Route as HostFeedbackRouteImport } from './routes/host.feedback'
+import { Route as HostEarningsRouteImport } from './routes/host.earnings'
+import { Route as HostCalendarRouteImport } from './routes/host.calendar'
+import { Route as CollectionsCollectionIdRouteImport } from './routes/collections.$collectionId'
+import { Route as BookingPaymentRouteImport } from './routes/booking.payment'
+import { Route as BookingConfirmationRouteImport } from './routes/booking.confirmation'
+import { Route as AuthOtpRouteImport } from './routes/auth.otp'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminProfileRouteImport } from './routes/admin.profile'
 import { Route as AdminPaymentsRouteImport } from './routes/admin.payments'
 import { Route as AdminCommissionsRouteImport } from './routes/admin.commissions'
 import { Route as AdminBookingsRouteImport } from './routes/admin.bookings'
+import { Route as AccountTaxesRouteImport } from './routes/account.taxes'
+import { Route as AccountSecurityRouteImport } from './routes/account.security'
+import { Route as AccountPrivacyRouteImport } from './routes/account.privacy'
+import { Route as AccountPreferencesRouteImport } from './routes/account.preferences'
+import { Route as AccountPersonalInfoRouteImport } from './routes/account.personal-info'
+import { Route as AccountPaymentsRouteImport } from './routes/account.payments'
+import { Route as AccountNotificationsRouteImport } from './routes/account.notifications'
+import { Route as AccountAccessibilityRouteImport } from './routes/account.accessibility'
 import { Route as AccommodationsIdRouteImport } from './routes/accommodations.$id'
+import { Route as StaysCollectionsSlugRouteImport } from './routes/stays.collections.$slug'
+import { Route as HostNewPropertyStep9RouteImport } from './routes/host.new-property.step-9'
+import { Route as HostNewPropertyStep8RouteImport } from './routes/host.new-property.step-8'
+import { Route as HostNewPropertyStep7RouteImport } from './routes/host.new-property.step-7'
+import { Route as HostNewPropertyStep6RouteImport } from './routes/host.new-property.step-6'
+import { Route as HostNewPropertyStep5RouteImport } from './routes/host.new-property.step-5'
+import { Route as HostNewPropertyStep4RouteImport } from './routes/host.new-property.step-4'
+import { Route as HostNewPropertyStep3RouteImport } from './routes/host.new-property.step-3'
+import { Route as HostNewPropertyStep2RouteImport } from './routes/host.new-property.step-2'
+import { Route as HostNewPropertyStep1RouteImport } from './routes/host.new-property.step-1'
+import { Route as HostNewPropertyReviewRouteImport } from './routes/host.new-property.review'
+import { Route as CollectionsSharedShareIdRouteImport } from './routes/collections.shared.$shareId'
+import { Route as StaysStayIdRoomsRoomIdRouteImport } from './routes/stays.$stayId.rooms.$roomId'
 
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SpotlightRoute = SpotlightRouteImport.update({
+  id: '/spotlight',
+  path: '/spotlight',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -67,6 +123,16 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InboxRoute = InboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HostRoute = HostRouteImport.update({
+  id: '/host',
+  path: '/host',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HelpRoute = HelpRouteImport.update({
   id: '/help',
   path: '/help',
@@ -82,14 +148,29 @@ const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CollectionsRoute = CollectionsRouteImport.update({
+  id: '/collections',
+  path: '/collections',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BusBookingRoute = BusBookingRouteImport.update({
   id: '/bus-booking',
   path: '/bus-booking',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BookingRoute = BookingRouteImport.update({
+  id: '/booking',
+  path: '/booking',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -112,6 +193,31 @@ const AccommodationsIndexRoute = AccommodationsIndexRouteImport.update({
   path: '/accommodations/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SupportContactRoute = SupportContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => SupportRoute,
+} as any)
+const SupportArticleIdRoute = SupportArticleIdRouteImport.update({
+  id: '/$articleId',
+  path: '/$articleId',
+  getParentRoute: () => SupportRoute,
+} as any)
+const StaysStayIdRoute = StaysStayIdRouteImport.update({
+  id: '/stays/$stayId',
+  path: '/stays/$stayId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SpotlightStoryIdRoute = SpotlightStoryIdRouteImport.update({
+  id: '/$storyId',
+  path: '/$storyId',
+  getParentRoute: () => SpotlightRoute,
+} as any)
+const ProfileVerificationRoute = ProfileVerificationRouteImport.update({
+  id: '/verification',
+  path: '/verification',
+  getParentRoute: () => ProfileRoute,
+} as any)
 const ProfileSettingsRoute = ProfileSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -120,6 +226,16 @@ const ProfileSettingsRoute = ProfileSettingsRouteImport.update({
 const ProfileHostRoute = ProfileHostRouteImport.update({
   id: '/host',
   path: '/host',
+  getParentRoute: () => ProfileRoute,
+} as any)
+const ProfileFeedbackRoute = ProfileFeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
+  getParentRoute: () => ProfileRoute,
+} as any)
+const ProfileEditRoute = ProfileEditRouteImport.update({
+  id: '/edit',
+  path: '/edit',
   getParentRoute: () => ProfileRoute,
 } as any)
 const LegalTermsRoute = LegalTermsRouteImport.update({
@@ -135,6 +251,61 @@ const LegalPrivacyRoute = LegalPrivacyRouteImport.update({
 const LegalCookiesRoute = LegalCookiesRouteImport.update({
   id: '/legal/cookies',
   path: '/legal/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalCommunityStandardsRoute = LegalCommunityStandardsRouteImport.update({
+  id: '/legal/community-standards',
+  path: '/legal/community-standards',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HostPropertiesRoute = HostPropertiesRouteImport.update({
+  id: '/properties',
+  path: '/properties',
+  getParentRoute: () => HostRoute,
+} as any)
+const HostPerformanceRoute = HostPerformanceRouteImport.update({
+  id: '/performance',
+  path: '/performance',
+  getParentRoute: () => HostRoute,
+} as any)
+const HostInboxRoute = HostInboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
+  getParentRoute: () => HostRoute,
+} as any)
+const HostFeedbackRoute = HostFeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
+  getParentRoute: () => HostRoute,
+} as any)
+const HostEarningsRoute = HostEarningsRouteImport.update({
+  id: '/earnings',
+  path: '/earnings',
+  getParentRoute: () => HostRoute,
+} as any)
+const HostCalendarRoute = HostCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => HostRoute,
+} as any)
+const CollectionsCollectionIdRoute = CollectionsCollectionIdRouteImport.update({
+  id: '/$collectionId',
+  path: '/$collectionId',
+  getParentRoute: () => CollectionsRoute,
+} as any)
+const BookingPaymentRoute = BookingPaymentRouteImport.update({
+  id: '/payment',
+  path: '/payment',
+  getParentRoute: () => BookingRoute,
+} as any)
+const BookingConfirmationRoute = BookingConfirmationRouteImport.update({
+  id: '/confirmation',
+  path: '/confirmation',
+  getParentRoute: () => BookingRoute,
+} as any)
+const AuthOtpRoute = AuthOtpRouteImport.update({
+  id: '/auth/otp',
+  path: '/auth/otp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
@@ -167,208 +338,615 @@ const AdminBookingsRoute = AdminBookingsRouteImport.update({
   path: '/bookings',
   getParentRoute: () => AdminRoute,
 } as any)
+const AccountTaxesRoute = AccountTaxesRouteImport.update({
+  id: '/taxes',
+  path: '/taxes',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountSecurityRoute = AccountSecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountPrivacyRoute = AccountPrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountPreferencesRoute = AccountPreferencesRouteImport.update({
+  id: '/preferences',
+  path: '/preferences',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountPersonalInfoRoute = AccountPersonalInfoRouteImport.update({
+  id: '/personal-info',
+  path: '/personal-info',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountPaymentsRoute = AccountPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountNotificationsRoute = AccountNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountAccessibilityRoute = AccountAccessibilityRouteImport.update({
+  id: '/accessibility',
+  path: '/accessibility',
+  getParentRoute: () => AccountRoute,
+} as any)
 const AccommodationsIdRoute = AccommodationsIdRouteImport.update({
   id: '/accommodations/$id',
   path: '/accommodations/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StaysCollectionsSlugRoute = StaysCollectionsSlugRouteImport.update({
+  id: '/stays/collections/$slug',
+  path: '/stays/collections/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HostNewPropertyStep9Route = HostNewPropertyStep9RouteImport.update({
+  id: '/new-property/step-9',
+  path: '/new-property/step-9',
+  getParentRoute: () => HostRoute,
+} as any)
+const HostNewPropertyStep8Route = HostNewPropertyStep8RouteImport.update({
+  id: '/new-property/step-8',
+  path: '/new-property/step-8',
+  getParentRoute: () => HostRoute,
+} as any)
+const HostNewPropertyStep7Route = HostNewPropertyStep7RouteImport.update({
+  id: '/new-property/step-7',
+  path: '/new-property/step-7',
+  getParentRoute: () => HostRoute,
+} as any)
+const HostNewPropertyStep6Route = HostNewPropertyStep6RouteImport.update({
+  id: '/new-property/step-6',
+  path: '/new-property/step-6',
+  getParentRoute: () => HostRoute,
+} as any)
+const HostNewPropertyStep5Route = HostNewPropertyStep5RouteImport.update({
+  id: '/new-property/step-5',
+  path: '/new-property/step-5',
+  getParentRoute: () => HostRoute,
+} as any)
+const HostNewPropertyStep4Route = HostNewPropertyStep4RouteImport.update({
+  id: '/new-property/step-4',
+  path: '/new-property/step-4',
+  getParentRoute: () => HostRoute,
+} as any)
+const HostNewPropertyStep3Route = HostNewPropertyStep3RouteImport.update({
+  id: '/new-property/step-3',
+  path: '/new-property/step-3',
+  getParentRoute: () => HostRoute,
+} as any)
+const HostNewPropertyStep2Route = HostNewPropertyStep2RouteImport.update({
+  id: '/new-property/step-2',
+  path: '/new-property/step-2',
+  getParentRoute: () => HostRoute,
+} as any)
+const HostNewPropertyStep1Route = HostNewPropertyStep1RouteImport.update({
+  id: '/new-property/step-1',
+  path: '/new-property/step-1',
+  getParentRoute: () => HostRoute,
+} as any)
+const HostNewPropertyReviewRoute = HostNewPropertyReviewRouteImport.update({
+  id: '/new-property/review',
+  path: '/new-property/review',
+  getParentRoute: () => HostRoute,
+} as any)
+const CollectionsSharedShareIdRoute =
+  CollectionsSharedShareIdRouteImport.update({
+    id: '/shared/$shareId',
+    path: '/shared/$shareId',
+    getParentRoute: () => CollectionsRoute,
+  } as any)
+const StaysStayIdRoomsRoomIdRoute = StaysStayIdRoomsRoomIdRouteImport.update({
+  id: '/rooms/$roomId',
+  path: '/rooms/$roomId',
+  getParentRoute: () => StaysStayIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/account': typeof AccountRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
+  '/booking': typeof BookingRouteWithChildren
   '/bus-booking': typeof BusBookingRoute
+  '/collections': typeof CollectionsRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/gems': typeof GemsRoute
   '/help': typeof HelpRoute
+  '/host': typeof HostRouteWithChildren
+  '/inbox': typeof InboxRoute
   '/login': typeof LoginRoute
   '/packages': typeof PackagesRoute
   '/profile': typeof ProfileRouteWithChildren
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/spotlight': typeof SpotlightRouteWithChildren
+  '/support': typeof SupportRouteWithChildren
   '/accommodations/$id': typeof AccommodationsIdRoute
+  '/account/accessibility': typeof AccountAccessibilityRoute
+  '/account/notifications': typeof AccountNotificationsRoute
+  '/account/payments': typeof AccountPaymentsRoute
+  '/account/personal-info': typeof AccountPersonalInfoRoute
+  '/account/preferences': typeof AccountPreferencesRoute
+  '/account/privacy': typeof AccountPrivacyRoute
+  '/account/security': typeof AccountSecurityRoute
+  '/account/taxes': typeof AccountTaxesRoute
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/commissions': typeof AdminCommissionsRoute
   '/admin/payments': typeof AdminPaymentsRoute
   '/admin/profile': typeof AdminProfileRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/auth/otp': typeof AuthOtpRoute
+  '/booking/confirmation': typeof BookingConfirmationRoute
+  '/booking/payment': typeof BookingPaymentRoute
+  '/collections/$collectionId': typeof CollectionsCollectionIdRoute
+  '/host/calendar': typeof HostCalendarRoute
+  '/host/earnings': typeof HostEarningsRoute
+  '/host/feedback': typeof HostFeedbackRoute
+  '/host/inbox': typeof HostInboxRoute
+  '/host/performance': typeof HostPerformanceRoute
+  '/host/properties': typeof HostPropertiesRoute
+  '/legal/community-standards': typeof LegalCommunityStandardsRoute
   '/legal/cookies': typeof LegalCookiesRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/terms': typeof LegalTermsRoute
+  '/profile/edit': typeof ProfileEditRoute
+  '/profile/feedback': typeof ProfileFeedbackRoute
   '/profile/host': typeof ProfileHostRoute
   '/profile/settings': typeof ProfileSettingsRoute
+  '/profile/verification': typeof ProfileVerificationRoute
+  '/spotlight/$storyId': typeof SpotlightStoryIdRoute
+  '/stays/$stayId': typeof StaysStayIdRouteWithChildren
+  '/support/$articleId': typeof SupportArticleIdRoute
+  '/support/contact': typeof SupportContactRoute
   '/accommodations/': typeof AccommodationsIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/profile/': typeof ProfileIndexRoute
+  '/collections/shared/$shareId': typeof CollectionsSharedShareIdRoute
+  '/host/new-property/review': typeof HostNewPropertyReviewRoute
+  '/host/new-property/step-1': typeof HostNewPropertyStep1Route
+  '/host/new-property/step-2': typeof HostNewPropertyStep2Route
+  '/host/new-property/step-3': typeof HostNewPropertyStep3Route
+  '/host/new-property/step-4': typeof HostNewPropertyStep4Route
+  '/host/new-property/step-5': typeof HostNewPropertyStep5Route
+  '/host/new-property/step-6': typeof HostNewPropertyStep6Route
+  '/host/new-property/step-7': typeof HostNewPropertyStep7Route
+  '/host/new-property/step-8': typeof HostNewPropertyStep8Route
+  '/host/new-property/step-9': typeof HostNewPropertyStep9Route
+  '/stays/collections/$slug': typeof StaysCollectionsSlugRoute
+  '/stays/$stayId/rooms/$roomId': typeof StaysStayIdRoomsRoomIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/account': typeof AccountRouteWithChildren
+  '/booking': typeof BookingRouteWithChildren
   '/bus-booking': typeof BusBookingRoute
+  '/collections': typeof CollectionsRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/gems': typeof GemsRoute
   '/help': typeof HelpRoute
+  '/host': typeof HostRouteWithChildren
+  '/inbox': typeof InboxRoute
   '/login': typeof LoginRoute
   '/packages': typeof PackagesRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/spotlight': typeof SpotlightRouteWithChildren
+  '/support': typeof SupportRouteWithChildren
   '/accommodations/$id': typeof AccommodationsIdRoute
+  '/account/accessibility': typeof AccountAccessibilityRoute
+  '/account/notifications': typeof AccountNotificationsRoute
+  '/account/payments': typeof AccountPaymentsRoute
+  '/account/personal-info': typeof AccountPersonalInfoRoute
+  '/account/preferences': typeof AccountPreferencesRoute
+  '/account/privacy': typeof AccountPrivacyRoute
+  '/account/security': typeof AccountSecurityRoute
+  '/account/taxes': typeof AccountTaxesRoute
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/commissions': typeof AdminCommissionsRoute
   '/admin/payments': typeof AdminPaymentsRoute
   '/admin/profile': typeof AdminProfileRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/auth/otp': typeof AuthOtpRoute
+  '/booking/confirmation': typeof BookingConfirmationRoute
+  '/booking/payment': typeof BookingPaymentRoute
+  '/collections/$collectionId': typeof CollectionsCollectionIdRoute
+  '/host/calendar': typeof HostCalendarRoute
+  '/host/earnings': typeof HostEarningsRoute
+  '/host/feedback': typeof HostFeedbackRoute
+  '/host/inbox': typeof HostInboxRoute
+  '/host/performance': typeof HostPerformanceRoute
+  '/host/properties': typeof HostPropertiesRoute
+  '/legal/community-standards': typeof LegalCommunityStandardsRoute
   '/legal/cookies': typeof LegalCookiesRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/terms': typeof LegalTermsRoute
+  '/profile/edit': typeof ProfileEditRoute
+  '/profile/feedback': typeof ProfileFeedbackRoute
   '/profile/host': typeof ProfileHostRoute
   '/profile/settings': typeof ProfileSettingsRoute
+  '/profile/verification': typeof ProfileVerificationRoute
+  '/spotlight/$storyId': typeof SpotlightStoryIdRoute
+  '/stays/$stayId': typeof StaysStayIdRouteWithChildren
+  '/support/$articleId': typeof SupportArticleIdRoute
+  '/support/contact': typeof SupportContactRoute
   '/accommodations': typeof AccommodationsIndexRoute
   '/admin': typeof AdminIndexRoute
   '/profile': typeof ProfileIndexRoute
+  '/collections/shared/$shareId': typeof CollectionsSharedShareIdRoute
+  '/host/new-property/review': typeof HostNewPropertyReviewRoute
+  '/host/new-property/step-1': typeof HostNewPropertyStep1Route
+  '/host/new-property/step-2': typeof HostNewPropertyStep2Route
+  '/host/new-property/step-3': typeof HostNewPropertyStep3Route
+  '/host/new-property/step-4': typeof HostNewPropertyStep4Route
+  '/host/new-property/step-5': typeof HostNewPropertyStep5Route
+  '/host/new-property/step-6': typeof HostNewPropertyStep6Route
+  '/host/new-property/step-7': typeof HostNewPropertyStep7Route
+  '/host/new-property/step-8': typeof HostNewPropertyStep8Route
+  '/host/new-property/step-9': typeof HostNewPropertyStep9Route
+  '/stays/collections/$slug': typeof StaysCollectionsSlugRoute
+  '/stays/$stayId/rooms/$roomId': typeof StaysStayIdRoomsRoomIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/account': typeof AccountRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
+  '/booking': typeof BookingRouteWithChildren
   '/bus-booking': typeof BusBookingRoute
+  '/collections': typeof CollectionsRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/gems': typeof GemsRoute
   '/help': typeof HelpRoute
+  '/host': typeof HostRouteWithChildren
+  '/inbox': typeof InboxRoute
   '/login': typeof LoginRoute
   '/packages': typeof PackagesRoute
   '/profile': typeof ProfileRouteWithChildren
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/spotlight': typeof SpotlightRouteWithChildren
+  '/support': typeof SupportRouteWithChildren
   '/accommodations/$id': typeof AccommodationsIdRoute
+  '/account/accessibility': typeof AccountAccessibilityRoute
+  '/account/notifications': typeof AccountNotificationsRoute
+  '/account/payments': typeof AccountPaymentsRoute
+  '/account/personal-info': typeof AccountPersonalInfoRoute
+  '/account/preferences': typeof AccountPreferencesRoute
+  '/account/privacy': typeof AccountPrivacyRoute
+  '/account/security': typeof AccountSecurityRoute
+  '/account/taxes': typeof AccountTaxesRoute
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/commissions': typeof AdminCommissionsRoute
   '/admin/payments': typeof AdminPaymentsRoute
   '/admin/profile': typeof AdminProfileRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/auth/otp': typeof AuthOtpRoute
+  '/booking/confirmation': typeof BookingConfirmationRoute
+  '/booking/payment': typeof BookingPaymentRoute
+  '/collections/$collectionId': typeof CollectionsCollectionIdRoute
+  '/host/calendar': typeof HostCalendarRoute
+  '/host/earnings': typeof HostEarningsRoute
+  '/host/feedback': typeof HostFeedbackRoute
+  '/host/inbox': typeof HostInboxRoute
+  '/host/performance': typeof HostPerformanceRoute
+  '/host/properties': typeof HostPropertiesRoute
+  '/legal/community-standards': typeof LegalCommunityStandardsRoute
   '/legal/cookies': typeof LegalCookiesRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/terms': typeof LegalTermsRoute
+  '/profile/edit': typeof ProfileEditRoute
+  '/profile/feedback': typeof ProfileFeedbackRoute
   '/profile/host': typeof ProfileHostRoute
   '/profile/settings': typeof ProfileSettingsRoute
+  '/profile/verification': typeof ProfileVerificationRoute
+  '/spotlight/$storyId': typeof SpotlightStoryIdRoute
+  '/stays/$stayId': typeof StaysStayIdRouteWithChildren
+  '/support/$articleId': typeof SupportArticleIdRoute
+  '/support/contact': typeof SupportContactRoute
   '/accommodations/': typeof AccommodationsIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/profile/': typeof ProfileIndexRoute
+  '/collections/shared/$shareId': typeof CollectionsSharedShareIdRoute
+  '/host/new-property/review': typeof HostNewPropertyReviewRoute
+  '/host/new-property/step-1': typeof HostNewPropertyStep1Route
+  '/host/new-property/step-2': typeof HostNewPropertyStep2Route
+  '/host/new-property/step-3': typeof HostNewPropertyStep3Route
+  '/host/new-property/step-4': typeof HostNewPropertyStep4Route
+  '/host/new-property/step-5': typeof HostNewPropertyStep5Route
+  '/host/new-property/step-6': typeof HostNewPropertyStep6Route
+  '/host/new-property/step-7': typeof HostNewPropertyStep7Route
+  '/host/new-property/step-8': typeof HostNewPropertyStep8Route
+  '/host/new-property/step-9': typeof HostNewPropertyStep9Route
+  '/stays/collections/$slug': typeof StaysCollectionsSlugRoute
+  '/stays/$stayId/rooms/$roomId': typeof StaysStayIdRoomsRoomIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/account'
     | '/admin'
+    | '/booking'
     | '/bus-booking'
+    | '/collections'
     | '/forgot-password'
     | '/gems'
     | '/help'
+    | '/host'
+    | '/inbox'
     | '/login'
     | '/packages'
     | '/profile'
     | '/register'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/spotlight'
+    | '/support'
     | '/accommodations/$id'
+    | '/account/accessibility'
+    | '/account/notifications'
+    | '/account/payments'
+    | '/account/personal-info'
+    | '/account/preferences'
+    | '/account/privacy'
+    | '/account/security'
+    | '/account/taxes'
     | '/admin/bookings'
     | '/admin/commissions'
     | '/admin/payments'
     | '/admin/profile'
     | '/admin/settings'
     | '/admin/users'
+    | '/auth/otp'
+    | '/booking/confirmation'
+    | '/booking/payment'
+    | '/collections/$collectionId'
+    | '/host/calendar'
+    | '/host/earnings'
+    | '/host/feedback'
+    | '/host/inbox'
+    | '/host/performance'
+    | '/host/properties'
+    | '/legal/community-standards'
     | '/legal/cookies'
     | '/legal/privacy'
     | '/legal/terms'
+    | '/profile/edit'
+    | '/profile/feedback'
     | '/profile/host'
     | '/profile/settings'
+    | '/profile/verification'
+    | '/spotlight/$storyId'
+    | '/stays/$stayId'
+    | '/support/$articleId'
+    | '/support/contact'
     | '/accommodations/'
     | '/admin/'
     | '/profile/'
+    | '/collections/shared/$shareId'
+    | '/host/new-property/review'
+    | '/host/new-property/step-1'
+    | '/host/new-property/step-2'
+    | '/host/new-property/step-3'
+    | '/host/new-property/step-4'
+    | '/host/new-property/step-5'
+    | '/host/new-property/step-6'
+    | '/host/new-property/step-7'
+    | '/host/new-property/step-8'
+    | '/host/new-property/step-9'
+    | '/stays/collections/$slug'
+    | '/stays/$stayId/rooms/$roomId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/account'
+    | '/booking'
     | '/bus-booking'
+    | '/collections'
     | '/forgot-password'
     | '/gems'
     | '/help'
+    | '/host'
+    | '/inbox'
     | '/login'
     | '/packages'
     | '/register'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/spotlight'
+    | '/support'
     | '/accommodations/$id'
+    | '/account/accessibility'
+    | '/account/notifications'
+    | '/account/payments'
+    | '/account/personal-info'
+    | '/account/preferences'
+    | '/account/privacy'
+    | '/account/security'
+    | '/account/taxes'
     | '/admin/bookings'
     | '/admin/commissions'
     | '/admin/payments'
     | '/admin/profile'
     | '/admin/settings'
     | '/admin/users'
+    | '/auth/otp'
+    | '/booking/confirmation'
+    | '/booking/payment'
+    | '/collections/$collectionId'
+    | '/host/calendar'
+    | '/host/earnings'
+    | '/host/feedback'
+    | '/host/inbox'
+    | '/host/performance'
+    | '/host/properties'
+    | '/legal/community-standards'
     | '/legal/cookies'
     | '/legal/privacy'
     | '/legal/terms'
+    | '/profile/edit'
+    | '/profile/feedback'
     | '/profile/host'
     | '/profile/settings'
+    | '/profile/verification'
+    | '/spotlight/$storyId'
+    | '/stays/$stayId'
+    | '/support/$articleId'
+    | '/support/contact'
     | '/accommodations'
     | '/admin'
     | '/profile'
+    | '/collections/shared/$shareId'
+    | '/host/new-property/review'
+    | '/host/new-property/step-1'
+    | '/host/new-property/step-2'
+    | '/host/new-property/step-3'
+    | '/host/new-property/step-4'
+    | '/host/new-property/step-5'
+    | '/host/new-property/step-6'
+    | '/host/new-property/step-7'
+    | '/host/new-property/step-8'
+    | '/host/new-property/step-9'
+    | '/stays/collections/$slug'
+    | '/stays/$stayId/rooms/$roomId'
   id:
     | '__root__'
     | '/'
+    | '/account'
     | '/admin'
+    | '/booking'
     | '/bus-booking'
+    | '/collections'
     | '/forgot-password'
     | '/gems'
     | '/help'
+    | '/host'
+    | '/inbox'
     | '/login'
     | '/packages'
     | '/profile'
     | '/register'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/spotlight'
+    | '/support'
     | '/accommodations/$id'
+    | '/account/accessibility'
+    | '/account/notifications'
+    | '/account/payments'
+    | '/account/personal-info'
+    | '/account/preferences'
+    | '/account/privacy'
+    | '/account/security'
+    | '/account/taxes'
     | '/admin/bookings'
     | '/admin/commissions'
     | '/admin/payments'
     | '/admin/profile'
     | '/admin/settings'
     | '/admin/users'
+    | '/auth/otp'
+    | '/booking/confirmation'
+    | '/booking/payment'
+    | '/collections/$collectionId'
+    | '/host/calendar'
+    | '/host/earnings'
+    | '/host/feedback'
+    | '/host/inbox'
+    | '/host/performance'
+    | '/host/properties'
+    | '/legal/community-standards'
     | '/legal/cookies'
     | '/legal/privacy'
     | '/legal/terms'
+    | '/profile/edit'
+    | '/profile/feedback'
     | '/profile/host'
     | '/profile/settings'
+    | '/profile/verification'
+    | '/spotlight/$storyId'
+    | '/stays/$stayId'
+    | '/support/$articleId'
+    | '/support/contact'
     | '/accommodations/'
     | '/admin/'
     | '/profile/'
+    | '/collections/shared/$shareId'
+    | '/host/new-property/review'
+    | '/host/new-property/step-1'
+    | '/host/new-property/step-2'
+    | '/host/new-property/step-3'
+    | '/host/new-property/step-4'
+    | '/host/new-property/step-5'
+    | '/host/new-property/step-6'
+    | '/host/new-property/step-7'
+    | '/host/new-property/step-8'
+    | '/host/new-property/step-9'
+    | '/stays/collections/$slug'
+    | '/stays/$stayId/rooms/$roomId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountRoute: typeof AccountRouteWithChildren
   AdminRoute: typeof AdminRouteWithChildren
+  BookingRoute: typeof BookingRouteWithChildren
   BusBookingRoute: typeof BusBookingRoute
+  CollectionsRoute: typeof CollectionsRouteWithChildren
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   GemsRoute: typeof GemsRoute
   HelpRoute: typeof HelpRoute
+  HostRoute: typeof HostRouteWithChildren
+  InboxRoute: typeof InboxRoute
   LoginRoute: typeof LoginRoute
   PackagesRoute: typeof PackagesRoute
   ProfileRoute: typeof ProfileRouteWithChildren
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SpotlightRoute: typeof SpotlightRouteWithChildren
+  SupportRoute: typeof SupportRouteWithChildren
   AccommodationsIdRoute: typeof AccommodationsIdRoute
+  AuthOtpRoute: typeof AuthOtpRoute
+  LegalCommunityStandardsRoute: typeof LegalCommunityStandardsRoute
   LegalCookiesRoute: typeof LegalCookiesRoute
   LegalPrivacyRoute: typeof LegalPrivacyRoute
   LegalTermsRoute: typeof LegalTermsRoute
+  StaysStayIdRoute: typeof StaysStayIdRouteWithChildren
   AccommodationsIndexRoute: typeof AccommodationsIndexRoute
+  StaysCollectionsSlugRoute: typeof StaysCollectionsSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/spotlight': {
+      id: '/spotlight'
+      path: '/spotlight'
+      fullPath: '/spotlight'
+      preLoaderRoute: typeof SpotlightRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -411,6 +989,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/inbox': {
+      id: '/inbox'
+      path: '/inbox'
+      fullPath: '/inbox'
+      preLoaderRoute: typeof InboxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/host': {
+      id: '/host'
+      path: '/host'
+      fullPath: '/host'
+      preLoaderRoute: typeof HostRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/help': {
       id: '/help'
       path: '/help'
@@ -432,6 +1024,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/collections': {
+      id: '/collections'
+      path: '/collections'
+      fullPath: '/collections'
+      preLoaderRoute: typeof CollectionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/bus-booking': {
       id: '/bus-booking'
       path: '/bus-booking'
@@ -439,11 +1038,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BusBookingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/booking': {
+      id: '/booking'
+      path: '/booking'
+      fullPath: '/booking'
+      preLoaderRoute: typeof BookingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin': {
       id: '/admin'
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -474,6 +1087,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccommodationsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/support/contact': {
+      id: '/support/contact'
+      path: '/contact'
+      fullPath: '/support/contact'
+      preLoaderRoute: typeof SupportContactRouteImport
+      parentRoute: typeof SupportRoute
+    }
+    '/support/$articleId': {
+      id: '/support/$articleId'
+      path: '/$articleId'
+      fullPath: '/support/$articleId'
+      preLoaderRoute: typeof SupportArticleIdRouteImport
+      parentRoute: typeof SupportRoute
+    }
+    '/stays/$stayId': {
+      id: '/stays/$stayId'
+      path: '/stays/$stayId'
+      fullPath: '/stays/$stayId'
+      preLoaderRoute: typeof StaysStayIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/spotlight/$storyId': {
+      id: '/spotlight/$storyId'
+      path: '/$storyId'
+      fullPath: '/spotlight/$storyId'
+      preLoaderRoute: typeof SpotlightStoryIdRouteImport
+      parentRoute: typeof SpotlightRoute
+    }
+    '/profile/verification': {
+      id: '/profile/verification'
+      path: '/verification'
+      fullPath: '/profile/verification'
+      preLoaderRoute: typeof ProfileVerificationRouteImport
+      parentRoute: typeof ProfileRoute
+    }
     '/profile/settings': {
       id: '/profile/settings'
       path: '/settings'
@@ -486,6 +1134,20 @@ declare module '@tanstack/react-router' {
       path: '/host'
       fullPath: '/profile/host'
       preLoaderRoute: typeof ProfileHostRouteImport
+      parentRoute: typeof ProfileRoute
+    }
+    '/profile/feedback': {
+      id: '/profile/feedback'
+      path: '/feedback'
+      fullPath: '/profile/feedback'
+      preLoaderRoute: typeof ProfileFeedbackRouteImport
+      parentRoute: typeof ProfileRoute
+    }
+    '/profile/edit': {
+      id: '/profile/edit'
+      path: '/edit'
+      fullPath: '/profile/edit'
+      preLoaderRoute: typeof ProfileEditRouteImport
       parentRoute: typeof ProfileRoute
     }
     '/legal/terms': {
@@ -507,6 +1169,83 @@ declare module '@tanstack/react-router' {
       path: '/legal/cookies'
       fullPath: '/legal/cookies'
       preLoaderRoute: typeof LegalCookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/community-standards': {
+      id: '/legal/community-standards'
+      path: '/legal/community-standards'
+      fullPath: '/legal/community-standards'
+      preLoaderRoute: typeof LegalCommunityStandardsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/host/properties': {
+      id: '/host/properties'
+      path: '/properties'
+      fullPath: '/host/properties'
+      preLoaderRoute: typeof HostPropertiesRouteImport
+      parentRoute: typeof HostRoute
+    }
+    '/host/performance': {
+      id: '/host/performance'
+      path: '/performance'
+      fullPath: '/host/performance'
+      preLoaderRoute: typeof HostPerformanceRouteImport
+      parentRoute: typeof HostRoute
+    }
+    '/host/inbox': {
+      id: '/host/inbox'
+      path: '/inbox'
+      fullPath: '/host/inbox'
+      preLoaderRoute: typeof HostInboxRouteImport
+      parentRoute: typeof HostRoute
+    }
+    '/host/feedback': {
+      id: '/host/feedback'
+      path: '/feedback'
+      fullPath: '/host/feedback'
+      preLoaderRoute: typeof HostFeedbackRouteImport
+      parentRoute: typeof HostRoute
+    }
+    '/host/earnings': {
+      id: '/host/earnings'
+      path: '/earnings'
+      fullPath: '/host/earnings'
+      preLoaderRoute: typeof HostEarningsRouteImport
+      parentRoute: typeof HostRoute
+    }
+    '/host/calendar': {
+      id: '/host/calendar'
+      path: '/calendar'
+      fullPath: '/host/calendar'
+      preLoaderRoute: typeof HostCalendarRouteImport
+      parentRoute: typeof HostRoute
+    }
+    '/collections/$collectionId': {
+      id: '/collections/$collectionId'
+      path: '/$collectionId'
+      fullPath: '/collections/$collectionId'
+      preLoaderRoute: typeof CollectionsCollectionIdRouteImport
+      parentRoute: typeof CollectionsRoute
+    }
+    '/booking/payment': {
+      id: '/booking/payment'
+      path: '/payment'
+      fullPath: '/booking/payment'
+      preLoaderRoute: typeof BookingPaymentRouteImport
+      parentRoute: typeof BookingRoute
+    }
+    '/booking/confirmation': {
+      id: '/booking/confirmation'
+      path: '/confirmation'
+      fullPath: '/booking/confirmation'
+      preLoaderRoute: typeof BookingConfirmationRouteImport
+      parentRoute: typeof BookingRoute
+    }
+    '/auth/otp': {
+      id: '/auth/otp'
+      path: '/auth/otp'
+      fullPath: '/auth/otp'
+      preLoaderRoute: typeof AuthOtpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/users': {
@@ -551,6 +1290,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBookingsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/account/taxes': {
+      id: '/account/taxes'
+      path: '/taxes'
+      fullPath: '/account/taxes'
+      preLoaderRoute: typeof AccountTaxesRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/security': {
+      id: '/account/security'
+      path: '/security'
+      fullPath: '/account/security'
+      preLoaderRoute: typeof AccountSecurityRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/privacy': {
+      id: '/account/privacy'
+      path: '/privacy'
+      fullPath: '/account/privacy'
+      preLoaderRoute: typeof AccountPrivacyRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/preferences': {
+      id: '/account/preferences'
+      path: '/preferences'
+      fullPath: '/account/preferences'
+      preLoaderRoute: typeof AccountPreferencesRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/personal-info': {
+      id: '/account/personal-info'
+      path: '/personal-info'
+      fullPath: '/account/personal-info'
+      preLoaderRoute: typeof AccountPersonalInfoRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/payments': {
+      id: '/account/payments'
+      path: '/payments'
+      fullPath: '/account/payments'
+      preLoaderRoute: typeof AccountPaymentsRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/notifications': {
+      id: '/account/notifications'
+      path: '/notifications'
+      fullPath: '/account/notifications'
+      preLoaderRoute: typeof AccountNotificationsRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/accessibility': {
+      id: '/account/accessibility'
+      path: '/accessibility'
+      fullPath: '/account/accessibility'
+      preLoaderRoute: typeof AccountAccessibilityRouteImport
+      parentRoute: typeof AccountRoute
+    }
     '/accommodations/$id': {
       id: '/accommodations/$id'
       path: '/accommodations/$id'
@@ -558,8 +1353,124 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccommodationsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/stays/collections/$slug': {
+      id: '/stays/collections/$slug'
+      path: '/stays/collections/$slug'
+      fullPath: '/stays/collections/$slug'
+      preLoaderRoute: typeof StaysCollectionsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/host/new-property/step-9': {
+      id: '/host/new-property/step-9'
+      path: '/new-property/step-9'
+      fullPath: '/host/new-property/step-9'
+      preLoaderRoute: typeof HostNewPropertyStep9RouteImport
+      parentRoute: typeof HostRoute
+    }
+    '/host/new-property/step-8': {
+      id: '/host/new-property/step-8'
+      path: '/new-property/step-8'
+      fullPath: '/host/new-property/step-8'
+      preLoaderRoute: typeof HostNewPropertyStep8RouteImport
+      parentRoute: typeof HostRoute
+    }
+    '/host/new-property/step-7': {
+      id: '/host/new-property/step-7'
+      path: '/new-property/step-7'
+      fullPath: '/host/new-property/step-7'
+      preLoaderRoute: typeof HostNewPropertyStep7RouteImport
+      parentRoute: typeof HostRoute
+    }
+    '/host/new-property/step-6': {
+      id: '/host/new-property/step-6'
+      path: '/new-property/step-6'
+      fullPath: '/host/new-property/step-6'
+      preLoaderRoute: typeof HostNewPropertyStep6RouteImport
+      parentRoute: typeof HostRoute
+    }
+    '/host/new-property/step-5': {
+      id: '/host/new-property/step-5'
+      path: '/new-property/step-5'
+      fullPath: '/host/new-property/step-5'
+      preLoaderRoute: typeof HostNewPropertyStep5RouteImport
+      parentRoute: typeof HostRoute
+    }
+    '/host/new-property/step-4': {
+      id: '/host/new-property/step-4'
+      path: '/new-property/step-4'
+      fullPath: '/host/new-property/step-4'
+      preLoaderRoute: typeof HostNewPropertyStep4RouteImport
+      parentRoute: typeof HostRoute
+    }
+    '/host/new-property/step-3': {
+      id: '/host/new-property/step-3'
+      path: '/new-property/step-3'
+      fullPath: '/host/new-property/step-3'
+      preLoaderRoute: typeof HostNewPropertyStep3RouteImport
+      parentRoute: typeof HostRoute
+    }
+    '/host/new-property/step-2': {
+      id: '/host/new-property/step-2'
+      path: '/new-property/step-2'
+      fullPath: '/host/new-property/step-2'
+      preLoaderRoute: typeof HostNewPropertyStep2RouteImport
+      parentRoute: typeof HostRoute
+    }
+    '/host/new-property/step-1': {
+      id: '/host/new-property/step-1'
+      path: '/new-property/step-1'
+      fullPath: '/host/new-property/step-1'
+      preLoaderRoute: typeof HostNewPropertyStep1RouteImport
+      parentRoute: typeof HostRoute
+    }
+    '/host/new-property/review': {
+      id: '/host/new-property/review'
+      path: '/new-property/review'
+      fullPath: '/host/new-property/review'
+      preLoaderRoute: typeof HostNewPropertyReviewRouteImport
+      parentRoute: typeof HostRoute
+    }
+    '/collections/shared/$shareId': {
+      id: '/collections/shared/$shareId'
+      path: '/shared/$shareId'
+      fullPath: '/collections/shared/$shareId'
+      preLoaderRoute: typeof CollectionsSharedShareIdRouteImport
+      parentRoute: typeof CollectionsRoute
+    }
+    '/stays/$stayId/rooms/$roomId': {
+      id: '/stays/$stayId/rooms/$roomId'
+      path: '/rooms/$roomId'
+      fullPath: '/stays/$stayId/rooms/$roomId'
+      preLoaderRoute: typeof StaysStayIdRoomsRoomIdRouteImport
+      parentRoute: typeof StaysStayIdRoute
+    }
   }
 }
+
+interface AccountRouteChildren {
+  AccountAccessibilityRoute: typeof AccountAccessibilityRoute
+  AccountNotificationsRoute: typeof AccountNotificationsRoute
+  AccountPaymentsRoute: typeof AccountPaymentsRoute
+  AccountPersonalInfoRoute: typeof AccountPersonalInfoRoute
+  AccountPreferencesRoute: typeof AccountPreferencesRoute
+  AccountPrivacyRoute: typeof AccountPrivacyRoute
+  AccountSecurityRoute: typeof AccountSecurityRoute
+  AccountTaxesRoute: typeof AccountTaxesRoute
+}
+
+const AccountRouteChildren: AccountRouteChildren = {
+  AccountAccessibilityRoute: AccountAccessibilityRoute,
+  AccountNotificationsRoute: AccountNotificationsRoute,
+  AccountPaymentsRoute: AccountPaymentsRoute,
+  AccountPersonalInfoRoute: AccountPersonalInfoRoute,
+  AccountPreferencesRoute: AccountPreferencesRoute,
+  AccountPrivacyRoute: AccountPrivacyRoute,
+  AccountSecurityRoute: AccountSecurityRoute,
+  AccountTaxesRoute: AccountTaxesRoute,
+}
+
+const AccountRouteWithChildren =
+  AccountRoute._addFileChildren(AccountRouteChildren)
 
 interface AdminRouteChildren {
   AdminBookingsRoute: typeof AdminBookingsRoute
@@ -583,39 +1494,160 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface BookingRouteChildren {
+  BookingConfirmationRoute: typeof BookingConfirmationRoute
+  BookingPaymentRoute: typeof BookingPaymentRoute
+}
+
+const BookingRouteChildren: BookingRouteChildren = {
+  BookingConfirmationRoute: BookingConfirmationRoute,
+  BookingPaymentRoute: BookingPaymentRoute,
+}
+
+const BookingRouteWithChildren =
+  BookingRoute._addFileChildren(BookingRouteChildren)
+
+interface CollectionsRouteChildren {
+  CollectionsCollectionIdRoute: typeof CollectionsCollectionIdRoute
+  CollectionsSharedShareIdRoute: typeof CollectionsSharedShareIdRoute
+}
+
+const CollectionsRouteChildren: CollectionsRouteChildren = {
+  CollectionsCollectionIdRoute: CollectionsCollectionIdRoute,
+  CollectionsSharedShareIdRoute: CollectionsSharedShareIdRoute,
+}
+
+const CollectionsRouteWithChildren = CollectionsRoute._addFileChildren(
+  CollectionsRouteChildren,
+)
+
+interface HostRouteChildren {
+  HostCalendarRoute: typeof HostCalendarRoute
+  HostEarningsRoute: typeof HostEarningsRoute
+  HostFeedbackRoute: typeof HostFeedbackRoute
+  HostInboxRoute: typeof HostInboxRoute
+  HostPerformanceRoute: typeof HostPerformanceRoute
+  HostPropertiesRoute: typeof HostPropertiesRoute
+  HostNewPropertyReviewRoute: typeof HostNewPropertyReviewRoute
+  HostNewPropertyStep1Route: typeof HostNewPropertyStep1Route
+  HostNewPropertyStep2Route: typeof HostNewPropertyStep2Route
+  HostNewPropertyStep3Route: typeof HostNewPropertyStep3Route
+  HostNewPropertyStep4Route: typeof HostNewPropertyStep4Route
+  HostNewPropertyStep5Route: typeof HostNewPropertyStep5Route
+  HostNewPropertyStep6Route: typeof HostNewPropertyStep6Route
+  HostNewPropertyStep7Route: typeof HostNewPropertyStep7Route
+  HostNewPropertyStep8Route: typeof HostNewPropertyStep8Route
+  HostNewPropertyStep9Route: typeof HostNewPropertyStep9Route
+}
+
+const HostRouteChildren: HostRouteChildren = {
+  HostCalendarRoute: HostCalendarRoute,
+  HostEarningsRoute: HostEarningsRoute,
+  HostFeedbackRoute: HostFeedbackRoute,
+  HostInboxRoute: HostInboxRoute,
+  HostPerformanceRoute: HostPerformanceRoute,
+  HostPropertiesRoute: HostPropertiesRoute,
+  HostNewPropertyReviewRoute: HostNewPropertyReviewRoute,
+  HostNewPropertyStep1Route: HostNewPropertyStep1Route,
+  HostNewPropertyStep2Route: HostNewPropertyStep2Route,
+  HostNewPropertyStep3Route: HostNewPropertyStep3Route,
+  HostNewPropertyStep4Route: HostNewPropertyStep4Route,
+  HostNewPropertyStep5Route: HostNewPropertyStep5Route,
+  HostNewPropertyStep6Route: HostNewPropertyStep6Route,
+  HostNewPropertyStep7Route: HostNewPropertyStep7Route,
+  HostNewPropertyStep8Route: HostNewPropertyStep8Route,
+  HostNewPropertyStep9Route: HostNewPropertyStep9Route,
+}
+
+const HostRouteWithChildren = HostRoute._addFileChildren(HostRouteChildren)
+
 interface ProfileRouteChildren {
+  ProfileEditRoute: typeof ProfileEditRoute
+  ProfileFeedbackRoute: typeof ProfileFeedbackRoute
   ProfileHostRoute: typeof ProfileHostRoute
   ProfileSettingsRoute: typeof ProfileSettingsRoute
+  ProfileVerificationRoute: typeof ProfileVerificationRoute
   ProfileIndexRoute: typeof ProfileIndexRoute
 }
 
 const ProfileRouteChildren: ProfileRouteChildren = {
+  ProfileEditRoute: ProfileEditRoute,
+  ProfileFeedbackRoute: ProfileFeedbackRoute,
   ProfileHostRoute: ProfileHostRoute,
   ProfileSettingsRoute: ProfileSettingsRoute,
+  ProfileVerificationRoute: ProfileVerificationRoute,
   ProfileIndexRoute: ProfileIndexRoute,
 }
 
 const ProfileRouteWithChildren =
   ProfileRoute._addFileChildren(ProfileRouteChildren)
 
+interface SpotlightRouteChildren {
+  SpotlightStoryIdRoute: typeof SpotlightStoryIdRoute
+}
+
+const SpotlightRouteChildren: SpotlightRouteChildren = {
+  SpotlightStoryIdRoute: SpotlightStoryIdRoute,
+}
+
+const SpotlightRouteWithChildren = SpotlightRoute._addFileChildren(
+  SpotlightRouteChildren,
+)
+
+interface SupportRouteChildren {
+  SupportArticleIdRoute: typeof SupportArticleIdRoute
+  SupportContactRoute: typeof SupportContactRoute
+}
+
+const SupportRouteChildren: SupportRouteChildren = {
+  SupportArticleIdRoute: SupportArticleIdRoute,
+  SupportContactRoute: SupportContactRoute,
+}
+
+const SupportRouteWithChildren =
+  SupportRoute._addFileChildren(SupportRouteChildren)
+
+interface StaysStayIdRouteChildren {
+  StaysStayIdRoomsRoomIdRoute: typeof StaysStayIdRoomsRoomIdRoute
+}
+
+const StaysStayIdRouteChildren: StaysStayIdRouteChildren = {
+  StaysStayIdRoomsRoomIdRoute: StaysStayIdRoomsRoomIdRoute,
+}
+
+const StaysStayIdRouteWithChildren = StaysStayIdRoute._addFileChildren(
+  StaysStayIdRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountRoute: AccountRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
+  BookingRoute: BookingRouteWithChildren,
   BusBookingRoute: BusBookingRoute,
+  CollectionsRoute: CollectionsRouteWithChildren,
   ForgotPasswordRoute: ForgotPasswordRoute,
   GemsRoute: GemsRoute,
   HelpRoute: HelpRoute,
+  HostRoute: HostRouteWithChildren,
+  InboxRoute: InboxRoute,
   LoginRoute: LoginRoute,
   PackagesRoute: PackagesRoute,
   ProfileRoute: ProfileRouteWithChildren,
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SpotlightRoute: SpotlightRouteWithChildren,
+  SupportRoute: SupportRouteWithChildren,
   AccommodationsIdRoute: AccommodationsIdRoute,
+  AuthOtpRoute: AuthOtpRoute,
+  LegalCommunityStandardsRoute: LegalCommunityStandardsRoute,
   LegalCookiesRoute: LegalCookiesRoute,
   LegalPrivacyRoute: LegalPrivacyRoute,
   LegalTermsRoute: LegalTermsRoute,
+  StaysStayIdRoute: StaysStayIdRouteWithChildren,
   AccommodationsIndexRoute: AccommodationsIndexRoute,
+  StaysCollectionsSlugRoute: StaysCollectionsSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
