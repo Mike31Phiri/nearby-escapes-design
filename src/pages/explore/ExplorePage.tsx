@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
-import { SiteHeader } from "@/components/layout/Navbar";
-import { SiteFooter } from "@/components/layout/Footer";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import { ListingCard } from "@/components/ListingCard";
 import { listings } from "@/lib/mock-data";
 import { SearchFilters, DEFAULT_FILTERS, type Filters } from "@/components/SearchFilters";
@@ -48,7 +48,7 @@ export function ExplorePage({ query = "" }: { query?: string }) {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <SiteHeader />
+      <Navbar />
       <section className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-8 md:mt-10">
         <p className="text-xs font-semibold uppercase tracking-widest text-primary">Stay</p>
         <h1 className="mt-1 text-3xl md:text-4xl font-bold tracking-tight">Search accommodations</h1>
@@ -105,7 +105,7 @@ export function ExplorePage({ query = "" }: { query?: string }) {
         </div>
       </section>
       <div className="flex-1" />
-      <SiteFooter />
+      <Footer />
     </div>
   );
 }

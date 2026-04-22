@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { SiteHeader } from "@/components/layout/Navbar";
-import { SiteFooter } from "@/components/layout/Footer";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import { SearchBar } from "@/components/explore/SearchBar";
 import { ListingCard } from "@/components/ListingCard";
 import { CategoryPills } from "@/components/CategoryPills";
@@ -10,7 +10,7 @@ import heroImage from "@/assets/hero-zambia.jpg";
 export function HomePage() {
   return (
     <div className="min-h-screen flex flex-col">
-      <SiteHeader />
+      <Navbar />
 
       <section className="relative">
         <div className="relative mx-auto max-w-7xl px-4 md:px-6 pt-8 md:pt-12">
@@ -65,7 +65,7 @@ export function HomePage() {
       </section>
 
       <div className="flex-1" />
-      <SiteFooter />
+      <Footer />
     </div>
   );
 }
