@@ -1,1 +1,3 @@
-export { default as StayDetailPage } from "@/routes/accommodations.$id";
+export function StayDetailPage() {
+  return null;
+}
