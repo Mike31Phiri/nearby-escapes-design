@@ -103,7 +103,7 @@ export function ListingWizardLayout({
               {backLabel || "Back"}
             </Button>
           ) : (
-            <Link to="/host/properties">
+            <Link to="/host/new-listing">
               <Button variant="ghost">Cancel</Button>
             </Link>
           )}

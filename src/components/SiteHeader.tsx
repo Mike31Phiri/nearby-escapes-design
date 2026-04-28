@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { CategoryPills } from "@/components/CategoryPills";
+import { ModeSwitcher } from "@/components/host/ModeSwitcher";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -64,6 +65,8 @@ export function SiteHeader() {
           </div>
         </nav>
 
+        <ModeSwitcher className="hidden md:flex" />
+
         <div className="flex items-center gap-2">
           {user ? (
             <Link
@@ -98,6 +101,9 @@ export function SiteHeader() {
                   <div className="px-3 pb-2 border-b border-border">
                     <p className="text-sm font-semibold truncate">{user.fullName}</p>
                     <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                    <div className="mt-3">
+                      <ModeSwitcher />
+                    </div>
                   </div>
                 )}
 

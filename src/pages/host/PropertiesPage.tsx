@@ -68,7 +68,7 @@ export function PropertiesPage() {
             </p>
           </div>
           <Button
-            onClick={() => navigate({ to: "/host/new-property/step-1" })}
+            onClick={() => navigate({ to: "/host/new-listing" })}
             className="bg-[image:var(--gradient-hero)] hover:opacity-95 shrink-0"
           >
             <Plus className="h-4 w-4 mr-2" /> Create listing
@@ -171,7 +171,7 @@ export function PropertiesPage() {
             </p>
             <Button
               className="mt-4 bg-[image:var(--gradient-hero)] hover:opacity-95"
-              onClick={() => navigate({ to: "/host/new-property/step-1" })}
+              onClick={() => navigate({ to: "/host/new-listing" })}
             >
               <Plus className="h-4 w-4 mr-2" /> Create your first listing
             </Button>

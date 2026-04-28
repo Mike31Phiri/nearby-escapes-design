@@ -43,7 +43,7 @@ export function HostDashboardPage() {
             </p>
           </div>
           <Button
-            onClick={() => navigate({ to: "/host/new-property/step-1" })}
+            onClick={() => navigate({ to: "/host/new-listing" })}
             className="bg-[image:var(--gradient-hero)] hover:opacity-95 shrink-0"
           >
             <Plus className="h-4 w-4 mr-2" /> New listing

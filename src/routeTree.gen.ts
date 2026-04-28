@@ -46,6 +46,9 @@ import { Route as LegalCookiesRouteImport } from './routes/legal.cookies'
 import { Route as LegalCommunityStandardsRouteImport } from './routes/legal.community-standards'
 import { Route as HostPropertiesRouteImport } from './routes/host.properties'
 import { Route as HostPerformanceRouteImport } from './routes/host.performance'
+import { Route as HostNewRideRouteImport } from './routes/host.new-ride'
+import { Route as HostNewListingRouteImport } from './routes/host.new-listing'
+import { Route as HostNewGemRouteImport } from './routes/host.new-gem'
 import { Route as HostInboxRouteImport } from './routes/host.inbox'
 import { Route as HostFeedbackRouteImport } from './routes/host.feedback'
 import { Route as HostEarningsRouteImport } from './routes/host.earnings'
@@ -266,6 +269,21 @@ const HostPropertiesRoute = HostPropertiesRouteImport.update({
 const HostPerformanceRoute = HostPerformanceRouteImport.update({
   id: '/performance',
   path: '/performance',
+  getParentRoute: () => HostRoute,
+} as any)
+const HostNewRideRoute = HostNewRideRouteImport.update({
+  id: '/new-ride',
+  path: '/new-ride',
+  getParentRoute: () => HostRoute,
+} as any)
+const HostNewListingRoute = HostNewListingRouteImport.update({
+  id: '/new-listing',
+  path: '/new-listing',
+  getParentRoute: () => HostRoute,
+} as any)
+const HostNewGemRoute = HostNewGemRouteImport.update({
+  id: '/new-gem',
+  path: '/new-gem',
   getParentRoute: () => HostRoute,
 } as any)
 const HostInboxRoute = HostInboxRouteImport.update({
@@ -493,6 +511,9 @@ export interface FileRoutesByFullPath {
   '/host/earnings': typeof HostEarningsRoute
   '/host/feedback': typeof HostFeedbackRoute
   '/host/inbox': typeof HostInboxRoute
+  '/host/new-gem': typeof HostNewGemRoute
+  '/host/new-listing': typeof HostNewListingRoute
+  '/host/new-ride': typeof HostNewRideRoute
   '/host/performance': typeof HostPerformanceRoute
   '/host/properties': typeof HostPropertiesRoute
   '/legal/community-standards': typeof LegalCommunityStandardsRoute
@@ -566,6 +587,9 @@ export interface FileRoutesByTo {
   '/host/earnings': typeof HostEarningsRoute
   '/host/feedback': typeof HostFeedbackRoute
   '/host/inbox': typeof HostInboxRoute
+  '/host/new-gem': typeof HostNewGemRoute
+  '/host/new-listing': typeof HostNewListingRoute
+  '/host/new-ride': typeof HostNewRideRoute
   '/host/performance': typeof HostPerformanceRoute
   '/host/properties': typeof HostPropertiesRoute
   '/legal/community-standards': typeof LegalCommunityStandardsRoute
@@ -642,6 +666,9 @@ export interface FileRoutesById {
   '/host/earnings': typeof HostEarningsRoute
   '/host/feedback': typeof HostFeedbackRoute
   '/host/inbox': typeof HostInboxRoute
+  '/host/new-gem': typeof HostNewGemRoute
+  '/host/new-listing': typeof HostNewListingRoute
+  '/host/new-ride': typeof HostNewRideRoute
   '/host/performance': typeof HostPerformanceRoute
   '/host/properties': typeof HostPropertiesRoute
   '/legal/community-standards': typeof LegalCommunityStandardsRoute
@@ -719,6 +746,9 @@ export interface FileRouteTypes {
     | '/host/earnings'
     | '/host/feedback'
     | '/host/inbox'
+    | '/host/new-gem'
+    | '/host/new-listing'
+    | '/host/new-ride'
     | '/host/performance'
     | '/host/properties'
     | '/legal/community-standards'
@@ -792,6 +822,9 @@ export interface FileRouteTypes {
     | '/host/earnings'
     | '/host/feedback'
     | '/host/inbox'
+    | '/host/new-gem'
+    | '/host/new-listing'
+    | '/host/new-ride'
     | '/host/performance'
     | '/host/properties'
     | '/legal/community-standards'
@@ -867,6 +900,9 @@ export interface FileRouteTypes {
     | '/host/earnings'
     | '/host/feedback'
     | '/host/inbox'
+    | '/host/new-gem'
+    | '/host/new-listing'
+    | '/host/new-ride'
     | '/host/performance'
     | '/host/properties'
     | '/legal/community-standards'
@@ -1190,6 +1226,27 @@ declare module '@tanstack/react-router' {
       path: '/performance'
       fullPath: '/host/performance'
       preLoaderRoute: typeof HostPerformanceRouteImport
+      parentRoute: typeof HostRoute
+    }
+    '/host/new-ride': {
+      id: '/host/new-ride'
+      path: '/new-ride'
+      fullPath: '/host/new-ride'
+      preLoaderRoute: typeof HostNewRideRouteImport
+      parentRoute: typeof HostRoute
+    }
+    '/host/new-listing': {
+      id: '/host/new-listing'
+      path: '/new-listing'
+      fullPath: '/host/new-listing'
+      preLoaderRoute: typeof HostNewListingRouteImport
+      parentRoute: typeof HostRoute
+    }
+    '/host/new-gem': {
+      id: '/host/new-gem'
+      path: '/new-gem'
+      fullPath: '/host/new-gem'
+      preLoaderRoute: typeof HostNewGemRouteImport
       parentRoute: typeof HostRoute
     }
     '/host/inbox': {
@@ -1526,6 +1583,9 @@ interface HostRouteChildren {
   HostEarningsRoute: typeof HostEarningsRoute
   HostFeedbackRoute: typeof HostFeedbackRoute
   HostInboxRoute: typeof HostInboxRoute
+  HostNewGemRoute: typeof HostNewGemRoute
+  HostNewListingRoute: typeof HostNewListingRoute
+  HostNewRideRoute: typeof HostNewRideRoute
   HostPerformanceRoute: typeof HostPerformanceRoute
   HostPropertiesRoute: typeof HostPropertiesRoute
   HostNewPropertyReviewRoute: typeof HostNewPropertyReviewRoute
@@ -1545,6 +1605,9 @@ const HostRouteChildren: HostRouteChildren = {
   HostEarningsRoute: HostEarningsRoute,
   HostFeedbackRoute: HostFeedbackRoute,
   HostInboxRoute: HostInboxRoute,
+  HostNewGemRoute: HostNewGemRoute,
+  HostNewListingRoute: HostNewListingRoute,
+  HostNewRideRoute: HostNewRideRoute,
   HostPerformanceRoute: HostPerformanceRoute,
   HostPropertiesRoute: HostPropertiesRoute,
   HostNewPropertyReviewRoute: HostNewPropertyReviewRoute,
