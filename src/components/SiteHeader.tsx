@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from "@tanstack/react-router";
 import logo from "@/assets/logo.png";
-import { MapPin, Menu, User, LogOut, CircleUser as UserCircle, Briefcase, ShieldCheck, Settings as SettingsIcon, Globe, Circle as HelpCircle, Hop as Home, FileText } from "lucide-react";
+import { MapPin, Menu, User, LogOut, CircleUser as UserCircle, Briefcase, Settings as SettingsIcon, Globe, Circle as HelpCircle, Hop as Home, FileText } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -14,11 +14,11 @@ export function SiteHeader() {
   const navigate = useNavigate();
   const location = useLocation();
   const isHome = location.pathname === "/";
-  const isHostOrAdmin = location.pathname.startsWith("/host") || location.pathname.startsWith("/admin");
-  const [showCenterPills, setShowCenterPills] = useState(!isHome && !isHostOrAdmin);
+  const isHostArea = location.pathname.startsWith("/host");
+  const [showCenterPills, setShowCenterPills] = useState(!isHome && !isHostArea);
 
   useEffect(() => {
-    if (isHostOrAdmin) {
+    if (isHostArea) {
       setShowCenterPills(false);
       return;
     }
@@ -39,7 +39,7 @@ export function SiteHeader() {
     );
     observer.observe(heroPills);
     return () => observer.disconnect();
-  }, [isHome, isHostOrAdmin]);
+  }, [isHome, isHostArea]);
 
   const initials = user?.fullName
     ? user.fullName.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase()
@@ -112,9 +112,6 @@ export function SiteHeader() {
                     <>
                       <MobileRowLink to="/profile" onSelect={() => setOpen(false)} icon={UserCircle} label="Profile" />
                       <MobileRowLink to="/profile/host" onSelect={() => setOpen(false)} icon={Briefcase} label="Host dashboard" />
-                      {user.role === "admin" && (
-                        <MobileRowLink to="/admin" onSelect={() => setOpen(false)} icon={ShieldCheck} label="Admin" />
-                      )}
                       <MobileRowLink to="/profile/settings" onSelect={() => setOpen(false)} icon={SettingsIcon} label="Account settings" />
                     </>
                   ) : (

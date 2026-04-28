@@ -25,11 +25,9 @@ import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as CollectionsRouteImport } from './routes/collections'
 import { Route as BusBookingRouteImport } from './routes/bus-booking'
 import { Route as BookingRouteImport } from './routes/booking'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProfileIndexRouteImport } from './routes/profile.index'
-import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AccommodationsIndexRouteImport } from './routes/accommodations.index'
 import { Route as SupportContactRouteImport } from './routes/support.contact'
 import { Route as SupportArticleIdRouteImport } from './routes/support.$articleId'
@@ -57,12 +55,6 @@ import { Route as CollectionsCollectionIdRouteImport } from './routes/collection
 import { Route as BookingPaymentRouteImport } from './routes/booking.payment'
 import { Route as BookingConfirmationRouteImport } from './routes/booking.confirmation'
 import { Route as AuthOtpRouteImport } from './routes/auth.otp'
-import { Route as AdminUsersRouteImport } from './routes/admin.users'
-import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
-import { Route as AdminProfileRouteImport } from './routes/admin.profile'
-import { Route as AdminPaymentsRouteImport } from './routes/admin.payments'
-import { Route as AdminCommissionsRouteImport } from './routes/admin.commissions'
-import { Route as AdminBookingsRouteImport } from './routes/admin.bookings'
 import { Route as AccountTaxesRouteImport } from './routes/account.taxes'
 import { Route as AccountSecurityRouteImport } from './routes/account.security'
 import { Route as AccountPrivacyRouteImport } from './routes/account.privacy'
@@ -166,11 +158,6 @@ const BookingRoute = BookingRouteImport.update({
   path: '/booking',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AccountRoute = AccountRouteImport.update({
   id: '/account',
   path: '/account',
@@ -185,11 +172,6 @@ const ProfileIndexRoute = ProfileIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => ProfileRoute,
-} as any)
-const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AdminRoute,
 } as any)
 const AccommodationsIndexRoute = AccommodationsIndexRouteImport.update({
   id: '/accommodations/',
@@ -326,36 +308,6 @@ const AuthOtpRoute = AuthOtpRouteImport.update({
   path: '/auth/otp',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminUsersRoute = AdminUsersRouteImport.update({
-  id: '/users',
-  path: '/users',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminSettingsRoute = AdminSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminProfileRoute = AdminProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminPaymentsRoute = AdminPaymentsRouteImport.update({
-  id: '/payments',
-  path: '/payments',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminCommissionsRoute = AdminCommissionsRouteImport.update({
-  id: '/commissions',
-  path: '/commissions',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminBookingsRoute = AdminBookingsRouteImport.update({
-  id: '/bookings',
-  path: '/bookings',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AccountTaxesRoute = AccountTaxesRouteImport.update({
   id: '/taxes',
   path: '/taxes',
@@ -471,7 +423,6 @@ const StaysStayIdRoomsRoomIdRoute = StaysStayIdRoomsRoomIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRouteWithChildren
-  '/admin': typeof AdminRouteWithChildren
   '/booking': typeof BookingRouteWithChildren
   '/bus-booking': typeof BusBookingRoute
   '/collections': typeof CollectionsRouteWithChildren
@@ -497,12 +448,6 @@ export interface FileRoutesByFullPath {
   '/account/privacy': typeof AccountPrivacyRoute
   '/account/security': typeof AccountSecurityRoute
   '/account/taxes': typeof AccountTaxesRoute
-  '/admin/bookings': typeof AdminBookingsRoute
-  '/admin/commissions': typeof AdminCommissionsRoute
-  '/admin/payments': typeof AdminPaymentsRoute
-  '/admin/profile': typeof AdminProfileRoute
-  '/admin/settings': typeof AdminSettingsRoute
-  '/admin/users': typeof AdminUsersRoute
   '/auth/otp': typeof AuthOtpRoute
   '/booking/confirmation': typeof BookingConfirmationRoute
   '/booking/payment': typeof BookingPaymentRoute
@@ -530,7 +475,6 @@ export interface FileRoutesByFullPath {
   '/support/$articleId': typeof SupportArticleIdRoute
   '/support/contact': typeof SupportContactRoute
   '/accommodations/': typeof AccommodationsIndexRoute
-  '/admin/': typeof AdminIndexRoute
   '/profile/': typeof ProfileIndexRoute
   '/collections/shared/$shareId': typeof CollectionsSharedShareIdRoute
   '/host/new-property/review': typeof HostNewPropertyReviewRoute
@@ -573,12 +517,6 @@ export interface FileRoutesByTo {
   '/account/privacy': typeof AccountPrivacyRoute
   '/account/security': typeof AccountSecurityRoute
   '/account/taxes': typeof AccountTaxesRoute
-  '/admin/bookings': typeof AdminBookingsRoute
-  '/admin/commissions': typeof AdminCommissionsRoute
-  '/admin/payments': typeof AdminPaymentsRoute
-  '/admin/profile': typeof AdminProfileRoute
-  '/admin/settings': typeof AdminSettingsRoute
-  '/admin/users': typeof AdminUsersRoute
   '/auth/otp': typeof AuthOtpRoute
   '/booking/confirmation': typeof BookingConfirmationRoute
   '/booking/payment': typeof BookingPaymentRoute
@@ -606,7 +544,6 @@ export interface FileRoutesByTo {
   '/support/$articleId': typeof SupportArticleIdRoute
   '/support/contact': typeof SupportContactRoute
   '/accommodations': typeof AccommodationsIndexRoute
-  '/admin': typeof AdminIndexRoute
   '/profile': typeof ProfileIndexRoute
   '/collections/shared/$shareId': typeof CollectionsSharedShareIdRoute
   '/host/new-property/review': typeof HostNewPropertyReviewRoute
@@ -626,7 +563,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/account': typeof AccountRouteWithChildren
-  '/admin': typeof AdminRouteWithChildren
   '/booking': typeof BookingRouteWithChildren
   '/bus-booking': typeof BusBookingRoute
   '/collections': typeof CollectionsRouteWithChildren
@@ -652,12 +588,6 @@ export interface FileRoutesById {
   '/account/privacy': typeof AccountPrivacyRoute
   '/account/security': typeof AccountSecurityRoute
   '/account/taxes': typeof AccountTaxesRoute
-  '/admin/bookings': typeof AdminBookingsRoute
-  '/admin/commissions': typeof AdminCommissionsRoute
-  '/admin/payments': typeof AdminPaymentsRoute
-  '/admin/profile': typeof AdminProfileRoute
-  '/admin/settings': typeof AdminSettingsRoute
-  '/admin/users': typeof AdminUsersRoute
   '/auth/otp': typeof AuthOtpRoute
   '/booking/confirmation': typeof BookingConfirmationRoute
   '/booking/payment': typeof BookingPaymentRoute
@@ -685,7 +615,6 @@ export interface FileRoutesById {
   '/support/$articleId': typeof SupportArticleIdRoute
   '/support/contact': typeof SupportContactRoute
   '/accommodations/': typeof AccommodationsIndexRoute
-  '/admin/': typeof AdminIndexRoute
   '/profile/': typeof ProfileIndexRoute
   '/collections/shared/$shareId': typeof CollectionsSharedShareIdRoute
   '/host/new-property/review': typeof HostNewPropertyReviewRoute
@@ -706,7 +635,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/account'
-    | '/admin'
     | '/booking'
     | '/bus-booking'
     | '/collections'
@@ -732,12 +660,6 @@ export interface FileRouteTypes {
     | '/account/privacy'
     | '/account/security'
     | '/account/taxes'
-    | '/admin/bookings'
-    | '/admin/commissions'
-    | '/admin/payments'
-    | '/admin/profile'
-    | '/admin/settings'
-    | '/admin/users'
     | '/auth/otp'
     | '/booking/confirmation'
     | '/booking/payment'
@@ -765,7 +687,6 @@ export interface FileRouteTypes {
     | '/support/$articleId'
     | '/support/contact'
     | '/accommodations/'
-    | '/admin/'
     | '/profile/'
     | '/collections/shared/$shareId'
     | '/host/new-property/review'
@@ -808,12 +729,6 @@ export interface FileRouteTypes {
     | '/account/privacy'
     | '/account/security'
     | '/account/taxes'
-    | '/admin/bookings'
-    | '/admin/commissions'
-    | '/admin/payments'
-    | '/admin/profile'
-    | '/admin/settings'
-    | '/admin/users'
     | '/auth/otp'
     | '/booking/confirmation'
     | '/booking/payment'
@@ -841,7 +756,6 @@ export interface FileRouteTypes {
     | '/support/$articleId'
     | '/support/contact'
     | '/accommodations'
-    | '/admin'
     | '/profile'
     | '/collections/shared/$shareId'
     | '/host/new-property/review'
@@ -860,7 +774,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/account'
-    | '/admin'
     | '/booking'
     | '/bus-booking'
     | '/collections'
@@ -886,12 +799,6 @@ export interface FileRouteTypes {
     | '/account/privacy'
     | '/account/security'
     | '/account/taxes'
-    | '/admin/bookings'
-    | '/admin/commissions'
-    | '/admin/payments'
-    | '/admin/profile'
-    | '/admin/settings'
-    | '/admin/users'
     | '/auth/otp'
     | '/booking/confirmation'
     | '/booking/payment'
@@ -919,7 +826,6 @@ export interface FileRouteTypes {
     | '/support/$articleId'
     | '/support/contact'
     | '/accommodations/'
-    | '/admin/'
     | '/profile/'
     | '/collections/shared/$shareId'
     | '/host/new-property/review'
@@ -939,7 +845,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRouteWithChildren
-  AdminRoute: typeof AdminRouteWithChildren
   BookingRoute: typeof BookingRouteWithChildren
   BusBookingRoute: typeof BusBookingRoute
   CollectionsRoute: typeof CollectionsRouteWithChildren
@@ -1081,13 +986,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/account': {
       id: '/account'
       path: '/account'
@@ -1108,13 +1006,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/profile/'
       preLoaderRoute: typeof ProfileIndexRouteImport
       parentRoute: typeof ProfileRoute
-    }
-    '/admin/': {
-      id: '/admin/'
-      path: '/'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof AdminRoute
     }
     '/accommodations/': {
       id: '/accommodations/'
@@ -1305,48 +1196,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthOtpRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/users': {
-      id: '/admin/users'
-      path: '/users'
-      fullPath: '/admin/users'
-      preLoaderRoute: typeof AdminUsersRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/settings': {
-      id: '/admin/settings'
-      path: '/settings'
-      fullPath: '/admin/settings'
-      preLoaderRoute: typeof AdminSettingsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/profile': {
-      id: '/admin/profile'
-      path: '/profile'
-      fullPath: '/admin/profile'
-      preLoaderRoute: typeof AdminProfileRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/payments': {
-      id: '/admin/payments'
-      path: '/payments'
-      fullPath: '/admin/payments'
-      preLoaderRoute: typeof AdminPaymentsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/commissions': {
-      id: '/admin/commissions'
-      path: '/commissions'
-      fullPath: '/admin/commissions'
-      preLoaderRoute: typeof AdminCommissionsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/bookings': {
-      id: '/admin/bookings'
-      path: '/bookings'
-      fullPath: '/admin/bookings'
-      preLoaderRoute: typeof AdminBookingsRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/account/taxes': {
       id: '/account/taxes'
       path: '/taxes'
@@ -1529,28 +1378,6 @@ const AccountRouteChildren: AccountRouteChildren = {
 const AccountRouteWithChildren =
   AccountRoute._addFileChildren(AccountRouteChildren)
 
-interface AdminRouteChildren {
-  AdminBookingsRoute: typeof AdminBookingsRoute
-  AdminCommissionsRoute: typeof AdminCommissionsRoute
-  AdminPaymentsRoute: typeof AdminPaymentsRoute
-  AdminProfileRoute: typeof AdminProfileRoute
-  AdminSettingsRoute: typeof AdminSettingsRoute
-  AdminUsersRoute: typeof AdminUsersRoute
-  AdminIndexRoute: typeof AdminIndexRoute
-}
-
-const AdminRouteChildren: AdminRouteChildren = {
-  AdminBookingsRoute: AdminBookingsRoute,
-  AdminCommissionsRoute: AdminCommissionsRoute,
-  AdminPaymentsRoute: AdminPaymentsRoute,
-  AdminProfileRoute: AdminProfileRoute,
-  AdminSettingsRoute: AdminSettingsRoute,
-  AdminUsersRoute: AdminUsersRoute,
-  AdminIndexRoute: AdminIndexRoute,
-}
-
-const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
-
 interface BookingRouteChildren {
   BookingConfirmationRoute: typeof BookingConfirmationRoute
   BookingPaymentRoute: typeof BookingPaymentRoute
@@ -1685,7 +1512,6 @@ const StaysStayIdRouteWithChildren = StaysStayIdRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRouteWithChildren,
-  AdminRoute: AdminRouteWithChildren,
   BookingRoute: BookingRouteWithChildren,
   BusBookingRoute: BusBookingRoute,
   CollectionsRoute: CollectionsRouteWithChildren,

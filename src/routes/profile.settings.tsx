@@ -2,7 +2,6 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   LogOut,
-  ShieldCheck,
   User as UserIcon,
   KeyRound,
   Lock,
@@ -104,39 +103,6 @@ function SettingsPage() {
               <Row label="Email" value={user.email} />
               <Row label="Role" value={user.role} capitalize />
               <Row label="Member since" value={new Date(user.createdAt).toLocaleDateString()} />
-              <Separator />
-              <div className="rounded-2xl border border-border p-4">
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-primary" />
-                  <h3 className="font-semibold text-sm">Admin access (dev)</h3>
-                </div>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Toggle admin role to test the admin section.
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {user.role !== "admin" ? (
-                    <Button
-                      size="sm"
-                      className="bg-[image:var(--gradient-hero)] hover:opacity-95"
-                      onClick={() => {
-                        setRole("admin");
-                        toast.success("You are now an admin.");
-                      }}
-                    >
-                      Promote me to admin
-                    </Button>
-                  ) : (
-                    <>
-                      <Button size="sm" className="bg-[image:var(--gradient-hero)] hover:opacity-95" onClick={() => navigate({ to: "/admin" })}>
-                        Open admin
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={() => { setRole("guest"); toast.success("Admin role removed."); }}>
-                        Revoke admin
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </div>
               <Separator />
               <div>
                 <h3 className="font-semibold text-sm">Sign out</h3>
