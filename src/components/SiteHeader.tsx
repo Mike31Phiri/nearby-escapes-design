@@ -88,7 +88,7 @@ export function SiteHeader() {
 
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-xl md:hidden" aria-label="Menu">
+              <Button variant="ghost" size="icon" className="rounded-xl" aria-label="Menu">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
