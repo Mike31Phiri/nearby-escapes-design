@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from "@tanstack/react-router";
 import logo from "@/assets/logo.png";
-import { MapPin, Menu, User, LogOut, UserCircle, Briefcase, ShieldCheck, Settings as SettingsIcon, Globe, HelpCircle, Home, FileText } from "lucide-react";
+import { MapPin, Menu, User, LogOut, CircleUser as UserCircle, Briefcase, ShieldCheck, Settings as SettingsIcon, Globe, Circle as HelpCircle, Hop as Home, FileText } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -13,9 +13,14 @@ export function SiteHeader() {
   const navigate = useNavigate();
   const location = useLocation();
   const isHome = location.pathname === "/";
-  const [showCenterPills, setShowCenterPills] = useState(!isHome);
+  const isHostOrAdmin = location.pathname.startsWith("/host") || location.pathname.startsWith("/admin");
+  const [showCenterPills, setShowCenterPills] = useState(!isHome && !isHostOrAdmin);
 
   useEffect(() => {
+    if (isHostOrAdmin) {
+      setShowCenterPills(false);
+      return;
+    }
     if (!isHome) {
       setShowCenterPills(true);
       return;
@@ -33,7 +38,7 @@ export function SiteHeader() {
     );
     observer.observe(heroPills);
     return () => observer.disconnect();
-  }, [isHome]);
+  }, [isHome, isHostOrAdmin]);
 
   const initials = user?.fullName
     ? user.fullName.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase()

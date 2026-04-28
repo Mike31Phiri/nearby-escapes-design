@@ -1,11 +1,90 @@
-import { AppPage, AssuranceBand, CardGrid, Checklist, FormPreview, StatStrip } from "@/pages/PageScaffold";
+import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import { ListingWizardLayout } from "@/components/host/ListingWizardLayout";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+const provinces = [
+  "Lusaka Province",
+  "Copperbelt Province",
+  "Southern Province",
+  "Eastern Province",
+  "Western Province",
+  "Central Province",
+  "North-Western Province",
+  "Muchinga Province",
+  "Northern Province",
+  "Luapula Province",
+];
 
 export function Step2Location() {
+  const navigate = useNavigate();
+  const [street, setStreet] = useState("");
+  const [city, setCity] = useState("");
+  const [province, setProvince] = useState("");
+
+  const canProceed = street.trim() && city.trim() && province;
+
   return (
-    <AppPage eyebrow="List your property" title="Location" description="Add the address, neighborhood and arrival guidance guests need.">
-      <Checklist items={["Save draft progress", "Validate required listing details", "Connect this step to the host listing API"]} />
-      <FormPreview fields={["Listing detail", "Additional detail"]} textarea="Host notes" cta="Save and continue" />
-      <AssuranceBand title="Step ready" description="This listing step has a dedicated page and can be wired to your backend wizard state." />
-    </AppPage>
+    <ListingWizardLayout
+      eyebrow="Step 2 of 10"
+      title="Where's your property located?"
+      description="Guests will see the neighborhood after booking. Your exact address stays private until then."
+      step={2}
+      onNext={() => navigate({ to: "/host/new-property/step-3" })}
+      onBack={() => navigate({ to: "/host/new-property/step-1" })}
+      nextDisabled={!canProceed}
+    >
+      <div className="space-y-5">
+        <div className="space-y-1.5">
+          <Label htmlFor="street">Street address</Label>
+          <Input
+            id="street"
+            placeholder="e.g. 12 Mosi-oa-Tunya Road"
+            value={street}
+            onChange={(e) => setStreet(e.target.value)}
+          />
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <Label htmlFor="city">City / Town</Label>
+            <Input
+              id="city"
+              placeholder="e.g. Livingstone"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label>Province</Label>
+            <Select value={province} onValueChange={setProvince}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select province" />
+              </SelectTrigger>
+              <SelectContent>
+                {provinces.map((p) => (
+                  <SelectItem key={p} value={p}>{p}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <Label htmlFor="directions">Arrival directions (optional)</Label>
+          <Textarea
+            id="directions"
+            placeholder="Help guests find your place — landmarks, gate codes, driving tips..."
+            rows={3}
+          />
+          <p className="text-xs text-muted-foreground">
+            Only shared with guests after they book.
+          </p>
+        </div>
+      </div>
+    </ListingWizardLayout>
   );
 }
