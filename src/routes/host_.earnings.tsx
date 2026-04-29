@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { EarningsPage } from "@/pages/host/EarningsPage";
 
-export const Route = createFileRoute("/host/earnings")({
+export const Route = createFileRoute("/host_/earnings")({
   head: () => ({
     meta: [
       { title: "Earnings — Wandr" },

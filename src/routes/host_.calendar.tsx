@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CalendarPage } from "@/pages/host/CalendarPage";
 
-export const Route = createFileRoute("/host/calendar")({
+export const Route = createFileRoute("/host_/calendar")({
   head: () => ({
     meta: [
       { title: "Host calendar — Wandr" },

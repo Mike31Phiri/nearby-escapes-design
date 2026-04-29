@@ -87,7 +87,7 @@ export function FormPreview({ fields, textarea, cta = "Save changes" }: { fields
           </div>
         )}
       </div>
-      <Button type="button" className="mt-5 bg-[image:var(--gradient-hero)] hover:opacity-95">{cta}</Button>
+      <Button type="button" className="mt-5">{cta}</Button>
     </form>
   );
 }
@@ -114,7 +114,7 @@ export function Timeline({ items }: { items: { title: string; description: strin
 
 export function AssuranceBand({ title = "Built for launch", description = "This page is ready to connect to your NestJS backend when the matching endpoint is available." }: { title?: string; description?: string }) {
   return (
-    <section className="rounded-2xl border border-border bg-[image:var(--gradient-soft)] p-5">
+    <section className="rounded-2xl border border-border bg-primary-soft/40 p-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">

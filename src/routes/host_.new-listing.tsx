@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { NewListingPage } from "@/pages/host/NewListingPage";
 
-export const Route = createFileRoute("/host/new-listing")({
+export const Route = createFileRoute("/host_/new-listing")({
   head: () => ({
     meta: [
       { title: "Create listing — Nearby Escapes" },

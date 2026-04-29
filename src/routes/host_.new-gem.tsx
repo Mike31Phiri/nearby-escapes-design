@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { NewGemPage } from "@/pages/host/NewGemPage";
 
-export const Route = createFileRoute("/host/new-gem")({
+export const Route = createFileRoute("/host_/new-gem")({
   head: () => ({
     meta: [
       { title: "New gem listing — Nearby Escapes" },

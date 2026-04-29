@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Step7Description } from "@/pages/host/new-property/Step7Description";
 
-export const Route = createFileRoute("/host/new-property/step-7")({
+export const Route = createFileRoute("/host_/new-property/step-7")({
   head: () => ({
     meta: [
       { title: "Description — Wandr" },

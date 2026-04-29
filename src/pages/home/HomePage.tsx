@@ -64,7 +64,7 @@ export function HomePage() {
               decoding="async"
               className="h-[420px] md:h-[520px] w-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/30 to-transparent" />
+            <div className="absolute inset-0 bg-foreground/40" />
             <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center text-background">
               <div className="mb-6" data-hero-pills>
                 <CategoryPills variant="hero" />
@@ -134,7 +134,7 @@ export function HomePage() {
                   loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-foreground/50 to-transparent" />
+                <div className="absolute inset-0 bg-foreground/35" />
                 <div className="absolute bottom-3 left-3 right-3">
                   <h3 className="text-lg font-bold text-background truncate">{listing.name}</h3>
                   <p className="text-xs text-background/80 flex items-center gap-1 mt-0.5">
@@ -183,7 +183,7 @@ export function HomePage() {
                     loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/50 to-transparent" />
+                  <div className="absolute inset-0 bg-foreground/35" />
                   <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
                     <div className="text-background">
                       <p className="text-lg font-bold">{route.from} → {route.to}</p>

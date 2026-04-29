@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { NewRidePage } from "@/pages/host/NewRidePage";
 
-export const Route = createFileRoute("/host/new-ride")({
+export const Route = createFileRoute("/host_/new-ride")({
   head: () => ({
     meta: [
       { title: "New ride listing — Nearby Escapes" },

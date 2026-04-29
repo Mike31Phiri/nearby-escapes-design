@@ -42,15 +42,15 @@ import { Route as LegalTermsRouteImport } from './routes/legal.terms'
 import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
 import { Route as LegalCookiesRouteImport } from './routes/legal.cookies'
 import { Route as LegalCommunityStandardsRouteImport } from './routes/legal.community-standards'
-import { Route as HostPropertiesRouteImport } from './routes/host.properties'
-import { Route as HostPerformanceRouteImport } from './routes/host.performance'
-import { Route as HostNewRideRouteImport } from './routes/host.new-ride'
-import { Route as HostNewListingRouteImport } from './routes/host.new-listing'
-import { Route as HostNewGemRouteImport } from './routes/host.new-gem'
-import { Route as HostInboxRouteImport } from './routes/host.inbox'
-import { Route as HostFeedbackRouteImport } from './routes/host.feedback'
-import { Route as HostEarningsRouteImport } from './routes/host.earnings'
-import { Route as HostCalendarRouteImport } from './routes/host.calendar'
+import { Route as HostPropertiesRouteImport } from './routes/host_.properties'
+import { Route as HostPerformanceRouteImport } from './routes/host_.performance'
+import { Route as HostNewRideRouteImport } from './routes/host_.new-ride'
+import { Route as HostNewListingRouteImport } from './routes/host_.new-listing'
+import { Route as HostNewGemRouteImport } from './routes/host_.new-gem'
+import { Route as HostInboxRouteImport } from './routes/host_.inbox'
+import { Route as HostFeedbackRouteImport } from './routes/host_.feedback'
+import { Route as HostEarningsRouteImport } from './routes/host_.earnings'
+import { Route as HostCalendarRouteImport } from './routes/host_.calendar'
 import { Route as CollectionsCollectionIdRouteImport } from './routes/collections.$collectionId'
 import { Route as BookingPaymentRouteImport } from './routes/booking.payment'
 import { Route as BookingConfirmationRouteImport } from './routes/booking.confirmation'
@@ -65,16 +65,16 @@ import { Route as AccountNotificationsRouteImport } from './routes/account.notif
 import { Route as AccountAccessibilityRouteImport } from './routes/account.accessibility'
 import { Route as AccommodationsIdRouteImport } from './routes/accommodations.$id'
 import { Route as StaysCollectionsSlugRouteImport } from './routes/stays.collections.$slug'
-import { Route as HostNewPropertyStep9RouteImport } from './routes/host.new-property.step-9'
-import { Route as HostNewPropertyStep8RouteImport } from './routes/host.new-property.step-8'
-import { Route as HostNewPropertyStep7RouteImport } from './routes/host.new-property.step-7'
-import { Route as HostNewPropertyStep6RouteImport } from './routes/host.new-property.step-6'
-import { Route as HostNewPropertyStep5RouteImport } from './routes/host.new-property.step-5'
-import { Route as HostNewPropertyStep4RouteImport } from './routes/host.new-property.step-4'
-import { Route as HostNewPropertyStep3RouteImport } from './routes/host.new-property.step-3'
-import { Route as HostNewPropertyStep2RouteImport } from './routes/host.new-property.step-2'
-import { Route as HostNewPropertyStep1RouteImport } from './routes/host.new-property.step-1'
-import { Route as HostNewPropertyReviewRouteImport } from './routes/host.new-property.review'
+import { Route as HostNewPropertyStep9RouteImport } from './routes/host_.new-property.step-9'
+import { Route as HostNewPropertyStep8RouteImport } from './routes/host_.new-property.step-8'
+import { Route as HostNewPropertyStep7RouteImport } from './routes/host_.new-property.step-7'
+import { Route as HostNewPropertyStep6RouteImport } from './routes/host_.new-property.step-6'
+import { Route as HostNewPropertyStep5RouteImport } from './routes/host_.new-property.step-5'
+import { Route as HostNewPropertyStep4RouteImport } from './routes/host_.new-property.step-4'
+import { Route as HostNewPropertyStep3RouteImport } from './routes/host_.new-property.step-3'
+import { Route as HostNewPropertyStep2RouteImport } from './routes/host_.new-property.step-2'
+import { Route as HostNewPropertyStep1RouteImport } from './routes/host_.new-property.step-1'
+import { Route as HostNewPropertyReviewRouteImport } from './routes/host_.new-property.review'
 import { Route as CollectionsSharedShareIdRouteImport } from './routes/collections.shared.$shareId'
 import { Route as StaysStayIdRoomsRoomIdRouteImport } from './routes/stays.$stayId.rooms.$roomId'
 
@@ -244,49 +244,49 @@ const LegalCommunityStandardsRoute = LegalCommunityStandardsRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const HostPropertiesRoute = HostPropertiesRouteImport.update({
-  id: '/properties',
-  path: '/properties',
-  getParentRoute: () => HostRoute,
+  id: '/host_/properties',
+  path: '/host/properties',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const HostPerformanceRoute = HostPerformanceRouteImport.update({
-  id: '/performance',
-  path: '/performance',
-  getParentRoute: () => HostRoute,
+  id: '/host_/performance',
+  path: '/host/performance',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const HostNewRideRoute = HostNewRideRouteImport.update({
-  id: '/new-ride',
-  path: '/new-ride',
-  getParentRoute: () => HostRoute,
+  id: '/host_/new-ride',
+  path: '/host/new-ride',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const HostNewListingRoute = HostNewListingRouteImport.update({
-  id: '/new-listing',
-  path: '/new-listing',
-  getParentRoute: () => HostRoute,
+  id: '/host_/new-listing',
+  path: '/host/new-listing',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const HostNewGemRoute = HostNewGemRouteImport.update({
-  id: '/new-gem',
-  path: '/new-gem',
-  getParentRoute: () => HostRoute,
+  id: '/host_/new-gem',
+  path: '/host/new-gem',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const HostInboxRoute = HostInboxRouteImport.update({
-  id: '/inbox',
-  path: '/inbox',
-  getParentRoute: () => HostRoute,
+  id: '/host_/inbox',
+  path: '/host/inbox',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const HostFeedbackRoute = HostFeedbackRouteImport.update({
-  id: '/feedback',
-  path: '/feedback',
-  getParentRoute: () => HostRoute,
+  id: '/host_/feedback',
+  path: '/host/feedback',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const HostEarningsRoute = HostEarningsRouteImport.update({
-  id: '/earnings',
-  path: '/earnings',
-  getParentRoute: () => HostRoute,
+  id: '/host_/earnings',
+  path: '/host/earnings',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const HostCalendarRoute = HostCalendarRouteImport.update({
-  id: '/calendar',
-  path: '/calendar',
-  getParentRoute: () => HostRoute,
+  id: '/host_/calendar',
+  path: '/host/calendar',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const CollectionsCollectionIdRoute = CollectionsCollectionIdRouteImport.update({
   id: '/$collectionId',
@@ -359,54 +359,54 @@ const StaysCollectionsSlugRoute = StaysCollectionsSlugRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const HostNewPropertyStep9Route = HostNewPropertyStep9RouteImport.update({
-  id: '/new-property/step-9',
-  path: '/new-property/step-9',
-  getParentRoute: () => HostRoute,
+  id: '/host_/new-property/step-9',
+  path: '/host/new-property/step-9',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const HostNewPropertyStep8Route = HostNewPropertyStep8RouteImport.update({
-  id: '/new-property/step-8',
-  path: '/new-property/step-8',
-  getParentRoute: () => HostRoute,
+  id: '/host_/new-property/step-8',
+  path: '/host/new-property/step-8',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const HostNewPropertyStep7Route = HostNewPropertyStep7RouteImport.update({
-  id: '/new-property/step-7',
-  path: '/new-property/step-7',
-  getParentRoute: () => HostRoute,
+  id: '/host_/new-property/step-7',
+  path: '/host/new-property/step-7',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const HostNewPropertyStep6Route = HostNewPropertyStep6RouteImport.update({
-  id: '/new-property/step-6',
-  path: '/new-property/step-6',
-  getParentRoute: () => HostRoute,
+  id: '/host_/new-property/step-6',
+  path: '/host/new-property/step-6',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const HostNewPropertyStep5Route = HostNewPropertyStep5RouteImport.update({
-  id: '/new-property/step-5',
-  path: '/new-property/step-5',
-  getParentRoute: () => HostRoute,
+  id: '/host_/new-property/step-5',
+  path: '/host/new-property/step-5',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const HostNewPropertyStep4Route = HostNewPropertyStep4RouteImport.update({
-  id: '/new-property/step-4',
-  path: '/new-property/step-4',
-  getParentRoute: () => HostRoute,
+  id: '/host_/new-property/step-4',
+  path: '/host/new-property/step-4',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const HostNewPropertyStep3Route = HostNewPropertyStep3RouteImport.update({
-  id: '/new-property/step-3',
-  path: '/new-property/step-3',
-  getParentRoute: () => HostRoute,
+  id: '/host_/new-property/step-3',
+  path: '/host/new-property/step-3',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const HostNewPropertyStep2Route = HostNewPropertyStep2RouteImport.update({
-  id: '/new-property/step-2',
-  path: '/new-property/step-2',
-  getParentRoute: () => HostRoute,
+  id: '/host_/new-property/step-2',
+  path: '/host/new-property/step-2',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const HostNewPropertyStep1Route = HostNewPropertyStep1RouteImport.update({
-  id: '/new-property/step-1',
-  path: '/new-property/step-1',
-  getParentRoute: () => HostRoute,
+  id: '/host_/new-property/step-1',
+  path: '/host/new-property/step-1',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const HostNewPropertyReviewRoute = HostNewPropertyReviewRouteImport.update({
-  id: '/new-property/review',
-  path: '/new-property/review',
-  getParentRoute: () => HostRoute,
+  id: '/host_/new-property/review',
+  path: '/host/new-property/review',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const CollectionsSharedShareIdRoute =
   CollectionsSharedShareIdRouteImport.update({
@@ -429,7 +429,7 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof ForgotPasswordRoute
   '/gems': typeof GemsRoute
   '/help': typeof HelpRoute
-  '/host': typeof HostRouteWithChildren
+  '/host': typeof HostRoute
   '/inbox': typeof InboxRoute
   '/login': typeof LoginRoute
   '/packages': typeof PackagesRoute
@@ -499,7 +499,7 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordRoute
   '/gems': typeof GemsRoute
   '/help': typeof HelpRoute
-  '/host': typeof HostRouteWithChildren
+  '/host': typeof HostRoute
   '/inbox': typeof InboxRoute
   '/login': typeof LoginRoute
   '/packages': typeof PackagesRoute
@@ -569,7 +569,7 @@ export interface FileRoutesById {
   '/forgot-password': typeof ForgotPasswordRoute
   '/gems': typeof GemsRoute
   '/help': typeof HelpRoute
-  '/host': typeof HostRouteWithChildren
+  '/host': typeof HostRoute
   '/inbox': typeof InboxRoute
   '/login': typeof LoginRoute
   '/packages': typeof PackagesRoute
@@ -592,15 +592,15 @@ export interface FileRoutesById {
   '/booking/confirmation': typeof BookingConfirmationRoute
   '/booking/payment': typeof BookingPaymentRoute
   '/collections/$collectionId': typeof CollectionsCollectionIdRoute
-  '/host/calendar': typeof HostCalendarRoute
-  '/host/earnings': typeof HostEarningsRoute
-  '/host/feedback': typeof HostFeedbackRoute
-  '/host/inbox': typeof HostInboxRoute
-  '/host/new-gem': typeof HostNewGemRoute
-  '/host/new-listing': typeof HostNewListingRoute
-  '/host/new-ride': typeof HostNewRideRoute
-  '/host/performance': typeof HostPerformanceRoute
-  '/host/properties': typeof HostPropertiesRoute
+  '/host_/calendar': typeof HostCalendarRoute
+  '/host_/earnings': typeof HostEarningsRoute
+  '/host_/feedback': typeof HostFeedbackRoute
+  '/host_/inbox': typeof HostInboxRoute
+  '/host_/new-gem': typeof HostNewGemRoute
+  '/host_/new-listing': typeof HostNewListingRoute
+  '/host_/new-ride': typeof HostNewRideRoute
+  '/host_/performance': typeof HostPerformanceRoute
+  '/host_/properties': typeof HostPropertiesRoute
   '/legal/community-standards': typeof LegalCommunityStandardsRoute
   '/legal/cookies': typeof LegalCookiesRoute
   '/legal/privacy': typeof LegalPrivacyRoute
@@ -617,16 +617,16 @@ export interface FileRoutesById {
   '/accommodations/': typeof AccommodationsIndexRoute
   '/profile/': typeof ProfileIndexRoute
   '/collections/shared/$shareId': typeof CollectionsSharedShareIdRoute
-  '/host/new-property/review': typeof HostNewPropertyReviewRoute
-  '/host/new-property/step-1': typeof HostNewPropertyStep1Route
-  '/host/new-property/step-2': typeof HostNewPropertyStep2Route
-  '/host/new-property/step-3': typeof HostNewPropertyStep3Route
-  '/host/new-property/step-4': typeof HostNewPropertyStep4Route
-  '/host/new-property/step-5': typeof HostNewPropertyStep5Route
-  '/host/new-property/step-6': typeof HostNewPropertyStep6Route
-  '/host/new-property/step-7': typeof HostNewPropertyStep7Route
-  '/host/new-property/step-8': typeof HostNewPropertyStep8Route
-  '/host/new-property/step-9': typeof HostNewPropertyStep9Route
+  '/host_/new-property/review': typeof HostNewPropertyReviewRoute
+  '/host_/new-property/step-1': typeof HostNewPropertyStep1Route
+  '/host_/new-property/step-2': typeof HostNewPropertyStep2Route
+  '/host_/new-property/step-3': typeof HostNewPropertyStep3Route
+  '/host_/new-property/step-4': typeof HostNewPropertyStep4Route
+  '/host_/new-property/step-5': typeof HostNewPropertyStep5Route
+  '/host_/new-property/step-6': typeof HostNewPropertyStep6Route
+  '/host_/new-property/step-7': typeof HostNewPropertyStep7Route
+  '/host_/new-property/step-8': typeof HostNewPropertyStep8Route
+  '/host_/new-property/step-9': typeof HostNewPropertyStep9Route
   '/stays/collections/$slug': typeof StaysCollectionsSlugRoute
   '/stays/$stayId/rooms/$roomId': typeof StaysStayIdRoomsRoomIdRoute
 }
@@ -803,15 +803,15 @@ export interface FileRouteTypes {
     | '/booking/confirmation'
     | '/booking/payment'
     | '/collections/$collectionId'
-    | '/host/calendar'
-    | '/host/earnings'
-    | '/host/feedback'
-    | '/host/inbox'
-    | '/host/new-gem'
-    | '/host/new-listing'
-    | '/host/new-ride'
-    | '/host/performance'
-    | '/host/properties'
+    | '/host_/calendar'
+    | '/host_/earnings'
+    | '/host_/feedback'
+    | '/host_/inbox'
+    | '/host_/new-gem'
+    | '/host_/new-listing'
+    | '/host_/new-ride'
+    | '/host_/performance'
+    | '/host_/properties'
     | '/legal/community-standards'
     | '/legal/cookies'
     | '/legal/privacy'
@@ -828,16 +828,16 @@ export interface FileRouteTypes {
     | '/accommodations/'
     | '/profile/'
     | '/collections/shared/$shareId'
-    | '/host/new-property/review'
-    | '/host/new-property/step-1'
-    | '/host/new-property/step-2'
-    | '/host/new-property/step-3'
-    | '/host/new-property/step-4'
-    | '/host/new-property/step-5'
-    | '/host/new-property/step-6'
-    | '/host/new-property/step-7'
-    | '/host/new-property/step-8'
-    | '/host/new-property/step-9'
+    | '/host_/new-property/review'
+    | '/host_/new-property/step-1'
+    | '/host_/new-property/step-2'
+    | '/host_/new-property/step-3'
+    | '/host_/new-property/step-4'
+    | '/host_/new-property/step-5'
+    | '/host_/new-property/step-6'
+    | '/host_/new-property/step-7'
+    | '/host_/new-property/step-8'
+    | '/host_/new-property/step-9'
     | '/stays/collections/$slug'
     | '/stays/$stayId/rooms/$roomId'
   fileRoutesById: FileRoutesById
@@ -851,7 +851,7 @@ export interface RootRouteChildren {
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   GemsRoute: typeof GemsRoute
   HelpRoute: typeof HelpRoute
-  HostRoute: typeof HostRouteWithChildren
+  HostRoute: typeof HostRoute
   InboxRoute: typeof InboxRoute
   LoginRoute: typeof LoginRoute
   PackagesRoute: typeof PackagesRoute
@@ -863,12 +863,31 @@ export interface RootRouteChildren {
   SupportRoute: typeof SupportRouteWithChildren
   AccommodationsIdRoute: typeof AccommodationsIdRoute
   AuthOtpRoute: typeof AuthOtpRoute
+  HostCalendarRoute: typeof HostCalendarRoute
+  HostEarningsRoute: typeof HostEarningsRoute
+  HostFeedbackRoute: typeof HostFeedbackRoute
+  HostInboxRoute: typeof HostInboxRoute
+  HostNewGemRoute: typeof HostNewGemRoute
+  HostNewListingRoute: typeof HostNewListingRoute
+  HostNewRideRoute: typeof HostNewRideRoute
+  HostPerformanceRoute: typeof HostPerformanceRoute
+  HostPropertiesRoute: typeof HostPropertiesRoute
   LegalCommunityStandardsRoute: typeof LegalCommunityStandardsRoute
   LegalCookiesRoute: typeof LegalCookiesRoute
   LegalPrivacyRoute: typeof LegalPrivacyRoute
   LegalTermsRoute: typeof LegalTermsRoute
   StaysStayIdRoute: typeof StaysStayIdRouteWithChildren
   AccommodationsIndexRoute: typeof AccommodationsIndexRoute
+  HostNewPropertyReviewRoute: typeof HostNewPropertyReviewRoute
+  HostNewPropertyStep1Route: typeof HostNewPropertyStep1Route
+  HostNewPropertyStep2Route: typeof HostNewPropertyStep2Route
+  HostNewPropertyStep3Route: typeof HostNewPropertyStep3Route
+  HostNewPropertyStep4Route: typeof HostNewPropertyStep4Route
+  HostNewPropertyStep5Route: typeof HostNewPropertyStep5Route
+  HostNewPropertyStep6Route: typeof HostNewPropertyStep6Route
+  HostNewPropertyStep7Route: typeof HostNewPropertyStep7Route
+  HostNewPropertyStep8Route: typeof HostNewPropertyStep8Route
+  HostNewPropertyStep9Route: typeof HostNewPropertyStep9Route
   StaysCollectionsSlugRoute: typeof StaysCollectionsSlugRoute
 }
 
@@ -1105,68 +1124,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LegalCommunityStandardsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/host/properties': {
-      id: '/host/properties'
-      path: '/properties'
+    '/host_/properties': {
+      id: '/host_/properties'
+      path: '/host/properties'
       fullPath: '/host/properties'
       preLoaderRoute: typeof HostPropertiesRouteImport
-      parentRoute: typeof HostRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/host/performance': {
-      id: '/host/performance'
-      path: '/performance'
+    '/host_/performance': {
+      id: '/host_/performance'
+      path: '/host/performance'
       fullPath: '/host/performance'
       preLoaderRoute: typeof HostPerformanceRouteImport
-      parentRoute: typeof HostRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/host/new-ride': {
-      id: '/host/new-ride'
-      path: '/new-ride'
+    '/host_/new-ride': {
+      id: '/host_/new-ride'
+      path: '/host/new-ride'
       fullPath: '/host/new-ride'
       preLoaderRoute: typeof HostNewRideRouteImport
-      parentRoute: typeof HostRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/host/new-listing': {
-      id: '/host/new-listing'
-      path: '/new-listing'
+    '/host_/new-listing': {
+      id: '/host_/new-listing'
+      path: '/host/new-listing'
       fullPath: '/host/new-listing'
       preLoaderRoute: typeof HostNewListingRouteImport
-      parentRoute: typeof HostRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/host/new-gem': {
-      id: '/host/new-gem'
-      path: '/new-gem'
+    '/host_/new-gem': {
+      id: '/host_/new-gem'
+      path: '/host/new-gem'
       fullPath: '/host/new-gem'
       preLoaderRoute: typeof HostNewGemRouteImport
-      parentRoute: typeof HostRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/host/inbox': {
-      id: '/host/inbox'
-      path: '/inbox'
+    '/host_/inbox': {
+      id: '/host_/inbox'
+      path: '/host/inbox'
       fullPath: '/host/inbox'
       preLoaderRoute: typeof HostInboxRouteImport
-      parentRoute: typeof HostRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/host/feedback': {
-      id: '/host/feedback'
-      path: '/feedback'
+    '/host_/feedback': {
+      id: '/host_/feedback'
+      path: '/host/feedback'
       fullPath: '/host/feedback'
       preLoaderRoute: typeof HostFeedbackRouteImport
-      parentRoute: typeof HostRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/host/earnings': {
-      id: '/host/earnings'
-      path: '/earnings'
+    '/host_/earnings': {
+      id: '/host_/earnings'
+      path: '/host/earnings'
       fullPath: '/host/earnings'
       preLoaderRoute: typeof HostEarningsRouteImport
-      parentRoute: typeof HostRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/host/calendar': {
-      id: '/host/calendar'
-      path: '/calendar'
+    '/host_/calendar': {
+      id: '/host_/calendar'
+      path: '/host/calendar'
       fullPath: '/host/calendar'
       preLoaderRoute: typeof HostCalendarRouteImport
-      parentRoute: typeof HostRoute
+      parentRoute: typeof rootRouteImport
     }
     '/collections/$collectionId': {
       id: '/collections/$collectionId'
@@ -1266,75 +1285,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StaysCollectionsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/host/new-property/step-9': {
-      id: '/host/new-property/step-9'
-      path: '/new-property/step-9'
+    '/host_/new-property/step-9': {
+      id: '/host_/new-property/step-9'
+      path: '/host/new-property/step-9'
       fullPath: '/host/new-property/step-9'
       preLoaderRoute: typeof HostNewPropertyStep9RouteImport
-      parentRoute: typeof HostRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/host/new-property/step-8': {
-      id: '/host/new-property/step-8'
-      path: '/new-property/step-8'
+    '/host_/new-property/step-8': {
+      id: '/host_/new-property/step-8'
+      path: '/host/new-property/step-8'
       fullPath: '/host/new-property/step-8'
       preLoaderRoute: typeof HostNewPropertyStep8RouteImport
-      parentRoute: typeof HostRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/host/new-property/step-7': {
-      id: '/host/new-property/step-7'
-      path: '/new-property/step-7'
+    '/host_/new-property/step-7': {
+      id: '/host_/new-property/step-7'
+      path: '/host/new-property/step-7'
       fullPath: '/host/new-property/step-7'
       preLoaderRoute: typeof HostNewPropertyStep7RouteImport
-      parentRoute: typeof HostRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/host/new-property/step-6': {
-      id: '/host/new-property/step-6'
-      path: '/new-property/step-6'
+    '/host_/new-property/step-6': {
+      id: '/host_/new-property/step-6'
+      path: '/host/new-property/step-6'
       fullPath: '/host/new-property/step-6'
       preLoaderRoute: typeof HostNewPropertyStep6RouteImport
-      parentRoute: typeof HostRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/host/new-property/step-5': {
-      id: '/host/new-property/step-5'
-      path: '/new-property/step-5'
+    '/host_/new-property/step-5': {
+      id: '/host_/new-property/step-5'
+      path: '/host/new-property/step-5'
       fullPath: '/host/new-property/step-5'
       preLoaderRoute: typeof HostNewPropertyStep5RouteImport
-      parentRoute: typeof HostRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/host/new-property/step-4': {
-      id: '/host/new-property/step-4'
-      path: '/new-property/step-4'
+    '/host_/new-property/step-4': {
+      id: '/host_/new-property/step-4'
+      path: '/host/new-property/step-4'
       fullPath: '/host/new-property/step-4'
       preLoaderRoute: typeof HostNewPropertyStep4RouteImport
-      parentRoute: typeof HostRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/host/new-property/step-3': {
-      id: '/host/new-property/step-3'
-      path: '/new-property/step-3'
+    '/host_/new-property/step-3': {
+      id: '/host_/new-property/step-3'
+      path: '/host/new-property/step-3'
       fullPath: '/host/new-property/step-3'
       preLoaderRoute: typeof HostNewPropertyStep3RouteImport
-      parentRoute: typeof HostRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/host/new-property/step-2': {
-      id: '/host/new-property/step-2'
-      path: '/new-property/step-2'
+    '/host_/new-property/step-2': {
+      id: '/host_/new-property/step-2'
+      path: '/host/new-property/step-2'
       fullPath: '/host/new-property/step-2'
       preLoaderRoute: typeof HostNewPropertyStep2RouteImport
-      parentRoute: typeof HostRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/host/new-property/step-1': {
-      id: '/host/new-property/step-1'
-      path: '/new-property/step-1'
+    '/host_/new-property/step-1': {
+      id: '/host_/new-property/step-1'
+      path: '/host/new-property/step-1'
       fullPath: '/host/new-property/step-1'
       preLoaderRoute: typeof HostNewPropertyStep1RouteImport
-      parentRoute: typeof HostRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/host/new-property/review': {
-      id: '/host/new-property/review'
-      path: '/new-property/review'
+    '/host_/new-property/review': {
+      id: '/host_/new-property/review'
+      path: '/host/new-property/review'
       fullPath: '/host/new-property/review'
       preLoaderRoute: typeof HostNewPropertyReviewRouteImport
-      parentRoute: typeof HostRoute
+      parentRoute: typeof rootRouteImport
     }
     '/collections/shared/$shareId': {
       id: '/collections/shared/$shareId'
@@ -1405,52 +1424,6 @@ const CollectionsRouteWithChildren = CollectionsRoute._addFileChildren(
   CollectionsRouteChildren,
 )
 
-interface HostRouteChildren {
-  HostCalendarRoute: typeof HostCalendarRoute
-  HostEarningsRoute: typeof HostEarningsRoute
-  HostFeedbackRoute: typeof HostFeedbackRoute
-  HostInboxRoute: typeof HostInboxRoute
-  HostNewGemRoute: typeof HostNewGemRoute
-  HostNewListingRoute: typeof HostNewListingRoute
-  HostNewRideRoute: typeof HostNewRideRoute
-  HostPerformanceRoute: typeof HostPerformanceRoute
-  HostPropertiesRoute: typeof HostPropertiesRoute
-  HostNewPropertyReviewRoute: typeof HostNewPropertyReviewRoute
-  HostNewPropertyStep1Route: typeof HostNewPropertyStep1Route
-  HostNewPropertyStep2Route: typeof HostNewPropertyStep2Route
-  HostNewPropertyStep3Route: typeof HostNewPropertyStep3Route
-  HostNewPropertyStep4Route: typeof HostNewPropertyStep4Route
-  HostNewPropertyStep5Route: typeof HostNewPropertyStep5Route
-  HostNewPropertyStep6Route: typeof HostNewPropertyStep6Route
-  HostNewPropertyStep7Route: typeof HostNewPropertyStep7Route
-  HostNewPropertyStep8Route: typeof HostNewPropertyStep8Route
-  HostNewPropertyStep9Route: typeof HostNewPropertyStep9Route
-}
-
-const HostRouteChildren: HostRouteChildren = {
-  HostCalendarRoute: HostCalendarRoute,
-  HostEarningsRoute: HostEarningsRoute,
-  HostFeedbackRoute: HostFeedbackRoute,
-  HostInboxRoute: HostInboxRoute,
-  HostNewGemRoute: HostNewGemRoute,
-  HostNewListingRoute: HostNewListingRoute,
-  HostNewRideRoute: HostNewRideRoute,
-  HostPerformanceRoute: HostPerformanceRoute,
-  HostPropertiesRoute: HostPropertiesRoute,
-  HostNewPropertyReviewRoute: HostNewPropertyReviewRoute,
-  HostNewPropertyStep1Route: HostNewPropertyStep1Route,
-  HostNewPropertyStep2Route: HostNewPropertyStep2Route,
-  HostNewPropertyStep3Route: HostNewPropertyStep3Route,
-  HostNewPropertyStep4Route: HostNewPropertyStep4Route,
-  HostNewPropertyStep5Route: HostNewPropertyStep5Route,
-  HostNewPropertyStep6Route: HostNewPropertyStep6Route,
-  HostNewPropertyStep7Route: HostNewPropertyStep7Route,
-  HostNewPropertyStep8Route: HostNewPropertyStep8Route,
-  HostNewPropertyStep9Route: HostNewPropertyStep9Route,
-}
-
-const HostRouteWithChildren = HostRoute._addFileChildren(HostRouteChildren)
-
 interface ProfileRouteChildren {
   ProfileEditRoute: typeof ProfileEditRoute
   ProfileFeedbackRoute: typeof ProfileFeedbackRoute
@@ -1518,7 +1491,7 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordRoute: ForgotPasswordRoute,
   GemsRoute: GemsRoute,
   HelpRoute: HelpRoute,
-  HostRoute: HostRouteWithChildren,
+  HostRoute: HostRoute,
   InboxRoute: InboxRoute,
   LoginRoute: LoginRoute,
   PackagesRoute: PackagesRoute,
@@ -1530,12 +1503,31 @@ const rootRouteChildren: RootRouteChildren = {
   SupportRoute: SupportRouteWithChildren,
   AccommodationsIdRoute: AccommodationsIdRoute,
   AuthOtpRoute: AuthOtpRoute,
+  HostCalendarRoute: HostCalendarRoute,
+  HostEarningsRoute: HostEarningsRoute,
+  HostFeedbackRoute: HostFeedbackRoute,
+  HostInboxRoute: HostInboxRoute,
+  HostNewGemRoute: HostNewGemRoute,
+  HostNewListingRoute: HostNewListingRoute,
+  HostNewRideRoute: HostNewRideRoute,
+  HostPerformanceRoute: HostPerformanceRoute,
+  HostPropertiesRoute: HostPropertiesRoute,
   LegalCommunityStandardsRoute: LegalCommunityStandardsRoute,
   LegalCookiesRoute: LegalCookiesRoute,
   LegalPrivacyRoute: LegalPrivacyRoute,
   LegalTermsRoute: LegalTermsRoute,
   StaysStayIdRoute: StaysStayIdRouteWithChildren,
   AccommodationsIndexRoute: AccommodationsIndexRoute,
+  HostNewPropertyReviewRoute: HostNewPropertyReviewRoute,
+  HostNewPropertyStep1Route: HostNewPropertyStep1Route,
+  HostNewPropertyStep2Route: HostNewPropertyStep2Route,
+  HostNewPropertyStep3Route: HostNewPropertyStep3Route,
+  HostNewPropertyStep4Route: HostNewPropertyStep4Route,
+  HostNewPropertyStep5Route: HostNewPropertyStep5Route,
+  HostNewPropertyStep6Route: HostNewPropertyStep6Route,
+  HostNewPropertyStep7Route: HostNewPropertyStep7Route,
+  HostNewPropertyStep8Route: HostNewPropertyStep8Route,
+  HostNewPropertyStep9Route: HostNewPropertyStep9Route,
   StaysCollectionsSlugRoute: StaysCollectionsSlugRoute,
 }
 export const routeTree = rootRouteImport

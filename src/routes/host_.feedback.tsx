@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { HostFeedbackPage } from "@/pages/host/HostFeedbackPage";
 
-export const Route = createFileRoute("/host/feedback")({
+export const Route = createFileRoute("/host_/feedback")({
   head: () => ({
     meta: [
       { title: "Guest feedback — Wandr" },

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { HostInboxPage } from "@/pages/host/HostInboxPage";
 
-export const Route = createFileRoute("/host/inbox")({
+export const Route = createFileRoute("/host_/inbox")({
   head: () => ({
     meta: [
       { title: "Host inbox — Wandr" },
