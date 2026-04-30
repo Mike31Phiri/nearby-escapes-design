@@ -28,6 +28,17 @@ The project was originally scaffolded for Cloudflare Workers deployment (see `wr
 - Configured as **autoscale** running `npm run dev` on port 5000.
 - The upstream Cloudflare Workers build target (`@cloudflare/vite-plugin` + `wrangler.jsonc`) is preserved but not used by the Replit deployment. To deploy a production-grade build instead, swap to a Node SSR adapter or build for static output and update the deployment config.
 
+## Recent Work (April 2026)
+
+- Replaced 32 placeholder `PageScaffold` stubs with full UIs across account, profile, inbox, host suite (calendar, earnings, feedback, performance, inbox), collections, spotlight, stays detail/room, booking confirmation, support + article, and legal (terms / privacy / community standards) pages.
+- Removed gradient backgrounds in favor of solid colors throughout HomePage and PageScaffold.
+- `useBooking` hook extended: `BookingDraft` includes optional `stayName`; hook now returns `draft` alongside totals. `BOOKING_DRAFT_STORAGE_KEY` re-exported from `@/store/bookingStore`.
+- Renamed all `host.<child>.tsx` route files to `host_.<child>.tsx` so they render as flat routes at `/host/<child>` instead of nesting inside `HostDashboardPage` (which has no `<Outlet />`). This fixed routes such as `/host/calendar`, `/host/earnings`, `/host/inbox`, `/host/properties`, `/host/performance`, `/host/feedback`, `/host/new-listing`, `/host/new-gem`, `/host/new-ride`, and the multi-step `/host/new-property/step-N` wizard.
+- `src/routes/legal.terms.tsx` and `src/routes/legal.privacy.tsx` were re-pointed to import the new `@/pages/legal/TermsPage` and `@/pages/legal/PrivacyPolicyPage` components instead of inlining their own.
+- If you see "Cannot read properties of null (reading 'useContext')" from Radix in dev, clear `node_modules/.vite` and restart — that was a stale Vite optimizeDeps cache, not a duplicate React install.
+
 ## User Preferences
 
-None recorded yet.
+- Backend (NestJS + JWT auth) and S3 photo storage are owned by the user; this codebase is frontend-only with mock data.
+- Prefer solid colors over gradients.
+- Final delivery: push to GitHub remote `origin` = https://github.com/Mike31Phiri/dream-stay-builder. Push is gated behind a project task (deferred by user — do later).
