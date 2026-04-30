@@ -23,6 +23,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/profile/settings")({
@@ -68,7 +70,9 @@ function SettingsPage() {
   if (!user) return null;
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen flex flex-col bg-background">
+      <SiteHeader />
+      <main className="flex-1 mx-auto w-full max-w-6xl px-4 md:px-6 py-8 space-y-6">
       <div>
         <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Settings</h1>
         <p className="text-sm text-muted-foreground mt-1">Manage your account, preferences and privacy.</p>
@@ -266,6 +270,8 @@ function SettingsPage() {
           )}
         </div>
       </div>
+      </main>
+      <SiteFooter />
     </div>
   );
 }

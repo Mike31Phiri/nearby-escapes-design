@@ -6,9 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/profile/")({
+  head: () => ({
+    meta: [
+      { title: "Profile overview — Nearby Escapes" },
+      { name: "description", content: "Your Nearby Escapes profile overview." },
+    ],
+  }),
   component: ProfileOverview,
 });
 
@@ -30,7 +38,9 @@ function ProfileOverview() {
   const initials = user.fullName.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase();
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen flex flex-col bg-background">
+      <SiteHeader />
+      <main className="flex-1 mx-auto w-full max-w-4xl px-4 md:px-6 py-8 space-y-6">
       <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
         <div className="flex items-center gap-5">
           <div className="relative">
@@ -124,6 +134,8 @@ function ProfileOverview() {
           </div>
         </div>
       </div>
+      </main>
+      <SiteFooter />
     </div>
   );
 }
