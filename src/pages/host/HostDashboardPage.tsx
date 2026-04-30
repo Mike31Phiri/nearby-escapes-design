@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { LayoutDashboard, CalendarDays, DollarSign, MessageSquare, ChartBar as BarChart3, Hop as Home, Star, Plus, TrendingUp, Users, ArrowRight } from "lucide-react";
+import { LayoutDashboard, CalendarDays, DollarSign, MessageSquare, ChartBar as BarChart3, Hop as Home, Star, Plus, TrendingUp, Users, ArrowRight, Compass } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -42,12 +42,19 @@ export function HostDashboardPage() {
               Track listings, reservations and earnings.
             </p>
           </div>
-          <Button
-            onClick={() => navigate({ to: "/host/new-listing" })}
-            className="bg-[image:var(--gradient-hero)] hover:opacity-95 shrink-0"
-          >
-            <Plus className="h-4 w-4 mr-2" /> New listing
-          </Button>
+          <div className="flex items-center gap-2 shrink-0">
+            <Button asChild variant="outline" size="sm">
+              <Link to="/">
+                <Compass className="h-4 w-4 mr-2" /> Switch to traveling
+              </Link>
+            </Button>
+            <Button
+              onClick={() => navigate({ to: "/host/new-listing" })}
+              className="bg-[image:var(--gradient-hero)] hover:opacity-95"
+            >
+              <Plus className="h-4 w-4 mr-2" /> New listing
+            </Button>
+          </div>
         </div>
 
         {/* Host subnav */}

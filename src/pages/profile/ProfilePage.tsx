@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Star, MapPin, Calendar, BadgeCheck, MessageCircle } from "lucide-react";
+import { Star, MapPin, Calendar, BadgeCheck, MessageCircle, Briefcase, ArrowRight } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -46,14 +46,35 @@ export function ProfilePage() {
                     <p className="text-[11px] uppercase tracking-widest text-muted-foreground">Rating</p>
                   </div>
                 </div>
-                <div className="mt-5 grid grid-cols-2 gap-2 w-full">
-                  <Button asChild size="sm" variant="outline">
-                    <Link to="/profile/edit">Edit</Link>
-                  </Button>
-                  <Button asChild size="sm">
-                    <Link to="/profile/host">Host mode</Link>
-                  </Button>
+                <Button asChild size="sm" variant="outline" className="mt-5 w-full">
+                  <Link to="/profile/edit">Edit profile</Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="mt-4 border-border/60">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-soft text-primary">
+                    <Briefcase className="h-5 w-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold leading-tight">Hosting on Nearby Escapes</p>
+                    <p className="text-xs text-muted-foreground">Same account, different mode.</p>
+                  </div>
                 </div>
+                <p className="mt-3 text-xs leading-5 text-muted-foreground">
+                  You're currently in traveler mode. Switch to hosting to manage listings, calendar and earnings — switch back any time to keep booking trips.
+                </p>
+                <Button asChild size="sm" className="mt-4 w-full">
+                  <Link to="/host">
+                    Switch to hosting
+                    <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                  </Link>
+                </Button>
+                <Button asChild variant="ghost" size="sm" className="mt-1 w-full text-xs text-muted-foreground">
+                  <Link to="/profile/host">Become a host</Link>
+                </Button>
               </CardContent>
             </Card>
           </aside>

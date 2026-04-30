@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Camera, Mail, MapPin, Phone, Save } from "lucide-react";
+import { ArrowRight, Briefcase, Camera, Mail, MapPin, Phone, Save } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -86,17 +86,44 @@ function ProfileOverview() {
         </div>
       </form>
 
-      {user.role === "guest" && (
-        <div className="rounded-3xl border border-border bg-[image:var(--gradient-soft)] p-6">
-          <h3 className="text-lg font-semibold">Become a host</h3>
-          <p className="mt-1 text-sm text-muted-foreground">
-            List your lodge, guesthouse or experience and earn from travelers exploring Zambia.
-          </p>
-          <Link to="/profile/host" className="mt-4 inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
-            Get started
-          </Link>
+      <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary">
+              <Briefcase className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
+              <h3 className="text-lg font-semibold leading-tight">
+                {user.role === "host" ? "Hosting on Nearby Escapes" : "Become a host"}
+              </h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {user.role === "host"
+                  ? "Switch to hosting to manage listings, calendar and earnings. You can switch back to traveling any time — same account."
+                  : "List your lodge, guesthouse or experience and earn from travelers exploring Zambia. You'll keep this same account for your own trips."}
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2 md:flex-row md:shrink-0">
+            {user.role === "host" ? (
+              <Button asChild>
+                <Link to="/host">
+                  Switch to hosting
+                  <ArrowRight className="ml-1.5 h-4 w-4" />
+                </Link>
+              </Button>
+            ) : (
+              <>
+                <Button asChild>
+                  <Link to="/profile/host">Get started</Link>
+                </Button>
+                <Button asChild variant="outline">
+                  <Link to="/host">Preview host dashboard</Link>
+                </Button>
+              </>
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
