@@ -73,7 +73,7 @@ export function ProfilePage() {
                   </Link>
                 </Button>
                 <Button asChild variant="ghost" size="sm" className="mt-1 w-full text-xs text-muted-foreground">
-                  <Link to="/profile/host">Become a host</Link>
+                  <Link to="/host">Become a host</Link>
                 </Button>
               </CardContent>
             </Card>

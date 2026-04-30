@@ -122,14 +122,9 @@ function ProfileOverview() {
                 </Link>
               </Button>
             ) : (
-              <>
-                <Button asChild>
-                  <Link to="/profile/host">Get started</Link>
-                </Button>
-                <Button asChild variant="outline">
-                  <Link to="/host">Preview host dashboard</Link>
-                </Button>
-              </>
+              <Button asChild>
+                <Link to="/host">Get started</Link>
+              </Button>
             )}
           </div>
         </div>

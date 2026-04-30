@@ -1,9 +1,11 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { LayoutDashboard, CalendarDays, DollarSign, MessageSquare, ChartBar as BarChart3, Hop as Home, Star, Plus, TrendingUp, Users, ArrowRight, Compass } from "lucide-react";
+import { LayoutDashboard, CalendarDays, DollarSign, MessageSquare, ChartBar as BarChart3, Hop as Home, Star, Plus, TrendingUp, Users, ArrowRight, Compass, Sparkles } from "lucide-react";
+import { toast } from "sonner";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useAuth } from "@/lib/auth";
 
 const hostNav = [
   { label: "Dashboard", icon: LayoutDashboard, to: "/host" },
@@ -30,6 +32,53 @@ const recentBookings = [
 
 export function HostDashboardPage() {
   const navigate = useNavigate();
+  const { user, becomeHost } = useAuth();
+
+  if (user && user.role === "guest") {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <Navbar />
+        <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-12 md:px-6 md:py-16">
+          <Card className="border-border/60 overflow-hidden">
+            <CardContent className="p-8 md:p-10 text-center">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-soft text-primary">
+                <Home className="h-6 w-6" />
+              </div>
+              <h1 className="mt-5 text-2xl md:text-3xl font-bold tracking-tight font-display">
+                Become a host on Nearby Escapes
+              </h1>
+              <p className="mt-3 text-sm md:text-base text-muted-foreground max-w-md mx-auto">
+                List your lodge, guesthouse, transport route or local experience and earn from travelers exploring Zambia. You'll keep this same account for your own trips.
+              </p>
+
+              <div className="mt-8 grid gap-3 sm:grid-cols-3 text-left">
+                <Perk icon={Sparkles} title="Easy listing" body="A guided wizard gets your first property live in minutes." />
+                <Perk icon={DollarSign} title="Payouts in ZMW or USD" body="Bank or mobile money — choose what works for you." />
+                <Perk icon={Star} title="Built-in trust" body="Verified guests, secure payments and 24/7 support." />
+              </div>
+
+              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-2">
+                <Button
+                  size="lg"
+                  className="bg-[image:var(--gradient-hero)] hover:opacity-95"
+                  onClick={() => {
+                    becomeHost();
+                    toast.success("You're now a host! Welcome aboard 🎉");
+                  }}
+                >
+                  Activate host account
+                </Button>
+                <Button asChild variant="outline" size="lg">
+                  <Link to="/help">Learn how it works</Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -162,6 +211,18 @@ export function HostDashboardPage() {
         </div>
       </main>
       <Footer />
+    </div>
+  );
+}
+
+function Perk({ icon: Icon, title, body }: { icon: React.ComponentType<{ className?: string }>; title: string; body: string }) {
+  return (
+    <div className="rounded-2xl border border-border/60 bg-muted/40 p-4">
+      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-soft text-primary">
+        <Icon className="h-4 w-4" />
+      </div>
+      <p className="mt-3 text-sm font-semibold">{title}</p>
+      <p className="mt-1 text-xs text-muted-foreground">{body}</p>
     </div>
   );
 }

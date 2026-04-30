@@ -1,24 +1,42 @@
-import { Link } from "@tanstack/react-router";
-import { Bus, ArrowLeft, Clock, MapPin, DollarSign, Route } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { Bus, ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
 
 export function NewRidePage() {
+  const navigate = useNavigate();
   const [routeName, setRouteName] = useState("");
   const [fromCity, setFromCity] = useState("");
   const [toCity, setToCity] = useState("");
   const [operator, setOperator] = useState("");
+  const [duration, setDuration] = useState("");
+  const [price, setPrice] = useState("");
+  const [departures, setDepartures] = useState("");
 
   const cities = [
     "Lusaka", "Livingstone", "Kitwe", "Ndola", "Chipata",
     "Kasama", "Mongu", "Solwezi", "Mansa", "Sesheke",
   ];
+
+  function onSaveDraft(e: React.FormEvent) {
+    e.preventDefault();
+    if (!routeName.trim() || !fromCity || !toCity || !operator.trim()) {
+      toast.error("Add a route name, both cities and the operator to save a draft.");
+      return;
+    }
+    if (fromCity === toCity) {
+      toast.error("From and to cities must be different.");
+      return;
+    }
+    toast.success("Draft saved. We'll pick up where you left off.");
+    navigate({ to: "/host/properties" });
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -46,7 +64,7 @@ export function NewRidePage() {
           </p>
         </header>
 
-        <div className="space-y-5">
+        <form onSubmit={onSaveDraft} className="space-y-5">
           <div className="space-y-1.5">
             <Label htmlFor="route-name">Route name</Label>
             <Input
@@ -91,38 +109,48 @@ export function NewRidePage() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="duration">Estimated duration</Label>
-              <Input id="duration" placeholder="e.g. 6h 30m" />
+              <Input
+                id="duration"
+                placeholder="e.g. 6h 30m"
+                value={duration}
+                onChange={(e) => setDuration(e.target.value)}
+              />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="price">Price (ZMW)</Label>
-              <Input id="price" type="number" placeholder="0" />
+              <Input
+                id="price"
+                type="number"
+                placeholder="0"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              />
             </div>
           </div>
 
           <div className="space-y-1.5">
             <Label htmlFor="departures">Departure schedule</Label>
-            <Input id="departures" placeholder="e.g. 4 daily, 06:00 / 10:00 / 14:00 / 20:00" />
+            <Input
+              id="departures"
+              placeholder="e.g. 4 daily, 06:00 / 10:00 / 14:00 / 20:00"
+              value={departures}
+              onChange={(e) => setDepartures(e.target.value)}
+            />
           </div>
 
-          <div className="rounded-2xl border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">
-              Coming soon
-            </p>
-            <p className="text-sm text-muted-foreground">
-              After this initial form, you'll be able to add vehicle details, seat maps,
-              amenities and photos for your transport listing.
-            </p>
+          <div className="mt-8 flex items-center gap-3">
+            <Button type="submit" className="bg-[image:var(--gradient-hero)] hover:opacity-95">
+              Save as draft
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => toast.info("Preview will open once vehicle photos are added.")}
+            >
+              Preview
+            </Button>
           </div>
-        </div>
-
-        <div className="mt-8 flex items-center gap-3">
-          <Button className="bg-[image:var(--gradient-hero)] hover:opacity-95">
-            Save as draft
-          </Button>
-          <Button variant="outline" onClick={() => {}}>
-            Preview
-          </Button>
-        </div>
+        </form>
       </main>
       <Footer />
     </div>

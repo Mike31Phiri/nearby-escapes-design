@@ -67,6 +67,84 @@ function SettingsPage() {
   const [language, setLanguage] = useState("en");
   const [currency, setCurrency] = useState("USD");
 
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [showCardForm, setShowCardForm] = useState(false);
+  const [cards, setCards] = useState<{ id: string; brand: string; last4: string; exp: string; name: string }[]>([]);
+  const [cardName, setCardName] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardExp, setCardExp] = useState("");
+  const [cardCvc, setCardCvc] = useState("");
+
+  function detectBrand(num: string) {
+    const n = num.replace(/\s+/g, "");
+    if (/^4/.test(n)) return "Visa";
+    if (/^(5[1-5]|2[2-7])/.test(n)) return "Mastercard";
+    if (/^3[47]/.test(n)) return "Amex";
+    return "Card";
+  }
+
+  function onChangePassword(e: React.FormEvent) {
+    e.preventDefault();
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      toast.error("Fill in all password fields.");
+      return;
+    }
+    if (newPassword.length < 8) {
+      toast.error("New password must be at least 8 characters.");
+      return;
+    }
+    if (newPassword === currentPassword) {
+      toast.error("New password must be different from your current one.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast.error("New passwords don't match.");
+      return;
+    }
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+    setShowPasswordForm(false);
+    toast.success("Password updated successfully.");
+  }
+
+  function onAddCard(e: React.FormEvent) {
+    e.preventDefault();
+    const digits = cardNumber.replace(/\s+/g, "");
+    if (!cardName.trim() || digits.length < 13 || !/^\d+$/.test(digits)) {
+      toast.error("Enter a valid name and card number.");
+      return;
+    }
+    if (!/^\d{2}\/\d{2}$/.test(cardExp)) {
+      toast.error("Expiry must be in MM/YY format.");
+      return;
+    }
+    if (!/^\d{3,4}$/.test(cardCvc)) {
+      toast.error("CVC must be 3 or 4 digits.");
+      return;
+    }
+    setCards((prev) => [
+      ...prev,
+      {
+        id: crypto.randomUUID(),
+        brand: detectBrand(digits),
+        last4: digits.slice(-4),
+        exp: cardExp,
+        name: cardName.trim(),
+      },
+    ]);
+    setCardName("");
+    setCardNumber("");
+    setCardExp("");
+    setCardCvc("");
+    setShowCardForm(false);
+    toast.success("Card added.");
+  }
+
   if (!user) return null;
 
   return (
@@ -155,12 +233,73 @@ function SettingsPage() {
                 onChange={(v) => { setTwoFactor(v); toast.success(`2FA ${v ? "enabled" : "disabled"}.`); }}
               />
               <Separator />
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-sm font-medium">Password</p>
-                  <p className="text-xs text-muted-foreground">Rotate every 90 days for best security.</p>
+              <div>
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-medium">Password</p>
+                    <p className="text-xs text-muted-foreground">Rotate every 90 days for best security.</p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowPasswordForm((v) => !v)}
+                  >
+                    {showPasswordForm ? "Cancel" : "Change password"}
+                  </Button>
                 </div>
-                <Button variant="outline" onClick={() => toast.info("Password change flow coming soon.")}>Change password</Button>
+                {showPasswordForm && (
+                  <form onSubmit={onChangePassword} className="mt-4 space-y-3 rounded-2xl border border-border/60 bg-muted/30 p-4">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="current-password">Current password</Label>
+                      <Input
+                        id="current-password"
+                        type="password"
+                        autoComplete="current-password"
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                      />
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <Label htmlFor="new-password">New password</Label>
+                        <Input
+                          id="new-password"
+                          type="password"
+                          autoComplete="new-password"
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                        />
+                        <p className="text-[11px] text-muted-foreground">At least 8 characters.</p>
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="confirm-password">Confirm new password</Label>
+                        <Input
+                          id="confirm-password"
+                          type="password"
+                          autoComplete="new-password"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-end gap-2 pt-1">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={() => {
+                          setShowPasswordForm(false);
+                          setCurrentPassword("");
+                          setNewPassword("");
+                          setConfirmPassword("");
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button type="submit" className="bg-[image:var(--gradient-hero)] hover:opacity-95">
+                        Update password
+                      </Button>
+                    </div>
+                  </form>
+                )}
               </div>
               <Separator />
               <div className="flex items-center justify-between gap-4">
@@ -219,14 +358,110 @@ function SettingsPage() {
 
           {active === "payments" && (
             <Section title="Payments" desc="Manage cards and payout methods.">
-              <div className="rounded-2xl border border-dashed border-border p-6 text-center">
-                <CreditCard className="h-6 w-6 mx-auto text-muted-foreground" />
-                <p className="mt-2 text-sm font-medium">No payment methods yet</p>
-                <p className="text-xs text-muted-foreground">Add a card to speed up checkout.</p>
-                <Button className="mt-4 bg-[image:var(--gradient-hero)] hover:opacity-95" onClick={() => toast.info("Payment setup coming soon.")}>
-                  Add payment method
-                </Button>
-              </div>
+              {cards.length > 0 && (
+                <div className="space-y-2">
+                  {cards.map((c) => (
+                    <div key={c.id} className="flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-card p-3">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-9 w-12 items-center justify-center rounded-md bg-muted text-xs font-semibold">
+                          {c.brand}
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium">•••• {c.last4}</p>
+                          <p className="text-xs text-muted-foreground">{c.name} · exp {c.exp}</p>
+                        </div>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setCards((prev) => prev.filter((x) => x.id !== c.id));
+                          toast.success("Card removed.");
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {!showCardForm ? (
+                <div className="rounded-2xl border border-dashed border-border p-6 text-center">
+                  <CreditCard className="h-6 w-6 mx-auto text-muted-foreground" />
+                  <p className="mt-2 text-sm font-medium">
+                    {cards.length > 0 ? "Add another card" : "No payment methods yet"}
+                  </p>
+                  <p className="text-xs text-muted-foreground">Add a card to speed up checkout.</p>
+                  <Button
+                    className="mt-4 bg-[image:var(--gradient-hero)] hover:opacity-95"
+                    onClick={() => setShowCardForm(true)}
+                  >
+                    Add payment method
+                  </Button>
+                </div>
+              ) : (
+                <form onSubmit={onAddCard} className="space-y-3 rounded-2xl border border-border/60 bg-muted/30 p-4">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="card-name">Cardholder name</Label>
+                    <Input
+                      id="card-name"
+                      placeholder="Full name on card"
+                      value={cardName}
+                      onChange={(e) => setCardName(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="card-number">Card number</Label>
+                    <Input
+                      id="card-number"
+                      inputMode="numeric"
+                      placeholder="1234 5678 9012 3456"
+                      value={cardNumber}
+                      onChange={(e) => setCardNumber(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="card-exp">Expiry (MM/YY)</Label>
+                      <Input
+                        id="card-exp"
+                        placeholder="04/28"
+                        value={cardExp}
+                        onChange={(e) => setCardExp(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="card-cvc">CVC</Label>
+                      <Input
+                        id="card-cvc"
+                        inputMode="numeric"
+                        placeholder="123"
+                        value={cardCvc}
+                        onChange={(e) => setCardCvc(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-end gap-2 pt-1">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => {
+                        setShowCardForm(false);
+                        setCardName("");
+                        setCardNumber("");
+                        setCardExp("");
+                        setCardCvc("");
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button type="submit" className="bg-[image:var(--gradient-hero)] hover:opacity-95">
+                      Save card
+                    </Button>
+                  </div>
+                </form>
+              )}
             </Section>
           )}
 

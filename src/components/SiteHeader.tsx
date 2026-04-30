@@ -105,14 +105,14 @@ export function SiteHeader() {
                   {user ? (
                     <>
                       <MobileRowLink to="/profile" onSelect={() => setOpen(false)} icon={UserCircle} label="Profile" />
-                      <MobileRowLink to="/profile/host" onSelect={() => setOpen(false)} icon={Briefcase} label="Host dashboard" />
+                      <MobileRowLink to="/host" onSelect={() => setOpen(false)} icon={Briefcase} label="Host dashboard" />
                       <MobileRowLink to="/profile/settings" onSelect={() => setOpen(false)} icon={SettingsIcon} label="Account settings" />
                     </>
                   ) : (
                     <>
                       <MobileRowAction onClick={() => { setOpen(false); navigate({ to: "/login" }); }} icon={UserCircle} label="Sign in" />
                       <MobileRowAction onClick={() => { setOpen(false); navigate({ to: "/register" }); }} icon={Briefcase} label="Sign up" />
-                      <MobileRowLink to="/profile/host" onSelect={() => setOpen(false)} icon={Briefcase} label="List your property" />
+                      <MobileRowLink to="/host" onSelect={() => setOpen(false)} icon={Briefcase} label="List your property" />
                     </>
                   )}
                 </MobileGroup>

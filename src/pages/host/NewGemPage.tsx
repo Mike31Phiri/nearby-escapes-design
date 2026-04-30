@@ -1,9 +1,9 @@
-import { Link } from "@tanstack/react-router";
-import { MapPin, ArrowLeft, Clock, DollarSign, Camera } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { MapPin, ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,9 +22,24 @@ const categories = [
 ];
 
 export function NewGemPage() {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [location, setLocation] = useState("");
+  const [description, setDescription] = useState("");
+  const [duration, setDuration] = useState("");
+  const [price, setPrice] = useState("");
+  const [schedule, setSchedule] = useState("");
+
+  function onSaveDraft(e: React.FormEvent) {
+    e.preventDefault();
+    if (!name.trim() || !category || !location.trim()) {
+      toast.error("Add at least a name, category and location to save a draft.");
+      return;
+    }
+    toast.success("Draft saved. We'll pick up where you left off.");
+    navigate({ to: "/host/properties" });
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -52,7 +67,7 @@ export function NewGemPage() {
           </p>
         </header>
 
-        <div className="space-y-5">
+        <form onSubmit={onSaveDraft} className="space-y-5">
           <div className="space-y-1.5">
             <Label htmlFor="gem-name">Experience name</Label>
             <Input
@@ -89,44 +104,56 @@ export function NewGemPage() {
               id="description"
               placeholder="Describe the experience, what guests will see and do..."
               rows={4}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="duration">Duration</Label>
-              <Input id="duration" placeholder="e.g. 3 hours" />
+              <Input
+                id="duration"
+                placeholder="e.g. 3 hours"
+                value={duration}
+                onChange={(e) => setDuration(e.target.value)}
+              />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="price">Price per person (USD)</Label>
-              <Input id="price" type="number" placeholder="0" />
+              <Input
+                id="price"
+                type="number"
+                placeholder="0"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              />
             </div>
           </div>
 
           <div className="space-y-1.5">
             <Label htmlFor="schedule">Schedule</Label>
-            <Input id="schedule" placeholder="e.g. Daily at 08:00 and 15:00" />
+            <Input
+              id="schedule"
+              placeholder="e.g. Daily at 08:00 and 15:00"
+              value={schedule}
+              onChange={(e) => setSchedule(e.target.value)}
+            />
           </div>
 
-          <div className="rounded-2xl border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">
-              Coming soon
-            </p>
-            <p className="text-sm text-muted-foreground">
-              After this initial form, you'll be able to add photos, itinerary details,
-              inclusions/exclusions and availability calendar for your gem listing.
-            </p>
+          <div className="mt-8 flex items-center gap-3">
+            <Button type="submit" className="bg-[image:var(--gradient-hero)] hover:opacity-95">
+              Save as draft
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => toast.info("Preview will open once photos are uploaded.")}
+            >
+              Preview
+            </Button>
           </div>
-        </div>
-
-        <div className="mt-8 flex items-center gap-3">
-          <Button className="bg-[image:var(--gradient-hero)] hover:opacity-95">
-            Save as draft
-          </Button>
-          <Button variant="outline">
-            Preview
-          </Button>
-        </div>
+        </form>
       </main>
       <Footer />
     </div>

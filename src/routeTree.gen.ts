@@ -35,7 +35,6 @@ import { Route as StaysStayIdRouteImport } from './routes/stays.$stayId'
 import { Route as SpotlightStoryIdRouteImport } from './routes/spotlight.$storyId'
 import { Route as ProfileVerificationRouteImport } from './routes/profile.verification'
 import { Route as ProfileSettingsRouteImport } from './routes/profile.settings'
-import { Route as ProfileHostRouteImport } from './routes/profile.host'
 import { Route as ProfileFeedbackRouteImport } from './routes/profile.feedback'
 import { Route as ProfileEditRouteImport } from './routes/profile.edit'
 import { Route as LegalTermsRouteImport } from './routes/legal.terms'
@@ -206,11 +205,6 @@ const ProfileVerificationRoute = ProfileVerificationRouteImport.update({
 const ProfileSettingsRoute = ProfileSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
-  getParentRoute: () => ProfileRoute,
-} as any)
-const ProfileHostRoute = ProfileHostRouteImport.update({
-  id: '/host',
-  path: '/host',
   getParentRoute: () => ProfileRoute,
 } as any)
 const ProfileFeedbackRoute = ProfileFeedbackRouteImport.update({
@@ -467,7 +461,6 @@ export interface FileRoutesByFullPath {
   '/legal/terms': typeof LegalTermsRoute
   '/profile/edit': typeof ProfileEditRoute
   '/profile/feedback': typeof ProfileFeedbackRoute
-  '/profile/host': typeof ProfileHostRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/verification': typeof ProfileVerificationRoute
   '/spotlight/$storyId': typeof SpotlightStoryIdRoute
@@ -536,7 +529,6 @@ export interface FileRoutesByTo {
   '/legal/terms': typeof LegalTermsRoute
   '/profile/edit': typeof ProfileEditRoute
   '/profile/feedback': typeof ProfileFeedbackRoute
-  '/profile/host': typeof ProfileHostRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/verification': typeof ProfileVerificationRoute
   '/spotlight/$storyId': typeof SpotlightStoryIdRoute
@@ -607,7 +599,6 @@ export interface FileRoutesById {
   '/legal/terms': typeof LegalTermsRoute
   '/profile/edit': typeof ProfileEditRoute
   '/profile/feedback': typeof ProfileFeedbackRoute
-  '/profile/host': typeof ProfileHostRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/verification': typeof ProfileVerificationRoute
   '/spotlight/$storyId': typeof SpotlightStoryIdRoute
@@ -679,7 +670,6 @@ export interface FileRouteTypes {
     | '/legal/terms'
     | '/profile/edit'
     | '/profile/feedback'
-    | '/profile/host'
     | '/profile/settings'
     | '/profile/verification'
     | '/spotlight/$storyId'
@@ -748,7 +738,6 @@ export interface FileRouteTypes {
     | '/legal/terms'
     | '/profile/edit'
     | '/profile/feedback'
-    | '/profile/host'
     | '/profile/settings'
     | '/profile/verification'
     | '/spotlight/$storyId'
@@ -818,7 +807,6 @@ export interface FileRouteTypes {
     | '/legal/terms'
     | '/profile/edit'
     | '/profile/feedback'
-    | '/profile/host'
     | '/profile/settings'
     | '/profile/verification'
     | '/spotlight/$storyId'
@@ -1073,13 +1061,6 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/profile/settings'
       preLoaderRoute: typeof ProfileSettingsRouteImport
-      parentRoute: typeof ProfileRoute
-    }
-    '/profile/host': {
-      id: '/profile/host'
-      path: '/host'
-      fullPath: '/profile/host'
-      preLoaderRoute: typeof ProfileHostRouteImport
       parentRoute: typeof ProfileRoute
     }
     '/profile/feedback': {
@@ -1427,7 +1408,6 @@ const CollectionsRouteWithChildren = CollectionsRoute._addFileChildren(
 interface ProfileRouteChildren {
   ProfileEditRoute: typeof ProfileEditRoute
   ProfileFeedbackRoute: typeof ProfileFeedbackRoute
-  ProfileHostRoute: typeof ProfileHostRoute
   ProfileSettingsRoute: typeof ProfileSettingsRoute
   ProfileVerificationRoute: typeof ProfileVerificationRoute
   ProfileIndexRoute: typeof ProfileIndexRoute
@@ -1436,7 +1416,6 @@ interface ProfileRouteChildren {
 const ProfileRouteChildren: ProfileRouteChildren = {
   ProfileEditRoute: ProfileEditRoute,
   ProfileFeedbackRoute: ProfileFeedbackRoute,
-  ProfileHostRoute: ProfileHostRoute,
   ProfileSettingsRoute: ProfileSettingsRoute,
   ProfileVerificationRoute: ProfileVerificationRoute,
   ProfileIndexRoute: ProfileIndexRoute,
