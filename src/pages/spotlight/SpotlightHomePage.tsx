@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import { Clock, ArrowRight, Sparkles } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -34,7 +34,7 @@ export function SpotlightHomePage() {
           </p>
         </header>
 
-        <Link to="/spotlight/$storyId" params={{ storyId: featured.id }} className="mt-8 block group">
+        <Link href="/spotlight/$storyId" params={{ storyId: featured.id }} className="mt-8 block group">
           <Card className="overflow-hidden border-border/60">
             <div className="grid md:grid-cols-2">
               <div className="relative aspect-[4/3] md:aspect-auto">

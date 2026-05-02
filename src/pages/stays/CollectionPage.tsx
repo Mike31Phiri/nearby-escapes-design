@@ -1,4 +1,5 @@
-import { useParams, Link } from "@tanstack/react-router";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { MapPin, Star, SlidersHorizontal } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -28,7 +29,7 @@ const collections: Record<string, { title: string; tagline: string; description:
 };
 
 export function CollectionPage() {
-  const { slug } = useParams({ from: "/stays/collections/$slug" });
+  const { slug } = useParams();
   const c = collections[slug] ?? { title: "Collection", tagline: "Hand-picked stays", description: "A curated set of stays from our editors." };
 
   return (

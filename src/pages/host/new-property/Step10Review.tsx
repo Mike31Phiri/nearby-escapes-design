@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, CircleCheck as CheckCircle2, Hop as Home, MapPin, Bed, Wifi, Camera, Type, FileText, DollarSign, CalendarDays, Eye, Loader as Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Navbar } from "@/components/layout/Navbar";
@@ -22,7 +23,7 @@ const sections = [
 ];
 
 export function Step10Review() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
   const [publishing, setPublishing] = useState(false);
   const [published, setPublished] = useState(false);
 
@@ -48,10 +49,10 @@ export function Step10Review() {
               Your property is now visible to travelers. You can edit details anytime from your host dashboard.
             </p>
             <div className="mt-6 flex flex-col gap-3">
-              <Button className="bg-[image:var(--gradient-hero)] hover:opacity-95" onClick={() => navigate({ to: "/host/properties" })}>
+              <Button className="bg-[image:var(--gradient-hero)] hover:opacity-95" onClick={() => router.push("/host/properties")}>
                 View my properties
               </Button>
-              <Button variant="outline" onClick={() => navigate({ to: "/" })}>
+              <Button variant="outline" onClick={() => router.push("/")}>
                 Back to home
               </Button>
             </div>

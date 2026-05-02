@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Cookie } from "lucide-react";
 
@@ -46,7 +46,7 @@ export function CookieConsent() {
           </div>
           <p className="text-sm leading-relaxed text-foreground">
             We use essential cookies to make the site work and optional analytics cookies to improve it.{" "}
-            <Link to="/legal/cookies" className="font-medium text-primary underline">
+            <Link href="/legal/cookies" className="font-medium text-primary underline">
               Learn more
             </Link>
             .

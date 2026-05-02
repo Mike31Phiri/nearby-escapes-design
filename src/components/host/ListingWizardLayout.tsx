@@ -1,4 +1,5 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -39,7 +40,7 @@ export function ListingWizardLayout({
   nextLabel?: string;
   backLabel?: string;
 }) {
-  const location = useLocation();
+  const location = usePathname();
   const currentIdx = steps.findIndex((s) => s.path === location.pathname);
 
   return (
@@ -103,7 +104,7 @@ export function ListingWizardLayout({
               {backLabel || "Back"}
             </Button>
           ) : (
-            <Link to="/host/new-listing">
+            <Link href="/host/new-listing">
               <Button variant="ghost">Cancel</Button>
             </Link>
           )}

@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import { Facebook, Instagram, Mail, MapPin, Phone, Twitter } from "lucide-react";
 import logo from "@/assets/logo.png";
 
@@ -23,10 +23,10 @@ export function SiteFooter() {
         <div>
           <h4 className="font-semibold mb-3">Explore</h4>
           <ul className="space-y-2 text-sm text-background/70">
-            <li><Link to="/accommodations" className="hover:text-background">Accommodations</Link></li>
-            <li><Link to="/bus-booking" className="hover:text-background">Bus Booking</Link></li>
-            <li><Link to="/packages" className="hover:text-background">Packages</Link></li>
-            <li><Link to="/gems" className="hover:text-background">Hidden Gems</Link></li>
+            <li><Link href="/accommodations" className="hover:text-background">Accommodations</Link></li>
+            <li><Link href="/bus-booking" className="hover:text-background">Bus Booking</Link></li>
+            <li><Link href="/packages" className="hover:text-background">Packages</Link></li>
+            <li><Link href="/gems" className="hover:text-background">Hidden Gems</Link></li>
           </ul>
         </div>
 
@@ -52,10 +52,10 @@ export function SiteFooter() {
         <div className="mx-auto max-w-7xl px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-background/60">
           <p>© {new Date().getFullYear()} Nearby Escapes. All rights reserved.</p>
           <div className="flex items-center gap-4">
-            <Link to="/legal/privacy" className="hover:text-background">Privacy</Link>
-            <Link to="/legal/terms" className="hover:text-background">Terms</Link>
-            <Link to="/legal/cookies" className="hover:text-background">Cookies</Link>
-            <Link to="/help" className="hover:text-background">Help</Link>
+            <Link href="/legal/privacy" className="hover:text-background">Privacy</Link>
+            <Link href="/legal/terms" className="hover:text-background">Terms</Link>
+            <Link href="/legal/cookies" className="hover:text-background">Cookies</Link>
+            <Link href="/help" className="hover:text-background">Help</Link>
           </div>
           <div className="flex items-center gap-3">
             <a href="#" aria-label="Facebook" className="hover:text-background"><Facebook className="h-4 w-4" /></a>

@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import { Star } from "lucide-react";
 import type { Listing } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";

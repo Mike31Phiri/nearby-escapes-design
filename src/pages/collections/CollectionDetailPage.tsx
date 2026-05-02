@@ -1,4 +1,5 @@
-import { useParams, Link } from "@tanstack/react-router";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { ArrowLeft, Heart, Share2, Users, Plus, MapPin, Star } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -16,7 +17,7 @@ const titles: Record<string, string> = {
 };
 
 export function CollectionDetailPage() {
-  const { collectionId } = useParams({ from: "/collections/$collectionId" });
+  const { collectionId } = useParams();
   const title = titles[collectionId] ?? "Collection";
   const items = listings.slice(0, 5);
 
@@ -24,7 +25,7 @@ export function CollectionDetailPage() {
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 md:px-6 md:py-12">
-        <Link to="/collections" className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+        <Link href="/collections" className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-4 w-4" /> All collections
         </Link>
 
@@ -60,7 +61,7 @@ export function CollectionDetailPage() {
         <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {items.map((l) => (
             <Card key={l.id} className="overflow-hidden border-border/60 transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-card)]">
-              <Link to="/stays/$stayId" params={{ stayId: l.id }}>
+              <Link href="/stays/$stayId" params={{ stayId: l.id }}>
                 <div className="relative aspect-[4/3]">
                   <img src={l.image} alt={l.name} className="h-full w-full object-cover" />
                   <Button size="icon" variant="ghost" className="absolute right-2 top-2 h-8 w-8 rounded-full bg-card/80 backdrop-blur">

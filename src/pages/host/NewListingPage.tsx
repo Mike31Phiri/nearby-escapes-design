@@ -1,4 +1,4 @@
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "next/navigation";
 import { Bed, Bus, MapPin, ArrowRight } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -33,7 +33,7 @@ const listingTypes = [
 ];
 
 export function NewListingPage() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
 
   return (
     <div className="min-h-screen flex flex-col bg-background">

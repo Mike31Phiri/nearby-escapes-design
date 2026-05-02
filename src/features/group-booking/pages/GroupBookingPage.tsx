@@ -1,4 +1,4 @@
-import { useNavigate } from '@tanstack/react-router';
+import { useRouter } from "next/navigation";
 import { useState } from 'react';
 import { GroupBookingForm, type GroupBookingData } from '../components/GroupBookingForm';
 import { Button } from '@/components/ui/button';
@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Users, Mail, Calendar, DollarSign, CheckCircle, Send } from 'lucide-react';
 
 export function GroupBookingPage() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
   const [groupCreated, setGroupCreated] = useState(false);
   const [groupData, setGroupData] = useState<GroupBookingData | null>(null);
 

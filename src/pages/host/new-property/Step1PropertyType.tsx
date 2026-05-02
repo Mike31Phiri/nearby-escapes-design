@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "next/navigation";
 import { Hop as Home, Building2, Tent, Hotel, Castle } from "lucide-react";
 import { ListingWizardLayout } from "@/components/host/ListingWizardLayout";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,7 +14,7 @@ const propertyTypes = [
 ];
 
 export function Step1PropertyType() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
   const [selected, setSelected] = useState<string>("");
 
   return (
@@ -23,8 +23,8 @@ export function Step1PropertyType() {
       title="What kind of place are you listing?"
       description="Pick the category that best matches your property. You can change this later."
       step={1}
-      onNext={() => navigate({ to: "/host/new-property/step-2" })}
-      onBack={() => navigate({ to: "/host/properties" })}
+      onNext={() => router.push("/host/new-property/step-2")}
+      onBack={() => router.push("/host/properties")}
       nextDisabled={!selected}
     >
       <div className="grid gap-3 sm:grid-cols-2">

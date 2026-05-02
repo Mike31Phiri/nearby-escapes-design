@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { Link, useNavigate, useSearch } from "@tanstack/react-router";
+"use client";
+import { useState, use } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, CalendarDays, Users, Star, MapPin, ShieldCheck, Clock, CreditCard, Loader as Loader2, Bus, Plus, Check } from "lucide-react";
 import { toast } from "sonner";
 import { Navbar } from "@/components/layout/Navbar";
@@ -30,17 +32,17 @@ const transportOptions = [
   },
 ];
 
-export function BookingPage() {
-  const navigate = useNavigate();
+export default function BookingPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
+  const router = useRouter();
+  const params = use(searchParams);
   const [proceeding, setProceeding] = useState(false);
   const [addTransport, setAddTransport] = useState(false);
   const [selectedTransport, setSelectedTransport] = useState<string | null>(null);
 
-  const search = useSearch({ strict: false }) as Record<string, string>;
-  const stayId = search.stayId || "mosi-oa-tunya-lodge";
-  const checkIn = search.checkIn || "";
-  const checkOut = search.checkOut || "";
-  const guests = search.guests || "2";
+  const stayId = params.stayId || "mosi-oa-tunya-lodge";
+  const checkIn = params.checkIn || "";
+  const checkOut = params.checkOut || "";
+  const guests = params.guests || "2";
 
   const listing = getListing(stayId);
 
@@ -62,7 +64,7 @@ export function BookingPage() {
     await new Promise((r) => setTimeout(r, 800));
     setProceeding(false);
     toast.success("Redirecting to secure payment...");
-    navigate({ to: "/booking/payment" });
+    router.push("/booking/payment");
   }
 
   return (

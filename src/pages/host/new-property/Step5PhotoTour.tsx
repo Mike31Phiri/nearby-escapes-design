@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "next/navigation";
 import { ImagePlus, X, Upload } from "lucide-react";
 import { ListingWizardLayout } from "@/components/host/ListingWizardLayout";
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 type Photo = { id: string; url: string; label: string };
 
 export function Step5PhotoTour() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
   const [photos, setPhotos] = useState<Photo[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -35,8 +35,8 @@ export function Step5PhotoTour() {
       title="Add photos of your place"
       description="Great photos help guests feel confident. Add at least 5 — the first one becomes your cover photo."
       step={5}
-      onNext={() => navigate({ to: "/host/new-property/step-6" })}
-      onBack={() => navigate({ to: "/host/new-property/step-4" })}
+      onNext={() => router.push("/host/new-property/step-6")}
+      onBack={() => router.push("/host/new-property/step-4")}
       nextDisabled={photos.length < 1}
       nextLabel={photos.length < 1 ? "Add at least 1 photo" : `Next (${photos.length} photos)`}
     >

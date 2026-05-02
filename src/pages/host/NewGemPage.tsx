@@ -1,4 +1,5 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { MapPin, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { Navbar } from "@/components/layout/Navbar";
@@ -22,7 +23,7 @@ const categories = [
 ];
 
 export function NewGemPage() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [location, setLocation] = useState("");
@@ -38,7 +39,7 @@ export function NewGemPage() {
       return;
     }
     toast.success("Draft saved. We'll pick up where you left off.");
-    navigate({ to: "/host/properties" });
+    router.push("/host/properties");
   }
 
   return (

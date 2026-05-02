@@ -1,4 +1,5 @@
-import { useParams, Link } from "@tanstack/react-router";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { ArrowLeft, ThumbsUp, ThumbsDown, MessageCircle, BookOpen } from "lucide-react";
 import { useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
@@ -66,7 +67,7 @@ const articles: Record<string, { topic: string; title: string; body: string[] }>
 };
 
 export function ArticlePage() {
-  const { articleId } = useParams({ from: "/support/$articleId" });
+  const { articleId } = useParams();
   const a = articles[articleId] ?? { topic: "Help", title: "Article", body: ["This article is not available yet."] };
   const [voted, setVoted] = useState<"up" | "down" | null>(null);
 
@@ -74,7 +75,7 @@ export function ArticlePage() {
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 md:px-6 md:py-12">
-        <Link to="/support" className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+        <Link href="/support" className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-4 w-4" /> Help center
         </Link>
 
@@ -131,7 +132,7 @@ export function ArticlePage() {
 
         <div className="mt-8 rounded-2xl border border-border bg-primary-soft/30 p-5 flex items-center justify-between gap-4">
           <p className="text-sm">Still need help? Our team is one message away.</p>
-          <Button asChild size="sm"><Link to="/support/contact"><MessageCircle className="h-4 w-4 mr-1" /> Contact</Link></Button>
+          <Button asChild size="sm"><Link href="/support/contact"><MessageCircle className="h-4 w-4 mr-1" /> Contact</Link></Button>
         </div>
       </main>
       <Footer />

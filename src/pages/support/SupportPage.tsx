@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import { Search, BookOpen, CreditCard, Plane, Home, Shield, MessageCircle, ChevronRight } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -81,7 +81,7 @@ export function SupportPage() {
                 <h3 className="font-semibold">Still need help?</h3>
                 <p className="text-sm text-muted-foreground">Our team replies in under an hour, every day.</p>
               </div>
-              <Button asChild><Link to="/support/contact"><MessageCircle className="h-4 w-4 mr-1" /> Contact us</Link></Button>
+              <Button asChild><Link href="/support/contact"><MessageCircle className="h-4 w-4 mr-1" /> Contact us</Link></Button>
             </CardContent>
           </Card>
         </div>

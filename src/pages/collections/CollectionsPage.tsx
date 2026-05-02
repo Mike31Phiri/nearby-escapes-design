@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import { Plus, Heart, Users, MapPin, Globe2 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -58,7 +58,7 @@ export function CollectionsPage() {
               </div>
             </Link>
           ))}
-          <Link to="/collections" className="rounded-2xl border-2 border-dashed border-border bg-card p-8 flex flex-col items-center justify-center text-center text-muted-foreground transition hover:border-primary hover:text-primary">
+          <Link href="/collections" className="rounded-2xl border-2 border-dashed border-border bg-card p-8 flex flex-col items-center justify-center text-center text-muted-foreground transition hover:border-primary hover:text-primary">
             <Plus className="h-7 w-7" />
             <p className="mt-2 text-sm font-medium">Create new collection</p>
           </Link>

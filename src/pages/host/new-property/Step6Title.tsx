@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "next/navigation";
 import { ListingWizardLayout } from "@/components/host/ListingWizardLayout";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 const MAX = 50;
 
 export function Step6Title() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
   const [title, setTitle] = useState("");
 
   const charCount = title.length;
@@ -19,8 +19,8 @@ export function Step6Title() {
       title="Give your place a name"
       description="A short, memorable title works best. Highlight what makes it unique."
       step={6}
-      onNext={() => navigate({ to: "/host/new-property/step-7" })}
-      onBack={() => navigate({ to: "/host/new-property/step-5" })}
+      onNext={() => router.push("/host/new-property/step-7")}
+      onBack={() => router.push("/host/new-property/step-5")}
       nextDisabled={!isValid}
     >
       <div className="space-y-4">

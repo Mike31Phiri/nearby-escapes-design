@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+import { useRouter } from "next/navigation";
 import { BusSearchForm, type BusSearchResult } from '../components/BusSearchForm';
 import { BusResultsList } from '../components/BusResultsList';
 import { Button } from '@/components/ui/button';
@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle, CreditCard } from 'lucide-react';
 
 export function BusBookingPage() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
   const [searchResults, setSearchResults] = useState<BusSearchResult[]>([]);
   const [selectedBus, setSelectedBus] = useState<BusSearchResult | null>(null);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);

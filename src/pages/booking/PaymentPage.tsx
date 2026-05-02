@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, CreditCard, Smartphone, ShieldCheck, Loader as Loader2, CircleCheck as CheckCircle2, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { Navbar } from "@/components/layout/Navbar";
@@ -11,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 
 export function PaymentPage() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [paying, setPaying] = useState(false);
   const [paid, setPaid] = useState(false);
   const [method, setMethod] = useState<"card" | "mobile">("card");
@@ -38,10 +39,10 @@ export function PaymentPage() {
               Your payment was processed securely via DPO. A confirmation email has been sent with your booking details.
             </p>
             <div className="mt-6 flex flex-col gap-3">
-              <Button className="bg-[image:var(--gradient-hero)] hover:opacity-95" onClick={() => navigate({ to: "/booking/confirmation" })}>
+              <Button className="bg-[image:var(--gradient-hero)] hover:opacity-95" onClick={() => router.push("/booking/confirmation")}>
                 View confirmation
               </Button>
-              <Button variant="outline" onClick={() => navigate({ to: "/" })}>
+              <Button variant="outline" onClick={() => router.push("/")}>
                 Back to home
               </Button>
             </div>

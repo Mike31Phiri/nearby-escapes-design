@@ -1,4 +1,5 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Bus, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { Navbar } from "@/components/layout/Navbar";
@@ -10,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react";
 
 export function NewRidePage() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [routeName, setRouteName] = useState("");
   const [fromCity, setFromCity] = useState("");
   const [toCity, setToCity] = useState("");
@@ -35,7 +36,7 @@ export function NewRidePage() {
       return;
     }
     toast.success("Draft saved. We'll pick up where you left off.");
-    navigate({ to: "/host/properties" });
+    router.push("/host/properties");
   }
 
   return (

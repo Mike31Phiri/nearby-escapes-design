@@ -1,4 +1,5 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { LayoutDashboard, CalendarDays, DollarSign, MessageSquare, ChartBar as BarChart3, Hop as Home, Star, Plus, TrendingUp, Users, ArrowRight, Compass, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { Navbar } from "@/components/layout/Navbar";
@@ -31,7 +32,7 @@ const recentBookings = [
 ];
 
 export function HostDashboardPage() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { user, becomeHost } = useAuth();
 
   if (user && user.role === "guest") {
@@ -69,7 +70,7 @@ export function HostDashboardPage() {
                   Activate host account
                 </Button>
                 <Button asChild variant="outline" size="lg">
-                  <Link to="/help">Learn how it works</Link>
+                  <Link href="/help">Learn how it works</Link>
                 </Button>
               </div>
             </CardContent>
@@ -93,12 +94,12 @@ export function HostDashboardPage() {
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <Button asChild variant="outline" size="sm">
-              <Link to="/">
+              <Link href="/">
                 <Compass className="h-4 w-4 mr-2" /> Switch to traveling
               </Link>
             </Button>
             <Button
-              onClick={() => navigate({ to: "/host/new-listing" })}
+              onClick={() => router.push("/host/new-listing")}
               className="bg-[image:var(--gradient-hero)] hover:opacity-95"
             >
               <Plus className="h-4 w-4 mr-2" /> New listing
@@ -148,7 +149,7 @@ export function HostDashboardPage() {
         <div className="mt-6">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-semibold">Recent bookings</h2>
-            <Link to="/host/calendar" className="text-xs font-medium text-primary hover:underline">
+            <Link href="/host/calendar" className="text-xs font-medium text-primary hover:underline">
               View all
             </Link>
           </div>
@@ -188,7 +189,7 @@ export function HostDashboardPage() {
               <p className="text-xs text-muted-foreground mt-1">
                 Edit pricing, photos, availability or description for any property.
               </p>
-              <Link to="/host/properties">
+              <Link href="/host/properties">
                 <Button variant="outline" size="sm" className="mt-3">
                   Manage properties <ArrowRight className="h-3 w-3 ml-1" />
                 </Button>
@@ -201,7 +202,7 @@ export function HostDashboardPage() {
               <p className="text-xs text-muted-foreground mt-1">
                 View payout history, upcoming payments and monthly breakdowns.
               </p>
-              <Link to="/host/earnings">
+              <Link href="/host/earnings">
                 <Button variant="outline" size="sm" className="mt-3">
                   View earnings <ArrowRight className="h-3 w-3 ml-1" />
                 </Button>

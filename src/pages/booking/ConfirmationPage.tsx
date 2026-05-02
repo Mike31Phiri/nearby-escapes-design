@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import { CheckCircle2, Download, Share2, MapPin, Calendar, Users, MessageCircle, Plane } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -58,7 +58,7 @@ export function ConfirmationPage() {
                 <p className="font-semibold">Your host, Chanda</p>
                 <p className="text-xs text-muted-foreground">Replies in under 30 minutes</p>
               </div>
-              <Button asChild size="sm"><Link to="/inbox"><MessageCircle className="h-4 w-4 mr-1" /> Message</Link></Button>
+              <Button asChild size="sm"><Link href="/inbox"><MessageCircle className="h-4 w-4 mr-1" /> Message</Link></Button>
             </div>
             <p className="mt-4 text-sm text-muted-foreground leading-6">
               "Thank you for booking! Check-in is from 14:00. If you arrive earlier, message me — we can usually arrange storage."
@@ -77,7 +77,7 @@ export function ConfirmationPage() {
             <div className="mt-6 flex flex-wrap items-center justify-end gap-2">
               <Button variant="outline" size="sm"><Download className="h-4 w-4 mr-1" /> Receipt</Button>
               <Button variant="outline" size="sm"><Share2 className="h-4 w-4 mr-1" /> Share</Button>
-              <Button asChild size="sm"><Link to="/">Back home</Link></Button>
+              <Button asChild size="sm"><Link href="/">Back home</Link></Button>
             </div>
           </CardContent>
         </Card>

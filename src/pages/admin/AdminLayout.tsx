@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import {
   Menu,
   LayoutDashboard,
@@ -89,7 +89,7 @@ export function AdminLayout({ children, title, description }: AdminLayoutProps) 
           </nav>
           <div className="p-4 border-t border-border">
             <Button variant="ghost" className="w-full justify-start text-destructive" asChild>
-              <Link to="/" onClick={() => setSidebarOpen(false)}>
+              <Link href="/" onClick={() => setSidebarOpen(false)}>
                 <LogOut className="h-5 w-5 mr-2" />
                 Exit Admin
               </Link>
@@ -114,7 +114,7 @@ export function AdminLayout({ children, title, description }: AdminLayoutProps) 
         </nav>
         <div className="p-4 border-t border-border">
           <Button variant="ghost" className="w-full justify-start text-destructive" asChild>
-            <Link to="/">
+            <Link href="/">
               <LogOut className="h-5 w-5 mr-2" />
               Exit Admin
             </Link>

@@ -1,4 +1,5 @@
-import { useParams, Link } from "@tanstack/react-router";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { Heart, MapPin, Star, Bookmark, Users } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -9,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { listings } from "@/lib/mock-data";
 
 export function SharedCollectionPage() {
-  const { shareId } = useParams({ from: "/collections/shared/$shareId" });
+  const { shareId } = useParams();
   const items = listings.slice(0, 4);
 
   return (
@@ -36,7 +37,7 @@ export function SharedCollectionPage() {
         <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {items.map((l) => (
             <Card key={l.id} className="overflow-hidden border-border/60 transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-card)]">
-              <Link to="/stays/$stayId" params={{ stayId: l.id }}>
+              <Link href="/stays/$stayId" params={{ stayId: l.id }}>
                 <div className="relative aspect-[4/3]">
                   <img src={l.image} alt={l.name} className="h-full w-full object-cover" />
                   <Badge className="absolute left-2 top-2 text-[11px]">Picked by Chanda</Badge>

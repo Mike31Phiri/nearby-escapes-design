@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import { Users, Home, CalendarCheck, TrendingUp, DollarSign, AlertCircle } from "lucide-react";
 import { AdminLayout } from "./AdminLayout";
 import { Card, CardContent } from "@/components/ui/card";
@@ -50,7 +50,7 @@ export function AdminDashboardPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold">Recent Activity</h2>
-              <Link to="/admin/bookings" className="text-sm text-primary hover:underline">
+              <Link href="/admin/bookings" className="text-sm text-primary hover:underline">
                 View all
               </Link>
             </div>

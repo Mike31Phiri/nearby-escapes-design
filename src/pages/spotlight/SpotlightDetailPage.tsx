@@ -1,4 +1,5 @@
-import { useParams, Link } from "@tanstack/react-router";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { ArrowLeft, Clock, Share2, Bookmark, MapPin, Star } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -10,7 +11,7 @@ import { listings } from "@/lib/mock-data";
 import lodge from "@/assets/listing-lodge.jpg";
 
 export function SpotlightDetailPage() {
-  const { storyId } = useParams({ from: "/spotlight/$storyId" });
+  const { storyId } = useParams();
   const linked = listings.slice(0, 3);
 
   return (
@@ -21,7 +22,7 @@ export function SpotlightDetailPage() {
           <img src={lodge} alt="Story hero" className="absolute inset-0 h-full w-full object-cover" />
           <div className="absolute inset-0 bg-foreground/40" />
           <div className="relative mx-auto flex h-full max-w-3xl flex-col justify-end px-4 pb-12 text-background md:px-6">
-            <Link to="/spotlight" className="inline-flex w-fit items-center gap-2 text-sm font-medium text-background/85 hover:text-background">
+            <Link href="/spotlight" className="inline-flex w-fit items-center gap-2 text-sm font-medium text-background/85 hover:text-background">
               <ArrowLeft className="h-4 w-4" /> Spotlight
             </Link>
             <Badge variant="secondary" className="mt-4 self-start text-[11px]">Destination</Badge>

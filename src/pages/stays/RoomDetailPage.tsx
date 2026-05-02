@@ -1,4 +1,5 @@
-import { useParams, Link, useNavigate } from "@tanstack/react-router";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Users, Bed, Bath, Maximize2, Wifi, Coffee, Tv, Wind, ShieldCheck, X, Check } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -16,8 +17,8 @@ const roomData: Record<string, { name: string; price: number; beds: string; slee
 };
 
 export function RoomDetailPage() {
-  const { stayId, roomId } = useParams({ from: "/stays/$stayId/rooms/$roomId" });
-  const navigate = useNavigate();
+  const { stayId, roomId } = useParams();
+  const router = useRouter();
   const stay = getListing(stayId) ?? listings[0];
   const room = roomData[roomId] ?? roomData.deluxe;
 
@@ -31,14 +32,14 @@ export function RoomDetailPage() {
       guests: Math.min(2, room.sleeps),
     };
     try { localStorage.setItem(BOOKING_DRAFT_STORAGE_KEY, JSON.stringify(draft)); } catch { /* noop */ }
-    navigate({ to: "/booking" });
+    router.push("/booking");
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 md:px-6 md:py-10">
-        <Link to="/stays/$stayId" params={{ stayId }} className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+        <Link href="/stays/$stayId" params={{ stayId }} className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-4 w-4" /> {stay.name}
         </Link>
 

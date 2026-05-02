@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "next/navigation";
 import { ListingWizardLayout } from "@/components/host/ListingWizardLayout";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export function Step9Availability() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
   const [minStay, setMinStay] = useState("1");
   const [maxStay, setMaxStay] = useState("30");
   const [instantBook, setInstantBook] = useState(false);
@@ -22,8 +22,8 @@ export function Step9Availability() {
       title="Set availability rules"
       description="Define when and how guests can book. You can block specific dates from your calendar later."
       step={9}
-      onNext={() => navigate({ to: "/host/new-property/review" })}
-      onBack={() => navigate({ to: "/host/new-property/step-8" })}
+      onNext={() => router.push("/host/new-property/review")}
+      onBack={() => router.push("/host/new-property/step-8")}
     >
       <div className="space-y-5">
         <div className="grid gap-4 sm:grid-cols-2">

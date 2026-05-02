@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "next/navigation";
 import { Minus, Plus } from "lucide-react";
 import { ListingWizardLayout } from "@/components/host/ListingWizardLayout";
 import { Button } from "@/components/ui/button";
@@ -51,7 +51,7 @@ function Counter({
 }
 
 export function Step3FloorPlan() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
   const [bedrooms, setBedrooms] = useState(1);
   const [beds, setBeds] = useState(1);
   const [bathrooms, setBathrooms] = useState(1);
@@ -64,8 +64,8 @@ export function Step3FloorPlan() {
       title="How is your place laid out?"
       description="Accurate counts help guests pick the right stay. You can add room details later."
       step={3}
-      onNext={() => navigate({ to: "/host/new-property/step-4" })}
-      onBack={() => navigate({ to: "/host/new-property/step-2" })}
+      onNext={() => router.push("/host/new-property/step-4")}
+      onBack={() => router.push("/host/new-property/step-2")}
     >
       <Card className="border-border/60">
         <CardContent className="p-5 divide-y divide-border/50">

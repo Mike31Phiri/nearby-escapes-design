@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import { Star, MapPin, Calendar, BadgeCheck, MessageCircle, Briefcase, ArrowRight } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -47,7 +47,7 @@ export function ProfilePage() {
                   </div>
                 </div>
                 <Button asChild size="sm" variant="outline" className="mt-5 w-full">
-                  <Link to="/profile/edit">Edit profile</Link>
+                  <Link href="/profile/edit">Edit profile</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -67,13 +67,13 @@ export function ProfilePage() {
                   You're currently in traveler mode. Switch to hosting to manage listings, calendar and earnings — switch back any time to keep booking trips.
                 </p>
                 <Button asChild size="sm" className="mt-4 w-full">
-                  <Link to="/host">
+                  <Link href="/host">
                     Switch to hosting
                     <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                   </Link>
                 </Button>
                 <Button asChild variant="ghost" size="sm" className="mt-1 w-full text-xs text-muted-foreground">
-                  <Link to="/host">Become a host</Link>
+                  <Link href="/host">Become a host</Link>
                 </Button>
               </CardContent>
             </Card>

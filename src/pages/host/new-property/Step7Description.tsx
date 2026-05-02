@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "next/navigation";
 import { ListingWizardLayout } from "@/components/host/ListingWizardLayout";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 const MAX = 4000;
 
 export function Step7Description() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
   const [description, setDescription] = useState("");
 
   const charCount = description.length;
@@ -19,8 +19,8 @@ export function Step7Description() {
       title="Describe your place"
       description="Tell guests what makes your property special — the setting, the experience, the little details."
       step={7}
-      onNext={() => navigate({ to: "/host/new-property/step-8" })}
-      onBack={() => navigate({ to: "/host/new-property/step-6" })}
+      onNext={() => router.push("/host/new-property/step-8")}
+      onBack={() => router.push("/host/new-property/step-6")}
       nextDisabled={!isValid}
     >
       <div className="space-y-4">

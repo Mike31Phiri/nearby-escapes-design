@@ -1,12 +1,13 @@
-import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { Briefcase, Compass } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
 export function ModeSwitcher({ className }: { className?: string }) {
   const { user } = useAuth();
-  const location = useLocation();
-  const navigate = useNavigate();
+  const location = usePathname();
+  const router = useRouter();
   const isHostMode = location.pathname.startsWith("/host");
 
   if (!user) return null;

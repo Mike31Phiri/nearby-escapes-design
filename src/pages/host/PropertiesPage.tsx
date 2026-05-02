@@ -1,4 +1,5 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Plus, MoveHorizontal as MoreHorizontal, Eye, Pencil, Power, PowerOff } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -52,7 +53,7 @@ const statusConfig = {
 };
 
 export function PropertiesPage() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const published = mockProperties.filter((p) => p.status === "published").length;
   const drafts = mockProperties.filter((p) => p.status === "draft").length;
 
@@ -68,7 +69,7 @@ export function PropertiesPage() {
             </p>
           </div>
           <Button
-            onClick={() => navigate({ to: "/host/new-listing" })}
+            onClick={() => router.push("/host/new-listing")}
             className="bg-[image:var(--gradient-hero)] hover:opacity-95 shrink-0"
           >
             <Plus className="h-4 w-4 mr-2" /> Create listing
@@ -171,7 +172,7 @@ export function PropertiesPage() {
             </p>
             <Button
               className="mt-4 bg-[image:var(--gradient-hero)] hover:opacity-95"
-              onClick={() => navigate({ to: "/host/new-listing" })}
+              onClick={() => router.push("/host/new-listing")}
             >
               <Plus className="h-4 w-4 mr-2" /> Create your first listing
             </Button>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "next/navigation";
 import { ListingWizardLayout } from "@/components/host/ListingWizardLayout";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -25,7 +25,7 @@ const amenityGroups = [
 ];
 
 export function Step4Amenities() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
   function toggle(item: string) {
@@ -43,8 +43,8 @@ export function Step4Amenities() {
       title="What amenities do you offer?"
       description="Select everything available to guests. You can add more later."
       step={4}
-      onNext={() => navigate({ to: "/host/new-property/step-5" })}
-      onBack={() => navigate({ to: "/host/new-property/step-3" })}
+      onNext={() => router.push("/host/new-property/step-5")}
+      onBack={() => router.push("/host/new-property/step-3")}
       nextLabel={`Next (${selected.size} selected)`}
     >
       <div className="space-y-6">

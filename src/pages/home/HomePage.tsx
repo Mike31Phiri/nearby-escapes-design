@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import { Bus, ArrowRight, MapPin, Star, Clock } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -218,7 +218,7 @@ export function HomePage() {
         </div>
 
         <div className="mt-4 text-center">
-          <Link to="/bus-booking">
+          <Link href="/bus-booking">
             <Button variant="outline" size="sm">
               Browse all routes <ArrowRight className="h-3 w-3 ml-1" />
             </Button>

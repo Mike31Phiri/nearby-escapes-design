@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "next/navigation";
 import { ListingWizardLayout } from "@/components/host/ListingWizardLayout";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,7 +20,7 @@ const provinces = [
 ];
 
 export function Step2Location() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
   const [street, setStreet] = useState("");
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
@@ -33,8 +33,8 @@ export function Step2Location() {
       title="Where's your property located?"
       description="Guests will see the neighborhood after booking. Your exact address stays private until then."
       step={2}
-      onNext={() => navigate({ to: "/host/new-property/step-3" })}
-      onBack={() => navigate({ to: "/host/new-property/step-1" })}
+      onNext={() => router.push("/host/new-property/step-3")}
+      onBack={() => router.push("/host/new-property/step-1")}
       nextDisabled={!canProceed}
     >
       <div className="space-y-5">

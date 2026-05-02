@@ -1,4 +1,5 @@
-import { useParams, Link, useNavigate } from "@tanstack/react-router";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
 import { Star, MapPin, Heart, Share2, Wifi, Car, Coffee, Trees, Waves, ShieldCheck, Award, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
@@ -33,8 +34,8 @@ const rooms = [
 ];
 
 export function StayDetailPage() {
-  const { stayId } = useParams({ from: "/stays/$stayId" });
-  const navigate = useNavigate();
+  const { stayId } = useParams();
+  const router = useRouter();
   const stay = getListing(stayId) ?? listings[0];
   const similar = listings.filter((l) => l.id !== stay.id).slice(0, 3);
   const [saved, setSaved] = useState(false);
@@ -49,14 +50,14 @@ export function StayDetailPage() {
       guests: 2,
     };
     try { localStorage.setItem(BOOKING_DRAFT_STORAGE_KEY, JSON.stringify(draft)); } catch { /* noop */ }
-    navigate({ to: "/booking" });
+    router.push("/booking");
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 md:px-6 md:py-10">
-        <Link to="/accommodations" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
+        <Link href="/accommodations" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
           <ChevronRight className="h-3 w-3 rotate-180" /> Back to stays
         </Link>
 

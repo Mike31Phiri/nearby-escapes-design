@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from '@tanstack/react-router';
+import { useParams, useRouter } from "next/navigation";
 import { useState } from 'react';
 import { GemBookingForm, type GemBookingData } from '../components/GemBookingForm';
 import { Button } from '@/components/ui/button';
@@ -88,7 +88,7 @@ const mockGems = {
 
 export function GemDetailPage() {
   const { gemId } = useParams({ from: '/gems/$gemId' });
-  const navigate = useNavigate();
+  const navigate = useRouter();
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [bookingData, setBookingData] = useState<GemBookingData | null>(null);

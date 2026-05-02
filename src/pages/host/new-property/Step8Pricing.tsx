@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "next/navigation";
 import { ListingWizardLayout } from "@/components/host/ListingWizardLayout";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 export function Step8Pricing() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
   const [basePrice, setBasePrice] = useState("");
   const [weekendPrice, setWeekendPrice] = useState("");
   const [cleaningFee, setCleaningFee] = useState("");
@@ -24,8 +24,8 @@ export function Step8Pricing() {
       title="Set your pricing"
       description="Start with a base nightly rate. You can adjust anytime and add seasonal rates later."
       step={8}
-      onNext={() => navigate({ to: "/host/new-property/step-9" })}
-      onBack={() => navigate({ to: "/host/new-property/step-7" })}
+      onNext={() => router.push("/host/new-property/step-9")}
+      onBack={() => router.push("/host/new-property/step-7")}
       nextDisabled={!canProceed}
     >
       <div className="space-y-5">

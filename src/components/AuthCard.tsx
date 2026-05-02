@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import type { ReactNode } from "react";
 
 export function AuthCard({
@@ -15,7 +15,7 @@ export function AuthCard({
   return (
     <div className="min-h-screen bg-[image:var(--gradient-soft)] flex flex-col">
       <div className="px-6 py-5">
-        <Link to="/" className="inline-flex items-center gap-2">
+        <Link href="/" className="inline-flex items-center gap-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[image:var(--gradient-hero)] text-primary-foreground font-bold shadow-[var(--shadow-elegant)]">
             N
           </div>
