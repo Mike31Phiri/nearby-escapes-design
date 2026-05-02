@@ -1,4 +1,7 @@
-import { Link, useNavigate, useLocation } from "@tanstack/react-router";
+"use client";
+
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import logo from "@/assets/logo.png";
 import { MapPin, Menu, User, LogOut, CircleUser as UserCircle, Briefcase, Settings as SettingsIcon, Globe, Circle as HelpCircle, Hop as Home, FileText } from "lucide-react";
 import { useEffect, useState, useRef, useCallback } from "react";
@@ -12,10 +15,10 @@ import { onEscape, trapFocus, announceToScreenReader } from "@/lib/accessibility
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const isHome = location.pathname === "/";
-  const isHostArea = location.pathname.startsWith("/host");
+  const router = useRouter();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  const isHostArea = pathname?.startsWith("/host");
   const [showCenterPills, setShowCenterPills] = useState(!isHome && !isHostArea);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const sheetContentRef = useRef<HTMLDivElement>(null);
@@ -69,15 +72,15 @@ export function SiteHeader() {
   const handleLogout = useCallback(() => {
     setOpen(false);
     logout();
-    navigate({ to: "/" });
+    router.push("/");
     announceToScreenReader("You have been signed out");
-  }, [logout, navigate]);
+  }, [logout, router]);
 
   const handleNavClick = useCallback((to: string) => {
     setOpen(false);
-    navigate({ to });
+    router.push(to);
     announceToScreenReader(`Navigated to ${to}`);
-  }, [navigate]);
+  }, [router]);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-lg" role="banner">
@@ -85,7 +88,7 @@ export function SiteHeader() {
       
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 md:px-6">
         <Link 
-          to="/" 
+          href="/" 
           className="flex items-center gap-2 shrink-0"
           aria-label="Nearby Escapes - Home"
         >
@@ -114,7 +117,7 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           {user ? (
             <Link
-              to="/profile"
+              href="/profile"
               className="flex items-center gap-2 rounded-full border border-border pl-2 pr-2 py-1 hover:shadow-sm transition"
               aria-label={`Go to your profile, ${user.fullName}`}
             >
@@ -130,7 +133,7 @@ export function SiteHeader() {
               <Button 
                 variant="ghost" 
                 size="sm" 
-                onClick={() => navigate({ to: "/login" })}
+                onClick={() => router.push("/login")}
                 aria-label="Sign in to your account"
               >
                 Sign in
@@ -138,7 +141,7 @@ export function SiteHeader() {
               <Button 
                 size="sm" 
                 className="btn-primary" 
-                onClick={() => navigate({ to: "/register" })}
+                onClick={() => router.push("/register")}
                 aria-label="Create a new account"
               >
                 Sign up
