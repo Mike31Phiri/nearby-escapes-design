@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowRight, Briefcase, Camera, Mail, MapPin, Phone, Save } from "lucide-react";
 import { toast } from "sonner";
@@ -6,12 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/profile/")({
   head: () => ({
     meta: [
-      { title: "Profile Overview — Nearby Escapes" },
+      { title: "Profile overview — Nearby Escapes" },
       { name: "description", content: "Your Nearby Escapes profile overview." },
     ],
   }),
@@ -33,8 +35,34 @@ function ProfileOverview() {
     toast.success("Profile updated.");
   }
 
+  const initials = user.fullName.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase();
+
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen flex flex-col bg-background">
+      <SiteHeader />
+      <main className="flex-1 mx-auto w-full max-w-4xl px-4 md:px-6 py-8 space-y-6">
+      <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
+        <div className="flex items-center gap-5">
+          <div className="relative">
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[image:var(--gradient-hero)] text-2xl font-bold text-primary-foreground">
+              {initials || "U"}
+            </div>
+            <button className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background shadow-sm">
+              <Camera className="h-4 w-4" />
+            </button>
+          </div>
+          <div className="min-w-0">
+            <h1 className="text-2xl font-bold tracking-tight truncate">{user.fullName}</h1>
+            <p className="text-sm text-muted-foreground flex items-center gap-1.5">
+              <Mail className="h-3.5 w-3.5" /> {user.email}
+            </p>
+            <div className="mt-1.5 inline-flex items-center rounded-full bg-primary-soft px-2.5 py-0.5 text-xs font-semibold text-primary capitalize">
+              {user.role}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <form onSubmit={onSave} className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-card)] space-y-5">
         <h2 className="text-lg font-semibold">Personal information</h2>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -88,19 +116,21 @@ function ProfileOverview() {
           <div className="flex flex-col gap-2 md:flex-row md:shrink-0">
             {user.role === "host" ? (
               <Button asChild>
-                <a href="/host">
+                <Link to="/host">
                   Switch to hosting
                   <ArrowRight className="ml-1.5 h-4 w-4" />
-                </a>
+                </Link>
               </Button>
             ) : (
               <Button asChild>
-                <a href="/host">Get started</a>
+                <Link to="/host">Get started</Link>
               </Button>
             )}
           </div>
         </div>
       </div>
+      </main>
+      <SiteFooter />
     </div>
   );
 }

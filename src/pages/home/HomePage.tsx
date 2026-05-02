@@ -85,11 +85,11 @@ export function HomePage() {
       </section>
 
       {/* Popular stays */}
-      <section className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-16" aria-labelledby="popular-stays-heading">
+      <section className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-16">
         <div className="flex items-end justify-between mb-6">
           <div>
-            <p className="text-overline text-primary">Popular</p>
-            <h2 id="popular-stays-heading" className="mt-1 text-2xl md:text-3xl font-bold tracking-tight">
+            <p className="text-xs font-semibold uppercase tracking-widest text-primary">Popular</p>
+            <h2 className="mt-1 text-2xl md:text-3xl font-bold tracking-tight">
               Stays travelers love
             </h2>
           </div>
@@ -98,23 +98,19 @@ export function HomePage() {
           </Link>
         </div>
 
-        <div 
-          className="grid grid-cols-2 gap-4 md:gap-6 md:grid-cols-3 lg:grid-cols-4"
-          role="list"
-          aria-label="Popular accommodations"
-        >
+        <div className="grid grid-cols-2 gap-4 md:gap-6 md:grid-cols-3 lg:grid-cols-4">
           {listings.map((listing) => (
-            <ListingCard key={listing.id} listing={listing} role="listitem" />
+            <ListingCard key={listing.id} listing={listing} />
           ))}
         </div>
       </section>
 
       {/* Recommended stays */}
-      <section className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-16" aria-labelledby="recommended-stays-heading">
+      <section className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-16">
         <div className="flex items-end justify-between mb-6">
           <div>
-            <p className="text-overline text-primary">Recommended</p>
-            <h2 id="recommended-stays-heading" className="mt-1 text-2xl md:text-3xl font-bold tracking-tight">
+            <p className="text-xs font-semibold uppercase tracking-widest text-primary">Recommended</p>
+            <h2 className="mt-1 text-2xl md:text-3xl font-bold tracking-tight">
               Stays we think you'll love
             </h2>
           </div>
@@ -123,38 +119,36 @@ export function HomePage() {
           </Link>
         </div>
 
-        <div className="grid gap-4 md:gap-6 md:grid-cols-3" role="list" aria-label="Recommended accommodations">
+        <div className="grid gap-4 md:gap-6 md:grid-cols-3">
           {recommendedListings.map((listing) => (
             <Link
               key={listing.id}
               to="/accommodations/$id"
               params={{ id: listing.id }}
-              className="group block overflow-hidden rounded-2xl bg-card border border-border/60 card-hover-effect"
-              aria-label={`View details for ${listing.name} in ${listing.location}`}
+              className="group block overflow-hidden rounded-2xl bg-card border border-border/60 transition-[var(--transition-smooth)] hover:-translate-y-1 hover:shadow-[var(--shadow-card)]"
             >
               <div className="relative aspect-[16/9] overflow-hidden">
                 <img
                   src={listing.image}
                   alt={listing.name}
                   loading="lazy"
-                  decoding="async"
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-foreground/35" />
                 <div className="absolute bottom-3 left-3 right-3">
                   <h3 className="text-lg font-bold text-background truncate">{listing.name}</h3>
                   <p className="text-xs text-background/80 flex items-center gap-1 mt-0.5">
-                    <MapPin className="h-3 w-3" aria-hidden="true" /> {listing.location}
+                    <MapPin className="h-3 w-3" /> {listing.location}
                   </p>
                 </div>
               </div>
               <div className="p-4 flex items-center justify-between">
-                <div className="flex items-center gap-1 text-sm" aria-label={`Rated ${listing.rating} out of 5 stars with ${listing.reviews} reviews`}>
-                  <Star className="h-3.5 w-3.5 fill-accent text-accent" aria-hidden="true" />
+                <div className="flex items-center gap-1 text-sm">
+                  <Star className="h-3.5 w-3.5 fill-accent text-accent" />
                   <span className="font-medium">{listing.rating}</span>
                   <span className="text-muted-foreground">({listing.reviews})</span>
                 </div>
-                <p className="text-sm" aria-label={`$${listing.price} per night`}>
+                <p className="text-sm">
                   <span className="font-bold">${listing.price}</span>
                   <span className="text-muted-foreground"> / night</span>
                 </p>
