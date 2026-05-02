@@ -180,33 +180,33 @@ export function SiteHeader() {
                 <MobileGroup title="Account">
                   {user ? (
                     <>
-                      <MobileRowLink to="/profile" onSelect={() => handleNavClick("/profile")} icon={UserCircle} label="Profile" />
-                      <MobileRowLink to="/host" onSelect={() => handleNavClick("/host")} icon={Briefcase} label="Host dashboard" />
-                      <MobileRowLink to="/profile/settings" onSelect={() => handleNavClick("/profile/settings")} icon={SettingsIcon} label="Account settings" />
+                      <MobileRowLink href="/profile" onSelect={() => handleNavClick("/profile")} icon={UserCircle} label="Profile" />
+                      <MobileRowLink href="/host" onSelect={() => handleNavClick("/host")} icon={Briefcase} label="Host dashboard" />
+                      <MobileRowLink href="/profile/settings" onSelect={() => handleNavClick("/profile/settings")} icon={SettingsIcon} label="Account settings" />
                     </>
                   ) : (
                     <>
                       <MobileRowAction onClick={() => handleNavClick("/login")} icon={UserCircle} label="Sign in" />
                       <MobileRowAction onClick={() => handleNavClick("/register")} icon={Briefcase} label="Sign up" />
-                      <MobileRowLink to="/host" onSelect={() => handleNavClick("/host")} icon={Briefcase} label="List your property" />
+                      <MobileRowLink href="/host" onSelect={() => handleNavClick("/host")} icon={Briefcase} label="List your property" />
                     </>
                   )}
                 </MobileGroup>
 
                 <MobileGroup title="Explore">
-                  <MobileRowLink to="/" onSelect={() => handleNavClick("/")} icon={Home} label="Home" />
-                  <MobileRowLink to="/gems" onSelect={() => handleNavClick("/gems")} icon={MapPin} label="Hidden gems" />
+                  <MobileRowLink href="/" onSelect={() => handleNavClick("/")} icon={Home} label="Home" />
+                  <MobileRowLink href="/gems" onSelect={() => handleNavClick("/gems")} icon={MapPin} label="Hidden gems" />
                 </MobileGroup>
 
                 <MobileGroup title="Support">
-                  <MobileRowLink to="/help" onSelect={() => handleNavClick("/help")} icon={HelpCircle} label="Help & support" />
-                  <MobileRowLink to="/profile/settings" hash="languages" onSelect={() => handleNavClick("/profile/settings")} icon={Globe} label="Languages & currency" />
+                  <MobileRowLink href="/help" onSelect={() => handleNavClick("/help")} icon={HelpCircle} label="Help & support" />
+                  <MobileRowLink href="/profile/settings#languages" onSelect={() => handleNavClick("/profile/settings")} icon={Globe} label="Languages & currency" />
                 </MobileGroup>
 
                 <MobileGroup title="Legal">
-                  <MobileRowLink to="/legal/terms" onSelect={() => handleNavClick("/legal/terms")} icon={FileText} label="Terms of service" />
-                  <MobileRowLink to="/legal/privacy" onSelect={() => handleNavClick("/legal/privacy")} icon={FileText} label="Privacy policy" />
-                  <MobileRowLink to="/legal/cookies" onSelect={() => handleNavClick("/legal/cookies")} icon={FileText} label="Cookie policy" />
+                  <MobileRowLink href="/legal/terms" onSelect={() => handleNavClick("/legal/terms")} icon={FileText} label="Terms of service" />
+                  <MobileRowLink href="/legal/privacy" onSelect={() => handleNavClick("/legal/privacy")} icon={FileText} label="Privacy policy" />
+                  <MobileRowLink href="/legal/cookies" onSelect={() => handleNavClick("/legal/cookies")} icon={FileText} label="Cookie policy" />
                 </MobileGroup>
 
                 {user && (
@@ -243,22 +243,19 @@ function MobileGroup({ title, children }: { title: string; children: React.React
 }
 
 function MobileRowLink({
-  to,
-  hash,
+  href,
   icon: Icon,
   label,
   onSelect,
 }: {
-  to: string;
-  hash?: string;
+  href: string;
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   onSelect: () => void;
 }) {
   return (
     <Link
-      to={to}
-      hash={hash}
+      href={href}
       onClick={onSelect}
       className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-muted"
     >

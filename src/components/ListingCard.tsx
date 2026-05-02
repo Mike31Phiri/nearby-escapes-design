@@ -12,8 +12,7 @@ interface ListingCardProps {
 export const ListingCard = memo(function ListingCard({ listing, className }: ListingCardProps) {
   return (
     <Link
-      to="/accommodations/$id"
-      params={{ id: listing.id }}
+      href={`/accommodations/${listing.id}`}
       className={cn(
         "group block overflow-hidden rounded-2xl bg-card card-hover-effect",
         className

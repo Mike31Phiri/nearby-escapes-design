@@ -93,7 +93,7 @@ export function HomePage() {
               Stays travelers love
             </h2>
           </div>
-          <Link className="hidden sm:inline text-sm font-medium text-primary hover:underline" to="/accommodations">
+          <Link className="hidden sm:inline text-sm font-medium text-primary hover:underline" href="/accommodations">
             View all
           </Link>
         </div>
@@ -118,7 +118,7 @@ export function HomePage() {
               Stays we think you'll love
             </h2>
           </div>
-          <Link className="hidden sm:inline text-sm font-medium text-primary hover:underline" to="/accommodations">
+          <Link className="hidden sm:inline text-sm font-medium text-primary hover:underline" href="/accommodations">
             See more
           </Link>
         </div>
@@ -127,8 +127,7 @@ export function HomePage() {
           {recommendedListings.map((listing) => (
             <Link
               key={listing.id}
-              to="/accommodations/$id"
-              params={{ id: listing.id }}
+              href={`/accommodations/${listing.id}`}
               className="group block overflow-hidden rounded-2xl bg-card border border-border/60 card-hover-effect"
               aria-label={`View details for ${listing.name} in ${listing.location}`}
             >
@@ -173,14 +172,14 @@ export function HomePage() {
               Popular bus routes
             </h2>
           </div>
-          <Link className="hidden sm:inline text-sm font-medium text-primary hover:underline" to="/bus-booking">
+          <Link className="hidden sm:inline text-sm font-medium text-primary hover:underline" href="/bus-booking">
             All routes
           </Link>
         </div>
 
         <div className="grid gap-4 md:gap-6 md:grid-cols-3">
           {popularRoutes.map((route) => (
-            <Link key={route.id} to="/bus-booking" className="group block">
+            <Link key={route.id} href="/bus-booking" className="group block">
               <Card className="border-border/60 overflow-hidden transition-[var(--transition-smooth)] hover:-translate-y-1 hover:shadow-[var(--shadow-card)]">
                 <div className="relative aspect-[16/9] overflow-hidden">
                   <img
