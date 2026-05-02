@@ -1,90 +1,51 @@
+'use client';
+
 import { useState } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+import { useRouter } from 'next/navigation';
 import { PackageSearchForm, type PackageSearchResult } from '../components/PackageSearchForm';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Star, Clock, MapPin, Users, CheckCircle, CreditCard } from 'lucide-react';
+import { Star, Clock, MapPin, CheckCircle, CreditCard } from 'lucide-react';
+import { useBookingStore } from '@/store/bookingStore';
 
 export function PackageBookingPage() {
-  const navigate = useNavigate();
+  const router = useRouter();
+  const { setPackageDetails } = useBookingStore();
   const [searchResults, setSearchResults] = useState<PackageSearchResult[]>([]);
   const [selectedPackage, setSelectedPackage] = useState<PackageSearchResult | null>(null);
-  const [bookingConfirmed, setBookingConfirmed] = useState(false);
-  const [isBooking, setIsBooking] = useState(false);
-
+  
   const handleSelectPackage = (pkg: PackageSearchResult) => {
     setSelectedPackage(pkg);
   };
-
-  const handleBookNow = async () => {
+  
+  const handleBookNow = () => {
     if (!selectedPackage) return;
-
-    setIsBooking(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    // Calculate pricing
+    const subtotal = selectedPackage.price * 2; // Default 2 guests
+    const serviceFee = subtotal * 0.1; // 10% service fee
+    const taxes = subtotal * 0.08; // 8% taxes
+    const total = subtotal + serviceFee + taxes;
     
-    setBookingConfirmed(true);
-    setIsBooking(false);
+    // Store booking details
+    setPackageDetails({
+      packageId: selectedPackage.id,
+      packageName: selectedPackage.name,
+      packageImage: selectedPackage.imageUrl,
+      guests: 2,
+      pricePerPerson: selectedPackage.price,
+      duration: selectedPackage.duration,
+      location: selectedPackage.location,
+      subtotal,
+      serviceFee,
+      taxes,
+      total,
+    });
+    
+    // Navigate to checkout
+    router.push('/checkout');
   };
-
-  if (bookingConfirmed && selectedPackage) {
-    return (
-      <div className="container mx-auto px-4 py-16">
-        <Card className="max-w-2xl mx-auto">
-          <CardContent className="pt-6 text-center">
-            <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-            <h1 className="text-3xl font-bold mb-2">Package Booking Confirmed!</h1>
-            <p className="text-muted-foreground mb-6">
-              Your vacation package has been booked successfully.
-            </p>
-            
-            <div className="bg-muted rounded-lg p-6 mb-6 text-left">
-              <h2 className="font-semibold mb-4">Booking Details</h2>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Package:</span>
-                  <span className="font-medium">{selectedPackage.name}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Duration:</span>
-                  <span className="font-medium">{selectedPackage.duration}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Location:</span>
-                  <span className="font-medium">{selectedPackage.location}</span>
-                </div>
-                <div className="border-t pt-3 flex justify-between text-lg">
-                  <span className="font-semibold">Total Paid:</span>
-                  <span className="font-bold text-primary">${selectedPackage.price}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-blue-50 dark:bg-blue-950 rounded-lg p-6 mb-6 text-left">
-              <h3 className="font-semibold mb-3">What's Next?</h3>
-              <ol className="space-y-2 text-sm list-decimal list-inside">
-                <li>You'll receive a confirmation email with your itinerary</li>
-                <li>A travel specialist will contact you within 24 hours</li>
-                <li>Receive detailed information about accommodations and activities</li>
-                <li>Get access to our mobile app for on-the-go support</li>
-              </ol>
-            </div>
-
-            <div className="flex gap-4 justify-center">
-              <Button variant="outline" onClick={() => navigate({ to: '/packages' })}>
-                Browse More Packages
-              </Button>
-              <Button onClick={() => navigate({ to: '/bookings' })}>
-                View My Bookings
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -251,20 +212,9 @@ export function PackageBookingPage() {
                             className="w-full"
                             size="lg"
                             onClick={handleBookNow}
-                            disabled={isBooking}
-                            aria-busy={isBooking}
                           >
-                            {isBooking ? (
-                              <>
-                                <CreditCard className="mr-2 h-4 w-4 animate-pulse" />
-                                Processing...
-                              </>
-                            ) : (
-                              <>
-                                <CreditCard className="mr-2 h-4 w-4" />
-                                Book Now - ${selectedPackage.price}
-                              </>
-                            )}
+                            <CreditCard className="mr-2 h-4 w-4" />
+                            Book Now - Proceed to Checkout
                           </Button>
                         </div>
                       </div>
