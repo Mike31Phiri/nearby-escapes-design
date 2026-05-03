@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { useBookingStore } from '@/store/bookingStore';
-import { GuestInformationForm } from '@/components/booking/GuestInformationForm';
-import { PaymentForm } from '@/components/booking/PaymentForm';
-import { BookingSummary } from '@/components/booking/BookingSummary';
-import { CancellationPolicy } from '@/components/booking/CancellationPolicy';
-import { Card, CardContent } from '@/components/ui/card';
-import { CheckCircle, CreditCard, User } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useBookingStore } from "@/store/bookingStore";
+import { GuestInformationForm } from "@/components/booking/GuestInformationForm";
+import { PaymentForm } from "@/components/booking/PaymentForm";
+import { BookingSummary } from "@/components/booking/BookingSummary";
+import { CancellationPolicy } from "@/components/booking/CancellationPolicy";
+import { Card, CardContent } from "@/components/ui/card";
+import { CheckCircle, CreditCard, User } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { currentStep, bookingConfirmed, confirmationId, resetBooking } = useBookingStore();
-  
+
   useEffect(() => {
     // Redirect if no booking details
     const hasDetails = false; // Will be checked by components
@@ -21,7 +21,7 @@ export default function CheckoutPage() {
       // Could redirect to home or packages page
     }
   }, [currentStep, router]);
-  
+
   if (bookingConfirmed && confirmationId) {
     return (
       <div className="container mx-auto px-4 py-16">
@@ -32,7 +32,7 @@ export default function CheckoutPage() {
             <p className="text-muted-foreground mb-6">
               Your booking has been completed successfully.
             </p>
-            
+
             <div className="bg-muted rounded-lg p-6 mb-6 text-left">
               <div className="flex justify-between items-center mb-4">
                 <span className="text-muted-foreground">Confirmation ID:</span>
@@ -57,7 +57,7 @@ export default function CheckoutPage() {
               <button
                 onClick={() => {
                   resetBooking();
-                  router.push('/packages');
+                  router.push("/packages");
                 }}
                 className="px-6 py-3 border border-border rounded-md hover:bg-muted transition-colors"
               >
@@ -66,7 +66,7 @@ export default function CheckoutPage() {
               <button
                 onClick={() => {
                   resetBooking();
-                  router.push('/bookings');
+                  router.push("/bookings");
                 }}
                 className="px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
               >
@@ -78,7 +78,7 @@ export default function CheckoutPage() {
       </div>
     );
   }
-  
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-12">
@@ -88,39 +88,51 @@ export default function CheckoutPage() {
             Just a few more steps to secure your reservation
           </p>
         </div>
-        
+
         {/* Progress Steps */}
         <div className="mb-8">
           <div className="flex items-center justify-center gap-4">
-            <div className={`flex items-center gap-2 ${currentStep >= 1 ? 'text-primary' : 'text-muted-foreground'}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                currentStep >= 1 ? 'bg-primary text-primary-foreground' : 'bg-muted'
-              }`}>
+            <div
+              className={`flex items-center gap-2 ${currentStep >= 1 ? "text-primary" : "text-muted-foreground"}`}
+            >
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                  currentStep >= 1 ? "bg-primary text-primary-foreground" : "bg-muted"
+                }`}
+              >
                 1
               </div>
               <span className="hidden sm:inline">Review</span>
             </div>
-            <div className={`w-12 h-0.5 ${currentStep >= 2 ? 'bg-primary' : 'bg-muted'}`} />
-            <div className={`flex items-center gap-2 ${currentStep >= 2 ? 'text-primary' : 'text-muted-foreground'}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                currentStep >= 2 ? 'bg-primary text-primary-foreground' : 'bg-muted'
-              }`}>
+            <div className={`w-12 h-0.5 ${currentStep >= 2 ? "bg-primary" : "bg-muted"}`} />
+            <div
+              className={`flex items-center gap-2 ${currentStep >= 2 ? "text-primary" : "text-muted-foreground"}`}
+            >
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                  currentStep >= 2 ? "bg-primary text-primary-foreground" : "bg-muted"
+                }`}
+              >
                 <User className="h-4 w-4" />
               </div>
               <span className="hidden sm:inline">Guest Info</span>
             </div>
-            <div className={`w-12 h-0.5 ${currentStep >= 3 ? 'bg-primary' : 'bg-muted'}`} />
-            <div className={`flex items-center gap-2 ${currentStep >= 3 ? 'text-primary' : 'text-muted-foreground'}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                currentStep >= 3 ? 'bg-primary text-primary-foreground' : 'bg-muted'
-              }`}>
+            <div className={`w-12 h-0.5 ${currentStep >= 3 ? "bg-primary" : "bg-muted"}`} />
+            <div
+              className={`flex items-center gap-2 ${currentStep >= 3 ? "text-primary" : "text-muted-foreground"}`}
+            >
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                  currentStep >= 3 ? "bg-primary text-primary-foreground" : "bg-muted"
+                }`}
+              >
                 <CreditCard className="h-4 w-4" />
               </div>
               <span className="hidden sm:inline">Payment</span>
             </div>
           </div>
         </div>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
@@ -142,12 +154,12 @@ export default function CheckoutPage() {
                 </CardContent>
               </Card>
             )}
-            
+
             {currentStep === 2 && <GuestInformationForm />}
-            
+
             {currentStep === 3 && <PaymentForm />}
           </div>
-          
+
           {/* Sidebar */}
           <div className="space-y-6">
             <BookingSummary />

@@ -1,1 +1,3 @@
-export function FiltersModal() { return null; }
+export function FiltersModal() {
+  return null;
+}

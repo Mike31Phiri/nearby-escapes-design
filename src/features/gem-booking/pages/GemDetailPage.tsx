@@ -1,93 +1,90 @@
 import { useParams, useRouter } from "next/navigation";
-import { useState } from 'react';
-import { GemBookingForm, type GemBookingData } from '../components/GemBookingForm';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Star, Clock, MapPin, Users, Shield, CheckCircle } from 'lucide-react';
-import { ArrowLeft } from 'lucide-react';
+import { useState } from "react";
+import { GemBookingForm, type GemBookingData } from "../components/GemBookingForm";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Star, Clock, MapPin, Users, Shield, CheckCircle } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 // Mock data - would come from API in production
 const mockGems = {
-  '1': {
-    id: '1',
-    name: 'Hidden Waterfall Adventure',
-    description: 'Discover a breathtaking hidden waterfall tucked away in the lush mountains. This exclusive experience includes a guided hike, swimming opportunity, and a traditional lunch prepared by local villagers.',
+  "1": {
+    id: "1",
+    name: "Hidden Waterfall Adventure",
+    description:
+      "Discover a breathtaking hidden waterfall tucked away in the lush mountains. This exclusive experience includes a guided hike, swimming opportunity, and a traditional lunch prepared by local villagers.",
     price: 85,
-    duration: '6 hours',
-    location: 'Blue Mountains, Jamaica',
+    duration: "6 hours",
+    location: "Blue Mountains, Jamaica",
     rating: 4.9,
     reviewCount: 234,
     maxGroupSize: 12,
-    imageUrl: 'https://images.unsplash.com/photo-1437719417032-8595fd9e9dc6?w=800',
+    imageUrl: "https://images.unsplash.com/photo-1437719417032-8595fd9e9dc6?w=800",
     images: [
-      'https://images.unsplash.com/photo-1437719417032-8595fd9e9dc6?w=800',
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800',
-      'https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=800',
+      "https://images.unsplash.com/photo-1437719417032-8595fd9e9dc6?w=800",
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800",
+      "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=800",
     ],
     highlights: [
-      'Private guided hike to secluded waterfall',
-      'Swimming in crystal-clear natural pools',
-      'Traditional Jamaican lunch included',
-      'Small group experience (max 12 people)',
-      'Hotel pickup and drop-off',
+      "Private guided hike to secluded waterfall",
+      "Swimming in crystal-clear natural pools",
+      "Traditional Jamaican lunch included",
+      "Small group experience (max 12 people)",
+      "Hotel pickup and drop-off",
     ],
     included: [
-      'Professional tour guide',
-      'Transportation',
-      'Lunch and refreshments',
-      'Entrance fees',
-      'Safety equipment',
+      "Professional tour guide",
+      "Transportation",
+      "Lunch and refreshments",
+      "Entrance fees",
+      "Safety equipment",
     ],
     whatToBring: [
-      'Swimsuit',
-      'Comfortable walking shoes',
-      'Sunscreen',
-      'Camera',
-      'Change of clothes',
+      "Swimsuit",
+      "Comfortable walking shoes",
+      "Sunscreen",
+      "Camera",
+      "Change of clothes",
     ],
   },
-  '2': {
-    id: '2',
-    name: 'Sunset Catamaran Cruise',
-    description: 'Sail into the Caribbean sunset aboard a luxury catamaran. Enjoy unlimited drinks, snorkeling at coral reefs, and live music as you cruise along the stunning coastline.',
+  "2": {
+    id: "2",
+    name: "Sunset Catamaran Cruise",
+    description:
+      "Sail into the Caribbean sunset aboard a luxury catamaran. Enjoy unlimited drinks, snorkeling at coral reefs, and live music as you cruise along the stunning coastline.",
     price: 120,
-    duration: '4 hours',
-    location: 'Montego Bay, Jamaica',
+    duration: "4 hours",
+    location: "Montego Bay, Jamaica",
     rating: 4.8,
     reviewCount: 567,
     maxGroupSize: 20,
-    imageUrl: 'https://images.unsplash.com/photo-1544551763-46a8723ba3f9?w=800',
+    imageUrl: "https://images.unsplash.com/photo-1544551763-46a8723ba3f9?w=800",
     images: [
-      'https://images.unsplash.com/photo-1544551763-46a8723ba3f9?w=800',
-      'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800',
-      'https://images.unsplash.com/photo-1566373767786-7a75c8d6aa4e?w=800',
+      "https://images.unsplash.com/photo-1544551763-46a8723ba3f9?w=800",
+      "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800",
+      "https://images.unsplash.com/photo-1566373767786-7a75c8d6aa4e?w=800",
     ],
     highlights: [
-      'Luxury catamaran sailing',
-      'Unlimited premium drinks',
-      'Snorkeling at coral reefs',
-      'Live DJ and music',
-      'Stunning sunset views',
+      "Luxury catamaran sailing",
+      "Unlimited premium drinks",
+      "Snorkeling at coral reefs",
+      "Live DJ and music",
+      "Stunning sunset views",
     ],
     included: [
-      'Catamaran cruise',
-      'Open bar (premium drinks)',
-      'Snorkeling equipment',
-      'Light appetizers',
-      'Live entertainment',
+      "Catamaran cruise",
+      "Open bar (premium drinks)",
+      "Snorkeling equipment",
+      "Light appetizers",
+      "Live entertainment",
     ],
-    whatToBring: [
-      'Swimsuit',
-      'Towel',
-      'Sunscreen',
-      'Sunglasses',
-      'Camera',
-    ],
+    whatToBring: ["Swimsuit", "Towel", "Sunscreen", "Sunglasses", "Camera"],
   },
 };
 
 export function GemDetailPage() {
-  const { gemId } = useParams({ from: '/gems/$gemId' });
+  const params = useParams();
+  const gemId = params.gemId as string;
   const navigate = useRouter();
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
@@ -100,7 +97,7 @@ export function GemDetailPage() {
       <div className="container mx-auto px-4 py-16 text-center">
         <h1 className="text-3xl font-bold mb-4">Gem Not Found</h1>
         <p className="text-muted-foreground mb-6">This experience is no longer available.</p>
-        <Button onClick={() => navigate({ to: '/gems' })}>Browse Other Gems</Button>
+        <Button onClick={() => navigate.push("/gems")}>Browse Other Gems</Button>
       </div>
     );
   }
@@ -123,23 +120,32 @@ export function GemDetailPage() {
             <div className="bg-muted rounded-lg p-6 mb-6 text-left">
               <h2 className="font-semibold mb-4">Booking Details</h2>
               <div className="space-y-2">
-                <p><strong>Experience:</strong> {gem.name}</p>
-                <p><strong>Date:</strong> {bookingData.date.toLocaleDateString()}</p>
-                <p><strong>Guests:</strong> {bookingData.numberOfGuests}</p>
-                <p><strong>Total Paid:</strong> ${bookingData.totalPrice}</p>
-                <p><strong>Confirmation Email:</strong> {bookingData.contactEmail}</p>
+                <p>
+                  <strong>Experience:</strong> {gem.name}
+                </p>
+                <p>
+                  <strong>Date:</strong> {bookingData.date.toLocaleDateString()}
+                </p>
+                <p>
+                  <strong>Guests:</strong> {bookingData.numberOfGuests}
+                </p>
+                <p>
+                  <strong>Total Paid:</strong> ${bookingData.totalPrice}
+                </p>
+                <p>
+                  <strong>Confirmation Email:</strong> {bookingData.contactEmail}
+                </p>
               </div>
             </div>
             <p className="text-sm text-muted-foreground mb-6">
-              A confirmation email has been sent to {bookingData.contactEmail} with all the details and meeting point information.
+              A confirmation email has been sent to {bookingData.contactEmail} with all the details
+              and meeting point information.
             </p>
             <div className="flex gap-4 justify-center">
-              <Button variant="outline" onClick={() => navigate({ to: '/gems' })}>
+              <Button variant="outline" onClick={() => navigate.push("/gems")}>
                 Browse More Experiences
               </Button>
-              <Button onClick={() => navigate({ to: '/bookings' })}>
-                View My Bookings
-              </Button>
+              <Button onClick={() => navigate.push("/bookings")}>View My Bookings</Button>
             </div>
           </CardContent>
         </Card>
@@ -163,7 +169,7 @@ export function GemDetailPage() {
           variant="ghost"
           size="icon"
           className="absolute top-4 left-4 text-white hover:bg-white/20"
-          onClick={() => navigate({ to: '/gems' })}
+          onClick={() => navigate.push("/gems")}
           aria-label="Go back"
         >
           <ArrowLeft className="h-6 w-6" />

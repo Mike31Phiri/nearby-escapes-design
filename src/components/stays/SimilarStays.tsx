@@ -1,1 +1,3 @@
-export function SimilarStays() { return null; }
+export function SimilarStays() {
+  return null;
+}

@@ -1,1 +1,3 @@
-export function EarningsChart() { return null; }
+export function EarningsChart() {
+  return null;
+}

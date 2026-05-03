@@ -1,1 +1,3 @@
-export function EmojiReaction() { return null; }
+export function EmojiReaction() {
+  return null;
+}

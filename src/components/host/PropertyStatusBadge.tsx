@@ -1,1 +1,3 @@
-export function PropertyStatusBadge() { return null; }
+export function PropertyStatusBadge() {
+  return null;
+}

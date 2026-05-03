@@ -37,7 +37,8 @@ export function SearchFilters({
 }) {
   const toggle = (key: "categories" | "locations", value: string) => {
     const set = new Set(filters[key]);
-    set.has(value) ? set.delete(value) : set.add(value);
+    if (set.has(value)) set.delete(value);
+    else set.add(value);
     setFilters({ ...filters, [key]: Array.from(set) });
   };
 
@@ -59,9 +60,7 @@ export function SearchFilters({
           max={500}
           step={10}
           value={[filters.priceMin, filters.priceMax]}
-          onValueChange={([min, max]) =>
-            setFilters({ ...filters, priceMin: min, priceMax: max })
-          }
+          onValueChange={([min, max]) => setFilters({ ...filters, priceMin: min, priceMax: max })}
         />
         <div className="flex justify-between text-xs text-muted-foreground">
           <span>${filters.priceMin}</span>
@@ -87,9 +86,7 @@ export function SearchFilters({
       </div>
 
       <div className="space-y-2">
-        <Label className="text-xs uppercase tracking-wide text-muted-foreground">
-          Location
-        </Label>
+        <Label className="text-xs uppercase tracking-wide text-muted-foreground">Location</Label>
         <div className="space-y-2 max-h-56 overflow-auto pr-1">
           {allLocations.map((loc) => (
             <label key={loc} className="flex items-center gap-2 cursor-pointer text-sm">

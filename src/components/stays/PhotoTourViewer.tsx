@@ -1,1 +1,3 @@
-export function PhotoTourViewer() { return null; }
+export function PhotoTourViewer() {
+  return null;
+}

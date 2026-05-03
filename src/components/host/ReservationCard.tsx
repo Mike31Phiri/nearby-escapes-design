@@ -1,1 +1,3 @@
-export function ReservationCard() { return null; }
+export function ReservationCard() {
+  return null;
+}

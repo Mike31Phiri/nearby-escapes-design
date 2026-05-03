@@ -1,1 +1,3 @@
-export function MessageInput() { return null; }
+export function MessageInput() {
+  return null;
+}

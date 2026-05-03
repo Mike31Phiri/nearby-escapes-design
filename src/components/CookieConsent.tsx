@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -45,7 +47,8 @@ export function CookieConsent() {
             <Cookie className="h-4 w-4" />
           </div>
           <p className="text-sm leading-relaxed text-foreground">
-            We use essential cookies to make the site work and optional analytics cookies to improve it.{" "}
+            We use essential cookies to make the site work and optional analytics cookies to improve
+            it.{" "}
             <Link href="/legal/cookies" className="font-medium text-primary underline">
               Learn more
             </Link>

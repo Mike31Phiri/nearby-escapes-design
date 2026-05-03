@@ -1,1 +1,3 @@
-export function GuestSelector() { return null; }
+export function GuestSelector() {
+  return null;
+}

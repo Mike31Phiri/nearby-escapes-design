@@ -1,1 +1,3 @@
-export function MessageBubble() { return null; }
+export function MessageBubble() {
+  return null;
+}

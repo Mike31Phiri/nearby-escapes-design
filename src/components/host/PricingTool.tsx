@@ -1,1 +1,3 @@
-export function PricingTool() { return null; }
+export function PricingTool() {
+  return null;
+}

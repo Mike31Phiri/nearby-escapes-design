@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Clock, Wifi, Zap, Armchair, Utensils, Check, ChevronRight } from 'lucide-react';
-import type { BusSearchResult } from './BusSearchForm';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Clock, Wifi, Zap, Armchair, Utensils, Check, ChevronRight } from "lucide-react";
+import type { BusSearchResult } from "./BusSearchForm";
 
 interface BusResultsListProps {
   results: BusSearchResult[];
@@ -11,13 +11,13 @@ interface BusResultsListProps {
 }
 
 const amenityIcons: Record<string, React.ReactNode> = {
-  'WiFi': <Wifi className="h-4 w-4" />,
-  'AC': <Zap className="h-4 w-4" />,
-  'USB Charging': <Zap className="h-4 w-4" />,
-  'Reclining Seats': <Armchair className="h-4 w-4" />,
-  'Snacks': <Utensils className="h-4 w-4" />,
-  'Extra Legroom': <Armchair className="h-4 w-4" />,
-  'Storage': <Armchair className="h-4 w-4" />,
+  WiFi: <Wifi className="h-4 w-4" />,
+  AC: <Zap className="h-4 w-4" />,
+  "USB Charging": <Zap className="h-4 w-4" />,
+  "Reclining Seats": <Armchair className="h-4 w-4" />,
+  Snacks: <Utensils className="h-4 w-4" />,
+  "Extra Legroom": <Armchair className="h-4 w-4" />,
+  Storage: <Armchair className="h-4 w-4" />,
 };
 
 export function BusResultsList({ results, onSelectBus }: BusResultsListProps) {
@@ -33,9 +33,7 @@ export function BusResultsList({ results, onSelectBus }: BusResultsListProps) {
       <Card>
         <CardContent className="pt-6 text-center py-12">
           <p className="text-muted-foreground">No buses found for your search criteria.</p>
-          <p className="text-sm text-muted-foreground mt-2">
-            Try adjusting your dates or route.
-          </p>
+          <p className="text-sm text-muted-foreground mt-2">Try adjusting your dates or route.</p>
         </CardContent>
       </Card>
     );
@@ -47,12 +45,12 @@ export function BusResultsList({ results, onSelectBus }: BusResultsListProps) {
         <Card
           key={bus.id}
           className={`transition-all cursor-pointer hover:shadow-md ${
-            selectedBusId === bus.id ? 'ring-2 ring-primary' : ''
+            selectedBusId === bus.id ? "ring-2 ring-primary" : ""
           }`}
           onClick={() => handleSelect(bus)}
           role="button"
           tabIndex={0}
-          onKeyDown={(e) => e.key === 'Enter' && handleSelect(bus)}
+          onKeyDown={(e) => e.key === "Enter" && handleSelect(bus)}
           aria-pressed={selectedBusId === bus.id}
         >
           <CardContent className="p-6">
@@ -62,7 +60,10 @@ export function BusResultsList({ results, onSelectBus }: BusResultsListProps) {
                 <div className="flex items-center gap-3 mb-2">
                   <div className="text-center">
                     <p className="text-2xl font-bold">
-                      {bus.departureTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      {bus.departureTime.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </p>
                     <p className="text-sm text-muted-foreground">{bus.from}</p>
                   </div>
@@ -75,7 +76,10 @@ export function BusResultsList({ results, onSelectBus }: BusResultsListProps) {
                   </div>
                   <div className="text-center">
                     <p className="text-2xl font-bold">
-                      {bus.arrivalTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      {bus.arrivalTime.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </p>
                     <p className="text-sm text-muted-foreground">{bus.to}</p>
                   </div>

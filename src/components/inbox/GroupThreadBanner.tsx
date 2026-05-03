@@ -1,1 +1,3 @@
-export function GroupThreadBanner() { return null; }
+export function GroupThreadBanner() {
+  return null;
+}

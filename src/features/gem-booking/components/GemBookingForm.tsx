@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { format } from 'date-fns';
-import { CalendarIcon, Users, Clock, MapPin, Star } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format } from "date-fns";
+import { CalendarIcon, Users, Clock, MapPin, Star } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface GemBookingProps {
   gemId: string;
@@ -45,10 +45,10 @@ export function GemBookingForm({
 }: GemBookingProps) {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [numberOfGuests, setNumberOfGuests] = useState(2);
-  const [contactName, setContactName] = useState('');
-  const [contactEmail, setContactEmail] = useState('');
-  const [contactPhone, setContactPhone] = useState('');
-  const [specialRequests, setSpecialRequests] = useState('');
+  const [contactName, setContactName] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
+  const [specialRequests, setSpecialRequests] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const totalPrice = price * numberOfGuests;
@@ -58,10 +58,10 @@ export function GemBookingForm({
     if (!date) return;
 
     setIsSubmitting(true);
-    
+
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     const bookingData: GemBookingData = {
       gemId,
       date,
@@ -108,9 +108,7 @@ export function GemBookingForm({
               <Users className="h-4 w-4" />
               <span>Max {maxGroupSize} guests</span>
             </div>
-            <div className="text-xl font-bold text-primary">
-              ${price} per person
-            </div>
+            <div className="text-xl font-bold text-primary">${price} per person</div>
           </div>
         </div>
 
@@ -123,14 +121,14 @@ export function GemBookingForm({
                   <Button
                     variant="outline"
                     className={cn(
-                      'w-full justify-start text-left font-normal',
-                      !date && 'text-muted-foreground'
+                      "w-full justify-start text-left font-normal",
+                      !date && "text-muted-foreground",
                     )}
                     id="date"
                     type="button"
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, 'PPP') : 'Pick a date'}
+                    {date ? format(date, "PPP") : "Pick a date"}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
@@ -153,7 +151,11 @@ export function GemBookingForm({
                 min={1}
                 max={maxGroupSize}
                 value={numberOfGuests}
-                onChange={(e) => setNumberOfGuests(Math.min(maxGroupSize, Math.max(1, parseInt(e.target.value) || 1)))}
+                onChange={(e) =>
+                  setNumberOfGuests(
+                    Math.min(maxGroupSize, Math.max(1, parseInt(e.target.value) || 1)),
+                  )
+                }
                 aria-describedby="guests-description"
               />
               <p id="guests-description" className="text-xs text-muted-foreground">
@@ -222,7 +224,7 @@ export function GemBookingForm({
               disabled={!date || isSubmitting}
               aria-busy={isSubmitting}
             >
-              {isSubmitting ? 'Processing...' : `Book Now - $${totalPrice}`}
+              {isSubmitting ? "Processing..." : `Book Now - $${totalPrice}`}
             </Button>
           </div>
         </form>

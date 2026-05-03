@@ -1,1 +1,3 @@
-export function CalendarGrid() { return null; }
+export function CalendarGrid() {
+  return null;
+}

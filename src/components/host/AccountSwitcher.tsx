@@ -1,1 +1,3 @@
-export function AccountSwitcher() { return null; }
+export function AccountSwitcher() {
+  return null;
+}

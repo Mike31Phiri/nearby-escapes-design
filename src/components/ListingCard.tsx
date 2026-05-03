@@ -13,10 +13,7 @@ export const ListingCard = memo(function ListingCard({ listing, className }: Lis
   return (
     <Link
       href={`/accommodations/${listing.id}`}
-      className={cn(
-        "group block overflow-hidden rounded-2xl bg-card card-hover-effect",
-        className
-      )}
+      className={cn("group block overflow-hidden rounded-2xl bg-card card-hover-effect", className)}
       aria-label={`View details for ${listing.name} in ${listing.location}, priced at $${listing.price} per night`}
     >
       <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
@@ -34,7 +31,7 @@ export const ListingCard = memo(function ListingCard({ listing, className }: Lis
       <div className="p-3">
         <div className="flex items-start justify-between gap-2">
           <h3 className="font-semibold text-sm leading-tight truncate">{listing.name}</h3>
-          <div 
+          <div
             className="flex items-center gap-1 text-xs font-medium shrink-0"
             aria-label={`Rated ${listing.rating} out of 5 stars`}
           >

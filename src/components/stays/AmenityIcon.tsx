@@ -1,1 +1,3 @@
-export function AmenityIcon() { return null; }
+export function AmenityIcon() {
+  return null;
+}

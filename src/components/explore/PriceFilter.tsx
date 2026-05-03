@@ -1,1 +1,3 @@
-export function PriceFilter() { return null; }
+export function PriceFilter() {
+  return null;
+}

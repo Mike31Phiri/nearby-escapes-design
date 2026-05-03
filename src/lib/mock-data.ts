@@ -1,8 +1,3 @@
-import lodge from "@/assets/listing-lodge.jpg";
-import hotel from "@/assets/listing-hotel.jpg";
-import camp from "@/assets/listing-camp.jpg";
-import guesthouse from "@/assets/listing-guesthouse.jpg";
-
 export type Listing = {
   id: string;
   name: string;
@@ -14,6 +9,11 @@ export type Listing = {
   category: "Lodge" | "Hotel" | "Camp" | "Guesthouse";
   description: string;
 };
+
+const lodge = "/images/listing-lodge.jpg";
+const hotel = "/images/listing-hotel.jpg";
+const camp = "/images/listing-camp.jpg";
+const guesthouse = "/images/listing-guesthouse.jpg";
 
 export const listings: Listing[] = [
   {

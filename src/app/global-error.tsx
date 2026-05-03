@@ -28,7 +28,9 @@ export default function GlobalError({
                 />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">Something went wrong</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">
+              Something went wrong
+            </h1>
             <p className="mt-2 text-sm text-muted-foreground">
               An unexpected error occurred. Please try again.
             </p>

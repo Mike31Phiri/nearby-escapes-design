@@ -1,1 +1,3 @@
-export function AvailabilityCalendar() { return null; }
+export function AvailabilityCalendar() {
+  return null;
+}

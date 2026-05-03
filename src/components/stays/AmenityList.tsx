@@ -1,1 +1,3 @@
-export function AmenityList() { return null; }
+export function AmenityList() {
+  return null;
+}

@@ -1,1 +1,3 @@
-export function PhoneOtpInput() { return null; }
+export function PhoneOtpInput() {
+  return null;
+}

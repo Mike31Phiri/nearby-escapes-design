@@ -1,1 +1,3 @@
-export function PropertyTypeFilter() { return null; }
+export function PropertyTypeFilter() {
+  return null;
+}

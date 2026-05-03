@@ -1,1 +1,3 @@
-export function SocialLoginButtons() { return null; }
+export function SocialLoginButtons() {
+  return null;
+}

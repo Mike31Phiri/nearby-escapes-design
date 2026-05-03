@@ -1,1 +1,3 @@
-export function MessageThread() { return null; }
+export function MessageThread() {
+  return null;
+}

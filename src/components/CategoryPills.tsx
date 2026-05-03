@@ -1,11 +1,14 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Bed, Bus, Package } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const categories = [
-  { label: "Stays", icon: Bed, to: "/accommodations" as const },
-  { label: "Transport", icon: Bus, to: "/bus-booking" as const },
-  { label: "Packages", icon: Package, to: "/packages" as const },
+  { label: "Stays", icon: Bed, href: "/accommodations" },
+  { label: "Transport", icon: Bus, href: "/bus-booking" },
+  { label: "Packages", icon: Package, href: "/packages" },
 ];
 
 export function CategoryPills({
@@ -15,6 +18,7 @@ export function CategoryPills({
   variant?: "hero" | "header";
   className?: string;
 }) {
+  const pathname = usePathname();
   const isHero = variant === "hero";
   return (
     <div
@@ -26,27 +30,29 @@ export function CategoryPills({
         className,
       )}
     >
-      {categories.map(({ label, icon: Icon, to }) => (
-        <Link
-          key={label}
-          to={to}
-          aria-label={label}
-          className={cn(
-            "group flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-[var(--transition-smooth)]",
-            isHero
-              ? "text-background hover:bg-background/20"
-              : "text-muted-foreground hover:bg-primary-soft hover:text-primary",
-          )}
-          activeProps={{
-            className: isHero
-              ? "bg-background text-primary"
-              : "bg-primary-soft text-primary",
-          }}
-        >
-          <Icon className="h-4 w-4" />
-          <span className="hidden sm:inline">{label}</span>
-        </Link>
-      ))}
+      {categories.map(({ label, icon: Icon, href }) => {
+        const isActive = pathname === href;
+        return (
+          <Link
+            key={label}
+            href={href}
+            aria-label={label}
+            className={cn(
+              "group flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-[var(--transition-smooth)]",
+              isHero
+                ? isActive
+                  ? "bg-background text-primary"
+                  : "text-background hover:bg-background/20"
+                : isActive
+                  ? "bg-primary-soft text-primary"
+                  : "text-muted-foreground hover:bg-primary-soft hover:text-primary",
+            )}
+          >
+            <Icon className="h-4 w-4" />
+            <span className="hidden sm:inline">{label}</span>
+          </Link>
+        );
+      })}
     </div>
   );
 }

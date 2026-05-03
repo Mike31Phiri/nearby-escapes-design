@@ -1,1 +1,3 @@
-export function HouseRules() { return null; }
+export function HouseRules() {
+  return null;
+}

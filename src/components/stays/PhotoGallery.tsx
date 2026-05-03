@@ -1,1 +1,3 @@
-export function PhotoGallery() { return null; }
+export function PhotoGallery() {
+  return null;
+}

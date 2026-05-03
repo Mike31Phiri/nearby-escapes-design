@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { format } from 'date-fns';
-import { CalendarIcon, Users, Clock, MapPin, Search, Star } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format } from "date-fns";
+import { CalendarIcon, Users, Clock, MapPin, Search, Star } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface PackageSearchProps {
   onSearchResults: (results: PackageSearchResult[]) => void;
@@ -30,114 +30,117 @@ export interface PackageSearchResult {
 
 const mockPackages: PackageSearchResult[] = [
   {
-    id: '1',
-    name: 'Complete Jamaica Experience',
-    description: '7-day all-inclusive package covering the best of Jamaica including beaches, mountains, and cultural experiences.',
-    duration: '7 days / 6 nights',
+    id: "1",
+    name: "Complete Jamaica Experience",
+    description:
+      "7-day all-inclusive package covering the best of Jamaica including beaches, mountains, and cultural experiences.",
+    duration: "7 days / 6 nights",
     price: 1299,
     rating: 4.9,
     reviewCount: 342,
-    location: 'Montego Bay & Ocho Rios',
-    imageUrl: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=800',
+    location: "Montego Bay & Ocho Rios",
+    imageUrl: "https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=800",
     highlights: [
-      'Luxury resort accommodation',
-      'Guided tours to Dunn\\'s River Falls',
-      'Sunset catamaran cruise',
-      'Blue Mountain coffee tour',
-      'All meals and drinks included',
+      "Luxury resort accommodation",
+      "Guided tours to Dunn's River Falls",
+      "Sunset catamaran cruise",
+      "Blue Mountain coffee tour",
+      "All meals and drinks included",
     ],
     included: [
-      '6 nights accommodation',
-      'Daily breakfast, lunch, and dinner',
-      'Airport transfers',
-      'All guided tours',
-      'Entrance fees',
-      'Professional tour guide',
+      "6 nights accommodation",
+      "Daily breakfast, lunch, and dinner",
+      "Airport transfers",
+      "All guided tours",
+      "Entrance fees",
+      "Professional tour guide",
     ],
-    category: 'All-Inclusive',
+    category: "All-Inclusive",
   },
   {
-    id: '2',
-    name: 'Adventure Seeker Package',
-    description: '5-day action-packed adventure featuring zip-lining, river tubing, hiking, and water sports.',
-    duration: '5 days / 4 nights',
+    id: "2",
+    name: "Adventure Seeker Package",
+    description:
+      "5-day action-packed adventure featuring zip-lining, river tubing, hiking, and water sports.",
+    duration: "5 days / 4 nights",
     price: 899,
     rating: 4.8,
     reviewCount: 218,
-    location: 'Ocho Rios & Port Antonio',
-    imageUrl: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?w=800',
+    location: "Ocho Rios & Port Antonio",
+    imageUrl: "https://images.unsplash.com/photo-1533105079780-92b9be482077?w=800",
     highlights: [
-      'Zip-lining through rainforest canopy',
-      'River tubing adventure',
-      'Blue Lagoon exploration',
-      'Horseback riding on the beach',
-      'Small group experience',
+      "Zip-lining through rainforest canopy",
+      "River tubing adventure",
+      "Blue Lagoon exploration",
+      "Horseback riding on the beach",
+      "Small group experience",
     ],
     included: [
-      '4 nights hotel accommodation',
-      'Daily breakfast',
-      'All adventure activities',
-      'Equipment and safety gear',
-      'Transportation between activities',
+      "4 nights hotel accommodation",
+      "Daily breakfast",
+      "All adventure activities",
+      "Equipment and safety gear",
+      "Transportation between activities",
     ],
-    category: 'Adventure',
+    category: "Adventure",
   },
   {
-    id: '3',
-    name: 'Romantic Getaway',
-    description: 'Perfect for couples! 4-day romantic escape with private dinners, spa treatments, and sunset cruises.',
-    duration: '4 days / 3 nights',
+    id: "3",
+    name: "Romantic Getaway",
+    description:
+      "Perfect for couples! 4-day romantic escape with private dinners, spa treatments, and sunset cruises.",
+    duration: "4 days / 3 nights",
     price: 1599,
     rating: 5.0,
     reviewCount: 156,
-    location: 'Negril',
-    imageUrl: 'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800',
+    location: "Negril",
+    imageUrl: "https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800",
     highlights: [
-      'Beachfront suite with ocean view',
-      'Private candlelit dinner on the beach',
-      'Couples spa treatment',
-      'Sunset sailing excursion',
-      'Champagne and chocolates on arrival',
+      "Beachfront suite with ocean view",
+      "Private candlelit dinner on the beach",
+      "Couples spa treatment",
+      "Sunset sailing excursion",
+      "Champagne and chocolates on arrival",
     ],
     included: [
-      '3 nights luxury suite',
-      'Daily gourmet breakfast',
-      'One romantic dinner',
-      'Couples massage (60 min)',
-      'Private airport transfers',
+      "3 nights luxury suite",
+      "Daily gourmet breakfast",
+      "One romantic dinner",
+      "Couples massage (60 min)",
+      "Private airport transfers",
     ],
-    category: 'Romance',
+    category: "Romance",
   },
 ];
 
 export function PackageSearchForm({ onSearchResults }: PackageSearchProps) {
-  const [destination, setDestination] = useState('');
+  const [destination, setDestination] = useState("");
   const [checkInDate, setCheckInDate] = useState<Date | undefined>(undefined);
   const [guests, setGuests] = useState(2);
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState("");
   const [isSearching, setIsSearching] = useState(false);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
 
     setIsSearching(true);
-    
+
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
+    await new Promise((resolve) => setTimeout(resolve, 800));
+
     // Filter mock results
     let results = mockPackages;
-    
+
     if (destination) {
-      results = results.filter(pkg => 
-        pkg.location.toLowerCase().includes(destination.toLowerCase())
+      results = results.filter((pkg) =>
+        pkg.location.toLowerCase().includes(destination.toLowerCase()),
       );
     }
-    
+
     if (category) {
-      results = results.filter(pkg => pkg.category === category);
+      results = results.filter((pkg) => pkg.category === category);
     }
-    
+
     onSearchResults(results);
     setIsSearching(false);
   };
@@ -170,14 +173,14 @@ export function PackageSearchForm({ onSearchResults }: PackageSearchProps) {
                 <Button
                   variant="outline"
                   className={cn(
-                    'w-full justify-start text-left font-normal',
-                    !checkInDate && 'text-muted-foreground'
+                    "w-full justify-start text-left font-normal",
+                    !checkInDate && "text-muted-foreground",
                   )}
                   id="checkIn"
                   type="button"
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {checkInDate ? format(checkInDate, 'PPP') : 'Pick a date'}
+                  {checkInDate ? format(checkInDate, "PPP") : "Pick a date"}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
@@ -202,7 +205,9 @@ export function PackageSearchForm({ onSearchResults }: PackageSearchProps) {
                 min={1}
                 max={10}
                 value={guests}
-                onChange={(e) => setGuests(Math.min(10, Math.max(1, parseInt(e.target.value) || 1)))}
+                onChange={(e) =>
+                  setGuests(Math.min(10, Math.max(1, parseInt(e.target.value) || 1)))
+                }
                 className="pl-10"
               />
             </div>

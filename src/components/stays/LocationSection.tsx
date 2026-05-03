@@ -1,1 +1,3 @@
-export function LocationSection() { return null; }
+export function LocationSection() {
+  return null;
+}

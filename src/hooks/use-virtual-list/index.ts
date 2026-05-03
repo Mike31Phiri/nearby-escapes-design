@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from "react";
 
 interface UseVirtualListOptions<T> {
   items: T[];
@@ -42,13 +42,15 @@ export function useVirtualList<T>({
     const container = containerRef.current;
     if (!container) return;
 
-    container.addEventListener('scroll', handleScroll, { passive: true });
+    container.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll(); // Initial calculation
 
     return () => {
-      container.removeEventListener('scroll', handleScroll);
-      if (rafId.current) {
-        cancelAnimationFrame(rafId.current);
+      container.removeEventListener("scroll", handleScroll);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      const raf = rafId.current;
+      if (raf) {
+        cancelAnimationFrame(raf);
       }
     };
   }, [containerRef, handleScroll]);
@@ -59,7 +61,7 @@ export function useVirtualList<T>({
   const startIndex = Math.max(0, Math.floor(scrollTop / itemHeight) - overscan);
   const endIndex = Math.min(
     items.length,
-    Math.ceil((scrollTop + containerHeight) / itemHeight) + overscan
+    Math.ceil((scrollTop + containerHeight) / itemHeight) + overscan,
   );
 
   const virtualItems: VirtualListItem<T>[] = [];
@@ -71,14 +73,17 @@ export function useVirtualList<T>({
     });
   }
 
-  const scrollToIndex = useCallback((index: number) => {
-    if (containerRef.current) {
-      containerRef.current.scrollTo({
-        top: index * itemHeight,
-        behavior: 'smooth',
-      });
-    }
-  }, [containerRef, itemHeight]);
+  const scrollToIndex = useCallback(
+    (index: number) => {
+      if (containerRef.current) {
+        containerRef.current.scrollTo({
+          top: index * itemHeight,
+          behavior: "smooth",
+        });
+      }
+    },
+    [containerRef, itemHeight],
+  );
 
   return {
     virtualItems,

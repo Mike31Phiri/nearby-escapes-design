@@ -41,7 +41,7 @@ export function ListingWizardLayout({
   backLabel?: string;
 }) {
   const location = usePathname();
-  const currentIdx = steps.findIndex((s) => s.path === location.pathname);
+  const currentIdx = steps.findIndex((s) => s.path === location);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -55,12 +55,12 @@ export function ListingWizardLayout({
               return (
                 <Link
                   key={s.path}
-                  to={s.path}
+                  href={s.path}
                   className={cn(
                     "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold whitespace-nowrap transition-[var(--transition-smooth)]",
                     isCurrent && "bg-primary-soft text-primary",
                     isCompleted && "text-primary hover:bg-primary-soft",
-                    !isCurrent && !isCompleted && "text-muted-foreground hover:bg-muted"
+                    !isCurrent && !isCompleted && "text-muted-foreground hover:bg-muted",
                   )}
                 >
                   {isCompleted ? (
@@ -89,9 +89,7 @@ export function ListingWizardLayout({
           <h1 className="mt-2 text-2xl font-bold tracking-tight md:text-3xl font-display">
             {title}
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-            {description}
-          </p>
+          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{description}</p>
         </header>
 
         <div className="space-y-6">{children}</div>

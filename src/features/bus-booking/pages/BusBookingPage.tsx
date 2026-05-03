@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { BusSearchForm, type BusSearchResult } from '../components/BusSearchForm';
-import { BusResultsList } from '../components/BusResultsList';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, CreditCard } from 'lucide-react';
+import { BusSearchForm, type BusSearchResult } from "../components/BusSearchForm";
+import { BusResultsList } from "../components/BusResultsList";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CheckCircle, CreditCard } from "lucide-react";
 
 export function BusBookingPage() {
   const navigate = useRouter();
@@ -21,10 +21,10 @@ export function BusBookingPage() {
     if (!selectedBus) return;
 
     setIsBooking(true);
-    
+
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
     setBookingConfirmed(true);
     setIsBooking(false);
   };
@@ -39,7 +39,7 @@ export function BusBookingPage() {
             <p className="text-muted-foreground mb-6">
               Your bus ticket has been booked successfully.
             </p>
-            
+
             <div className="bg-muted rounded-lg p-6 mb-6 text-left">
               <h2 className="font-semibold mb-4">Ticket Details</h2>
               <div className="space-y-3">
@@ -49,19 +49,17 @@ export function BusBookingPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Route:</span>
-                  <span className="font-medium">{selectedBus.from} → {selectedBus.to}</span>
+                  <span className="font-medium">
+                    {selectedBus.from} → {selectedBus.to}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Departure:</span>
-                  <span className="font-medium">
-                    {selectedBus.departureTime.toLocaleString()}
-                  </span>
+                  <span className="font-medium">{selectedBus.departureTime.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Arrival:</span>
-                  <span className="font-medium">
-                    {selectedBus.arrivalTime.toLocaleString()}
-                  </span>
+                  <span className="font-medium">{selectedBus.arrivalTime.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Bus Type:</span>
@@ -75,17 +73,15 @@ export function BusBookingPage() {
             </div>
 
             <p className="text-sm text-muted-foreground mb-6">
-              A confirmation email with your e-ticket has been sent to your registered email address.
-              Please present this ticket (printed or on your phone) when boarding.
+              A confirmation email with your e-ticket has been sent to your registered email
+              address. Please present this ticket (printed or on your phone) when boarding.
             </p>
 
             <div className="flex gap-4 justify-center">
-              <Button variant="outline" onClick={() => navigate({ to: '/transport' })}>
+              <Button variant="outline" onClick={() => navigate.push("/transport")}>
                 Book Another Trip
               </Button>
-              <Button onClick={() => navigate({ to: '/bookings' })}>
-                View My Bookings
-              </Button>
+              <Button onClick={() => navigate.push("/bookings")}>View My Bookings</Button>
             </div>
           </CardContent>
         </Card>

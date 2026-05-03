@@ -1,1 +1,3 @@
-export function QuickReplyBar() { return null; }
+export function QuickReplyBar() {
+  return null;
+}

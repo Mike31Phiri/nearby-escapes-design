@@ -2,8 +2,20 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import logo from "@/assets/logo.png";
-import { MapPin, Menu, User, LogOut, CircleUser as UserCircle, Briefcase, Settings as SettingsIcon, Globe, Circle as HelpCircle, Hop as Home, FileText } from "lucide-react";
+const logo = "/images/logo.png";
+import {
+  MapPin,
+  Menu,
+  User,
+  LogOut,
+  CircleUser as UserCircle,
+  Briefcase,
+  Settings as SettingsIcon,
+  Globe,
+  Circle as HelpCircle,
+  Hop as Home,
+  FileText,
+} from "lucide-react";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -53,10 +65,10 @@ export function SiteHeader() {
     if (open && sheetContentRef.current) {
       const cleanup = trapFocus(sheetContentRef.current);
       announceToScreenReader("Navigation menu opened");
-      
+
       // Handle escape key
       const cleanupEscape = onEscape(() => setOpen(false));
-      
+
       return () => {
         cleanup();
         cleanupEscape();
@@ -66,7 +78,12 @@ export function SiteHeader() {
   }, [open]);
 
   const initials = user?.fullName
-    ? user.fullName.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase()
+    ? user.fullName
+        .split(" ")
+        .map((p) => p[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase()
     : "";
 
   const handleLogout = useCallback(() => {
@@ -76,19 +93,27 @@ export function SiteHeader() {
     announceToScreenReader("You have been signed out");
   }, [logout, router]);
 
-  const handleNavClick = useCallback((to: string) => {
-    setOpen(false);
-    router.push(to);
-    announceToScreenReader(`Navigated to ${to}`);
-  }, [router]);
+  const handleNavClick = useCallback(
+    (to: string) => {
+      setOpen(false);
+      router.push(to);
+      announceToScreenReader(`Navigated to ${to}`);
+    },
+    [router],
+  );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-lg" role="banner">
-      <a href="#main-content" className="skip-link">Skip to main content</a>
-      
+    <header
+      className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-lg"
+      role="banner"
+    >
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 md:px-6">
-        <Link 
-          href="/" 
+        <Link
+          href="/"
           className="flex items-center gap-2 shrink-0"
           aria-label="Nearby Escapes - Home"
         >
@@ -100,14 +125,16 @@ export function SiteHeader() {
           <span className="hidden sm:inline font-bold text-lg tracking-tight">Nearby Escapes</span>
         </Link>
 
-        <nav 
-          className="hidden md:flex items-center justify-center flex-1" 
+        <nav
+          className="hidden md:flex items-center justify-center flex-1"
           aria-label="Main navigation"
         >
           <div
             className={cn(
               "transition-all duration-300",
-              showCenterPills ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
+              showCenterPills
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 -translate-y-2 pointer-events-none",
             )}
           >
             <CategoryPills variant="header" />
@@ -121,7 +148,7 @@ export function SiteHeader() {
               className="flex items-center gap-2 rounded-full border border-border pl-2 pr-2 py-1 hover:shadow-sm transition"
               aria-label={`Go to your profile, ${user.fullName}`}
             >
-              <div 
+              <div
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-[image:var(--gradient-hero)] text-xs font-bold text-primary-foreground"
                 aria-hidden="true"
               >
@@ -129,18 +156,22 @@ export function SiteHeader() {
               </div>
             </Link>
           ) : (
-            <div className="hidden sm:flex items-center gap-2" role="group" aria-label="Authentication">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+            <div
+              className="hidden sm:flex items-center gap-2"
+              role="group"
+              aria-label="Authentication"
+            >
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => router.push("/login")}
                 aria-label="Sign in to your account"
               >
                 Sign in
               </Button>
-              <Button 
-                size="sm" 
-                className="btn-primary" 
+              <Button
+                size="sm"
+                className="btn-primary"
                 onClick={() => router.push("/register")}
                 aria-label="Create a new account"
               >
@@ -151,10 +182,10 @@ export function SiteHeader() {
 
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="rounded-xl" 
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-xl"
                 aria-label="Open menu"
                 aria-expanded={open}
                 aria-controls="mobile-menu"
@@ -163,8 +194,8 @@ export function SiteHeader() {
                 <Menu className="h-5 w-5" aria-hidden="true" />
               </Button>
             </SheetTrigger>
-            <SheetContent 
-              side="right" 
+            <SheetContent
+              side="right"
               className="w-80 overflow-y-auto"
               id="mobile-menu"
               ref={sheetContentRef}
@@ -180,33 +211,96 @@ export function SiteHeader() {
                 <MobileGroup title="Account">
                   {user ? (
                     <>
-                      <MobileRowLink href="/profile" onSelect={() => handleNavClick("/profile")} icon={UserCircle} label="Profile" />
-                      <MobileRowLink href="/host" onSelect={() => handleNavClick("/host")} icon={Briefcase} label="Host dashboard" />
-                      <MobileRowLink href="/profile/settings" onSelect={() => handleNavClick("/profile/settings")} icon={SettingsIcon} label="Account settings" />
+                      <MobileRowLink
+                        href="/profile"
+                        onSelect={() => handleNavClick("/profile")}
+                        icon={UserCircle}
+                        label="Profile"
+                      />
+                      <MobileRowLink
+                        href="/host"
+                        onSelect={() => handleNavClick("/host")}
+                        icon={Briefcase}
+                        label="Host dashboard"
+                      />
+                      <MobileRowLink
+                        href="/profile/settings"
+                        onSelect={() => handleNavClick("/profile/settings")}
+                        icon={SettingsIcon}
+                        label="Account settings"
+                      />
                     </>
                   ) : (
                     <>
-                      <MobileRowAction onClick={() => handleNavClick("/login")} icon={UserCircle} label="Sign in" />
-                      <MobileRowAction onClick={() => handleNavClick("/register")} icon={Briefcase} label="Sign up" />
-                      <MobileRowLink href="/host" onSelect={() => handleNavClick("/host")} icon={Briefcase} label="List your property" />
+                      <MobileRowAction
+                        onClick={() => handleNavClick("/login")}
+                        icon={UserCircle}
+                        label="Sign in"
+                      />
+                      <MobileRowAction
+                        onClick={() => handleNavClick("/register")}
+                        icon={Briefcase}
+                        label="Sign up"
+                      />
+                      <MobileRowLink
+                        href="/host"
+                        onSelect={() => handleNavClick("/host")}
+                        icon={Briefcase}
+                        label="List your property"
+                      />
                     </>
                   )}
                 </MobileGroup>
 
                 <MobileGroup title="Explore">
-                  <MobileRowLink href="/" onSelect={() => handleNavClick("/")} icon={Home} label="Home" />
-                  <MobileRowLink href="/gems" onSelect={() => handleNavClick("/gems")} icon={MapPin} label="Hidden gems" />
+                  <MobileRowLink
+                    href="/"
+                    onSelect={() => handleNavClick("/")}
+                    icon={Home}
+                    label="Home"
+                  />
+                  <MobileRowLink
+                    href="/gems"
+                    onSelect={() => handleNavClick("/gems")}
+                    icon={MapPin}
+                    label="Hidden gems"
+                  />
                 </MobileGroup>
 
                 <MobileGroup title="Support">
-                  <MobileRowLink href="/help" onSelect={() => handleNavClick("/help")} icon={HelpCircle} label="Help & support" />
-                  <MobileRowLink href="/profile/settings#languages" onSelect={() => handleNavClick("/profile/settings")} icon={Globe} label="Languages & currency" />
+                  <MobileRowLink
+                    href="/help"
+                    onSelect={() => handleNavClick("/help")}
+                    icon={HelpCircle}
+                    label="Help & support"
+                  />
+                  <MobileRowLink
+                    href="/profile/settings#languages"
+                    onSelect={() => handleNavClick("/profile/settings")}
+                    icon={Globe}
+                    label="Languages & currency"
+                  />
                 </MobileGroup>
 
                 <MobileGroup title="Legal">
-                  <MobileRowLink href="/legal/terms" onSelect={() => handleNavClick("/legal/terms")} icon={FileText} label="Terms of service" />
-                  <MobileRowLink href="/legal/privacy" onSelect={() => handleNavClick("/legal/privacy")} icon={FileText} label="Privacy policy" />
-                  <MobileRowLink href="/legal/cookies" onSelect={() => handleNavClick("/legal/cookies")} icon={FileText} label="Cookie policy" />
+                  <MobileRowLink
+                    href="/legal/terms"
+                    onSelect={() => handleNavClick("/legal/terms")}
+                    icon={FileText}
+                    label="Terms of service"
+                  />
+                  <MobileRowLink
+                    href="/legal/privacy"
+                    onSelect={() => handleNavClick("/legal/privacy")}
+                    icon={FileText}
+                    label="Privacy policy"
+                  />
+                  <MobileRowLink
+                    href="/legal/cookies"
+                    onSelect={() => handleNavClick("/legal/cookies")}
+                    icon={FileText}
+                    label="Cookie policy"
+                  />
                 </MobileGroup>
 
                 {user && (
@@ -215,7 +309,7 @@ export function SiteHeader() {
                     className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium hover:bg-muted text-left text-destructive"
                     aria-label="Sign out of your account"
                   >
-                    <LogOut className="h-5 w-5" aria-hidden="true" /> 
+                    <LogOut className="h-5 w-5" aria-hidden="true" />
                     <span>Sign out</span>
                   </button>
                 )}
@@ -231,7 +325,7 @@ export function SiteHeader() {
 function MobileGroup({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div role="group" aria-labelledby={`${title.toLowerCase()}-heading`}>
-      <p 
+      <p
         id={`${title.toLowerCase()}-heading`}
         className="px-3 mb-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground"
       >

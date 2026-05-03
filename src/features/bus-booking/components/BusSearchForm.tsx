@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { format } from 'date-fns';
-import { CalendarIcon, MapPin, Clock, Users, Search } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format } from "date-fns";
+import { CalendarIcon, MapPin, Clock, Users, Search } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface BusSearchProps {
   onSearchResults: (results: BusSearchResult[]) => void;
@@ -29,49 +29,49 @@ export interface BusSearchResult {
 
 const mockBusRoutes: BusSearchResult[] = [
   {
-    id: '1',
-    operator: 'Jamaica Express',
+    id: "1",
+    operator: "Jamaica Express",
     departureTime: new Date(new Date().setHours(8, 0, 0, 0)),
     arrivalTime: new Date(new Date().setHours(12, 30, 0, 0)),
-    duration: '4h 30m',
+    duration: "4h 30m",
     price: 45,
     availableSeats: 23,
-    busType: 'Luxury Coach',
-    amenities: ['WiFi', 'AC', 'USB Charging', 'Reclining Seats'],
-    from: 'Kingston',
-    to: 'Montego Bay',
+    busType: "Luxury Coach",
+    amenities: ["WiFi", "AC", "USB Charging", "Reclining Seats"],
+    from: "Kingston",
+    to: "Montego Bay",
   },
   {
-    id: '2',
-    operator: 'Island Shuttle',
+    id: "2",
+    operator: "Island Shuttle",
     departureTime: new Date(new Date().setHours(10, 0, 0, 0)),
     arrivalTime: new Date(new Date().setHours(15, 0, 0, 0)),
-    duration: '5h 0m',
+    duration: "5h 0m",
     price: 35,
     availableSeats: 15,
-    busType: 'Standard',
-    amenities: ['AC', 'Storage'],
-    from: 'Kingston',
-    to: 'Montego Bay',
+    busType: "Standard",
+    amenities: ["AC", "Storage"],
+    from: "Kingston",
+    to: "Montego Bay",
   },
   {
-    id: '3',
-    operator: 'Caribbean Routes',
+    id: "3",
+    operator: "Caribbean Routes",
     departureTime: new Date(new Date().setHours(14, 0, 0, 0)),
     arrivalTime: new Date(new Date().setHours(18, 15, 0, 0)),
-    duration: '4h 15m',
+    duration: "4h 15m",
     price: 50,
     availableSeats: 8,
-    busType: 'Premium',
-    amenities: ['WiFi', 'AC', 'USB Charging', 'Snacks', 'Extra Legroom'],
-    from: 'Kingston',
-    to: 'Montego Bay',
+    busType: "Premium",
+    amenities: ["WiFi", "AC", "USB Charging", "Snacks", "Extra Legroom"],
+    from: "Kingston",
+    to: "Montego Bay",
   },
 ];
 
 export function BusSearchForm({ onSearchResults }: BusSearchProps) {
-  const [from, setFrom] = useState('Kingston');
-  const [to, setTo] = useState('Montego Bay');
+  const [from, setFrom] = useState("Kingston");
+  const [to, setTo] = useState("Montego Bay");
   const [departureDate, setDepartureDate] = useState<Date | undefined>(new Date());
   const [passengers, setPassengers] = useState(1);
   const [isSearching, setIsSearching] = useState(false);
@@ -81,16 +81,17 @@ export function BusSearchForm({ onSearchResults }: BusSearchProps) {
     if (!departureDate) return;
 
     setIsSearching(true);
-    
+
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
+    await new Promise((resolve) => setTimeout(resolve, 800));
+
     // Filter mock results based on search criteria
-    const results = mockBusRoutes.filter(bus => 
-      bus.from.toLowerCase().includes(from.toLowerCase()) &&
-      bus.to.toLowerCase().includes(to.toLowerCase())
+    const results = mockBusRoutes.filter(
+      (bus) =>
+        bus.from.toLowerCase().includes(from.toLowerCase()) &&
+        bus.to.toLowerCase().includes(to.toLowerCase()),
     );
-    
+
     onSearchResults(results.length > 0 ? results : mockBusRoutes);
     setIsSearching(false);
   };
@@ -144,14 +145,14 @@ export function BusSearchForm({ onSearchResults }: BusSearchProps) {
                   <Button
                     variant="outline"
                     className={cn(
-                      'w-full justify-start text-left font-normal',
-                      !departureDate && 'text-muted-foreground'
+                      "w-full justify-start text-left font-normal",
+                      !departureDate && "text-muted-foreground",
                     )}
                     id="departureDate"
                     type="button"
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {departureDate ? format(departureDate, 'PPP') : 'Pick a date'}
+                    {departureDate ? format(departureDate, "PPP") : "Pick a date"}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
@@ -176,7 +177,9 @@ export function BusSearchForm({ onSearchResults }: BusSearchProps) {
                   min={1}
                   max={10}
                   value={passengers}
-                  onChange={(e) => setPassengers(Math.min(10, Math.max(1, parseInt(e.target.value) || 1)))}
+                  onChange={(e) =>
+                    setPassengers(Math.min(10, Math.max(1, parseInt(e.target.value) || 1)))
+                  }
                   className="pl-10"
                   aria-describedby="passengers-description"
                 />

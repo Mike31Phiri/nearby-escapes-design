@@ -1,1 +1,3 @@
-export function DateRangePicker() { return null; }
+export function DateRangePicker() {
+  return null;
+}

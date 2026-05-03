@@ -1,1 +1,3 @@
-export function PriceBreakdown() { return null; }
+export function PriceBreakdown() {
+  return null;
+}

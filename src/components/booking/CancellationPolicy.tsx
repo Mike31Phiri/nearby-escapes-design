@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertCircle, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AlertCircle, Clock, CheckCircle, XCircle } from "lucide-react";
 
 export function CancellationPolicy() {
   return (
@@ -19,10 +19,11 @@ export function CancellationPolicy() {
             Flexible Cancellation
           </h4>
           <p className="text-sm text-muted-foreground">
-            Free cancellation up to 48 hours before check-in. After that, cancellations are subject to fees.
+            Free cancellation up to 48 hours before check-in. After that, cancellations are subject
+            to fees.
           </p>
         </div>
-        
+
         <div className="space-y-3">
           <div className="flex items-start gap-3">
             <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
@@ -31,7 +32,7 @@ export function CancellationPolicy() {
               <p className="text-xs text-muted-foreground">Full refund minus service fee</p>
             </div>
           </div>
-          
+
           <div className="flex items-start gap-3">
             <XCircle className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
             <div>
@@ -39,7 +40,7 @@ export function CancellationPolicy() {
               <p className="text-xs text-muted-foreground">50% refund of accommodation cost</p>
             </div>
           </div>
-          
+
           <div className="flex items-start gap-3">
             <XCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
             <div>
@@ -48,7 +49,7 @@ export function CancellationPolicy() {
             </div>
           </div>
         </div>
-        
+
         <div className="border-t pt-4 mt-4">
           <h4 className="font-semibold mb-2 text-sm">Important Notes</h4>
           <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">

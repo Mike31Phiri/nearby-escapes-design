@@ -1,1 +1,3 @@
-export function StayCarousel() { return null; }
+export function StayCarousel() {
+  return null;
+}

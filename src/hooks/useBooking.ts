@@ -10,7 +10,11 @@ export type BookingDraft = {
   pricePerNight?: number;
 };
 
-export function useBooking(input?: { checkIn?: string; checkOut?: string; pricePerNight?: number }) {
+export function useBooking(input?: {
+  checkIn?: string;
+  checkOut?: string;
+  pricePerNight?: number;
+}) {
   const [draft, setDraft] = useState<BookingDraft>({});
 
   useEffect(() => {

@@ -1,1 +1,3 @@
-export function FeedbackSummary() { return null; }
+export function FeedbackSummary() {
+  return null;
+}

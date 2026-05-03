@@ -1,9 +1,9 @@
 import { useRouter } from "next/navigation";
-import { useState } from 'react';
-import { GroupBookingForm, type GroupBookingData } from '../components/GroupBookingForm';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Users, Mail, Calendar, DollarSign, CheckCircle, Send } from 'lucide-react';
+import { useState } from "react";
+import { GroupBookingForm, type GroupBookingData } from "../components/GroupBookingForm";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Users, Mail, Calendar, DollarSign, CheckCircle, Send } from "lucide-react";
 
 export function GroupBookingPage() {
   const navigate = useRouter();
@@ -35,10 +35,19 @@ export function GroupBookingPage() {
                   Trip Details
                 </h2>
                 <div className="space-y-2 text-sm">
-                  <p><strong>Destination:</strong> {groupData.destination}</p>
-                  <p><strong>Dates:</strong> {groupData.startDate.toLocaleDateString()} - {groupData.endDate.toLocaleDateString()}</p>
-                  <p><strong>Organizer:</strong> {groupData.organizerName}</p>
-                  <p><strong>Members:</strong> {groupData.members.length} invited</p>
+                  <p>
+                    <strong>Destination:</strong> {groupData.destination}
+                  </p>
+                  <p>
+                    <strong>Dates:</strong> {groupData.startDate.toLocaleDateString()} -{" "}
+                    {groupData.endDate.toLocaleDateString()}
+                  </p>
+                  <p>
+                    <strong>Organizer:</strong> {groupData.organizerName}
+                  </p>
+                  <p>
+                    <strong>Members:</strong> {groupData.members.length} invited
+                  </p>
                 </div>
               </div>
 
@@ -49,8 +58,10 @@ export function GroupBookingPage() {
                 </h2>
                 <div className="space-y-2 text-sm">
                   <p>
-                    <strong>Split Costs:</strong>{' '}
-                    {groupData.splitCosts ? 'Yes, equally among all members' : 'No, organizer pays all'}
+                    <strong>Split Costs:</strong>{" "}
+                    {groupData.splitCosts
+                      ? "Yes, equally among all members"
+                      : "No, organizer pays all"}
                   </p>
                   {groupData.splitCosts && (
                     <p className="text-muted-foreground">
@@ -77,7 +88,7 @@ export function GroupBookingPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 variant="outline"
-                onClick={() => navigate({ to: '/trips' })}
+                onClick={() => navigate.push("/trips")}
                 className="flex items-center gap-2"
               >
                 <Users className="h-4 w-4" />
@@ -86,7 +97,7 @@ export function GroupBookingPage() {
               <Button
                 onClick={() => {
                   // In production, this would trigger actual email sending
-                  alert('Invitations sent to all members!');
+                  alert("Invitations sent to all members!");
                 }}
                 className="flex items-center gap-2"
               >
@@ -107,8 +118,8 @@ export function GroupBookingPage() {
           <div className="mb-8">
             <h1 className="text-4xl font-bold mb-4">Create a Group Trip</h1>
             <p className="text-muted-foreground text-lg">
-              Plan an unforgettable adventure with friends and family. Create your group,
-              invite members, and start booking experiences together.
+              Plan an unforgettable adventure with friends and family. Create your group, invite
+              members, and start booking experiences together.
             </p>
           </div>
 

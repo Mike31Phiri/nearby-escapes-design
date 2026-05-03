@@ -16,20 +16,20 @@ export function generateAriaId(prefix: string): string {
  */
 export function trapFocus(element: HTMLElement): () => void {
   const focusableSelectors = [
-    'button:not([disabled])',
-    'input:not([disabled])',
-    'select:not([disabled])',
-    'textarea:not([disabled])',
-    'a[href]',
+    "button:not([disabled])",
+    "input:not([disabled])",
+    "select:not([disabled])",
+    "textarea:not([disabled])",
+    "a[href]",
     '[tabindex]:not([tabindex="-1"])',
-  ].join(', ');
+  ].join(", ");
 
   const focusableElements = element.querySelectorAll<HTMLElement>(focusableSelectors);
   const firstElement = focusableElements[0];
   const lastElement = focusableElements[focusableElements.length - 1];
 
   function handleKeyDown(e: KeyboardEvent) {
-    if (e.key !== 'Tab') return;
+    if (e.key !== "Tab") return;
 
     if (e.shiftKey) {
       if (document.activeElement === firstElement) {
@@ -44,13 +44,13 @@ export function trapFocus(element: HTMLElement): () => void {
     }
   }
 
-  element.addEventListener('keydown', handleKeyDown);
+  element.addEventListener("keydown", handleKeyDown);
 
   // Focus first element
   firstElement?.focus();
 
   return () => {
-    element.removeEventListener('keydown', handleKeyDown);
+    element.removeEventListener("keydown", handleKeyDown);
   };
 }
 
@@ -71,16 +71,19 @@ export function isElementFocused(element: HTMLElement): boolean {
 /**
  * Announce a message to screen readers
  */
-export function announceToScreenReader(message: string, priority: 'polite' | 'assertive' = 'polite'): void {
-  const announcement = document.createElement('div');
-  announcement.setAttribute('role', 'status');
-  announcement.setAttribute('aria-live', priority);
-  announcement.setAttribute('aria-atomic', 'true');
-  announcement.className = 'sr-only';
+export function announceToScreenReader(
+  message: string,
+  priority: "polite" | "assertive" = "polite",
+): void {
+  const announcement = document.createElement("div");
+  announcement.setAttribute("role", "status");
+  announcement.setAttribute("aria-live", priority);
+  announcement.setAttribute("aria-atomic", "true");
+  announcement.className = "sr-only";
   announcement.textContent = message;
-  
+
   document.body.appendChild(announcement);
-  
+
   // Remove after announcement is made
   setTimeout(() => {
     document.body.removeChild(announcement);
@@ -92,13 +95,13 @@ export function announceToScreenReader(message: string, priority: 'polite' | 'as
  */
 export function onEscape(handler: () => void): () => void {
   function handleKeyDown(e: KeyboardEvent) {
-    if (e.key === 'Escape') {
+    if (e.key === "Escape") {
       handler();
     }
   }
 
-  document.addEventListener('keydown', handleKeyDown);
-  return () => document.removeEventListener('keydown', handleKeyDown);
+  document.addEventListener("keydown", handleKeyDown);
+  return () => document.removeEventListener("keydown", handleKeyDown);
 }
 
 /**
@@ -106,13 +109,13 @@ export function onEscape(handler: () => void): () => void {
  */
 export function getFocusableElements(container: HTMLElement): HTMLElement[] {
   const focusableSelectors = [
-    'button:not([disabled])',
-    'input:not([disabled])',
-    'select:not([disabled])',
-    'textarea:not([disabled])',
-    'a[href]',
+    "button:not([disabled])",
+    "input:not([disabled])",
+    "select:not([disabled])",
+    "textarea:not([disabled])",
+    "a[href]",
     '[tabindex]:not([tabindex="-1"])',
-  ].join(', ');
+  ].join(", ");
 
   return Array.from(container.querySelectorAll<HTMLElement>(focusableSelectors));
 }

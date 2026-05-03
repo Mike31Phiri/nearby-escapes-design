@@ -1,1 +1,3 @@
-export function AmenitiesFilter() { return null; }
+export function AmenitiesFilter() {
+  return null;
+}

@@ -7,16 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
 const contactSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, "Please enter your name")
-    .max(80, "Name is too long"),
-  email: z
-    .string()
-    .trim()
-    .email("Enter a valid email")
-    .max(255, "Email is too long"),
+  name: z.string().trim().min(2, "Please enter your name").max(80, "Name is too long"),
+  email: z.string().trim().email("Enter a valid email").max(255, "Email is too long"),
   subject: z.string().trim().min(3, "Subject is too short").max(120, "Subject is too long"),
   message: z
     .string()
@@ -73,7 +65,14 @@ export function ContactForm() {
           <Input id="name" name="name" autoComplete="name" maxLength={80} required />
         </Field>
         <Field id="email" label="Email" error={errors.email}>
-          <Input id="email" name="email" type="email" autoComplete="email" maxLength={255} required />
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            maxLength={255}
+            required
+          />
         </Field>
       </div>
       <Field id="subject" label="Subject" error={errors.subject}>

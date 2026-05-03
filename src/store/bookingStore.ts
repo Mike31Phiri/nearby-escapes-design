@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export const BOOKING_DRAFT_STORAGE_KEY = "ne.bookingDraft";
 
@@ -59,16 +59,16 @@ interface BookingState {
   stayDetails: BookingDetails | null;
   guestInfo: BookingGuest | null;
   paymentInfo: BookingPayment | null;
-  
+
   // Package booking
   packageDetails: PackageBookingDetails | null;
-  
+
   // UI state
   currentStep: number;
   isProcessing: boolean;
   bookingConfirmed: boolean;
   confirmationId: string | null;
-  
+
   // Actions
   setStayDetails: (details: BookingDetails) => void;
   setPackageDetails: (details: PackageBookingDetails) => void;
@@ -92,7 +92,7 @@ export const useBookingStore = create<BookingState>()(
       isProcessing: false,
       bookingConfirmed: false,
       confirmationId: null,
-      
+
       // Actions
       setStayDetails: (details) => set({ stayDetails: details, currentStep: 2 }),
       setPackageDetails: (details) => set({ packageDetails: details, currentStep: 2 }),
@@ -100,22 +100,23 @@ export const useBookingStore = create<BookingState>()(
       setPaymentInfo: (info) => set({ paymentInfo: info }),
       setCurrentStep: (step) => set({ currentStep: step }),
       setIsProcessing: (processing) => set({ isProcessing: processing }),
-      setBookingConfirmed: (confirmed, confirmationId) => 
-        set({ 
-          bookingConfirmed: confirmed, 
+      setBookingConfirmed: (confirmed, confirmationId) =>
+        set({
+          bookingConfirmed: confirmed,
           confirmationId: confirmationId || null,
-          currentStep: confirmed ? 4 : 3
+          currentStep: confirmed ? 4 : 3,
         }),
-      resetBooking: () => set({
-        stayDetails: null,
-        packageDetails: null,
-        guestInfo: null,
-        paymentInfo: null,
-        currentStep: 1,
-        isProcessing: false,
-        bookingConfirmed: false,
-        confirmationId: null,
-      }),
+      resetBooking: () =>
+        set({
+          stayDetails: null,
+          packageDetails: null,
+          guestInfo: null,
+          paymentInfo: null,
+          currentStep: 1,
+          isProcessing: false,
+          bookingConfirmed: false,
+          confirmationId: null,
+        }),
     }),
     {
       name: BOOKING_DRAFT_STORAGE_KEY,
@@ -125,6 +126,6 @@ export const useBookingStore = create<BookingState>()(
         guestInfo: state.guestInfo,
         currentStep: state.currentStep,
       }),
-    }
-  )
+    },
+  ),
 );

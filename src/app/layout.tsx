@@ -6,7 +6,8 @@ import { CookieConsent } from "@/components/CookieConsent";
 
 export const metadata: Metadata = {
   title: "Nearby Escapes — Stay, travel, explore Zambia",
-  description: "Discover stays, bus tickets and hidden gems across Zambia. Book trusted lodges, hotels and tour packages with Nearby Escapes.",
+  description:
+    "Discover stays, bus tickets and hidden gems across Zambia. Book trusted lodges, hotels and tour packages with Nearby Escapes.",
   manifest: "/site.webmanifest",
   appleWebApp: {
     capable: true,

@@ -1,33 +1,33 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { PackageSearchForm, type PackageSearchResult } from '../components/PackageSearchForm';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Star, Clock, MapPin, CheckCircle, CreditCard } from 'lucide-react';
-import { useBookingStore } from '@/store/bookingStore';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { PackageSearchForm, type PackageSearchResult } from "../components/PackageSearchForm";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Star, Clock, MapPin, CheckCircle, CreditCard } from "lucide-react";
+import { useBookingStore } from "@/store/bookingStore";
 
 export function PackageBookingPage() {
   const router = useRouter();
   const { setPackageDetails } = useBookingStore();
   const [searchResults, setSearchResults] = useState<PackageSearchResult[]>([]);
   const [selectedPackage, setSelectedPackage] = useState<PackageSearchResult | null>(null);
-  
+
   const handleSelectPackage = (pkg: PackageSearchResult) => {
     setSelectedPackage(pkg);
   };
-  
+
   const handleBookNow = () => {
     if (!selectedPackage) return;
-    
+
     // Calculate pricing
     const subtotal = selectedPackage.price * 2; // Default 2 guests
     const serviceFee = subtotal * 0.1; // 10% service fee
     const taxes = subtotal * 0.08; // 8% taxes
     const total = subtotal + serviceFee + taxes;
-    
+
     // Store booking details
     setPackageDetails({
       packageId: selectedPackage.id,
@@ -42,9 +42,9 @@ export function PackageBookingPage() {
       taxes,
       total,
     });
-    
+
     // Navigate to checkout
-    router.push('/checkout');
+    router.push("/checkout");
   };
 
   return (
@@ -76,12 +76,12 @@ export function PackageBookingPage() {
                       <Card
                         key={pkg.id}
                         className={`cursor-pointer transition-all hover:shadow-md ${
-                          selectedPackage?.id === pkg.id ? 'ring-2 ring-primary' : ''
+                          selectedPackage?.id === pkg.id ? "ring-2 ring-primary" : ""
                         }`}
                         onClick={() => handleSelectPackage(pkg)}
                         role="button"
                         tabIndex={0}
-                        onKeyDown={(e) => e.key === 'Enter' && handleSelectPackage(pkg)}
+                        onKeyDown={(e) => e.key === "Enter" && handleSelectPackage(pkg)}
                         aria-pressed={selectedPackage?.id === pkg.id}
                       >
                         <CardContent className="p-6">
@@ -93,7 +93,7 @@ export function PackageBookingPage() {
                               loading="lazy"
                               decoding="async"
                             />
-                            
+
                             <div className="md:col-span-2">
                               <div className="flex items-start justify-between mb-2">
                                 <div>
@@ -158,7 +158,7 @@ export function PackageBookingPage() {
                           <p className="text-sm text-muted-foreground mb-4">
                             {selectedPackage.description}
                           </p>
-                          
+
                           <h4 className="font-semibold mb-2">Highlights</h4>
                           <ul className="space-y-1 mb-4">
                             {selectedPackage.highlights.slice(0, 4).map((highlight, i) => (
@@ -182,7 +182,9 @@ export function PackageBookingPage() {
 
                         <div>
                           <div className="text-right mb-6">
-                            <p className="text-4xl font-bold text-primary">${selectedPackage.price}</p>
+                            <p className="text-4xl font-bold text-primary">
+                              ${selectedPackage.price}
+                            </p>
                             <p className="text-sm text-muted-foreground">per person</p>
                           </div>
 
@@ -208,11 +210,7 @@ export function PackageBookingPage() {
                             </div>
                           </div>
 
-                          <Button
-                            className="w-full"
-                            size="lg"
-                            onClick={handleBookNow}
-                          >
+                          <Button className="w-full" size="lg" onClick={handleBookNow}>
                             <CreditCard className="mr-2 h-4 w-4" />
                             Book Now - Proceed to Checkout
                           </Button>

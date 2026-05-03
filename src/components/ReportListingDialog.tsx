@@ -36,7 +36,13 @@ const REASONS = [
   "Other",
 ];
 
-export function ReportListingDialog({ listingId, listingName }: { listingId: string; listingName: string }) {
+export function ReportListingDialog({
+  listingId,
+  listingName,
+}: {
+  listingId: string;
+  listingName: string;
+}) {
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -71,7 +77,11 @@ export function ReportListingDialog({ listingId, listingName }: { listingId: str
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="gap-2 text-muted-foreground hover:text-foreground"
+        >
           <Flag className="h-4 w-4" /> Report this listing
         </Button>
       </DialogTrigger>
@@ -79,7 +89,9 @@ export function ReportListingDialog({ listingId, listingName }: { listingId: str
         <DialogHeader>
           <DialogTitle>Report listing</DialogTitle>
           <DialogDescription>
-            Tell us what's wrong with <span className="font-medium text-foreground">{listingName}</span>. Reports are confidential.
+            Tell us what's wrong with{" "}
+            <span className="font-medium text-foreground">{listingName}</span>. Reports are
+            confidential.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit} className="space-y-4" noValidate>
@@ -108,7 +120,11 @@ export function ReportListingDialog({ listingId, listingName }: { listingId: str
             <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={submitting} className="bg-[image:var(--gradient-hero)] hover:opacity-95">
+            <Button
+              type="submit"
+              disabled={submitting}
+              className="bg-[image:var(--gradient-hero)] hover:opacity-95"
+            >
               {submitting ? "Sending…" : "Submit report"}
             </Button>
           </DialogFooter>

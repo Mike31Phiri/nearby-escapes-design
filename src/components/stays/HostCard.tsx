@@ -1,1 +1,3 @@
-export function HostCard() { return null; }
+export function HostCard() {
+  return null;
+}
