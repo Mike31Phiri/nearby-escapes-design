@@ -7,6 +7,7 @@ import {
   DollarSign,
   AlertCircle,
   Settings,
+  ArrowRight
 } from "lucide-react";
 import { AdminLayout } from "./AdminLayout";
 import { Card, CardContent } from "@/components/ui/card";
@@ -35,66 +36,67 @@ export function AdminDashboardPage() {
   return (
     <AdminLayout title="Dashboard" description="Overview of platform performance and activity">
       {/* Stats Grid */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-6 sm:mb-8">
         {stats.map((stat) => (
-          <Card key={stat.label} className="border-border/60">
-            <CardContent className="p-5">
+          <Card key={stat.label} className="border-border/40 shadow-sm hover:shadow-md transition-shadow duration-200">
+            <CardContent className="p-6">
               <div className="flex items-center justify-between">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-soft text-primary">
-                  <stat.icon className="h-5 w-5" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                  <stat.icon className="h-6 w-6" />
                 </div>
                 {stat.trend === "up" && (
-                  <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full">
+                  <div className="flex items-center gap-1 text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
+                    <TrendingUp className="h-3 w-3" />
                     {stat.change}
-                  </span>
+                  </div>
                 )}
               </div>
-              <div className="mt-4">
-                <p className="text-2xl font-bold">{stat.value}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">{stat.label}</p>
+              <div className="mt-5">
+                <p className="text-3xl font-bold tracking-tight text-foreground">{stat.value}</p>
+                <p className="text-sm font-medium text-muted-foreground mt-1">{stat.label}</p>
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 lg:gap-8 lg:grid-cols-3">
         {/* Recent Activity */}
-        <Card className="border-border/60">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Recent Activity</h2>
-              <Link href="/admin/bookings" className="text-sm text-primary hover:underline">
-                View all
+        <Card className="lg:col-span-2 border-border/40 shadow-sm">
+          <CardContent className="p-0">
+            <div className="flex items-center justify-between p-6 border-b border-border/40 bg-white rounded-t-xl">
+              <h2 className="text-lg font-semibold tracking-tight">Recent Activity</h2>
+              <Link href="/admin/bookings" className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1 transition-colors">
+                View all <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
-            <div className="space-y-4">
+            <div className="divide-y divide-border/40 bg-white rounded-b-xl">
               {recentActivity.map((activity) => (
-                <div key={activity.id} className="flex items-start gap-3">
+                <div key={activity.id} className="flex items-start gap-4 p-6 hover:bg-muted/30 transition-colors">
                   <div
-                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border ${
                       activity.type === "alert"
-                        ? "bg-red-100 text-red-600"
+                        ? "bg-red-50 text-red-600 border-red-100"
                         : activity.type === "booking"
-                          ? "bg-green-100 text-green-600"
+                          ? "bg-emerald-50 text-emerald-600 border-emerald-100"
                           : activity.type === "listing"
-                            ? "bg-blue-100 text-blue-600"
-                            : "bg-purple-100 text-purple-600"
+                            ? "bg-blue-50 text-blue-600 border-blue-100"
+                            : "bg-purple-50 text-purple-600 border-purple-100"
                     }`}
                   >
                     {activity.type === "alert" ? (
-                      <AlertCircle className="h-4 w-4" />
+                      <AlertCircle className="h-5 w-5" />
                     ) : activity.type === "booking" ? (
-                      <CalendarCheck className="h-4 w-4" />
+                      <CalendarCheck className="h-5 w-5" />
                     ) : activity.type === "listing" ? (
-                      <Home className="h-4 w-4" />
+                      <Home className="h-5 w-5" />
                     ) : (
-                      <Users className="h-4 w-4" />
+                      <Users className="h-5 w-5" />
                     )}
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium">{activity.message}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">{activity.time}</p>
+                  <div className="flex-1 min-w-0 pt-0.5">
+                    <p className="text-sm font-medium text-foreground">{activity.message}</p>
+                    <p className="text-xs text-muted-foreground mt-1.5">{activity.time}</p>
                   </div>
                 </div>
               ))}
@@ -103,46 +105,30 @@ export function AdminDashboardPage() {
         </Card>
 
         {/* Quick Actions */}
-        <Card className="border-border/60">
+        <Card className="border-border/40 shadow-sm h-fit">
           <CardContent className="p-6">
-            <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
+            <h2 className="text-lg font-semibold tracking-tight mb-5">Quick Actions</h2>
             <div className="grid gap-3">
-              <Link
-                href="/admin/users"
-                className="flex items-center justify-between p-4 rounded-xl border border-border hover:bg-muted transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <Users className="h-5 w-5 text-primary" />
-                  <span className="font-medium">Manage Users</span>
-                </div>
-              </Link>
-              <Link
-                href="/admin/listings"
-                className="flex items-center justify-between p-4 rounded-xl border border-border hover:bg-muted transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <Home className="h-5 w-5 text-primary" />
-                  <span className="font-medium">Review Listings</span>
-                </div>
-              </Link>
-              <Link
-                href="/admin/bookings"
-                className="flex items-center justify-between p-4 rounded-xl border border-border hover:bg-muted transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <CalendarCheck className="h-5 w-5 text-primary" />
-                  <span className="font-medium">View Bookings</span>
-                </div>
-              </Link>
-              <Link
-                href="/admin/settings"
-                className="flex items-center justify-between p-4 rounded-xl border border-border hover:bg-muted transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <Settings className="h-5 w-5 text-primary" />
-                  <span className="font-medium">Platform Settings</span>
-                </div>
-              </Link>
+              {[
+                { href: "/admin/users", icon: Users, label: "Manage Users" },
+                { href: "/admin/listings", icon: Home, label: "Review Listings" },
+                { href: "/admin/bookings", icon: CalendarCheck, label: "View Bookings" },
+                { href: "/admin/settings", icon: Settings, label: "Platform Settings" },
+              ].map((action) => (
+                <Link
+                  key={action.label}
+                  href={action.href}
+                  className="flex items-center justify-between p-4 rounded-xl border border-border/40 hover:border-primary/30 hover:bg-primary/5 hover:shadow-sm transition-all group bg-white"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-lg bg-muted/50 border border-border/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:border-primary/20 transition-colors">
+                      <action.icon className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </div>
+                    <span className="font-medium text-sm text-foreground">{action.label}</span>
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                </Link>
+              ))}
             </div>
           </CardContent>
         </Card>

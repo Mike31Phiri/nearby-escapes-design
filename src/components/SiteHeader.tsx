@@ -17,7 +17,7 @@ import {
   FileText,
 } from "lucide-react";
 import { useEffect, useState, useRef, useCallback } from "react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { CategoryPills } from "@/components/CategoryPills";
@@ -33,7 +33,6 @@ export function SiteHeader() {
   const isHostArea = pathname?.startsWith("/host");
   const [showCenterPills, setShowCenterPills] = useState(!isHome && !isHostArea);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const sheetContentRef = useRef<HTMLDivElement>(null);
 
   // Handle scroll-based pill visibility
   useEffect(() => {
@@ -60,20 +59,12 @@ export function SiteHeader() {
     return () => observer.disconnect();
   }, [isHome, isHostArea]);
 
-  // Trap focus when sheet is open
+  // Announce sheet open/close to screen readers
   useEffect(() => {
-    if (open && sheetContentRef.current) {
-      const cleanup = trapFocus(sheetContentRef.current);
-      announceToScreenReader("Navigation menu opened");
-
-      // Handle escape key
+    announceToScreenReader(open ? "Navigation menu opened" : "Navigation menu closed");
+    if (open) {
       const cleanupEscape = onEscape(() => setOpen(false));
-
-      return () => {
-        cleanup();
-        cleanupEscape();
-        announceToScreenReader("Navigation menu closed");
-      };
+      return cleanupEscape;
     }
   }, [open]);
 
@@ -198,8 +189,9 @@ export function SiteHeader() {
               side="right"
               className="w-80 overflow-y-auto"
               id="mobile-menu"
-              ref={sheetContentRef}
+              aria-label="Navigation menu"
             >
+              <SheetTitle className="sr-only">Navigation menu</SheetTitle>
               <div className="mt-8 space-y-6" role="navigation" aria-label="Mobile navigation">
                 {user && (
                   <div className="px-3 pb-2 border-b border-border" role="status">

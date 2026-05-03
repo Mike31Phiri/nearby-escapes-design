@@ -78,6 +78,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const found = readUsers().find((u) => u.email.toLowerCase() === email.toLowerCase());
         if (!found || found.password !== password) throw new Error("Invalid email or password.");
         localStorage.setItem(SESSION_KEY, found.id);
+        document.cookie = `ne.session=${found.id}; path=/; max-age=86400`;
+        document.cookie = `ne.role=${found.role}; path=/; max-age=86400`;
         setUser(publicUser(found));
       },
       async register({ email, password, fullName }) {
@@ -96,10 +98,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         };
         writeUsers([...users, newUser]);
         localStorage.setItem(SESSION_KEY, newUser.id);
+        document.cookie = `ne.session=${newUser.id}; path=/; max-age=86400`;
+        document.cookie = `ne.role=${newUser.role}; path=/; max-age=86400`;
         setUser(publicUser(newUser));
       },
       logout() {
         localStorage.removeItem(SESSION_KEY);
+        document.cookie = "ne.session=; path=/; max-age=0";
+        document.cookie = "ne.role=; path=/; max-age=0";
         setUser(null);
       },
       async requestPasswordReset(email) {
@@ -141,6 +147,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (idx === -1) return;
         users[idx].role = "host";
         writeUsers(users);
+        document.cookie = `ne.role=host; path=/; max-age=86400`;
         setUser(publicUser(users[idx]));
       },
       setRole(role) {
@@ -150,6 +157,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (idx === -1) return;
         users[idx].role = role;
         writeUsers(users);
+        document.cookie = `ne.role=${role}; path=/; max-age=86400`;
         setUser(publicUser(users[idx]));
       },
     }),
