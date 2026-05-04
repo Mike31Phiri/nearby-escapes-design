@@ -1,4 +1,3 @@
-```
 # Dependencies
 node_modules/
 
@@ -19,4 +18,27 @@ out/
 # Coverage reports
 coverage/
 .nyc_output/
-```
+
+# AI tool skill folders
+.agent/
+.claude/
+.codebuddy/
+.codex/
+.continue/
+.cursor/
+.gemini/
+.kiro/
+.opencode/
+.qoder/
+.roo/
+.trae/
+.windsurf/
+.github/prompts/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Design system generated files
+design-system/
+scratch/

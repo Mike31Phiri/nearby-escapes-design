@@ -19,9 +19,8 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
-import { CategoryPills } from "@/components/CategoryPills";
 import { cn } from "@/lib/utils";
-import { onEscape, trapFocus, announceToScreenReader } from "@/lib/accessibility";
+import { onEscape, announceToScreenReader } from "@/lib/accessibility";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -30,7 +29,6 @@ export function SiteHeader() {
   const pathname = usePathname();
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Announce sheet open/close to screen readers
   useEffect(() => {
     announceToScreenReader(open ? "Navigation menu opened" : "Navigation menu closed");
     if (open) {
@@ -40,12 +38,7 @@ export function SiteHeader() {
   }, [open]);
 
   const initials = user?.fullName
-    ? user.fullName
-        .split(" ")
-        .map((p) => p[0])
-        .slice(0, 2)
-        .join("")
-        .toUpperCase()
+    ? user.fullName.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase()
     : "";
 
   const handleLogout = useCallback(() => {
@@ -65,59 +58,40 @@ export function SiteHeader() {
   );
 
   return (
-    <header
-      className="sticky top-0 z-50 w-full bg-background border-b border-border"
-      role="banner"
-    >
-      <a href="#main-content" className="skip-link">
-        Skip to main content
-      </a>
+    <header className="sticky top-0 z-50 w-full bg-background border-b border-border" role="banner">
+      <a href="#main-content" className="skip-link">Skip to main content</a>
 
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-4 md:px-6">
         {/* Logo */}
-        <Link
-          href="/"
-          className="flex items-center gap-2 shrink-0"
-          aria-label="Nearby Escapes - Home"
-        >
-          <img
-            src={logo}
-            alt=""
-            className="h-9 w-9 rounded-xl object-contain shadow-sm"
-          />
+        <Link href="/" className="flex items-center gap-2 shrink-0" aria-label="Nearby Escapes - Home">
+          <img src={logo} alt="" className="h-9 w-9 rounded-xl object-contain shadow-sm" />
           <span className="hidden sm:inline font-bold text-xl tracking-tight text-primary">Nearby Escapes</span>
         </Link>
 
         <div className="hidden md:flex flex-1" />
 
         {/* Right side nav */}
-        <div className="flex items-center justify-end gap-1 md:gap-2 shrink-0">
-          <button
-            className="hidden lg:flex items-center gap-1 text-sm font-medium hover:bg-muted/50 rounded-full px-3 py-2 transition-[var(--transition-smooth)]"
-            aria-label="Currency"
-          >
-            <span>ZMW</span>
-          </button>
+        <div className="flex items-center justify-end gap-2 shrink-0">
 
+          {/* Become a Host — visible on all sizes */}
           <Link
-            href="/help"
-            className="hidden lg:flex items-center justify-center h-10 w-10 rounded-full hover:bg-muted/50 transition-[var(--transition-smooth)]"
-            aria-label="Help & Support"
+            href="/host"
+            className="text-sm font-semibold hover:bg-muted/50 rounded-full px-4 py-2 transition-colors whitespace-nowrap"
           >
-            <HelpCircle className="h-4 w-4" />
+            Become a Host
           </Link>
 
           {!user ? (
-            <div className="hidden sm:flex items-center gap-2 ml-2">
+            <div className="hidden sm:flex items-center gap-2">
               <Button
                 variant="ghost"
-                className="rounded-full font-semibold hover:bg-muted/50 transition-[var(--transition-smooth)]"
+                className="rounded-full font-semibold hover:bg-muted/50"
                 onClick={() => router.push("/register")}
               >
                 Register
               </Button>
               <Button
-                className="rounded-full font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm transition-[var(--transition-smooth)]"
+                className="rounded-full font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm"
                 onClick={() => router.push("/login")}
               >
                 Sign in
@@ -125,11 +99,11 @@ export function SiteHeader() {
             </div>
           ) : null}
 
-          {/* Mobile menu / User Profile Pill */}
+          {/* Menu pill */}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <button
-                className="flex items-center gap-2 border border-border hover:shadow-md transition-[var(--transition-smooth)] rounded-full pl-3 pr-1.5 py-1.5 ml-2 bg-background"
+                className="flex items-center gap-2 border border-border hover:shadow-md transition-all rounded-full pl-3 pr-1.5 py-1.5 bg-background"
                 aria-label="Open menu"
                 aria-expanded={open}
                 aria-controls="mobile-menu"
@@ -144,12 +118,7 @@ export function SiteHeader() {
                 </div>
               </button>
             </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="w-80 overflow-y-auto"
-              id="mobile-menu"
-              aria-label="Navigation menu"
-            >
+            <SheetContent side="right" className="w-80 overflow-y-auto" id="mobile-menu" aria-label="Navigation menu">
               <SheetTitle className="sr-only">Navigation menu</SheetTitle>
               <div className="mt-6 space-y-6" role="navigation" aria-label="Mobile navigation">
                 {user ? (
@@ -164,17 +133,10 @@ export function SiteHeader() {
                   </div>
                 ) : (
                   <div className="px-3 pb-4 border-b border-border sm:hidden flex flex-col gap-2">
-                    <Button
-                      className="w-full rounded-xl font-semibold bg-primary hover:bg-primary/90"
-                      onClick={() => handleNavClick("/login")}
-                    >
+                    <Button className="w-full rounded-xl font-semibold bg-primary hover:bg-primary/90" onClick={() => handleNavClick("/login")}>
                       Sign in
                     </Button>
-                    <Button
-                      variant="outline"
-                      className="w-full rounded-xl font-semibold"
-                      onClick={() => handleNavClick("/register")}
-                    >
+                    <Button variant="outline" className="w-full rounded-xl font-semibold" onClick={() => handleNavClick("/register")}>
                       Create account
                     </Button>
                   </div>
@@ -183,58 +145,23 @@ export function SiteHeader() {
                 <MobileGroup title="Manage">
                   {user && (
                     <>
-                      <MobileRowLink
-                        href="/profile"
-                        onSelect={() => handleNavClick("/profile")}
-                        icon={UserCircle}
-                        label="Manage account"
-                      />
-                      <MobileRowLink
-                        href="/account/bookings"
-                        onSelect={() => handleNavClick("/account/bookings")}
-                        icon={Briefcase}
-                        label="Bookings & Trips"
-                      />
+                      <MobileRowLink href="/profile" onSelect={() => handleNavClick("/profile")} icon={UserCircle} label="Manage account" />
+                      <MobileRowLink href="/account/bookings" onSelect={() => handleNavClick("/account/bookings")} icon={Briefcase} label="Bookings & Trips" />
                     </>
                   )}
-                  <MobileRowLink
-                    href="/gems"
-                    onSelect={() => handleNavClick("/gems")}
-                    icon={MapPin}
-                    label="Saved Lists"
-                  />
+                  <MobileRowLink href="/gems" onSelect={() => handleNavClick("/gems")} icon={MapPin} label="Saved Lists" />
                 </MobileGroup>
 
                 <MobileGroup title="Hosting">
-                  <MobileRowLink
-                    href="/host"
-                    onSelect={() => handleNavClick("/host")}
-                    icon={Home}
-                    label="List your property"
-                  />
+                  <MobileRowLink href="/host" onSelect={() => handleNavClick("/host")} icon={Home} label="Become a Host" />
                   {user && (
-                    <MobileRowLink
-                      href="/host"
-                      onSelect={() => handleNavClick("/host")}
-                      icon={SettingsIcon}
-                      label="Host dashboard"
-                    />
+                    <MobileRowLink href="/host" onSelect={() => handleNavClick("/host")} icon={SettingsIcon} label="Host dashboard" />
                   )}
                 </MobileGroup>
 
                 <MobileGroup title="Support">
-                  <MobileRowLink
-                    href="/help"
-                    onSelect={() => handleNavClick("/help")}
-                    icon={HelpCircle}
-                    label="Help Center"
-                  />
-                  <MobileRowLink
-                    href="/help/contact"
-                    onSelect={() => handleNavClick("/help/contact")}
-                    icon={FileText}
-                    label="Contact customer service"
-                  />
+                  <MobileRowLink href="/help" onSelect={() => handleNavClick("/help")} icon={HelpCircle} label="Help Center" />
+                  <MobileRowLink href="/help/contact" onSelect={() => handleNavClick("/help/contact")} icon={FileText} label="Contact customer service" />
                 </MobileGroup>
 
                 {user && (
@@ -261,10 +188,7 @@ export function SiteHeader() {
 function MobileGroup({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div role="group" aria-labelledby={`${title.toLowerCase()}-heading`}>
-      <p
-        id={`${title.toLowerCase()}-heading`}
-        className="px-3 mb-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground"
-      >
+      <p id={`${title.toLowerCase()}-heading`} className="px-3 mb-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
         {title}
       </p>
       <div className="space-y-0.5">{children}</div>
@@ -272,46 +196,11 @@ function MobileGroup({ title, children }: { title: string; children: React.React
   );
 }
 
-function MobileRowLink({
-  href,
-  icon: Icon,
-  label,
-  onSelect,
-}: {
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-  onSelect: () => void;
-}) {
+function MobileRowLink({ href, icon: Icon, label, onSelect }: { href: string; icon: React.ComponentType<{ className?: string }>; label: string; onSelect: () => void }) {
   return (
-    <Link
-      href={href}
-      onClick={onSelect}
-      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-muted"
-    >
+    <Link href={href} onClick={onSelect} className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-muted">
       <Icon className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
       <span>{label}</span>
     </Link>
-  );
-}
-
-function MobileRowAction({
-  onClick,
-  icon: Icon,
-  label,
-}: {
-  onClick: () => void;
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-muted text-left"
-    >
-      <Icon className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
-      <span>{label}</span>
-    </button>
   );
 }
