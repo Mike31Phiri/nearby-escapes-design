@@ -1,98 +1,131 @@
 "use client";
 
-import { useState } from "react";
-import { CalendarDays, MapPin, Search, Users, X } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { CalendarDays, MapPin, Search, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export function SearchBar({ className }: { className?: string }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [active, setActive] = useState<"where" | "when" | "who" | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsExpanded(false);
+        setActive(null);
+      }
+    }
+    if (isExpanded) document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [isExpanded]);
 
   return (
-    <div className={cn("mx-auto w-full max-w-4xl relative", className)}>
-      {/* Mobile Collapsed State */}
-      <div className={cn("md:hidden", isExpanded ? "hidden" : "block")}>
+    <div ref={containerRef} className={cn("mx-auto w-full max-w-3xl relative", className)}>
+
+      {/* Collapsed — single Search pill */}
+      {!isExpanded && (
         <button
           type="button"
-          onClick={() => setIsExpanded(true)}
-          className="flex items-center w-full gap-4 rounded-full bg-background p-3 pl-5 shadow-lg ring-1 ring-border/20 text-left transition-transform active:scale-[0.98]"
+          onClick={() => { setIsExpanded(true); setActive("where"); }}
+          className="flex items-center gap-3 mx-auto rounded-full bg-background shadow-md ring-1 ring-border/40 hover:shadow-lg transition-all duration-200 active:scale-[0.99] px-6 py-4 w-full"
         >
-          <Search className="h-5 w-5 text-foreground font-bold" />
-          <div className="flex flex-col">
-            <span className="text-sm font-bold text-foreground leading-tight">Where to?</span>
-            <span className="text-[11px] text-muted-foreground font-medium mt-0.5">Anywhere • Any week • Add guests</span>
-          </div>
+          <Search className="h-4 w-4 text-primary shrink-0" />
+          <span className="text-sm font-semibold text-foreground">Search</span>
         </button>
-      </div>
+      )}
 
-      {/* Expanded / Desktop State */}
-      <div
-        className={cn(
-          "bg-background md:rounded-full md:p-2 md:shadow-lg md:ring-1 md:ring-border/20",
-          isExpanded ? "absolute top-0 left-0 right-0 z-50 rounded-3xl shadow-xl ring-1 ring-border/20 p-2" : "hidden md:block"
-        )}
-      >
-        <div className={cn("flex justify-between items-center p-3 mb-2", isExpanded ? "flex md:hidden" : "hidden")}>
-          <span className="font-bold text-lg">Search</span>
-          <button onClick={() => setIsExpanded(false)} className="p-2 rounded-full bg-muted/50 hover:bg-muted transition-colors">
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-
-        <form className="flex flex-col md:flex-row items-center divide-y md:divide-y-0 md:divide-x divide-border/50">
-          <Field icon={MapPin} label="Where" placeholder="Search destinations" className="flex-[1.5]" />
-          <Field icon={CalendarDays} label="When" placeholder="Add dates" type="date" className="flex-1" />
-          <Field icon={Users} label="Who" placeholder="Add guests" className="flex-1" />
-          <div className="p-2 w-full md:w-auto mt-2 md:mt-0">
-            <Button
-              type="submit"
-              size="lg"
-              className="h-12 w-full md:w-12 md:h-12 rounded-xl md:rounded-full bg-primary hover:bg-primary/90 shadow-md text-primary-foreground flex items-center justify-center p-0"
-              aria-label="Search"
-            >
-              <Search className="h-5 w-5" />
-              <span className="md:hidden ml-2 font-semibold">Search</span>
-            </Button>
-          </div>
-        </form>
-      </div>
-
-      {/* Mobile Backdrop */}
+      {/* Expanded — full Airbnb-style wide bar */}
       {isExpanded && (
-        <div 
-          className="fixed inset-0 bg-black/60 z-40 md:hidden backdrop-blur-sm transition-opacity" 
-          onClick={() => setIsExpanded(false)}
-        />
+        <>
+          <div
+            className="fixed inset-0 bg-black/40 z-40 backdrop-blur-sm"
+            onClick={() => { setIsExpanded(false); setActive(null); }}
+          />
+          <div className="absolute top-0 left-0 right-0 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+            <div className="flex items-stretch w-full rounded-full bg-background shadow-2xl ring-1 ring-border/30 overflow-hidden">
+
+              {/* Where */}
+              <button
+                type="button"
+                onClick={() => setActive("where")}
+                className={cn(
+                  "flex-1 flex items-center gap-3 px-6 py-4 text-left transition-colors rounded-full",
+                  active === "where" ? "bg-white shadow-md ring-1 ring-border/40" : "hover:bg-muted/50"
+                )}
+              >
+                <MapPin className="h-4 w-4 text-primary shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-[11px] font-bold text-foreground uppercase tracking-wide">Where</p>
+                  <input
+                    autoFocus
+                    type="text"
+                    placeholder="Search destinations"
+                    className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground mt-0.5"
+                    onClick={(e) => { e.stopPropagation(); setActive("where"); }}
+                  />
+                </div>
+              </button>
+
+              <div className="w-px my-3 bg-border/50" />
+
+              {/* When */}
+              <button
+                type="button"
+                onClick={() => setActive("when")}
+                className={cn(
+                  "flex-1 flex items-center gap-3 px-6 py-4 text-left transition-colors rounded-full",
+                  active === "when" ? "bg-white shadow-md ring-1 ring-border/40" : "hover:bg-muted/50"
+                )}
+              >
+                <CalendarDays className="h-4 w-4 text-primary shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-[11px] font-bold text-foreground uppercase tracking-wide">When</p>
+                  <input
+                    type="date"
+                    className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground mt-0.5"
+                    onClick={(e) => { e.stopPropagation(); setActive("when"); }}
+                  />
+                </div>
+              </button>
+
+              <div className="w-px my-3 bg-border/50" />
+
+              {/* Who + Search button */}
+              <div className="flex items-center gap-2 pr-3">
+                <button
+                  type="button"
+                  onClick={() => setActive("who")}
+                  className={cn(
+                    "flex items-center gap-3 px-6 py-4 text-left transition-colors rounded-full",
+                    active === "who" ? "bg-white shadow-md ring-1 ring-border/40" : "hover:bg-muted/50"
+                  )}
+                >
+                  <Users className="h-4 w-4 text-primary shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-[11px] font-bold text-foreground uppercase tracking-wide">Who</p>
+                    <input
+                      type="text"
+                      placeholder="Add guests"
+                      className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground mt-0.5"
+                      onClick={(e) => { e.stopPropagation(); setActive("who"); }}
+                    />
+                  </div>
+                </button>
+                <Button
+                  type="submit"
+                  className="h-12 w-12 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground flex items-center justify-center p-0 shadow-md shrink-0"
+                  aria-label="Search"
+                >
+                  <Search className="h-5 w-5" />
+                </Button>
+              </div>
+
+            </div>
+          </div>
+        </>
       )}
     </div>
-  );
-}
-
-function Field({
-  icon: Icon,
-  label,
-  placeholder,
-  type = "text",
-  className,
-}: {
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-  placeholder: string;
-  type?: string;
-  className?: string;
-}) {
-  return (
-    <label className={cn("group flex w-full cursor-text items-center gap-3 px-4 py-3 transition-[var(--transition-smooth)] hover:bg-muted/50 rounded-xl md:rounded-full md:py-2 md:px-6", className)}>
-      <div className="flex-1 min-w-0">
-        <div className="text-[11px] font-bold tracking-wide text-foreground">
-          {label}
-        </div>
-        <input
-          type={type}
-          placeholder={placeholder}
-          className="w-full bg-transparent text-sm font-normal outline-none placeholder:text-muted-foreground truncate mt-0.5"
-        />
-      </div>
-    </label>
   );
 }

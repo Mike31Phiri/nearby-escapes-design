@@ -191,6 +191,33 @@
     border-color: var(--color-border);
   }
 
+  /* Smooth transitions on all interactive elements */
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  [role="button"] {
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease,
+      box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  /* Page-level fade-in */
+  body {
+    animation: page-fade-in 0.35s ease forwards;
+  }
+
+  @keyframes page-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
@@ -313,6 +340,43 @@
   .image-loading {
     @apply bg-muted animate-pulse;
   }
+
+  /* Smooth image zoom on card hover */
+  .card-img-zoom img {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card-img-zoom:hover img {
+    transform: scale(1.05);
+  }
+
+  /* Section fade-up animation */
+  .section-enter {
+    animation: section-fade-up 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+
+  @keyframes section-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Staggered children animation */
+  .stagger-children > * {
+    animation: section-fade-up 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+  .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+  .stagger-children > *:nth-child(2) { animation-delay: 60ms; }
+  .stagger-children > *:nth-child(3) { animation-delay: 120ms; }
+  .stagger-children > *:nth-child(4) { animation-delay: 180ms; }
+  .stagger-children > *:nth-child(5) { animation-delay: 240ms; }
+  .stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+  .stagger-children > *:nth-child(7) { animation-delay: 360ms; }
+  .stagger-children > *:nth-child(8) { animation-delay: 420ms; }
 }
 
 @layer utilities {

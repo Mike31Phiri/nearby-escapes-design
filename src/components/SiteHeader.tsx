@@ -11,7 +11,6 @@ import {
   CircleUser as UserCircle,
   Briefcase,
   Settings as SettingsIcon,
-  Globe,
   Circle as HelpCircle,
   Hop as Home,
   FileText,
@@ -99,13 +98,6 @@ export function SiteHeader() {
           >
             <span>ZMW</span>
           </button>
-          
-          <button
-            className="hidden sm:flex items-center justify-center h-10 w-10 rounded-full hover:bg-muted/50 transition-[var(--transition-smooth)]"
-            aria-label="Language"
-          >
-            <Globe className="h-4 w-4" />
-          </button>
 
           <Link
             href="/help"
@@ -113,13 +105,6 @@ export function SiteHeader() {
             aria-label="Help & Support"
           >
             <HelpCircle className="h-4 w-4" />
-          </Link>
-
-          <Link
-            href="/host"
-            className="hidden md:block text-sm font-semibold hover:bg-muted/50 rounded-full px-4 py-2 transition-[var(--transition-smooth)]"
-          >
-            List your property
           </Link>
 
           {!user ? (
@@ -229,8 +214,8 @@ export function SiteHeader() {
                   />
                   {user && (
                     <MobileRowLink
-                      href="/host/dashboard"
-                      onSelect={() => handleNavClick("/host/dashboard")}
+                      href="/host"
+                      onSelect={() => handleNavClick("/host")}
                       icon={SettingsIcon}
                       label="Host dashboard"
                     />

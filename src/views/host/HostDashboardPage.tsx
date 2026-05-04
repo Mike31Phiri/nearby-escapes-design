@@ -1,17 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard, CalendarDays, DollarSign, MessageSquare,
   ChartBar as BarChart3, Hop as Home, Star, Plus, TrendingUp,
-  Users, ArrowRight, Compass, Sparkles,
+  Users, ArrowRight, Compass, Sparkles, Menu,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
@@ -44,7 +46,7 @@ export function HostSidebar() {
     <aside className="hidden lg:flex flex-col w-56 shrink-0">
       <nav className="sticky top-24 space-y-1">
         {hostNav.map(({ label, icon: Icon, href }) => {
-          const active = href === "/host" ? pathname === "/host" : pathname?.startsWith(href);
+          const active = pathname === href || (href !== "/host" && pathname?.startsWith(href));
           return (
             <Link
               key={href}
@@ -68,27 +70,43 @@ export function HostSidebar() {
 
 export function HostMobileNav() {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
   return (
-    <nav className="lg:hidden flex gap-1.5 overflow-x-auto scrollbar-none pb-1">
-      {hostNav.map(({ label, icon: Icon, href }) => {
-        const active = href === "/host" ? pathname === "/host" : pathname?.startsWith(href);
-        return (
-          <Link
-            key={href}
-            href={href}
-            className={cn(
-              "flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold whitespace-nowrap transition-all shrink-0",
-              active
-                ? "bg-primary text-primary-foreground"
-                : "bg-muted text-muted-foreground hover:bg-primary-soft hover:text-primary"
-            )}
-          >
-            <Icon className="h-3.5 w-3.5" />
-            {label}
-          </Link>
-        );
-      })}
-    </nav>
+    <div className="lg:hidden">
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetTrigger asChild>
+          <button className="p-1.5 rounded-lg hover:bg-muted transition-colors" aria-label="Open navigation">
+            <Menu className="h-5 w-5 text-foreground" />
+          </button>
+        </SheetTrigger>
+        <SheetContent side="left" className="w-64 p-0">
+          <div className="px-5 py-5 border-b border-border">
+            <p className="font-bold text-sm uppercase tracking-widest text-primary">Host</p>
+          </div>
+          <nav className="p-3 space-y-1">
+            {hostNav.map(({ label, icon: Icon, href }) => {
+              const active = pathname === href || (href !== "/host" && pathname?.startsWith(href));
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setOpen(false)}
+                  className={cn(
+                    "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all",
+                    active
+                      ? "bg-primary-soft text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  <Icon className="h-4 w-4 shrink-0" />
+                  {label}
+                </Link>
+              );
+            })}
+          </nav>
+        </SheetContent>
+      </Sheet>
+    </div>
   );
 }
 
@@ -148,10 +166,13 @@ export function HostDashboardPage() {
       <div className="border-b border-border/50 bg-primary-soft/30">
         <div className="mx-auto w-full max-w-6xl px-4 md:px-6 py-8 md:py-10">
           <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-1">Host</p>
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Dashboard</h1>
-              <p className="mt-1.5 text-sm text-muted-foreground">Track listings, reservations and earnings.</p>
+            <div className="flex items-center gap-3">
+              <HostMobileNav />
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-1">Host</p>
+                <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Dashboard</h1>
+                <p className="mt-1.5 text-sm text-muted-foreground">Track listings, reservations and earnings.</p>
+              </div>
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <Button asChild variant="outline" size="sm" className="hidden sm:flex">
@@ -161,9 +182,6 @@ export function HostDashboardPage() {
                 <Plus className="h-4 w-4 mr-2" /> New listing
               </Button>
             </div>
-          </div>
-          <div className="mt-6">
-            <HostMobileNav />
           </div>
         </div>
       </div>
@@ -243,6 +261,23 @@ export function HostDashboardPage() {
                   </Card>
                 ))}
               </div>
+            </section>
+
+            {/* Analytics CTA */}
+            <section>
+              <Card className="border-border/60 bg-gradient-to-r from-primary-soft to-purple-50 dark:to-purple-950/30">
+                <CardContent className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div>
+                    <p className="font-bold text-base">Full analytics</p>
+                    <p className="text-sm text-muted-foreground mt-1">Deep-dive into views, conversion rates, revenue trends and guest insights across all your listings.</p>
+                  </div>
+                  <Link href="/host/analytics" className="shrink-0">
+                    <Button className="bg-primary hover:bg-primary/90 whitespace-nowrap">
+                      View analytics <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
             </section>
           </div>
         </div>
