@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import {
@@ -13,6 +15,8 @@ import {
   ShieldCheck,
   Award,
   ChevronRight,
+  Check,
+  Users,
 } from "lucide-react";
 import { useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
@@ -24,6 +28,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { getListing, listings } from "@/lib/mock-data";
 import { BOOKING_DRAFT_STORAGE_KEY } from "@/store/bookingStore";
+import { ListingCard } from "@/components/ListingCard";
 
 const amenities = [
   { icon: Wifi, label: "Fast Wi-Fi" },
@@ -59,9 +64,9 @@ const reviews = [
 ];
 
 const rooms = [
-  { id: "deluxe", name: "Deluxe river view", beds: "1 king", price: 220, sleeps: 2 },
-  { id: "family", name: "Family suite", beds: "1 king + 2 single", price: 295, sleeps: 4 },
-  { id: "garden", name: "Garden cabin", beds: "1 queen", price: 175, sleeps: 2 },
+  { id: "deluxe", name: "Deluxe river view", beds: "1 extra-large double bed", price: 220, sleeps: 2, features: ["River view", "Balcony", "Air conditioning"] },
+  { id: "family", name: "Family suite", beds: "1 king + 2 single beds", price: 295, sleeps: 4, features: ["Private suite", "Kitchenette", "Garden view"] },
+  { id: "garden", name: "Garden cabin", beds: "1 queen bed", price: 175, sleeps: 2, features: ["Patio", "Ensuite bathroom", "Free WiFi"] },
 ];
 
 export function StayDetailPage() {
@@ -69,7 +74,7 @@ export function StayDetailPage() {
   const stayId = (params.stayId as string) ?? "";
   const router = useRouter();
   const stay = getListing(stayId) ?? listings[0];
-  const similar = listings.filter((l) => l.id !== stay.id).slice(0, 3);
+  const similar = listings.filter((l) => l.id !== stay.id).slice(0, 4);
   const [saved, setSaved] = useState(false);
 
   function reserve() {
@@ -92,222 +97,281 @@ export function StayDetailPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 md:px-6 md:py-10">
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 md:px-6 md:py-8">
         <Link
-          href="/accommodations"
-          className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
+          href="/"
+          className="text-sm font-semibold text-muted-foreground hover:text-foreground inline-flex items-center gap-1 mb-2 transition-colors"
         >
-          <ChevronRight className="h-3 w-3 rotate-180" /> Back to stays
+          <ChevronRight className="h-4 w-4 rotate-180" /> Home
         </Link>
 
-        <header className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">{stay.name}</h1>
-            <div className="mt-1.5 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-              <span className="inline-flex items-center gap-1">
-                <Star className="h-4 w-4 fill-accent text-accent" /> {stay.rating} · {stay.reviews}{" "}
-                reviews
-              </span>
-              <span className="inline-flex items-center gap-1">
-                <MapPin className="h-4 w-4" /> {stay.location}, Zambia
-              </span>
-              <Badge variant="secondary" className="text-[11px]">
-                <Award className="h-3 w-3 mr-1" /> Superhost
+        {/* Header - Hybrid Styling */}
+        <header className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-2">
+              <Badge className="bg-primary/10 text-primary hover:bg-primary/20 text-xs font-bold border-0">
+                <Award className="h-3.5 w-3.5 mr-1" /> Superhost
               </Badge>
+              <span className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
+                <Star className="h-4 w-4 fill-accent text-accent" />
+                <span className="text-foreground font-semibold">{stay.rating}</span> ({stay.reviews} reviews)
+              </span>
+            </div>
+            
+            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground">{stay.name}</h1>
+            
+            <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+              <MapPin className="h-4 w-4 shrink-0 text-primary" /> 
+              <span className="font-medium underline decoration-border underline-offset-4 cursor-pointer hover:text-foreground transition-colors">{stay.location}, Zambia</span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Button size="sm" variant="outline">
-              <Share2 className="h-4 w-4 mr-1" />
-              Share
+          
+          <div className="flex items-center gap-2 sm:pt-4">
+            <div className="flex items-center gap-2 bg-primary/5 rounded-lg p-2 mr-2 border border-primary/10 hidden md:flex">
+               <div className="flex flex-col items-end">
+                 <span className="font-bold text-primary text-sm leading-none">Exceptional</span>
+                 <span className="text-xs text-muted-foreground mt-1 leading-none">{stay.reviews} reviews</span>
+               </div>
+               <div className="bg-primary text-primary-foreground font-bold text-lg rounded-md px-2 py-1 flex items-center justify-center">
+                 {stay.rating.toFixed(1)}
+               </div>
+            </div>
+
+            <Button size="icon" variant="outline" className="rounded-full h-10 w-10">
+              <Share2 className="h-4 w-4" />
             </Button>
-            <Button size="sm" variant="outline" onClick={() => setSaved((s) => !s)}>
-              <Heart className={`h-4 w-4 mr-1 ${saved ? "fill-primary text-primary" : ""}`} />
-              {saved ? "Saved" : "Save"}
+            <Button 
+              size="icon" 
+              variant="outline" 
+              className="rounded-full h-10 w-10 border-border"
+              onClick={() => setSaved((s) => !s)}
+            >
+              <Heart className={`h-4 w-4 ${saved ? "fill-primary text-primary" : "text-muted-foreground"}`} />
             </Button>
           </div>
         </header>
 
-        <div className="mt-5 grid gap-2 sm:grid-cols-4 sm:grid-rows-2 rounded-2xl overflow-hidden h-[260px] sm:h-[420px]">
+        {/* Gallery */}
+        <div className="mt-6 grid gap-2 sm:grid-cols-4 sm:grid-rows-2 rounded-2xl overflow-hidden h-[300px] sm:h-[460px]">
           <img
             src={stay.image}
             alt={stay.name}
-            className="object-cover w-full h-full sm:row-span-2 sm:col-span-2"
+            className="object-cover w-full h-full sm:row-span-2 sm:col-span-2 transition-transform duration-700 hover:scale-[1.02] cursor-pointer"
           />
           {[0, 1, 2, 3].map((i) => (
-            <img
-              key={i}
-              src={listings[(listings.indexOf(stay) + i + 1) % listings.length].image}
-              alt=""
-              className="hidden sm:block w-full h-full object-cover"
-            />
+            <div key={i} className="relative overflow-hidden group">
+              <img
+                src={listings[(listings.indexOf(stay) + i + 1) % listings.length].image}
+                alt=""
+                className="hidden sm:block w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 cursor-pointer"
+              />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors pointer-events-none" />
+            </div>
           ))}
         </div>
 
-        <div className="mt-8 grid gap-10 lg:grid-cols-[1fr_360px]">
+        <div className="mt-10 grid gap-12 lg:grid-cols-[1fr_380px]">
+          {/* Main Content */}
           <div className="space-y-10">
-            <section>
-              <div className="flex items-center gap-3">
-                <Avatar className="h-12 w-12">
-                  <AvatarFallback className="bg-primary text-primary-foreground font-bold">
-                    CK
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="font-semibold">Hosted by Chanda</p>
-                  <p className="text-sm text-muted-foreground">Superhost · 4 years hosting</p>
-                </div>
+            {/* Host Info */}
+            <section className="flex items-center justify-between pb-6 border-b border-border/50">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight text-foreground">Hosted by Chanda</h2>
+                <p className="text-sm text-muted-foreground mt-1">Superhost · 4 years hosting</p>
               </div>
-              <Separator className="my-6" />
-              <h2 className="text-lg font-bold tracking-tight">About this stay</h2>
-              <p className="mt-2 text-muted-foreground leading-7">
-                {stay.description} A small, owner-run property with thoughtful touches — fresh
-                flowers, a stocked pantry and a host who knows the area like family.
-              </p>
+              <Avatar className="h-14 w-14 ring-2 ring-primary/20">
+                <AvatarFallback className="bg-primary text-primary-foreground font-bold text-lg">
+                  CH
+                </AvatarFallback>
+              </Avatar>
             </section>
 
+            {/* Description */}
             <section>
-              <h2 className="text-lg font-bold tracking-tight">What's included</h2>
-              <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <h2 className="text-xl font-bold tracking-tight mb-4">About this stay</h2>
+              <div className="prose prose-sm md:prose-base text-muted-foreground max-w-none">
+                <p>
+                  {stay.description}
+                </p>
+                <p>
+                  A small, owner-run property with thoughtful touches — fresh
+                  flowers, a stocked pantry and a host who knows the area like family.
+                </p>
+              </div>
+            </section>
+
+            {/* Amenities */}
+            <section>
+              <h2 className="text-xl font-bold tracking-tight mb-6">What this place offers</h2>
+              <div className="grid grid-cols-2 gap-y-4 gap-x-6">
                 {amenities.map((a) => (
-                  <div
-                    key={a.label}
-                    className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3"
-                  >
-                    <a.icon className="h-4 w-4 text-primary" />
-                    <span className="text-sm">{a.label}</span>
+                  <div key={a.label} className="flex items-center gap-4">
+                    <a.icon className="h-6 w-6 text-foreground/70" strokeWidth={1.5} />
+                    <span className="text-[15px] text-foreground">{a.label}</span>
                   </div>
                 ))}
               </div>
+              <Button variant="outline" className="mt-6 rounded-xl font-semibold">
+                Show all amenities
+              </Button>
             </section>
 
+            <Separator className="my-8" />
+
+            {/* Rooms Functional Table (Booking.com style) */}
             <section>
-              <h2 className="text-lg font-bold tracking-tight">Rooms</h2>
-              <div className="mt-4 space-y-3">
-                {rooms.map((r) => (
-                  <Link key={r.id} href={`/stays/${stay.id}/rooms/${r.id}`}>
-                    <Card className="border-border/60 transition hover:border-primary/40">
-                      <CardContent className="p-4 flex items-center justify-between gap-4">
-                        <div>
-                          <p className="font-semibold">{r.name}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {r.beds} · sleeps {r.sleeps}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-bold">
-                            ${r.price}
-                            <span className="text-xs font-normal text-muted-foreground">
-                              {" "}
-                              / night
-                            </span>
-                          </p>
-                          <p className="text-xs text-primary">View room</p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                ))}
+              <h2 className="text-xl font-bold tracking-tight mb-6">Availability</h2>
+              <div className="border border-border/80 rounded-xl overflow-hidden shadow-sm">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-sm border-collapse">
+                    <thead>
+                      <tr className="bg-muted/50 text-foreground border-b border-border/80">
+                        <th className="p-4 font-bold border-r border-border/80">Room type</th>
+                        <th className="p-4 font-bold border-r border-border/80">Guests</th>
+                        <th className="p-4 font-bold border-r border-border/80 w-32">Price per night</th>
+                        <th className="p-4 font-bold w-32">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border/80">
+                      {rooms.map((r) => (
+                        <tr key={r.id} className="hover:bg-muted/20 transition-colors">
+                          <td className="p-4 align-top border-r border-border/80">
+                            <p className="font-bold text-foreground text-[15px] underline decoration-primary/30 underline-offset-4 cursor-pointer hover:decoration-primary">{r.name}</p>
+                            <p className="text-xs text-muted-foreground mt-2 font-medium">{r.beds}</p>
+                            <ul className="mt-3 space-y-1">
+                              {r.features.map(f => (
+                                <li key={f} className="text-xs flex items-center gap-1.5 text-foreground/80">
+                                  <Check className="h-3 w-3 text-green-600" /> {f}
+                                </li>
+                              ))}
+                            </ul>
+                          </td>
+                          <td className="p-4 align-top border-r border-border/80">
+                            <div className="flex items-center gap-1 text-foreground/80">
+                              {Array.from({ length: r.sleeps }).map((_, i) => (
+                                <Users key={i} className="h-4 w-4" />
+                              ))}
+                            </div>
+                            <span className="text-xs text-muted-foreground mt-1 block">Sleeps {r.sleeps}</span>
+                          </td>
+                          <td className="p-4 align-top border-r border-border/80">
+                            <p className="font-bold text-lg">${r.price}</p>
+                            <p className="text-xs text-muted-foreground">Includes taxes</p>
+                          </td>
+                          <td className="p-4 align-top">
+                            <Button size="sm" className="w-full font-bold bg-primary hover:bg-primary/90 text-primary-foreground">
+                              Select
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </section>
 
+            <Separator className="my-8" />
+
+            {/* Reviews */}
             <section>
-              <h2 className="text-lg font-bold tracking-tight flex items-center gap-2">
-                <Star className="h-5 w-5 fill-accent text-accent" /> {stay.rating} · {stay.reviews}{" "}
-                reviews
-              </h2>
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <div className="flex items-center gap-3 mb-6">
+                 <Star className="h-6 w-6 fill-foreground text-foreground" />
+                 <h2 className="text-2xl font-bold tracking-tight">
+                   {stay.rating} · {stay.reviews} reviews
+                 </h2>
+              </div>
+              <div className="grid gap-6 sm:grid-cols-2">
                 {reviews.map((r) => (
-                  <Card key={r.id} className="border-border/60">
-                    <CardContent className="p-5">
-                      <div className="flex items-center justify-between text-sm">
-                        <p className="font-semibold">{r.from}</p>
-                        <span className="text-xs text-muted-foreground">{r.date}</span>
+                  <div key={r.id} className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-10 w-10">
+                        <AvatarFallback className="bg-muted text-foreground font-semibold">{r.from[0]}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-bold text-[15px]">{r.from}</p>
+                        <p className="text-xs text-muted-foreground">{r.date}</p>
                       </div>
-                      <p className="mt-2 text-sm leading-6 text-muted-foreground">{r.text}</p>
-                    </CardContent>
-                  </Card>
+                    </div>
+                    <p className="text-[15px] leading-relaxed text-foreground/90">{r.text}</p>
+                  </div>
                 ))}
               </div>
+              <Button variant="outline" className="mt-8 rounded-xl font-semibold">
+                Show all {stay.reviews} reviews
+              </Button>
             </section>
           </div>
 
-          <aside className="lg:sticky lg:top-24 self-start">
-            <Card className="border-border/60 shadow-[var(--shadow-card)]">
-              <CardContent className="p-5">
-                <p className="text-2xl font-bold">
-                  ${stay.price}
-                  <span className="text-sm font-normal text-muted-foreground"> / night</span>
-                </p>
-                <Separator className="my-4" />
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div className="rounded-lg border border-border p-3">
-                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                      Check in
-                    </p>
-                    <p className="font-medium">May 02</p>
+          {/* Booking Widget (Pure & Clean) */}
+          <aside className="lg:sticky lg:top-28 self-start z-10">
+            <Card className="border border-border shadow-xl rounded-2xl overflow-hidden bg-background">
+              <CardContent className="p-6">
+                <div className="flex items-end gap-1 mb-6">
+                  <span className="text-2xl font-bold">${stay.price}</span>
+                  <span className="text-muted-foreground font-medium pb-1">night</span>
+                </div>
+                
+                <div className="border border-border rounded-xl overflow-hidden mb-4">
+                  <div className="flex divide-x divide-border border-b border-border">
+                    <div className="flex-1 p-3 cursor-pointer hover:bg-muted/50 transition-colors">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-foreground">Check-in</p>
+                      <p className="text-sm font-medium mt-0.5 text-muted-foreground">Add date</p>
+                    </div>
+                    <div className="flex-1 p-3 cursor-pointer hover:bg-muted/50 transition-colors">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-foreground">Checkout</p>
+                      <p className="text-sm font-medium mt-0.5 text-muted-foreground">Add date</p>
+                    </div>
                   </div>
-                  <div className="rounded-lg border border-border p-3">
-                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                      Check out
-                    </p>
-                    <p className="font-medium">May 05</p>
-                  </div>
-                  <div className="rounded-lg border border-border p-3 col-span-2">
-                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                      Guests
-                    </p>
-                    <p className="font-medium">2 adults</p>
+                  <div className="p-3 cursor-pointer hover:bg-muted/50 transition-colors">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-foreground">Guests</p>
+                    <p className="text-sm font-medium mt-0.5">1 guest</p>
                   </div>
                 </div>
-                <Button className="w-full mt-4" onClick={reserve}>
+
+                <Button 
+                  className="w-full h-12 text-[15px] font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl transition-transform active:scale-[0.98]" 
+                  onClick={reserve}
+                >
                   Reserve
                 </Button>
-                <p className="mt-2 text-center text-xs text-muted-foreground">
+                
+                <p className="text-center text-sm text-muted-foreground mt-4">
                   You won't be charged yet
                 </p>
-                <Separator className="my-4" />
-                <div className="space-y-1.5 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">${stay.price} × 3 nights</span>
-                    <span>${stay.price * 3}</span>
+
+                <div className="mt-6 space-y-3">
+                  <div className="flex justify-between text-[15px] text-foreground/90 underline decoration-border underline-offset-4 cursor-pointer hover:text-foreground hover:decoration-muted-foreground">
+                    <span>${stay.price} × 5 nights</span>
+                    <span className="no-underline">${stay.price * 5}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Service fee</span>
-                    <span>${Math.round(stay.price * 3 * 0.1)}</span>
+                  <div className="flex justify-between text-[15px] text-foreground/90 underline decoration-border underline-offset-4 cursor-pointer hover:text-foreground hover:decoration-muted-foreground">
+                    <span>Cleaning fee</span>
+                    <span className="no-underline">$45</span>
                   </div>
-                  <Separator className="my-2" />
-                  <div className="flex justify-between font-bold">
-                    <span>Total</span>
-                    <span>${stay.price * 3 + Math.round(stay.price * 3 * 0.1)}</span>
+                  <div className="flex justify-between text-[15px] text-foreground/90 underline decoration-border underline-offset-4 cursor-pointer hover:text-foreground hover:decoration-muted-foreground">
+                    <span>Service fee</span>
+                    <span className="no-underline">${Math.round(stay.price * 5 * 0.1)}</span>
                   </div>
+                </div>
+
+                <Separator className="my-5" />
+                
+                <div className="flex justify-between font-bold text-[15px]">
+                  <span>Total before taxes</span>
+                  <span>${(stay.price * 5) + 45 + Math.round(stay.price * 5 * 0.1)}</span>
                 </div>
               </CardContent>
             </Card>
           </aside>
         </div>
 
-        <section className="mt-14">
-          <h2 className="text-lg font-bold tracking-tight">Similar stays</h2>
-          <div className="mt-4 grid gap-4 sm:grid-cols-3">
+        {/* Similar Stays */}
+        <section className="mt-16 pt-10 border-t border-border/50">
+          <h2 className="text-2xl font-bold tracking-tight mb-6">Similar stays</h2>
+          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-4">
             {similar.map((l) => (
-              <Link key={l.id} href={`/stays/${l.id}`}>
-                <Card className="overflow-hidden border-border/60 transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-card)]">
-                  <div className="aspect-[4/3]">
-                    <img src={l.image} alt={l.name} className="h-full w-full object-cover" />
-                  </div>
-                  <CardContent className="p-4">
-                    <p className="font-semibold">{l.name}</p>
-                    <p className="text-xs text-muted-foreground flex items-center gap-1">
-                      <MapPin className="h-3 w-3" /> {l.location}
-                    </p>
-                    <p className="mt-2 text-sm">
-                      <span className="font-bold">${l.price}</span>
-                      <span className="text-muted-foreground"> / night</span>
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
+              <ListingCard key={l.id} listing={l} />
             ))}
           </div>
         </section>
