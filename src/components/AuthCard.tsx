@@ -16,9 +16,7 @@ export function AuthCard({
     <div className="min-h-screen bg-[image:var(--gradient-soft)] flex flex-col">
       <div className="px-6 py-5">
         <Link href="/" className="inline-flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[image:var(--gradient-hero)] text-primary-foreground font-bold shadow-[var(--shadow-elegant)]">
-            N
-          </div>
+          <img src="/images/logo.png" alt="Nearby Escapes" className="h-9 w-9 rounded-xl object-contain shadow-sm" />
           <span className="font-bold text-lg tracking-tight">Nearby Escapes</span>
         </Link>
       </div>

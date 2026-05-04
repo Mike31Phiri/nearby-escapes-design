@@ -66,8 +66,9 @@ export function AdminLayout({ children, title, description, activeTab, onTabChan
         <div className="flex flex-col h-full">
           <div className="flex flex-col px-6 py-6 border-b border-border/40 gap-5">
             <div className="flex items-center justify-between">
-              <Link href="/" className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-sm transition-transform hover:scale-105">
-                N
+              <Link href="/" className="flex items-center gap-2 group shrink-0">
+                <img src="/images/logo.png" alt="Nearby Escapes" className="h-8 w-8 rounded-lg object-contain shadow-sm transition-transform group-hover:scale-105" />
+                <span className="text-base font-black tracking-tighter text-primary font-display">Nearby Admin</span>
               </Link>
               <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(false)} className="lg:hidden">
                 <X className="h-5 w-5" />

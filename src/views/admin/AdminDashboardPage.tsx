@@ -30,6 +30,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { useAuth } from "@/lib/auth";
 
 const stats = [
@@ -113,10 +121,18 @@ export function AdminDashboardPage() {
 
               {/* Recents 2x2 Grid */}
               <div className="grid gap-6 md:grid-cols-2">
-                <RecentsCard title="Booking Requests" icon={CalendarCheck} iconColor="text-blue-600" items={bookingRequests} />
-                <RecentsCard title="Recent Payments" icon={CreditCard} iconColor="text-emerald-600" items={recentPayments} priceLabel />
-                <UserListCard title="New Users" items={recentUsers} />
-                <HostListCard title="New Hosts" items={recentHosts} />
+                <div onClick={() => setActiveTab("bookings")} className="cursor-pointer group/card">
+                  <RecentsCard title="Booking Requests" icon={CalendarCheck} iconColor="text-blue-600" items={bookingRequests} />
+                </div>
+                <div onClick={() => setActiveTab("revenue")} className="cursor-pointer group/card">
+                  <RecentsCard title="Recent Payments" icon={CreditCard} iconColor="text-emerald-600" items={recentPayments} priceLabel />
+                </div>
+                <div onClick={() => setActiveTab("users")} className="cursor-pointer group/card">
+                  <UserListCard title="New Users" items={recentUsers} />
+                </div>
+                <div onClick={() => setActiveTab("performance")} className="cursor-pointer group/card">
+                  <HostListCard title="New Hosts" items={recentHosts} />
+                </div>
               </div>
             </div>
           </div>
@@ -124,11 +140,11 @@ export function AdminDashboardPage() {
       case "analysis":
         return <PlaceholderView title="Analysis" icon={BarChart3} desc="Detailed analysis of platform growth and user behavior." />;
       case "revenue":
-        return <PlaceholderView title="Revenue" icon={DollarSign} desc="Track your earnings, payouts, and financial performance." />;
+        return <RevenueListView />;
       case "bookings":
-        return <PlaceholderView title="Bookings" icon={CalendarCheck} desc="Manage all reservations across your properties." />;
+        return <BookingsListView />;
       case "users":
-        return <PlaceholderView title="Users" icon={Users} desc="Manage guests, hosts, and administrative accounts." />;
+        return <UsersListView />;
       case "performance":
         return <PlaceholderView title="Performance" icon={Award} desc="Monitor property ratings, response rates, and host quality." />;
       case "settings":
@@ -413,6 +429,160 @@ function AdminSettingsView() {
           </Card>
         </TabsContent>
       </Tabs>
+    </div>
+  );
+}
+
+function BookingsListView() {
+  return (
+    <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 space-y-6">
+      <Card className="border-none shadow-sm rounded-2xl bg-white overflow-hidden">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle className="text-xl font-black">All Bookings</CardTitle>
+            <CardDescription>Comprehensive list of all platform reservations.</CardDescription>
+          </div>
+          <Button size="sm" className="rounded-xl font-bold">Export CSV</Button>
+        </CardHeader>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader className="bg-muted/5">
+              <TableRow className="border-border/40">
+                <TableHead className="font-bold text-xs uppercase tracking-widest px-6">ID</TableHead>
+                <TableHead className="font-bold text-xs uppercase tracking-widest px-6">Guest</TableHead>
+                <TableHead className="font-bold text-xs uppercase tracking-widest px-6">Property</TableHead>
+                <TableHead className="font-bold text-xs uppercase tracking-widest px-6">Date</TableHead>
+                <TableHead className="font-bold text-xs uppercase tracking-widest px-6">Amount</TableHead>
+                <TableHead className="font-bold text-xs uppercase tracking-widest px-6 text-right">Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {[...Array(6)].map((_, i) => (
+                <TableRow key={i} className="border-border/20 hover:bg-muted/5 transition-colors">
+                  <TableCell className="px-6 font-bold text-muted-foreground">BK-{100 + i}</TableCell>
+                  <TableCell className="px-6 font-bold">User {i + 1}</TableCell>
+                  <TableCell className="px-6 font-medium text-muted-foreground">Luxury Villa {i + 1}</TableCell>
+                  <TableCell className="px-6 text-xs text-muted-foreground">Oct {10 + i}, 2026</TableCell>
+                  <TableCell className="px-6 font-black">K{1200 + (i * 300)}</TableCell>
+                  <TableCell className="px-6 text-right">
+                    <Badge className={cn(
+                      "text-[10px] font-bold uppercase tracking-widest",
+                      i % 3 === 0 ? "bg-emerald-50 text-emerald-600 border-emerald-100" : 
+                      i % 3 === 1 ? "bg-orange-50 text-orange-600 border-orange-100" : 
+                      "bg-blue-50 text-blue-600 border-blue-100"
+                    )}>
+                      {i % 3 === 0 ? "Confirmed" : i % 3 === 1 ? "Pending" : "Arrived"}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function UsersListView() {
+  return (
+    <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 space-y-6">
+      <Card className="border-none shadow-sm rounded-2xl bg-white overflow-hidden">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle className="text-xl font-black">User Directory</CardTitle>
+            <CardDescription>Manage all platform users and roles.</CardDescription>
+          </div>
+          <Button size="sm" variant="outline" className="rounded-xl font-bold">Add User</Button>
+        </CardHeader>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader className="bg-muted/5">
+              <TableRow className="border-border/40">
+                <TableHead className="font-bold text-xs uppercase tracking-widest px-6">User</TableHead>
+                <TableHead className="font-bold text-xs uppercase tracking-widest px-6">Email</TableHead>
+                <TableHead className="font-bold text-xs uppercase tracking-widest px-6">Role</TableHead>
+                <TableHead className="font-bold text-xs uppercase tracking-widest px-6">Joined</TableHead>
+                <TableHead className="font-bold text-xs uppercase tracking-widest px-6 text-right">Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {[...Array(6)].map((_, i) => (
+                <TableRow key={i} className="border-border/20 hover:bg-muted/5 transition-colors">
+                  <TableCell className="px-6">
+                    <div className="flex items-center gap-3">
+                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">U</div>
+                      <span className="font-bold">Member Name {i + 1}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 text-sm text-muted-foreground font-medium">user{i + 1}@example.com</TableCell>
+                  <TableCell className="px-6">
+                    <Badge variant="secondary" className="text-[10px] font-bold uppercase">{i % 2 === 0 ? "Guest" : "Host"}</Badge>
+                  </TableCell>
+                  <TableCell className="px-6 text-xs text-muted-foreground">2 days ago</TableCell>
+                  <TableCell className="px-6 text-right">
+                    <div className="inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function RevenueListView() {
+  return (
+    <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 space-y-6">
+       <div className="grid gap-6 grid-cols-1 sm:grid-cols-3">
+          <Card className="border-none shadow-sm rounded-2xl bg-white p-6">
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">Total Payouts</p>
+            <p className="text-2xl font-black">K384,200</p>
+          </Card>
+          <Card className="border-none shadow-sm rounded-2xl bg-white p-6">
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">Pending Fees</p>
+            <p className="text-2xl font-black text-orange-600">K12,450</p>
+          </Card>
+          <Card className="border-none shadow-sm rounded-2xl bg-white p-6">
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">Net Earnings</p>
+            <p className="text-2xl font-black text-emerald-600">K46,800</p>
+          </Card>
+       </div>
+
+      <Card className="border-none shadow-sm rounded-2xl bg-white overflow-hidden">
+        <CardHeader>
+          <CardTitle className="text-xl font-black">Transaction History</CardTitle>
+          <CardDescription>Detailed log of all financial movements on the platform.</CardDescription>
+        </CardHeader>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader className="bg-muted/5">
+              <TableRow className="border-border/40">
+                <TableHead className="font-bold text-xs uppercase tracking-widest px-6">TXN ID</TableHead>
+                <TableHead className="font-bold text-xs uppercase tracking-widest px-6">Recipient</TableHead>
+                <TableHead className="font-bold text-xs uppercase tracking-widest px-6">Amount</TableHead>
+                <TableHead className="font-bold text-xs uppercase tracking-widest px-6">Method</TableHead>
+                <TableHead className="font-bold text-xs uppercase tracking-widest px-6 text-right">Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {[...Array(6)].map((_, i) => (
+                <TableRow key={i} className="border-border/20 hover:bg-muted/5 transition-colors">
+                  <TableCell className="px-6 font-bold text-muted-foreground">TX-90{i}</TableCell>
+                  <TableCell className="px-6 font-bold">Vendor {i + 1}</TableCell>
+                  <TableCell className="px-6 font-black text-emerald-600">K{2400 + (i * 100)}</TableCell>
+                  <TableCell className="px-6 text-xs text-muted-foreground font-bold uppercase tracking-widest">Mobile Money</TableCell>
+                  <TableCell className="px-6 text-right">
+                    <Badge className="bg-emerald-50 text-emerald-600 border-emerald-100 text-[10px] font-bold">COMPLETED</Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   );
 }

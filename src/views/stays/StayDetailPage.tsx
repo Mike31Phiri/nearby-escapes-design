@@ -14,21 +14,30 @@ import {
   Waves,
   ShieldCheck,
   Award,
-  ChevronRight,
+  ChevronLeft,
   Check,
   Users,
+  Calendar,
+  Info,
+  ArrowRight,
+  Verified,
+  Zap,
+  Plus,
+  Minus,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { getListing, listings } from "@/lib/mock-data";
 import { BOOKING_DRAFT_STORAGE_KEY } from "@/store/bookingStore";
 import { ListingCard } from "@/components/ListingCard";
+import { cn } from "@/lib/utils";
 
 const amenities = [
   { icon: Wifi, label: "Fast Wi-Fi" },
@@ -39,43 +48,48 @@ const amenities = [
   { icon: ShieldCheck, label: "24/7 security" },
 ];
 
-const reviews = [
-  {
-    id: "r1",
-    from: "Bwalya K.",
-    rating: 5,
-    text: "Spectacular setting. The host arranged a sunrise hike that made the trip.",
-    date: "Mar 2026",
+const whyBookUs = [
+  { 
+    icon: ShieldCheck, 
+    title: "Secure Bookings", 
+    description: "Verified Zambian hosts and 24/7 support for peace of mind." 
   },
-  {
-    id: "r2",
-    from: "Joyce S.",
-    rating: 5,
-    text: "Quiet, comfortable and impeccably clean. We didn't want to leave.",
-    date: "Feb 2026",
+  { 
+    icon: Zap, 
+    title: "Instant Confirmation", 
+    description: "No more waiting. Get your booking confirmation in seconds." 
   },
-  {
-    id: "r3",
-    from: "Mulenga P.",
-    rating: 4,
-    text: "Loved everything except the slow Wi-Fi in the back room.",
-    date: "Jan 2026",
+  { 
+    icon: Award, 
+    title: "Local Expertise", 
+    description: "Hand-picked gems curated by experts who know Zambia best." 
   },
-];
-
-const rooms = [
-  { id: "deluxe", name: "Deluxe river view", beds: "1 extra-large double bed", price: 220, sleeps: 2, features: ["River view", "Balcony", "Air conditioning"] },
-  { id: "family", name: "Family suite", beds: "1 king + 2 single beds", price: 295, sleeps: 4, features: ["Private suite", "Kitchenette", "Garden view"] },
-  { id: "garden", name: "Garden cabin", beds: "1 queen bed", price: 175, sleeps: 2, features: ["Patio", "Ensuite bathroom", "Free WiFi"] },
 ];
 
 export function StayDetailPage() {
   const params = useParams();
-  const stayId = (params.stayId as string) ?? "";
+  const id = (params.id as string) ?? "";
   const router = useRouter();
-  const stay = getListing(stayId) ?? listings[0];
+  const stay = getListing(id) ?? listings[0];
   const similar = listings.filter((l) => l.id !== stay.id).slice(0, 4);
   const [saved, setSaved] = useState(false);
+  const [duration, setDuration] = useState(3);
+  const [guests, setGuests] = useState(2);
+
+  // Gallery Images List
+  const galleryImages = useMemo(() => [
+    stay.image,
+    listings[(listings.indexOf(stay) + 1) % listings.length].image,
+    listings[(listings.indexOf(stay) + 2) % listings.length].image,
+    listings[(listings.indexOf(stay) + 3) % listings.length].image,
+    listings[(listings.indexOf(stay) + 4) % listings.length].image,
+  ], [stay]);
+
+  const [mainImage, setMainImage] = useState(stay.image);
+
+  const pricePerNight = stay.price * 18;
+  const serviceFee = 450;
+  const totalCost = (pricePerNight * duration) + serviceFee;
 
   function reserve() {
     const draft = {
@@ -83,8 +97,8 @@ export function StayDetailPage() {
       stayName: stay.name,
       pricePerNight: stay.price,
       checkIn: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
-      checkOut: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
-      guests: 2,
+      checkOut: new Date(Date.now() + (7 + duration) * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
+      guests: guests,
     };
     try {
       localStorage.setItem(BOOKING_DRAFT_STORAGE_KEY, JSON.stringify(draft));
@@ -95,287 +109,242 @@ export function StayDetailPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Navbar />
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 md:px-6 md:py-8">
-        <Link
-          href="/"
-          className="text-sm font-semibold text-muted-foreground hover:text-foreground inline-flex items-center gap-1 mb-2 transition-colors"
-        >
-          <ChevronRight className="h-4 w-4 rotate-180" /> Home
-        </Link>
+    <div className="min-h-screen flex flex-col bg-[#FAFBFC]">
+      <Navbar className="bg-[#F5F3FF] border-purple-100" />
+      
+      <header className="bg-[#F5F3FF] border-b border-purple-100 pt-10 pb-20">
+        <div className="mx-auto w-full max-w-7xl px-4 md:px-6">
+          <Link
+            href="/"
+            className="group inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-primary mb-8 hover:opacity-70 transition-all"
+          >
+            <ChevronLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" /> Back
+          </Link>
 
-        {/* Header - Hybrid Styling */}
-        <header className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex-1">
-            <div className="flex items-center gap-3 mb-2">
-              <Badge className="bg-primary/10 text-primary hover:bg-primary/20 text-xs font-bold border-0">
-                <Award className="h-3.5 w-3.5 mr-1" /> Superhost
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+            <div className="space-y-4 max-w-4xl">
+              <Badge className="bg-white text-primary border border-purple-100 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter w-fit">
+                <Award className="h-3 w-3 mr-1.5" /> Zambian Superhost
               </Badge>
-              <span className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
-                <Star className="h-4 w-4 fill-accent text-accent" />
-                <span className="text-foreground font-semibold">{stay.rating}</span> ({stay.reviews} reviews)
-              </span>
+              
+              <h1 className="text-4xl md:text-6xl font-black tracking-tight text-foreground font-display leading-[0.95]">
+                {stay.name}
+              </h1>
+              
+              <div className="flex items-center gap-2 text-base font-bold text-primary/80">
+                <MapPin className="h-5 w-5" />
+                <span className="underline decoration-primary/20 underline-offset-8">{stay.location}, Zambia</span>
+              </div>
             </div>
-            
-            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground">{stay.name}</h1>
-            
-            <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
-              <MapPin className="h-4 w-4 shrink-0 text-primary" /> 
-              <span className="font-medium underline decoration-border underline-offset-4 cursor-pointer hover:text-foreground transition-colors">{stay.location}, Zambia</span>
+
+            <div className="flex items-center gap-3">
+              <Button 
+                variant="outline" 
+                className={cn(
+                    "rounded-full h-14 w-14 border-purple-200 bg-white shadow-sm transition-all",
+                    saved ? "text-primary border-primary bg-primary/5" : "text-muted-foreground"
+                )}
+                onClick={() => setSaved((s) => !s)}
+              >
+                <Heart className={cn("h-5 w-5", saved && "fill-primary")} />
+              </Button>
             </div>
+          </div>
+        </div>
+      </header>
+
+      <main className="mx-auto w-full max-w-5xl px-4 md:px-6 -mt-12 relative z-10 pb-20">
+        {/* Gallery Section - Centralized */}
+        <div className="space-y-6">
+          <div className="aspect-[16/9] w-full relative overflow-hidden rounded-[1.25rem] shadow-2xl bg-white p-2 border border-purple-100">
+            <img
+              src={mainImage}
+              alt={stay.name}
+              key={mainImage}
+              className="object-cover w-full h-full rounded-[1rem] transition-all duration-700 animate-in fade-in zoom-in-95"
+            />
           </div>
           
-          <div className="flex items-center gap-2 sm:pt-4">
-            <div className="flex items-center gap-2 bg-primary/5 rounded-lg p-2 mr-2 border border-primary/10 hidden md:flex">
-               <div className="flex flex-col items-end">
-                 <span className="font-bold text-primary text-sm leading-none">Exceptional</span>
-                 <span className="text-xs text-muted-foreground mt-1 leading-none">{stay.reviews} reviews</span>
-               </div>
-               <div className="bg-primary text-primary-foreground font-bold text-lg rounded-md px-2 py-1 flex items-center justify-center">
-                 {stay.rating.toFixed(1)}
-               </div>
-            </div>
-
-            <Button size="icon" variant="outline" className="rounded-full h-10 w-10">
-              <Share2 className="h-4 w-4" />
-            </Button>
-            <Button 
-              size="icon" 
-              variant="outline" 
-              className="rounded-full h-10 w-10 border-border"
-              onClick={() => setSaved((s) => !s)}
-            >
-              <Heart className={`h-4 w-4 ${saved ? "fill-primary text-primary" : "text-muted-foreground"}`} />
-            </Button>
+          <div className="flex items-center justify-center gap-4 overflow-x-auto pb-2 no-scrollbar">
+            {galleryImages.map((img, idx) => (
+              <div 
+                key={idx}
+                onClick={() => setMainImage(img)}
+                className={cn(
+                  "relative h-20 w-32 shrink-0 rounded-xl overflow-hidden cursor-pointer transition-all duration-300 ring-primary/40",
+                  mainImage === img ? "ring-4 scale-[0.95] opacity-100" : "opacity-60 hover:opacity-100 hover:ring-2"
+                )}
+              >
+                <img src={img} alt="" className="h-full w-full object-cover" />
+              </div>
+            ))}
           </div>
-        </header>
-
-        {/* Gallery */}
-        <div className="mt-6 grid gap-2 sm:grid-cols-4 sm:grid-rows-2 rounded-2xl overflow-hidden h-[300px] sm:h-[460px]">
-          <img
-            src={stay.image}
-            alt={stay.name}
-            className="object-cover w-full h-full sm:row-span-2 sm:col-span-2 transition-transform duration-700 hover:scale-[1.02] cursor-pointer"
-          />
-          {[0, 1, 2, 3].map((i) => (
-            <div key={i} className="relative overflow-hidden group">
-              <img
-                src={listings[(listings.indexOf(stay) + i + 1) % listings.length].image}
-                alt=""
-                className="hidden sm:block w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 cursor-pointer"
-              />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors pointer-events-none" />
-            </div>
-          ))}
         </div>
 
-        <div className="mt-10 grid gap-12 lg:grid-cols-[1fr_380px]">
-          {/* Main Content */}
-          <div className="space-y-10">
-            {/* Host Info */}
-            <section className="flex items-center justify-between pb-6 border-b border-border/50">
-              <div>
-                <h2 className="text-xl font-bold tracking-tight text-foreground">Hosted by Chanda</h2>
-                <p className="text-sm text-muted-foreground mt-1">Superhost · 4 years hosting</p>
-              </div>
-              <Avatar className="h-14 w-14 ring-2 ring-primary/20">
-                <AvatarFallback className="bg-primary text-primary-foreground font-bold text-lg">
-                  CH
-                </AvatarFallback>
+        <div className="mt-20 space-y-16">
+          {/* 1. Narrative */}
+          <section className="bg-white p-10 rounded-[1.25rem] border border-border/40 shadow-sm max-w-4xl mx-auto">
+            <h2 className="text-3xl font-black tracking-tight mb-6 font-display text-primary">The Narrative</h2>
+            <div className="prose prose-lg text-muted-foreground/90 font-medium leading-relaxed max-w-none">
+              <p className="text-foreground font-bold text-xl leading-snug mb-4">
+                {stay.description}
+              </p>
+              <p>
+                Experience the true essence of Zambian hospitality in this meticulously crafted space. Every corner tells a story of local craft and modern luxury, designed for those who seek more than just a place to sleep.
+              </p>
+            </div>
+          </section>
+
+          {/* 2. Host Profile */}
+          <section className="bg-white p-10 rounded-[1.25rem] border border-border/40 shadow-sm flex items-center gap-8 max-w-4xl mx-auto">
+            <div className="relative">
+              <Avatar className="h-24 w-24 ring-4 ring-primary/5">
+                <AvatarFallback className="bg-primary text-primary-foreground font-black text-3xl">CH</AvatarFallback>
               </Avatar>
-            </section>
-
-            {/* Description */}
-            <section>
-              <h2 className="text-xl font-bold tracking-tight mb-4">About this stay</h2>
-              <div className="prose prose-sm md:prose-base text-muted-foreground max-w-none">
-                <p>
-                  {stay.description}
-                </p>
-                <p>
-                  A small, owner-run property with thoughtful touches — fresh
-                  flowers, a stocked pantry and a host who knows the area like family.
-                </p>
+              <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-1.5 shadow-md">
+                <Verified className="h-6 w-6 text-primary" />
               </div>
-            </section>
+            </div>
+            <div>
+              <h2 className="text-3xl font-black tracking-tight font-display text-primary">Chanda Mwenya</h2>
+              <p className="text-base font-bold text-muted-foreground uppercase tracking-widest mt-1 flex items-center gap-2">
+                <MapPin className="h-4 w-4" /> Lusaka, Zambia
+              </p>
+            </div>
+          </section>
 
-            {/* Amenities */}
-            <section>
-              <h2 className="text-xl font-bold tracking-tight mb-6">What this place offers</h2>
-              <div className="grid grid-cols-2 gap-y-4 gap-x-6">
-                {amenities.map((a) => (
-                  <div key={a.label} className="flex items-center gap-4">
-                    <a.icon className="h-6 w-6 text-foreground/70" strokeWidth={1.5} />
-                    <span className="text-[15px] text-foreground">{a.label}</span>
+          {/* 3. The Essentials - Now back in the flow */}
+          <section className="bg-white p-10 rounded-[1.25rem] border border-border/40 shadow-sm max-w-4xl mx-auto">
+            <h2 className="text-xl font-black tracking-tight mb-10 uppercase tracking-widest text-primary/60 font-display">The Essentials</h2>
+            <div className="grid grid-cols-2 gap-y-10 gap-x-8">
+              {amenities.map((a) => (
+                <div key={a.label} className="flex items-center gap-4 group">
+                  <div className="h-12 w-12 rounded-xl bg-primary/5 flex items-center justify-center text-primary transition-all group-hover:bg-primary group-hover:text-white">
+                      <a.icon className="h-5 w-5" strokeWidth={2.5} />
                   </div>
-                ))}
-              </div>
-              <Button variant="outline" className="mt-6 rounded-xl font-semibold">
-                Show all amenities
-              </Button>
-            </section>
-
-            <Separator className="my-8" />
-
-            {/* Rooms Functional Table (Booking.com style) */}
-            <section>
-              <h2 className="text-xl font-bold tracking-tight mb-6">Availability</h2>
-              <div className="border border-border/80 rounded-xl overflow-hidden shadow-sm">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-sm border-collapse">
-                    <thead>
-                      <tr className="bg-muted/50 text-foreground border-b border-border/80">
-                        <th className="p-4 font-bold border-r border-border/80">Room type</th>
-                        <th className="p-4 font-bold border-r border-border/80">Guests</th>
-                        <th className="p-4 font-bold border-r border-border/80 w-32">Price per night</th>
-                        <th className="p-4 font-bold w-32">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border/80">
-                      {rooms.map((r) => (
-                        <tr key={r.id} className="hover:bg-muted/20 transition-colors">
-                          <td className="p-4 align-top border-r border-border/80">
-                            <p className="font-bold text-foreground text-[15px] underline decoration-primary/30 underline-offset-4 cursor-pointer hover:decoration-primary">{r.name}</p>
-                            <p className="text-xs text-muted-foreground mt-2 font-medium">{r.beds}</p>
-                            <ul className="mt-3 space-y-1">
-                              {r.features.map(f => (
-                                <li key={f} className="text-xs flex items-center gap-1.5 text-foreground/80">
-                                  <Check className="h-3 w-3 text-green-600" /> {f}
-                                </li>
-                              ))}
-                            </ul>
-                          </td>
-                          <td className="p-4 align-top border-r border-border/80">
-                            <div className="flex items-center gap-1 text-foreground/80">
-                              {Array.from({ length: r.sleeps }).map((_, i) => (
-                                <Users key={i} className="h-4 w-4" />
-                              ))}
-                            </div>
-                            <span className="text-xs text-muted-foreground mt-1 block">Sleeps {r.sleeps}</span>
-                          </td>
-                          <td className="p-4 align-top border-r border-border/80">
-                            <p className="font-bold text-lg">${r.price}</p>
-                            <p className="text-xs text-muted-foreground">Includes taxes</p>
-                          </td>
-                          <td className="p-4 align-top">
-                            <Button size="sm" className="w-full font-bold bg-primary hover:bg-primary/90 text-primary-foreground">
-                              Select
-                            </Button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <span className="text-sm font-black text-foreground uppercase tracking-tight">{a.label}</span>
                 </div>
-              </div>
-            </section>
+              ))}
+            </div>
+          </section>
 
-            <Separator className="my-8" />
-
-            {/* Reviews */}
-            <section>
-              <div className="flex items-center gap-3 mb-6">
-                 <Star className="h-6 w-6 fill-foreground text-foreground" />
-                 <h2 className="text-2xl font-bold tracking-tight">
-                   {stay.rating} · {stay.reviews} reviews
-                 </h2>
-              </div>
-              <div className="grid gap-6 sm:grid-cols-2">
-                {reviews.map((r) => (
-                  <div key={r.id} className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-10 w-10">
-                        <AvatarFallback className="bg-muted text-foreground font-semibold">{r.from[0]}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="font-bold text-[15px]">{r.from}</p>
-                        <p className="text-xs text-muted-foreground">{r.date}</p>
-                      </div>
+          {/* 4. Booking Card */}
+          <div className="max-w-2xl mx-auto">
+            <Card className="border-none shadow-3xl rounded-[2rem] overflow-hidden bg-white border border-purple-100 ring-1 ring-primary/5 relative">
+                <div className="absolute top-0 right-0 p-6">
+                    <Badge className="bg-primary text-white font-black px-3 py-1 text-[10px] uppercase tracking-widest rounded-full">Best Value</Badge>
+                </div>
+                
+                <CardContent className="p-10">
+                  <div className="mb-10">
+                    <p className="text-[12px] font-black text-primary uppercase tracking-[0.2em] mb-2">Standard Rate</p>
+                    <div className="flex items-baseline gap-2">
+                        <span className="text-5xl font-black tracking-tighter font-display text-primary">ZMW {pricePerNight}</span>
+                        <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest">/ night</span>
                     </div>
-                    <p className="text-[15px] leading-relaxed text-foreground/90">{r.text}</p>
                   </div>
-                ))}
-              </div>
-              <Button variant="outline" className="mt-8 rounded-xl font-semibold">
-                Show all {stay.reviews} reviews
-              </Button>
-            </section>
+                  
+                  <div className="space-y-6">
+                    <div className="p-6 rounded-[1.5rem] bg-purple-50/50 border border-purple-100/50">
+                        <div className="flex items-center justify-between mb-4">
+                            <Label className="text-xs font-black uppercase tracking-widest text-primary/60">Stay Duration</Label>
+                            <span className="text-sm font-black text-primary">{duration} Nights</span>
+                        </div>
+                        <div className="flex items-center justify-between bg-white rounded-2xl p-2 border border-purple-100 shadow-sm">
+                            <button 
+                                onClick={() => setDuration(Math.max(1, duration - 1))}
+                                className="h-12 w-12 rounded-xl bg-purple-50 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all active:scale-90"
+                            >
+                                <Minus className="h-5 w-5" />
+                            </button>
+                            <span className="text-xl font-black font-display text-primary">{duration}</span>
+                            <button 
+                                onClick={() => setDuration(duration + 1)}
+                                className="h-12 w-12 rounded-xl bg-purple-50 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all active:scale-90"
+                            >
+                                <Plus className="h-5 w-5" />
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="p-5 rounded-2xl bg-[#FAFBFC] border border-border/40">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Check-In</p>
+                            <p className="text-sm font-black">Oct 12, 2026</p>
+                        </div>
+                        <div className="p-5 rounded-2xl bg-[#FAFBFC] border border-border/40">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Guests</p>
+                            <div className="flex items-center justify-between mt-1">
+                                <span className="text-sm font-black">{guests} People</span>
+                                <div className="flex gap-1">
+                                    <button onClick={() => setGuests(Math.max(1, guests - 1))} className="text-primary hover:opacity-50"><Minus className="h-3 w-3" /></button>
+                                    <button onClick={() => setGuests(guests + 1)} className="text-primary hover:opacity-50"><Plus className="h-3 w-3" /></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="space-y-3 pt-6 border-t border-purple-100">
+                        <div className="flex justify-between text-sm font-bold text-muted-foreground">
+                            <span>ZMW {pricePerNight} × {duration} nights</span>
+                            <span className="text-foreground">ZMW {pricePerNight * duration}</span>
+                        </div>
+                        <div className="flex justify-between text-sm font-bold text-muted-foreground">
+                            <span>Service Fee</span>
+                            <span className="text-foreground">ZMW {serviceFee}</span>
+                        </div>
+                        <div className="flex justify-between items-center pt-4 mt-2 border-t border-purple-100">
+                            <span className="text-lg font-black text-primary uppercase tracking-wider">Total</span>
+                            <span className="text-3xl font-black text-primary font-display">ZMW {totalCost}</span>
+                        </div>
+                    </div>
+
+                    <Button 
+                        className="w-full h-16 text-lg font-black bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl shadow-2xl shadow-primary/30 transition-all active:scale-[0.98] uppercase tracking-widest mt-4" 
+                        onClick={reserve}
+                    >
+                        Reserve Now
+                    </Button>
+                  </div>
+                </CardContent>
+            </Card>
           </div>
 
-          {/* Booking Widget (Pure & Clean) */}
-          <aside className="lg:sticky lg:top-28 self-start z-10">
-            <Card className="border border-border shadow-xl rounded-2xl overflow-hidden bg-background">
-              <CardContent className="p-6">
-                <div className="flex items-end gap-1 mb-6">
-                  <span className="text-2xl font-bold">${stay.price}</span>
-                  <span className="text-muted-foreground font-medium pb-1">night</span>
-                </div>
-                
-                <div className="border border-border rounded-xl overflow-hidden mb-4">
-                  <div className="flex divide-x divide-border border-b border-border">
-                    <div className="flex-1 p-3 cursor-pointer hover:bg-muted/50 transition-colors">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-foreground">Check-in</p>
-                      <p className="text-sm font-medium mt-0.5 text-muted-foreground">Add date</p>
-                    </div>
-                    <div className="flex-1 p-3 cursor-pointer hover:bg-muted/50 transition-colors">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-foreground">Checkout</p>
-                      <p className="text-sm font-medium mt-0.5 text-muted-foreground">Add date</p>
-                    </div>
+          {/* 5. The Nearby Guarantee - Now just above the footer */}
+          <section className="bg-white p-12 rounded-[1.25rem] border border-border/40 shadow-sm relative overflow-hidden group max-w-5xl mx-auto">
+             <h2 className="text-xl font-black tracking-tight mb-12 uppercase tracking-[0.3em] text-center text-primary/40">The Nearby Guarantee</h2>
+             <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                {whyBookUs.map((item, idx) => (
+                  <div key={idx} className="flex flex-col items-center text-center space-y-6">
+                      <div className="h-16 w-16 rounded-2xl bg-primary text-white shadow-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                         <item.icon className="h-8 w-8" strokeWidth={2.5} />
+                      </div>
+                      <div>
+                          <h3 className="font-black text-primary tracking-tight text-lg mb-2 font-display">{item.title}</h3>
+                          <p className="text-xs font-bold text-primary/60 leading-relaxed uppercase tracking-wider max-w-[200px]">{item.description}</p>
+                      </div>
                   </div>
-                  <div className="p-3 cursor-pointer hover:bg-muted/50 transition-colors">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-foreground">Guests</p>
-                    <p className="text-sm font-medium mt-0.5">1 guest</p>
-                  </div>
-                </div>
-
-                <Button 
-                  className="w-full h-12 text-[15px] font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl transition-transform active:scale-[0.98]" 
-                  onClick={reserve}
-                >
-                  Reserve
-                </Button>
-                
-                <p className="text-center text-sm text-muted-foreground mt-4">
-                  You won't be charged yet
-                </p>
-
-                <div className="mt-6 space-y-3">
-                  <div className="flex justify-between text-[15px] text-foreground/90 underline decoration-border underline-offset-4 cursor-pointer hover:text-foreground hover:decoration-muted-foreground">
-                    <span>${stay.price} × 5 nights</span>
-                    <span className="no-underline">${stay.price * 5}</span>
-                  </div>
-                  <div className="flex justify-between text-[15px] text-foreground/90 underline decoration-border underline-offset-4 cursor-pointer hover:text-foreground hover:decoration-muted-foreground">
-                    <span>Cleaning fee</span>
-                    <span className="no-underline">$45</span>
-                  </div>
-                  <div className="flex justify-between text-[15px] text-foreground/90 underline decoration-border underline-offset-4 cursor-pointer hover:text-foreground hover:decoration-muted-foreground">
-                    <span>Service fee</span>
-                    <span className="no-underline">${Math.round(stay.price * 5 * 0.1)}</span>
-                  </div>
-                </div>
-
-                <Separator className="my-5" />
-                
-                <div className="flex justify-between font-bold text-[15px]">
-                  <span>Total before taxes</span>
-                  <span>${(stay.price * 5) + 45 + Math.round(stay.price * 5 * 0.1)}</span>
-                </div>
-              </CardContent>
-            </Card>
-          </aside>
+                ))}
+             </div>
+          </section>
         </div>
 
-        {/* Similar Stays */}
-        <section className="mt-16 pt-10 border-t border-border/50">
-          <h2 className="text-2xl font-bold tracking-tight mb-6">Similar stays</h2>
-          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-4">
+        {/* Similar Explorations */}
+        <section className="mt-32">
+          <div className="flex items-center justify-between mb-12">
+            <h2 className="text-3xl font-black tracking-tight font-display text-primary">Similar Explorations</h2>
+            <Button variant="ghost" className="font-black text-primary hover:bg-primary/5 rounded-xl" asChild>
+                <Link href="/accommodations">View All Stays</Link>
+            </Button>
+          </div>
+          <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-4">
             {similar.map((l) => (
               <ListingCard key={l.id} listing={l} />
             ))}
           </div>
         </section>
       </main>
+      
       <Footer />
     </div>
   );

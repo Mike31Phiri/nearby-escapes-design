@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { useMemo, useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import { Search, SlidersHorizontal, MapPin, Star, Send, Phone, Mail, MessageSquare } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ListingCard } from "@/components/ListingCard";
@@ -9,6 +10,7 @@ import { listings } from "@/lib/mock-data";
 import { SearchFilters, DEFAULT_FILTERS, type Filters } from "@/components/SearchFilters";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -17,11 +19,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
 
 type SortKey = "recommended" | "price-asc" | "price-desc" | "rating";
 
-export function ExplorePage({ query = "" }: { query?: string }) {
-  const [filters, setFilters] = useState<Filters>({ ...DEFAULT_FILTERS, query });
+function ExploreContent({ query = "" }: { query?: string }) {
+  const searchParams = useSearchParams();
+  const initialCategory = searchParams.get("category");
+  
+  const [filters, setFilters] = useState<Filters>({ 
+    ...DEFAULT_FILTERS, 
+    query, 
+    categories: initialCategory ? [initialCategory] : [] 
+  });
   const [sort, setSort] = useState<SortKey>("recommended");
 
   const allCategories = useMemo(() => Array.from(new Set(listings.map((l) => l.category))), []);
@@ -58,97 +68,161 @@ export function ExplorePage({ query = "" }: { query?: string }) {
 
   const reset = () => setFilters({ ...DEFAULT_FILTERS });
 
+  const activeCategoryName = filters.categories.length > 0 
+    ? filters.categories[0].charAt(0).toUpperCase() + filters.categories[0].slice(1) 
+    : "Accommodations";
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#FAFBFC]">
       <Navbar />
-      <section className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-8 md:mt-10">
-        <p className="text-xs font-semibold uppercase tracking-widest text-primary">Stay</p>
-        <h1 className="mt-1 text-3xl md:text-4xl font-bold tracking-tight">
-          Search accommodations
-        </h1>
-        <p className="mt-2 text-muted-foreground max-w-2xl">
-          Hand-picked places to rest your head across Zambia.
-        </p>
+      
+      <main className="flex-1">
+        {/* Hero Section */}
+        <section className="bg-white border-b border-border/40 pt-12 pb-16">
+          <div className="mx-auto max-w-7xl px-4 md:px-6">
+            <div className="max-w-3xl">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary mb-3">Explore</p>
+              <h1 className="text-4xl md:text-5xl font-black tracking-tight text-foreground font-display">
+                {activeCategoryName}
+              </h1>
+              <p className="mt-4 text-lg text-muted-foreground font-medium max-w-2xl leading-relaxed">
+                Discover the best {activeCategoryName.toLowerCase()} across Zambia. Hand-picked and verified for your peace of mind.
+              </p>
+            </div>
 
-        <div className="mt-6 flex flex-col gap-3 md:flex-row md:items-center">
-          <div className="relative flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search by name, location or type…"
-              value={filters.query}
-              onChange={(event) => setFilters({ ...filters, query: event.target.value })}
-              className="pl-9 h-11"
-            />
+            {/* Search & Filter Bar */}
+            <div className="mt-10 flex flex-col gap-4 md:flex-row md:items-center bg-muted/30 p-2 rounded-[1.25rem] border border-border/40">
+              <div className="relative flex-1">
+                <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-muted-foreground/60" />
+                <Input
+                  placeholder={`Search ${activeCategoryName.toLowerCase()}…`}
+                  value={filters.query}
+                  onChange={(event) => setFilters({ ...filters, query: event.target.value })}
+                  className="pl-11 h-12 rounded-full border-none bg-white shadow-sm font-medium"
+                />
+              </div>
+              
+              <div className="flex items-center gap-3 px-2">
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" className="h-12 rounded-full px-6 gap-2 border-border/60 bg-white hover:bg-muted/50 font-bold">
+                      <SlidersHorizontal className="h-4 w-4" /> Filters
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="left" className="w-80 overflow-y-auto pt-10">
+                    <SearchFilters
+                      filters={filters}
+                      setFilters={setFilters}
+                      allCategories={allCategories}
+                      allLocations={allLocations}
+                      onReset={reset}
+                    />
+                  </SheetContent>
+                </Sheet>
+                
+                <Select value={sort} onValueChange={(value) => setSort(value as SortKey)}>
+                  <SelectTrigger className="h-12 w-[180px] rounded-full border-border/60 bg-white font-bold">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-2xl border-border/40 shadow-xl">
+                    <SelectItem value="recommended" className="font-medium">Recommended</SelectItem>
+                    <SelectItem value="price-asc" className="font-medium">Price: Low to High</SelectItem>
+                    <SelectItem value="price-desc" className="font-medium">Price: High to Low</SelectItem>
+                    <SelectItem value="rating" className="font-medium">Top Rated</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" className="md:hidden h-11 gap-2">
-                  <SlidersHorizontal className="h-4 w-4" /> Filters
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-80 overflow-y-auto">
-                <div className="mt-6">
-                  <SearchFilters
-                    filters={filters}
-                    setFilters={setFilters}
-                    allCategories={allCategories}
-                    allLocations={allLocations}
-                    onReset={reset}
-                  />
-                </div>
-              </SheetContent>
-            </Sheet>
-            <Select value={sort} onValueChange={(value) => setSort(value as SortKey)}>
-              <SelectTrigger className="h-11 w-[180px]">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="recommended">Recommended</SelectItem>
-                <SelectItem value="price-asc">Price: low to high</SelectItem>
-                <SelectItem value="price-desc">Price: high to low</SelectItem>
-                <SelectItem value="rating">Top rated</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+        </section>
 
-        <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-[260px_1fr]">
-          <div className="hidden md:block sticky top-24 self-start max-h-[calc(100vh-7rem)] overflow-y-auto pr-2">
-            <SearchFilters
-              filters={filters}
-              setFilters={setFilters}
-              allCategories={allCategories}
-              allLocations={allLocations}
-              onReset={reset}
-            />
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground mb-4">
-              {filtered.length} {filtered.length === 1 ? "result" : "results"}
+        {/* Results Grid */}
+        <section className="mx-auto w-full max-w-7xl px-4 md:px-6 py-16">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-xl font-black tracking-tight font-display">Discover Results</h2>
+            <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">
+              {filtered.length} listings found
             </p>
-            {filtered.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-border p-10 text-center">
-                <p className="font-semibold">No matches</p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Try clearing some filters or adjusting your search.
-                </p>
-                <Button onClick={reset} variant="outline" className="mt-4">
-                  Reset filters
-                </Button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {filtered.map((listing) => (
-                  <ListingCard key={listing.id} listing={listing} />
-                ))}
-              </div>
-            )}
           </div>
-        </div>
-      </section>
-      <div className="flex-1" />
+
+          {filtered.length === 0 ? (
+            <div className="rounded-[1.25rem] border-2 border-dashed border-border/40 p-20 text-center bg-white shadow-sm animate-in fade-in zoom-in duration-500">
+              <div className="h-20 w-20 bg-muted/50 rounded-full flex items-center justify-center mx-auto mb-6 text-muted-foreground/30">
+                <Search className="h-10 w-10" />
+              </div>
+              <p className="text-xl font-bold">No matches found</p>
+              <p className="mt-2 text-muted-foreground font-medium">
+                Try clearing some filters or adjusting your search terms.
+              </p>
+              <Button onClick={reset} variant="outline" className="mt-8 rounded-full px-8 font-bold border-2">
+                Reset all filters
+              </Button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-12">
+              {filtered.map((listing) => (
+                <ListingCard key={listing.id} listing={listing} />
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* Contact CTA Footer Section */}
+        <section className="bg-white border-t border-border/40 py-24 px-4">
+          <div className="mx-auto max-w-5xl">
+            <div className="grid md:grid-cols-2 gap-16 items-center">
+              <div className="space-y-8">
+                <div>
+                  <h2 className="text-3xl md:text-4xl font-black tracking-tight font-display mb-4">
+                    Want more? Check out our <span className="text-primary underline decoration-primary/30">Popular Attractions</span> and Packages.
+                  </h2>
+                  <p className="text-muted-foreground font-medium leading-relaxed">
+                    Can't find exactly what you're looking for? Our travel experts are ready to curate a bespoke experience just for you. Get in touch and let's plan your dream stay.
+                  </p>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4 text-foreground font-bold">
+                    <div className="h-10 w-10 rounded-full bg-primary/5 flex items-center justify-center text-primary">
+                      <Phone className="h-5 w-5" />
+                    </div>
+                    <span>+260 971 123 456</span>
+                  </div>
+                  <div className="flex items-center gap-4 text-foreground font-bold">
+                    <div className="h-10 w-10 rounded-full bg-primary/5 flex items-center justify-center text-primary">
+                      <Mail className="h-5 w-5" />
+                    </div>
+                    <span>hello@nearbyescapes.com</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-[#FAFBFC] p-8 rounded-[1.25rem] border border-border/60 shadow-sm">
+                <form className="space-y-4">
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <Input placeholder="Full Name" className="rounded-2xl h-12 bg-white border-border/60 font-medium" />
+                    <Input placeholder="Email Address" className="rounded-2xl h-12 bg-white border-border/60 font-medium" />
+                  </div>
+                  <Textarea placeholder="How can we help you plan your escape?" className="rounded-2xl min-h-[120px] bg-white border-border/60 font-medium" />
+                  <Button className="w-full h-12 rounded-2xl font-black tracking-tight text-base shadow-lg shadow-primary/20">
+                    Send Message <Send className="ml-2 h-4 w-4" />
+                  </Button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
       <Footer />
     </div>
+  );
+}
+
+export function ExplorePage(props: { query?: string }) {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ExploreContent {...props} />
+    </Suspense>
   );
 }

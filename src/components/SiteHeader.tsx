@@ -22,7 +22,7 @@ import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { onEscape, announceToScreenReader } from "@/lib/accessibility";
 
-export function SiteHeader() {
+export function SiteHeader({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
   const { user, logout } = useAuth();
   const router = useRouter();
@@ -58,7 +58,7 @@ export function SiteHeader() {
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-background border-b border-border" role="banner">
+    <header className={cn("sticky top-0 z-50 w-full bg-background border-b border-border", className)} role="banner">
       <a href="#main-content" className="skip-link">Skip to main content</a>
 
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-4 md:px-6">

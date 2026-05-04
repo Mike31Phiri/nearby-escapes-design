@@ -179,93 +179,121 @@ export function HomePage() {
 
         {/* Stays */}
         {activeCategory === "stays" && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10 stagger-children">
-            {listings.slice(0, 8).map((listing) => (
-              <ListingCard key={listing.id} listing={listing} />
-            ))}
+          <div className="space-y-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10 stagger-children">
+              {listings.slice(0, 8).map((listing) => (
+                <ListingCard key={listing.id} listing={listing} />
+              ))}
+            </div>
+            <div className="flex justify-center">
+              <Button variant="outline" size="lg" className="rounded-full px-12 border-2 font-bold hover:bg-primary hover:text-white transition-all" asChild>
+                <Link href="/accommodations?category=stays">See all stays</Link>
+              </Button>
+            </div>
           </div>
         )}
 
         {/* Transport */}
         {activeCategory === "transport" && (
-          <div className="grid gap-6 md:grid-cols-3 stagger-children">
-            {popularRoutes.map((route) => (
-              <Link key={route.id} href="/bus-booking" className="group block">
-                <Card className="border border-border/60 overflow-hidden hover:shadow-lg rounded-2xl transition-all duration-300 hover:-translate-y-1">
-                  <div className="relative aspect-[16/9] overflow-hidden">
-                    <img
-                      src={route.image}
-                      alt={`${route.from} to ${route.to}`}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-black/20" />
-                    <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
-                      <p className="text-lg font-bold text-white drop-shadow-md">{route.from} → {route.to}</p>
-                      <div className="flex items-center gap-1 rounded-full bg-background/90 px-2.5 py-1 text-xs font-bold backdrop-blur-sm shadow-sm">
-                        <Bus className="h-3.5 w-3.5" /> {route.operator}
+          <div className="space-y-12">
+            <div className="grid gap-6 md:grid-cols-3 stagger-children">
+              {popularRoutes.map((route) => (
+                <Link key={route.id} href="/bus-booking" className="group block">
+                  <Card className="border border-border/60 overflow-hidden hover:shadow-lg rounded-2xl transition-all duration-300 hover:-translate-y-1">
+                    <div className="relative aspect-[16/9] overflow-hidden">
+                      <img
+                        src={route.image}
+                        alt={`${route.from} to ${route.to}`}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/20" />
+                      <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+                        <p className="text-lg font-bold text-white drop-shadow-md">{route.from} → {route.to}</p>
+                        <div className="flex items-center gap-1 rounded-full bg-background/90 px-2.5 py-1 text-xs font-bold backdrop-blur-sm shadow-sm">
+                          <Bus className="h-3.5 w-3.5" /> {route.operator}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4 text-xs text-muted-foreground font-medium">
-                        <span className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" /> {route.duration}</span>
-                        <span>{route.departures}</span>
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4 text-xs text-muted-foreground font-medium">
+                          <span className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" /> {route.duration}</span>
+                          <span>{route.departures}</span>
+                        </div>
+                        <span className="font-bold text-foreground">ZMW {route.price}</span>
                       </div>
-                      <span className="font-bold text-foreground">ZMW {route.price}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+            <div className="flex justify-center">
+              <Button variant="outline" size="lg" className="rounded-full px-12 border-2 font-bold hover:bg-primary hover:text-white transition-all" asChild>
+                <Link href="/accommodations?category=transport">See all transport</Link>
+              </Button>
+            </div>
           </div>
         )}
 
         {/* Attractions */}
         {activeCategory === "attractions" && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 stagger-children">
-            {attractions.map((item) => (
-              <Link key={item.id} href="/experiences" className="group block">
-                <Card className="overflow-hidden border border-border/60 rounded-2xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <img src={item.image} alt={item.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                  </div>
-                  <CardContent className="p-4">
-                    <p className="font-semibold text-sm leading-snug">{item.name}</p>
-                    <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1"><MapPin className="h-3 w-3" />{item.location}</p>
-                    <div className="flex items-center justify-between mt-2">
-                      <span className="text-xs flex items-center gap-1"><Star className="h-3 w-3 fill-accent text-accent" />{item.rating} <span className="text-muted-foreground">({item.reviews})</span></span>
-                      <span className="text-sm font-bold">${item.price}<span className="text-xs font-normal text-muted-foreground"> /person</span></span>
+          <div className="space-y-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 stagger-children">
+              {attractions.map((item) => (
+                <Link key={item.id} href="/experiences" className="group block">
+                  <Card className="overflow-hidden border border-border/60 rounded-2xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                    <div className="relative aspect-[4/3] overflow-hidden">
+                      <img src={item.image} alt={item.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                     </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+                    <CardContent className="p-4">
+                      <p className="font-semibold text-sm leading-snug">{item.name}</p>
+                      <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1"><MapPin className="h-3 w-3" />{item.location}</p>
+                      <div className="flex items-center justify-between mt-2">
+                        <span className="text-xs flex items-center gap-1"><Star className="h-3 w-3 fill-accent text-accent" />{item.rating} <span className="text-muted-foreground">({item.reviews})</span></span>
+                        <span className="text-sm font-bold">${item.price}<span className="text-xs font-normal text-muted-foreground"> /person</span></span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+            <div className="flex justify-center">
+              <Button variant="outline" size="lg" className="rounded-full px-12 border-2 font-bold hover:bg-primary hover:text-white transition-all" asChild>
+                <Link href="/accommodations?category=attractions">See all attractions</Link>
+              </Button>
+            </div>
           </div>
         )}
 
         {/* Gems */}
         {activeCategory === "gems" && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 stagger-children">
-            {gems.map((item) => (
-              <Link key={item.id} href="/gems" className="group block">
-                <Card className="overflow-hidden border border-border/60 rounded-2xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <img src={item.image} alt={item.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                    <div className="absolute top-3 left-3 rounded-full bg-primary px-3 py-1 text-[10px] font-bold text-primary-foreground">Hidden Gem</div>
-                  </div>
-                  <CardContent className="p-4">
-                    <p className="font-semibold text-sm leading-snug">{item.name}</p>
-                    <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1"><MapPin className="h-3 w-3" />{item.location}</p>
-                    <div className="flex items-center justify-between mt-2">
-                      <span className="text-xs flex items-center gap-1"><Star className="h-3 w-3 fill-accent text-accent" />{item.rating} <span className="text-muted-foreground">({item.reviews})</span></span>
-                      <span className="text-sm font-bold">${item.price}<span className="text-xs font-normal text-muted-foreground"> /person</span></span>
+          <div className="space-y-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 stagger-children">
+              {gems.map((item) => (
+                <Link key={item.id} href="/gems" className="group block">
+                  <Card className="overflow-hidden border border-border/60 rounded-2xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                    <div className="relative aspect-[4/3] overflow-hidden">
+                      <img src={item.image} alt={item.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                      <div className="absolute top-3 left-3 rounded-full bg-primary px-3 py-1 text-[10px] font-bold text-primary-foreground">Hidden Gem</div>
                     </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+                    <CardContent className="p-4">
+                      <p className="font-semibold text-sm leading-snug">{item.name}</p>
+                      <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1"><MapPin className="h-3 w-3" />{item.location}</p>
+                      <div className="flex items-center justify-between mt-2">
+                        <span className="text-xs flex items-center gap-1"><Star className="h-3 w-3 fill-accent text-accent" />{item.rating} <span className="text-muted-foreground">({item.reviews})</span></span>
+                        <span className="text-sm font-bold">${item.price}<span className="text-xs font-normal text-muted-foreground"> /person</span></span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+            <div className="flex justify-center">
+              <Button variant="outline" size="lg" className="rounded-full px-12 border-2 font-bold hover:bg-primary hover:text-white transition-all" asChild>
+                <Link href="/accommodations?category=gems">See all gems</Link>
+              </Button>
+            </div>
           </div>
         )}
 
