@@ -1,6 +1,9 @@
+"use client";
+
 import { Star, MessageCircle, ThumbsUp, ChevronRight } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { HostSidebar, HostMobileNav } from "./HostDashboardPage";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -49,7 +52,122 @@ export function HostFeedbackPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 md:px-6 md:py-12">
+
+      <div className="border-b border-border/50 bg-primary-soft/30">
+        <div className="mx-auto w-full max-w-6xl px-4 md:px-6 py-8 md:py-10">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-1">Host</p>
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Feedback</h1>
+              <p className="mt-1.5 text-sm text-muted-foreground">Track ratings, reply to reviews and spot trends.</p>
+            </div>
+            <div className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 shrink-0">
+              <Star className="h-5 w-5 fill-accent text-accent" />
+              <div>
+                <p className="text-xl font-bold leading-none">4.86</p>
+                <p className="text-[11px] text-muted-foreground">217 reviews</p>
+              </div>
+            </div>
+          </div>
+          <div className="mt-6"><HostMobileNav /></div>
+        </div>
+      </div>
+
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 md:px-6 py-10">
+        <div className="flex gap-10">
+          <HostSidebar />
+          <div className="flex-1 min-w-0 space-y-10">
+            <section>
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Rating breakdown</p>
+              <Card className="border-border/60">
+                <CardContent className="p-6">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {breakdown.map(b => (
+                      <div key={b.label}>
+                        <div className="flex items-center justify-between text-sm mb-1.5">
+                          <span className="font-medium">{b.label}</span>
+                          <span className="font-bold">{b.score}</span>
+                        </div>
+                        <div className="h-2 rounded-full bg-muted">
+                          <div className="h-2 rounded-full bg-primary transition-all" style={{ width: `${(b.score / 5) * 100}%` }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </section>
+
+            <section>
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Reviews</p>
+              <Tabs defaultValue="all">
+                <TabsList>
+                  <TabsTrigger value="all">All ({reviews.length})</TabsTrigger>
+                  <TabsTrigger value="needs">Needs reply (1)</TabsTrigger>
+                  <TabsTrigger value="recent">Last 30 days</TabsTrigger>
+                </TabsList>
+                <TabsContent value="all" className="mt-5 space-y-4">
+                  {reviews.map(r => (
+                    <Card key={r.id} className="border-border/60">
+                      <CardContent className="p-6">
+                        <div className="flex items-start gap-4">
+                          <Avatar className="h-11 w-11 shrink-0">
+                            <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
+                              {r.from.split(" ").map(w => w[0]).join("")}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center justify-between gap-2">
+                              <p className="font-semibold">{r.from} <span className="text-muted-foreground font-normal text-sm">· {r.listing}</span></p>
+                              <span className="text-xs text-muted-foreground shrink-0">{r.date}</span>
+                            </div>
+                            <div className="flex items-center gap-1 mt-1.5">
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                <Star key={i} className={`h-3.5 w-3.5 ${i < r.rating ? "fill-accent text-accent" : "text-muted-foreground/30"}`} />
+                              ))}
+                            </div>
+                            <p className="mt-3 text-sm leading-7 text-muted-foreground">{r.text}</p>
+                            {r.reply ? (
+                              <div className="mt-4 rounded-xl border border-border bg-muted/40 px-4 py-3 text-sm">
+                                <p className="text-[11px] font-semibold text-primary mb-1">Your reply</p>
+                                <p className="text-muted-foreground">{r.reply}</p>
+                              </div>
+                            ) : (
+                              <div className="mt-4 flex items-center gap-2">
+                                <Button size="sm" variant="outline"><MessageCircle className="h-4 w-4 mr-1.5" /> Reply</Button>
+                                <Badge variant="outline" className="text-[10px]">Needs reply</Badge>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </TabsContent>
+                <TabsContent value="needs" className="mt-4 text-sm text-muted-foreground">1 review needs your reply.</TabsContent>
+                <TabsContent value="recent" className="mt-4 text-sm text-muted-foreground">Last 30 days · 14 reviews collected.</TabsContent>
+              </Tabs>
+            </section>
+
+            <Card className="border-border/60 bg-primary-soft/30">
+              <CardContent className="p-6 flex items-center justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <ThumbsUp className="h-5 w-5 text-primary mt-0.5" />
+                  <div>
+                    <p className="font-semibold">Tip from our hosting team</p>
+                    <p className="text-sm text-muted-foreground mt-1">Replying to reviews within 7 days can lift your bookings up to 12%.</p>
+                  </div>
+                </div>
+                <Button size="sm" variant="ghost" className="shrink-0">Learn more <ChevronRight className="h-4 w-4 ml-1" /></Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}
         <header className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-primary">

@@ -1,3 +1,5 @@
+"use client";
+
 import { useRouter } from "next/navigation";
 import { Bed, Bus, MapPin, ArrowRight } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";

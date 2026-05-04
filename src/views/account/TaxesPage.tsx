@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowLeft, FileText, Download, Info } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";

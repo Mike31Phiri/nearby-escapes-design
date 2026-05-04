@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Hop as Home, Building2, Tent, Hotel, Castle } from "lucide-react";

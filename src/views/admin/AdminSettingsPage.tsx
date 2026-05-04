@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Settings, Globe, Mail, CreditCard, Shield, Bell } from "lucide-react";
 import { AdminLayout } from "./AdminLayout";

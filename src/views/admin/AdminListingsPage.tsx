@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Search, MoreHorizontal, CheckCircle, XCircle, AlertTriangle, Home } from "lucide-react";
 import { AdminLayout } from "./AdminLayout";

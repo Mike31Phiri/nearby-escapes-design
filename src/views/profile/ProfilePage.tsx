@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   Star,
@@ -14,7 +16,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth";
 
 const reviews = [
   {
@@ -48,7 +51,11 @@ const trips = [
   { id: "t2", title: "Livingstone", date: "Dec 22 – Dec 27, 2025" },
 ];
 
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+
 export function ProfilePage() {
+  const router = useRouter();
+  const { setRole } = useAuth();
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
@@ -117,6 +124,16 @@ export function ProfilePage() {
                   className="mt-1 w-full text-xs text-muted-foreground"
                 >
                   <Link href="/host">Become a host</Link>
+                </Button>
+
+                {/* DEV ONLY — remove before launch */}
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  className="mt-3 w-full text-xs opacity-70"
+                  onClick={() => { setRole("admin"); router.push("/admin"); }}
+                >
+                  🔧 Dev: Go to Admin
                 </Button>
               </CardContent>
             </Card>

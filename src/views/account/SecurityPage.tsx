@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowLeft, ShieldCheck, Smartphone, Monitor, MapPin, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";

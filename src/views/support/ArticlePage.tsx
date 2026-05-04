@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, ThumbsUp, ThumbsDown, MessageCircle, BookOpen } from "lucide-react";

@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Search, Send, Paperclip, MapPin, Calendar, ChevronLeft } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";

@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Search, MoreHorizontal, Calendar, Users, DollarSign } from "lucide-react";
 import { AdminLayout } from "./AdminLayout";

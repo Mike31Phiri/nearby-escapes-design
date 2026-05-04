@@ -268,6 +268,31 @@ export function HomePage() {
         </div>
       </section>
 
+      <section className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-16 mb-16">
+        <div className="text-center mb-10">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Why Book With Us</h2>
+        </div>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { icon: "fa-shield-alt", title: "Secure Booking", desc: "Your bookings are safe with our secure payment system", bg: "bg-blue-50 dark:bg-blue-950/40", iconBg: "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400" },
+            { icon: "fa-headset", title: "24/7 Support", desc: "Our customer service team is always ready to help", bg: "bg-violet-50 dark:bg-violet-950/40", iconBg: "bg-violet-100 dark:bg-violet-900 text-violet-600 dark:text-violet-400" },
+            { icon: "fa-tags", title: "Best Prices", desc: "We guarantee the best prices for your stays and travels", bg: "bg-emerald-50 dark:bg-emerald-950/40", iconBg: "bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400" },
+            { icon: "fa-map-marked-alt", title: "Wide Coverage", desc: "Covering all major Zambian cities and tourist attractions", bg: "bg-amber-50 dark:bg-amber-950/40", iconBg: "bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-400" },
+          ].map(({ icon, title, desc, bg, iconBg }) => (
+            <div
+              key={title}
+              className={`flex flex-col items-center text-center gap-4 rounded-2xl border border-border/60 ${bg} p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-card)]`}
+            >
+              <div className={`flex h-14 w-14 items-center justify-center rounded-full ${iconBg} text-2xl`}>
+                <i className={`fas ${icon}`} aria-hidden="true" />
+              </div>
+              <h3 className="text-lg font-semibold tracking-tight">{title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <div className="flex-1" />
       <Footer />
     </div>
