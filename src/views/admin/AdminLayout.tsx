@@ -14,6 +14,9 @@ import {
   X,
   Bell,
   Search,
+  TrendingUp,
+  DollarSign,
+  Award,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -21,19 +24,23 @@ import { useAuth } from "@/lib/auth";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/users", label: "Users", icon: Users },
-  { href: "/admin/listings", label: "Listings", icon: Home },
+  { href: "/admin/analysis", label: "Analysis", icon: TrendingUp },
+  { href: "/admin/revenue", label: "Revenue", icon: DollarSign },
   { href: "/admin/bookings", label: "Bookings", icon: CalendarCheck },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
+  { href: "/admin/users", label: "Users", icon: Users },
+  { href: "/admin/performance", label: "Performance", icon: Award },
+  { href: "/admin/settings", label: "Profile Settings", icon: Settings },
 ] as const;
 
 interface AdminLayoutProps {
   children: React.ReactNode;
   title: string;
   description?: string;
+  activeTab?: string;
+  onTabChange?: (tab: string) => void;
 }
 
-export function AdminLayout({ children, title, description }: AdminLayoutProps) {
+export function AdminLayout({ children, title, description, activeTab, onTabChange }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
   const { user, logout } = useAuth();
@@ -49,24 +56,33 @@ export function AdminLayout({ children, title, description }: AdminLayoutProps) 
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar - Always open on desktop */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-border/50 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:w-64 flex flex-col shadow-sm",
+          "fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-border/50 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:w-72 flex flex-col shadow-sm",
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between h-20 px-6 border-b border-border/40">
-            <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-sm transition-transform group-hover:scale-105">
+          <div className="flex flex-col px-6 py-6 border-b border-border/40 gap-5">
+            <div className="flex items-center justify-between">
+              <Link href="/" className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-sm transition-transform hover:scale-105">
                 N
+              </Link>
+              <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(false)} className="lg:hidden">
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <div className="h-11 w-11 rounded-full bg-primary/10 flex items-center justify-center text-primary text-sm font-black shrink-0 border border-primary/20 ring-4 ring-primary/5">
+                {user?.fullName?.charAt(0) || "A"}
               </div>
-              <span className="text-lg font-bold tracking-tight text-foreground">Nearby Admin</span>
-            </Link>
-            <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(false)} className="lg:hidden">
-              <X className="h-5 w-5" />
-            </Button>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-black truncate text-foreground leading-tight">{user?.fullName || "Admin User"}</p>
+                <p className="text-[10px] font-bold text-muted-foreground truncate uppercase tracking-tighter mt-0.5">{user?.email || "admin@nearby.com"}</p>
+              </div>
+            </div>
           </div>
           
           <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
@@ -74,10 +90,38 @@ export function AdminLayout({ children, title, description }: AdminLayoutProps) 
               Navigation
             </p>
             {navItems.map((item) => {
-              const isActive = item.href === "/admin" 
-                ? pathname === "/admin" 
-                : pathname?.startsWith(item.href);
+              const tabId = item.href.split("/").pop() || "dashboard";
+              const isActive = onTabChange 
+                ? activeTab === tabId
+                : (item.href === "/admin" ? pathname === "/admin" : pathname?.startsWith(item.href));
                 
+              const content = (
+                <>
+                  <item.icon className={cn("h-4.5 w-4.5", isActive ? "text-primary-foreground" : "text-muted-foreground")} />
+                  {item.label}
+                </>
+              );
+
+              if (onTabChange) {
+                return (
+                  <button
+                    key={item.href}
+                    onClick={() => {
+                      onTabChange(tabId);
+                      setSidebarOpen(false);
+                    }}
+                    className={cn(
+                      "w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200",
+                      isActive
+                        ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    )}
+                  >
+                    {content}
+                  </button>
+                );
+              }
+
               return (
                 <Link
                   key={item.href}
@@ -90,23 +134,13 @@ export function AdminLayout({ children, title, description }: AdminLayoutProps) 
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   )}
                 >
-                  <item.icon className={cn("h-4.5 w-4.5", isActive ? "text-primary-foreground" : "text-muted-foreground")} />
-                  {item.label}
+                  {content}
                 </Link>
               );
             })}
           </nav>
 
           <div className="p-4 border-t border-border/40 bg-muted/10">
-            <div className="flex items-center gap-3 px-3 py-3 mb-3 rounded-xl border border-border/50 bg-white shadow-sm">
-              <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold shrink-0 border border-primary/20">
-                {user?.fullName?.charAt(0) || "A"}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-bold truncate text-foreground">{user?.fullName || "Admin User"}</p>
-                <p className="text-[10px] text-muted-foreground truncate">{user?.email || "admin@nearby.com"}</p>
-              </div>
-            </div>
             <Button 
               variant="ghost" 
               className="w-full justify-start text-muted-foreground hover:text-destructive hover:bg-destructive/5 h-10 px-3 rounded-xl font-semibold transition-colors" 
@@ -167,6 +201,19 @@ export function AdminLayout({ children, title, description }: AdminLayoutProps) 
             </div>
             {children}
           </div>
+
+          {/* Admin Footer */}
+          <footer className="mt-auto pt-8 border-t border-border/40 text-center space-y-2 pb-10 px-6 lg:px-10">
+            <p className="text-sm font-bold text-foreground/80">Nearby Escapes Admin Panel</p>
+            <p className="text-xs text-muted-foreground">© 2026 Nearby Escapes. All rights reserved.</p>
+            <div className="flex items-center justify-center gap-4 pt-4 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+              <Link href="/admin/help" className="hover:text-primary transition-colors">Help Center</Link>
+              <span className="h-1 w-1 bg-muted-foreground/30 rounded-full" />
+              <Link href="/admin/terms" className="hover:text-primary transition-colors">Terms of Service</Link>
+              <span className="h-1 w-1 bg-muted-foreground/30 rounded-full" />
+              <Link href="/admin/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
+            </div>
+          </footer>
         </main>
       </div>
     </div>

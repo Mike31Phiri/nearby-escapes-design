@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import {
   Star, MapPin, CheckCircle, Calendar, MessageSquare,
   ArrowRight, Briefcase, TrendingUp, Shield, Clock,
-  ChevronRight, Home, DollarSign,
+  ChevronRight, Home, DollarSign, Award, Users,
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -29,11 +29,10 @@ const reviews = [
   { name: "Joyce S.", date: "January 2026", rating: 4, text: "Great stay overall. The host went above and beyond to make us feel at home." },
 ];
 
-const perks = [
-  { icon: Shield, title: "Verified host", desc: "Identity and property verified by Nearby Escapes" },
-  { icon: Clock, title: "Fast responses", desc: "Typically replies within an hour" },
-  { icon: TrendingUp, title: "Superhost", desc: "Consistently high ratings and great reviews" },
-  { icon: DollarSign, title: "Flexible pricing", desc: "Competitive rates with seasonal discounts" },
+const hostFeatures = [
+  { icon: Award, label: "Superhost", value: "4+ years" },
+  { icon: CheckCircle, label: "Identity", value: "Verified" },
+  { icon: Users, label: "Guests", value: "240+ served" },
 ];
 
 export function HostProfilePage() {
@@ -45,225 +44,203 @@ export function HostProfilePage() {
     : "H";
 
   const isHost = user?.role === "host" || user?.role === "admin";
-  const hostListings = listings.slice(0, 3);
+  const hostListings = listings.slice(0, 4); // Show 4 listings for the grid
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
 
-      {/* Cover + Avatar */}
-      <div className="relative">
-        <div className="h-52 md:h-64 w-full bg-gradient-to-br from-purple-600 via-purple-500 to-violet-400" />
-        <div className="mx-auto max-w-5xl px-4 md:px-6">
-          <div className="relative -mt-16 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 pb-6">
-            <div className="flex items-end gap-5">
-              {/* Avatar */}
-              <div className="h-28 w-28 rounded-2xl border-4 border-background bg-purple-600 flex items-center justify-center text-white text-3xl font-bold shadow-lg shrink-0">
+      <main className="flex-grow">
+        {/* Hero / Top Section (Centered) */}
+        <section className="relative pt-16 pb-20 px-4">
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
+          
+          <div className="mx-auto max-w-4xl text-center space-y-8">
+            {/* Avatar Cluster */}
+            <div className="relative inline-block group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-purple-600 rounded-full blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
+              <div className="relative h-40 w-40 rounded-full border-4 border-background bg-card flex items-center justify-center text-primary text-5xl font-bold shadow-2xl overflow-hidden">
                 {user?.avatarUrl ? (
-                  <img src={user.avatarUrl} alt={user.fullName} className="h-full w-full object-cover rounded-2xl" />
+                  <img src={user.avatarUrl} alt={user.fullName} className="h-full w-full object-cover" />
                 ) : (
                   initials
                 )}
               </div>
-              <div className="pb-1">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h1 className="text-2xl font-bold tracking-tight">{user?.fullName ?? "Your Name"}</h1>
-                  {isHost && (
-                    <Badge className="bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300 border-0 text-xs font-semibold">
-                      <CheckCircle className="h-3 w-3 mr-1" /> Verified Host
-                    </Badge>
-                  )}
-                </div>
-                <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
-                  <MapPin className="h-3.5 w-3.5" />
-                  {user?.location ?? "Lusaka, Zambia"}
-                </p>
+              <div className="absolute bottom-2 right-2 h-10 w-10 bg-primary text-primary-foreground rounded-full border-4 border-background flex items-center justify-center shadow-lg">
+                <CheckCircle className="h-5 w-5" />
               </div>
             </div>
 
-            {/* Action buttons */}
-            <div className="flex items-center gap-2 pb-1">
+            {/* Name & Title */}
+            <div className="space-y-3">
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground font-display">
+                {user?.fullName ?? "Your Name"}
+              </h1>
+              <div className="flex items-center justify-center gap-4 text-muted-foreground font-medium">
+                <span className="flex items-center gap-1.5">
+                  <MapPin className="h-4 w-4 text-primary" />
+                  {user?.location ?? "Lusaka, Zambia"}
+                </span>
+                <span className="h-1 w-1 bg-muted-foreground/30 rounded-full" />
+                <span className="flex items-center gap-1.5 text-primary">
+                  <Star className="h-4 w-4 fill-primary" />
+                  4.9 Superhost
+                </span>
+              </div>
+            </div>
+
+            {/* Bio */}
+            <div className="max-w-2xl mx-auto">
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                {user?.bio ?? "Welcome! I'm a passionate host based in Zambia. I love sharing the beauty of this country with travelers from around the world. My properties are carefully maintained to give you the most comfortable and authentic Zambian experience possible."}
+              </p>
+            </div>
+
+            {/* Feature Bar */}
+            <div className="flex flex-wrap justify-center gap-8 pt-4">
+              {hostFeatures.map((f) => (
+                <div key={f.label} className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                    <f.icon className="h-5 w-5" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold">{f.label}</p>
+                    <p className="text-sm font-semibold">{f.value}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* CTAs */}
+            <div className="flex flex-wrap justify-center gap-3 pt-4">
               {isHost ? (
                 <>
-                  <Button variant="outline" size="sm" asChild>
-                    <Link href="/host"><Briefcase className="h-4 w-4 mr-2" />Go to Dashboard</Link>
-                  </Button>
-                  <Button size="sm" className="bg-purple-600 hover:bg-purple-700 text-white" asChild>
+                  <Button size="lg" className="rounded-full px-8 bg-primary text-white hover:bg-primary/90" asChild>
                     <Link href="/host/new-listing">+ New listing</Link>
+                  </Button>
+                  <Button variant="outline" size="lg" className="rounded-full px-8" asChild>
+                    <Link href="/host">Dashboard</Link>
                   </Button>
                 </>
               ) : (
-                <Button
-                  size="sm"
-                  className="bg-purple-600 hover:bg-purple-700 text-white"
+                <Button 
+                  size="lg" 
+                  className="rounded-full px-8 bg-primary text-white hover:bg-primary/90"
                   onClick={() => { becomeHost(); router.push("/host/dashboard"); }}
                 >
                   Become a host
                 </Button>
               )}
+              <Button variant="ghost" size="lg" className="rounded-full px-8">
+                <MessageSquare className="h-4 w-4 mr-2" /> Message
+              </Button>
             </div>
           </div>
-        </div>
-      </div>
+        </section>
 
-      <main className="mx-auto w-full max-w-5xl px-4 md:px-6 pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-
-          {/* Left column */}
-          <div className="lg:col-span-2 space-y-10">
-
-            {/* About */}
-            <section>
-              <h2 className="text-lg font-bold mb-3">About</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                {user?.bio ?? "Welcome! I'm a passionate host based in Zambia. I love sharing the beauty of this country with travelers from around the world. My properties are carefully maintained to give you the most comfortable and authentic Zambian experience possible."}
-              </p>
-            </section>
-
-            {/* Stats */}
-            <section>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {stats.map(({ label, value, icon: Icon }) => (
-                  <div key={label} className="rounded-2xl border border-border/60 bg-card p-5 text-center">
-                    <Icon className="h-5 w-5 text-purple-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold">{value}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">{label}</p>
-                  </div>
-                ))}
+        {/* Listings Section (Grid of 4) */}
+        <section className="bg-muted/30 py-20 px-4">
+          <div className="mx-auto max-w-6xl">
+            <div className="flex items-center justify-between mb-10">
+              <div>
+                <h2 className="text-3xl font-bold tracking-tight font-display">My Listings</h2>
+                <p className="text-muted-foreground mt-1">Explore properties managed by {user?.fullName?.split(" ")[0] ?? "this host"}</p>
               </div>
-            </section>
+              <Link href="/accommodations" className="text-sm font-semibold text-primary hover:underline flex items-center gap-1 group">
+                See all {stats[0].value} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
 
-            {/* Listings */}
-            <section>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold">My listings</h2>
-                <Link href="/accommodations" className="text-sm font-medium text-purple-600 hover:underline flex items-center gap-1">
-                  View all <ChevronRight className="h-4 w-4" />
-                </Link>
-              </div>
-              <div className="grid gap-5 sm:grid-cols-3">
-                {hostListings.map((listing) => (
-                  <Link key={listing.id} href={`/accommodations/${listing.id}`} className="group block">
-                    <Card className="overflow-hidden border border-border/60 rounded-2xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                      <div className="relative aspect-[4/3] overflow-hidden">
-                        <img
-                          src={listing.image}
-                          alt={listing.name}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                      </div>
-                      <CardContent className="p-4">
-                        <p className="font-semibold text-sm truncate">{listing.name}</p>
-                        <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
-                          <MapPin className="h-3 w-3" />{listing.location}
-                        </p>
-                        <div className="flex items-center justify-between mt-2">
-                          <span className="text-xs flex items-center gap-1">
-                            <Star className="h-3 w-3 fill-amber-400 text-amber-400" />{listing.rating}
-                          </span>
-                          <span className="text-sm font-bold">${listing.price}<span className="text-xs font-normal text-muted-foreground">/night</span></span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                ))}
-              </div>
-            </section>
-
-            {/* Reviews */}
-            <section>
-              <div className="flex items-center gap-2 mb-5">
-                <h2 className="text-lg font-bold">Guest reviews</h2>
-                <div className="flex items-center gap-1 text-sm font-semibold">
-                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" /> 4.9
-                </div>
-                <span className="text-sm text-muted-foreground">({reviews.length} reviews)</span>
-              </div>
-              <div className="space-y-4">
-                {reviews.map((r) => (
-                  <Card key={r.name} className="border border-border/60">
-                    <CardContent className="p-5">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-3">
-                          <div className="h-9 w-9 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center text-purple-700 dark:text-purple-300 text-xs font-bold">
-                            {r.name.split(" ").map((n) => n[0]).join("")}
-                          </div>
-                          <div>
-                            <p className="text-sm font-semibold">{r.name}</p>
-                            <p className="text-xs text-muted-foreground">{r.date}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-0.5">
-                          {Array.from({ length: r.rating }).map((_, i) => (
-                            <Star key={i} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                          ))}
-                        </div>
-                      </div>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{r.text}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </section>
-          </div>
-
-          {/* Right column — sticky card */}
-          <div className="space-y-6">
-            <div className="sticky top-24 space-y-6">
-
-              {/* Host perks */}
-              <Card className="border border-border/60">
-                <CardContent className="p-6 space-y-4">
-                  <h3 className="font-bold text-base">Why guests love this host</h3>
-                  {perks.map(({ icon: Icon, title, desc }) => (
-                    <div key={title} className="flex items-start gap-3">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-300">
-                        <Icon className="h-4 w-4" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold">{title}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">{desc}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {hostListings.map((listing) => (
+                <Link key={listing.id} href={`/accommodations/${listing.id}`} className="group block">
+                  <div className="space-y-3">
+                    <div className="relative aspect-[4/5] overflow-hidden rounded-2xl shadow-md group-hover:shadow-xl transition-all duration-300">
+                      <img
+                        src={listing.image}
+                        alt={listing.name}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute top-3 left-3">
+                        <Badge className="bg-white/90 text-black border-0 backdrop-blur-md font-bold text-[10px] uppercase tracking-tighter">
+                          Verified
+                        </Badge>
                       </div>
                     </div>
-                  ))}
-                </CardContent>
-              </Card>
-
-              {/* CTA */}
-              {isHost ? (
-                <Card className="border-0 bg-purple-600 text-white">
-                  <CardContent className="p-6 text-center space-y-3">
-                    <Briefcase className="h-8 w-8 mx-auto opacity-90" />
-                    <p className="font-bold text-base">Manage your business</p>
-                    <p className="text-sm text-white/80">View bookings, earnings and performance from your dashboard.</p>
-                    <Button asChild className="w-full bg-white text-purple-700 hover:bg-white/90 font-bold">
-                      <Link href="/host">Go to Dashboard <ArrowRight className="ml-2 h-4 w-4" /></Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              ) : (
-                <Card className="border-0 bg-purple-600 text-white">
-                  <CardContent className="p-6 text-center space-y-3">
-                    <Home className="h-8 w-8 mx-auto opacity-90" />
-                    <p className="font-bold text-base">Start hosting today</p>
-                    <p className="text-sm text-white/80">List your property and earn from travelers across Zambia.</p>
-                    <Button
-                      className="w-full bg-white text-purple-700 hover:bg-white/90 font-bold"
-                      onClick={() => { becomeHost(); router.push("/host/dashboard"); }}
-                    >
-                      Become a host <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Member since */}
-              <p className="text-xs text-center text-muted-foreground">
-                Member since {user?.createdAt ? new Date(user.createdAt).toLocaleDateString("en-GB", { month: "long", year: "numeric" }) : "2024"}
-              </p>
+                    <div className="px-1">
+                      <div className="flex items-center justify-between text-sm mb-1">
+                        <span className="font-bold truncate text-foreground">{listing.name}</span>
+                        <span className="flex items-center gap-1 font-semibold">
+                          <Star className="h-3 w-3 fill-amber-400 text-amber-400" /> {listing.rating}
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground mb-2 flex items-center gap-1">
+                        <MapPin className="h-3 w-3" /> {listing.location}
+                      </p>
+                      <p className="text-sm font-bold text-primary">
+                        ${listing.price} <span className="text-xs font-normal text-muted-foreground">/ night</span>
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
-        </div>
+        </section>
+
+        {/* Ratings and Reviews Section */}
+        <section className="py-20 px-4 bg-background">
+          <div className="mx-auto max-w-4xl">
+            <div className="text-center space-y-4 mb-16">
+              <h2 className="text-3xl font-bold tracking-tight font-display">Ratings & Reviews</h2>
+              <div className="flex items-center justify-center gap-6">
+                <div className="text-center">
+                  <p className="text-4xl font-bold text-foreground">4.9</p>
+                  <div className="flex items-center justify-center gap-0.5 mt-1 text-amber-400">
+                    {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}
+                  </div>
+                </div>
+                <div className="h-12 w-px bg-muted" />
+                <div className="text-center">
+                  <p className="text-4xl font-bold text-foreground">100%</p>
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold mt-1">Recommended</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              {reviews.map((r, i) => (
+                <div key={i} className="group relative p-8 rounded-3xl border border-border/60 bg-card hover:bg-muted/20 transition-colors duration-300">
+                  <div className="flex flex-col md:flex-row gap-6">
+                    <div className="flex items-center gap-4 shrink-0 md:w-48">
+                      <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary text-sm font-bold">
+                        {r.name.split(" ").map(n => n[0]).join("")}
+                      </div>
+                      <div>
+                        <p className="font-bold text-foreground">{r.name}</p>
+                        <p className="text-xs text-muted-foreground">{r.date}</p>
+                      </div>
+                    </div>
+                    <div className="flex-grow space-y-3">
+                      <div className="flex items-center gap-0.5 text-amber-400">
+                        {[...Array(r.rating)].map((_, j) => <Star key={j} className="h-3.5 w-3.5 fill-current" />)}
+                      </div>
+                      <p className="text-muted-foreground leading-relaxed italic">
+                        "{r.text}"
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-12 text-center">
+              <Button variant="outline" className="rounded-full px-10 border-muted-foreground/20 hover:bg-muted/30">
+                Show all 147 reviews
+              </Button>
+            </div>
+          </div>
+        </section>
       </main>
 
       <Footer />

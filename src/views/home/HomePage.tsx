@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Bus, ArrowRight, Clock, Hotel, TrainFront, Ticket, Gem, MapPin, Star } from "lucide-react";
+import { Bus, ArrowRight, Clock, Hotel, TrainFront, Ticket, Gem, MapPin, Star, ShieldCheck, Headset, Tag, Map } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SearchBar } from "@/components/explore/SearchBar";
@@ -81,6 +81,28 @@ export function HomePage() {
   const [activeCategory, setActiveCategory] = useState<CategoryId>("stays");
   const meta = sectionMeta[activeCategory];
 
+  const scrollToContent = () => {
+    const element = document.getElementById("category-content");
+    if (element) {
+      const offset = 160; // Account for sticky tabs and navbar
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = element.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const handleCategoryChange = (id: CategoryId) => {
+    setActiveCategory(id);
+    // Use setTimeout to ensure the DOM has updated before scrolling if content height changes
+    setTimeout(scrollToContent, 10);
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
@@ -119,7 +141,7 @@ export function HomePage() {
               return (
                 <button
                   key={id}
-                  onClick={() => setActiveCategory(id)}
+                  onClick={() => handleCategoryChange(id)}
                   className={cn(
                     "group flex flex-col items-center justify-center gap-2 pb-3 border-b-2 transition-all duration-200",
                     isActive
@@ -143,7 +165,11 @@ export function HomePage() {
       </section>
 
       {/* Dynamic Content Section */}
-      <section className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-10 md:mt-14 section-enter" key={activeCategory}>
+      <section 
+        id="category-content"
+        className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-10 md:mt-14 section-enter scroll-mt-40" 
+        key={activeCategory}
+      >
         <div className="flex items-end justify-between mb-8">
           <div>
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight">{meta.heading}</h2>
@@ -254,26 +280,33 @@ export function HomePage() {
       </section>
 
       {/* Why Book With Us */}
-      <section className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-20 mb-16 section-enter">
-        <div className="text-center mb-10">
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Why Book With Us</h2>
+      <section className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-20 mb-24 section-enter">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold tracking-tight font-display">Why Book With Us</h2>
+          <p className="text-muted-foreground mt-2">The trusted choice for Zambian travelers</p>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { icon: "fa-shield-alt", title: "Secure Booking", desc: "Your bookings are safe with our secure payment system" },
-            { icon: "fa-headset", title: "24/7 Support", desc: "Our customer service team is always ready to help" },
-            { icon: "fa-tags", title: "Best Prices", desc: "We guarantee the best prices for your stays and travels" },
-            { icon: "fa-map-marked-alt", title: "Wide Coverage", desc: "Covering all major Zambian cities and tourist attractions" },
-          ].map(({ icon, title, desc }) => (
+            { icon: ShieldCheck, title: "Secure Booking", desc: "Your bookings are safe with our encrypted payment system", color: "blue" },
+            { icon: Headset, title: "24/7 Support", desc: "Our local support team is always ready to help you", color: "indigo" },
+            { icon: Tag, title: "Best Prices", desc: "We guarantee the best rates for all Zambian properties", color: "emerald" },
+            { icon: Map, title: "Wide Coverage", desc: "Access to the most remote gems and major cities", color: "orange" },
+          ].map(({ icon: Icon, title, desc, color }) => (
             <div
               key={title}
-              className="flex flex-col items-center text-center gap-4 rounded-2xl bg-purple-600 dark:bg-purple-700 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              className="group flex flex-col items-center text-center p-8 rounded-3xl border border-border/50 bg-card hover:bg-muted/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-sm"
             >
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/20 text-white text-2xl">
-                <i className={`fas ${icon}`} aria-hidden="true" />
+              <div className={cn(
+                "flex h-16 w-16 items-center justify-center rounded-2xl mb-6 transition-transform group-hover:scale-110",
+                color === "blue" && "bg-blue-50 text-blue-600",
+                color === "indigo" && "bg-indigo-50 text-indigo-600",
+                color === "emerald" && "bg-emerald-50 text-emerald-600",
+                color === "orange" && "bg-orange-50 text-orange-600",
+              )}>
+                <Icon className="h-8 w-8" />
               </div>
-              <h3 className="text-lg font-semibold tracking-tight text-white">{title}</h3>
-              <p className="text-sm text-white/80 leading-relaxed">{desc}</p>
+              <h3 className="text-xl font-bold tracking-tight mb-2 font-display">{title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
             </div>
           ))}
         </div>
