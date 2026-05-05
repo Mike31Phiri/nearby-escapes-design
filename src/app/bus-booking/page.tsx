@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Bus, Clock, MapPin, ArrowRight, Users, ChevronRight, Zap, ShieldCheck, Ticket } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useState, useEffect } from "react";
 
 const routes = [
   {
@@ -57,6 +58,28 @@ const routes = [
 ];
 
 export default function BusBookingPage() {
+  const [allRoutes, setAllRoutes] = useState(routes);
+
+  useEffect(() => {
+    try {
+      const mock = JSON.parse(localStorage.getItem("mock_host_listings") || "[]");
+      const transportMocks = mock.filter((m: any) => m.category === 'transport').map((m: any) => ({
+        id: m.id,
+        from: m.name || m.title || "Custom",
+        to: m.location || "Location",
+        duration: "Flexible",
+        price: m.price || 0,
+        operator: "Custom Host",
+        departures: ["Flexible"],
+        seats: 4,
+        image: m.image
+      }));
+      if (transportMocks.length > 0) {
+        setAllRoutes(prev => [...transportMocks, ...prev]);
+      }
+    } catch(e) {}
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFBFC]">
       <Navbar className="bg-[#F5F3FF] border-purple-100" />
@@ -103,11 +126,11 @@ export default function BusBookingPage() {
               <h2 className="text-3xl font-black tracking-tighter text-primary font-display">Popular Connections</h2>
               <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest mt-2">Daily departures across the country</p>
             </div>
-            <span className="hidden md:block text-xs font-black uppercase tracking-[0.2em] text-primary/30">{routes.length} verified routes</span>
+            <span className="hidden md:block text-xs font-black uppercase tracking-[0.2em] text-primary/30">{allRoutes.length} verified routes</span>
           </div>
 
           <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-2">
-            {routes.map((route) => (
+            {allRoutes.map((route) => (
               <Card key={route.id} className="border-none shadow-sm hover:shadow-2xl transition-all duration-500 rounded-[2rem] overflow-hidden bg-white border border-purple-50 group">
                 <div className="flex flex-col sm:flex-row h-full">
                   <div className="relative h-56 sm:w-64 overflow-hidden shrink-0">

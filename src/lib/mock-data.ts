@@ -6,7 +6,8 @@ export type Listing = {
   rating: number;
   reviews: number;
   image: string;
-  category: "Lodge" | "Hotel" | "Camp" | "Guesthouse";
+  photos?: string[];
+  category: string;
   description: string;
 };
 

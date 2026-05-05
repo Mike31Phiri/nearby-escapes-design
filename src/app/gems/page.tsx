@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Star, Compass, ArrowRight, Gem, Trees, Waves, Map } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useState, useEffect } from "react";
 
 const metadata = { title: "Hidden Gems — Nearby Escapes" };
 
@@ -59,6 +60,26 @@ const gems = [
 ];
 
 export default function GemsPage() {
+  const [allGems, setAllGems] = useState(gems);
+
+  useEffect(() => {
+    try {
+      const mock = JSON.parse(localStorage.getItem("mock_host_listings") || "[]");
+      const gemMocks = mock.filter((m: any) => m.category === 'gem').map((m: any) => ({
+        id: m.id,
+        name: m.name || m.title || "Hidden Gem",
+        location: m.location || "Unknown",
+        tagline: m.description || "A beautiful new discovery.",
+        category: "New Discovery",
+        rating: m.rating || 5.0,
+        image: m.image
+      }));
+      if (gemMocks.length > 0) {
+        setAllGems(prev => [...gemMocks, ...prev]);
+      }
+    } catch(e) {}
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFBFC]">
       <Navbar className="bg-[#F5F3FF] border-purple-100" />
@@ -84,7 +105,7 @@ export default function GemsPage() {
         {/* Gems Masonry-like Grid */}
         <section className="mx-auto max-w-7xl px-4 py-24 md:px-6">
           <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3 items-start">
-            {gems.map((gem, idx) => (
+            {allGems.map((gem, idx) => (
               <Card 
                 key={gem.id} 
                 className={cn(

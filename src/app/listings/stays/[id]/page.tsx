@@ -13,9 +13,9 @@ import {
   Trees, Dumbbell, Utensils, WavesLadder, Lock,
 } from "lucide-react";
 import Link from "next/link";
-import { listings } from "@/lib/mock-data";
+import { listings, type Listing } from "@/lib/mock-data";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ListingCard } from "@/components/ListingCard";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -82,22 +82,49 @@ const amenities = [
 export default function StayDetailPage() {
   const params = useParams();
   const id = params.id as string;
-  const listing = listings.find((l) => l.id === id) || listings[0];
-  const similar = listings.filter((l) => l.id !== listing.id).slice(0, 4);
+  const [listing, setListing] = useState<Listing | null>(null);
   const [isSaved, setIsSaved] = useState(false);
-  const [galleryIndex, setGalleryIndex] = useState(0);
   const [showAllAmenities, setShowAllAmenities] = useState(false);
+
+  useEffect(() => {
+    try {
+      const mock = JSON.parse(localStorage.getItem("mock_host_listings") || "[]");
+      const foundMock = mock.find((l: any) => l.id === id);
+      if (foundMock) {
+        setListing(foundMock);
+        return;
+      }
+    } catch(e) {}
+    
+    const foundStatic = listings.find((l) => l.id === id) || listings[0];
+    setListing(foundStatic);
+  }, [id]);
+
+  if (!listing) {
+    return <div className="min-h-screen flex items-center justify-center font-bold">Loading...</div>;
+  }
+
+  const similar = listings.filter((l) => l.id !== listing.id).slice(0, 4);
 
   const coords = locationCoords[listing.location] || { lat: -15.4166, lng: 28.2833, zoom: 12 };
   const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${coords.lng - 0.05}%2C${coords.lat - 0.05}%2C${coords.lng + 0.05}%2C${coords.lat + 0.05}&layer=mapnik&marker=${coords.lat}%2C${coords.lng}`;
 
-  const galleryImages = [
-    listing.image,
+  const defaultPhotos = [
     "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&fit=crop&w=800&h=600",
     "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&fit=crop&w=800&h=600",
     "https://images.pexels.com/photos/262048/pexels-photo-262048.jpeg?auto=compress&fit=crop&w=800&h=600",
     "https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg?auto=compress&fit=crop&w=800&h=600",
   ];
+
+  const galleryImages = listing.photos && listing.photos.length > 0 
+    ? [
+        ...listing.photos,
+        ...Array.from({ length: Math.max(0, 5 - listing.photos.length) }).map((_, i) => defaultPhotos[i % 4])
+      ].slice(0, 5)
+    : [
+        listing.image,
+        ...defaultPhotos
+      ];
 
   const avgRating = mockReviews.reduce((a, r) => a + r.rating, 0) / mockReviews.length;
 
