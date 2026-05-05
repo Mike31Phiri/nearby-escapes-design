@@ -87,9 +87,11 @@ export default function BookingSuccessPage() {
             </Card>
             
             <div className="flex flex-col gap-3">
-              <Button variant="outline" className="w-full h-12 rounded-2xl border-2 font-bold flex items-center gap-2">
-                <Download className="h-4 w-4" /> Download Receipt
-              </Button>
+              <Link href="/checkout/receipt" className="block w-full">
+                <Button variant="outline" className="w-full h-12 rounded-2xl border-2 font-bold flex items-center gap-2">
+                  <Download className="h-4 w-4" /> Download Receipt
+                </Button>
+              </Link>
               <Button variant="outline" className="w-full h-12 rounded-2xl border-2 font-bold flex items-center gap-2">
                 <Printer className="h-4 w-4" /> Print Booking
               </Button>

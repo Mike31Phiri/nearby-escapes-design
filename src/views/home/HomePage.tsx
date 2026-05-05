@@ -87,26 +87,8 @@ export function HomePage() {
   const [activeCategory, setActiveCategory] = useState<CategoryId>("stays");
   const meta = sectionMeta[activeCategory];
 
-  const scrollToContent = () => {
-    const element = document.getElementById("category-content");
-    if (element) {
-      const offset = 160; // Account for sticky tabs and navbar
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
-    }
-  };
-
   const handleCategoryChange = (id: CategoryId) => {
     setActiveCategory(id);
-    // Use setTimeout to ensure the DOM has updated before scrolling if content height changes
-    setTimeout(scrollToContent, 10);
   };
 
   return (
@@ -313,6 +295,45 @@ export function HomePage() {
               {meta.cta} <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
+        </div>
+      </section>
+
+      {/* Popular Destinations */}
+      <section className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-32 section-enter">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight">Popular Destinations</h2>
+          <p className="text-muted-foreground mt-2 text-lg font-medium">Explore the most sought-after locations in Zambia</p>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 stagger-children">
+          {[
+            { name: "Livingstone", image: "https://images.pexels.com/photos/2166936/pexels-photo-2166936?auto=compress&fit=crop&w=400&h=400" },
+            { name: "Lusaka", image: "https://images.pexels.com/photos/2422533/pexels-photo-2422533?auto=compress&fit=crop&w=400&h=400" },
+            { name: "South Luangwa", image: "https://images.pexels.com/photos/2199357/pexels-photo-2199357?auto=compress&fit=crop&w=400&h=400" },
+            { name: "Lower Zambezi", image: "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&fit=crop&w=400&h=400" },
+          ].map((dest) => (
+            <Link key={dest.name} href={`/search?location=${dest.name}`} className="group block text-center">
+              <div className="relative aspect-square overflow-hidden rounded-[32px] mb-4 shadow-sm group-hover:shadow-xl transition-all duration-500">
+                <img src={dest.image} alt={dest.name} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+              </div>
+              <h3 className="font-black text-xl">{dest.name}</h3>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Recommended For You */}
+      <section className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-32 section-enter">
+        <div className="flex items-end justify-between mb-12">
+          <div>
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight">Recommended For You</h2>
+            <p className="text-muted-foreground mt-2 text-lg font-medium">Based on your recent searches</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-14 stagger-children">
+          {listings.slice(4, 8).map((listing) => (
+            <ListingCard key={listing.id} listing={listing} />
+          ))}
         </div>
       </section>
 

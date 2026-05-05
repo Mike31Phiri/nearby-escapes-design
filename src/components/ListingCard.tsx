@@ -21,7 +21,7 @@ export const ListingCard = memo(function ListingCard({ listing, className }: Lis
 
   return (
     <Link
-      href={`/accommodations/${listing.id}`}
+      href={`/listings/stays/${listing.id}`}
       className={cn("group block", className)}
       aria-label={`View details for ${listing.name} in ${listing.location}, priced at $${listing.price} per night`}
     >

@@ -5,7 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 import { ListingCard } from "@/components/ListingCard";
 import { listings } from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";
-import { Plus, LayoutGrid, List, Search, MoreHorizontal, Edit, Power, Trash2 } from "lucide-react";
+import { Plus, LayoutGrid, List, Search, MoreHorizontal, Edit, Power, Trash2, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { useState } from "react";
