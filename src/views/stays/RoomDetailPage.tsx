@@ -91,34 +91,34 @@ export function RoomDetailPage() {
           <ArrowLeft className="h-4 w-4" /> {stay.name}
         </Link>
 
-        <header className="mt-4 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary">Room</p>
-            <h1 className="mt-1 text-2xl md:text-3xl font-bold tracking-tight">{room.name}</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
+        <header className="mt-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
+          <div className="animate-in fade-in slide-in-from-left-4 duration-500">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-1">Room Category</p>
+            <h1 className="text-3xl md:text-5xl font-black tracking-tight font-display">{room.name}</h1>
+            <p className="mt-3 text-lg text-muted-foreground font-medium">
               {room.beds} · sleeps {room.sleeps} · {room.size}
             </p>
           </div>
-          <Badge variant="secondary" className="text-[11px] self-start sm:self-auto">
+          <Badge className="bg-emerald-50 text-emerald-600 border-none px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest self-start sm:self-auto">
             Free cancellation until 48h before
           </Badge>
         </header>
 
-        <div className="mt-5 grid gap-2 sm:grid-cols-3 rounded-2xl overflow-hidden h-[240px] sm:h-[360px]">
+        <div className="mt-8 grid gap-4 sm:grid-cols-3 rounded-[32px] overflow-hidden h-[300px] sm:h-[450px] shadow-2xl animate-in fade-in zoom-in duration-700">
           <img
             src={stay.image}
             alt={room.name}
-            className="object-cover w-full h-full sm:col-span-2 sm:row-span-2"
+            className="object-cover w-full h-full sm:col-span-2 sm:row-span-2 transition-transform duration-1000 hover:scale-105"
           />
           <img
             src={listings[1].image}
             alt=""
-            className="hidden sm:block w-full h-full object-cover"
+            className="hidden sm:block w-full h-full object-cover transition-transform duration-1000 hover:scale-110"
           />
           <img
             src={listings[2].image}
             alt=""
-            className="hidden sm:block w-full h-full object-cover"
+            className="hidden sm:block w-full h-full object-cover transition-transform duration-1000 hover:scale-110"
           />
         </div>
 
@@ -159,34 +159,34 @@ export function RoomDetailPage() {
             </section>
           </div>
 
-          <aside className="lg:sticky lg:top-24 self-start">
-            <Card className="border-border/60 shadow-[var(--shadow-card)]">
-              <CardContent className="p-5">
-                <p className="text-2xl font-bold">
+          <aside className="lg:sticky lg:top-24 self-start animate-in fade-in slide-in-from-right-4 duration-700">
+            <Card className="border-border/60 shadow-3xl rounded-[32px] overflow-hidden bg-white border border-purple-100 ring-1 ring-primary/5">
+              <CardContent className="p-8">
+                <p className="text-3xl font-black text-primary">
                   ${room.price}
-                  <span className="text-sm font-normal text-muted-foreground"> / night</span>
+                  <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest ml-1"> / night</span>
                 </p>
-                <Separator className="my-4" />
-                <div className="space-y-1.5 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">${room.price} × 3 nights</span>
-                    <span>${room.price * 3}</span>
+                <Separator className="my-6 opacity-50" />
+                <div className="space-y-3 text-sm font-medium">
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>${room.price} × 3 nights</span>
+                    <span className="text-foreground font-bold">${room.price * 3}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Cleaning</span>
-                    <span>$25</span>
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>Cleaning</span>
+                    <span className="text-foreground font-bold">$25</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Service fee</span>
-                    <span>${Math.round(room.price * 3 * 0.1)}</span>
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>Service fee</span>
+                    <span className="text-foreground font-bold">${Math.round(room.price * 3 * 0.1)}</span>
                   </div>
-                  <Separator className="my-2" />
-                  <div className="flex justify-between font-bold">
-                    <span>Total</span>
-                    <span>${room.price * 3 + 25 + Math.round(room.price * 3 * 0.1)}</span>
+                  <Separator className="my-4 opacity-50" />
+                  <div className="flex justify-between items-center text-xl font-black text-primary">
+                    <span className="uppercase tracking-widest text-sm">Total</span>
+                    <span className="font-display">${room.price * 3 + 25 + Math.round(room.price * 3 * 0.1)}</span>
                   </div>
                 </div>
-                <Button className="w-full mt-4" onClick={reserve}>
+                <Button className="w-full h-14 mt-8 rounded-2xl font-black uppercase tracking-widest text-xs bg-primary shadow-xl shadow-primary/20 hover:bg-primary/90 transition-all active:scale-[0.98]" onClick={reserve}>
                   Reserve this room
                 </Button>
               </CardContent>
@@ -209,10 +209,12 @@ function Spec({
   value: string;
 }) {
   return (
-    <div className="rounded-xl border border-border bg-card p-4">
-      <Icon className="h-4 w-4 text-primary" />
-      <p className="mt-2 text-xs uppercase tracking-widest text-muted-foreground">{label}</p>
-      <p className="text-sm font-semibold">{value}</p>
+    <div className="rounded-[24px] border border-border/40 bg-white p-6 shadow-sm hover:shadow-md transition-shadow group">
+      <div className="h-10 w-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center group-hover:scale-110 transition-transform mb-4">
+        <Icon className="h-5 w-5" strokeWidth={2.5} />
+      </div>
+      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">{label}</p>
+      <p className="text-sm font-black text-foreground">{value}</p>
     </div>
   );
 }

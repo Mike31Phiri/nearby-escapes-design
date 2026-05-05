@@ -46,7 +46,7 @@ export function SearchBar({ className }: { className?: string }) {
   }, [isExpanded]);
 
   return (
-    <div ref={containerRef} className={cn("mx-auto w-full relative z-50 px-4 md:px-0", className)}>
+    <div ref={containerRef} className={cn("mx-auto w-full relative z-50 px-2 md:px-0", className)}>
       {/* Backdrop for expanded state */}
       <div 
         className={cn(
@@ -59,23 +59,23 @@ export function SearchBar({ className }: { className?: string }) {
       <div 
         className={cn(
           "mx-auto transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] overflow-hidden bg-white shadow-2xl ring-1 ring-border/40",
-          isExpanded ? "max-w-4xl rounded-[2rem] p-2" : "max-w-md rounded-full p-1.5"
+          isExpanded ? "max-w-4xl rounded-[2rem] p-2" : "w-full max-w-md rounded-full p-1"
         )}
       >
         <div className={cn(
-            "flex flex-col md:flex-row md:items-stretch relative transition-all duration-500",
-            isExpanded ? "gap-2 md:gap-0 h-auto md:h-16" : "h-14 md:h-16"
+            "flex relative transition-all duration-500",
+            isExpanded ? "flex-col md:flex-row gap-2 md:gap-0 h-auto md:h-16" : "flex-row items-center h-12 md:h-16"
         )}>
           
           {/* Where Section */}
           <div 
             onClick={() => { setIsExpanded(true); setActive("where"); }}
             className={cn(
-              "flex items-center gap-4 px-6 cursor-pointer transition-all duration-300 rounded-full h-16 md:h-auto md:flex-1",
-              isExpanded && active === "where" ? "bg-purple-50 shadow-inner md:bg-white md:shadow-md md:ring-1 md:ring-border/20" : "hover:bg-muted/40"
+              "flex items-center gap-3 md:gap-4 px-4 md:px-6 cursor-pointer transition-all duration-300 rounded-full md:flex-1",
+              isExpanded ? (active === "where" ? "bg-purple-50 shadow-inner md:bg-white md:shadow-md md:ring-1 md:ring-border/20 h-16 md:h-auto" : "h-16 md:h-auto") : "h-full hover:bg-muted/40"
             )}
           >
-            <MapPin className={cn("h-5 w-5 shrink-0 transition-colors", isExpanded ? "text-primary" : "text-muted-foreground")} />
+            <MapPin className={cn("hidden md:block h-4.5 w-4.5 shrink-0 transition-colors", isExpanded ? "text-primary" : "text-muted-foreground")} />
             <div className="flex-1 min-w-0">
               <p className={cn(
                 "text-[10px] font-black uppercase tracking-widest transition-all duration-300",
@@ -88,7 +88,7 @@ export function SearchBar({ className }: { className?: string }) {
                 placeholder={isExpanded ? "Search destinations" : "Search your next escape..."}
                 className={cn(
                   "w-full bg-transparent text-sm font-bold outline-none placeholder:text-muted-foreground/60 transition-all duration-300",
-                  isExpanded ? "mt-0.5" : "text-base"
+                  isExpanded ? "mt-0.5" : "text-sm md:text-base"
                 )}
                 onFocus={() => { setIsExpanded(true); setActive("where"); }}
               />
@@ -143,16 +143,16 @@ export function SearchBar({ className }: { className?: string }) {
 
           {/* Search Button */}
           <div className={cn(
-            "flex items-center px-2 pb-2 md:pb-0 transition-all duration-500",
-            isExpanded ? "h-16 md:h-auto" : "h-auto"
+            "flex items-center transition-all duration-500",
+            isExpanded ? "px-2 pb-2 md:pb-0 h-16 md:h-auto" : "pr-1 h-full"
           )}>
             <Button
               className={cn(
                 "bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-500 shadow-xl shadow-primary/20 flex items-center justify-center gap-2 overflow-hidden",
-                isExpanded ? "w-full md:w-auto md:px-8 h-12 md:h-12 rounded-2xl" : "w-11 h-11 p-0 rounded-full"
+                isExpanded ? "w-full md:w-auto md:px-8 h-12 md:h-12 rounded-2xl" : "w-10 h-10 p-0 rounded-full"
               )}
             >
-              <Search className="h-5 w-5 shrink-0" strokeWidth={3} />
+              <Search className="h-4.5 w-4.5 shrink-0" strokeWidth={3} />
               <span className={cn(
                 "font-black tracking-widest text-xs uppercase transition-all duration-500 whitespace-nowrap",
                 isExpanded ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4 absolute"

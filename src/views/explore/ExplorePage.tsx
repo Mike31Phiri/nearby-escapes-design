@@ -78,35 +78,36 @@ function ExploreContent({ query = "" }: { query?: string }) {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="bg-white border-b border-border/40 pt-12 pb-16">
+        <section className="bg-white border-b border-border/40 pt-16 pb-20">
           <div className="mx-auto max-w-7xl px-4 md:px-6">
-            <div className="max-w-3xl">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary mb-3">Explore</p>
-              <h1 className="text-4xl md:text-5xl font-black tracking-tight text-foreground font-display">
+            <div className="max-w-3xl animate-in fade-in slide-in-from-left-8 duration-700">
+              <p className="text-xs font-black uppercase tracking-[0.2em] text-primary mb-4">Discovery</p>
+              <h1 className="text-4xl md:text-7xl font-black tracking-tight text-foreground font-display leading-tight">
                 {activeCategoryName}
               </h1>
-              <p className="mt-4 text-lg text-muted-foreground font-medium max-w-2xl leading-relaxed">
+              <p className="mt-6 text-xl text-muted-foreground font-medium max-w-2xl leading-relaxed">
                 Discover the best {activeCategoryName.toLowerCase()} across Zambia. Hand-picked and verified for your peace of mind.
               </p>
             </div>
 
             {/* Search & Filter Bar */}
-            <div className="mt-10 flex flex-col gap-4 md:flex-row md:items-center bg-muted/30 p-2 rounded-[1.25rem] border border-border/40">
+            <div className="mt-10 flex flex-row items-center gap-2 bg-muted/20 p-2 rounded-full border border-border/40 shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-700">
               <div className="relative flex-1">
-                <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-muted-foreground/60" />
+                <Search className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60 hidden md:block" />
                 <Input
-                  placeholder={`Search ${activeCategoryName.toLowerCase()}…`}
+                  placeholder={`Search…`}
                   value={filters.query}
                   onChange={(event) => setFilters({ ...filters, query: event.target.value })}
-                  className="pl-11 h-12 rounded-full border-none bg-white shadow-sm font-medium"
+                  className="pl-4 md:pl-12 h-12 rounded-full border-none bg-white shadow-sm font-bold text-sm md:text-lg"
                 />
               </div>
               
-              <div className="flex items-center gap-3 px-2">
+              <div className="flex items-center gap-2 pr-1">
                 <Sheet>
                   <SheetTrigger asChild>
-                    <Button variant="outline" className="h-12 rounded-full px-6 gap-2 border-border/60 bg-white hover:bg-muted/50 font-bold">
-                      <SlidersHorizontal className="h-4 w-4" /> Filters
+                    <Button variant="outline" size="icon" className="h-10 w-10 md:h-14 md:w-auto md:rounded-full md:px-8 gap-2 border-border/60 bg-white hover:bg-muted/50 rounded-full">
+                      <SlidersHorizontal className="h-4 w-4" />
+                      <span className="hidden md:inline font-black uppercase tracking-widest text-xs">Filters</span>
                     </Button>
                   </SheetTrigger>
                   <SheetContent side="left" className="w-80 overflow-y-auto pt-10">
@@ -120,17 +121,19 @@ function ExploreContent({ query = "" }: { query?: string }) {
                   </SheetContent>
                 </Sheet>
                 
-                <Select value={sort} onValueChange={(value) => setSort(value as SortKey)}>
-                  <SelectTrigger className="h-12 w-[180px] rounded-full border-border/60 bg-white font-bold">
-                    <SelectValue placeholder="Sort by" />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-2xl border-border/40 shadow-xl">
-                    <SelectItem value="recommended" className="font-medium">Recommended</SelectItem>
-                    <SelectItem value="price-asc" className="font-medium">Price: Low to High</SelectItem>
-                    <SelectItem value="price-desc" className="font-medium">Price: High to Low</SelectItem>
-                    <SelectItem value="rating" className="font-medium">Top Rated</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="hidden sm:block">
+                  <Select value={sort} onValueChange={(value) => setSort(value as SortKey)}>
+                    <SelectTrigger className="h-14 w-[200px] rounded-full border-border/60 bg-white font-black uppercase tracking-widest text-xs">
+                      <SelectValue placeholder="Sort by" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-2xl border-border/40 shadow-2xl">
+                      <SelectItem value="recommended" className="font-bold">Recommended</SelectItem>
+                      <SelectItem value="price-asc" className="font-bold">Price: Low to High</SelectItem>
+                      <SelectItem value="price-desc" className="font-bold">Price: High to Low</SelectItem>
+                      <SelectItem value="rating" className="font-bold">Top Rated</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
           </div>

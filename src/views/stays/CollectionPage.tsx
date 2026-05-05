@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { MapPin, Star, SlidersHorizontal } from "lucide-react";
+import { MapPin, Star, SlidersHorizontal, ArrowRight } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -50,15 +50,15 @@ export function CollectionPage() {
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
       <main className="flex-1">
-        <header className="relative h-[260px] sm:h-[320px]">
-          <img src={lodge} alt={c.title} className="absolute inset-0 h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-foreground/45" />
-          <div className="relative mx-auto max-w-6xl h-full px-4 md:px-6 flex flex-col justify-end pb-8 text-background">
-            <Badge variant="secondary" className="self-start text-[11px]">
-              Curated
+        <header className="relative h-[400px] sm:h-[500px] overflow-hidden">
+          <img src={lodge} alt={c.title} className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 hover:scale-105" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          <div className="relative mx-auto max-w-7xl h-full px-4 md:px-6 flex flex-col justify-end pb-16 text-background animate-in fade-in slide-in-from-bottom-8 duration-700">
+            <Badge className="self-start bg-primary text-white font-black uppercase tracking-widest text-[10px] px-4 py-1.5 rounded-full mb-4">
+              Curated Selection
             </Badge>
-            <h1 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight">{c.title}</h1>
-            <p className="mt-2 max-w-2xl text-background/85">{c.tagline}</p>
+            <h1 className="text-4xl md:text-7xl font-black tracking-tight font-display leading-tight">{c.title}</h1>
+            <p className="mt-4 max-w-2xl text-lg md:text-xl text-background/90 font-medium leading-relaxed">{c.tagline}</p>
           </div>
         </header>
 
@@ -95,30 +95,35 @@ export function CollectionPage() {
             </div>
           </div>
 
-          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 animate-in fade-in slide-in-from-bottom-4 duration-700">
             {listings.map((l) => (
-              <Link key={l.id} href={`/stays/${l.id}`}>
-                <Card className="overflow-hidden border-border/60 transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-card)]">
-                  <div className="aspect-[4/3]">
-                    <img src={l.image} alt={l.name} className="h-full w-full object-cover" />
+              <Link key={l.id} href={`/stays/${l.id}`} className="group">
+                <Card className="overflow-hidden border-border/60 bg-white rounded-[32px] transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+                  <div className="aspect-[4/3] overflow-hidden">
+                    <img src={l.image} alt={l.name} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
                   </div>
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between gap-2">
+                  <CardContent className="p-8">
+                    <div className="flex items-start justify-between gap-4 mb-4">
                       <div>
-                        <p className="font-semibold">{l.name}</p>
-                        <p className="text-xs text-muted-foreground flex items-center gap-1">
-                          <MapPin className="h-3 w-3" /> {l.location}
+                        <p className="text-xl font-black tracking-tight mb-1">{l.name}</p>
+                        <p className="text-[10px] font-black text-muted-foreground flex items-center gap-1.5 uppercase tracking-widest">
+                          <MapPin className="h-4 w-4 text-primary" /> {l.location}
                         </p>
                       </div>
-                      <span className="text-xs flex items-center gap-1">
-                        <Star className="h-3 w-3 fill-accent text-accent" />
+                      <span className="shrink-0 flex items-center gap-1.5 bg-accent/10 text-accent px-3 py-1 rounded-full text-xs font-black">
+                        <Star className="h-3.5 w-3.5 fill-accent" />
                         {l.rating}
                       </span>
                     </div>
-                    <p className="mt-3 text-sm">
-                      <span className="font-bold">${l.price}</span>
-                      <span className="text-muted-foreground"> / night</span>
-                    </p>
+                    <div className="flex items-center justify-between pt-4 border-t border-border/40">
+                      <p className="text-2xl font-black text-primary">
+                        ${l.price}
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">/ night</span>
+                      </p>
+                      <Button variant="ghost" size="sm" className="rounded-full h-10 w-10 p-0 text-primary hover:bg-primary/5">
+                        <ArrowRight className="h-5 w-5" />
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               </Link>

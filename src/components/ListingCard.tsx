@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Heart } from "lucide-react";
+import { Heart, Star, MapPin } from "lucide-react";
 import type { Listing } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 import { memo, useState } from "react";
@@ -25,51 +25,52 @@ export const ListingCard = memo(function ListingCard({ listing, className }: Lis
       className={cn("group block", className)}
       aria-label={`View details for ${listing.name} in ${listing.location}, priced at $${listing.price} per night`}
     >
-      <div className="relative aspect-[4/3] overflow-hidden rounded-xl mb-3">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-[24px] mb-4 shadow-sm group-hover:shadow-xl transition-shadow duration-500">
         <img
           src={listing.image}
           alt={listing.name}
           loading="lazy"
           decoding="async"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
         <button
           onClick={toggleFavorite}
-          className="absolute top-3 right-3 p-1 transition-transform active:scale-95 z-10"
+          className="absolute top-4 right-4 p-2 rounded-full bg-white/20 backdrop-blur-md transition-all active:scale-90 hover:bg-white/40 z-10"
           aria-label={isFavorited ? "Remove from wishlist" : "Add to wishlist"}
         >
           <Heart
-            className={cn("h-6 w-6 transition-colors", isFavorited ? "fill-primary text-primary" : "fill-black/30 text-white")}
+            className={cn("h-5 w-5 transition-colors", isFavorited ? "fill-primary text-primary" : "text-white")}
           />
         </button>
         {listing.rating >= 4.8 && (
-          <div className="absolute top-3 left-3 rounded bg-background px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-foreground shadow-sm">
-            Top Rated
+          <div className="absolute top-4 left-4 rounded-full bg-primary text-white px-3 py-1 text-[9px] font-black uppercase tracking-widest shadow-lg">
+            Guest Favorite
           </div>
         )}
       </div>
       
-      <div className="flex flex-col">
-        <div className="flex items-start justify-between gap-2">
-          <h3 className="font-semibold text-[15px] leading-snug text-foreground line-clamp-1">{listing.name}</h3>
+      <div className="flex flex-col px-1">
+        <div className="flex items-start justify-between gap-3 mb-1">
+          <h3 className="font-black text-base tracking-tight text-foreground line-clamp-1 group-hover:text-primary transition-colors">{listing.name}</h3>
           
-          <div className="flex items-center gap-1 shrink-0">
-            <div className="flex flex-col items-end mr-1 hidden sm:flex">
-              <span className="text-[10px] font-bold uppercase text-primary leading-none">Exceptional</span>
-              <span className="text-[10px] text-muted-foreground leading-none mt-0.5">{listing.reviews} reviews</span>
-            </div>
-            <div className="flex items-center justify-center bg-primary text-primary-foreground font-bold text-xs rounded px-1.5 py-1 min-w-[28px]">
+          <div className="flex items-center gap-1.5 shrink-0 bg-primary/5 px-2 py-1 rounded-lg">
+            <Star className="h-3.5 w-3.5 fill-primary text-primary" />
+            <span className="font-black text-xs text-primary">
               {listing.rating.toFixed(1)}
-            </div>
+            </span>
           </div>
         </div>
         
-        <p className="text-[15px] text-muted-foreground truncate">{listing.location}</p>
-        <p className="text-[15px] text-muted-foreground truncate">Distance or views here</p>
+        <p className="text-sm text-muted-foreground font-medium flex items-center gap-1 uppercase tracking-wider text-[10px] mb-3">
+          <MapPin className="h-3 w-3 text-primary" /> {listing.location}
+        </p>
         
-        <div className="mt-1 flex items-center gap-1 text-[15px]">
-          <span className="font-semibold text-foreground">${listing.price}</span>
-          <span className="text-foreground">night</span>
+        <div className="flex items-center justify-between border-t border-border/40 pt-3">
+          <p className="text-lg font-black text-foreground">
+            ${listing.price}
+            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1"> / night</span>
+          </p>
+          <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{listing.reviews} reviews</span>
         </div>
       </div>
     </Link>

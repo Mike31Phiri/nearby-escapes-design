@@ -106,4 +106,83 @@ export const listings: Listing[] = [
   },
 ];
 
+export type Package = {
+  id: string;
+  name: string;
+  tagline: string;
+  price: number;
+  rating: number;
+  reviews: number;
+  image: string;
+  duration: string;
+  location: string;
+  description: string;
+  highlights: string[];
+  itinerary: { day: number; title: string; desc: string }[];
+};
+
+export const packages: Package[] = [
+  {
+    id: "luxury-zambezi-escape",
+    name: "Luxury Zambezi Escape",
+    tagline: "4 Days of pure riverside bliss",
+    price: 850,
+    rating: 4.9,
+    reviews: 84,
+    image: "/images/hero-zambia.jpg",
+    duration: "4 Days / 3 Nights",
+    location: "Livingstone",
+    description: "Experience the ultimate luxury on the banks of the Zambezi. This all-inclusive package includes luxury accommodation, private sunset cruises, and a guided tour of the Victoria Falls.",
+    highlights: ["Luxury Riverside Suite", "Private Sunset Cruise", "Victoria Falls Guided Tour", "All-inclusive Dining"],
+    itinerary: [
+      { day: 1, title: "Arrival & Sunset Cruise", desc: "Arrive in Livingstone and check into your luxury lodge. Enjoy a private sunset cruise on the Zambezi." },
+      { day: 2, title: "Victoria Falls Exploration", desc: "Guided tour of the Victoria Falls followed by a scenic helicopter flight." },
+      { day: 3, title: "Leisure & Spa", desc: "A relaxing day with spa treatments and high tea overlooking the river." },
+      { day: 4, title: "Departure", desc: "Enjoy a final breakfast before your transfer to the airport." }
+    ]
+  },
+  {
+    id: "safari-adventure-luangwa",
+    name: "Safari Adventure Luangwa",
+    tagline: "Into the heart of the wild",
+    price: 1200,
+    rating: 4.95,
+    reviews: 126,
+    image: "/images/listing-camp.jpg",
+    duration: "5 Days / 4 Nights",
+    location: "South Luangwa",
+    description: "Immerse yourself in one of Africa's greatest wildlife sanctuaries. Enjoy daily game drives, walking safaris, and luxury tented accommodation.",
+    highlights: ["Big Five Game Drives", "Walking Safaris", "Luxury Tented Camp", "Bush Dinners"],
+    itinerary: [
+      { day: 1, title: "Bush Welcome", desc: "Arrival at the camp and an evening game drive." },
+      { day: 2, title: "The Walking Safari", desc: "Experience the wild on foot with expert guides." },
+      { day: 3, title: "Game Drives", desc: "Morning and afternoon game drives to spot leopards and lions." },
+      { day: 4, title: "Cultural Experience", desc: "Visit a local village and enjoy a traditional bush dinner." },
+      { day: 5, title: "Farewell Drive", desc: "Early morning drive before departure." }
+    ]
+  },
+  {
+    id: "kafue-wilderness-trek",
+    name: "Kafue Wilderness Trek",
+    tagline: "Remote, wild, and untouched",
+    price: 950,
+    rating: 4.8,
+    reviews: 42,
+    image: "/images/listing-lodge.jpg",
+    duration: "6 Days / 5 Nights",
+    location: "Kafue",
+    description: "Explore the vast and diverse landscapes of Kafue National Park. This package is perfect for nature lovers and those seeking solitude.",
+    highlights: ["Remote Wilderness", "Boat Safaris", "Bird Watching", "Eco-friendly Lodging"],
+    itinerary: [
+      { day: 1, title: "Journey to Kafue", desc: "Travel to the remote heart of the park." },
+      { day: 2, title: "River Exploration", desc: "Boat safari on the Kafue River." },
+      { day: 3, title: "Savannah Drive", desc: "Full day drive to the Busanga Plains." },
+      { day: 4, title: "Birding Safari", desc: "Expert-led bird watching session." },
+      { day: 5, title: "Nature Walk", desc: "Guided walk focused on smaller flora and fauna." },
+      { day: 6, title: "Departure", desc: "Scenic flight back to Lusaka." }
+    ]
+  }
+];
+
 export const getListing = (id: string) => listings.find((l) => l.id === id);
+export const getPackage = (id: string) => packages.find((p) => p.id === id);

@@ -76,36 +76,36 @@ export function AdminDashboardPage() {
     switch (activeTab) {
       case "admin":
         return (
-          <div className="space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-500">
+          <div className="space-y-12 animate-in fade-in slide-in-from-bottom-2 duration-500">
             {/* Stats Grid */}
-            <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
               {stats.map((stat) => (
-                <Card key={stat.label} className="border-none shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl group bg-white overflow-hidden">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between mb-4">
+                <Card key={stat.label} className="border-border/40 shadow-sm hover:shadow-xl transition-all duration-500 rounded-[32px] group bg-white overflow-hidden hover:-translate-y-1">
+                  <CardContent className="p-8">
+                    <div className="flex items-center justify-between mb-6">
                       <div className={cn(
-                        "flex h-10 w-10 items-center justify-center rounded-xl transition-transform group-hover:scale-110",
+                        "flex h-14 w-14 items-center justify-center rounded-2xl transition-transform group-hover:scale-110 shadow-sm",
                         stat.color === "blue" && "bg-blue-50 text-blue-600",
                         stat.color === "indigo" && "bg-indigo-50 text-indigo-600",
                         stat.color === "emerald" && "bg-emerald-50 text-emerald-600",
                         stat.color === "orange" && "bg-orange-50 text-orange-600",
                       )}>
-                        <stat.icon className="h-5 w-5" />
+                        <stat.icon className="h-6 w-6" />
                       </div>
-                      <div className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                      <div className="text-[10px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
                         {stat.change}
                       </div>
                     </div>
-                    <p className="text-2xl font-black tracking-tight">{stat.value}</p>
-                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1">{stat.label}</p>
-                    <div className="mt-4 h-8 w-full flex items-end gap-1 opacity-40 group-hover:opacity-100 transition-opacity">
+                    <p className="text-4xl font-black tracking-tight">{stat.value}</p>
+                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mt-2">{stat.label}</p>
+                    <div className="mt-8 h-10 w-full flex items-end gap-1.5 opacity-20 group-hover:opacity-100 transition-opacity">
                       {[...Array(8)].map((_, i) => (
-                        <div key={i} className={cn("flex-1 rounded-t-sm", 
+                        <div key={i} className={cn("flex-1 rounded-t-md", 
                           stat.color === "blue" && "bg-blue-400",
                           stat.color === "indigo" && "bg-indigo-400",
                           stat.color === "emerald" && "bg-emerald-400",
                           stat.color === "orange" && "bg-orange-400"
-                        )} style={{ height: `${Math.random() * 100}%` }} />
+                        )} style={{ height: `${20 + Math.random() * 80}%` }} />
                       ))}
                     </div>
                   </CardContent>
@@ -115,12 +115,12 @@ export function AdminDashboardPage() {
 
             <div className="space-y-10">
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold tracking-tight font-display">Recents</h2>
-                <Button variant="ghost" size="sm" className="text-xs font-bold text-primary">View All Activities</Button>
+                <h2 className="text-3xl font-black tracking-tight font-display">Latest Activity</h2>
+                <Button variant="ghost" size="sm" className="text-xs font-black uppercase tracking-widest text-primary hover:underline">View All Activities</Button>
               </div>
 
               {/* Recents 2x2 Grid */}
-              <div className="grid gap-6 md:grid-cols-2">
+              <div className="grid gap-8 md:grid-cols-2">
                 <div onClick={() => setActiveTab("bookings")} className="cursor-pointer group/card">
                   <RecentsCard title="Booking Requests" icon={CalendarCheck} iconColor="text-blue-600" items={bookingRequests} />
                 </div>

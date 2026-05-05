@@ -70,125 +70,138 @@ export function InboxPage() {
   const active = threads.find((t) => t.id === activeId)!;
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col bg-[#FAFBFC]">
       <Navbar />
-      <main className="mx-auto w-full max-w-6xl flex-1 px-0 md:px-6 md:py-8">
-        <div className="grid h-[calc(100vh-160px)] md:rounded-2xl md:border md:border-border md:overflow-hidden md:grid-cols-[320px_1fr]">
+      <main className="mx-auto w-full max-w-7xl flex-1 px-0 md:px-6 py-12">
+        <div className="grid h-[calc(100vh-180px)] md:rounded-[40px] md:border md:border-border/60 md:overflow-hidden md:grid-cols-[380px_1fr] bg-white shadow-2xl animate-in fade-in zoom-in-95 duration-500">
           <aside
-            className={`${showList ? "block" : "hidden"} md:block border-r border-border bg-card`}
+            className={`${showList ? "block" : "hidden"} md:block border-r border-border/40 bg-white`}
           >
-            <div className="p-4 space-y-3 border-b border-border">
+            <div className="p-8 space-y-6 border-b border-border/40">
               <div className="flex items-center justify-between">
-                <h1 className="text-lg font-bold tracking-tight">Inbox</h1>
-                <Badge variant="secondary" className="text-[11px]">
+                <h1 className="text-3xl font-black tracking-tight font-display">Inbox</h1>
+                <Badge className="bg-primary/10 text-primary border-none font-black text-[10px] uppercase tracking-widest px-3 py-1 rounded-full">
                   {threads.reduce((s, t) => s + t.unread, 0)} unread
                 </Badge>
               </div>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input className="pl-9 h-9" placeholder="Search messages" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
+                <Input className="pl-10 h-12 rounded-2xl border-muted/30 bg-muted/20 font-medium text-sm" placeholder="Search conversations…" />
               </div>
-              <Tabs defaultValue="all">
-                <TabsList className="w-full">
-                  <TabsTrigger value="all" className="flex-1">
+              <Tabs defaultValue="all" className="w-full">
+                <TabsList className="w-full bg-muted/30 p-1 rounded-xl h-11">
+                  <TabsTrigger value="all" className="flex-1 rounded-lg font-black text-[10px] uppercase tracking-widest">
                     All
                   </TabsTrigger>
-                  <TabsTrigger value="trips" className="flex-1">
+                  <TabsTrigger value="trips" className="flex-1 rounded-lg font-black text-[10px] uppercase tracking-widest">
                     Trips
                   </TabsTrigger>
-                  <TabsTrigger value="support" className="flex-1">
+                  <TabsTrigger value="support" className="flex-1 rounded-lg font-black text-[10px] uppercase tracking-widest">
                     Support
                   </TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>
             <ScrollArea className="h-full">
-              {threads.map((t) => (
-                <button
-                  key={t.id}
-                  onClick={() => {
-                    setActiveId(t.id);
-                    setShowList(false);
-                  }}
-                  className={`w-full text-left p-4 border-b border-border flex gap-3 transition hover:bg-muted/50 ${
-                    activeId === t.id ? "bg-muted/50" : ""
-                  }`}
-                >
-                  <Avatar className="h-10 w-10 shrink-0">
-                    <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
-                      {t.name
-                        .split(" ")
-                        .slice(0, 2)
-                        .map((w) => w[0])
-                        .join("")}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="font-medium text-sm truncate">{t.name}</p>
-                      <span className="text-[11px] text-muted-foreground shrink-0">{t.time}</span>
+              <div className="divide-y divide-border/40">
+                {threads.map((t) => (
+                  <button
+                    key={t.id}
+                    onClick={() => {
+                      setActiveId(t.id);
+                      setShowList(false);
+                    }}
+                    className={`w-full text-left p-6 flex gap-4 transition-all hover:bg-muted/30 ${
+                      activeId === t.id ? "bg-primary/5 border-r-4 border-r-primary" : ""
+                    }`}
+                  >
+                    <Avatar className="h-12 w-12 shrink-0 border-2 border-white shadow-sm">
+                      <AvatarFallback className="bg-primary text-primary-foreground text-xs font-black">
+                        {t.name
+                          .split(" ")
+                          .slice(0, 2)
+                          .map((w) => w[0])
+                          .join("")}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-2 mb-1">
+                        <p className="font-bold text-base truncate">{t.name}</p>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 shrink-0">{t.time}</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground font-medium truncate leading-relaxed">{t.snippet}</p>
+                      {t.unread > 0 && (
+                        <div className="mt-2 flex">
+                          <span className="bg-primary text-white text-[9px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded-full">{t.unread} new messages</span>
+                        </div>
+                      )}
                     </div>
-                    <p className="text-xs text-muted-foreground truncate">{t.snippet}</p>
-                    {t.unread > 0 && (
-                      <Badge className="mt-1 text-[10px] h-4 px-1.5">{t.unread} new</Badge>
-                    )}
-                  </div>
-                </button>
-              ))}
+                  </button>
+                ))}
+              </div>
             </ScrollArea>
           </aside>
 
-          <section className={`${showList ? "hidden md:flex" : "flex"} flex-col bg-background`}>
-            <div className="p-4 border-b border-border flex items-center gap-3">
-              <Button
-                size="icon"
-                variant="ghost"
-                className="md:hidden"
-                onClick={() => setShowList(true)}
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </Button>
-              <Avatar className="h-9 w-9">
-                <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
-                  {active.name
-                    .split(" ")
-                    .slice(0, 2)
-                    .map((w) => w[0])
-                    .join("")}
-                </AvatarFallback>
-              </Avatar>
-              <div className="min-w-0 flex-1">
-                <p className="font-semibold text-sm truncate">{active.name}</p>
-                <p className="text-xs text-muted-foreground">{active.role}</p>
+          <section className={`${showList ? "hidden md:flex" : "flex"} flex-col bg-white`}>
+            <div className="p-6 border-b border-border/40 flex items-center justify-between bg-white/50 backdrop-blur-md">
+              <div className="flex items-center gap-4">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="md:hidden rounded-full h-10 w-10"
+                  onClick={() => setShowList(true)}
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </Button>
+                <Avatar className="h-12 w-12 border-2 border-white shadow-sm">
+                  <AvatarFallback className="bg-primary text-primary-foreground text-sm font-black">
+                    {active.name
+                      .split(" ")
+                      .slice(0, 2)
+                      .map((w) => w[0])
+                      .join("")}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="min-w-0">
+                  <p className="font-black text-lg tracking-tight truncate leading-none mb-1">{active.name}</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{active.role}</p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                 <Button variant="outline" size="sm" className="rounded-full font-black text-[10px] uppercase tracking-widest px-4 border-border/60">Details</Button>
               </div>
             </div>
 
-            <div className="px-4 py-3 border-b border-border flex flex-wrap gap-3 text-xs text-muted-foreground bg-muted/30">
-              <span className="flex items-center gap-1">
-                <MapPin className="h-3 w-3" /> {active.listing}
+            <div className="px-6 py-4 border-b border-border/40 flex flex-wrap gap-6 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 bg-[#FAFBFC]">
+              <span className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-primary" strokeWidth={3} /> {active.listing}
               </span>
-              <span className="flex items-center gap-1">
-                <Calendar className="h-3 w-3" /> {active.dates}
+              <span className="flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-primary" strokeWidth={3} /> {active.dates}
               </span>
             </div>
 
-            <ScrollArea className="flex-1 p-4">
-              <div className="space-y-3 max-w-2xl mx-auto">
+            <ScrollArea className="flex-1 p-8">
+              <div className="space-y-6 max-w-3xl mx-auto">
+                <div className="flex justify-center my-8">
+                   <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 bg-muted/20 px-4 py-1.5 rounded-full">Conversation Started</span>
+                </div>
                 {active.messages.map((m, i) => (
                   <div
                     key={i}
-                    className={`flex ${m.from === "me" ? "justify-end" : "justify-start"}`}
+                    className={`flex ${m.from === "me" ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-2 duration-300`}
+                    style={{ animationDelay: `${i * 100}ms` }}
                   >
                     <div
-                      className={`max-w-[78%] rounded-2xl px-4 py-2.5 text-sm ${
+                      className={`max-w-[70%] rounded-[24px] px-6 py-4 text-sm font-medium leading-relaxed shadow-sm ${
                         m.from === "me"
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-card border border-border"
+                          ? "bg-primary text-primary-foreground rounded-tr-none"
+                          : "bg-muted/20 border border-border/40 text-foreground rounded-tl-none"
                       }`}
                     >
                       <p>{m.text}</p>
                       <p
-                        className={`mt-1 text-[10px] ${m.from === "me" ? "text-primary-foreground/70" : "text-muted-foreground"}`}
+                        className={`mt-2 text-[9px] font-black uppercase tracking-widest ${m.from === "me" ? "text-primary-foreground/60 text-right" : "text-muted-foreground/60"}`}
                       >
                         {m.time}
                       </p>
@@ -198,27 +211,29 @@ export function InboxPage() {
               </div>
             </ScrollArea>
 
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (!draft.trim()) return;
-                setDraft("");
-              }}
-              className="border-t border-border p-3 flex items-center gap-2"
-            >
-              <Button type="button" size="icon" variant="ghost">
-                <Paperclip className="h-4 w-4" />
-              </Button>
-              <Input
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
-                placeholder="Write a message…"
-                className="flex-1"
-              />
-              <Button type="submit" size="icon" disabled={!draft.trim()}>
-                <Send className="h-4 w-4" />
-              </Button>
-            </form>
+            <div className="p-6 bg-white border-t border-border/40">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (!draft.trim()) return;
+                  setDraft("");
+                }}
+                className="bg-muted/20 border border-border/40 rounded-[28px] p-2 flex items-center gap-3 focus-within:ring-2 ring-primary/20 transition-all"
+              >
+                <Button type="button" size="icon" variant="ghost" className="rounded-full h-10 w-10 text-muted-foreground hover:text-primary transition-colors">
+                  <Paperclip className="h-5 w-5" />
+                </Button>
+                <Input
+                  value={draft}
+                  onChange={(e) => setDraft(e.target.value)}
+                  placeholder="Type a message…"
+                  className="flex-1 border-none bg-transparent focus-visible:ring-0 shadow-none font-medium placeholder:text-muted-foreground/40"
+                />
+                <Button type="submit" size="icon" disabled={!draft.trim()} className="rounded-full h-10 w-10 bg-primary hover:bg-primary/90 text-white shadow-lg transition-transform active:scale-90">
+                  <Send className="h-4 w-4" />
+                </Button>
+              </form>
+            </div>
           </section>
         </div>
       </main>

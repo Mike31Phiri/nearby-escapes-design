@@ -21,11 +21,11 @@ export function AuthCard({
         </Link>
       </div>
       <div className="flex-1 flex items-center justify-center px-4 pb-12">
-        <div className="w-full max-w-md">
-          <div className="rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-card)]">
-            <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
-            {subtitle && <p className="mt-1.5 text-sm text-muted-foreground">{subtitle}</p>}
-            <div className="mt-6">{children}</div>
+        <div className="w-full max-w-md animate-in fade-in zoom-in duration-500">
+          <div className="rounded-[40px] border border-border/60 bg-card p-10 shadow-2xl">
+            <h1 className="text-3xl font-black tracking-tight">{title}</h1>
+            {subtitle && <p className="mt-2 text-base text-muted-foreground font-medium">{subtitle}</p>}
+            <div className="mt-8">{children}</div>
           </div>
           {footer && <div className="mt-5 text-center text-sm text-muted-foreground">{footer}</div>}
         </div>

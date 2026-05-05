@@ -73,13 +73,15 @@ export function SiteHeader({ className }: { className?: string }) {
         {/* Right side nav */}
         <div className="flex items-center justify-end gap-2 shrink-0">
 
-          {/* Become a Host — visible on all sizes */}
-          <Link
-            href="/host"
-            className="text-sm font-semibold hover:bg-muted/50 rounded-full px-4 py-2 transition-colors whitespace-nowrap"
-          >
-            Become a Host
-          </Link>
+          {/* Become a Host — visible on all sizes ONLY when logged in */}
+          {user && (
+            <Link
+              href="/host/become-a-host"
+              className="text-sm font-semibold hover:bg-muted/50 rounded-full px-4 py-2 transition-colors whitespace-nowrap"
+            >
+              Become a Host
+            </Link>
+          )}
 
           {!user ? (
             <div className="hidden sm:flex items-center gap-2">
@@ -153,7 +155,9 @@ export function SiteHeader({ className }: { className?: string }) {
                 </MobileGroup>
 
                 <MobileGroup title="Hosting">
-                  <MobileRowLink href="/host" onSelect={() => handleNavClick("/host")} icon={Home} label="Become a Host" />
+                  {user && (
+                    <MobileRowLink href="/host/become-a-host" onSelect={() => handleNavClick("/host/become-a-host")} icon={Home} label="Become a Host" />
+                  )}
                   {user && (
                     <MobileRowLink href="/host" onSelect={() => handleNavClick("/host")} icon={SettingsIcon} label="Host dashboard" />
                   )}

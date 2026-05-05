@@ -78,66 +78,69 @@ export function AccountPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 md:px-6 md:py-12">
-        <header className="max-w-3xl">
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary">Account</p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">Your account</h1>
-          <p className="mt-3 text-base text-muted-foreground">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-12 md:px-6 md:py-20">
+        <header className="max-w-3xl mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Account</p>
+          <h1 className="mt-4 text-4xl md:text-6xl font-black tracking-tight">Your account</h1>
+          <p className="mt-4 text-lg text-muted-foreground font-medium">
             Manage identity, payments, notifications and security from one place.
           </p>
         </header>
 
-        <section className="mt-8 grid gap-3 sm:grid-cols-3">
-          <Card className="border-border/60">
-            <CardContent className="p-5">
-              <p className="text-xs uppercase tracking-widest text-muted-foreground">
+        <section className="grid gap-6 sm:grid-cols-3 mb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <Card className="border-border/60 shadow-sm rounded-[32px] overflow-hidden group hover:shadow-md transition-all">
+            <CardContent className="p-8">
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">
                 Profile readiness
               </p>
-              <p className="mt-1 text-2xl font-bold">82%</p>
-              <p className="text-xs text-muted-foreground">Add ID to reach 100%</p>
+              <p className="text-3xl font-black text-primary">82%</p>
+              <div className="mt-4 h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                <div className="h-full bg-primary rounded-full" style={{ width: "82%" }} />
+              </div>
+              <p className="mt-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Add ID to reach 100%</p>
             </CardContent>
           </Card>
-          <Card className="border-border/60">
-            <CardContent className="p-5">
-              <p className="text-xs uppercase tracking-widest text-muted-foreground">
+          <Card className="border-border/60 shadow-sm rounded-[32px] overflow-hidden group hover:shadow-md transition-all">
+            <CardContent className="p-8">
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">
                 Saved settings
               </p>
-              <p className="mt-1 text-2xl font-bold">7</p>
-              <p className="text-xs text-muted-foreground">Last updated today</p>
+              <p className="text-3xl font-black">7</p>
+              <p className="mt-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider italic">Last updated today</p>
             </CardContent>
           </Card>
-          <Card className="border-border/60">
-            <CardContent className="p-5">
-              <p className="text-xs uppercase tracking-widest text-muted-foreground">
+          <Card className="border-border/60 shadow-sm rounded-[32px] overflow-hidden group hover:shadow-md transition-all">
+            <CardContent className="p-8">
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">
                 Security checks
               </p>
-              <p className="mt-1 text-2xl font-bold">3 / 5</p>
-              <p className="text-xs text-muted-foreground">Enable 2-step to improve</p>
+              <p className="text-3xl font-black text-amber-600">3 / 5</p>
+              <p className="mt-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Enable 2-step to improve</p>
             </CardContent>
           </Card>
         </section>
 
-        <section className="mt-8 grid gap-3 md:grid-cols-2">
+        <section className="grid gap-4 md:grid-cols-2 animate-in fade-in slide-in-from-bottom-8 duration-700">
           {sections.map(({ to, icon: Icon, title, description, status }) => (
             <Link
               key={to}
               href={to}
-              className="group rounded-2xl border border-border bg-card p-5 transition hover:border-primary/40"
+              className="group rounded-[32px] border border-border/60 bg-card p-8 transition-all hover:border-primary/40 hover:shadow-xl hover:-translate-y-1"
             >
-              <div className="flex items-start gap-4">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary">
-                  <Icon className="h-5 w-5" />
+              <div className="flex items-start gap-6">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary/5 text-primary group-hover:scale-110 transition-transform">
+                  <Icon className="h-6 w-6" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between gap-2">
-                    <h2 className="font-semibold tracking-tight">{title}</h2>
-                    <Badge variant="secondary" className="shrink-0 text-[11px]">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <h2 className="text-xl font-bold tracking-tight">{title}</h2>
+                    <span className="shrink-0 text-[10px] font-black uppercase tracking-widest bg-muted/50 px-3 py-1 rounded-full text-muted-foreground">
                       {status}
-                    </Badge>
+                    </span>
                   </div>
-                  <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+                  <p className="text-sm text-muted-foreground font-medium leading-relaxed">{description}</p>
                 </div>
-                <ChevronRight className="h-4 w-4 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-foreground" />
+                <ChevronRight className="h-5 w-5 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary mt-1" />
               </div>
             </Link>
           ))}
