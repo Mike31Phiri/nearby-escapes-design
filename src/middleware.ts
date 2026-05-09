@@ -1,69 +1,53 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-<<<<<<< HEAD
-const PROTECTED_ROUTES = ["/profile", "/host", "/inbox", "/booking", "/account"];
+// Paths that require authentication
+const PROTECTED_ROUTES = [
+  "/profile",
+  "/account",
+  "/inbox",
+  "/booking",
+  "/checkout",
+  "/collections",
+  "/host"
+];
+
+// Paths that require admin role
+const ADMIN_ROUTES = ["/admin"];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const session = request.cookies.get("ne.session")?.value;
   const role = request.cookies.get("ne.role")?.value;
 
-  // Guard admin routes
-  if (pathname.startsWith("/admin")) {
-    if (role === "admin") return NextResponse.next();
-    return NextResponse.redirect(new URL("/", request.url));
-=======
-// Paths that require authentication
-const protectedPaths = [
-  "/account",
-  "/admin",
-  "/booking",
-  "/checkout",
-  "/host",
-  "/inbox",
-  "/profile"
-];
-
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  
-  // Check if it's a protected path
-  const isProtectedPath = protectedPaths.some(path => pathname.startsWith(path));
-  
-  if (isProtectedPath) {
-    const session = request.cookies.get("ne.session")?.value;
-    
-    // Redirect to register/login if no session
+  // 1. Guard Admin Routes
+  const isAdminRoute = ADMIN_ROUTES.some((route) => pathname.startsWith(route));
+  if (isAdminRoute) {
+    // If no session or not an admin, redirect to home or login
     if (!session) {
-      return NextResponse.redirect(new URL("/register", request.url));
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(loginUrl);
     }
-    
-    // Admin specific check
-    if (pathname.startsWith("/admin")) {
-      const role = request.cookies.get("ne.role")?.value;
-      if (role !== "admin") {
-        return NextResponse.redirect(new URL("/", request.url));
-      }
+    if (role !== "admin") {
+      return NextResponse.redirect(new URL("/", request.url));
     }
->>>>>>> e3378f9791f92d62290a9cdd2efb69f29fde11d8
+    return NextResponse.next();
   }
 
-  // Guard protected routes — redirect to login if no session
-  const isProtected = PROTECTED_ROUTES.some((r) => pathname.startsWith(r));
-  if (isProtected && !session) {
+  // 2. Guard Protected Routes
+  const isProtectedRoute = PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
+  if (isProtectedRoute && !session) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
+  // 3. Allow everything else
   return NextResponse.next();
 }
 
 export const config = {
-<<<<<<< HEAD
-  matcher: ["/admin/:path*", "/profile/:path*", "/host/:path*", "/inbox/:path*", "/booking/:path*", "/account/:path*"],
-=======
   matcher: [
     /*
      * Match all request paths except for the ones starting with:
@@ -71,8 +55,8 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * - images (public images)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico).*)"
+    "/((?!api|_next/static|_next/image|favicon.ico|images).*)",
   ],
->>>>>>> e3378f9791f92d62290a9cdd2efb69f29fde11d8
 };

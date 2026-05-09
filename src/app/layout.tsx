@@ -3,6 +3,8 @@ import "../styles.css";
 import { AuthProvider } from "@/lib/auth";
 import { Toaster } from "@/components/ui/sonner";
 import { CookieConsent } from "@/components/CookieConsent";
+import { RouteProgressBar } from "@/components/ui/RouteProgressBar";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Nearby Escapes — Stay, travel, explore Zambia",
@@ -33,6 +35,9 @@ export default function RootLayout({
       </head>
       <body>
         <AuthProvider>
+          <Suspense fallback={null}>
+            <RouteProgressBar />
+          </Suspense>
           {children}
           <Toaster />
           <CookieConsent />

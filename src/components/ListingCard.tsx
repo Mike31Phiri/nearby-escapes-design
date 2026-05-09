@@ -5,6 +5,9 @@ import { Heart, Star, MapPin } from "lucide-react";
 import type { Stay } from "@/types/stay";
 import { cn } from "@/lib/utils";
 import { memo, useState } from "react";
+import { useAuth } from "@/lib/auth";
+import { AuthGuardDialog } from "@/components/auth/AuthGuardDialog";
+import { toast } from "sonner";
 
 interface ListingCardProps {
   listing: Stay;
@@ -12,11 +15,25 @@ interface ListingCardProps {
 }
 
 export const ListingCard = memo(function ListingCard({ listing, className }: ListingCardProps) {
+  const { isAuthenticated } = useAuth();
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
 
   const toggleFavorite = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+
+    if (!isAuthenticated) {
+      setShowAuthDialog(true);
+      return;
+    }
+
     setIsFavorited(!isFavorited);
+    if (!isFavorited) {
+      toast.success(`Added ${listing.name} to your collections`, {
+        icon: <Heart className="h-4 w-4 fill-primary text-primary" />,
+      });
+    }
   };
 
   return (
@@ -73,6 +90,12 @@ export const ListingCard = memo(function ListingCard({ listing, className }: Lis
           <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{listing.reviews} reviews</span>
         </div>
       </div>
+      <AuthGuardDialog 
+        isOpen={showAuthDialog} 
+        onClose={() => setShowAuthDialog(false)} 
+        title="Save to your collections"
+        description="Sign in to save this property and access it from any device."
+      />
     </Link>
   );
 });

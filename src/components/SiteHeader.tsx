@@ -41,11 +41,15 @@ export function SiteHeader({ className }: { className?: string }) {
     ? user.fullName.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase()
     : "";
 
-  const handleLogout = useCallback(() => {
+  const handleLogout = useCallback(async () => {
     setOpen(false);
-    logout();
-    router.push("/");
-    announceToScreenReader("You have been signed out");
+    try {
+      await logout();
+      router.push("/");
+      router.refresh(); // Ensure RSC are updated
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
   }, [logout, router]);
 
   const handleNavClick = useCallback(
@@ -139,15 +143,18 @@ export function SiteHeader({ className }: { className?: string }) {
                   {user && (
                     <>
                       <MobileRowLink href="/profile" onSelect={() => handleNavClick("/profile")} icon={UserCircle} label="Manage account" />
-                      <MobileRowLink href="/account/bookings" onSelect={() => handleNavClick("/account/bookings")} icon={Briefcase} label="Bookings & Trips" />
+                      <MobileRowLink href="/account/bookings" onSelect={() => handleNavClick("/account/bookings")} icon={Briefcase} label="My Bookings" />
+                      <MobileRowLink href="/collections" onSelect={() => handleNavClick("/collections")} icon={MapPin} label="Saved Collections" />
                     </>
                   )}
-                  <MobileRowLink href="/gems" onSelect={() => handleNavClick("/gems")} icon={MapPin} label="Saved Lists" />
+                  {user?.role === "admin" && (
+                    <MobileRowLink href="/admin" onSelect={() => handleNavClick("/admin")} icon={SettingsIcon} label="Admin Dashboard" />
+                  )}
                 </MobileGroup>
 
                 <MobileGroup title="Hosting">
-                  {user?.role === "guest" && (
-                    <MobileRowLink href="/host/become-a-host" onSelect={() => handleNavClick("/host/become-a-host")} icon={Home} label="Become a Host" />
+                  {user && user.role === "guest" && (
+                    <MobileRowLink href="/host/become-a-host" onSelect={() => handleNavClick("/host/become-a-host")} icon={Home} label="List your property" />
                   )}
                   {user?.role === "host" && (
                     <MobileRowLink href="/host" onSelect={() => handleNavClick("/host")} icon={SettingsIcon} label="Host dashboard" />

@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { login as apiLogin, register as apiRegister, logout as apiLogout, forgotPassword as apiForgotPassword, resetPassword as apiResetPassword, getSession } from "@/api/auth";
 import { updateCurrentUser } from "@/api/users";
+import { toast } from "sonner";
 
 export type Role = "guest" | "host" | "admin";
 
@@ -47,19 +48,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user,
       isAuthenticated: !!user,
       async login(email, password) {
-        const u = await apiLogin({ email, password });
-        document.cookie = `ne.role=${u.role}; path=/; max-age=86400`;
-        setUser(u);
+        try {
+          const u = await apiLogin({ email, password });
+          document.cookie = `ne.role=${u.role}; path=/; max-age=86400; samesite=lax`;
+          document.cookie = `ne.session=true; path=/; max-age=86400; samesite=lax`;
+          setUser(u);
+          toast.success(`Welcome back, ${u.fullName}!`);
+        } catch (error: any) {
+          toast.error(error.message || "Failed to sign in. Please check your credentials.");
+          throw error;
+        }
       },
       async register({ email, password, fullName, phone, location }) {
-        const u = await apiRegister({ email, password, fullName, phone, location });
-        document.cookie = `ne.role=${u.role}; path=/; max-age=86400`;
-        setUser(u);
+        try {
+          const u = await apiRegister({ email, password, fullName, phone, location });
+          document.cookie = `ne.role=${u.role}; path=/; max-age=86400; samesite=lax`;
+          document.cookie = `ne.session=true; path=/; max-age=86400; samesite=lax`;
+          setUser(u);
+          toast.success("Account created successfully!");
+        } catch (error: any) {
+          toast.error(error.message || "Failed to create account.");
+          throw error;
+        }
       },
       async logout() {
-        await apiLogout();
-        document.cookie = "ne.role=; path=/; max-age=0";
-        setUser(null);
+        try {
+          await apiLogout();
+          document.cookie = "ne.role=; path=/; max-age=0";
+          document.cookie = "ne.session=; path=/; max-age=0";
+          setUser(null);
+          toast.info("You have been signed out.");
+        } catch (error) {
+          // Even if API logout fails, clear local state
+          document.cookie = "ne.role=; path=/; max-age=0";
+          document.cookie = "ne.session=; path=/; max-age=0";
+          setUser(null);
+        }
       },
       async requestPasswordReset(email) {
         await apiForgotPassword({ email });
