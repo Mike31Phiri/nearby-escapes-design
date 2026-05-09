@@ -7,7 +7,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SearchBar } from "@/components/explore/SearchBar";
 import { ListingCard } from "@/components/ListingCard";
-import { listings } from "@/lib/mock-data";
+import { mockStays, mockTransport, mockExperiences, mockGems, mockPackages, mockDestinations } from "@/lib/mock-data";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -23,58 +23,18 @@ const categories = [
 
 type CategoryId = (typeof categories)[number]["id"];
 
-const popularRoutes = [
-  {
-    id: "lusaka-livingstone",
-    from: "Lusaka",
-    to: "Livingstone",
-    duration: "6h 30m",
-    price: 180,
-    operator: "Mazhandu Family Bus",
-    departures: "4 daily",
-    image: "https://images.pexels.com/photos/2166936/pexels-photo-2166936?auto=compress&fit=crop&w=400&h=250",
-  },
-  {
-    id: "lusaka-kitwe",
-    from: "Lusaka",
-    to: "Kitwe",
-    duration: "7h",
-    price: 200,
-    operator: "Power Tools",
-    departures: "3 daily",
-    image: "https://images.pexels.com/photos/2199357/pexels-photo-2199357?auto=compress&fit=crop&w=400&h=250",
-  },
-  {
-    id: "lusaka-chipata",
-    from: "Lusaka",
-    to: "Chipata",
-    duration: "5h 45m",
-    price: 160,
-    operator: "Jonda Bus",
-    departures: "2 daily",
-    image: "https://images.pexels.com/photos/2422533/pexels-photo-2422533?auto=compress&fit=crop&w=400&h=250",
-  },
-];
-
-const attractions = [
-  { id: "vic-falls", name: "Victoria Falls", location: "Livingstone", rating: 4.9, reviews: 1240, price: 35, image: "https://images.pexels.com/photos/2166936/pexels-photo-2166936?auto=compress&fit=crop&w=400&h=300" },
-  { id: "south-luangwa", name: "South Luangwa Safari", location: "Chipata", rating: 4.8, reviews: 876, price: 120, image: "https://images.pexels.com/photos/2199357/pexels-photo-2199357?auto=compress&fit=crop&w=400&h=300" },
-  { id: "kafue-park", name: "Kafue National Park", location: "Kafue", rating: 4.7, reviews: 543, price: 80, image: "https://images.pexels.com/photos/2422533/pexels-photo-2422533?auto=compress&fit=crop&w=400&h=300" },
-  { id: "lower-zambezi", name: "Lower Zambezi Canoe", location: "Lower Zambezi", rating: 4.9, reviews: 312, price: 95, image: "https://images.pexels.com/photos/2166936/pexels-photo-2166936?auto=compress&fit=crop&w=400&h=300" },
-];
-
-const gems = [
-  { id: "mutinondo", name: "Mutinondo Wilderness", location: "Mpika", rating: 5.0, reviews: 89, price: 45, image: "https://images.pexels.com/photos/2199357/pexels-photo-2199357?auto=compress&fit=crop&w=400&h=300" },
-  { id: "shiwa-ngandu", name: "Shiwa Ng'andu Estate", location: "Chinsali", rating: 4.9, reviews: 134, price: 60, image: "https://images.pexels.com/photos/2422533/pexels-photo-2422533?auto=compress&fit=crop&w=400&h=300" },
-  { id: "bangweulu", name: "Bangweulu Wetlands", location: "Samfya", rating: 4.8, reviews: 67, price: 55, image: "https://images.pexels.com/photos/2166936/pexels-photo-2166936?auto=compress&fit=crop&w=400&h=300" },
-  { id: "blue-lagoon", name: "Blue Lagoon National Park", location: "Kafue Flats", rating: 4.7, reviews: 45, price: 40, image: "https://images.pexels.com/photos/2199357/pexels-photo-2199357?auto=compress&fit=crop&w=400&h=300" },
-];
-
-const packagesList = [
-  { id: "luxury-zambezi-escape", name: "Luxury Zambezi Escape", location: "Livingstone", rating: 4.9, price: 850, image: "/images/hero-zambia.jpg", duration: "4 Days" },
-  { id: "safari-adventure-luangwa", name: "Safari Adventure Luangwa", location: "South Luangwa", rating: 4.95, price: 1200, image: "/images/listing-camp.jpg", duration: "5 Days" },
-  { id: "kafue-wilderness-trek", name: "Kafue Wilderness Trek", location: "Kafue", rating: 4.8, price: 950, image: "/images/listing-lodge.jpg", duration: "6 Days" },
-];
+const popularRoutes = mockTransport;
+const attractions = mockExperiences;
+const gems = mockGems;
+const packagesList = mockPackages.map((p) => ({
+  id: p.id,
+  name: p.name,
+  location: p.location,
+  rating: p.rating,
+  price: p.price,
+  image: p.image,
+  duration: p.duration.split(" / ")[0],
+}));
 
 const sectionMeta: Record<CategoryId, { heading: string; sub: string; cta: string; href: string }> = {
   stays: { heading: "Popular stays", sub: "Hand-picked lodges, hotels and camps across Zambia", cta: "Explore all stays", href: "/accommodations" },
@@ -172,7 +132,7 @@ export function HomePage() {
         {activeCategory === "stays" && (
           <div className="space-y-16">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-14 stagger-children">
-              {listings.slice(0, 8).map((listing) => (
+              {mockStays.slice(0, 8).map((listing) => (
                 <ListingCard key={listing.id} listing={listing} />
               ))}
             </div>
@@ -305,12 +265,7 @@ export function HomePage() {
           <p className="text-muted-foreground mt-2 text-lg font-medium">Explore the most sought-after locations in Zambia</p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 stagger-children">
-          {[
-            { name: "Livingstone", image: "https://images.pexels.com/photos/2166936/pexels-photo-2166936?auto=compress&fit=crop&w=400&h=400" },
-            { name: "Lusaka", image: "https://images.pexels.com/photos/2422533/pexels-photo-2422533?auto=compress&fit=crop&w=400&h=400" },
-            { name: "South Luangwa", image: "https://images.pexels.com/photos/2199357/pexels-photo-2199357?auto=compress&fit=crop&w=400&h=400" },
-            { name: "Lower Zambezi", image: "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&fit=crop&w=400&h=400" },
-          ].map((dest) => (
+          {mockDestinations.map((dest) => (
             <Link key={dest.name} href={`/search?location=${dest.name}`} className="group block text-center">
               <div className="relative aspect-square overflow-hidden rounded-[32px] mb-4 shadow-sm group-hover:shadow-xl transition-all duration-500">
                 <img src={dest.image} alt={dest.name} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
@@ -331,7 +286,7 @@ export function HomePage() {
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-14 stagger-children">
-          {listings.slice(4, 8).map((listing) => (
+          {mockStays.slice(4, 8).map((listing) => (
             <ListingCard key={listing.id} listing={listing} />
           ))}
         </div>

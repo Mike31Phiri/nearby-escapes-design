@@ -28,90 +28,22 @@ export interface PackageSearchResult {
   category: string;
 }
 
-const mockPackages: PackageSearchResult[] = [
-  {
-    id: "1",
-    name: "Complete Jamaica Experience",
-    description:
-      "7-day all-inclusive package covering the best of Jamaica including beaches, mountains, and cultural experiences.",
-    duration: "7 days / 6 nights",
-    price: 1299,
-    rating: 4.9,
-    reviewCount: 342,
-    location: "Montego Bay & Ocho Rios",
-    imageUrl: "https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=800",
-    highlights: [
-      "Luxury resort accommodation",
-      "Guided tours to Dunn's River Falls",
-      "Sunset catamaran cruise",
-      "Blue Mountain coffee tour",
-      "All meals and drinks included",
-    ],
-    included: [
-      "6 nights accommodation",
-      "Daily breakfast, lunch, and dinner",
-      "Airport transfers",
-      "All guided tours",
-      "Entrance fees",
-      "Professional tour guide",
-    ],
-    category: "All-Inclusive",
-  },
-  {
-    id: "2",
-    name: "Adventure Seeker Package",
-    description:
-      "5-day action-packed adventure featuring zip-lining, river tubing, hiking, and water sports.",
-    duration: "5 days / 4 nights",
-    price: 899,
-    rating: 4.8,
-    reviewCount: 218,
-    location: "Ocho Rios & Port Antonio",
-    imageUrl: "https://images.unsplash.com/photo-1533105079780-92b9be482077?w=800",
-    highlights: [
-      "Zip-lining through rainforest canopy",
-      "River tubing adventure",
-      "Blue Lagoon exploration",
-      "Horseback riding on the beach",
-      "Small group experience",
-    ],
-    included: [
-      "4 nights hotel accommodation",
-      "Daily breakfast",
-      "All adventure activities",
-      "Equipment and safety gear",
-      "Transportation between activities",
-    ],
-    category: "Adventure",
-  },
-  {
-    id: "3",
-    name: "Romantic Getaway",
-    description:
-      "Perfect for couples! 4-day romantic escape with private dinners, spa treatments, and sunset cruises.",
-    duration: "4 days / 3 nights",
-    price: 1599,
-    rating: 5.0,
-    reviewCount: 156,
-    location: "Negril",
-    imageUrl: "https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800",
-    highlights: [
-      "Beachfront suite with ocean view",
-      "Private candlelit dinner on the beach",
-      "Couples spa treatment",
-      "Sunset sailing excursion",
-      "Champagne and chocolates on arrival",
-    ],
-    included: [
-      "3 nights luxury suite",
-      "Daily gourmet breakfast",
-      "One romantic dinner",
-      "Couples massage (60 min)",
-      "Private airport transfers",
-    ],
-    category: "Romance",
-  },
-];
+import { mockPackages as rawPackages } from "@/lib/mock-data";
+
+const mockPackages: PackageSearchResult[] = rawPackages.map((p) => ({
+  id: p.id,
+  name: p.name,
+  description: p.description,
+  duration: p.duration,
+  price: p.price,
+  rating: p.rating,
+  reviewCount: p.reviews,
+  location: p.location,
+  imageUrl: p.image,
+  highlights: p.highlights,
+  included: p.included,
+  category: p.category,
+}));
 
 export function PackageSearchForm({ onSearchResults }: PackageSearchProps) {
   const [destination, setDestination] = useState("");

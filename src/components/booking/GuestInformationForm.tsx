@@ -9,8 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight, User, Mail, Phone, MessageSquare } from "lucide-react";
 
 export function GuestInformationForm() {
-  const { guestInfo, setGuestInfo, setCurrentStep, setIsProcessing, isProcessing } =
-    useBookingStore();
+  const { guestInfo, setGuestInfo, setCurrentStep } = useBookingStore();
 
   const initialGuest = {
     firstName: "",
@@ -24,13 +23,8 @@ export function GuestInformationForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsProcessing(true);
-
-    // Simulate validation
-    setTimeout(() => {
-      setIsProcessing(false);
-      setCurrentStep(3);
-    }, 500);
+    setGuestInfo({ ...guest });
+    setCurrentStep(3);
   };
 
   const handleChange = (field: keyof typeof guest, value: string) => {
@@ -116,7 +110,7 @@ export function GuestInformationForm() {
             </div>
           </div>
 
-          <Button type="submit" className="w-full" size="lg" disabled={isProcessing}>
+          <Button type="submit" className="w-full" size="lg">
             Continue to Payment
             <ChevronRight className="ml-2 h-4 w-4" />
           </Button>

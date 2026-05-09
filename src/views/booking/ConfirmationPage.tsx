@@ -16,12 +16,14 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { useBookingStore } from "@/store/bookingStore";
 import { useBooking } from "@/hooks/useBooking";
 
 export function ConfirmationPage() {
   const { draft, total, nights } = useBooking();
-  const ref = `NE-${Math.floor(100000 + Math.random() * 900000)}`;
-  const stayName = draft?.stayName ?? "Mosi-oa-Tunya Lodge";
+  const { confirmationId, stayDetails } = useBookingStore();
+  const ref = confirmationId ?? "—";
+  const stayName = stayDetails?.listingName ?? draft?.stayName ?? "—";
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -49,7 +51,7 @@ export function ConfirmationPage() {
               <div>
                 <p className="font-semibold">{stayName}</p>
                 <p className="text-xs text-muted-foreground flex items-center gap-1">
-                  <MapPin className="h-3 w-3" /> Livingstone, Zambia
+                  <MapPin className="h-3 w-3" /> {stayDetails?.listingId ? "Zambia" : "—"}
                 </p>
               </div>
               <Badge variant="secondary" className="text-[11px]">
@@ -83,7 +85,7 @@ export function ConfirmationPage() {
                 </AvatarFallback>
               </Avatar>
               <div className="min-w-0 flex-1">
-                <p className="font-semibold">Your host, Chanda</p>
+                <p className="font-semibold">Your host</p>
                 <p className="text-xs text-muted-foreground">Replies in under 30 minutes</p>
               </div>
               <Button asChild size="sm">

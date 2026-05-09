@@ -35,6 +35,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { getListing, listings } from "@/lib/mock-data";
+import type { Stay } from "@/types/stay";
 import { BOOKING_DRAFT_STORAGE_KEY } from "@/store/bookingStore";
 import { ListingCard } from "@/components/ListingCard";
 import { cn } from "@/lib/utils";
@@ -77,13 +78,17 @@ export function StayDetailPage() {
   const [guests, setGuests] = useState(2);
 
   // Gallery Images List
-  const galleryImages = useMemo(() => [
-    stay.image,
-    listings[(listings.indexOf(stay) + 1) % listings.length].image,
-    listings[(listings.indexOf(stay) + 2) % listings.length].image,
-    listings[(listings.indexOf(stay) + 3) % listings.length].image,
-    listings[(listings.indexOf(stay) + 4) % listings.length].image,
-  ], [stay]);
+  const galleryImages = useMemo(() =>
+    (stay as unknown as Stay).images?.length
+      ? (stay as unknown as Stay).images
+      : [
+          stay.image,
+          listings[(listings.indexOf(stay) + 1) % listings.length].image,
+          listings[(listings.indexOf(stay) + 2) % listings.length].image,
+          listings[(listings.indexOf(stay) + 3) % listings.length].image,
+          listings[(listings.indexOf(stay) + 4) % listings.length].image,
+        ]
+  , [stay]);
 
   const [mainImage, setMainImage] = useState(stay.image);
 
@@ -206,9 +211,11 @@ export function StayDetailPage() {
               </div>
             </div>
             <div>
-              <h2 className="text-3xl font-black tracking-tight font-display text-primary">Chanda Mwenya</h2>
+              <h2 className="text-3xl font-black tracking-tight font-display text-primary">
+                {(stay as unknown as Stay).host?.displayName ?? "Nearby Escapes Host"}
+              </h2>
               <p className="text-base font-bold text-muted-foreground uppercase tracking-widest mt-1 flex items-center gap-2">
-                <MapPin className="h-4 w-4" /> Lusaka, Zambia
+                <MapPin className="h-4 w-4" /> {(stay as unknown as Stay).host?.location ?? "Zambia"}
               </p>
             </div>
           </section>

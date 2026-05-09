@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { Heart, Star, MapPin } from "lucide-react";
-import type { Listing } from "@/lib/mock-data";
+import type { Stay } from "@/types/stay";
 import { cn } from "@/lib/utils";
 import { memo, useState } from "react";
 
 interface ListingCardProps {
-  listing: Listing;
+  listing: Stay;
   className?: string;
 }
 

@@ -27,47 +27,21 @@ export interface BusSearchResult {
   to: string;
 }
 
-const mockBusRoutes: BusSearchResult[] = [
-  {
-    id: "1",
-    operator: "Jamaica Express",
-    departureTime: new Date(new Date().setHours(8, 0, 0, 0)),
-    arrivalTime: new Date(new Date().setHours(12, 30, 0, 0)),
-    duration: "4h 30m",
-    price: 45,
-    availableSeats: 23,
-    busType: "Luxury Coach",
-    amenities: ["WiFi", "AC", "USB Charging", "Reclining Seats"],
-    from: "Kingston",
-    to: "Montego Bay",
-  },
-  {
-    id: "2",
-    operator: "Island Shuttle",
-    departureTime: new Date(new Date().setHours(10, 0, 0, 0)),
-    arrivalTime: new Date(new Date().setHours(15, 0, 0, 0)),
-    duration: "5h 0m",
-    price: 35,
-    availableSeats: 15,
-    busType: "Standard",
-    amenities: ["AC", "Storage"],
-    from: "Kingston",
-    to: "Montego Bay",
-  },
-  {
-    id: "3",
-    operator: "Caribbean Routes",
-    departureTime: new Date(new Date().setHours(14, 0, 0, 0)),
-    arrivalTime: new Date(new Date().setHours(18, 15, 0, 0)),
-    duration: "4h 15m",
-    price: 50,
-    availableSeats: 8,
-    busType: "Premium",
-    amenities: ["WiFi", "AC", "USB Charging", "Snacks", "Extra Legroom"],
-    from: "Kingston",
-    to: "Montego Bay",
-  },
-];
+import { mockTransport } from "@/lib/mock-data";
+
+const mockBusRoutes: BusSearchResult[] = mockTransport.map((t) => ({
+  id: t.id,
+  operator: t.operator,
+  departureTime: new Date(`1970-01-01T${t.departureTime}:00`),
+  arrivalTime: new Date(`1970-01-01T${t.arrivalTime}:00`),
+  duration: t.duration,
+  price: t.price,
+  availableSeats: t.availableSeats,
+  busType: t.busType,
+  amenities: t.amenities,
+  from: t.from,
+  to: t.to,
+}));
 
 export function BusSearchForm({ onSearchResults }: BusSearchProps) {
   const [from, setFrom] = useState("Kingston");

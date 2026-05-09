@@ -25,6 +25,9 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { getListing } from "@/lib/mock-data";
+import { createBooking } from "@/api/bookings";
+import { useBookingStore } from "@/store/bookingStore";
+import type { CreateBookingDto } from "@/types/booking";
 
 const transportOptions = [
   {
@@ -62,6 +65,7 @@ export default function BookingPage({
   const guests = params.guests || "2";
 
   const listing = getListing(stayId);
+  const canProceed = !!guestInfo?.firstName && !!guestInfo?.email && !!guestInfo?.phone;
 
   const nights =
     checkIn && checkOut
@@ -80,12 +84,47 @@ export default function BookingPage({
       : 0;
   const total = subtotal + serviceFee + transportCost;
 
+  const { setStayDetails, setBookingConfirmed, guestInfo } = useBookingStore();
+
   async function handleProceed() {
+    const { guestInfo } = useBookingStore.getState();
+
+    if (!guestInfo?.firstName || !guestInfo?.email || !guestInfo?.phone) {
+      toast.error("Please fill in your guest information first.");
+      return;
+    }
+
     setProceeding(true);
-    await new Promise((r) => setTimeout(r, 800));
-    setProceeding(false);
-    toast.success("Redirecting to secure payment...");
-    router.push("/booking/payment");
+    try {
+      const dto: CreateBookingDto = {
+        stayId,
+        checkIn: checkIn || new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10),
+        checkOut: checkOut || new Date(Date.now() + 10 * 86400000).toISOString().slice(0, 10),
+        guests: Number(guests),
+        guestInfo,
+      };
+      const booking = await createBooking(dto);
+      setStayDetails({
+        listingId: booking.stayId,
+        listingName: booking.stayName,
+        listingImage: booking.stayImage,
+        guests: booking.guests,
+        pricePerNight: booking.fees.pricePerNight,
+        nights: booking.fees.nights,
+        subtotal: booking.fees.subtotal,
+        cleaningFee: booking.fees.cleaningFee,
+        serviceFee: booking.fees.serviceFee,
+        taxes: booking.fees.taxes,
+        total: booking.fees.total,
+      });
+      setBookingConfirmed(true, booking.confirmationId);
+      toast.success("Redirecting to secure payment...");
+      router.push("/booking/payment");
+    } catch {
+      toast.error("Failed to create booking. Please try again.");
+    } finally {
+      setProceeding(false);
+    }
   }
 
   return (
@@ -311,7 +350,7 @@ export default function BookingPage({
         <div className="flex items-center gap-3">
           <Button
             onClick={handleProceed}
-            disabled={proceeding}
+            disabled={proceeding || !canProceed}
             className="bg-[image:var(--gradient-hero)] hover:opacity-95"
           >
             {proceeding ? (

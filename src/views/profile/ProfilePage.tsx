@@ -15,15 +15,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { useState, useEffect } from "react";
+import { getUserReviews, type Review } from "@/lib/data";
 import { ListingCard } from "@/components/ListingCard";
-import { listings } from "@/lib/mock-data";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
-
-const reviews = [
-  { id: "r1", from: "Chanda M.", rating: 5, text: "Easy to coordinate with and respectful of house rules. Welcome anytime!", listing: "Mosi-oa-Tunya Lodge", date: "Mar 2026" },
-  { id: "r2", from: "Bwalya K.", rating: 5, text: "Quiet, considerate guest. Left the apartment spotless.", listing: "Skyline Boutique Suite", date: "Jan 2026" },
-  { id: "r3", from: "Mulenga P.", rating: 4, text: "Communicated clearly and arrived on time.", listing: "Luangwa Tented Camp", date: "Nov 2025" },
-];
 
 const mockBookings = [
   {
@@ -89,6 +86,24 @@ const settingsGroups = [
 ];
 
 export function ProfilePage() {
+  const { user, logout } = useAuth();
+  const router = useRouter();
+  const [reviews, setReviews] = useState<Review[]>([]);
+
+  useEffect(() => {
+    if (user?.id) {
+      getUserReviews(user.id).then(setReviews).catch(() => setReviews([]));
+    }
+  }, [user?.id]);
+
+  const initials = user?.fullName
+    ? user.fullName.split(" ").map(p => p[0]).slice(0, 2).join("").toUpperCase()
+    : "?";
+  const displayName = user?.fullName || "Guest";
+  const displayLocation = user?.location || "Zambia";
+  const displayBio = user?.bio || "No bio added yet.";
+  const displayEmail = user?.email || "";
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
@@ -101,14 +116,17 @@ export function ProfilePage() {
                 <div className="relative">
                   <Avatar className="h-24 w-24 bg-primary text-primary-foreground">
                     <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-black">
-                      MP
+                      {initials}
                     </AvatarFallback>
                   </Avatar>
                   <div className="absolute -bottom-1 -right-1 h-6 w-6 bg-emerald-500 rounded-full border-2 border-background" />
                 </div>
-                <h1 className="mt-4 text-xl font-black">Mike Phiri</h1>
+                <h1 className="mt-4 text-xl font-black">{displayName}</h1>
+                {displayEmail && (
+                  <p className="text-xs text-muted-foreground mt-0.5">{displayEmail}</p>
+                )}
                 <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
-                  <MapPin className="h-3.5 w-3.5 text-primary" /> Lusaka, Zambia
+                  <MapPin className="h-3.5 w-3.5 text-primary" /> {displayLocation}
                 </p>
                 <Badge variant="secondary" className="mt-3 text-[11px] font-bold">
                   <BadgeCheck className="h-3 w-3 mr-1 text-primary" /> ID verified
@@ -167,6 +185,7 @@ export function ProfilePage() {
               <TabsList className="bg-muted/50 p-1.5 rounded-2xl h-auto w-full flex-wrap gap-1">
                 {[
                   { value: "bookings", icon: BookOpen, label: "My Bookings" },
+                  { value: "about", icon: MessageCircle, label: "About" },
                   { value: "saved", icon: Heart, label: "Saved" },
                   { value: "reviews", icon: Star, label: "Reviews" },
                   { value: "settings", icon: Settings, label: "Settings" },
@@ -180,6 +199,28 @@ export function ProfilePage() {
                   </TabsTrigger>
                 ))}
               </TabsList>
+
+              {/* ── About ── */}
+              <TabsContent value="about" className="mt-6 space-y-4">
+                <Card className="border-border/60 rounded-3xl shadow-sm">
+                  <CardContent className="p-6">
+                    <h2 className="text-sm font-black tracking-tight mb-3">About me</h2>
+                    <p className="text-sm leading-7 text-muted-foreground">{displayBio}</p>
+                  </CardContent>
+                </Card>
+                <Card className="border-border/60 rounded-3xl shadow-sm">
+                  <CardContent className="p-6 space-y-3">
+                    <h2 className="text-sm font-black tracking-tight">Account details</h2>
+                    <div className="text-sm text-muted-foreground space-y-2">
+                      <p><span className="font-semibold text-foreground">Name:</span> {displayName}</p>
+                      <p><span className="font-semibold text-foreground">Email:</span> {displayEmail}</p>
+                      <p><span className="font-semibold text-foreground">Location:</span> {displayLocation}</p>
+                      <p><span className="font-semibold text-foreground">Role:</span> {user?.role || "guest"}</p>
+                      <p><span className="font-semibold text-foreground">Member since:</span> {user?.createdAt ? new Date(user.createdAt).toLocaleDateString("en", { year: "numeric", month: "long" }) : "—"}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
 
               {/* ── My Bookings ── */}
               <TabsContent value="bookings" className="mt-6 space-y-4">
@@ -270,25 +311,32 @@ export function ProfilePage() {
 
               {/* ── Reviews ── */}
               <TabsContent value="reviews" className="mt-6 space-y-4">
-                {reviews.map((r) => (
-                  <Card key={r.id} className="border-border/60 rounded-3xl shadow-sm">
-                    <CardContent className="p-5">
-                      <div className="flex items-center justify-between mb-3">
-                        <div>
-                          <p className="font-black">{r.from}</p>
-                          <p className="text-xs text-muted-foreground font-medium">{r.listing} · {r.date}</p>
+                {reviews.length === 0 ? (
+                  <div className="text-center py-16 bg-muted/20 rounded-3xl border border-dashed border-border">
+                    <Star className="h-10 w-10 text-muted-foreground/40 mx-auto mb-3" />
+                    <p className="font-semibold">No reviews yet</p>
+                    <p className="text-sm text-muted-foreground mt-1">Reviews from hosts will appear here.</p>
+                  </div>
+                ) : (
+                  reviews.map((r) => (
+                    <Card key={r.id} className="border-border/60 rounded-3xl shadow-sm">
+                      <CardContent className="p-5">
+                        <div className="flex items-center justify-between mb-3">
+                          <div>
+                            <p className="font-black">{r.from}</p>
+                            <p className="text-xs text-muted-foreground font-medium">{r.listing} · {r.date}</p>
+                          </div>
+                          <div className="flex items-center gap-0.5">
+                            {Array.from({ length: 5 }).map((_, i) => (
+                              <Star key={i} className={cn("h-4 w-4", i < r.rating ? "fill-accent text-accent" : "text-muted-foreground/30")} />
+                            ))}
+                          </div>
                         </div>
-                        <div className="flex items-center gap-0.5">
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <Star key={i} className={cn("h-4 w-4", i < r.rating ? "fill-accent text-accent" : "text-muted-foreground/30")} />
-                          ))}
-                        </div>
-                      </div>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{r.text}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </TabsContent>
+                        <p className="text-sm text-muted-foreground leading-relaxed">{r.text}</p>
+                      </CardContent>
+                    </Card>
+                  )))
+                )}
 
               {/* ── Settings ── */}
               <TabsContent value="settings" className="mt-6 space-y-6">
