@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // ─────────────────────────────────────────────────────────────────────────────
 // MOCK DATA — single source of truth for testing
 // When backend is ready: replace each exported array/function with the
@@ -14,6 +15,19 @@ const IMG = {
   camp: "/images/listing-camp.jpg",
   guesthouse: "/images/listing-guesthouse.jpg",
   hero: "/images/hero-zambia.jpg",
+=======
+export type Listing = {
+  id: string;
+  name: string;
+  location: string;
+  price: number;
+  rating: number;
+  reviews: number;
+  image: string;
+  photos?: string[];
+  category: string;
+  description: string;
+>>>>>>> e3378f9791f92d62290a9cdd2efb69f29fde11d8
 };
 
 // ── Stays ─────────────────────────────────────────────────────────────────────

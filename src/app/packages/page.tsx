@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Package, Star, MapPin, Clock, Users, ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useState, useEffect } from "react";
 
 const packages = [
   {
@@ -60,6 +61,29 @@ const packages = [
 ];
 
 export default function PackagesPage() {
+  const [allPackages, setAllPackages] = useState(packages);
+
+  useEffect(() => {
+    try {
+      const mock = JSON.parse(localStorage.getItem("mock_host_listings") || "[]");
+      const packageMocks = mock.filter((m: any) => m.category === 'package').map((m: any) => ({
+        id: m.id,
+        title: m.name || m.title || "Custom Package",
+        location: m.location || "Unknown",
+        nights: 3,
+        includes: ["Custom inclusions"],
+        price: m.price || 0,
+        originalPrice: m.price ? m.price + 500 : 0,
+        rating: m.rating || 5.0,
+        image: m.image,
+        tag: "New"
+      }));
+      if (packageMocks.length > 0) {
+        setAllPackages(prev => [...packageMocks, ...prev]);
+      }
+    } catch(e) {}
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFBFC]">
       <Navbar className="bg-[#F5F3FF] border-purple-100" />
@@ -92,7 +116,7 @@ export default function PackagesPage() {
           </div>
 
           <div className="grid gap-16">
-            {packages.map((pkg, idx) => (
+            {allPackages.map((pkg, idx) => (
               <div 
                 key={pkg.id} 
                 className={cn(

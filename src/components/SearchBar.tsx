@@ -1,18 +1,25 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { CalendarDays, MapPin, Search, Users, X } from "lucide-react";
+import { format } from "date-fns";
+import { DateRange } from "react-day-picker";
+import { CalendarDays, MapPin, Search, Users, X, Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 
 export function SearchBar({ className }: { className?: string }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [active, setActive] = useState<"where" | "when" | "who" | null>(null);
+  const [date, setDate] = useState<DateRange | undefined>();
+  const [guests, setGuests] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      if (!document.contains(target)) return;
+      if (containerRef.current && !containerRef.current.contains(target)) {
         setIsExpanded(false);
         setActive(null);
       }
@@ -26,7 +33,9 @@ export function SearchBar({ className }: { className?: string }) {
     }
 
     function handleFocusOut(e: FocusEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.relatedTarget as Node)) {
+      const relatedTarget = e.relatedTarget as Node | null;
+      if (!relatedTarget) return;
+      if (containerRef.current && !containerRef.current.contains(relatedTarget)) {
         setIsExpanded(false);
         setActive(null);
       }
@@ -71,15 +80,15 @@ export function SearchBar({ className }: { className?: string }) {
           <div 
             onClick={() => { setIsExpanded(true); setActive("where"); }}
             className={cn(
-              "flex items-center gap-3 md:gap-4 px-4 md:px-6 cursor-pointer transition-all duration-300 rounded-full md:flex-1",
-              isExpanded ? (active === "where" ? "bg-purple-50 shadow-inner md:bg-white md:shadow-md md:ring-1 md:ring-border/20 h-16 md:h-auto" : "h-16 md:h-auto") : "h-full hover:bg-muted/40"
+              "flex items-center gap-3 md:gap-4 px-4 md:px-6 cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] rounded-full md:flex-1",
+              isExpanded ? (active === "where" ? "bg-purple-50 shadow-inner md:bg-white md:shadow-md md:ring-1 md:ring-border/20 h-16 md:h-16" : "h-16 md:h-16") : "h-full hover:bg-muted/40"
             )}
           >
-            <MapPin className={cn("hidden md:block h-4.5 w-4.5 shrink-0 transition-colors", isExpanded ? "text-primary" : "text-muted-foreground")} />
-            <div className="flex-1 min-w-0">
+            <MapPin className={cn("hidden md:block h-4.5 w-4.5 shrink-0 transition-colors duration-500", isExpanded ? "text-primary" : "text-muted-foreground")} />
+            <div className="flex-1 min-w-0 relative flex flex-col justify-center h-full">
               <p className={cn(
-                "text-[10px] font-black uppercase tracking-widest transition-all duration-300",
-                isExpanded ? "text-primary opacity-100 translate-y-0" : "text-muted-foreground opacity-0 -translate-y-1 absolute"
+                "absolute left-0 text-[10px] font-black uppercase tracking-widest transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
+                isExpanded ? "top-3 md:top-2 text-primary opacity-100 translate-y-0" : "top-1/2 -translate-y-1/2 text-muted-foreground opacity-0 pointer-events-none"
               )}>
                 Where
               </p>
@@ -87,8 +96,8 @@ export function SearchBar({ className }: { className?: string }) {
                 type="text"
                 placeholder={isExpanded ? "Search destinations" : "Search your next escape..."}
                 className={cn(
-                  "w-full bg-transparent text-sm font-bold outline-none placeholder:text-muted-foreground/60 transition-all duration-300",
-                  isExpanded ? "mt-0.5" : "text-sm md:text-base"
+                  "w-full bg-transparent font-bold outline-none placeholder:text-muted-foreground/60 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] relative",
+                  isExpanded ? "text-sm translate-y-2 md:translate-y-2" : "text-sm md:text-base translate-y-0"
                 )}
                 onFocus={() => { setIsExpanded(true); setActive("where"); }}
               />
@@ -111,9 +120,17 @@ export function SearchBar({ className }: { className?: string }) {
               )}
             >
               <CalendarDays className="h-5 w-5 text-primary shrink-0" />
-              <div className="min-w-0">
+              <div className="min-w-0 text-left">
                 <p className="text-[10px] font-black text-primary uppercase tracking-widest">When</p>
-                <p className="text-sm font-bold text-foreground mt-0.5 whitespace-nowrap">Add dates</p>
+                <div className="flex items-center gap-1.5 mt-0.5 whitespace-nowrap">
+                  <span className={cn("text-sm font-bold", date?.from ? "text-foreground" : "text-muted-foreground")}>
+                    {date?.from ? format(date.from, "MMM d") : "From"}
+                  </span>
+                  <span className="text-muted-foreground text-sm font-bold">-</span>
+                  <span className={cn("text-sm font-bold", date?.to ? "text-foreground" : "text-muted-foreground")}>
+                    {date?.to ? format(date.to, "MMM d") : "To"}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -122,21 +139,44 @@ export function SearchBar({ className }: { className?: string }) {
           <div 
             className={cn(
               "transition-all duration-500 ease-in-out flex flex-col md:flex-row items-stretch md:items-center overflow-hidden",
-              isExpanded ? "h-16 md:h-auto md:w-64 opacity-100" : "h-0 md:w-0 opacity-0 pointer-events-none"
+              isExpanded ? "h-16 md:h-auto md:w-auto opacity-100" : "h-0 md:w-0 opacity-0 pointer-events-none"
             )}
           >
             <div className="hidden md:block w-px h-8 bg-border/40 shrink-0" />
             <div 
-              onClick={() => setActive("who")}
               className={cn(
-                "flex-1 h-full flex items-center gap-4 px-6 cursor-pointer transition-all duration-300 rounded-full",
-                active === "who" ? "bg-purple-50 shadow-inner md:bg-white md:shadow-md md:ring-1 md:ring-border/20" : "hover:bg-muted/40"
+                "flex-1 h-full flex items-center justify-between gap-4 px-6 transition-all duration-300 rounded-full min-w-[200px]"
               )}
             >
-              <Users className="h-5 w-5 text-primary shrink-0" />
-              <div className="min-w-0">
-                <p className="text-[10px] font-black text-primary uppercase tracking-widest">Who</p>
-                <p className="text-sm font-bold text-foreground mt-0.5 whitespace-nowrap">Add guests</p>
+              <div className="flex items-center gap-4">
+                <Users className="h-5 w-5 text-primary shrink-0" />
+                <div className="min-w-0 text-left">
+                  <p className="text-[10px] font-black text-primary uppercase tracking-widest">Who</p>
+                  <p className="text-sm font-bold text-foreground mt-0.5 whitespace-nowrap">
+                    Guests
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  className="h-7 w-7 rounded-full border-border/60 hover:border-primary shrink-0"
+                  onClick={(e) => { e.stopPropagation(); setGuests(Math.max(1, guests - 1)); }}
+                  disabled={guests <= 1}
+                >
+                  <Minus className="h-3 w-3" />
+                </Button>
+                <span className="w-4 text-center font-bold text-sm shrink-0">{guests}</span>
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  className="h-7 w-7 rounded-full border-border/60 hover:border-primary shrink-0"
+                  onClick={(e) => { e.stopPropagation(); setGuests(guests + 1); }}
+                  disabled={guests >= 16}
+                >
+                  <Plus className="h-3 w-3" />
+                </Button>
               </div>
             </div>
           </div>
@@ -171,6 +211,27 @@ export function SearchBar({ className }: { className?: string }) {
               <X className="h-5 w-5" />
             </button>
           )}
+        </div>
+
+        {/* Unified Data Collection Panel */}
+        <div className={cn(
+          "absolute left-0 right-0 top-full mt-4 bg-white rounded-3xl shadow-2xl ring-1 ring-border/40 transition-all duration-500 overflow-hidden transform origin-top z-50",
+          active === "when" && isExpanded ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-4 pointer-events-none"
+        )}>
+          <div className="p-6 md:p-8">
+            {active === "when" && (
+              <div className="flex flex-col items-center animate-in fade-in zoom-in-95 duration-300">
+                <h3 className="text-lg font-bold mb-4 w-full text-center md:text-left">Select your dates</h3>
+                <Calendar
+                  mode="range"
+                  selected={date}
+                  onSelect={setDate}
+                  initialFocus
+                  className="rounded-xl border shadow-sm"
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

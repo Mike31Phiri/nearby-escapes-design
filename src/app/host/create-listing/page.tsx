@@ -15,6 +15,7 @@ import {
   Info, ShieldCheck
 } from "lucide-react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -27,11 +28,82 @@ const steps = [
 ];
 
 export default function CreateListingPage() {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [category, setCategory] = useState("");
+  const [title, setTitle] = useState("");
+  const [location, setLocation] = useState("");
+  const [description, setDescription] = useState("");
+  const [photos, setPhotos] = useState<string[]>([]);
+  const [price, setPrice] = useState(0);
 
   const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, 5));
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const img = new window.Image();
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const MAX_WIDTH = 1000;
+            const MAX_HEIGHT = 800;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+              if (width > MAX_WIDTH) {
+                height *= MAX_WIDTH / width;
+                width = MAX_WIDTH;
+              }
+            } else {
+              if (height > MAX_HEIGHT) {
+                width *= MAX_HEIGHT / height;
+                height = MAX_HEIGHT;
+              }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx?.drawImage(img, 0, 0, width, height);
+            const dataUrl = canvas.toDataURL("image/jpeg", 0.6);
+            setPhotos(prev => [...prev, dataUrl]);
+          };
+          img.src = reader.result as string;
+        };
+        reader.readAsDataURL(file);
+      });
+      e.target.value = '';
+    }
+  };
+
+  const handlePublish = () => {
+    try {
+      const newListing = {
+        id: "mock-" + Date.now(),
+        name: title || "Untitled Listing",
+        location: location || "Unknown Location",
+        description: description,
+        price: price || 0,
+        category: category || "stay",
+        rating: 5.0,
+        reviews: 0,
+        image: photos.length > 0 ? photos[0] : "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg",
+        photos: photos
+      };
+
+      const existing = JSON.parse(localStorage.getItem("mock_host_listings") || "[]");
+      localStorage.setItem("mock_host_listings", JSON.stringify([...existing, newListing]));
+      
+      router.push("/host/listing-success");
+    } catch (error) {
+      console.error("Failed to save listing:", error);
+      alert("Failed to save listing. If you uploaded many high-resolution photos, please try using fewer or smaller images.");
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -108,18 +180,18 @@ export default function CreateListingPage() {
                   <div className="grid gap-6 max-w-2xl mx-auto">
                     <div className="grid gap-2">
                       <Label htmlFor="title">Listing Title</Label>
-                      <Input id="title" placeholder="e.g. Modern Riverside Villa" className="rounded-xl h-12" />
+                      <Input id="title" placeholder="e.g. Modern Riverside Villa" className="rounded-xl h-12" value={title} onChange={e => setTitle(e.target.value)} />
                     </div>
                     <div className="grid gap-2">
                       <Label htmlFor="location">Location</Label>
                       <div className="relative">
                         <MapPin className="absolute left-4 top-3.5 h-5 w-5 text-muted-foreground/50" />
-                        <Input id="location" placeholder="City, Area" className="rounded-xl h-12 pl-12" />
+                        <Input id="location" placeholder="City, Area" className="rounded-xl h-12 pl-12" value={location} onChange={e => setLocation(e.target.value)} />
                       </div>
                     </div>
                     <div className="grid gap-2">
                       <Label htmlFor="description">Description</Label>
-                      <Textarea id="description" placeholder="Describe the unique features of your escape..." className="rounded-xl min-h-[150px] p-4" />
+                      <Textarea id="description" placeholder="Describe the unique features of your escape..." className="rounded-xl min-h-[150px] p-4" value={description} onChange={e => setDescription(e.target.value)} />
                     </div>
                   </div>
                 </div>
@@ -133,15 +205,32 @@ export default function CreateListingPage() {
                     <p className="text-muted-foreground">High-quality photos make a huge difference.</p>
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-                    <div className="col-span-full aspect-[21/9] rounded-3xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-4 bg-muted/20 cursor-pointer hover:bg-muted/40 transition-all group">
-                       <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Camera className="h-8 w-8 text-primary" />
+                    <Label htmlFor="photo-upload" className="col-span-full aspect-[21/9] rounded-3xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-4 bg-muted/20 cursor-pointer hover:bg-muted/40 transition-all group relative overflow-hidden">
+                       <Input id="photo-upload" type="file" multiple accept="image/*" className="hidden" onChange={handlePhotoUpload} />
+                       {photos.length === 0 ? (
+                         <>
+                           <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                              <Camera className="h-8 w-8 text-primary" />
+                           </div>
+                           <p className="font-bold">Click to upload cover photo</p>
+                           <p className="text-xs text-muted-foreground">Or drag and drop files here</p>
+                         </>
+                       ) : (
+                         <div className="absolute inset-0">
+                           <img src={photos[0]} alt="Cover" className="w-full h-full object-cover" />
+                           <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                             <p className="text-white font-bold">Add More Photos</p>
+                           </div>
+                         </div>
+                       )}
+                    </Label>
+                    {photos.slice(1, 4).map((photo, i) => (
+                       <div key={i} className="aspect-square rounded-2xl overflow-hidden border-2 border-border">
+                          <img src={photo} alt={`Photo ${i+1}`} className="w-full h-full object-cover" />
                        </div>
-                       <p className="font-bold">Click to upload cover photo</p>
-                       <p className="text-xs text-muted-foreground">Or drag and drop files here</p>
-                    </div>
-                    {[1, 2, 3].map(i => (
-                       <div key={i} className="aspect-square rounded-2xl border-2 border-dashed border-border flex items-center justify-center bg-muted/10 cursor-pointer">
+                    ))}
+                    {photos.length < 4 && Array.from({ length: 3 - Math.max(0, photos.length - 1) }).map((_, i) => (
+                       <div key={`empty-${i}`} className="aspect-square rounded-2xl border-2 border-dashed border-border flex items-center justify-center bg-muted/10">
                           <Camera className="h-6 w-6 text-muted-foreground/30" />
                        </div>
                     ))}
@@ -161,8 +250,10 @@ export default function CreateListingPage() {
                       <span className="text-2xl font-bold mr-2">ZMW</span>
                       <input 
                         type="number" 
-                        defaultValue={0} 
+                        value={price || ""}
+                        onChange={e => setPrice(Number(e.target.value))} 
                         className="bg-transparent text-6xl font-black focus:outline-none w-48 text-center"
+                        placeholder="0"
                       />
                     </div>
                     <p className="text-sm font-bold text-muted-foreground mt-4">per night / per person</p>
@@ -182,18 +273,18 @@ export default function CreateListingPage() {
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-4xl mx-auto">
                     <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-xl">
-                      <img src="https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&fit=crop&w=600&h=450" alt="Preview" className="h-full w-full object-cover" />
+                      <img src={photos.length > 0 ? photos[0] : "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&fit=crop&w=600&h=450"} alt="Preview" className="h-full w-full object-cover" />
                     </div>
                     <div className="space-y-6">
                       <div>
-                        <Badge className="bg-primary/10 text-primary mb-2">Stay</Badge>
-                        <h3 className="text-2xl font-bold">Modern Riverside Villa</h3>
-                        <p className="text-muted-foreground flex items-center gap-1 mt-1"><MapPin className="h-4 w-4" /> Lusaka, Zambia</p>
+                        <Badge className="bg-primary/10 text-primary mb-2 capitalize">{category || "Stay"}</Badge>
+                        <h3 className="text-2xl font-bold">{title || "Listing Title"}</h3>
+                        <p className="text-muted-foreground flex items-center gap-1 mt-1"><MapPin className="h-4 w-4" /> {location || "Location"}</p>
                       </div>
                       <div className="p-6 bg-muted/30 rounded-2xl space-y-4">
                         <div className="flex justify-between font-bold">
                           <span>Nightly Rate</span>
-                          <span>ZMW 1,200.00</span>
+                          <span>ZMW {price.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between text-xs text-muted-foreground border-t border-border/40 pt-4">
                           <span>Visibility</span>
@@ -216,11 +307,9 @@ export default function CreateListingPage() {
                 </Button>
                 
                 {currentStep === 5 ? (
-                  <Link href="/host/listing-success">
-                    <Button className="rounded-xl px-12 h-14 bg-primary font-extrabold text-lg shadow-xl">
-                      Publish Listing
-                    </Button>
-                  </Link>
+                  <Button onClick={handlePublish} className="rounded-xl px-12 h-14 bg-primary font-extrabold text-lg shadow-xl">
+                    Publish Listing
+                  </Button>
                 ) : (
                   <Button 
                     onClick={nextStep}

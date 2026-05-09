@@ -33,16 +33,26 @@ function ExploreContent({ query = "" }: { query?: string }) {
     categories: initialCategory ? [initialCategory] : [] 
   });
   const [sort, setSort] = useState<SortKey>("recommended");
+  const [allListings, setAllListings] = useState(listings);
 
-  const allCategories = useMemo(() => Array.from(new Set(listings.map((l) => l.category))), []);
+  useEffect(() => {
+    try {
+      const mock = JSON.parse(localStorage.getItem("mock_host_listings") || "[]");
+      if (mock.length > 0) {
+        setAllListings(prev => [...mock, ...prev]);
+      }
+    } catch(e) {}
+  }, []);
+
+  const allCategories = useMemo(() => Array.from(new Set(allListings.map((l) => l.category))), [allListings]);
   const allLocations = useMemo(
-    () => Array.from(new Set(listings.map((l) => l.location))).sort(),
-    [],
+    () => Array.from(new Set(allListings.map((l) => l.location))).sort(),
+    [allListings],
   );
 
   const filtered = useMemo(() => {
     const q = filters.query.trim().toLowerCase();
-    let result = listings.filter((listing) => {
+    let result = allListings.filter((listing) => {
       if (q && !`${listing.name} ${listing.location} ${listing.category}`.toLowerCase().includes(q))
         return false;
       if (filters.categories.length && !filters.categories.includes(listing.category)) return false;
