@@ -22,11 +22,8 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
-const bookings = [
-  { id: "BK-101", name: "Kafue Lodge", type: "Stay", status: "success", date: "Oct 12 - 15, 2025", price: "K2,400", image: "https://images.pexels.com/photos/2422533/pexels-photo-2422533.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
-  { id: "BK-102", name: "Vic Falls Tour", type: "Attraction", status: "pending", date: "Nov 02, 2025", price: "K450", image: "https://images.pexels.com/photos/2166936/pexels-photo-2166936.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
-  { id: "BK-103", name: "Lusaka City Stay", type: "Stay", status: "cancelled", date: "Sep 20 - 22, 2025", price: "K1,200", image: "https://images.pexels.com/photos/2199357/pexels-photo-2199357.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
-];
+import { useBookingStore } from "@/store/bookingStore";
+import { format } from "date-fns";
 
 export function UserProfilePage() {
   const { user, logout, becomeHost } = useAuth();
@@ -36,9 +33,13 @@ export function UserProfilePage() {
     ? user.fullName.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase()
     : "MP";
 
+  const { bookingHistory } = useBookingStore();
+
+  const activeBookings = bookingHistory || [];
+  
   const filteredBookings = activeTab === "all" 
-    ? bookings 
-    : bookings.filter(b => b.type.toLowerCase().startsWith(activeTab.substring(0, 3)));
+    ? activeBookings 
+    : activeBookings.filter(b => b.type.toLowerCase().startsWith(activeTab.substring(0, 3)));
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFBFC] font-sans">
@@ -90,7 +91,7 @@ export function UserProfilePage() {
               
               <div className="flex items-center justify-center gap-10 pt-6">
                  <div className="text-center">
-                    <p className="text-3xl font-black text-primary font-display">12</p>
+                    <p className="text-3xl font-black text-primary font-display">{activeBookings.length}</p>
                     <p className="text-[10px] font-black text-primary/40 uppercase tracking-[0.2em]">Trips Taken</p>
                  </div>
                  <div className="w-px h-10 bg-purple-100" />
@@ -149,14 +150,14 @@ export function UserProfilePage() {
               <Card key={booking.id} className="border-none shadow-sm hover:shadow-xl transition-all duration-500 rounded-[1.25rem] overflow-hidden bg-white border border-purple-100 group">
                 <div className="flex flex-col sm:flex-row">
                   <div className="relative h-44 sm:w-60 overflow-hidden shrink-0">
-                    <img src={booking.image} alt={booking.name} className="h-full w-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110" />
+                    <img src={booking.details.listingImage || booking.details.packageImage || "https://images.pexels.com/photos/2422533/pexels-photo-2422533.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"} alt={booking.details.listingName || booking.details.packageName || booking.details.route} className="h-full w-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110" />
                   </div>
                   <CardContent className="flex-1 p-8 flex flex-col sm:flex-row items-center justify-between gap-8">
                     <div className="text-center sm:text-left space-y-1">
-                      <p className="text-[10px] font-black text-primary/40 uppercase tracking-[0.3em] mb-2">{booking.id} · {booking.date}</p>
-                      <h3 className="text-3xl font-black tracking-tighter font-display text-primary">{booking.name}</h3>
+                      <p className="text-[10px] font-black text-primary/40 uppercase tracking-[0.3em] mb-2">{booking.id.substring(0, 8).toUpperCase()} · {format(new Date(booking.date), "MMM dd, yyyy")}</p>
+                      <h3 className="text-3xl font-black tracking-tighter font-display text-primary">{booking.details.listingName || booking.details.packageName || booking.details.route}</h3>
                       <div className="flex items-center justify-center sm:justify-start gap-2 mt-4 text-primary/60 font-bold text-sm">
-                        <MapPin className="h-4 w-4" /> Kafue National Park
+                        <MapPin className="h-4 w-4" /> {booking.details.location || 'Zambia'}
                       </div>
                     </div>
 
@@ -164,12 +165,12 @@ export function UserProfilePage() {
                       <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest">Status</p>
                       <div className={cn(
                         "flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border-2",
-                        booking.status === "success" && "bg-emerald-50 text-emerald-600 border-emerald-100",
-                        booking.status === "pending" && "bg-orange-50 text-orange-600 border-orange-100",
+                        booking.status === "upcoming" && "bg-emerald-50 text-emerald-600 border-emerald-100",
+                        booking.status === "past" && "bg-orange-50 text-orange-600 border-orange-100",
                         booking.status === "cancelled" && "bg-red-50 text-red-600 border-red-100",
                       )}>
-                        {booking.status === "success" && <CheckCircle2 className="h-4 w-4" />}
-                        {booking.status === "pending" && <AlertCircle className="h-4 w-4" />}
+                        {booking.status === "upcoming" && <CheckCircle2 className="h-4 w-4" />}
+                        {booking.status === "past" && <AlertCircle className="h-4 w-4" />}
                         {booking.status === "cancelled" && <XCircle className="h-4 w-4" />}
                         {booking.status}
                       </div>

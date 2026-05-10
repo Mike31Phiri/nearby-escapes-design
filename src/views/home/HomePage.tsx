@@ -15,10 +15,10 @@ import { cn } from "@/lib/utils";
 const heroImage = "/images/hero-zambia.jpg";
 
 const categories = [
-  { id: "stays", label: "Stays", icon: Hotel, href: "/accommodations" },
-  { id: "transport", label: "Transport", icon: TrainFront, href: "/bus-booking" },
-  { id: "attractions", label: "Attractions", icon: Ticket, href: "/experiences" },
-  { id: "gems", label: "Gems", icon: Gem, href: "/gems" },
+  { id: "stays", label: "Stays", icon: Hotel, href: "/search?category=stays" },
+  { id: "transport", label: "Transport", icon: TrainFront, href: "/search?category=transport" },
+  { id: "attractions", label: "Attractions", icon: Ticket, href: "/search?category=attractions" },
+  { id: "gems", label: "Gems", icon: Gem, href: "/search?category=gems" },
 ] as const;
 
 type CategoryId = (typeof categories)[number]["id"];
@@ -37,10 +37,10 @@ const packagesList = mockPackages.map((p) => ({
 }));
 
 const sectionMeta: Record<CategoryId, { heading: string; sub: string; cta: string; href: string }> = {
-  stays: { heading: "Popular stays", sub: "Hand-picked lodges, hotels and camps across Zambia", cta: "Explore all stays", href: "/accommodations" },
-  transport: { heading: "Popular bus routes", sub: "Get to your destination comfortably", cta: "Browse all routes", href: "/bus-booking" },
-  attractions: { heading: "Top attractions", sub: "Iconic experiences and must-see destinations", cta: "See all attractions", href: "/experiences" },
-  gems: { heading: "Hidden gems", sub: "Off-the-beaten-path spots only locals know", cta: "Discover all gems", href: "/gems" },
+  stays: { heading: "Popular stays", sub: "Hand-picked lodges, hotels and camps across Zambia", cta: "Explore all stays", href: "/search?category=stays" },
+  transport: { heading: "Popular bus routes", sub: "Get to your destination comfortably", cta: "Browse all routes", href: "/search?category=transport" },
+  attractions: { heading: "Top attractions", sub: "Iconic experiences and must-see destinations", cta: "See all attractions", href: "/search?category=attractions" },
+  gems: { heading: "Hidden gems", sub: "Off-the-beaten-path spots only locals know", cta: "Discover all gems", href: "/search?category=gems" },
 };
 
 export function HomePage() {
@@ -68,7 +68,7 @@ export function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-black/20 to-black/60" />
         </div>
         <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6 pt-16 md:pt-24 pb-8 md:pb-16 flex flex-col items-center">
-          <h1 className="font-sans max-w-4xl text-4xl md:text-7xl font-black tracking-tight leading-[1.1] drop-shadow-2xl text-center text-white mb-6">
+          <h1 className="font-sans max-w-4xl text-4xl md:text-6xl font-black tracking-tight leading-[1.1] drop-shadow-2xl text-center text-white mb-6">
             Find your next escape, just nearby
           </h1>
           <p className="font-sans max-w-xl text-lg md:text-2xl text-white/90 drop-shadow-md font-bold text-center mb-12">
@@ -123,7 +123,7 @@ export function HomePage() {
       >
         <div className="flex items-end justify-between mb-12">
           <div>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight">{meta.heading}</h2>
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight">{meta.heading}</h2>
             <p className="text-muted-foreground mt-2 text-lg font-medium">{meta.sub}</p>
           </div>
         </div>
@@ -138,7 +138,7 @@ export function HomePage() {
             </div>
             <div className="flex justify-center">
               <Button variant="outline" size="lg" className="rounded-2xl px-12 border-2 font-black uppercase tracking-widest text-xs h-14 hover:bg-primary hover:text-white transition-all shadow-lg" asChild>
-                <Link href="/accommodations?category=stays">See all stays</Link>
+                <Link href="/search?category=stays">See all stays</Link>
               </Button>
             </div>
           </div>
@@ -149,7 +149,7 @@ export function HomePage() {
           <div className="space-y-16">
             <div className="grid gap-8 md:grid-cols-3 stagger-children">
               {popularRoutes.map((route) => (
-                <Link key={route.id} href="/bus-booking" className="group block">
+                <Link key={route.id} href={`/listings/transport/${route.id}`} className="group block">
                   <Card className="border border-border/60 overflow-hidden hover:shadow-2xl rounded-[32px] transition-all duration-500 hover:-translate-y-2 bg-white">
                     <div className="relative aspect-[16/9] overflow-hidden">
                       <img
@@ -181,7 +181,7 @@ export function HomePage() {
             </div>
             <div className="flex justify-center">
               <Button variant="outline" size="lg" className="rounded-2xl px-12 border-2 font-black uppercase tracking-widest text-xs h-14 hover:bg-primary hover:text-white transition-all shadow-lg" asChild>
-                <Link href="/accommodations?category=transport">See all transport</Link>
+                <Link href="/search?category=transport">See all transport</Link>
               </Button>
             </div>
           </div>
@@ -192,7 +192,7 @@ export function HomePage() {
           <div className="space-y-16">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 stagger-children">
               {attractions.map((item) => (
-                <Link key={item.id} href="/experiences" className="group block">
+                <Link key={item.id} href={`/listings/experiences/${item.id}`} className="group block">
                   <Card className="overflow-hidden border border-border/60 rounded-[32px] hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-white">
                     <div className="relative aspect-[4/3] overflow-hidden">
                       <img src={item.image} alt={item.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
@@ -211,7 +211,7 @@ export function HomePage() {
             </div>
             <div className="flex justify-center">
               <Button variant="outline" size="lg" className="rounded-2xl px-12 border-2 font-black uppercase tracking-widest text-xs h-14 hover:bg-primary hover:text-white transition-all shadow-lg" asChild>
-                <Link href="/accommodations?category=attractions">See all attractions</Link>
+                <Link href="/search?category=attractions">See all attractions</Link>
               </Button>
             </div>
           </div>
@@ -222,7 +222,7 @@ export function HomePage() {
           <div className="space-y-16">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 stagger-children">
               {gems.map((item) => (
-                <Link key={item.id} href="/gems" className="group block">
+                <Link key={item.id} href={`/listings/experiences/${item.id}`} className="group block">
                   <Card className="overflow-hidden border border-border/60 rounded-[32px] hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-white">
                     <div className="relative aspect-[4/3] overflow-hidden">
                       <img src={item.image} alt={item.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
@@ -242,7 +242,7 @@ export function HomePage() {
             </div>
             <div className="flex justify-center">
               <Button variant="outline" size="lg" className="rounded-2xl px-12 border-2 font-black uppercase tracking-widest text-xs h-14 hover:bg-primary hover:text-white transition-all shadow-lg" asChild>
-                <Link href="/accommodations?category=gems">See all gems</Link>
+                <Link href="/search?category=gems">See all gems</Link>
               </Button>
             </div>
           </div>
@@ -261,7 +261,7 @@ export function HomePage() {
       {/* Popular Destinations */}
       <section className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-32 section-enter">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-5xl font-black tracking-tight">Popular Destinations</h2>
+          <h2 className="text-3xl md:text-4xl font-black tracking-tight">Popular Destinations</h2>
           <p className="text-muted-foreground mt-2 text-lg font-medium">Explore the most sought-after locations in Zambia</p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 stagger-children">
@@ -281,7 +281,7 @@ export function HomePage() {
       <section className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-32 section-enter">
         <div className="flex items-end justify-between mb-12">
           <div>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight">Recommended For You</h2>
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight">Recommended For You</h2>
             <p className="text-muted-foreground mt-2 text-lg font-medium">Based on your recent searches</p>
           </div>
         </div>
@@ -296,10 +296,10 @@ export function HomePage() {
       <section className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-32 section-enter">
         <div className="flex items-end justify-between mb-12">
           <div>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight">Curated Packages</h2>
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight">Curated Packages</h2>
             <p className="text-muted-foreground mt-2 text-lg font-medium">All-inclusive experiences for a hassle-free escape</p>
           </div>
-          <Link href="/packages" className="hidden md:flex items-center gap-2 text-primary font-black uppercase tracking-widest text-xs group">
+          <Link href="/search?category=packages" className="hidden md:flex items-center gap-2 text-primary font-black uppercase tracking-widest text-xs group">
             View All Packages <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
@@ -331,7 +331,7 @@ export function HomePage() {
           ))}
         </div>
         <div className="mt-12 flex justify-center md:hidden">
-          <Link href="/packages">
+          <Link href="/search?category=packages">
             <Button variant="outline" className="rounded-full px-8 font-black uppercase tracking-widest text-[10px] border-2">View All Packages</Button>
           </Link>
         </div>
@@ -340,7 +340,7 @@ export function HomePage() {
       {/* Why Book With Us */}
       <section className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-32 mb-40 section-enter">
         <div className="text-center mb-20 space-y-4">
-          <h2 className="text-3xl md:text-6xl font-black tracking-tight font-display">Why Book With Us</h2>
+          <h2 className="text-3xl md:text-4xl font-black tracking-tight font-display">Why Book With Us</h2>
           <p className="text-xl text-muted-foreground font-medium">The trusted choice for Zambian travelers</p>
         </div>
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">

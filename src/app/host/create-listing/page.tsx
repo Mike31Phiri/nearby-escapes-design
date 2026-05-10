@@ -35,6 +35,7 @@ export default function CreateListingPage() {
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
   const [photos, setPhotos] = useState<string[]>([]);
+  const [activePreviewIndex, setActivePreviewIndex] = useState(0);
   const [price, setPrice] = useState(0);
 
   const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, 5));
@@ -43,7 +44,14 @@ export default function CreateListingPage() {
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
-      files.forEach(file => {
+      const remainingSlots = 5 - photos.length;
+      const filesToProcess = files.slice(0, remainingSlots);
+
+      if (files.length > remainingSlots) {
+        alert("You can only upload up to 5 photos.");
+      }
+
+      filesToProcess.forEach(file => {
         const reader = new FileReader();
         reader.onloadend = () => {
           const img = new window.Image();
@@ -204,35 +212,56 @@ export default function CreateListingPage() {
                     <h2 className="text-3xl font-extrabold tracking-tight">Add some photos</h2>
                     <p className="text-muted-foreground">High-quality photos make a huge difference.</p>
                   </div>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-                    <Label htmlFor="photo-upload" className="col-span-full aspect-[21/9] rounded-3xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-4 bg-muted/20 cursor-pointer hover:bg-muted/40 transition-all group relative overflow-hidden">
-                       <Input id="photo-upload" type="file" multiple accept="image/*" className="hidden" onChange={handlePhotoUpload} />
-                       {photos.length === 0 ? (
-                         <>
-                           <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                              <Camera className="h-8 w-8 text-primary" />
-                           </div>
-                           <p className="font-bold">Click to upload cover photo</p>
-                           <p className="text-xs text-muted-foreground">Or drag and drop files here</p>
-                         </>
-                       ) : (
-                         <div className="absolute inset-0">
-                           <img src={photos[0]} alt="Cover" className="w-full h-full object-cover" />
-                           <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                             <p className="text-white font-bold">Add More Photos</p>
-                           </div>
-                         </div>
-                       )}
-                    </Label>
-                    {photos.slice(1, 4).map((photo, i) => (
-                       <div key={i} className="aspect-square rounded-2xl overflow-hidden border-2 border-border">
-                          <img src={photo} alt={`Photo ${i+1}`} className="w-full h-full object-cover" />
-                       </div>
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-4xl mx-auto">
+                    <div className="col-span-full relative group aspect-[21/9] rounded-[32px] overflow-hidden border border-border shadow-inner bg-muted/10">
+                      {photos.length > 0 ? (
+                        <img src={photos[activePreviewIndex] || photos[0]} alt="Preview" className="w-full h-full object-cover animate-in fade-in duration-500" />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center gap-4 text-muted-foreground">
+                          <Camera className="h-12 w-12 opacity-20" />
+                          <p className="font-bold">No photos yet</p>
+                        </div>
+                      )}
+                      <Label htmlFor="photo-upload" className="absolute inset-0 bg-black/0 hover:bg-black/40 flex items-center justify-center cursor-pointer transition-all opacity-0 hover:opacity-100 group">
+                        <Input id="photo-upload" type="file" multiple accept="image/*" className="hidden" onChange={handlePhotoUpload} disabled={photos.length >= 5} />
+                        <div className="flex flex-col items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform">
+                          <Camera className="h-10 w-10 text-white" />
+                          <p className="text-white font-bold">{photos.length >= 5 ? "Max 5 photos reached" : "Add Photos"}</p>
+                        </div>
+                      </Label>
+                    </div>
+
+                    {photos.map((photo, i) => (
+                      <div 
+                        key={i} 
+                        onClick={() => setActivePreviewIndex(i)}
+                        className={cn(
+                          "aspect-square rounded-2xl overflow-hidden border-2 cursor-pointer transition-all relative group",
+                          activePreviewIndex === i ? "border-primary shadow-lg scale-105" : "border-transparent opacity-70 hover:opacity-100"
+                        )}
+                      >
+                        <img src={photo} alt={`Thumbnail ${i}`} className="w-full h-full object-cover" />
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setPhotos(prev => prev.filter((_, idx) => idx !== i));
+                            if (activePreviewIndex >= i) setActivePreviewIndex(Math.max(0, activePreviewIndex - 1));
+                          }}
+                          className="absolute top-1 right-1 h-6 w-6 bg-black/60 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500"
+                        >
+                          <span className="text-xs">×</span>
+                        </button>
+                      </div>
                     ))}
-                    {photos.length < 4 && Array.from({ length: 3 - Math.max(0, photos.length - 1) }).map((_, i) => (
-                       <div key={`empty-${i}`} className="aspect-square rounded-2xl border-2 border-dashed border-border flex items-center justify-center bg-muted/10">
-                          <Camera className="h-6 w-6 text-muted-foreground/30" />
-                       </div>
+
+                    {photos.length < 5 && Array.from({ length: 5 - photos.length }).map((_, i) => (
+                      <Label 
+                        key={`empty-${i}`} 
+                        htmlFor="photo-upload"
+                        className="aspect-square rounded-2xl border-2 border-dashed border-border flex items-center justify-center bg-muted/5 cursor-pointer hover:bg-muted/10 transition-colors"
+                      >
+                        <Camera className="h-6 w-6 text-muted-foreground/30" />
+                      </Label>
                     ))}
                   </div>
                 </div>
@@ -272,8 +301,30 @@ export default function CreateListingPage() {
                     <p className="text-muted-foreground">Review your listing details before going live.</p>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-4xl mx-auto">
-                    <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-xl">
-                      <img src={photos.length > 0 ? photos[0] : "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&fit=crop&w=600&h=450"} alt="Preview" className="h-full w-full object-cover" />
+                    <div className="space-y-4">
+                      <div className="aspect-[4/3] rounded-[32px] overflow-hidden shadow-2xl border border-border/40 bg-muted/10">
+                        <img 
+                          src={photos[activePreviewIndex] || photos[0] || "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&fit=crop&w=600&h=450"} 
+                          alt="Preview" 
+                          className="h-full w-full object-cover animate-in fade-in zoom-in-95 duration-500" 
+                        />
+                      </div>
+                      {photos.length > 1 && (
+                        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                          {photos.map((photo, i) => (
+                            <div 
+                              key={i}
+                              onClick={() => setActivePreviewIndex(i)}
+                              className={cn(
+                                "h-16 w-16 rounded-xl overflow-hidden cursor-pointer transition-all border-2 flex-shrink-0",
+                                activePreviewIndex === i ? "border-primary scale-105" : "border-transparent opacity-60"
+                              )}
+                            >
+                              <img src={photo} alt={`Preview ${i}`} className="h-full w-full object-cover" />
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                     <div className="space-y-6">
                       <div>

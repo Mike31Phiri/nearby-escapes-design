@@ -59,21 +59,35 @@ export default function BookingPage({
   const [addTransport, setAddTransport] = useState(false);
   const [selectedTransport, setSelectedTransport] = useState<string | null>(null);
 
-  const stayId = params.stayId || "mosi-oa-tunya-lodge";
-  const checkIn = params.checkIn || "";
-  const checkOut = params.checkOut || "";
-  const guests = params.guests || "2";
+  const { stayDetails, setStayDetails, setBookingConfirmed, guestInfo, setGuestInfo } = useBookingStore();
+
+  const stayId = params.stayId || stayDetails?.listingId || "mosi-oa-tunya-lodge";
+  
+  // Use dates from store or params
+  const checkInStr = params.checkIn || (stayDetails?.checkIn ? new Date(stayDetails.checkIn).toISOString() : "");
+  const checkOutStr = params.checkOut || (stayDetails?.checkOut ? new Date(stayDetails.checkOut).toISOString() : "");
+  const guests = Number(params.guests) || stayDetails?.guests || 2;
 
   const listing = getListing(stayId);
+
+  // Initialize local guest state
+  const [guestForm, setGuestForm] = useState({
+    firstName: guestInfo?.firstName || "",
+    lastName: guestInfo?.lastName || "",
+    email: guestInfo?.email || "",
+    phone: guestInfo?.phone || "",
+  });
+  
+  const canProceed = !!guestForm.firstName && !!guestForm.email && !!guestForm.phone;
   const canProceed = !!guestInfo?.firstName && !!guestInfo?.email && !!guestInfo?.phone;
 
   const nights =
-    checkIn && checkOut
+    checkInStr && checkOutStr
       ? Math.max(
           1,
-          Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / 86_400_000),
+          Math.ceil((new Date(checkOutStr).getTime() - new Date(checkInStr).getTime()) / 86_400_000),
         )
-      : 3;
+      : stayDetails?.nights || 3;
 
   const pricePerNight = listing?.price || 220;
   const subtotal = pricePerNight * nights;
@@ -84,24 +98,21 @@ export default function BookingPage({
       : 0;
   const total = subtotal + serviceFee + transportCost;
 
-  const { setStayDetails, setBookingConfirmed, guestInfo } = useBookingStore();
-
   async function handleProceed() {
-    const { guestInfo } = useBookingStore.getState();
-
-    if (!guestInfo?.firstName || !guestInfo?.email || !guestInfo?.phone) {
+    if (!guestForm.firstName || !guestForm.email || !guestForm.phone) {
       toast.error("Please fill in your guest information first.");
       return;
     }
 
+    setGuestInfo({ ...guestForm, specialRequests: "" });
     setProceeding(true);
     try {
       const dto: CreateBookingDto = {
         stayId,
-        checkIn: checkIn || new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10),
-        checkOut: checkOut || new Date(Date.now() + 10 * 86400000).toISOString().slice(0, 10),
-        guests: Number(guests),
-        guestInfo,
+        checkIn: checkInStr || new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10),
+        checkOut: checkOutStr || new Date(Date.now() + 10 * 86400000).toISOString().slice(0, 10),
+        guests: guests,
+        guestInfo: guestForm,
       };
       const booking = await createBooking(dto);
       setStayDetails({
@@ -184,8 +195,8 @@ export default function BookingPage({
               <div>
                 <p className="text-xs text-muted-foreground">Dates</p>
                 <p className="text-sm font-semibold">
-                  {checkIn && checkOut
-                    ? `${formatShort(checkIn)} — ${formatShort(checkOut)}`
+                  {checkInStr && checkOutStr
+                    ? `${formatShort(checkInStr)} — ${formatShort(checkOutStr)}`
                     : "Select dates"}
                 </p>
                 <p className="text-xs text-muted-foreground">
@@ -203,7 +214,7 @@ export default function BookingPage({
               <div>
                 <p className="text-xs text-muted-foreground">Guests</p>
                 <p className="text-sm font-semibold">
-                  {guests} guest{guests !== "1" ? "s" : ""}
+                  {guests} guest{guests !== 1 ? "s" : ""}
                 </p>
               </div>
             </CardContent>
@@ -342,6 +353,55 @@ export default function BookingPage({
               <li>No parties or events</li>
               <li>Pets allowed on request</li>
             </ul>
+          </CardContent>
+        </Card>
+
+        {/* Guest Information */}
+        <Card className="mt-6 border-border/60">
+          <CardContent className="p-5 space-y-4">
+            <h3 className="font-semibold text-lg">Guest Information</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium">First name</label>
+                <input
+                  type="text"
+                  className="flex h-11 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                  value={guestForm.firstName}
+                  onChange={(e) => setGuestForm({ ...guestForm, firstName: e.target.value })}
+                  placeholder="John"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium">Last name</label>
+                <input
+                  type="text"
+                  className="flex h-11 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                  value={guestForm.lastName}
+                  onChange={(e) => setGuestForm({ ...guestForm, lastName: e.target.value })}
+                  placeholder="Doe"
+                />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-sm font-medium">Email address</label>
+              <input
+                type="email"
+                className="flex h-11 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                value={guestForm.email}
+                onChange={(e) => setGuestForm({ ...guestForm, email: e.target.value })}
+                placeholder="john@example.com"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-sm font-medium">Phone number</label>
+              <input
+                type="tel"
+                className="flex h-11 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                value={guestForm.phone}
+                onChange={(e) => setGuestForm({ ...guestForm, phone: e.target.value })}
+                placeholder="+260 97 123 4567"
+              />
+            </div>
           </CardContent>
         </Card>
 

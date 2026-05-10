@@ -8,6 +8,8 @@ import { memo, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { AuthGuardDialog } from "@/components/auth/AuthGuardDialog";
 import { toast } from "sonner";
+import { useSearchParams } from "next/navigation";
+import { useWishlistStore } from "@/store/wishlistStore";
 
 interface ListingCardProps {
   listing: Stay;
@@ -16,8 +18,10 @@ interface ListingCardProps {
 
 export const ListingCard = memo(function ListingCard({ listing, className }: ListingCardProps) {
   const { isAuthenticated } = useAuth();
+  const searchParams = useSearchParams();
   const [showAuthDialog, setShowAuthDialog] = useState(false);
-  const [isFavorited, setIsFavorited] = useState(false);
+  const { isSaved, addItem, removeItem } = useWishlistStore();
+  const isFavorited = isSaved(listing.id);
 
   const toggleFavorite = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -28,8 +32,11 @@ export const ListingCard = memo(function ListingCard({ listing, className }: Lis
       return;
     }
 
-    setIsFavorited(!isFavorited);
-    if (!isFavorited) {
+    if (isFavorited) {
+      removeItem(listing.id);
+      toast.success(`Removed ${listing.name} from your collections`);
+    } else {
+      addItem(listing);
       toast.success(`Added ${listing.name} to your collections`, {
         icon: <Heart className="h-4 w-4 fill-primary text-primary" />,
       });
@@ -38,7 +45,7 @@ export const ListingCard = memo(function ListingCard({ listing, className }: Lis
 
   return (
     <Link
-      href={`/listings/stays/${listing.id}`}
+      href={searchParams.toString() ? `/listings/stays/${listing.id}?${searchParams.toString()}` : `/listings/stays/${listing.id}`}
       className={cn("group block", className)}
       aria-label={`View details for ${listing.name} in ${listing.location}, priced at $${listing.price} per night`}
     >

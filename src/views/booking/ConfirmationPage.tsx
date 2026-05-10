@@ -17,13 +17,17 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { useBookingStore } from "@/store/bookingStore";
-import { useBooking } from "@/hooks/useBooking";
 
 export function ConfirmationPage() {
-  const { draft, total, nights } = useBooking();
   const { confirmationId, stayDetails } = useBookingStore();
   const ref = confirmationId ?? "—";
-  const stayName = stayDetails?.listingName ?? draft?.stayName ?? "—";
+  const stayName = stayDetails?.listingName ?? "—";
+  
+  const checkIn = stayDetails?.checkIn ? new Date(stayDetails.checkIn).toLocaleDateString() : "—";
+  const checkOut = stayDetails?.checkOut ? new Date(stayDetails.checkOut).toLocaleDateString() : "—";
+  const guests = stayDetails?.guests ?? 2;
+  const nights = stayDetails?.nights ?? 3;
+  const total = stayDetails?.total ?? 705;
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -60,18 +64,18 @@ export function ConfirmationPage() {
             </div>
             <Separator className="my-4" />
             <div className="grid gap-4 sm:grid-cols-3">
-              <Detail icon={Calendar} label="Check in" value={draft?.checkIn ?? "—"} />
-              <Detail icon={Calendar} label="Check out" value={draft?.checkOut ?? "—"} />
+              <Detail icon={Calendar} label="Check in" value={checkIn} />
+              <Detail icon={Calendar} label="Check out" value={checkOut} />
               <Detail
                 icon={Users}
                 label="Guests"
-                value={`${draft?.guests ?? 2} · ${nights || 3} nights`}
+                value={`${guests} · ${nights} nights`}
               />
             </div>
             <Separator className="my-4" />
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Total paid</span>
-              <span className="font-bold text-lg">${total || 705}</span>
+              <span className="font-bold text-lg">ZMW {total}</span>
             </div>
           </CardContent>
         </Card>

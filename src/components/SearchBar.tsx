@@ -6,6 +6,7 @@ import { DateRange } from "react-day-picker";
 import { CalendarDays, MapPin, Search, Users, X, Minus, Plus, History, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 
@@ -17,6 +18,7 @@ export function SearchBar({ className }: { className?: string }) {
   const [searchValue, setSearchValue] = useState("");
   const [recentSearches, setRecentSearches] = useLocalStorage<string[]>("recent-searches", []);
   const containerRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const handleSearch = () => {
     if (searchValue.trim()) {
@@ -25,7 +27,14 @@ export function SearchBar({ className }: { className?: string }) {
     }
     setIsExpanded(false);
     setActive(null);
-    // Add router.push here for actual search navigation
+    
+    let url = `/search?`;
+    if (searchValue.trim()) url += `q=${encodeURIComponent(searchValue.trim())}&`;
+    if (date?.from) url += `checkIn=${format(date.from, "yyyy-MM-dd")}&`;
+    if (date?.to) url += `checkOut=${format(date.to, "yyyy-MM-dd")}&`;
+    if (guests) url += `guests=${guests}`;
+    
+    router.push(url);
   };
 
   const removeRecentSearch = (e: React.MouseEvent, search: string) => {
@@ -73,7 +82,7 @@ export function SearchBar({ className }: { className?: string }) {
   }, [isExpanded]);
 
   return (
-    <div ref={containerRef} className={cn("mx-auto w-full relative z-50 px-2 md:px-0", className)}>
+    <div ref={containerRef} className={cn("mx-auto w-full relative z-[100] px-2 md:px-0", className)}>
       {/* Backdrop for expanded state */}
       <div 
         className={cn(
@@ -86,7 +95,7 @@ export function SearchBar({ className }: { className?: string }) {
       <div 
         className={cn(
           "mx-auto transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] overflow-hidden bg-white shadow-2xl ring-1 ring-border/40",
-          isExpanded ? "max-w-4xl rounded-[2rem] p-2" : "w-full max-w-md rounded-full p-1"
+          isExpanded ? "max-w-5xl rounded-[2rem] p-2" : "w-full max-w-2xl rounded-full p-1"
         )}
       >
         <div className={cn(
@@ -98,8 +107,10 @@ export function SearchBar({ className }: { className?: string }) {
           <div 
             onClick={() => { setIsExpanded(true); setActive("where"); }}
             className={cn(
-              "flex items-center gap-3 md:gap-4 px-4 md:px-6 cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] rounded-full md:flex-1",
-              isExpanded ? (active === "where" ? "bg-purple-50 shadow-inner md:bg-white md:shadow-md md:ring-1 md:ring-border/20 h-16 md:h-16" : "h-16 md:h-16") : "h-full hover:bg-muted/40"
+              "flex items-center gap-3 md:gap-4 px-4 md:px-6 cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] rounded-full",
+              isExpanded 
+                ? (active === "where" ? "bg-purple-50 shadow-inner md:bg-white md:shadow-md md:ring-1 md:ring-border/20 h-16 md:h-16 md:flex-[1.5]" : "h-16 md:h-16 md:w-56 hover:bg-muted/40") 
+                : "h-full md:flex-1 hover:bg-muted/40"
             )}
           >
             <MapPin className={cn("hidden md:block h-4.5 w-4.5 shrink-0 transition-colors duration-500", isExpanded ? "text-primary" : "text-muted-foreground")} />
@@ -129,7 +140,9 @@ export function SearchBar({ className }: { className?: string }) {
           <div 
             className={cn(
               "transition-all duration-500 ease-in-out flex flex-col md:flex-row items-stretch md:items-center overflow-hidden",
-              isExpanded ? "h-16 md:h-auto md:w-64 opacity-100" : "h-0 md:w-0 opacity-0 pointer-events-none"
+              isExpanded 
+                ? (active === "when" ? "h-16 md:h-auto md:flex-[1.5] opacity-100" : "h-16 md:h-auto md:w-56 opacity-100") 
+                : "h-0 md:w-0 opacity-0 pointer-events-none"
             )}
           >
             <div className="hidden md:block w-px h-8 bg-border/40 shrink-0" />
@@ -160,44 +173,27 @@ export function SearchBar({ className }: { className?: string }) {
           <div 
             className={cn(
               "transition-all duration-500 ease-in-out flex flex-col md:flex-row items-stretch md:items-center overflow-hidden",
-              isExpanded ? "h-16 md:h-auto md:w-auto opacity-100" : "h-0 md:w-0 opacity-0 pointer-events-none"
+              isExpanded 
+                ? (active === "who" ? "h-16 md:h-auto md:flex-[1.5] opacity-100" : "h-16 md:h-auto md:w-56 opacity-100") 
+                : "h-0 md:w-0 opacity-0 pointer-events-none"
             )}
           >
             <div className="hidden md:block w-px h-8 bg-border/40 shrink-0" />
             <div 
+              onClick={() => setActive("who")}
               className={cn(
-                "flex-1 h-full flex items-center justify-between gap-4 px-6 transition-all duration-300 rounded-full min-w-[200px]"
+                "flex-1 h-full flex items-center justify-between gap-4 px-6 transition-all duration-300 rounded-full cursor-pointer",
+                active === "who" ? "bg-purple-50 shadow-inner md:bg-white md:shadow-md md:ring-1 md:ring-border/20" : "hover:bg-muted/40"
               )}
             >
               <div className="flex items-center gap-4">
                 <Users className="h-5 w-5 text-primary shrink-0" />
                 <div className="min-w-0 text-left">
                   <p className="text-[10px] font-black text-primary uppercase tracking-widest">Who</p>
-                  <p className="text-sm font-bold text-foreground mt-0.5 whitespace-nowrap">
-                    Guests
+                  <p className={cn("text-sm font-bold mt-0.5 whitespace-nowrap", guests > 1 ? "text-foreground" : "text-muted-foreground")}>
+                    {guests > 1 ? `${guests} Guests` : "Add guests"}
                   </p>
                 </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button 
-                  variant="outline" 
-                  size="icon" 
-                  className="h-7 w-7 rounded-full border-border/60 hover:border-primary shrink-0"
-                  onClick={(e) => { e.stopPropagation(); setGuests(Math.max(1, guests - 1)); }}
-                  disabled={guests <= 1}
-                >
-                  <Minus className="h-3 w-3" />
-                </Button>
-                <span className="w-4 text-center font-bold text-sm shrink-0">{guests}</span>
-                <Button 
-                  variant="outline" 
-                  size="icon" 
-                  className="h-7 w-7 rounded-full border-border/60 hover:border-primary shrink-0"
-                  onClick={(e) => { e.stopPropagation(); setGuests(guests + 1); }}
-                  disabled={guests >= 16}
-                >
-                  <Plus className="h-3 w-3" />
-                </Button>
               </div>
             </div>
           </div>
@@ -238,7 +234,7 @@ export function SearchBar({ className }: { className?: string }) {
         {/* Unified Data Collection Panel */}
         <div className={cn(
           "absolute left-0 right-0 top-full mt-4 bg-white rounded-3xl shadow-2xl ring-1 ring-border/40 transition-all duration-500 overflow-hidden transform origin-top z-50",
-          (active === "where" || active === "when") && isExpanded ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-4 pointer-events-none"
+          (active === "where" || active === "when" || active === "who") && isExpanded ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-4 pointer-events-none"
         )}>
           <div className="p-6 md:p-8">
             {active === "where" && (
@@ -295,6 +291,37 @@ export function SearchBar({ className }: { className?: string }) {
                   initialFocus
                   className="rounded-xl border shadow-sm"
                 />
+              </div>
+            )}
+            {active === "who" && (
+              <div className="animate-in fade-in slide-in-from-top-2 duration-300 px-2">
+                <div className="flex items-center justify-between pb-6 mb-2">
+                  <div>
+                    <h3 className="font-bold text-foreground">Guests</h3>
+                    <p className="text-sm text-muted-foreground">Ages 13 or above</p>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <Button 
+                      variant="outline" 
+                      size="icon" 
+                      className="h-10 w-10 rounded-full border-border/60 hover:border-primary shrink-0"
+                      onClick={(e) => { e.stopPropagation(); setGuests(Math.max(1, guests - 1)); }}
+                      disabled={guests <= 1}
+                    >
+                      <Minus className="h-4 w-4" />
+                    </Button>
+                    <span className="w-6 text-center font-bold text-xl shrink-0">{guests}</span>
+                    <Button 
+                      variant="outline" 
+                      size="icon" 
+                      className="h-10 w-10 rounded-full border-border/60 hover:border-primary shrink-0"
+                      onClick={(e) => { e.stopPropagation(); setGuests(guests + 1); }}
+                      disabled={guests >= 16}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
               </div>
             )}
           </div>

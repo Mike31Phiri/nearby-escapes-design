@@ -17,6 +17,7 @@ export function PaymentForm() {
     setBookingConfirmed,
     packageDetails,
     stayDetails,
+    transportDetails,
   } = useBookingStore();
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -73,7 +74,7 @@ export function PaymentForm() {
     if (errors[field]) setErrors({ ...errors, [field]: "" });
   };
 
-  const bookingDetails = packageDetails || stayDetails;
+  const bookingDetails = packageDetails || stayDetails || transportDetails;
   const totalAmount = bookingDetails?.total || 0;
 
   return (
@@ -89,7 +90,7 @@ export function PaymentForm() {
           <div className="bg-muted/50 rounded-lg p-4 mb-6">
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Total Amount:</span>
-              <span className="text-2xl font-bold text-primary">${totalAmount.toFixed(2)}</span>
+              <span className="text-2xl font-bold text-primary">ZMW {totalAmount.toFixed(2)}</span>
             </div>
           </div>
 
@@ -236,7 +237,7 @@ export function PaymentForm() {
             ) : (
               <>
                 <CheckCircle className="mr-2 h-4 w-4" />
-                Complete Booking - ${totalAmount.toFixed(2)}
+                Complete Booking - ZMW {totalAmount.toFixed(2)}
               </>
             )}
           </Button>

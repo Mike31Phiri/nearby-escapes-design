@@ -6,10 +6,11 @@ import { Calendar, Users, MapPin, Clock, CheckCircle } from "lucide-react";
 import { format } from "date-fns";
 
 export function BookingSummary() {
-  const { packageDetails, stayDetails, guestInfo } = useBookingStore();
+  const { packageDetails, stayDetails, transportDetails, guestInfo } = useBookingStore();
 
-  const details = packageDetails || stayDetails;
+  const details = packageDetails || stayDetails || transportDetails;
   const isPackage = !!packageDetails;
+  const isTransport = !!transportDetails;
 
   if (!details) return null;
 
@@ -31,7 +32,7 @@ export function BookingSummary() {
         ) : null}
 
         <div>
-          <h3 className="font-semibold text-lg">{d.listingName || d.packageName}</h3>
+          <h3 className="font-semibold text-lg">{d.listingName || d.packageName || d.route}</h3>
           {isPackage && (
             <>
               <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
@@ -44,7 +45,19 @@ export function BookingSummary() {
               </div>
             </>
           )}
-          {!isPackage && d.checkIn && (
+          {isTransport && (
+            <>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+                <Clock className="h-4 w-4" />
+                {d.departureDate} at {d.departureTime}
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Users className="h-4 w-4" />
+                {d.passengers} {d.passengers === 1 ? "passenger" : "passengers"}
+              </div>
+            </>
+          )}
+          {!isPackage && !isTransport && d.checkIn && (
             <>
               <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
                 <Calendar className="h-4 w-4" />
@@ -72,25 +85,25 @@ export function BookingSummary() {
         <div className="border-t pt-4 space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Subtotal</span>
-            <span>${d.subtotal.toFixed(2)}</span>
+            <span>ZMW {d.subtotal.toFixed(2)}</span>
           </div>
           {d.cleaningFee > 0 && (
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Cleaning fee</span>
-              <span>${d.cleaningFee.toFixed(2)}</span>
+              <span>ZMW {d.cleaningFee.toFixed(2)}</span>
             </div>
           )}
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Service fee</span>
-            <span>${d.serviceFee.toFixed(2)}</span>
+            <span>ZMW {d.serviceFee.toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Taxes</span>
-            <span>${d.taxes.toFixed(2)}</span>
+            <span>ZMW {d.taxes.toFixed(2)}</span>
           </div>
           <div className="border-t pt-2 flex justify-between font-bold text-lg">
             <span>Total</span>
-            <span className="text-primary">${d.total.toFixed(2)}</span>
+            <span className="text-primary">ZMW {d.total.toFixed(2)}</span>
           </div>
         </div>
 

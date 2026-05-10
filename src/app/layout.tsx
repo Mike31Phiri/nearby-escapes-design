@@ -10,6 +10,30 @@ export const metadata: Metadata = {
   title: "Nearby Escapes — Stay, travel, explore Zambia",
   description:
     "Discover stays, bus tickets and hidden gems across Zambia. Book trusted lodges, hotels and tour packages with Nearby Escapes.",
+  keywords: ["Zambia", "travel", "booking", "lodges", "bus tickets", "tours", "Nearby Escapes", "vacation"],
+  authors: [{ name: "Nearby Escapes" }],
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://nearbyescapes.com",
+    title: "Nearby Escapes — Stay, travel, explore Zambia",
+    description: "Discover stays, bus tickets and hidden gems across Zambia. Book trusted lodges, hotels and tour packages with Nearby Escapes.",
+    siteName: "Nearby Escapes",
+    images: [
+      {
+        url: "https://images.pexels.com/photos/2166936/pexels-photo-2166936.jpeg",
+        width: 1200,
+        height: 630,
+        alt: "Nearby Escapes Zambia",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nearby Escapes — Stay, travel, explore Zambia",
+    description: "Discover stays, bus tickets and hidden gems across Zambia. Book trusted lodges, hotels and tour packages with Nearby Escapes.",
+    images: ["https://images.pexels.com/photos/2166936/pexels-photo-2166936.jpeg"],
+  },
   manifest: "/site.webmanifest",
   appleWebApp: {
     capable: true,

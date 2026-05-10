@@ -9,12 +9,14 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState } from "react";
 
+import { useWishlistStore } from "@/store/wishlistStore";
+
 export default function WishlistPage() {
-  const [items, setItems] = useState(listings.slice(0, 4));
+  const { items, removeItem, clearWishlist } = useWishlistStore();
 
   const clearAll = () => {
     if (confirm("Are you sure you want to clear your wishlist?")) {
-      setItems([]);
+      clearWishlist();
     }
   };
 
@@ -48,7 +50,7 @@ export default function WishlistPage() {
                 <ListingCard listing={listing} />
                 <button 
                   className="absolute top-4 right-4 z-20 h-10 w-10 bg-white/90 backdrop-blur-md rounded-full shadow-lg flex items-center justify-center text-red-500 hover:bg-white transition-all opacity-0 group-hover:opacity-100"
-                  onClick={() => setItems(items.filter(i => i.id !== listing.id))}
+                  onClick={() => removeItem(listing.id)}
                 >
                   <Heart className="h-5 w-5 fill-red-500" />
                 </button>

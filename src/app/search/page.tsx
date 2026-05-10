@@ -11,16 +11,17 @@ import {
   X, ChevronDown, Star, Wifi, Car, Coffee,
   Wind, Dumbbell, Search as SearchIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 // ─── Filter config ────────────────────────────────────────────────────────────
 const PRICE_RANGES = [
   { id: "any", label: "Any price" },
-  { id: "0-100", label: "Under ZMW 100" },
-  { id: "100-200", label: "ZMW 100 – 200" },
-  { id: "200-350", label: "ZMW 200 – 350" },
-  { id: "350+", label: "ZMW 350+" },
+  { id: "0-2000", label: "Under ZMW 2,000" },
+  { id: "2000-3500", label: "ZMW 2,000 – 3,500" },
+  { id: "3500-5000", label: "ZMW 3,500 – 5,000" },
+  { id: "5000+", label: "ZMW 5,000+" },
 ];
 
 const PROPERTY_TYPES = [
@@ -89,20 +90,29 @@ function FilterPill({
 function FilterDropdown({ children, open }: { children: React.ReactNode; open: boolean }) {
   if (!open) return null;
   return (
-    <div className="absolute top-full left-0 mt-3 bg-background border border-border rounded-3xl shadow-2xl z-50 min-w-[240px] p-4 animate-in fade-in zoom-in-95 duration-200">
+    <div className="absolute top-full left-0 mt-3 bg-background border border-border rounded-3xl shadow-2xl z-[100] min-w-[240px] p-4 animate-in fade-in zoom-in-95 duration-200">
       {children}
     </div>
   );
 }
 
 export default function SearchPage() {
-  const [activeCategory, setActiveCategory] = useState("all");
+  const searchParams = useSearchParams();
+  const q = searchParams.get("q") || "";
+  const categoryParam = searchParams.get("category") || "all";
+
+  const [activeCategory, setActiveCategory] = useState(categoryParam);
   const [priceRange, setPriceRange] = useState("any");
   const [propertyType, setPropertyType] = useState<string[]>([]);
   const [amenities, setAmenities] = useState<string[]>([]);
   const [rating, setRating] = useState("");
   const [sort, setSort] = useState("recommended");
   const [openFilter, setOpenFilter] = useState<string | null>(null);
+
+  // Sync with URL category changes
+  useEffect(() => {
+    setActiveCategory(categoryParam);
+  }, [categoryParam]);
 
   const toggleFilter = (f: string) => setOpenFilter(openFilter === f ? null : f);
 
@@ -126,6 +136,62 @@ export default function SearchPage() {
     setOpenFilter(null);
   };
 
+  const filteredListings = useMemo(() => {
+    let result = [...listings];
+
+    // Search query filter (q)
+    if (q) {
+      const query = q.toLowerCase();
+      result = result.filter(l => 
+        l.name.toLowerCase().includes(query) || 
+        l.location.toLowerCase().includes(query) ||
+        l.description.toLowerCase().includes(query)
+      );
+    }
+
+    // Price range filter
+    if (priceRange !== "any") {
+      result = result.filter(l => {
+        if (priceRange.endsWith("+")) {
+          const min = parseInt(priceRange);
+          return l.priceZmw >= min;
+        }
+        const [min, max] = priceRange.split("-").map(Number);
+        return l.priceZmw >= min && l.priceZmw <= max;
+      });
+    }
+
+    // Property type filter
+    if (propertyType.length > 0) {
+      result = result.filter(l => propertyType.includes(l.category));
+    }
+
+    // Rating filter
+    if (rating) {
+      const minRating = parseFloat(rating);
+      result = result.filter(l => l.rating >= minRating);
+    }
+
+    // Amenities filter
+    if (amenities.length > 0) {
+      result = result.filter(l => 
+        amenities.every(a => 
+          l.amenities.some(la => la.toLowerCase().includes(a.toLowerCase()))
+        )
+      );
+    }
+
+    // Sorting logic
+    result.sort((a, b) => {
+      if (sort === "price-asc") return a.priceZmw - b.priceZmw;
+      if (sort === "price-desc") return b.priceZmw - a.priceZmw;
+      if (sort === "rating") return b.rating - a.rating;
+      return 0; // recommended
+    });
+
+    return result;
+  }, [q, priceRange, propertyType, rating, amenities, sort]);
+
   const categories = [
     { id: "all", label: "All" },
     { id: "stays", label: "Stays" },
@@ -142,23 +208,15 @@ export default function SearchPage() {
       <div className="sticky top-20 z-40 bg-background/95 backdrop-blur-sm border-b border-border/50 shadow-sm">
         <div className="mx-auto max-w-7xl px-4 md:px-6 py-3">
           {/* Top row: search + view toggle */}
-          <div className="flex items-center gap-3">
-            <div className="flex-1 max-w-2xl">
+          <div className="flex justify-center w-full">
+            <div className="w-full max-w-4xl">
               <SearchBar />
-            </div>
-            <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-xl flex-shrink-0">
-              <Button variant="ghost" size="icon" className="rounded-lg h-10 w-10 bg-background shadow-sm">
-                <LayoutGrid className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="rounded-lg h-10 w-10 text-muted-foreground hover:text-foreground">
-                <MapIcon className="h-4 w-4" />
-              </Button>
             </div>
           </div>
 
           {/* ── DIFFERENTIATED FILTER BAR ── */}
           {/* Horizontal scrollable pill bar — no sidebar, no modal */}
-          <div className="flex items-center gap-2 mt-3 overflow-x-auto pb-1 no-scrollbar">
+          <div className="flex flex-wrap items-center gap-2 mt-3 pb-1">
             {/* Category pills */}
             {categories.map((cat) => (
               <button
@@ -298,7 +356,7 @@ export default function SearchPage() {
           <div>
             <h1 className="text-2xl md:text-3xl font-black tracking-tight">Search Results</h1>
             <p className="text-muted-foreground mt-1 font-medium">
-              {listings.length} escapes found
+              {filteredListings.length} escapes found
               {activeCategory !== "all" && ` in ${categories.find(c => c.id === activeCategory)?.label}`}
             </p>
           </div>
@@ -319,9 +377,9 @@ export default function SearchPage() {
         </div>
 
         {/* Results grid */}
-        {listings.length > 0 ? (
+        {filteredListings.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12 stagger-children">
-            {listings.map((listing) => (
+            {filteredListings.map((listing) => (
               <ListingCard key={listing.id} listing={listing} />
             ))}
           </div>
@@ -341,7 +399,7 @@ export default function SearchPage() {
         )}
 
         {/* Load more */}
-        {listings.length > 0 && (
+        {filteredListings.length > 0 && (
           <div className="mt-16 flex justify-center">
             <Button variant="outline" className="rounded-2xl px-12 h-12 border-2 font-black hover:bg-primary hover:text-white transition-all shadow-sm">
               Load more results

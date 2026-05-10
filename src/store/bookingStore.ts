@@ -54,6 +54,21 @@ export interface PackageBookingDetails {
   total: number;
 }
 
+export interface TransportBookingDetails {
+  transportId?: string;
+  route?: string;
+  operator?: string;
+  departureDate?: string;
+  departureTime?: string;
+  arrivalTime?: string;
+  passengers: number;
+  pricePerPassenger: number;
+  subtotal: number;
+  serviceFee: number;
+  taxes: number;
+  total: number;
+}
+
 interface BookingState {
   // Stay booking
   stayDetails: BookingDetails | null;
@@ -62,6 +77,18 @@ interface BookingState {
 
   // Package booking
   packageDetails: PackageBookingDetails | null;
+
+  // Transport booking
+  transportDetails: TransportBookingDetails | null;
+
+  // Booking history
+  bookingHistory: Array<{
+    id: string;
+    date: string;
+    type: "stay" | "package" | "transport";
+    details: any;
+    status: "upcoming" | "past" | "cancelled";
+  }>;
 
   // UI state
   currentStep: number;
@@ -72,6 +99,7 @@ interface BookingState {
   // Actions
   setStayDetails: (details: BookingDetails) => void;
   setPackageDetails: (details: PackageBookingDetails) => void;
+  setTransportDetails: (details: TransportBookingDetails) => void;
   setGuestInfo: (info: BookingGuest) => void;
   setPaymentInfo: (info: BookingPayment) => void;
   setCurrentStep: (step: number) => void;
@@ -86,8 +114,10 @@ export const useBookingStore = create<BookingState>()(
       // Initial state
       stayDetails: null,
       packageDetails: null,
+      transportDetails: null,
       guestInfo: null,
       paymentInfo: null,
+      bookingHistory: [],
       currentStep: 1,
       isProcessing: false,
       bookingConfirmed: false,
@@ -96,20 +126,41 @@ export const useBookingStore = create<BookingState>()(
       // Actions
       setStayDetails: (details) => set({ stayDetails: details, currentStep: 2 }),
       setPackageDetails: (details) => set({ packageDetails: details, currentStep: 2 }),
+      setTransportDetails: (details) => set({ transportDetails: details, currentStep: 2 }),
       setGuestInfo: (info) => set({ guestInfo: info }),
       setPaymentInfo: (info) => set({ paymentInfo: info }),
       setCurrentStep: (step) => set({ currentStep: step }),
       setIsProcessing: (processing) => set({ isProcessing: processing }),
       setBookingConfirmed: (confirmed, confirmationId) =>
-        set({
-          bookingConfirmed: confirmed,
-          confirmationId: confirmationId || null,
-          currentStep: confirmed ? 4 : 3,
+        set((state) => {
+          if (confirmed && confirmationId) {
+            const type = state.stayDetails ? "stay" : state.packageDetails ? "package" : state.transportDetails ? "transport" : "stay";
+            const details = state.stayDetails || state.packageDetails || state.transportDetails;
+            const newBooking = {
+              id: confirmationId,
+              date: new Date().toISOString(),
+              type,
+              details,
+              status: "upcoming" as const,
+            };
+            return {
+              bookingConfirmed: confirmed,
+              confirmationId: confirmationId,
+              currentStep: 4,
+              bookingHistory: [...state.bookingHistory, newBooking],
+            };
+          }
+          return {
+            bookingConfirmed: confirmed,
+            confirmationId: confirmationId || null,
+            currentStep: confirmed ? 4 : 3,
+          };
         }),
       resetBooking: () =>
         set({
           stayDetails: null,
           packageDetails: null,
+          transportDetails: null,
           guestInfo: null,
           paymentInfo: null,
           currentStep: 1,
@@ -123,7 +174,9 @@ export const useBookingStore = create<BookingState>()(
       partialize: (state) => ({
         stayDetails: state.stayDetails,
         packageDetails: state.packageDetails,
+        transportDetails: state.transportDetails,
         guestInfo: state.guestInfo,
+        bookingHistory: state.bookingHistory,
         currentStep: state.currentStep,
       }),
     },
