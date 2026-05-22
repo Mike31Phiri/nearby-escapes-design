@@ -1,10 +1,11 @@
+```
 # Dependencies
 node_modules/
 
 # Build outputs
-.next/
 dist/
 build/
+.next/
 out/
 
 # Environment variables
@@ -12,33 +13,527 @@ out/
 .env.local
 .env.*
 
+# IDE specific
+.vscode/
+.idea/
+*.swp
+*.swo
+
 # Logs
 *.log
 
-# Coverage reports
+# Coverage
 coverage/
-.nyc_output/
+htmlcov/
+.coverage
 
-# AI tool skill folders
-.agent/
-.claude/
-.codebuddy/
-.codex/
-.continue/
-.cursor/
-.gemini/
-.kiro/
-.opencode/
-.qoder/
-.roo/
-.trae/
-.windsurf/
-.github/prompts/
+# OS generated
+.DS_Store
+Thumbs.db
 
-# Python cache
+# Temporary files
+*.tmp
+
+# Python specific
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg-info/
+.eggs/
 
-# Design system generated files
-design-system/
-scratch/
+# MyPy cache
+.mypy_cache/
+
+# PyTest cache
+.pytest_cache/
+
+# Coverage reports
+coverage.xml
+*.gcov
+*.lcov
+
+# Distribution / packaging
+.Python
+*.egg
+
+# Byte-compiled / optimized / DLL files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*$py.class
+*$pyc.class
+
+# C extensions
+*.so
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask
+instance/
+.webassets-cache
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# PyCharm
+# JetBrains specific template is maintained in a separate JetBrains.gitignore that can be found at: https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
+# If you need to add JetBrains-specific ignores it should go in that file
+.idea/
+
+# Visual Studio Code
+.vscode/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+node_modules/
+dist
+build
+.nyc_output
+coverage
+.nyc_output/
+coverage/
+*.lcov
+.nyc_output/*
+coverage/*
+
+# Next.js
+.next
+out
+
+# Nuxt.js
+.nuxt
+dist
+
+# Gatsby.js
+.cache/
+public
+
+# Vue.js
+node_modules/
+dist
+dist-server
+*.vuepress/dist
+.static
+
+# React Native
+node_modules/
+React-Native/
+ios/
+android/
+*/build/
+*.apk
+*.aab
+
+# Cordova
+hooks/
+platforms/
+plugins/
+www/
+
+# Ionic
+ionic/www/
+Ionic/www/
+
+# Meteor
+.meteor/local
+
+# NativeScript
+node_modules/
+platforms/
+src/platforms/
+
+# PhoneGap
+node_modules/
+platforms/
+plugins/
+www/
+
+# Tessel
+.node_modules
+.tessel
+tessel
+
+# Webpack
+webpack-stats.json
+
+# Ember
+tmp/
+temp/
+dist/
+node_modules/
+vendor/
+
+# Grunt
+.grunt
+grunt
+Gruntfile.js
+
+# Bower
+bower_components/
+
+# Brunch
+.brunch/
+public/
+
+# Component
+component.json
+components/
+bower_components/
+
+# Sprockets
+.sprockets
+
+# Stencil
+stencil-build/
+
+# Rails
+*.gem
+*.rbc
+.bundle/
+.config
+.yarn-integrity
+coverage/
+InstalledFiles
+lib/bundler/man/
+pkg/
+rdoc/
+spec/reports/
+spec/examples.txt
+test/tmp/
+test/version_tmp/
+tmp/
+
+# Stop ignoring builds
+!build/installer.*
+!build/*.dmg
+
+# Capybara Chrome Driver
+chromedriver.log
+
+# Turbolinks cache
+.turbolinks-manifest
+
+# DynamoDB Local
+.dynamodb/
+
+# Yarn
+yarn-error.log
+yarn-debug.log*
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output/**/*.xml
+fastlane/build/**
+
+# Bundle monorepo tools
+jspm_packages/
+
+# TypeScript
+*.tsbuildinfo
+*.bak
+
+# Code coverage
+coverage.lcov
+
+# Next.js build output
+.next/
+out/
+
+# Next.js static export output
+export-marker.json
+
+# Netlify
+.netlify/
+
+# Vercel
+.vercel/
+
+# Docker
+.dockerignore
+
+# Kubernetes
+.kubeconfig
+
+# Terraform
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+
+# Ansible
+.retry
+
+# Puppet
+spec/fixtures/
+.rubocop.yml
+.rubocop_todo.yml
+
+# Chef
+.kitchen/
+.kitchen.local.yml
+
+# SaltStack
+salt/
+pillar/
+
+# Vagrant
+.vagrant/
+vagrant-*.out
+vagrant-*.err
+
+# VirtualEnv
+venv/
+ENV/
+
+# Conda
+conda-meta/
+.conda/
+
+# Julia
+.julia/
+
+# Zig
+zig-cache/
+zig-out/
+
+# Rust
+target/
+Cargo.lock
+
+# Go
+*.out
+*.exe
+*.dll
+*.so
+*.dylib
+*.plist
+*.profdata
+*.gcda
+*.gcno
+*.gcov
+*.profraw
+*.stackdump
+*.trace
+*.syso
+*.s
+*.i
+*.ii
+*.ll
+*.bc
+*.o
+*.a
+*.dylib
+*.so
+*.dll
+*.exe
+*.manifest
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.obj
+*.res
+*.rsp
+*.tlog
+*.lastbuildstate
+*.pch
+*.ilk
+*.meta
+*.pidb
+*.userprefs
+*.sln.docstates
+*.userosscache
+*.suo
+*.user
+*.aps
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+*.cbs
+*.cbx
+*.cbz
+*.lof
+*.lot
+*.synctex.gz
+*.tex.backup
+*.mpx
+*.mp
+*.mpo
+*.mpy
+*.mpz
+*.mpq
+*.mps
+*.mpu
+*.mpv
+*.mpw
+*.mpx
+*.mpy
+*.mpz
+*.mpq
+*.mps
+*.mpu
+*.mpv
+*.mpw
+*.mpx
+*.mpy
+*.mpz
+*.mpq
+*.mps
+*.mpu
+*.mpv
+*.mpw
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+target/
+.gradle/
+build/
+
+# C#
+*.sln
+*.csproj
+*.user
+*.userosscache
+*.suo
+*.cache
+*.VC.db
+*.VC.VC.opendb
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+*.VC.VC.opendb......
+```
