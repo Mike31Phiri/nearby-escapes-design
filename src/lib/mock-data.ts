@@ -279,8 +279,20 @@ export const mockPackages: Package[] = [
 ];
 
 export const mockDestinations: Destination[] = [
-  { name: "Livingstone", image: "https://images.unsplash.com/photo-1589979481223-deb893043163?w=800&q=80" },
-  { name: "Lusaka", image: "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=800&q=80" },
-  { name: "Ndola", image: "https://images.unsplash.com/photo-1512453979798-5ea904ac66de?w=800&q=80" },
-  { name: "Mfuwe", image: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=80" },
+  {
+    name: "Livingstone",
+    image: "https://images.unsplash.com/photo-1589979481223-deb893043163?w=800&q=80",
+  },
+  {
+    name: "Lusaka",
+    image: "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=800&q=80",
+  },
+  {
+    name: "Ndola",
+    image: "https://images.unsplash.com/photo-1512453979798-5ea904ac66de?w=800&q=80",
+  },
+  {
+    name: "Mfuwe",
+    image: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=80",
+  },
 ];

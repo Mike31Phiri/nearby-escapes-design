@@ -3,6 +3,7 @@ import "../styles.css";
 import { AuthProvider } from "@/lib/auth";
 import { Toaster } from "@/components/ui/sonner";
 import { CookieConsent } from "@/components/CookieConsent";
+import { Footer } from "@/components/layout/Footer";
 import { RouteProgressBar } from "@/components/ui/RouteProgressBar";
 import { Suspense } from "react";
 
@@ -10,14 +11,24 @@ export const metadata: Metadata = {
   title: "Nearby Escapes — Stay, travel, explore Zambia",
   description:
     "Discover stays, bus tickets and hidden gems across Zambia. Book trusted lodges, hotels and tour packages with Nearby Escapes.",
-  keywords: ["Zambia", "travel", "booking", "lodges", "bus tickets", "tours", "Nearby Escapes", "vacation"],
+  keywords: [
+    "Zambia",
+    "travel",
+    "booking",
+    "lodges",
+    "bus tickets",
+    "tours",
+    "Nearby Escapes",
+    "vacation",
+  ],
   authors: [{ name: "Nearby Escapes" }],
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://nearbyescapes.com",
     title: "Nearby Escapes — Stay, travel, explore Zambia",
-    description: "Discover stays, bus tickets and hidden gems across Zambia. Book trusted lodges, hotels and tour packages with Nearby Escapes.",
+    description:
+      "Discover stays, bus tickets and hidden gems across Zambia. Book trusted lodges, hotels and tour packages with Nearby Escapes.",
     siteName: "Nearby Escapes",
     images: [
       {
@@ -31,7 +42,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Nearby Escapes — Stay, travel, explore Zambia",
-    description: "Discover stays, bus tickets and hidden gems across Zambia. Book trusted lodges, hotels and tour packages with Nearby Escapes.",
+    description:
+      "Discover stays, bus tickets and hidden gems across Zambia. Book trusted lodges, hotels and tour packages with Nearby Escapes.",
     images: ["https://images.pexels.com/photos/2166936/pexels-photo-2166936.jpeg"],
   },
   manifest: "/site.webmanifest",
@@ -63,6 +75,7 @@ export default function RootLayout({
             <RouteProgressBar />
           </Suspense>
           {children}
+          <Footer />
           <Toaster />
           <CookieConsent />
         </AuthProvider>

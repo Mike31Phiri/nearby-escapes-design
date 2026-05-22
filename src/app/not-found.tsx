@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Compass } from "lucide-react";
 
@@ -8,22 +7,25 @@ export default function NotFound() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
-      
+
       <main className="flex-1 flex flex-col items-center justify-center p-4 text-center py-20">
         <div className="max-w-md w-full space-y-8 animate-in fade-in zoom-in duration-700">
           <div className="relative">
-            <h1 className="text-[150px] leading-none font-black text-primary/10 select-none">404</h1>
+            <h1 className="text-[150px] leading-none font-black text-primary/10 select-none">
+              404
+            </h1>
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="h-24 w-24 bg-primary/10 rounded-[40px] flex items-center justify-center rotate-12">
                 <Compass className="h-12 w-12 text-primary" />
               </div>
             </div>
           </div>
-          
+
           <div className="space-y-4">
             <h2 className="text-4xl font-extrabold tracking-tight">Looks like you're lost</h2>
             <p className="text-muted-foreground text-lg">
-              We can't seem to find the page you're looking for. It might have been removed or the link is incorrect.
+              We can't seem to find the page you're looking for. It might have been removed or the
+              link is incorrect.
             </p>
           </div>
 
@@ -34,8 +36,6 @@ export default function NotFound() {
           </Link>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }
