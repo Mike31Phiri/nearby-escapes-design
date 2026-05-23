@@ -22,10 +22,10 @@ export default function NotFound() {
           </div>
 
           <div className="space-y-4">
-            <h2 className="text-4xl font-extrabold tracking-tight">Looks like you're lost</h2>
+            <h2 className="text-4xl font-extrabold tracking-tight">Looks like you&apos;re lost</h2>
             <p className="text-muted-foreground text-lg">
-              We can't seem to find the page you're looking for. It might have been removed or the
-              link is incorrect.
+              We can&apos;t seem to find the page you&apos;re looking for. It might have been
+              removed or the link is incorrect.
             </p>
           </div>
 

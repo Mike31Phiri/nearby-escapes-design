@@ -36,8 +36,8 @@ const heroImage = "/images/hero-zambia.jpg";
 
 const categories = [
   { id: "stays", label: "Stays", icon: Hotel, href: "/search?category=stays" },
-  { id: "transport", label: "Transport", icon: TrainFront, href: "/search?category=transport" },
   { id: "attractions", label: "Attractions", icon: Ticket, href: "/search?category=attractions" },
+  { id: "transport", label: "Transport", icon: TrainFront, href: "/search?category=transport" },
   { id: "gems", label: "Gems", icon: Gem, href: "/search?category=gems" },
 ] as const;
 
@@ -59,25 +59,25 @@ const packagesList = mockPackages.map((p) => ({
 const sectionMeta: Record<CategoryId, { heading: string; sub: string; cta: string; href: string }> =
   {
     stays: {
-      heading: "Popular stays",
+      heading: "Stays in Lusaka",
       sub: "Hand-picked lodges, hotels and camps across Zambia",
       cta: "Explore all stays",
       href: "/search?category=stays",
     },
     transport: {
-      heading: "Popular bus routes",
+      heading: "Transport in Lusaka",
       sub: "Get to your destination comfortably",
       cta: "Browse all routes",
       href: "/search?category=transport",
     },
     attractions: {
-      heading: "Top attractions",
+      heading: "Attractions in Lusaka",
       sub: "Iconic experiences and must-see destinations",
       cta: "See all attractions",
       href: "/search?category=attractions",
     },
     gems: {
-      heading: "Hidden gems",
+      heading: "Hidden gems in Lusaka",
       sub: "Off-the-beaten-path spots only locals know",
       cta: "Discover all gems",
       href: "/search?category=gems",
@@ -90,6 +90,10 @@ export function HomePage() {
 
   const handleCategoryChange = (id: CategoryId) => {
     setActiveCategory(id);
+    // Add a slight delay to allow the DOM to update if needed, though scroll-mt should handle the offset.
+    setTimeout(() => {
+      document.getElementById("category-content")?.scrollIntoView({ behavior: "smooth" });
+    }, 50);
   };
 
   return (
@@ -122,7 +126,7 @@ export function HomePage() {
       </section>
 
       {/* Category Tabs */}
-      <section className="sticky top-20 z-30 bg-background border-b border-border/50 shadow-sm">
+      <section className="sticky top-16 z-30 bg-background border-b border-border/50 shadow-sm">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <div className="flex items-center justify-center gap-8 md:gap-20 pt-6 pb-2">
             {categories.map(({ id, label, icon: Icon }) => {
@@ -204,36 +208,27 @@ export function HomePage() {
                   href={`/listings/transport/${route.id}`}
                   className="group block"
                 >
-                  <Card className="border border-border/60 overflow-hidden hover:shadow-2xl rounded-[32px] transition-all duration-500 hover:-translate-y-2 bg-white">
-                    <div className="relative aspect-[16/9] overflow-hidden">
+                  <div className="flex flex-col gap-2">
+                    <div className="relative aspect-[16/9] overflow-hidden rounded-md bg-muted mb-2">
                       <img
                         src={route.image}
                         alt={`${route.from} to ${route.to}`}
                         loading="lazy"
-                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-90"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                      <div className="absolute bottom-4 left-5 right-5 flex items-center justify-between">
-                        <p className="text-xl font-black text-white drop-shadow-xl">
-                          {route.from} → {route.to}
-                        </p>
-                        <div className="flex items-center gap-2 rounded-full bg-white/95 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-primary backdrop-blur-md shadow-lg">
-                          <Bus className="h-3.5 w-3.5" /> {route.operator}
-                        </div>
-                      </div>
                     </div>
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-6 text-[10px] font-black text-muted-foreground uppercase tracking-widest">
-                          <span className="flex items-center gap-1.5">
-                            <Clock className="h-4 w-4 text-primary" /> {route.duration}
-                          </span>
-                          <span>{route.departures}</span>
-                        </div>
-                        <span className="font-black text-xl text-primary">ZMW {route.price}</span>
-                      </div>
-                    </CardContent>
-                  </Card>
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-bold text-foreground">
+                        {route.from} to {route.to}
+                      </p>
+                      <span className="font-semibold text-sm text-foreground">
+                        ZMW {route.price}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      {route.operator} • {route.duration}
+                    </p>
+                  </div>
                 </Link>
               ))}
             </div>
@@ -260,39 +255,24 @@ export function HomePage() {
                   href={`/listings/experiences/${item.id}`}
                   className="group block"
                 >
-                  <Card className="overflow-hidden border border-border/60 rounded-[32px] hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-white">
-                    <div className="relative aspect-[4/3] overflow-hidden">
+                  <div className="flex flex-col gap-2">
+                    <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-muted mb-2">
                       <img
                         src={item.image}
                         alt={item.name}
                         loading="lazy"
-                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-90"
                       />
                     </div>
-                    <CardContent className="p-6">
-                      <p className="font-black text-lg leading-tight mb-2">{item.name}</p>
-                      <p className="text-xs font-bold text-muted-foreground flex items-center gap-1.5 uppercase tracking-wider">
-                        <MapPin className="h-3.5 w-3.5 text-primary" />
-                        {item.location}
-                      </p>
-                      <div className="flex items-center justify-between mt-6">
-                        <span className="text-xs font-black flex items-center gap-1.5">
-                          <Star className="h-4 w-4 fill-accent text-accent" />
-                          {item.rating}{" "}
-                          <span className="text-muted-foreground opacity-60 font-bold">
-                            ({item.reviews})
-                          </span>
-                        </span>
-                        <span className="text-lg font-black text-primary">
-                          ${item.price}
-                          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                            {" "}
-                            /pp
-                          </span>
-                        </span>
+                    <div className="flex items-start justify-between">
+                      <p className="text-sm font-bold text-foreground line-clamp-1">{item.name}</p>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <Star className="h-3 w-3 fill-primary text-primary" />
+                        <span className="text-xs font-semibold text-foreground">{item.rating}</span>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                    <p className="text-xs text-muted-foreground line-clamp-1">{item.location}</p>
+                  </div>
                 </Link>
               ))}
             </div>
@@ -319,42 +299,28 @@ export function HomePage() {
                   href={`/listings/experiences/${item.id}`}
                   className="group block"
                 >
-                  <Card className="overflow-hidden border border-border/60 rounded-[32px] hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-white">
-                    <div className="relative aspect-[4/3] overflow-hidden">
+                  <div className="flex flex-col gap-2">
+                    <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-muted mb-2">
                       <img
                         src={item.image}
                         alt={item.name}
                         loading="lazy"
-                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-90"
                       />
-                      <div className="absolute top-4 left-4 rounded-full bg-primary/95 text-white px-4 py-1.5 text-[10px] font-black uppercase tracking-widest shadow-lg backdrop-blur-sm">
-                        Hidden Gem
+                    </div>
+                    <div className="flex items-start justify-between">
+                      <p className="text-sm font-bold text-foreground line-clamp-1">{item.name}</p>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <Star className="h-3 w-3 fill-primary text-primary" />
+                        <span className="text-xs font-semibold text-foreground">{item.rating}</span>
                       </div>
                     </div>
-                    <CardContent className="p-6">
-                      <p className="font-black text-lg leading-tight mb-2">{item.name}</p>
-                      <p className="text-xs font-bold text-muted-foreground flex items-center gap-1.5 uppercase tracking-wider">
-                        <MapPin className="h-3.5 w-3.5 text-primary" />
-                        {item.location}
-                      </p>
-                      <div className="flex items-center justify-between mt-6">
-                        <span className="text-xs font-black flex items-center gap-1.5">
-                          <Star className="h-4 w-4 fill-accent text-accent" />
-                          {item.rating}{" "}
-                          <span className="text-muted-foreground opacity-60 font-bold">
-                            ({item.reviews})
-                          </span>
-                        </span>
-                        <span className="text-lg font-black text-primary">
-                          ${item.price}
-                          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                            {" "}
-                            /pp
-                          </span>
-                        </span>
-                      </div>
-                    </CardContent>
-                  </Card>
+                    <p className="text-xs text-muted-foreground line-clamp-1">{item.location}</p>
+                    <p className="text-sm font-semibold text-foreground mt-1">
+                      ${item.price}
+                      <span className="text-xs font-normal text-muted-foreground ml-1">/pp</span>
+                    </p>
+                  </div>
                 </Link>
               ))}
             </div>
@@ -384,13 +350,21 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Popular Destinations */}
+      {/* Travel Destinations */}
       <section className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-32 section-enter">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-black tracking-tight">Popular Destinations</h2>
-          <p className="text-muted-foreground mt-2 text-lg font-medium">
-            Explore the most sought-after locations in Zambia
-          </p>
+        <div className="flex items-end justify-between mb-8">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight">Travel Destinations</h2>
+            <p className="text-muted-foreground mt-2 text-lg font-medium">
+              Explore the most sought-after locations in Zambia
+            </p>
+          </div>
+          <Link
+            href="/search?category=destinations"
+            className="text-primary font-black uppercase tracking-widest text-xs hover:underline"
+          >
+            View All
+          </Link>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 stagger-children">
           {mockDestinations.map((dest) => (
@@ -399,114 +373,32 @@ export function HomePage() {
               href={`/search?location=${dest.name}`}
               className="group block text-center"
             >
-              <div className="relative aspect-square overflow-hidden rounded-[32px] mb-4 shadow-sm group-hover:shadow-xl transition-all duration-500">
+              <div className="relative aspect-square overflow-hidden rounded-md mb-3 bg-muted">
                 <img
                   src={dest.image}
                   alt={dest.name}
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-90"
                 />
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
               </div>
-              <h3 className="font-black text-xl">{dest.name}</h3>
+              <h3 className="font-bold text-sm text-foreground">{dest.name}</h3>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* Recommended For You */}
-      <section className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-32 section-enter">
-        <div className="flex items-end justify-between mb-12">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-black tracking-tight">Recommended For You</h2>
-            <p className="text-muted-foreground mt-2 text-lg font-medium">
-              Based on your recent searches
-            </p>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-14 stagger-children">
-          {mockStays.slice(4, 8).map((listing) => (
-            <ListingCard key={listing.id} listing={listing} />
-          ))}
-        </div>
-      </section>
-
-      {/* Curated Packages */}
-      <section className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-32 section-enter">
-        <div className="flex items-end justify-between mb-12">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-black tracking-tight">Curated Packages</h2>
-            <p className="text-muted-foreground mt-2 text-lg font-medium">
-              All-inclusive experiences for a hassle-free escape
-            </p>
-          </div>
-          <Link
-            href="/search?category=packages"
-            className="hidden md:flex items-center gap-2 text-primary font-black uppercase tracking-widest text-xs group"
+      {/* Promo Banner */}
+      <section className="w-full bg-purple-50 border-y border-border/50 mt-32 py-20 section-enter">
+        <div className="mx-auto max-w-7xl px-4 md:px-6 text-center flex flex-col items-center justify-center">
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-8 text-foreground">
+            Enjoy More and Spend Less with packages
+          </h2>
+          <Button
+            size="lg"
+            className="rounded-md bg-primary text-primary-foreground hover:opacity-90 font-bold px-12 h-14"
+            asChild
           >
-            View All Packages{" "}
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Link>
-        </div>
-
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 stagger-children">
-          {packagesList.map((pkg) => (
-            <Link key={pkg.id} href={`/packages/${pkg.id}`} className="group block">
-              <Card className="overflow-hidden border border-border/60 rounded-[32px] hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-white h-full flex flex-col">
-                <div className="relative aspect-[16/10] overflow-hidden">
-                  <img
-                    src={pkg.image}
-                    alt={pkg.name}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute top-4 left-4 rounded-full bg-white/95 text-primary px-4 py-1.5 text-[10px] font-black uppercase tracking-widest shadow-lg backdrop-blur-sm">
-                    {pkg.duration}
-                  </div>
-                </div>
-                <CardContent className="p-8 flex-1 flex flex-col">
-                  <div className="flex items-start justify-between mb-4">
-                    <p className="font-black text-xl leading-tight group-hover:text-primary transition-colors">
-                      {pkg.name}
-                    </p>
-                    <span className="flex items-center gap-1.5 font-black text-xs bg-accent/10 text-accent px-2 py-1 rounded-full">
-                      <Star className="h-3.5 w-3.5 fill-accent" />
-                      {pkg.rating}
-                    </span>
-                  </div>
-                  <p className="text-xs font-bold text-muted-foreground flex items-center gap-1.5 uppercase tracking-wider mb-8">
-                    <MapPin className="h-3.5 w-3.5 text-primary" />
-                    {pkg.location}
-                  </p>
-
-                  <div className="mt-auto pt-6 border-t border-border/40 flex items-center justify-between">
-                    <p className="text-2xl font-black text-primary">
-                      ${pkg.price}
-                      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                        {" "}
-                        /pp
-                      </span>
-                    </p>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="rounded-full h-10 w-10 text-primary group-hover:bg-primary/5 group-hover:translate-x-1 transition-all"
-                    >
-                      <ArrowRight className="h-5 w-5" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
-        <div className="mt-12 flex justify-center md:hidden">
-          <Link href="/search?category=packages">
-            <Button
-              variant="outline"
-              className="rounded-full px-8 font-black uppercase tracking-widest text-[10px] border-2"
-            >
-              View All Packages
-            </Button>
-          </Link>
+            <Link href="/search?category=packages">View Packages</Link>
+          </Button>
         </div>
       </section>
 
@@ -526,40 +418,28 @@ export function HomePage() {
               icon: ShieldCheck,
               title: "Secure Booking",
               desc: "Your bookings are safe with our encrypted payment system",
-              color: "blue",
             },
             {
               icon: Headset,
               title: "24/7 Support",
               desc: "Our local support team is always ready to help you",
-              color: "indigo",
             },
             {
               icon: Tag,
               title: "Best Prices",
               desc: "We guarantee the best rates for all Zambian properties",
-              color: "emerald",
             },
             {
               icon: Map,
               title: "Wide Coverage",
               desc: "Access to the most remote gems and major cities",
-              color: "orange",
             },
-          ].map(({ icon: Icon, title, desc, color }) => (
+          ].map(({ icon: Icon, title, desc }) => (
             <div
               key={title}
-              className="group flex flex-col items-center text-center p-10 rounded-[40px] border border-border/50 bg-white hover:bg-muted/5 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl shadow-sm"
+              className="group flex flex-col items-center text-center p-10 rounded-md border border-border/50 bg-[#e0e0e0] hover:bg-[#d0d0d0] transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl shadow-sm"
             >
-              <div
-                className={cn(
-                  "flex h-20 w-20 items-center justify-center rounded-[24px] mb-8 transition-transform group-hover:scale-110 shadow-sm",
-                  color === "blue" && "bg-blue-50 text-blue-600",
-                  color === "indigo" && "bg-indigo-50 text-indigo-600",
-                  color === "emerald" && "bg-emerald-50 text-emerald-600",
-                  color === "orange" && "bg-orange-50 text-orange-600",
-                )}
-              >
+              <div className="flex h-20 w-20 items-center justify-center rounded-[24px] mb-8 transition-transform group-hover:scale-110 shadow-sm bg-white text-primary">
                 <Icon className="h-10 w-10" />
               </div>
               <h3 className="text-2xl font-black tracking-tight mb-4 font-display">{title}</h3>

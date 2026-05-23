@@ -56,7 +56,7 @@ const config: Config = {
         sans: ["var(--font-sans)", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
         display: [
           "var(--font-display)",
-          "Poppins",
+          "Plus Jakarta Sans",
           "Inter",
           "ui-sans-serif",
           "system-ui",

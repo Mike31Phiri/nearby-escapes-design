@@ -4,7 +4,10 @@ import logo from "@/assets/logo.png";
 
 export function Footer() {
   return (
-    <footer className="mt-20 border-t border-transparent text-white" style={{ backgroundColor: "oklch(0.22 0.13 295)" }}>
+    <footer
+      className="mt-20 border-t border-transparent text-white"
+      style={{ backgroundColor: "oklch(0.22 0.13 295)" }}
+    >
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-4">
         <div>
           <div className="flex items-center gap-2 mb-3">
