@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   ChevronLeft,
+  ChevronRight,
   Clock,
   Compass,
   MapPin,
@@ -22,19 +23,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { toast } from "sonner";
-import { useAuth } from "@/lib/auth";
-import { AuthGuardDialog } from "@/components/auth/AuthGuardDialog";
+import { ReviewSection } from "@/components/reviews/ReviewSection";
 import { cn } from "@/lib/utils";
 import type { Transport } from "@/lib/mock-data";
 
@@ -47,45 +36,6 @@ export function TransportDetailPage({
   route,
   backHref = "/search?category=transport",
 }: TransportDetailPageProps) {
-  const [showAuthDialog, setShowAuthDialog] = useState(false);
-  const { isAuthenticated } = useAuth();
-
-  // Form State
-  const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    travelDate: "",
-    travelClass: "standard",
-    passengers: "1",
-    departureTime: "morning",
-  });
-
-  const handleBook = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.name || !form.phone || !form.travelDate) {
-      toast.error("Please fill in all required fields");
-      return;
-    }
-    toast.success(
-      `Booking request sent for ${route.from} ➔ ${route.to}! We'll confirm via SMS within 1 hour.`,
-      {
-        duration: 5000,
-      },
-    );
-  };
-
-  const passengerCount = parseInt(form.passengers) || 1;
-  const basePrice = route.price * passengerCount;
-
-  // Class markup
-  let classMarkup = 0;
-  if (form.travelClass === "business") classMarkup = Math.round(route.price * 0.4);
-  else if (form.travelClass === "first") classMarkup = Math.round(route.price * 0.8);
-
-  const additionalCost = classMarkup * passengerCount;
-  const serviceFee = Math.round((basePrice + additionalCost) * 0.05);
-  const totalCost = basePrice + additionalCost + serviceFee;
-
   return (
     <div className="min-h-screen flex flex-col bg-background font-sans">
       <Navbar />
@@ -276,6 +226,13 @@ export function TransportDetailPage({
                 </li>
               </ul>
             </section>
+
+            {/* Guest Reviews */}
+            <ReviewSection
+              listingId={route.id}
+              listingName={`${route.from} to ${route.to}`}
+              listingType="transport"
+            />
           </div>
 
           {/* Right Side: Interactive Booking Card */}
@@ -298,174 +255,91 @@ export function TransportDetailPage({
                 </div>
               </div>
 
-              {/* Booking Form */}
-              <form onSubmit={handleBook} className="p-6 space-y-4">
+              {/* Invoice Summary */}
+              <div className="p-6 space-y-5">
                 <h3 className="font-black text-lg text-foreground tracking-tight">
-                  Reserve Ticket
+                  Invoice Summary
                 </h3>
 
-                <div className="space-y-1.5">
-                  <Label
-                    htmlFor="book-name"
-                    className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
-                  >
-                    Passenger Name <span className="text-destructive">*</span>
-                  </Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
-                    <Input
-                      id="book-name"
-                      placeholder="Ex. Sarah Phiri"
-                      value={form.name}
-                      onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                      className="pl-9 h-11 rounded-xl border-border/60"
-                      required
-                    />
+                {/* What's Included */}
+                <div className="space-y-3">
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    What&apos;s Included
+                  </p>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Clock className="h-4 w-4 text-primary/70" />
+                      <span>Duration: {route.duration}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Compass className="h-4 w-4 text-primary/70" />
+                      <span>{route.departures} departures</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <ShieldCheck className="h-4 w-4 text-primary/70" />
+                      <span>Verified operator: {route.operator}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Briefcase className="h-4 w-4 text-primary/70" />
+                      <span>Up to 20kg baggage included</span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="space-y-1.5">
-                  <Label
-                    htmlFor="book-phone"
-                    className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
-                  >
-                    Mobile Phone Number <span className="text-destructive">*</span>
-                  </Label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
-                    <Input
-                      id="book-phone"
-                      type="tel"
-                      placeholder="+260 97 XXX XXXX"
-                      value={form.phone}
-                      onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
-                      className="pl-9 h-11 rounded-xl border-border/60"
-                      required
-                    />
-                  </div>
-                </div>
+                <div className="h-px bg-border/40" />
 
-                <div className="space-y-1.5">
-                  <Label
-                    htmlFor="travel-date"
-                    className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
-                  >
-                    Travel Date <span className="text-destructive">*</span>
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="travel-date"
-                      type="date"
-                      value={form.travelDate}
-                      min={new Date().toISOString().split("T")[0]}
-                      onChange={(e) => setForm((f) => ({ ...f, travelDate: e.target.value }))}
-                      className="h-11 rounded-xl border-border/60 text-sm"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      Passengers <span className="text-destructive">*</span>
-                    </Label>
-                    <Select
-                      value={form.passengers}
-                      onValueChange={(v) => setForm((f) => ({ ...f, passengers: v }))}
-                    >
-                      <SelectTrigger className="h-11 rounded-xl border-border/60 text-sm">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {[1, 2, 3, 4, 5, 6].map((n) => (
-                          <SelectItem key={n} value={String(n)}>
-                            {n} Seat{n > 1 ? "s" : ""}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      Departure <span className="text-destructive">*</span>
-                    </Label>
-                    <Select
-                      value={form.departureTime}
-                      onValueChange={(v) => setForm((f) => ({ ...f, departureTime: v }))}
-                    >
-                      <SelectTrigger className="h-11 rounded-xl border-border/60 text-sm uppercase">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="morning">Morning (07:00)</SelectItem>
-                        <SelectItem value="midday">Noon (12:00)</SelectItem>
-                        <SelectItem value="evening">Evening (17:00)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Class Category <span className="text-destructive">*</span>
-                  </Label>
-                  <Select
-                    value={form.travelClass}
-                    onValueChange={(v) => setForm((f) => ({ ...f, travelClass: v }))}
-                  >
-                    <SelectTrigger className="h-11 rounded-xl border-border/60 text-sm">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="standard">Standard Class (+K0)</SelectItem>
-                      <SelectItem value="business">
-                        Business Class (+K{Math.round(route.price * 0.4)})
-                      </SelectItem>
-                      <SelectItem value="first">
-                        First Class (+K{Math.round(route.price * 0.8)})
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Pricing Summary */}
-                {form.travelDate && (
-                  <div className="rounded-xl bg-muted/50 border border-border/40 p-4 space-y-1.5 text-sm">
-                    <div className="flex justify-between text-muted-foreground">
-                      <span>
-                        Base ticket (K{route.price} × {passengerCount})
+                {/* Boarding Amenities Preview */}
+                <div className="space-y-2">
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Boarding Amenities
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {["Air Conditioning", "Reclining Seats", "WiFi", "USB Charging"].map((a) => (
+                      <span
+                        key={a}
+                        className="text-xs bg-muted px-2.5 py-1 rounded-full text-muted-foreground"
+                      >
+                        {a}
                       </span>
-                      <span className="font-semibold text-foreground">K{basePrice}</span>
-                    </div>
-                    {additionalCost > 0 && (
-                      <div className="flex justify-between text-muted-foreground">
-                        <span>Class Upgrade</span>
-                        <span className="font-semibold text-foreground">K{additionalCost}</span>
-                      </div>
-                    )}
+                    ))}
+                  </div>
+                </div>
+
+                <div className="h-px bg-border/40" />
+
+                {/* Price Summary */}
+                <div className="space-y-2">
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Price Breakdown
+                  </p>
+                  <div className="space-y-1.5 text-sm">
                     <div className="flex justify-between text-muted-foreground">
-                      <span>Online Booking Fee (5%)</span>
-                      <span className="font-semibold text-foreground">K{serviceFee}</span>
+                      <span>Ticket rate</span>
+                      <span className="font-semibold text-foreground">K{route.price}/seat</span>
                     </div>
-                    <div className="flex justify-between font-black text-foreground border-t border-border/60 pt-2 mt-1">
-                      <span>Total Invoice</span>
-                      <span>K{totalCost}</span>
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Booking fee (est.)</span>
+                      <span className="font-semibold text-foreground">5%</span>
                     </div>
                   </div>
-                )}
+                  <p className="text-[11px] text-muted-foreground italic">
+                    Final total calculated after selecting passengers & class
+                  </p>
+                </div>
 
-                <Button
-                  type="submit"
-                  className="w-full h-12 rounded-xl font-black uppercase tracking-widest text-sm shadow-md shadow-primary/20 hover:shadow-primary/30 transition-all hover:scale-[1.01]"
+                {/* CTA */}
+                <Link
+                  href={`/checkout/book?type=transport&id=${route.id}`}
+                  className="w-full h-12 rounded-xl bg-primary font-black uppercase tracking-widest text-sm text-primary-foreground shadow-md shadow-primary/20 hover:shadow-primary/30 transition-all hover:scale-[1.01] flex items-center justify-center gap-2"
                 >
-                  Confirm Booking
-                </Button>
+                  Proceed to Booking
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
 
-                <p className="text-center text-[10px] text-muted-foreground">
-                  Secure passenger check-in. Terminal departures run exactly on schedule.
+                <p className="text-center text-xs text-muted-foreground">
+                  Free cancellation 24h before departure · Secure seat
                 </p>
-              </form>
+              </div>
             </div>
           </aside>
         </div>

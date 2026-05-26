@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   ChevronLeft,
+  ChevronRight,
   Clock,
   Compass,
   MapPin,
@@ -23,19 +24,7 @@ import {
   Share2,
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { toast } from "sonner";
-import { useAuth } from "@/lib/auth";
-import { AuthGuardDialog } from "@/components/auth/AuthGuardDialog";
+import { ReviewSection } from "@/components/reviews/ReviewSection";
 import { cn } from "@/lib/utils";
 import type { Experience, Package } from "@/lib/mock-data";
 
@@ -113,9 +102,6 @@ export function ExperienceDetailPage({
   item,
   backHref = "/search?category=attractions",
 }: ExperienceDetailPageProps) {
-  const [showAuthDialog, setShowAuthDialog] = useState(false);
-  const { isAuthenticated } = useAuth();
-
   const isPackage = item.id.startsWith("p");
   const isGem = item.id.startsWith("g");
 
@@ -128,37 +114,7 @@ export function ExperienceDetailPage({
     richDescriptions[item.id] ||
     "Discover the wonders of Zambia with our curated local tours and packages. Expert guides, premium travel setups, and verified safety ensure an unforgettable journey.";
 
-  // Form state
-  const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    date: "",
-    timeSlot: "morning",
-    adults: "1",
-    children: "0",
-  });
 
-  const handleBook = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.name || !form.phone || !form.date) {
-      toast.error("Please fill in all required fields");
-      return;
-    }
-    toast.success(
-      `Booking request submitted for "${item.name}"! Our local travel advisor will contact you within 2 hours.`,
-      {
-        duration: 5000,
-      },
-    );
-  };
-
-  const adultCount = parseInt(form.adults) || 1;
-  const childCount = parseInt(form.children) || 0;
-
-  const baseCost = item.price * adultCount;
-  const childCost = Math.round(item.price * 0.5 * childCount);
-  const tax = Math.round((baseCost + childCost) * 0.05);
-  const total = baseCost + childCost + tax;
 
   return (
     <div className="min-h-screen flex flex-col bg-background font-sans">
@@ -319,6 +275,13 @@ export function ExperienceDetailPage({
                 </ul>
               </div>
             </section>
+
+            {/* Guest Reviews */}
+            <ReviewSection
+              listingId={item.id}
+              listingName={item.name}
+              listingType="experience"
+            />
           </div>
 
           {/* Right: Booking Form Card */}
@@ -343,176 +306,95 @@ export function ExperienceDetailPage({
                 )}
               </div>
 
-              {/* Form */}
-              <form onSubmit={handleBook} className="p-6 space-y-4">
+              {/* Invoice Summary */}
+              <div className="p-6 space-y-5">
                 <h3 className="font-black text-lg text-foreground tracking-tight">
-                  Request Booking
+                  Invoice Summary
                 </h3>
 
-                <div className="space-y-1.5">
-                  <Label
-                    htmlFor="tour-name"
-                    className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
-                  >
-                    Full Name <span className="text-destructive">*</span>
-                  </Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
-                    <Input
-                      id="tour-name"
-                      placeholder="Ex. John Phiri"
-                      value={form.name}
-                      onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                      className="pl-9 h-11 rounded-xl border-border/60"
-                      required
-                    />
+                {/* What's Included */}
+                <div className="space-y-3">
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    What&apos;s Included
+                  </p>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Clock className="h-4 w-4 text-primary/70" />
+                      <span>
+                        Duration: {"duration" in item ? item.duration : "Approx 4 Hours"}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Users className="h-4 w-4 text-primary/70" />
+                      <span>Small groups (1-10 people)</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <ShieldCheck className="h-4 w-4 text-primary/70" />
+                      <span>Verified Local Guide Included</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                      <span>Free cancellation up to 48h</span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="space-y-1.5">
-                  <Label
-                    htmlFor="tour-phone"
-                    className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
-                  >
-                    Phone Number <span className="text-destructive">*</span>
-                  </Label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
-                    <Input
-                      id="tour-phone"
-                      type="tel"
-                      placeholder="+260 97 XXX XXXX"
-                      value={form.phone}
-                      onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
-                      className="pl-9 h-11 rounded-xl border-border/60"
-                      required
-                    />
-                  </div>
+                <div className="h-px bg-border/40" />
+
+                {/* Highlights Preview */}
+                <div className="space-y-2">
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Highlights
+                  </p>
+                  <ul className="space-y-1.5">
+                    {[
+                      "Professional guide & safety setup",
+                      "All local taxes & charges included",
+                      "Water & refreshments provided",
+                    ].map((h, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-primary mt-0.5 shrink-0" />
+                        {h}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
-                <div className="space-y-1.5">
-                  <Label
-                    htmlFor="tour-date"
-                    className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
-                  >
-                    Date <span className="text-destructive">*</span>
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="tour-date"
-                      type="date"
-                      value={form.date}
-                      min={new Date().toISOString().split("T")[0]}
-                      onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))}
-                      className="h-11 rounded-xl border-border/60 text-sm"
-                      required
-                    />
-                  </div>
-                </div>
-
-                {!isPackage && (
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      Preferred Time Slot <span className="text-destructive">*</span>
-                    </Label>
-                    <Select
-                      value={form.timeSlot}
-                      onValueChange={(v) => setForm((f) => ({ ...f, timeSlot: v }))}
-                    >
-                      <SelectTrigger className="h-11 rounded-xl border-border/60 text-sm">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="morning">Morning Tour (08:30)</SelectItem>
-                        <SelectItem value="afternoon">Afternoon Tour (13:30)</SelectItem>
-                        <SelectItem value="evening">Sunset Tour (16:30)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      Adults <span className="text-destructive">*</span>
-                    </Label>
-                    <Select
-                      value={form.adults}
-                      onValueChange={(v) => setForm((f) => ({ ...f, adults: v }))}
-                    >
-                      <SelectTrigger className="h-11 rounded-xl border-border/60 text-sm">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
-                          <SelectItem key={n} value={String(n)}>
-                            {n} Adult{n > 1 ? "s" : ""}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      Children
-                    </Label>
-                    <Select
-                      value={form.children}
-                      onValueChange={(v) => setForm((f) => ({ ...f, children: v }))}
-                    >
-                      <SelectTrigger className="h-11 rounded-xl border-border/60 text-sm">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {[0, 1, 2, 3, 4].map((n) => (
-                          <SelectItem key={n} value={String(n)}>
-                            {n === 0 ? "None" : `${n} Child${n > 1 ? "ren" : ""}`}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
+                <div className="h-px bg-border/40" />
 
                 {/* Price Summary */}
-                {form.date && (
-                  <div className="rounded-xl bg-muted/50 border border-border/40 p-4 space-y-1.5 text-sm">
+                <div className="space-y-2">
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Price Breakdown
+                  </p>
+                  <div className="space-y-1.5 text-sm">
                     <div className="flex justify-between text-muted-foreground">
-                      <span>
-                        Adults (K{item.price} × {adultCount})
-                      </span>
-                      <span className="font-semibold text-foreground">K{baseCost}</span>
+                      <span>{isPackage ? "Package rate" : "Per person"}</span>
+                      <span className="font-semibold text-foreground">K{item.price}</span>
                     </div>
-                    {childCount > 0 && (
-                      <div className="flex justify-between text-muted-foreground">
-                        <span>
-                          Children (K{Math.round(item.price * 0.5)} × {childCount})
-                        </span>
-                        <span className="font-semibold text-foreground">K{childCost}</span>
-                      </div>
-                    )}
                     <div className="flex justify-between text-muted-foreground">
-                      <span>Local Tourism Levy (5%)</span>
-                      <span className="font-semibold text-foreground">K{tax}</span>
-                    </div>
-                    <div className="flex justify-between font-black text-foreground border-t border-border/60 pt-2 mt-1">
-                      <span>Total Invoice</span>
-                      <span>K{total}</span>
+                      <span>Tourism levy (est.)</span>
+                      <span className="font-semibold text-foreground">5%</span>
                     </div>
                   </div>
-                )}
+                  <p className="text-[11px] text-muted-foreground italic">
+                    Final total calculated after selecting guests
+                  </p>
+                </div>
 
-                <Button
-                  type="submit"
-                  className="w-full h-12 rounded-xl font-black uppercase tracking-widest text-sm shadow-md shadow-primary/20 hover:shadow-primary/30 transition-all hover:scale-[1.01]"
+                {/* CTA */}
+                <Link
+                  href={`/checkout/book?type=experience&id=${item.id}`}
+                  className="w-full h-12 rounded-xl bg-primary font-black uppercase tracking-widest text-sm text-primary-foreground shadow-md shadow-primary/20 hover:shadow-primary/30 transition-all hover:scale-[1.01] flex items-center justify-center gap-2"
                 >
-                  Book Activity
-                </Button>
+                  Proceed to Booking
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
 
-                <p className="text-center text-[10px] text-muted-foreground">
-                  Free cancellation up to 48 hours in advance. No initial charge.
+                <p className="text-center text-xs text-muted-foreground">
+                  Free cancellation · No charge until confirmed
                 </p>
-              </form>
+              </div>
             </div>
           </aside>
         </div>

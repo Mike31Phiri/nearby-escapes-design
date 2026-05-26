@@ -26,20 +26,12 @@ import {
   User,
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { toast } from "sonner";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useAuth } from "@/lib/auth";
 import { AuthGuardDialog } from "@/components/auth/AuthGuardDialog";
+import { ReviewSection } from "@/components/reviews/ReviewSection";
 import { cn } from "@/lib/utils";
 import type { Stay } from "@/lib/mock-data";
 
@@ -78,17 +70,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
   const { isSaved, addItem, removeItem } = useWishlistStore();
   const isFavorited = isSaved(stay.id);
 
-  // Booking form state
-  const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    checkIn: "",
-    checkOut: "",
-    adults: "1",
-    children: "0",
-    roomType: "standard",
-    rooms: "1",
-  });
+
 
   const handleToggleFavorite = () => {
     if (!isAuthenticated) {
@@ -106,27 +88,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
     }
   };
 
-  const handleBook = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.name || !form.phone || !form.checkIn || !form.checkOut) {
-      toast.error("Please fill in all required fields");
-      return;
-    }
-    toast.success("Booking request sent! We'll confirm within 24 hours.", {
-      duration: 5000,
-    });
-  };
 
-  const nights =
-    form.checkIn && form.checkOut
-      ? Math.max(
-          0,
-          Math.round(
-            (new Date(form.checkOut).getTime() - new Date(form.checkIn).getTime()) /
-              (1000 * 60 * 60 * 24),
-          ),
-        )
-      : 0;
 
   const prevImg = () => setActiveImg((i) => (i === 0 ? images.length - 1 : i - 1));
   const nextImg = () => setActiveImg((i) => (i === images.length - 1 ? 0 : i + 1));
@@ -474,6 +436,13 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                 {stay.location}, Zambia
               </p>
             </section>
+
+            {/* Guest Reviews */}
+            <ReviewSection
+              listingId={stay.id}
+              listingName={stay.name}
+              listingType="stay"
+            />
           </div>
 
           {/* Right: Booking card */}
@@ -496,202 +465,99 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                 </div>
               </div>
 
-              {/* Form */}
-              <form onSubmit={handleBook} className="p-6 space-y-4">
-                <h3 className="font-black text-lg text-foreground tracking-tight">Book Room</h3>
+              {/* Invoice Summary */}
+              <div className="p-6 space-y-5">
+                <h3 className="font-black text-lg text-foreground tracking-tight">
+                  Invoice Summary
+                </h3>
 
-                <div className="space-y-1.5">
-                  <Label
-                    htmlFor="booking-name"
-                    className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
-                  >
-                    Your Name <span className="text-destructive">*</span>
-                  </Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
-                    <Input
-                      id="booking-name"
-                      placeholder="Ex. John Doe"
-                      value={form.name}
-                      onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                      className="pl-9 h-11 rounded-xl border-border/60"
-                    />
+                {/* What's Included */}
+                <div className="space-y-3">
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    What&apos;s Included
+                  </p>
+                  <div className="space-y-2 text-sm">
+                    {stay.beds && (
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <BedDouble className="h-4 w-4 text-primary/70" />
+                        <span>
+                          {stay.beds} {stay.beds === 1 ? "Bed" : "Beds"} · {stay.baths}{" "}
+                          {stay.baths === 1 ? "Bath" : "Baths"}
+                        </span>
+                      </div>
+                    )}
+                    {stay.guests && (
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Users className="h-4 w-4 text-primary/70" />
+                        <span>Up to {stay.guests} guests</span>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <CalendarDays className="h-4 w-4 text-primary/70" />
+                      <span>Check-in 14:00+ · Check-out 11:00</span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="space-y-1.5">
-                  <Label
-                    htmlFor="booking-phone"
-                    className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
-                  >
-                    Phone Number <span className="text-destructive">*</span>
-                  </Label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
-                    <Input
-                      id="booking-phone"
-                      type="tel"
-                      placeholder="+260 97 XXX XXXX"
-                      value={form.phone}
-                      onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
-                      className="pl-9 h-11 rounded-xl border-border/60"
-                    />
-                  </div>
-                </div>
+                <div className="h-px bg-border/40" />
 
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label
-                      htmlFor="check-in"
-                      className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
-                    >
-                      Check-In <span className="text-destructive">*</span>
-                    </Label>
-                    <Input
-                      id="check-in"
-                      type="date"
-                      value={form.checkIn}
-                      min={new Date().toISOString().split("T")[0]}
-                      onChange={(e) => setForm((f) => ({ ...f, checkIn: e.target.value }))}
-                      className="h-11 rounded-xl border-border/60 text-sm"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label
-                      htmlFor="check-out"
-                      className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
-                    >
-                      Check-Out <span className="text-destructive">*</span>
-                    </Label>
-                    <Input
-                      id="check-out"
-                      type="date"
-                      value={form.checkOut}
-                      min={form.checkIn || new Date().toISOString().split("T")[0]}
-                      onChange={(e) => setForm((f) => ({ ...f, checkOut: e.target.value }))}
-                      className="h-11 rounded-xl border-border/60 text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      Adults <span className="text-destructive">*</span>
-                    </Label>
-                    <Select
-                      value={form.adults}
-                      onValueChange={(v) => setForm((f) => ({ ...f, adults: v }))}
-                    >
-                      <SelectTrigger className="h-11 rounded-xl border-border/60 text-sm">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {[1, 2, 3, 4, 5, 6].map((n) => (
-                          <SelectItem key={n} value={String(n)}>
-                            {n} Adult{n > 1 ? "s" : ""}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      Children
-                    </Label>
-                    <Select
-                      value={form.children}
-                      onValueChange={(v) => setForm((f) => ({ ...f, children: v }))}
-                    >
-                      <SelectTrigger className="h-11 rounded-xl border-border/60 text-sm">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {[0, 1, 2, 3, 4].map((n) => (
-                          <SelectItem key={n} value={String(n)}>
-                            {n === 0 ? "None" : `${n} Child${n > 1 ? "ren" : ""}`}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      Room Type <span className="text-destructive">*</span>
-                    </Label>
-                    <Select
-                      value={form.roomType}
-                      onValueChange={(v) => setForm((f) => ({ ...f, roomType: v }))}
-                    >
-                      <SelectTrigger className="h-11 rounded-xl border-border/60 text-sm">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="standard">Standard</SelectItem>
-                        <SelectItem value="deluxe">Deluxe</SelectItem>
-                        <SelectItem value="suite">Suite</SelectItem>
-                        <SelectItem value="family">Family</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      Rooms <span className="text-destructive">*</span>
-                    </Label>
-                    <Select
-                      value={form.rooms}
-                      onValueChange={(v) => setForm((f) => ({ ...f, rooms: v }))}
-                    >
-                      <SelectTrigger className="h-11 rounded-xl border-border/60 text-sm">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {[1, 2, 3, 4, 5].map((n) => (
-                          <SelectItem key={n} value={String(n)}>
-                            {n} Room{n > 1 ? "s" : ""}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                {/* Price breakdown */}
-                {nights > 0 && (
-                  <div className="rounded-xl bg-muted/50 border border-border/40 p-4 space-y-1.5 text-sm">
-                    <div className="flex justify-between text-muted-foreground">
-                      <span>
-                        K{stay.price} × {nights} night{nights > 1 ? "s" : ""}
+                {/* Amenities Preview */}
+                <div className="space-y-2">
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Amenities
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {stay.amenities.slice(0, 4).map((a) => (
+                      <span
+                        key={a}
+                        className="text-xs bg-muted px-2.5 py-1 rounded-full text-muted-foreground"
+                      >
+                        {a}
                       </span>
-                      <span className="font-semibold text-foreground">K{stay.price * nights}</span>
+                    ))}
+                    {stay.amenities.length > 4 && (
+                      <span className="text-xs bg-muted px-2.5 py-1 rounded-full text-muted-foreground">
+                        +{stay.amenities.length - 4} more
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="h-px bg-border/40" />
+
+                {/* Price Summary */}
+                <div className="space-y-2">
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Price Breakdown
+                  </p>
+                  <div className="space-y-1.5 text-sm">
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Room rate</span>
+                      <span className="font-semibold text-foreground">K{stay.price}/night</span>
                     </div>
                     <div className="flex justify-between text-muted-foreground">
-                      <span>Service fee</span>
-                      <span className="font-semibold text-foreground">
-                        K{Math.round(stay.price * nights * 0.05)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between font-black text-foreground border-t border-border/60 pt-2 mt-1">
-                      <span>Total</span>
-                      <span>K{Math.round(stay.price * nights * 1.05)}</span>
+                      <span>Service fee (est.)</span>
+                      <span className="font-semibold text-foreground">5%</span>
                     </div>
                   </div>
-                )}
+                  <p className="text-[11px] text-muted-foreground italic">
+                    Final total calculated after selecting dates
+                  </p>
+                </div>
 
-                <Button
-                  type="submit"
-                  className="w-full h-12 rounded-xl font-black uppercase tracking-widest text-sm shadow-md shadow-primary/20 hover:shadow-primary/30 transition-all hover:scale-[1.01]"
+                {/* CTA */}
+                <Link
+                  href={`/checkout/book?type=stay&id=${stay.id}`}
+                  className="w-full h-12 rounded-xl bg-primary font-black uppercase tracking-widest text-sm text-primary-foreground shadow-md shadow-primary/20 hover:shadow-primary/30 transition-all hover:scale-[1.01] flex items-center justify-center gap-2"
                 >
-                  Book Now
-                </Button>
+                  Proceed to Booking
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
 
                 <p className="text-center text-xs text-muted-foreground">
-                  No charge until confirmed · Free cancellation
+                  Free cancellation · No charge until confirmed
                 </p>
-              </form>
+              </div>
             </div>
           </aside>
         </div>

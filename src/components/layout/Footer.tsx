@@ -1,8 +1,15 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Facebook, Instagram, Mail, MapPin, Phone, Twitter } from "lucide-react";
 import logo from "@/assets/logo.png";
 
 export function Footer() {
+  const pathname = usePathname();
+  if (pathname?.startsWith("/auth")) {
+    return null;
+  }
   return (
     <footer
       className="mt-20 border-t border-transparent text-white"

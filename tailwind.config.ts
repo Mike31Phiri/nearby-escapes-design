@@ -53,15 +53,8 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["var(--font-sans)", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-        display: [
-          "var(--font-display)",
-          "Plus Jakarta Sans",
-          "Inter",
-          "ui-sans-serif",
-          "system-ui",
-          "sans-serif",
-        ],
+        sans: ["var(--font-sans)", "Figtree", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "Manrope", "ui-sans-serif", "system-ui", "sans-serif"],
       },
     },
   },

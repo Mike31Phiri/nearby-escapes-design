@@ -112,14 +112,16 @@ export function HomePage() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-black/20 to-black/60" />
         </div>
-        <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6 pt-16 md:pt-24 pb-8 md:pb-16 flex flex-col items-center">
-          <h1 className="font-sans max-w-4xl text-4xl md:text-6xl font-black tracking-tight leading-[1.1] drop-shadow-2xl text-center text-white mb-6">
-            Find your next escape, just nearby
+        <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6 pt-16 md:pt-24 pb-10 md:pb-18 flex flex-col items-center">
+          <h1 className="font-sans max-w-4xl text-2xl md:text-4xl font-medium tracking-tight leading-[1.3] text-center text-white mb-6">
+            Discover what’s around your next destination — from stays and transport to hidden gems
+            and experiences.
           </h1>
-          <p className="font-sans max-w-xl text-lg md:text-2xl text-white/90 drop-shadow-md font-bold text-center mb-12">
-            Stays, transport, hidden gems and curated packages — all in one place.
+          <p className="font-sans max-w-xl text-sm md:text-base text-white/80 font-normal text-center mb-12">
+            Find your next trip with lodging, transport and local gems combined for a seamless
+            journey.
           </p>
-          <div className="w-full px-2 mt-4 md:mt-8 transform translate-y-8 md:translate-y-12">
+          <div className="w-full max-w-2xl mx-auto mt-8 md:mt-10">
             <SearchBar />
           </div>
         </div>
@@ -172,8 +174,8 @@ export function HomePage() {
       >
         <div className="flex items-end justify-between mb-8">
           <div>
-            <h2 className="text-3xl md:text-4xl font-black tracking-tight">{meta.heading}</h2>
-            <p className="text-muted-foreground mt-2 text-lg font-medium">{meta.sub}</p>
+            <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">{meta.heading}</h2>
+            <p className="text-muted-foreground mt-2 text-base font-medium">{meta.sub}</p>
           </div>
         </div>
 
