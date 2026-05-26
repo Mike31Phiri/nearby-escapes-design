@@ -1,14 +1,12 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
 import {
   Building2,
   Search,
   CheckCircle2,
   XCircle,
   Loader2,
-  ArrowLeft,
   MapPin,
   DollarSign,
   Bed,
@@ -16,7 +14,6 @@ import {
   Bus,
   AlertTriangle,
 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -256,43 +253,33 @@ export function AdminListings() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-      <Navbar />
-
-      <main className="flex-1">
-        {/* Header */}
-        <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
-          <div className="mx-auto max-w-7xl px-4 md:px-6 pt-8 md:pt-12">
-            <div className="flex items-center gap-3 mb-1.5">
-              <Link href="/admin" className="text-xs font-semibold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1">
-                <ArrowLeft className="h-3 w-3" /> Dashboard
-              </Link>
-              <span className="text-muted-foreground/30">·</span>
-              <span className="text-xs font-black uppercase tracking-widest text-primary">Admin</span>
+    <div className="flex-1">
+      {/* Header */}
+      <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
+        <div className="mx-auto max-w-7xl px-4 md:px-6 pt-8 md:pt-12">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Listing Moderation</h1>
+              <p className="text-sm text-muted-foreground mt-1">
+                {listingStats.total} submissions — {listingStats.pendingReview} pending review
+              </p>
             </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Listing Moderation</h1>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {listingStats.total} submissions — {listingStats.pendingReview} pending review
-                </p>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-xs text-muted-foreground">
-                  <span className="font-semibold text-foreground">{listingStats.approved}</span> approved
-                </span>
-                {listingStats.pendingReview > 0 && (
-                  <Badge variant="outline" className="rounded-full text-[9px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border-amber-200">
-                    {listingStats.pendingReview} pending
-                  </Badge>
-                )}
-              </div>
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-muted-foreground">
+                <span className="font-semibold text-foreground">{listingStats.approved}</span> approved
+              </span>
+              {listingStats.pendingReview > 0 && (
+                <Badge variant="outline" className="rounded-full text-[9px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border-amber-200">
+                  {listingStats.pendingReview} pending
+                </Badge>
+              )}
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Filters */}
-        <div className="mx-auto max-w-6xl px-4 md:px-6 -mt-6 relative z-10">
+      {/* Filters */}
+      <div className="mx-auto max-w-6xl px-4 md:px-6 -mt-6 relative z-10">
           <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border/40 bg-card p-3 shadow-sm">
             <div className="relative flex-1 min-w-[200px]">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -385,7 +372,6 @@ export function AdminListings() {
             ))
           )}
         </div>
-      </main>
     </div>
   );
 }

@@ -1,11 +1,9 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
 import {
   Scale,
   Search,
-  ArrowLeft,
   CheckCircle2,
   Clock,
   AlertTriangle,
@@ -17,7 +15,6 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -355,20 +352,11 @@ export function AdminDisputes() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-      <Navbar />
-
-      <main className="flex-1">
+    <div className="min-h-screen flex flex-col font-sans">
+      <div className="flex-1">
         {/* Header */}
         <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
-          <div className="mx-auto max-w-6xl px-4 md:px-6 pt-8 md:pt-12">
-            <div className="flex items-center gap-3 mb-1.5">
-              <Link href="/admin" className="text-xs font-semibold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1">
-                <ArrowLeft className="h-3 w-3" /> Dashboard
-              </Link>
-              <span className="text-muted-foreground/30">·</span>
-              <span className="text-xs font-black uppercase tracking-widest text-primary">Admin</span>
-            </div>
+          <div className="mx-auto max-w-6xl px-4 md:px-6 pt-6 md:pt-10">
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Disputes &amp; Resolution</h1>
@@ -487,7 +475,7 @@ export function AdminDisputes() {
             ))
           )}
         </div>
-      </main>
+      </div>
     </div>
   );
 }

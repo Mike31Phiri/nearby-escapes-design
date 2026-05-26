@@ -16,11 +16,9 @@ import {
   ChevronRight,
   Scale,
   Sparkles,
-  Menu,
   Settings,
 } from "lucide-react";
 import { mockDisputes } from "@/lib/mock-admin-data";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -31,7 +29,6 @@ import {
   mockAdminUsers,
 } from "@/lib/mock-admin-data";
 import type { ActivityLog } from "@/lib/mock-admin-data";
-
 
 // ─── Stat Card ──────────────────────────────────────────────────────────
 
@@ -122,46 +119,22 @@ function ActivityItem({ log }: { log: ActivityLog }) {
   );
 }
 
-// ─── Admin Nav ──────────────────────────────────────────────────────────
-
-const adminSections = [
-  { icon: BarChart3, label: "Dashboard", href: "/admin", desc: "Platform overview" },
-  { icon: Users, label: "Users", href: "/admin/users", desc: "Manage accounts" },
-  { icon: Building2, label: "Listings", href: "/admin/listings", desc: "Moderation queue" },
-  { icon: CalendarDays, label: "Bookings", href: "/admin/bookings", desc: "Booking oversight" },
-  { icon: Scale, label: "Disputes", href: "/admin/disputes", desc: "Resolution center", alert: true },
-  { icon: DollarSign, label: "Payouts", href: "/admin/payouts", desc: "Host payments" },
-  { icon: Sparkles, label: "Promotions", href: "/admin/promotions", desc: "Marketing tools" },
-  { icon: Activity, label: "Activity Log", href: "/admin/activity", desc: "Audit trail" },
-  { icon: BarChart3, label: "Reports", href: "/admin/reports", desc: "Analytics" },
-  { icon: Settings, label: "Settings", href: "/admin/settings", desc: "System config" },
-];
-
 // ─── Main Component ─────────────────────────────────────────────────────
 
 export function AdminDashboard() {
   const stats = mockPlatformStats;
   const pendingListings = mockPendingListings.filter((l) => l.status === "pending_review");
   const pendingUsers = mockAdminUsers.filter((u) => u.status === "pending verification");
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-      <Navbar />
-
-      <main className="flex-1">
+    <div className="min-h-screen flex flex-col font-sans">
+      <div className="flex-1">
         {/* Header */}
         <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
-          <div className="mx-auto max-w-7xl px-4 md:px-6 pt-8 md:pt-12">
+          <div className="mx-auto max-w-7xl px-4 md:px-6 pt-6 md:pt-10">
             <div className="flex items-center justify-between">
               <div>
-                <div className="flex items-center gap-2.5 mb-1.5">
-                  <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <ShieldCheck className="h-4 w-4 text-primary" />
-                  </div>
-                  <span className="text-xs font-black uppercase tracking-widest text-primary">Admin</span>
-                </div>
-                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Platform Dashboard</h1>
+                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Dashboard</h1>
                 <p className="text-sm text-muted-foreground mt-1">
                   Overview of all platform activity and metrics
                 </p>
@@ -172,63 +145,6 @@ export function AdminDashboard() {
                   {new Date().toLocaleDateString("en-ZM", { month: "long", day: "numeric", year: "numeric" })}
                 </Button>
               </div>
-            </div>
-
-            {/* Admin Navigation Tabs */}
-            <div className="mt-6 -mb-1 hidden md:flex items-center gap-0.5 overflow-x-auto">
-              {adminSections.map((section) => {
-                const Icon = section.icon;
-                const isActive = false; // simplified — could use pathname
-                return (
-                  <Link
-                    key={section.href}
-                    href={section.href}
-                    className={cn(
-                      "flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all shrink-0",
-                      isActive
-                        ? "bg-primary text-primary-foreground shadow-sm"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/60",
-                    )}
-                  >
-                    <Icon className="h-3.5 w-3.5" />
-                    <span>{section.label}</span>
-                    {section.alert && mockDisputes.filter((d) => d.status === "open" || d.status === "investigating").length > 0 && (
-                      <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
-                    )}
-                  </Link>
-                );
-              })}
-            </div>
-
-            {/* Mobile Nav Toggle */}
-            <div className="mt-4 md:hidden">
-              <button
-                onClick={() => setMobileNavOpen(!mobileNavOpen)}
-                className="flex items-center gap-2 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <Menu className="h-4 w-4" />
-                {mobileNavOpen ? "Hide navigation" : "Show navigation"}
-              </button>
-              {mobileNavOpen && (
-                <div className="mt-2 grid grid-cols-2 gap-1">
-                  {adminSections.map((section) => {
-                    const Icon = section.icon;
-                    return (
-                      <Link
-                        key={section.href}
-                        href={section.href}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors"
-                      >
-                        <Icon className="h-3.5 w-3.5" />
-                        <span>{section.label}</span>
-                        {section.alert && mockDisputes.filter((d) => d.status === "open" || d.status === "investigating").length > 0 && (
-                          <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
-                        )}
-                      </Link>
-                    );
-                  })}
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -459,7 +375,7 @@ export function AdminDashboard() {
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

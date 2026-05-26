@@ -34,6 +34,7 @@ import { useAuth } from "@/lib/auth";
 import { createPaymentToken, generateBookingRef } from "@/lib/dpo";
 import type { Stay, Transport, Experience, Package } from "@/lib/mock-data";
 import { useBookingStore } from "@/store/bookingStore";
+import { useProfileStore } from "@/store/profileStore";
 
 // ─── Types ───────────────────────────────────────────────────────────────
 
@@ -63,6 +64,7 @@ export interface ListingData {
 interface StayForm {
   name: string;
   phone: string;
+  homeCity: string;
   checkIn: string;
   checkOut: string;
   adults: string;
@@ -74,6 +76,7 @@ interface StayForm {
 interface ExperienceForm {
   name: string;
   phone: string;
+  homeCity: string;
   date: string;
   timeSlot: string;
   adults: string;
@@ -83,6 +86,7 @@ interface ExperienceForm {
 interface TransportForm {
   name: string;
   phone: string;
+  homeCity: string;
   travelDate: string;
   passengers: string;
   departureTime: string;
@@ -113,9 +117,12 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
 
   // ─── Initialize form based on listing type ───────────────────────────
 
+  const { saveCheckoutInfo, phone: savedPhone, homeCity: savedHomeCity } = useProfileStore();
+
   const [stayForm, setStayForm] = useState<StayForm>({
     name: user?.name || "",
-    phone: "",
+    phone: savedPhone || "",
+    homeCity: savedHomeCity || "",
     checkIn: "",
     checkOut: "",
     adults: "1",
@@ -126,7 +133,8 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
 
   const [expForm, setExpForm] = useState<ExperienceForm>({
     name: user?.name || "",
-    phone: "",
+    phone: savedPhone || "",
+    homeCity: savedHomeCity || "",
     date: "",
     timeSlot: "morning",
     adults: "1",
@@ -135,7 +143,8 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
 
   const [transportForm, setTransportForm] = useState<TransportForm>({
     name: user?.name || "",
-    phone: "",
+    phone: savedPhone || "",
+    homeCity: savedHomeCity || "",
     travelDate: "",
     passengers: "1",
     departureTime: "morning",
@@ -292,6 +301,18 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
         extras.travelClass = transportForm.travelClass;
         extras.departureTime = transportForm.departureTime;
         extras.passengerCount = priceBreakdown.passengerCount;
+      }
+
+      // Save profile info
+      saveCheckoutInfo({
+        phone: isStay ? stayForm.phone : isExperience ? expForm.phone : transportForm.phone,
+        homeCity: isStay ? stayForm.homeCity : isExperience ? expForm.homeCity : transportForm.homeCity,
+      });
+
+      // Trigger travel preferences modal on first checkout
+      const profileStore = useProfileStore.getState();
+      if (!profileStore.hasSeenTravelPrompt) {
+        profileStore.triggerTravelPreferences();
       }
 
       // Create DPO payment token
@@ -458,6 +479,24 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                       required
                     />
                   </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Home City <span className="text-muted-foreground/50">(optional)</span>
+                  </Label>
+                  <div className="relative">
+                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
+                    <Input
+                      placeholder="e.g. Lusaka, Ndola"
+                      value={getFormValue("homeCity")}
+                      onChange={(e) => setFormValue("homeCity", e.target.value)}
+                      className="pl-9 h-11 rounded-xl border-border/60"
+                    />
+                  </div>
+                  <p className="text-[10px] text-muted-foreground/70">
+                    Helps us show you relevant nearby travel options
+                  </p>
                 </div>
               </section>
 

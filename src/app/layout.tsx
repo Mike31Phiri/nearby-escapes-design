@@ -13,9 +13,9 @@ import type { Metadata } from "next";
 import "../styles.css";
 import { AuthProvider } from "@/lib/auth";
 import { Toaster } from "@/components/ui/sonner";
-import { CookieConsent } from "@/components/CookieConsent";
 import { Footer } from "@/components/layout/Footer";
 import { RouteProgressBar } from "@/components/ui/RouteProgressBar";
+import { ClientModals } from "./ClientModals";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
@@ -88,7 +88,7 @@ export default function RootLayout({
           {children}
           <Footer />
           <Toaster />
-          <CookieConsent />
+          <ClientModals />
         </AuthProvider>
       </body>
     </html>

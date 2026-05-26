@@ -114,8 +114,8 @@
   --primary-foreground: 0.99 0.005 300;
   --primary-glow: 0.62 0.18 295;
   --primary-soft: 0.95 0.04 295;
-  --secondary: 0.96 0.015 295;
-  --secondary-foreground: 0.25 0.06 295;
+  --secondary: 0.88 0.14 85;
+  --secondary-foreground: 0.18 0.03 290;
   --muted: 0.96 0.01 295;
   --muted-foreground: 0.5 0.03 290;
   --accent: 0.78 0.14 70;
@@ -157,8 +157,8 @@
   --popover-foreground: 0.984 0.003 247.858;
   --primary: 0.929 0.013 255.508;
   --primary-foreground: 0.208 0.042 265.755;
-  --secondary: 0.279 0.041 260.031;
-  --secondary-foreground: 0.984 0.003 247.858;
+  --secondary: 0.32 0.10 85;
+  --secondary-foreground: 0.92 0.10 85;
   --muted: 0.279 0.041 260.031;
   --muted-foreground: 0.704 0.04 256.788;
   --accent: 0.279 0.041 260.031;

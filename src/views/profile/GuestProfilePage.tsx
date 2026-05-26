@@ -46,6 +46,7 @@ import { useWishlistStore } from "@/store/wishlistStore";
 import { mockTrips, mockReviews } from "@/lib/mock-profile-data";
 import type { TripBooking, UserReview } from "@/lib/mock-profile-data";
 import { useReviewStore } from "@/store/reviewStore";
+import { useProfileStore } from "@/store/profileStore";
 import { toast } from "sonner";
 
 type GuestTab = "saves" | "trips" | "reviews" | "settings";
@@ -211,15 +212,25 @@ export function GuestProfilePage() {
   const { items: savedItems, removeItem } = useWishlistStore();
   const [activeTab, setActiveTab] = useState<GuestTab>("saves");
 
+  // Travel preferences from profile store
+  const {
+    phone: savedPhone,
+    homeCity: savedHomeCity,
+    travelPreferences,
+    setPhone: savePhone,
+    setHomeCity: saveHomeCity,
+    setTravelPreferences: saveTravelPreferences,
+  } = useProfileStore();
+
   // Settings form state
   const [fullName, setFullName] = useState(user?.name ?? "");
   const [email, setEmail] = useState(user?.email ?? "");
-  const [phone, setPhone] = useState("+260 97 123 4567");
+  const [phone, setPhone] = useState(savedPhone || "+260 97 123 4567");
   const [bio, setBio] = useState("Travel enthusiast exploring Zambia one destination at a time.");
   const [showNotifications, setShowNotifications] = useState(true);
   const [showPromotions, setShowPromotions] = useState(false);
 
-  const { getReviewsByGuest } = useReviewStore();
+  const getReviewsByGuest = useReviewStore((s) => s.getReviewsByGuest);
   const storeReviews = getReviewsByGuest(user?.name ?? "");
 
   const completedTrips = mockTrips.filter((t) => t.status === "completed");
@@ -655,6 +666,79 @@ export function GuestProfilePage() {
                     </Button>
                     <Button variant="outline" className="rounded-full font-semibold text-xs border-border/60">
                       Cancel
+                    </Button>
+                  </div>
+                </div>
+
+                <hr className="border-border/50" />
+
+                {/* Travel Preferences */}
+                <div>
+                  <h3 className="text-sm font-black uppercase tracking-widest text-foreground mb-5">
+                    Travel Preferences
+                  </h3>
+                  <div className="space-y-4">
+                    <div className="space-y-1.5">
+                      <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                        Home City
+                      </Label>
+                      <div className="relative">
+                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          value={savedHomeCity}
+                          onChange={(e) => saveHomeCity(e.target.value)}
+                          placeholder="e.g. Lusaka, Ndola"
+                          className="pl-9 h-11 rounded-xl border-border/60"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                        Travel Interests
+                      </Label>
+                      {travelPreferences.travelInterests.length > 0 ? (
+                        <div className="flex flex-wrap gap-1.5">
+                          {travelPreferences.travelInterests.map((interest) => (
+                            <Badge key={interest} variant="secondary" className="rounded-full text-[10px] font-semibold capitalize">
+                              {interest.replace(/-/g, " ")}
+                            </Badge>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-xs text-muted-foreground">No interests set yet</p>
+                      )}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                          Budget Range
+                        </Label>
+                        <p className="text-sm font-semibold text-foreground capitalize">
+                          {travelPreferences.budgetRange}
+                        </p>
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                          Travel Group
+                        </Label>
+                        <p className="text-sm font-semibold text-foreground capitalize">
+                          {travelPreferences.travelGroup}
+                        </p>
+                      </div>
+                    </div>
+
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="rounded-full text-xs font-semibold border-border/60"
+                      onClick={() => {
+                        useProfileStore.getState().triggerTravelPreferences();
+                      }}
+                    >
+                      <Sparkles className="h-3.5 w-3.5 mr-1" />
+                      Update Preferences
                     </Button>
                   </div>
                 </div>

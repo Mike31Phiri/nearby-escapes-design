@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, User, Heart, LogIn, Compass, ShieldCheck, Building2, Sparkles, Bell, CheckCheck, Clock, Inbox } from "lucide-react";
+import { Menu, User, Heart, LogIn, Compass, ShieldCheck, Building2, Bell, CheckCheck, Clock, Inbox, Hotel, Search, HelpCircle, MessageSquare, LogOut, CalendarDays, TrainFront, Ticket, Gem, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
 import logo from "@/assets/logo.png";
@@ -60,6 +60,15 @@ export function Navbar() {
 
         {/* Right side actions */}
         <div className="flex items-center gap-2 shrink-0">
+          {/* Search icon shortcut */}
+          <Link
+            href="/search"
+            className="h-9 w-9 rounded-lg flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
+            aria-label="Search"
+          >
+            <Search className="h-4.5 w-4.5" />
+          </Link>
+
           {/* Wishlist */}
           {isAuthenticated && (
             <Link
@@ -178,6 +187,21 @@ export function Navbar() {
             </DropdownMenu>
           )}
 
+          {/* Become a Host CTA — always visible for non-admin users */}
+          {!isAdmin && (
+            <Link
+              href={user?.role === "host" ? "/host" : "/become-host"}
+              className={cn(
+                "hidden sm:inline-flex items-center gap-1.5 h-9 px-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all",
+                user?.role === "host"
+                  ? "border border-border/60 text-muted-foreground hover:text-foreground hover:border-primary/30"
+                  : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm shadow-primary/20",
+              )}
+            >
+              {user?.role === "host" ? "Host Dashboard" : "Become a Host"}
+            </Link>
+          )}
+
           {/* Profile / Auth dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -208,52 +232,97 @@ export function Navbar() {
               {isAuthenticated ? (
                 <>
                   <DropdownMenuLabel className="font-bold text-sm px-2 py-1.5">
-                    {user?.name ?? "My Account"}
-                    {user?.email && (
-                      <p className="text-xs font-normal text-muted-foreground mt-0.5 truncate">
-                        {user.email}
-                      </p>
-                    )}
+                    <div className="flex items-center gap-2">
+                      <div className="h-7 w-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center overflow-hidden shrink-0">
+                        {user?.avatar ? (
+                          <img
+                            src={user.avatar}
+                            alt={user.name ?? ""}
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <User className="h-3.5 w-3.5 text-primary" />
+                        )}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-bold text-sm truncate">{user?.name ?? "My Account"}</p>
+                        {user?.email && (
+                          <p className="text-xs font-normal text-muted-foreground truncate">
+                            {user.email}
+                          </p>
+                        )}
+                      </div>
+                    </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
+
+                  {/* Traveler section */}
+                  <DropdownMenuLabel className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 px-2 pb-1">
+                    Travel
+                  </DropdownMenuLabel>
                   <DropdownMenuItem asChild>
                     <Link href="/profile" className="cursor-pointer rounded-xl font-medium">
-                      <User className="h-4 w-4 mr-2 text-muted-foreground" /> My Profile
+                      <User className="h-4 w-4 mr-2.5 text-muted-foreground" /> My Profile
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/trips" className="cursor-pointer rounded-xl font-medium">
-                      <Compass className="h-4 w-4 mr-2 text-muted-foreground" /> My Trips
+                      <Compass className="h-4 w-4 mr-2.5 text-muted-foreground" /> My Trips
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/wishlist" className="cursor-pointer rounded-xl font-medium">
-                      <Heart className="h-4 w-4 mr-2 text-muted-foreground" /> My Collections
+                      <Heart className="h-4 w-4 mr-2.5 text-muted-foreground" /> My Collections
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/notifications" className="cursor-pointer rounded-xl font-medium">
+                      <MessageSquare className="h-4 w-4 mr-2.5 text-muted-foreground" /> Messages & Updates
                     </Link>
                   </DropdownMenuItem>
 
-                  {/* Host Section — only for host users */}
+                  {/* Host Section */}
                   {user?.role === "host" && (
                     <>
                       <DropdownMenuSeparator />
-                      <DropdownMenuLabel className="text-xs font-normal text-muted-foreground px-2">
+                      <DropdownMenuLabel className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 px-2 pb-1">
                         Hosting
                       </DropdownMenuLabel>
                       <DropdownMenuItem asChild>
                         <Link href="/host" className="cursor-pointer rounded-xl font-medium">
-                          <Building2 className="h-4 w-4 mr-2 text-muted-foreground" /> Host Dashboard
+                          <Building2 className="h-4 w-4 mr-2.5 text-muted-foreground" /> Host Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/host/listings" className="cursor-pointer rounded-xl font-medium">
+                          <Hotel className="h-4 w-4 mr-2.5 text-muted-foreground" /> My Listings
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/host/bookings" className="cursor-pointer rounded-xl font-medium">
+                          <CalendarDays className="h-4 w-4 mr-2.5 text-muted-foreground" /> Booking Requests
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/host/availability" className="cursor-pointer rounded-xl font-medium">
+                          <Clock className="h-4 w-4 mr-2.5 text-muted-foreground" /> Availability
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/host/create" className="cursor-pointer rounded-xl font-medium text-primary">
+                          Create New Listing
                         </Link>
                       </DropdownMenuItem>
                     </>
                   )}
 
-                  {/* Become a Host — only for guest users */}
+                  {/* Become a Host — for guest users only (CTA also visible in navbar) */}
                   {user?.role === "guest" && (
                     <>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem asChild>
                         <Link href="/become-host" className="cursor-pointer rounded-xl font-medium text-primary">
-                          <Sparkles className="h-4 w-4 mr-2" /> Become a Host
+                          Become a Host
                         </Link>
                       </DropdownMenuItem>
                     </>
@@ -263,22 +332,28 @@ export function Navbar() {
                   {isAdmin && (
                     <>
                       <DropdownMenuSeparator />
-                      <DropdownMenuLabel className="text-xs font-normal text-muted-foreground px-2">
+                      <DropdownMenuLabel className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 px-2 pb-1">
                         Admin
                       </DropdownMenuLabel>
                       <DropdownMenuItem asChild>
                         <Link href="/admin" className="cursor-pointer rounded-xl font-medium text-primary">
-                          <ShieldCheck className="h-4 w-4 mr-2" /> Admin Dashboard
+                          <ShieldCheck className="h-4 w-4 mr-2.5" /> Admin Dashboard
                         </Link>
                       </DropdownMenuItem>
                     </>
                   )}
 
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/help" className="cursor-pointer rounded-xl font-medium">
+                      <HelpCircle className="h-4 w-4 mr-2.5 text-muted-foreground" /> Help & Support
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={logout}
-                    className="cursor-pointer rounded-xl text-destructive font-medium focus:text-destructive focus:bg-destructive/5"
+                    className="cursor-pointer rounded-xl font-medium text-destructive focus:text-destructive focus:bg-destructive/5"
                   >
+                    <LogOut className="h-4 w-4 mr-2.5" />
                     Sign Out
                   </DropdownMenuItem>
                 </>
@@ -287,30 +362,61 @@ export function Navbar() {
                   <DropdownMenuLabel className="font-bold text-sm px-2 py-1.5 text-foreground">
                     Welcome
                     <p className="text-xs font-normal text-muted-foreground mt-0.5">
-                      Sign in to access your account
+                      Sign in to start exploring
                     </p>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
+
                   <DropdownMenuItem asChild>
                     <Link href="/auth/login" className="cursor-pointer rounded-xl font-semibold">
-                      <LogIn className="h-4 w-4 mr-2 text-muted-foreground" /> Sign In
+                      <LogIn className="h-4 w-4 mr-2.5 text-muted-foreground" /> Sign In
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/auth/register" className="cursor-pointer rounded-xl font-medium">
-                      <User className="h-4 w-4 mr-2 text-muted-foreground" /> Create Account
+                      <User className="h-4 w-4 mr-2.5 text-muted-foreground" /> Create Account
                     </Link>
                   </DropdownMenuItem>
+
                   <DropdownMenuSeparator />
-                  <DropdownMenuLabel className="text-xs font-normal text-muted-foreground px-2">
-                    Are you a host?
+                  <DropdownMenuLabel className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 px-2 pb-1">
+                    Browse
                   </DropdownMenuLabel>
                   <DropdownMenuItem asChild>
-                    <Link
-                      href="/host"
-                      className="cursor-pointer rounded-xl font-medium text-primary"
-                    >
-                      List your property →
+                    <Link href="/search?category=stays" className="cursor-pointer rounded-xl font-medium">
+                      <Hotel className="h-4 w-4 mr-2.5 text-muted-foreground" /> Stays
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/search?category=transport" className="cursor-pointer rounded-xl font-medium">
+                      <TrainFront className="h-4 w-4 mr-2.5 text-muted-foreground" /> Transport
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/search?category=attractions" className="cursor-pointer rounded-xl font-medium">
+                      <Ticket className="h-4 w-4 mr-2.5 text-muted-foreground" /> Experiences
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/search?category=gems" className="cursor-pointer rounded-xl font-medium">
+                      <Gem className="h-4 w-4 mr-2.5 text-muted-foreground" /> Hidden Gems
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/search?category=packages" className="cursor-pointer rounded-xl font-medium">
+                      <Tag className="h-4 w-4 mr-2.5 text-muted-foreground" /> Packages
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/become-host" className="cursor-pointer rounded-xl font-medium text-primary">
+                      List your property
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/help" className="cursor-pointer rounded-xl font-medium">
+                      <HelpCircle className="h-4 w-4 mr-2.5 text-muted-foreground" /> Help & Support
                     </Link>
                   </DropdownMenuItem>
                 </>

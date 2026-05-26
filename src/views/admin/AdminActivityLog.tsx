@@ -1,15 +1,12 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
 import {
   Activity,
   Search,
-  ArrowLeft,
   CalendarDays,
   ArrowUpDown,
 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -152,131 +149,122 @@ export function AdminActivityLog() {
   }), []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-      <Navbar />
-
-      <main className="flex-1">
-        {/* Header */}
-        <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
-          <div className="mx-auto max-w-6xl px-4 md:px-6 pt-8 md:pt-12">
-            <div className="flex items-center gap-3 mb-1.5">
-              <Link href="/admin" className="text-xs font-semibold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1">
-                <ArrowLeft className="h-3 w-3" /> Dashboard
-              </Link>
-              <span className="text-muted-foreground/30">·</span>
-              <span className="text-xs font-black uppercase tracking-widest text-primary">Admin</span>
-            </div>
+    <div className="flex-1">
+      {/* Header */}
+      <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
+        <div className="mx-auto max-w-6xl px-4 md:px-6 pt-6 md:pt-10">
+          <div>
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Audit Log</h1>
             <p className="text-sm text-muted-foreground mt-1">
               {stats.total} total events — showing {stats.filtered}
             </p>
           </div>
         </div>
+      </div>
 
-        {/* Filters */}
-        <div className="mx-auto max-w-6xl px-4 md:px-6 -mt-6 relative z-10">
-          <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border/40 bg-card p-3 shadow-sm">
-            <div className="relative flex-1 min-w-[200px]">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search actions, users, or targets..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 h-10 rounded-xl border-border/60 text-sm"
-              />
-            </div>
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-[130px] h-10 rounded-xl border-border/60">
-                <SelectValue placeholder="Type" />
-              </SelectTrigger>
-              <SelectContent className="rounded-xl">
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="booking">Booking ({stats.byType.booking})</SelectItem>
-                <SelectItem value="listing">Listing ({stats.byType.listing})</SelectItem>
-                <SelectItem value="user">User ({stats.byType.user})</SelectItem>
-                <SelectItem value="payment">Payment ({stats.byType.payment})</SelectItem>
-                <SelectItem value="report">Report ({stats.byType.report})</SelectItem>
-                <SelectItem value="system">System ({stats.byType.system})</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={userFilter} onValueChange={setUserFilter}>
-              <SelectTrigger className="w-[160px] h-10 rounded-xl border-border/60">
-                <SelectValue placeholder="User" />
-              </SelectTrigger>
-              <SelectContent className="rounded-xl">
-                <SelectItem value="all">All Users</SelectItem>
-                {allUsers.map((user) => (
-                  <SelectItem key={user} value={user}>{user}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+      {/* Filters */}
+      <div className="mx-auto max-w-6xl px-4 md:px-6 -mt-6 relative z-10">
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border/40 bg-card p-3 shadow-sm">
+          <div className="relative flex-1 min-w-[200px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search actions, users, or targets..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9 h-10 rounded-xl border-border/60 text-sm"
+            />
+          </div>
+          <Select value={typeFilter} onValueChange={setTypeFilter}>
+            <SelectTrigger className="w-[130px] h-10 rounded-xl border-border/60">
+              <SelectValue placeholder="Type" />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl">
+              <SelectItem value="all">All Types</SelectItem>
+              <SelectItem value="booking">Booking ({stats.byType.booking})</SelectItem>
+              <SelectItem value="listing">Listing ({stats.byType.listing})</SelectItem>
+              <SelectItem value="user">User ({stats.byType.user})</SelectItem>
+              <SelectItem value="payment">Payment ({stats.byType.payment})</SelectItem>
+              <SelectItem value="report">Report ({stats.byType.report})</SelectItem>
+              <SelectItem value="system">System ({stats.byType.system})</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={userFilter} onValueChange={setUserFilter}>
+            <SelectTrigger className="w-[160px] h-10 rounded-xl border-border/60">
+              <SelectValue placeholder="User" />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl">
+              <SelectItem value="all">All Users</SelectItem>
+              {allUsers.map((user) => (
+                <SelectItem key={user} value={user}>{user}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <button
+            onClick={() => setSortOrder(sortOrder === "newest" ? "oldest" : "newest")}
+            className="h-10 px-3 rounded-xl border border-border/60 text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors flex items-center gap-1.5"
+          >
+            <ArrowUpDown className="h-3.5 w-3.5" />
+            {sortOrder === "newest" ? "Newest" : "Oldest"}
+          </button>
+        </div>
+      </div>
+
+      {/* Type Summary Chips */}
+      <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6">
+        <div className="flex flex-wrap items-center gap-2">
+          {Object.entries(typeLabels).map(([type, label]) => (
             <button
-              onClick={() => setSortOrder(sortOrder === "newest" ? "oldest" : "newest")}
-              className="h-10 px-3 rounded-xl border border-border/60 text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors flex items-center gap-1.5"
+              key={type}
+              onClick={() => setTypeFilter(typeFilter === type ? "all" : type)}
+              className={cn(
+                "px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider border transition-all",
+                typeFilter === type
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "border-border/60 text-muted-foreground hover:text-foreground hover:border-foreground/30",
+              )}
             >
-              <ArrowUpDown className="h-3.5 w-3.5" />
-              {sortOrder === "newest" ? "Newest" : "Oldest"}
+              {label} ({stats.byType[type as keyof typeof stats.byType]})
             </button>
-          </div>
+          ))}
+          {typeFilter !== "all" && (
+            <button
+              onClick={() => setTypeFilter("all")}
+              className="text-[10px] font-semibold text-primary hover:text-primary/80 transition-colors"
+            >
+              Clear filter
+            </button>
+          )}
         </div>
+      </div>
 
-        {/* Type Summary Chips */}
-        <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6">
-          <div className="flex flex-wrap items-center gap-2">
-            {Object.entries(typeLabels).map(([type, label]) => (
-              <button
-                key={type}
-                onClick={() => setTypeFilter(typeFilter === type ? "all" : type)}
-                className={cn(
-                  "px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider border transition-all",
-                  typeFilter === type
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "border-border/60 text-muted-foreground hover:text-foreground hover:border-foreground/30",
-                )}
-              >
-                {label} ({stats.byType[type as keyof typeof stats.byType]})
-              </button>
-            ))}
-            {typeFilter !== "all" && (
-              <button
-                onClick={() => setTypeFilter("all")}
-                className="text-[10px] font-semibold text-primary hover:text-primary/80 transition-colors"
-              >
-                Clear filter
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Activity List */}
-        <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6 pb-16">
-          <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm">
-            {filteredLogs.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-center">
-                <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                  <Activity className="h-7 w-7 text-muted-foreground/40" />
-                </div>
-                <h3 className="text-lg font-bold text-foreground">No events found</h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Try adjusting your search or filters.
-                </p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="mt-6 rounded-full text-xs font-semibold"
-                  onClick={() => { setSearch(""); setTypeFilter("all"); setUserFilter("all"); }}
-                >
-                  Clear All Filters
-                </Button>
+      {/* Activity List */}
+      <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6 pb-16">
+        <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm">
+          {filteredLogs.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                <Activity className="h-7 w-7 text-muted-foreground/40" />
               </div>
-            ) : (
-              filteredLogs.map((log) => (
-                <ActivityItem key={log.id} log={log} />
-              ))
-            )}
-          </div>
+              <h3 className="text-lg font-bold text-foreground">No events found</h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                Try adjusting your search or filters.
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-6 rounded-full text-xs font-semibold"
+                onClick={() => { setSearch(""); setTypeFilter("all"); setUserFilter("all"); }}
+              >
+                Clear All Filters
+              </Button>
+            </div>
+          ) : (
+            filteredLogs.map((log) => (
+              <ActivityItem key={log.id} log={log} />
+            ))
+          )}
         </div>
-      </main>
+      </div>
     </div>
   );
 }
