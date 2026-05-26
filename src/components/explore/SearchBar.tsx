@@ -1,70 +1,122 @@
 "use client";
 
 import { useState } from "react";
-import { Search } from "lucide-react";
+import { CalendarDays, MapPin, Search, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 export function SearchBar({ className }: { className?: string }) {
-  const [query, setQuery] = useState("");
+  const [destination, setDestination] = useState("");
   const router = useRouter();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    const trimmed = query.trim();
-    if (!trimmed) return;
-    router.push(`/search?q=${encodeURIComponent(trimmed)}`);
+    const term = destination.trim();
+    if (!term) return;
+    router.push(`/search?q=${encodeURIComponent(term)}`);
   };
 
   return (
     <form
       onSubmit={handleSearch}
       className={cn(
-        "mx-auto flex w-full max-w-2xl items-stretch",
-        /* ── shape: pill at rest, squarer on focus ── */
-        "rounded-2xl focus-within:rounded-xl",
-        /* ── base: clean glass with light shadow ── */
-        "border border-white/20 bg-white/10 backdrop-blur-md",
-        "shadow-lg shadow-white/5",
-        /* ── active: brighten, primary ring glow (no dark shadows) ── */
-        "focus-within:border-white/40 focus-within:bg-white/20",
-        "focus-within:shadow-md focus-within:shadow-white/5",
-        "focus-within:ring-2 focus-within:ring-primary/35",
-        /* ── smooth in & out — ease-out decelerates on un-focus ── */
-        "transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
+        "mx-auto w-full max-w-3xl",
+        /* ── card container: solid white, floating on hero ── */
+        "rounded-2xl bg-white shadow-[0_12px_40px_-8px_rgba(0,0,0,0.25)]",
+        "border border-gray-200/60",
+        /* ── active: brighter ring ── */
+        "focus-within:ring-2 focus-within:ring-primary/30 focus-within:border-primary/40",
+        /* ── smooth transitions ── */
+        "transition-all duration-300",
         className,
       )}
     >
-      <div className="flex flex-1 items-center gap-3 pl-4 md:pl-5">
-        <Search
-          className={cn(
-            "h-4 w-4 shrink-0 transition-all duration-500 md:h-5 md:w-5",
-            "text-white/40 focus-within:text-primary/60",
-          )}
-          strokeWidth={2}
-        />
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search destinations..."
-          className="flex-1 bg-transparent py-3.5 text-sm text-white placeholder-white/40 outline-none transition-all duration-500 md:py-5 md:text-base"
-        />
+      {/* ── Main search row ── */}
+      <div className="flex flex-col md:flex-row items-stretch gap-0">
+        {/* Destination */}
+        <div className="flex flex-1 items-center gap-3 px-4 md:px-5 py-3 md:py-0">
+          <MapPin
+            className="h-4 w-4 shrink-0 text-primary/60 md:h-5 md:w-5"
+            strokeWidth={2}
+          />
+          <div className="flex flex-col flex-1 min-w-0">
+            <label
+              htmlFor="search-destination"
+              className="text-[10px] font-semibold uppercase tracking-wider text-gray-500 leading-none mb-0.5"
+            >
+              Destination
+            </label>
+            <input
+              id="search-destination"
+              type="text"
+              value={destination}
+              onChange={(e) => setDestination(e.target.value)}
+              placeholder="Where are you going?"
+              className="w-full bg-transparent py-1 text-sm text-gray-900 placeholder-gray-400 outline-none md:text-base"
+            />
+          </div>
+        </div>
+
+        {/* Divider (desktop) */}
+        <div className="hidden md:block w-px self-stretch my-3 bg-gray-200" />
+        <div className="block md:hidden h-px mx-4 bg-gray-100" />
+
+        {/* Date picker trigger */}
+        <button
+          type="button"
+          className="flex flex-1 items-center gap-3 px-4 md:px-5 py-3 md:py-0 hover:bg-gray-50/50 transition-colors text-left cursor-default"
+        >
+          <CalendarDays
+            className="h-4 w-4 shrink-0 text-primary/60 md:h-5 md:w-5"
+            strokeWidth={2}
+          />
+          <div className="flex flex-col min-w-0">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-500 leading-none mb-0.5">
+              Check in — Check out
+            </span>
+            <span className="py-1 text-sm text-gray-400 md:text-base">Add dates</span>
+          </div>
+        </button>
+
+        {/* Divider (desktop) */}
+        <div className="hidden md:block w-px self-stretch my-3 bg-gray-200" />
+        <div className="block md:hidden h-px mx-4 bg-gray-100" />
+
+        {/* Guest picker trigger */}
+        <button
+          type="button"
+          className="flex flex-1 items-center gap-3 px-4 md:px-5 py-3 md:py-0 hover:bg-gray-50/50 transition-colors text-left cursor-default"
+        >
+          <Users
+            className="h-4 w-4 shrink-0 text-primary/60 md:h-5 md:w-5"
+            strokeWidth={2}
+          />
+          <div className="flex flex-col min-w-0">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-500 leading-none mb-0.5">
+              Guests
+            </span>
+            <span className="py-1 text-sm text-gray-400 md:text-base">Add guests</span>
+          </div>
+        </button>
+
+        {/* Search button */}
+        <div className="flex items-center p-2 md:p-2.5">
+          <button
+            type="submit"
+            className={cn(
+              "flex w-full md:w-auto items-center justify-center gap-2",
+              "rounded-xl bg-primary px-5 md:px-6 py-3 md:py-3.5",
+              "text-sm font-semibold text-white",
+              "transition-all duration-200 hover:bg-primary/90 active:scale-[0.97]",
+              "shadow-lg shadow-primary/25",
+            )}
+            aria-label="Search"
+          >
+            <Search className="h-4 w-4" strokeWidth={2.5} />
+            <span>Search</span>
+          </button>
+        </div>
       </div>
-      <button
-        type="submit"
-        className={cn(
-          "m-1.5 flex shrink-0 items-center justify-center gap-2",
-          "rounded-xl focus-within:rounded-lg",
-          "bg-primary px-4 text-sm font-semibold text-primary-foreground",
-          "transition-all duration-500 hover:bg-primary/90",
-          "md:px-5",
-        )}
-        aria-label="Search"
-      >
-        <Search className="h-4 w-4 md:hidden" strokeWidth={2.5} />
-        <span className="hidden md:inline">Search</span>
-      </button>
     </form>
   );
 }
