@@ -16,7 +16,6 @@ import {
   Ticket,
   TrainFront,
 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { SearchBar } from "@/components/explore/SearchBar";
 import { ListingCard } from "@/components/ListingCard";
 import {
@@ -34,8 +33,6 @@ const heroImage = "/images/hero-zambia.jpg";
 export function HomePage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Navbar />
-
       {/* Hero */}
       <section className="relative z-40 bg-black">
         <div className="absolute inset-0 z-0">
@@ -95,8 +92,18 @@ export function HomePage() {
           <div className="flex items-center justify-center gap-8 md:gap-20 pt-6 pb-2">
             {[
               { id: "stays", label: "Stays", icon: Hotel, href: "/search?category=stays" },
-              { id: "transport", label: "Transport", icon: TrainFront, href: "/search?category=transport" },
-              { id: "experiences", label: "Experiences", icon: Ticket, href: "/search?category=attractions" },
+              {
+                id: "transport",
+                label: "Transport",
+                icon: TrainFront,
+                href: "/search?category=transport",
+              },
+              {
+                id: "experiences",
+                label: "Experiences",
+                icon: Ticket,
+                href: "/search?category=attractions",
+              },
               { id: "gems", label: "Gems", icon: Gem, href: "/search?category=gems" },
               { id: "packages", label: "Packages", icon: Tag, href: "/search?category=packages" },
             ].map(({ id, label, icon: Icon, href }) => (
@@ -120,7 +127,6 @@ export function HomePage() {
 
       {/* Content Sections — Mixed Feed */}
       <main className="mx-auto w-full max-w-7xl px-4 md:px-6 mt-12 md:mt-16">
-
         {/* ── Trending Destinations ── */}
         <section className="mb-16 md:mb-24 section-enter">
           <div className="flex items-center gap-2 mb-2">
@@ -129,7 +135,9 @@ export function HomePage() {
               Trending Now
             </span>
           </div>
-          <h2 className="text-2xl md:text-4xl font-bold tracking-tight mb-2">Popular Destinations</h2>
+          <h2 className="text-2xl md:text-4xl font-bold tracking-tight mb-2">
+            Popular Destinations
+          </h2>
           <p className="text-muted-foreground text-base md:text-lg mb-8 max-w-xl">
             Where everyone is going this season
           </p>
@@ -206,11 +214,7 @@ export function HomePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 stagger-children">
             {mockExperiences.map((item) => (
-              <Link
-                key={item.id}
-                href={`/listings/experiences/${item.id}`}
-                className="group block"
-              >
+              <Link key={item.id} href={`/listings/experiences/${item.id}`} className="group block">
                 <div className="flex flex-col gap-2 transition-all duration-300 group-hover:-translate-y-1">
                   <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-muted mb-2 shadow-sm transition-shadow duration-300 group-hover:shadow-lg">
                     <img
@@ -266,11 +270,7 @@ export function HomePage() {
           </div>
           <div className="grid gap-8 md:grid-cols-3 stagger-children">
             {mockTransport.map((route) => (
-              <Link
-                key={route.id}
-                href={`/listings/transport/${route.id}`}
-                className="group block"
-              >
+              <Link key={route.id} href={`/listings/transport/${route.id}`} className="group block">
                 <div className="flex flex-col gap-2 transition-all duration-300 group-hover:-translate-y-1">
                   <div className="relative aspect-[16/9] overflow-hidden rounded-md bg-muted mb-2 shadow-sm transition-shadow duration-300 group-hover:shadow-lg">
                     <img
@@ -284,9 +284,7 @@ export function HomePage() {
                     <p className="text-sm font-bold text-foreground">
                       {route.from} to {route.to}
                     </p>
-                    <span className="font-semibold text-sm text-foreground">
-                      ZMW {route.price}
-                    </span>
+                    <span className="font-semibold text-sm text-foreground">ZMW {route.price}</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
                     {route.operator} • {route.duration}
@@ -325,11 +323,7 @@ export function HomePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 stagger-children">
             {mockGems.map((item) => (
-              <Link
-                key={item.id}
-                href={`/listings/experiences/${item.id}`}
-                className="group block"
-              >
+              <Link key={item.id} href={`/listings/experiences/${item.id}`} className="group block">
                 <div className="flex flex-col gap-2 transition-all duration-300 group-hover:-translate-y-1">
                   <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-muted mb-2 shadow-sm transition-shadow duration-300 group-hover:shadow-lg">
                     <img
@@ -366,16 +360,24 @@ export function HomePage() {
             </Button>
           </div>
         </section>
-
       </main>
 
       {/* Promo Banner */}
       <section className="w-full bg-gradient-to-r from-primary/5 via-primary/[0.08] to-primary/5 border-y border-primary/10 mt-24 md:mt-32 py-20 md:py-24 section-enter">
         <div className="mx-auto max-w-7xl px-4 md:px-6 text-center flex flex-col items-center justify-center">
           <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary mb-6">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="h-3.5 w-3.5"
+            >
               <path d="M11.584 2.376a.75.75 0 01.832 0l9 6a.75.75 0 11-.832 1.248L12 3.901 3.416 9.624a.75.75 0 01-.832-1.248l9-6z" />
-              <path fillRule="evenodd" d="M20.25 10.332v9.918H21a.75.75 0 010 1.5H3a.75.75 0 010-1.5h.75v-9.918a.75.75 0 01.634-.74A49.109 49.109 0 0112 9c2.59 0 5.134.202 7.616.592a.75.75 0 01.634.74zm-7.5 2.418a.75.75 0 00-1.5 0v6.75a.75.75 0 001.5 0v-6.75zm3-.75a.75.75 0 01.75.75v6.75a.75.75 0 01-1.5 0v-6.75a.75.75 0 01.75-.75zM9 12.75a.75.75 0 00-1.5 0v6.75a.75.75 0 001.5 0v-6.75z" clipRule="evenodd" />
+              <path
+                fillRule="evenodd"
+                d="M20.25 10.332v9.918H21a.75.75 0 010 1.5H3a.75.75 0 010-1.5h.75v-9.918a.75.75 0 01.634-.74A49.109 49.109 0 0112 9c2.59 0 5.134.202 7.616.592a.75.75 0 01.634.74zm-7.5 2.418a.75.75 0 00-1.5 0v6.75a.75.75 0 001.5 0v-6.75zm3-.75a.75.75 0 01.75.75v6.75a.75.75 0 01-1.5 0v-6.75a.75.75 0 01.75-.75zM9 12.75a.75.75 0 00-1.5 0v6.75a.75.75 0 001.5 0v-6.75z"
+                clipRule="evenodd"
+              />
             </svg>
             Smart Travel
           </div>
@@ -401,9 +403,7 @@ export function HomePage() {
           <span className="inline-block rounded-full bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary">
             Trust & Safety
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-            Why Book With Us
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Why Book With Us</h2>
           <p className="text-base md:text-lg text-muted-foreground font-normal max-w-xl mx-auto">
             The trusted choice for Zambian travelers
           </p>

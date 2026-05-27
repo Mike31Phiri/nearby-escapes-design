@@ -22,7 +22,6 @@ import {
   Sparkles,
   Zap,
 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { ReviewSection } from "@/components/reviews/ReviewSection";
 import { cn } from "@/lib/utils";
 import type { Transport } from "@/lib/mock-data";
@@ -38,8 +37,6 @@ export function TransportDetailPage({
 }: TransportDetailPageProps) {
   return (
     <div className="min-h-screen flex flex-col bg-background font-sans">
-      <Navbar />
-
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-6 py-8">
         {/* Back breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">

@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { Bed, MapPin, Star, ArrowRight, Wifi, Waves, Coffee, Sparkles } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { mockStays } from "@/lib/mock-data";
@@ -19,8 +18,6 @@ const amenityIcons: Record<string, React.ReactNode> = {
 export function AccommodationsPage() {
   return (
     <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-      <Navbar />
-
       <main className="flex-1">
         {/* Header */}
         <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-10">
@@ -111,9 +108,7 @@ export function AccommodationsPage() {
                   <div className="flex items-center gap-1 mt-2">
                     <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                     <span className="text-xs font-bold text-foreground">{stay.rating}</span>
-                    <span className="text-xs text-muted-foreground">
-                      ({stay.reviews} reviews)
-                    </span>
+                    <span className="text-xs text-muted-foreground">({stay.reviews} reviews)</span>
                   </div>
                   {/* Amenities preview */}
                   <div className="flex items-center gap-2 mt-2.5 text-muted-foreground">
@@ -134,12 +129,7 @@ export function AccommodationsPage() {
                       <Bed className="h-3 w-3" />
                       {stay.beds} bed · {stay.baths} bath · up to {stay.guests}
                     </div>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="h-8 w-8 rounded-lg p-0"
-                      asChild
-                    >
+                    <Button size="sm" variant="ghost" className="h-8 w-8 rounded-lg p-0" asChild>
                       <Link href={`/listings/stays/${stay.id}`}>
                         <ArrowRight className="h-4 w-4" />
                       </Link>

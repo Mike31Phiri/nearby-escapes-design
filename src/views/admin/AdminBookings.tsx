@@ -27,10 +27,7 @@ import { cn } from "@/lib/utils";
 import { mockHostBookings } from "@/lib/mock-host-bookings";
 import type { HostBooking } from "@/lib/mock-host-bookings";
 import { useLoading, withLoading } from "@/lib/loading-context";
-import {
-  toastBookingAccepted,
-  toastBookingDeclined,
-} from "@/lib/admin-toast";
+import { toastBookingAccepted, toastBookingDeclined } from "@/lib/admin-toast";
 
 // ─── Type Helpers ───────────────────────────────────────────────────────
 
@@ -46,7 +43,10 @@ const typeLabels: Record<string, string> = {
   transport: "Transport",
 };
 
-const bookingStatusConfig: Record<string, { label: string; icon: React.ElementType; badgeClass: string }> = {
+const bookingStatusConfig: Record<
+  string,
+  { label: string; icon: React.ElementType; badgeClass: string }
+> = {
   pending: {
     label: "Pending",
     icon: Clock,
@@ -96,7 +96,13 @@ function BookingCard({ booking }: { booking: HostBooking }) {
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
               <h4 className="font-bold text-foreground truncate">{booking.guestName}</h4>
-              <Badge variant="outline" className={cn("rounded-full text-[8px] font-bold uppercase tracking-wider px-2 py-0.5", cfg.badgeClass)}>
+              <Badge
+                variant="outline"
+                className={cn(
+                  "rounded-full text-[8px] font-bold uppercase tracking-wider px-2 py-0.5",
+                  cfg.badgeClass,
+                )}
+              >
                 <StatusIcon className="h-2.5 w-2.5 mr-0.5" />
                 {cfg.label}
               </Badge>
@@ -141,10 +147,15 @@ function BookingCard({ booking }: { booking: HostBooking }) {
             size="sm"
             className="h-8 rounded-lg text-xs font-semibold"
             onClick={() =>
-              withLoading(setLoading, setLoadingMessage, async () => {
-                await new Promise((r) => setTimeout(r, 600));
-                toastBookingAccepted(booking.guestName);
-              }, "Accepting booking...")
+              withLoading(
+                setLoading,
+                setLoadingMessage,
+                async () => {
+                  await new Promise((r) => setTimeout(r, 600));
+                  toastBookingAccepted(booking.guestName);
+                },
+                "Accepting booking...",
+              )
             }
           >
             <CheckCircle2 className="h-3.5 w-3.5 mr-1" /> Accept
@@ -154,10 +165,15 @@ function BookingCard({ booking }: { booking: HostBooking }) {
             size="sm"
             className="h-8 rounded-lg text-xs font-semibold border-rose-200 text-rose-600"
             onClick={() =>
-              withLoading(setLoading, setLoadingMessage, async () => {
-                await new Promise((r) => setTimeout(r, 600));
-                toastBookingDeclined(booking.guestName);
-              }, "Declining booking...")
+              withLoading(
+                setLoading,
+                setLoadingMessage,
+                async () => {
+                  await new Promise((r) => setTimeout(r, 600));
+                  toastBookingDeclined(booking.guestName);
+                },
+                "Declining booking...",
+              )
             }
           >
             <XCircle className="h-3.5 w-3.5 mr-1" /> Decline
@@ -172,19 +188,24 @@ function BookingCard({ booking }: { booking: HostBooking }) {
 
 export function AdminBookings() {
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "confirmed" | "completed" | "cancelled">("all");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "pending" | "confirmed" | "completed" | "cancelled"
+  >("all");
   const [typeFilter, setTypeFilter] = useState<"all" | "stay" | "experience" | "transport">("all");
 
   const allBookings = mockHostBookings;
 
-  const bookingStats = useMemo(() => ({
-    total: allBookings.length,
-    pending: allBookings.filter((b) => b.status === "pending").length,
-    confirmed: allBookings.filter((b) => b.status === "confirmed").length,
-    completed: allBookings.filter((b) => b.status === "completed").length,
-    cancelled: allBookings.filter((b) => b.status === "cancelled").length,
-    totalRevenue: allBookings.reduce((sum, b) => sum + b.amount, 0),
-  }), [allBookings]);
+  const bookingStats = useMemo(
+    () => ({
+      total: allBookings.length,
+      pending: allBookings.filter((b) => b.status === "pending").length,
+      confirmed: allBookings.filter((b) => b.status === "confirmed").length,
+      completed: allBookings.filter((b) => b.status === "completed").length,
+      cancelled: allBookings.filter((b) => b.status === "cancelled").length,
+      totalRevenue: allBookings.reduce((sum, b) => sum + b.amount, 0),
+    }),
+    [allBookings],
+  );
 
   const filteredBookings = useMemo(() => {
     return allBookings.filter((b) => {
@@ -208,15 +229,20 @@ export function AdminBookings() {
           <div className="mx-auto max-w-6xl px-4 md:px-6 pt-6 md:pt-10">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Platform Bookings</h1>
+                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
+                  Platform Bookings
+                </h1>
                 <p className="text-sm text-muted-foreground mt-1">
-                  {bookingStats.total} bookings — K{bookingStats.totalRevenue.toLocaleString()} total value
+                  {bookingStats.total} bookings — K{bookingStats.totalRevenue.toLocaleString()}{" "}
+                  total value
                 </p>
               </div>
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <span>{bookingStats.pending} pending</span>
                 <span className="text-muted-foreground/30">·</span>
-                <span className="text-emerald-600 font-semibold">{bookingStats.completed} completed</span>
+                <span className="text-emerald-600 font-semibold">
+                  {bookingStats.completed} completed
+                </span>
               </div>
             </div>
           </div>
@@ -245,7 +271,10 @@ export function AdminBookings() {
                 <SelectItem value="transport">Transport</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}>
+            <Select
+              value={statusFilter}
+              onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}
+            >
               <SelectTrigger className="w-[150px] h-10 rounded-xl border-border/60">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
@@ -265,23 +294,33 @@ export function AdminBookings() {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
               <p className="text-2xl font-bold text-foreground">{bookingStats.total}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Total</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Total
+              </p>
             </div>
             <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
               <p className="text-2xl font-bold text-amber-600">{bookingStats.pending}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Pending</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Pending
+              </p>
             </div>
             <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
               <p className="text-2xl font-bold text-blue-600">{bookingStats.confirmed}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Confirmed</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Confirmed
+              </p>
             </div>
             <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
               <p className="text-2xl font-bold text-emerald-600">{bookingStats.completed}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Completed</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Completed
+              </p>
             </div>
             <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
               <p className="text-2xl font-bold text-rose-600">{bookingStats.cancelled}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Cancelled</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Cancelled
+              </p>
             </div>
           </div>
         </div>
@@ -301,15 +340,17 @@ export function AdminBookings() {
                 variant="outline"
                 size="sm"
                 className="mt-6 rounded-full text-xs font-semibold"
-                onClick={() => { setSearch(""); setStatusFilter("all"); setTypeFilter("all"); }}
+                onClick={() => {
+                  setSearch("");
+                  setStatusFilter("all");
+                  setTypeFilter("all");
+                }}
               >
                 Clear Filters
               </Button>
             </div>
           ) : (
-            filteredBookings.map((booking) => (
-              <BookingCard key={booking.id} booking={booking} />
-            ))
+            filteredBookings.map((booking) => <BookingCard key={booking.id} booking={booking} />)
           )}
         </div>
       </div>

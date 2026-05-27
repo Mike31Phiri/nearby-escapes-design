@@ -29,7 +29,6 @@ import {
   AlertTriangle,
   Copy,
 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -71,31 +70,41 @@ const typeRoutes: Record<string, string> = {
 };
 
 const statusStyles: Record<string, string> = {
-  active: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800",
-  pending: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800",
-  draft: "bg-zinc-100 text-zinc-600 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700",
+  active:
+    "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800",
+  pending:
+    "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800",
+  draft:
+    "bg-zinc-100 text-zinc-600 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700",
 };
 
-const bookingStatusConfig: Record<string, { label: string; icon: React.ElementType; badgeClass: string }> = {
+const bookingStatusConfig: Record<
+  string,
+  { label: string; icon: React.ElementType; badgeClass: string }
+> = {
   pending: {
     label: "Pending",
     icon: Clock,
-    badgeClass: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800",
+    badgeClass:
+      "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800",
   },
   confirmed: {
     label: "Confirmed",
     icon: CheckCircle2,
-    badgeClass: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800",
+    badgeClass:
+      "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800",
   },
   completed: {
     label: "Completed",
     icon: CheckCircle2,
-    badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800",
+    badgeClass:
+      "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800",
   },
   cancelled: {
     label: "Cancelled",
     icon: Ban,
-    badgeClass: "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950 dark:text-rose-300 dark:border-rose-800",
+    badgeClass:
+      "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950 dark:text-rose-300 dark:border-rose-800",
   },
 };
 
@@ -215,7 +224,10 @@ function StatCard({
         className={cn(
           "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110",
         )}
-        style={{ backgroundColor: accent ? `${accent}1a` : "var(--primary)1a", color: accent ?? "var(--primary)" }}
+        style={{
+          backgroundColor: accent ? `${accent}1a` : "var(--primary)1a",
+          color: accent ?? "var(--primary)",
+        }}
       >
         <Icon className="h-5.5 w-5.5" />
       </div>
@@ -272,7 +284,10 @@ function CompactBookingCard({ booking }: { booking: HostBooking }) {
       </div>
       <Badge
         variant="outline"
-        className={cn("rounded-full text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 border", cfg.badgeClass)}
+        className={cn(
+          "rounded-full text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 border",
+          cfg.badgeClass,
+        )}
       >
         <StatusIcon className="h-2.5 w-2.5 mr-0.5" />
         {cfg.label}
@@ -311,10 +326,7 @@ export function HostListingDetailPage({ listing }: Props) {
   );
 
   // Performance data
-  const perfData = useMemo(
-    () => mockListingPerformance[listing.id] ?? [],
-    [listing.id],
-  );
+  const perfData = useMemo(() => mockListingPerformance[listing.id] ?? [], [listing.id]);
 
   // Stats
   const stats = useMemo(() => {
@@ -322,12 +334,14 @@ export function HostListingDetailPage({ listing }: Props) {
     const totalBookings = perfData.reduce((sum, m) => sum + m.bookings, 0);
     const currentMonth = perfData[perfData.length - 1] ?? { bookings: 0, revenue: 0 };
     const prevMonth = perfData[perfData.length - 2] ?? { bookings: 0, revenue: 0 };
-    const bookingsTrend = prevMonth.bookings > 0
-      ? ((currentMonth.bookings - prevMonth.bookings) / prevMonth.bookings * 100).toFixed(1)
-      : "0";
-    const revenueTrend = prevMonth.revenue > 0
-      ? ((currentMonth.revenue - prevMonth.revenue) / prevMonth.revenue * 100).toFixed(1)
-      : "0";
+    const bookingsTrend =
+      prevMonth.bookings > 0
+        ? (((currentMonth.bookings - prevMonth.bookings) / prevMonth.bookings) * 100).toFixed(1)
+        : "0";
+    const revenueTrend =
+      prevMonth.revenue > 0
+        ? (((currentMonth.revenue - prevMonth.revenue) / prevMonth.revenue) * 100).toFixed(1)
+        : "0";
     return {
       totalRevenue,
       totalBookings,
@@ -378,11 +392,41 @@ export function HostListingDetailPage({ listing }: Props) {
   // Recent reviews for this listing from mock data
   const listingReviews = useMemo(() => {
     const allReviews = [
-      { id: "r1", guestName: "Sarah Phiri", rating: 5, date: "2025-03-20", text: "An absolutely breathtaking experience! Waking up to elephants at dawn was magical. The staff went above and beyond to make our stay unforgettable." },
-      { id: "r2", guestName: "James Banda", rating: 4, date: "2025-03-22", text: "Beautiful location and great service. The room was comfortable and the food was excellent. Would definitely recommend to anyone visiting the area." },
-      { id: "r3", guestName: "Emily Zulu", rating: 5, date: "2025-02-15", text: "Exceeded all expectations! The views were incredible and the guide was knowledgeable. A truly unforgettable experience." },
-      { id: "r4", guestName: "Michael Tembo", rating: 5, date: "2025-02-10", text: "One of the best experiences in Zambia. Everything was perfectly organized from start to finish." },
-      { id: "r5", guestName: "Grace Mwale", rating: 4, date: "2025-01-28", text: "Lovely property with amazing attention to detail. The hosts were incredibly welcoming and helpful throughout our stay." },
+      {
+        id: "r1",
+        guestName: "Sarah Phiri",
+        rating: 5,
+        date: "2025-03-20",
+        text: "An absolutely breathtaking experience! Waking up to elephants at dawn was magical. The staff went above and beyond to make our stay unforgettable.",
+      },
+      {
+        id: "r2",
+        guestName: "James Banda",
+        rating: 4,
+        date: "2025-03-22",
+        text: "Beautiful location and great service. The room was comfortable and the food was excellent. Would definitely recommend to anyone visiting the area.",
+      },
+      {
+        id: "r3",
+        guestName: "Emily Zulu",
+        rating: 5,
+        date: "2025-02-15",
+        text: "Exceeded all expectations! The views were incredible and the guide was knowledgeable. A truly unforgettable experience.",
+      },
+      {
+        id: "r4",
+        guestName: "Michael Tembo",
+        rating: 5,
+        date: "2025-02-10",
+        text: "One of the best experiences in Zambia. Everything was perfectly organized from start to finish.",
+      },
+      {
+        id: "r5",
+        guestName: "Grace Mwale",
+        rating: 4,
+        date: "2025-01-28",
+        text: "Lovely property with amazing attention to detail. The hosts were incredibly welcoming and helpful throughout our stay.",
+      },
     ];
     return allReviews.slice(0, Math.floor(Math.random() * 3) + 2);
   }, []); // Stable mock
@@ -395,8 +439,6 @@ export function HostListingDetailPage({ listing }: Props) {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-      <Navbar />
-
       <main className="flex-1">
         {/* ─── Header ────────────────────────────────────────────────── */}
         <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
@@ -462,14 +504,19 @@ export function HostListingDetailPage({ listing }: Props) {
                     <div className="flex items-center gap-2.5 mb-1.5">
                       <Badge
                         variant="outline"
-                        className={cn("rounded-full text-[9px] font-bold uppercase tracking-wider px-2.5 py-0.5 border", statusClass)}
+                        className={cn(
+                          "rounded-full text-[9px] font-bold uppercase tracking-wider px-2.5 py-0.5 border",
+                          statusClass,
+                        )}
                       >
                         {currentStatus}
                       </Badge>
                       {listing.rating > 0 && (
                         <div className="flex items-center gap-0.5">
                           <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                          <span className="text-sm font-bold text-foreground">{listing.rating.toFixed(1)}</span>
+                          <span className="text-sm font-bold text-foreground">
+                            {listing.rating.toFixed(1)}
+                          </span>
                         </div>
                       )}
                     </div>
@@ -486,10 +533,14 @@ export function HostListingDetailPage({ listing }: Props) {
                 {/* Quick Info */}
                 <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-4 text-sm">
                   <span className="flex items-center gap-1.5 font-semibold text-foreground">
-                    <DollarSign className="h-4 w-4 text-primary/70" />
-                    K{listing.price}
-                    <span className="text-muted-foreground font-normal">/
-                      {listing.type === "stay" ? "night" : listing.type === "experience" ? "person" : "seat"}
+                    <DollarSign className="h-4 w-4 text-primary/70" />K{listing.price}
+                    <span className="text-muted-foreground font-normal">
+                      /
+                      {listing.type === "stay"
+                        ? "night"
+                        : listing.type === "experience"
+                          ? "person"
+                          : "seat"}
                     </span>
                   </span>
                   <span className="flex items-center gap-1.5 text-muted-foreground">
@@ -497,8 +548,8 @@ export function HostListingDetailPage({ listing }: Props) {
                     {listing.bookings} total bookings
                   </span>
                   <span className="flex items-center gap-1.5 text-muted-foreground">
-                    <DollarSign className="h-4 w-4 text-primary/70" />
-                    K{listing.revenue.toLocaleString()} earned
+                    <DollarSign className="h-4 w-4 text-primary/70" />K
+                    {listing.revenue.toLocaleString()} earned
                   </span>
                 </div>
               </div>
@@ -602,11 +653,19 @@ export function HostListingDetailPage({ listing }: Props) {
                       }}
                       className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-foreground hover:bg-muted/50 transition-colors text-left"
                     >
-                      <div className={cn(
-                        "h-7 w-7 rounded-lg flex items-center justify-center",
-                        currentStatus === "active" ? "bg-amber-100 text-amber-600" : "bg-emerald-100 text-emerald-600",
-                      )}>
-                        {currentStatus === "active" ? <Eye className="h-3.5 w-3.5" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
+                      <div
+                        className={cn(
+                          "h-7 w-7 rounded-lg flex items-center justify-center",
+                          currentStatus === "active"
+                            ? "bg-amber-100 text-amber-600"
+                            : "bg-emerald-100 text-emerald-600",
+                        )}
+                      >
+                        {currentStatus === "active" ? (
+                          <Eye className="h-3.5 w-3.5" />
+                        ) : (
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                        )}
                       </div>
                       <div>
                         <p className="font-semibold text-sm">
@@ -631,7 +690,9 @@ export function HostListingDetailPage({ listing }: Props) {
                       </div>
                       <div>
                         <p className="font-semibold text-sm">View Public Page</p>
-                        <p className="text-[10px] text-muted-foreground">Open listing as guests see it</p>
+                        <p className="text-[10px] text-muted-foreground">
+                          Open listing as guests see it
+                        </p>
                       </div>
                     </button>
                   </div>
@@ -659,8 +720,8 @@ export function HostListingDetailPage({ listing }: Props) {
                   </AlertDialogTitle>
                   <AlertDialogDescription className="text-sm text-muted-foreground">
                     This action cannot be undone. All associated booking data will be permanently
-                    removed from your dashboard and the listing will be immediately hidden from search
-                    results.
+                    removed from your dashboard and the listing will be immediately hidden from
+                    search results.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <div className="flex items-start gap-3 rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-800">
@@ -680,9 +741,13 @@ export function HostListingDetailPage({ listing }: Props) {
                     className="rounded-xl bg-destructive text-destructive-foreground hover:bg-destructive/90 font-bold"
                   >
                     {deleting ? (
-                      <><Loader2 className="h-4 w-4 mr-1.5 animate-spin" /> Deleting...</>
+                      <>
+                        <Loader2 className="h-4 w-4 mr-1.5 animate-spin" /> Deleting...
+                      </>
                     ) : (
-                      <><Trash2 className="h-4 w-4 mr-1.5" /> Delete Listing</>
+                      <>
+                        <Trash2 className="h-4 w-4 mr-1.5" /> Delete Listing
+                      </>
                     )}
                   </AlertDialogAction>
                 </AlertDialogFooter>
@@ -707,7 +772,9 @@ export function HostListingDetailPage({ listing }: Props) {
                       : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30",
                   )}
                 >
-                  <Icon className={cn("h-4 w-4", isActive ? "text-primary" : "text-muted-foreground")} />
+                  <Icon
+                    className={cn("h-4 w-4", isActive ? "text-primary" : "text-muted-foreground")}
+                  />
                   {label}
                 </button>
               );
@@ -742,7 +809,10 @@ export function HostListingDetailPage({ listing }: Props) {
                         const revHeight = (m.revenue / maxRevenue) * 100;
                         const bkgHeight = (m.bookings / maxBookings) * 100;
                         return (
-                          <div key={m.month} className="flex-1 flex flex-col items-center gap-0.5 group">
+                          <div
+                            key={m.month}
+                            className="flex-1 flex flex-col items-center gap-0.5 group"
+                          >
                             {/* Dual bar chart */}
                             <div className="w-full flex items-end justify-center gap-[2px]">
                               <div
@@ -790,11 +860,15 @@ export function HostListingDetailPage({ listing }: Props) {
                     <p className="text-3xl font-bold text-foreground">
                       K{stats.currentMonthRevenue.toLocaleString()}
                     </p>
-                    <p className={cn(
-                      "text-xs font-semibold mt-1 flex items-center gap-0.5",
-                      Number(stats.revenueTrend) >= 0 ? "text-emerald-600" : "text-destructive"
-                    )}>
-                      <TrendingUp className={cn("h-3 w-3", Number(stats.revenueTrend) < 0 && "rotate-180")} />
+                    <p
+                      className={cn(
+                        "text-xs font-semibold mt-1 flex items-center gap-0.5",
+                        Number(stats.revenueTrend) >= 0 ? "text-emerald-600" : "text-destructive",
+                      )}
+                    >
+                      <TrendingUp
+                        className={cn("h-3 w-3", Number(stats.revenueTrend) < 0 && "rotate-180")}
+                      />
                       {stats.revenueTrend}% vs last month
                     </p>
                   </div>
@@ -802,13 +876,9 @@ export function HostListingDetailPage({ listing }: Props) {
                     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                       Pending Requests
                     </p>
-                    <p className="text-3xl font-bold text-foreground">
-                      {pendingBookings.length}
-                    </p>
+                    <p className="text-3xl font-bold text-foreground">{pendingBookings.length}</p>
                     <p className="text-xs text-muted-foreground font-medium mt-1">
-                      {pendingBookings.length > 0
-                        ? `Awaiting your response`
-                        : "All clear"}
+                      {pendingBookings.length > 0 ? `Awaiting your response` : "All clear"}
                     </p>
                   </div>
                 </div>
@@ -924,7 +994,9 @@ export function HostListingDetailPage({ listing }: Props) {
                               {review.guestName.charAt(0)}
                             </div>
                             <div>
-                              <p className="text-sm font-bold text-foreground">{review.guestName}</p>
+                              <p className="text-sm font-bold text-foreground">
+                                {review.guestName}
+                              </p>
                               <p className="text-xs text-muted-foreground">
                                 {new Date(review.date).toLocaleDateString("en-ZM", {
                                   month: "long",
@@ -940,13 +1012,17 @@ export function HostListingDetailPage({ listing }: Props) {
                                 key={i}
                                 className={cn(
                                   "h-3.5 w-3.5",
-                                  i < review.rating ? "fill-amber-400 text-amber-400" : "text-muted-foreground/20",
+                                  i < review.rating
+                                    ? "fill-amber-400 text-amber-400"
+                                    : "text-muted-foreground/20",
                                 )}
                               />
                             ))}
                           </div>
                         </div>
-                        <p className="text-sm text-muted-foreground leading-relaxed">{review.text}</p>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {review.text}
+                        </p>
                       </div>
                     ))}
                   </div>
@@ -955,16 +1031,21 @@ export function HostListingDetailPage({ listing }: Props) {
                   <div className="mt-6 rounded-xl border border-border/50 bg-card p-5 shadow-sm">
                     <div className="flex items-center gap-4">
                       <div className="text-center">
-                        <p className="text-4xl font-black text-foreground">{listing.rating.toFixed(1)}</p>
+                        <p className="text-4xl font-black text-foreground">
+                          {listing.rating.toFixed(1)}
+                        </p>
                         <p className="text-xs text-muted-foreground font-medium">out of 5</p>
                       </div>
                       <div className="flex-1 space-y-1.5">
                         {[5, 4, 3, 2, 1].map((star) => {
                           const count = listingReviews.filter((r) => r.rating === star).length;
-                          const pct = listingReviews.length > 0 ? (count / listingReviews.length) * 100 : 0;
+                          const pct =
+                            listingReviews.length > 0 ? (count / listingReviews.length) * 100 : 0;
                           return (
                             <div key={star} className="flex items-center gap-2 text-xs">
-                              <span className="w-3 text-muted-foreground font-semibold">{star}</span>
+                              <span className="w-3 text-muted-foreground font-semibold">
+                                {star}
+                              </span>
                               <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
                               <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
                                 <div

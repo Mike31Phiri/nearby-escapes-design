@@ -56,8 +56,7 @@ export const useBookingStore = create<BookingStore>()(
 
       getBookingByRef: (bookingRef) => get().bookings.find((b) => b.bookingRef === bookingRef),
 
-      getBookingsByListing: (listingId) =>
-        get().bookings.filter((b) => b.listingId === listingId),
+      getBookingsByListing: (listingId) => get().bookings.filter((b) => b.listingId === listingId),
 
       getUpcomingBookings: () => {
         const now = new Date();

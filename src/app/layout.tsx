@@ -13,7 +13,6 @@ import type { Metadata } from "next";
 import "../styles.css";
 import { AuthProvider } from "@/lib/auth";
 import { Toaster } from "@/components/ui/sonner";
-import { Footer } from "@/components/layout/Footer";
 import { RouteProgressBar } from "@/components/ui/RouteProgressBar";
 import { ClientModals } from "./ClientModals";
 import { Suspense } from "react";
@@ -86,7 +85,6 @@ export default function RootLayout({
             <RouteProgressBar />
           </Suspense>
           {children}
-          <Footer />
           <Toaster />
           <ClientModals />
         </AuthProvider>

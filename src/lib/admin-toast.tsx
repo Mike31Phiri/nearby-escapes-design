@@ -34,9 +34,7 @@ function ToastContent({
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-foreground">{title}</p>
-        {description && (
-          <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
-        )}
+        {description && <p className="text-xs text-muted-foreground mt-0.5">{description}</p>}
       </div>
     </div>
   );
@@ -48,12 +46,7 @@ export function showSuccess(title: string, description?: string) {
   toast.custom(
     (t) => (
       <div className="pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 shadow-lg dark:border-emerald-800 dark:bg-emerald-950/80">
-        <ToastContent
-          icon={CheckCircle2}
-          title={title}
-          description={description}
-          color="#10b981"
-        />
+        <ToastContent icon={CheckCircle2} title={title} description={description} color="#10b981" />
       </div>
     ),
     { duration: 3500 },
@@ -64,12 +57,7 @@ export function showError(title: string, description?: string) {
   toast.custom(
     (t) => (
       <div className="pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-xl border border-rose-200 bg-rose-50 p-4 shadow-lg dark:border-rose-800 dark:bg-rose-950/80">
-        <ToastContent
-          icon={XCircle}
-          title={title}
-          description={description}
-          color="#e11d48"
-        />
+        <ToastContent icon={XCircle} title={title} description={description} color="#e11d48" />
       </div>
     ),
     { duration: 5000 },
@@ -96,12 +84,7 @@ export function showInfo(title: string, description?: string) {
   toast.custom(
     (t) => (
       <div className="pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4 shadow-lg dark:border-blue-800 dark:bg-blue-950/80">
-        <ToastContent
-          icon={Info}
-          title={title}
-          description={description}
-          color="#3b82f6"
-        />
+        <ToastContent icon={Info} title={title} description={description} color="#3b82f6" />
       </div>
     ),
     { duration: 3500 },
@@ -123,11 +106,7 @@ export function showLoadingToast(
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-foreground">{title}</p>
-          {description && (
-            <p className="text-xs text-muted-foreground mt-0.5">
-              {description}
-            </p>
-          )}
+          {description && <p className="text-xs text-muted-foreground mt-0.5">{description}</p>}
         </div>
       </div>
     ),
@@ -147,24 +126,15 @@ export function showLoadingToast(
 // ─── Admin-Specific Action Toasts ───────────────────────────────────────
 
 export function toastUserVerified(userName: string) {
-  showSuccess(
-    `${userName} verified`,
-    "User account has been marked as verified.",
-  );
+  showSuccess(`${userName} verified`, "User account has been marked as verified.");
 }
 
 export function toastUserSuspended(userName: string) {
-  showWarning(
-    `${userName} suspended`,
-    "This user can no longer access the platform.",
-  );
+  showWarning(`${userName} suspended`, "This user can no longer access the platform.");
 }
 
 export function toastUserReactivated(userName: string) {
-  showSuccess(
-    `${userName} reactivated`,
-    "User has been restored to active status.",
-  );
+  showSuccess(`${userName} reactivated`, "User has been restored to active status.");
 }
 
 export function toastListingApproved(listingName: string) {
@@ -175,10 +145,7 @@ export function toastListingApproved(listingName: string) {
 }
 
 export function toastListingRejected(listingName: string) {
-  showWarning(
-    `"${listingName}" rejected`,
-    "The host will be notified of this decision.",
-  );
+  showWarning(`"${listingName}" rejected`, "The host will be notified of this decision.");
 }
 
 export function toastBookingAccepted(guestName: string) {
@@ -189,29 +156,17 @@ export function toastBookingAccepted(guestName: string) {
 }
 
 export function toastBookingDeclined(guestName: string) {
-  showInfo(
-    `Booking from ${guestName} declined`,
-    "The guest has been notified of this decision.",
-  );
+  showInfo(`Booking from ${guestName} declined`, "The guest has been notified of this decision.");
 }
 
 export function toastSettingsSaved() {
-  showSuccess(
-    "Settings saved",
-    "Platform-wide settings have been updated successfully.",
-  );
+  showSuccess("Settings saved", "Platform-wide settings have been updated successfully.");
 }
 
 export function toastSettingsReset() {
-  showInfo(
-    "Settings reset",
-    "All settings have been restored to their default values.",
-  );
+  showInfo("Settings reset", "All settings have been restored to their default values.");
 }
 
 export function toastReportExported() {
-  showSuccess(
-    "Report exported",
-    "Your report has been downloaded as a CSV file.",
-  );
+  showSuccess("Report exported", "Your report has been downloaded as a CSV file.");
 }

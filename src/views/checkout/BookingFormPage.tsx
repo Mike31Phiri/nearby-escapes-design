@@ -18,7 +18,6 @@ import {
   CreditCard,
   Loader2,
 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -172,8 +171,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
           ? Math.max(
               0,
               Math.round(
-                (new Date(stayForm.checkOut).getTime() -
-                  new Date(stayForm.checkIn).getTime()) /
+                (new Date(stayForm.checkOut).getTime() - new Date(stayForm.checkIn).getTime()) /
                   (1000 * 60 * 60 * 24),
               ),
             )
@@ -181,7 +179,17 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
       const roomCount = parseInt(stayForm.rooms) || 1;
       const subtotal = listing.price * nights * roomCount;
       const serviceFee = Math.round(subtotal * 0.05);
-      return { subtotal, serviceFee, total: subtotal + serviceFee, nights, roomCount, adultCount: 0, childCount: 0, passengerCount: 0, classMarkup: 0 };
+      return {
+        subtotal,
+        serviceFee,
+        total: subtotal + serviceFee,
+        nights,
+        roomCount,
+        adultCount: 0,
+        childCount: 0,
+        passengerCount: 0,
+        classMarkup: 0,
+      };
     }
 
     if (isExperience) {
@@ -225,7 +233,17 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
       };
     }
 
-    return { subtotal: 0, serviceFee: 0, total: 0, nights: 0, roomCount: 1, adultCount: 0, childCount: 0, passengerCount: 0, classMarkup: 0 };
+    return {
+      subtotal: 0,
+      serviceFee: 0,
+      total: 0,
+      nights: 0,
+      roomCount: 1,
+      adultCount: 0,
+      childCount: 0,
+      passengerCount: 0,
+      classMarkup: 0,
+    };
   }, [listing, stayForm, expForm, transportForm, isStay, isExperience, isTransport]);
 
   // ─── Handle Submit ────────────────────────────────────────────────────
@@ -306,7 +324,11 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
       // Save profile info
       saveCheckoutInfo({
         phone: isStay ? stayForm.phone : isExperience ? expForm.phone : transportForm.phone,
-        homeCity: isStay ? stayForm.homeCity : isExperience ? expForm.homeCity : transportForm.homeCity,
+        homeCity: isStay
+          ? stayForm.homeCity
+          : isExperience
+            ? expForm.homeCity
+            : transportForm.homeCity,
       });
 
       // Trigger travel preferences modal on first checkout
@@ -364,19 +386,11 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
         status: "confirmed",
         transToken: result.transToken,
         customerName: isStay ? stayForm.name : isExperience ? expForm.name : transportForm.name,
-        customerPhone: isStay
-          ? stayForm.phone
-          : isExperience
-            ? expForm.phone
-            : transportForm.phone,
+        customerPhone: isStay ? stayForm.phone : isExperience ? expForm.phone : transportForm.phone,
         details: {
           checkIn: isStay ? stayForm.checkIn : undefined,
           checkOut: isStay ? stayForm.checkOut : undefined,
-          date: isExperience
-            ? expForm.date
-            : isTransport
-              ? transportForm.travelDate
-              : undefined,
+          date: isExperience ? expForm.date : isTransport ? transportForm.travelDate : undefined,
           guests: isStay
             ? parseInt(stayForm.adults) + parseInt(stayForm.children)
             : isExperience
@@ -413,8 +427,6 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
 
   return (
     <div className="min-h-screen flex flex-col bg-background font-sans">
-      <Navbar />
-
       <main className="flex-1 w-full max-w-5xl mx-auto px-4 md:px-6 py-8">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
@@ -517,9 +529,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                         type="date"
                         value={stayForm.checkIn}
                         min={minDate}
-                        onChange={(e) =>
-                          setStayForm((f) => ({ ...f, checkIn: e.target.value }))
-                        }
+                        onChange={(e) => setStayForm((f) => ({ ...f, checkIn: e.target.value }))}
                         className="h-11 rounded-xl border-border/60 text-sm"
                         required
                       />
@@ -532,9 +542,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                         type="date"
                         value={stayForm.checkOut}
                         min={stayForm.checkIn || minDate}
-                        onChange={(e) =>
-                          setStayForm((f) => ({ ...f, checkOut: e.target.value }))
-                        }
+                        onChange={(e) => setStayForm((f) => ({ ...f, checkOut: e.target.value }))}
                         className="h-11 rounded-xl border-border/60 text-sm"
                         required
                       />
@@ -768,9 +776,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                       </Label>
                       <Select
                         value={transportForm.departureTime}
-                        onValueChange={(v) =>
-                          setTransportForm((f) => ({ ...f, departureTime: v }))
-                        }
+                        onValueChange={(v) => setTransportForm((f) => ({ ...f, departureTime: v }))}
                       >
                         <SelectTrigger className="h-11 rounded-xl border-border/60 text-sm uppercase">
                           <SelectValue />
@@ -954,9 +960,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                       </div>
                       {priceBreakdown.childCount > 0 && (
                         <div className="flex justify-between text-muted-foreground">
-                          <span>
-                            Children (× {priceBreakdown.childCount})
-                          </span>
+                          <span>Children (× {priceBreakdown.childCount})</span>
                           <span className="font-semibold text-foreground">
                             K{Math.round(listing.price * 0.5 * priceBreakdown.childCount)}
                           </span>
@@ -987,7 +991,9 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                           <span>Class upgrade</span>
                           <span className="font-semibold text-foreground">
                             K
-                            {(priceBreakdown.classMarkup * priceBreakdown.passengerCount).toLocaleString()}
+                            {(
+                              priceBreakdown.classMarkup * priceBreakdown.passengerCount
+                            ).toLocaleString()}
                           </span>
                         </div>
                       )}
@@ -1002,9 +1008,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
 
                   <div className="flex justify-between font-black text-foreground border-t border-border/40 pt-2 mt-1 text-base">
                     <span>Total</span>
-                    <span className="text-primary">
-                      K{priceBreakdown.total.toLocaleString()}
-                    </span>
+                    <span className="text-primary">K{priceBreakdown.total.toLocaleString()}</span>
                   </div>
                 </div>
 

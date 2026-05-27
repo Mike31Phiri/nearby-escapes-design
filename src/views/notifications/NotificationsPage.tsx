@@ -16,10 +16,13 @@ import {
   ChevronRight,
   Inbox,
 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { cn, timeAgo } from "@/lib/utils";
-import { useNotificationStore, type AppNotification, type NotificationType } from "@/store/notificationStore";
+import {
+  useNotificationStore,
+  type AppNotification,
+  type NotificationType,
+} from "@/store/notificationStore";
 
 const TYPE_CONFIG: Record<
   NotificationType,
@@ -95,17 +98,13 @@ function NotificationCard({
               <span
                 className={cn(
                   "shrink-0 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider",
-                  n.read
-                    ? "bg-muted text-muted-foreground"
-                    : "bg-primary/10 text-primary",
+                  n.read ? "bg-muted text-muted-foreground" : "bg-primary/10 text-primary",
                 )}
               >
                 {config.label}
               </span>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed mt-1">
-              {n.description}
-            </p>
+            <p className="text-sm text-muted-foreground leading-relaxed mt-1">{n.description}</p>
           </div>
         </div>
 
@@ -146,13 +145,8 @@ function NotificationCard({
 }
 
 export function NotificationsPage() {
-  const {
-    notifications,
-    getUnreadCount,
-    getNotificationsByType,
-    markAsRead,
-    markAllAsRead,
-  } = useNotificationStore();
+  const { notifications, getUnreadCount, getNotificationsByType, markAsRead, markAllAsRead } =
+    useNotificationStore();
 
   const [activeFilter, setActiveFilter] = useState<NotificationType | "all">("all");
   const [showUnreadOnly, setShowUnreadOnly] = useState(false);
@@ -163,8 +157,6 @@ export function NotificationsPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-      <Navbar />
-
       <main className="flex-1">
         <div className="mx-auto max-w-4xl px-4 md:px-6 pt-8 md:pt-12 pb-16">
           {/* Header */}
@@ -213,9 +205,7 @@ export function NotificationsPage() {
             {FILTER_TABS.map((tab) => {
               const isActive = activeFilter === tab.id;
               const count =
-                tab.id === "all"
-                  ? notifications.length
-                  : getNotificationsByType(tab.id).length;
+                tab.id === "all" ? notifications.length : getNotificationsByType(tab.id).length;
               return (
                 <button
                   key={tab.id}

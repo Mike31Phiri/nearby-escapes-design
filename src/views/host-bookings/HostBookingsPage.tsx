@@ -22,7 +22,6 @@ import {
   MapPin,
   AlertTriangle,
 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -205,7 +204,11 @@ function BookingCard({
               </Link>
               <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
                 <MapPin className="h-3 w-3 shrink-0" />
-                {booking.listingType === "stay" ? "Lodge" : booking.listingType === "experience" ? "Activity" : "Route"}
+                {booking.listingType === "stay"
+                  ? "Lodge"
+                  : booking.listingType === "experience"
+                    ? "Activity"
+                    : "Route"}
               </p>
             </div>
             <Badge
@@ -225,9 +228,7 @@ function BookingCard({
               {booking.guestName.charAt(0)}
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-foreground truncate">
-                {booking.guestName}
-              </p>
+              <p className="text-sm font-semibold text-foreground truncate">{booking.guestName}</p>
               <p className="text-[10px] text-muted-foreground">
                 Requested {formatTimeAgo(booking.createdAt)}
               </p>
@@ -247,8 +248,7 @@ function BookingCard({
               {booking.guests} guest{booking.guests > 1 ? "s" : ""}
             </span>
             <span className="flex items-center gap-1 font-semibold text-foreground">
-              <DollarSign className="h-3.5 w-3.5" />
-              K{booking.amount.toLocaleString()}
+              <DollarSign className="h-3.5 w-3.5" />K{booking.amount.toLocaleString()}
             </span>
             <span className="font-mono text-[10px] text-muted-foreground/50">
               {booking.bookingRef}
@@ -365,7 +365,8 @@ export function HostBookingsPage() {
 
   // Filtered & searched bookings
   const filteredBookings = useMemo(() => {
-    let result = activeFilter === "all" ? bookings : bookings.filter((b) => b.status === activeFilter);
+    let result =
+      activeFilter === "all" ? bookings : bookings.filter((b) => b.status === activeFilter);
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       result = result.filter(
@@ -392,39 +393,51 @@ export function HostBookingsPage() {
 
   // ─── Accept / Decline Handlers ────────────────────────────────────────
 
-  const handleAccept = useCallback((id: string) => {
-    // Find guest name before async operation
-    const guest = bookings.find((b) => b.id === id);
-    const guestName = guest?.guestName ?? "Guest";
-    setProcessing(id);
-    // Simulate API call
-    setTimeout(() => {
-      setBookings((prev) =>
-        prev.map((b) =>
-          b.id === id ? { ...b, status: "confirmed" as const, updatedAt: new Date().toISOString() } : b,
-        ),
-      );
-      setProcessing(null);
-      toast.success(`Booking confirmed for ${guestName}! A confirmation notification has been sent.`);
-    }, 1200);
-  }, [bookings]);
+  const handleAccept = useCallback(
+    (id: string) => {
+      // Find guest name before async operation
+      const guest = bookings.find((b) => b.id === id);
+      const guestName = guest?.guestName ?? "Guest";
+      setProcessing(id);
+      // Simulate API call
+      setTimeout(() => {
+        setBookings((prev) =>
+          prev.map((b) =>
+            b.id === id
+              ? { ...b, status: "confirmed" as const, updatedAt: new Date().toISOString() }
+              : b,
+          ),
+        );
+        setProcessing(null);
+        toast.success(
+          `Booking confirmed for ${guestName}! A confirmation notification has been sent.`,
+        );
+      }, 1200);
+    },
+    [bookings],
+  );
 
-  const handleDecline = useCallback((id: string) => {
-    // Find guest name before async operation
-    const guest = bookings.find((b) => b.id === id);
-    const guestName = guest?.guestName ?? "Guest";
-    setProcessing(id);
-    // Simulate API call
-    setTimeout(() => {
-      setBookings((prev) =>
-        prev.map((b) =>
-          b.id === id ? { ...b, status: "cancelled" as const, updatedAt: new Date().toISOString() } : b,
-        ),
-      );
-      setProcessing(null);
-      toast.success(`Booking request from ${guestName} has been declined. They'll be notified.`);
-    }, 1200);
-  }, [bookings]);
+  const handleDecline = useCallback(
+    (id: string) => {
+      // Find guest name before async operation
+      const guest = bookings.find((b) => b.id === id);
+      const guestName = guest?.guestName ?? "Guest";
+      setProcessing(id);
+      // Simulate API call
+      setTimeout(() => {
+        setBookings((prev) =>
+          prev.map((b) =>
+            b.id === id
+              ? { ...b, status: "cancelled" as const, updatedAt: new Date().toISOString() }
+              : b,
+          ),
+        );
+        setProcessing(null);
+        toast.success(`Booking request from ${guestName} has been declined. They'll be notified.`);
+      }, 1200);
+    },
+    [bookings],
+  );
 
   const filters: { id: StatusFilter; label: string; count: number }[] = [
     { id: "all", label: "All", count: stats.total },
@@ -436,8 +449,6 @@ export function HostBookingsPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-      <Navbar />
-
       <main className="flex-1">
         {/* ─── Page Header ──────────────────────────────────────────── */}
         <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-10">
@@ -472,11 +483,7 @@ export function HostBookingsPage() {
         {/* ─── Stats Row ────────────────────────────────────────────── */}
         <div className="mx-auto max-w-6xl px-4 md:px-6 -mt-6 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            <StatCard
-              icon={CalendarDays}
-              label="Total Requests"
-              value={String(stats.total)}
-            />
+            <StatCard icon={CalendarDays} label="Total Requests" value={String(stats.total)} />
             <StatCard
               icon={Clock}
               label="Pending"
@@ -500,9 +507,7 @@ export function HostBookingsPage() {
               value={`K${stats.pendingRevenue.toLocaleString()}`}
               accent="#f59e0b"
               trend={
-                stats.pending > 0
-                  ? { value: "Awaiting your decision", positive: false }
-                  : undefined
+                stats.pending > 0 ? { value: "Awaiting your decision", positive: false } : undefined
               }
             />
           </div>
@@ -531,9 +536,7 @@ export function HostBookingsPage() {
                     <span
                       className={cn(
                         "ml-0.5 rounded-full px-2 py-0.5 text-[9px] font-bold",
-                        isActive
-                          ? "bg-primary/10 text-primary"
-                          : "bg-muted text-muted-foreground",
+                        isActive ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground",
                       )}
                     >
                       {count}
@@ -608,7 +611,9 @@ export function HostBookingsPage() {
                   <Clock className="h-4 w-4 text-amber-500 shrink-0" />
                   <p className="text-sm text-amber-800 dark:text-amber-200 font-medium">
                     You have{" "}
-                    <span className="font-bold">{stats.pending} pending booking request{stats.pending > 1 ? "s" : ""}</span>{" "}
+                    <span className="font-bold">
+                      {stats.pending} pending booking request{stats.pending > 1 ? "s" : ""}
+                    </span>{" "}
                     awaiting your response.
                     <button
                       onClick={() => setActiveFilter("pending")}

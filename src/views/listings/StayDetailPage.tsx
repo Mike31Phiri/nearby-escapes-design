@@ -25,7 +25,6 @@ import {
   Phone,
   User,
 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 
 import { toast } from "sonner";
 import { useWishlistStore } from "@/store/wishlistStore";
@@ -70,8 +69,6 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
   const { isSaved, addItem, removeItem } = useWishlistStore();
   const isFavorited = isSaved(stay.id);
 
-
-
   const handleToggleFavorite = () => {
     if (!isAuthenticated) {
       setShowAuthDialog(true);
@@ -88,15 +85,11 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
     }
   };
 
-
-
   const prevImg = () => setActiveImg((i) => (i === 0 ? images.length - 1 : i - 1));
   const nextImg = () => setActiveImg((i) => (i === images.length - 1 ? 0 : i + 1));
 
   return (
     <div className="min-h-screen flex flex-col bg-background font-sans">
-      <Navbar />
-
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-6 py-8">
         {/* Back breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
@@ -438,11 +431,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
             </section>
 
             {/* Guest Reviews */}
-            <ReviewSection
-              listingId={stay.id}
-              listingName={stay.name}
-              listingType="stay"
-            />
+            <ReviewSection listingId={stay.id} listingName={stay.name} listingType="stay" />
           </div>
 
           {/* Right: Booking card */}

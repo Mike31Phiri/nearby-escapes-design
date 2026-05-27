@@ -23,7 +23,6 @@ import {
   Heart,
   Share2,
 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { ReviewSection } from "@/components/reviews/ReviewSection";
 import { cn } from "@/lib/utils";
 import type { Experience, Package } from "@/lib/mock-data";
@@ -114,12 +113,8 @@ export function ExperienceDetailPage({
     richDescriptions[item.id] ||
     "Discover the wonders of Zambia with our curated local tours and packages. Expert guides, premium travel setups, and verified safety ensure an unforgettable journey.";
 
-
-
   return (
     <div className="min-h-screen flex flex-col bg-background font-sans">
-      <Navbar />
-
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-6 py-8">
         {/* Back breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
@@ -277,11 +272,7 @@ export function ExperienceDetailPage({
             </section>
 
             {/* Guest Reviews */}
-            <ReviewSection
-              listingId={item.id}
-              listingName={item.name}
-              listingType="experience"
-            />
+            <ReviewSection listingId={item.id} listingName={item.name} listingType="experience" />
           </div>
 
           {/* Right: Booking Form Card */}
@@ -320,9 +311,7 @@ export function ExperienceDetailPage({
                   <div className="space-y-2 text-sm">
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <Clock className="h-4 w-4 text-primary/70" />
-                      <span>
-                        Duration: {"duration" in item ? item.duration : "Approx 4 Hours"}
-                      </span>
+                      <span>Duration: {"duration" in item ? item.duration : "Approx 4 Hours"}</span>
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <Users className="h-4 w-4 text-primary/70" />

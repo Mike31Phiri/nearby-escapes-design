@@ -238,7 +238,10 @@ export const useAvailabilityStore = create<AvailabilityStore>()(
         if (seasonal.label?.toLowerCase().includes("peak")) {
           return Math.round(basePrice * 1.3);
         }
-        if (seasonal.label?.toLowerCase().includes("green") || seasonal.label?.toLowerCase().includes("off")) {
+        if (
+          seasonal.label?.toLowerCase().includes("green") ||
+          seasonal.label?.toLowerCase().includes("off")
+        ) {
           return Math.round(basePrice * 0.8);
         }
         return basePrice;

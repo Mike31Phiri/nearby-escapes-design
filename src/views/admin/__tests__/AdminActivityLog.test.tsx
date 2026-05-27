@@ -39,9 +39,7 @@ describe("AdminActivityLog", () => {
 
   it("filters activities by search input", async () => {
     render(<AdminActivityLog />);
-    const searchInput = screen.getByPlaceholderText(
-      "Search actions, users, or targets...",
-    );
+    const searchInput = screen.getByPlaceholderText("Search actions, users, or targets...");
     await userEvent.type(searchInput, "Grace");
 
     const graceElements = screen.getAllByText(/Grace/);
@@ -67,9 +65,7 @@ describe("AdminActivityLog", () => {
 
   it("shows empty state when search matches nothing", async () => {
     render(<AdminActivityLog />);
-    const searchInput = screen.getByPlaceholderText(
-      "Search actions, users, or targets...",
-    );
+    const searchInput = screen.getByPlaceholderText("Search actions, users, or targets...");
     await userEvent.type(searchInput, "zzzzznotexist");
 
     expect(screen.getByText("No events found")).toBeInTheDocument();
@@ -78,9 +74,7 @@ describe("AdminActivityLog", () => {
 
   it("clears all filters from empty state", async () => {
     render(<AdminActivityLog />);
-    const searchInput = screen.getByPlaceholderText(
-      "Search actions, users, or targets...",
-    );
+    const searchInput = screen.getByPlaceholderText("Search actions, users, or targets...");
     await userEvent.type(searchInput, "zzzzznotexist");
 
     await userEvent.click(screen.getByText("Clear All Filters"));
@@ -94,9 +88,7 @@ describe("AdminActivityLog", () => {
     render(<AdminActivityLog />);
     // Find the Payment chip (not inside the mocked Select) by filtering out select items
     const paymentElements = screen.getAllByText(/Payment\s*\(\d+\)/);
-    const chipBtn = paymentElements.find(
-      (el) => !el.closest('[data-testid="mock-select"]'),
-    );
+    const chipBtn = paymentElements.find((el) => !el.closest('[data-testid="mock-select"]'));
     expect(chipBtn).toBeTruthy();
     if (chipBtn) await userEvent.click(chipBtn);
     // After filtering by 'payment', "Admin User" should still be present

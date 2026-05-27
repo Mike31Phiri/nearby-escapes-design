@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { MapPin, Star, ArrowRight, Diamond } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { mockGems } from "@/lib/mock-data";
@@ -10,8 +9,6 @@ import { mockGems } from "@/lib/mock-data";
 export function GemsPage() {
   return (
     <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-      <Navbar />
-
       <main className="flex-1">
         {/* Hero */}
         <div className="relative bg-gradient-to-br from-amber-500/10 via-primary/[0.02] to-transparent pb-12">
@@ -70,9 +67,7 @@ export function GemsPage() {
                     <div className="flex items-center gap-1 mt-2">
                       <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                       <span className="text-xs font-bold text-foreground">{gem.rating}</span>
-                      <span className="text-xs text-muted-foreground">
-                        ({gem.reviews} reviews)
-                      </span>
+                      <span className="text-xs text-muted-foreground">({gem.reviews} reviews)</span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between mt-4 pt-3 border-t border-border/40">
@@ -100,9 +95,12 @@ export function GemsPage() {
           {/* Bottom note */}
           <div className="mt-12 text-center">
             <p className="text-sm text-muted-foreground max-w-lg mx-auto">
-              These hidden gems are just the beginning. As our community grows, more off-the-beaten-path
-              treasures will be uncovered. Know a hidden gem?{" "}
-              <Link href="/become-host" className="text-primary font-semibold underline underline-offset-2">
+              These hidden gems are just the beginning. As our community grows, more
+              off-the-beaten-path treasures will be uncovered. Know a hidden gem?{" "}
+              <Link
+                href="/become-host"
+                className="text-primary font-semibold underline underline-offset-2"
+              >
                 Share it with us
               </Link>
               .

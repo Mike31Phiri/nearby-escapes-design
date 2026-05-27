@@ -21,7 +21,6 @@ import {
   Unlock,
   Percent,
 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -37,8 +36,18 @@ import { toast } from "sonner";
 
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MONTH_NAMES = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────
@@ -88,13 +97,14 @@ function DayCell({
   const today = isToday(dateStr);
   const past = isPast(dateStr);
 
-  const statusColor = status === "available"
-    ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-800"
-    : status === "blocked"
-    ? "bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100 dark:bg-rose-950/30 dark:text-rose-300 dark:border-rose-800"
-    : status === "booked"
-    ? "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800"
-    : "bg-transparent text-muted-foreground/30 border-transparent";
+  const statusColor =
+    status === "available"
+      ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-800"
+      : status === "blocked"
+        ? "bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100 dark:bg-rose-950/30 dark:text-rose-300 dark:border-rose-800"
+        : status === "booked"
+          ? "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800"
+          : "bg-transparent text-muted-foreground/30 border-transparent";
 
   return (
     <button
@@ -104,10 +114,10 @@ function DayCell({
         past
           ? "Past date"
           : status === "booked"
-          ? "Has a booking"
-          : status === "blocked"
-          ? "Blocked — click to unblock"
-          : "Available — click to block"
+            ? "Has a booking"
+            : status === "blocked"
+              ? "Blocked — click to unblock"
+              : "Available — click to block"
       }
       className={cn(
         "relative flex items-center justify-center h-10 md:h-11 w-full rounded-lg text-sm font-medium border transition-all duration-150",
@@ -119,12 +129,7 @@ function DayCell({
         isSelectable && !past && status !== "booked" && "cursor-pointer",
       )}
     >
-      <span className={cn(
-        "text-xs md:text-sm",
-        today && "font-black",
-      )}>
-        {day}
-      </span>
+      <span className={cn("text-xs md:text-sm", today && "font-black")}>{day}</span>
       {/* Status indicator dot */}
       {status === "booked" && (
         <span className="absolute bottom-1 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-blue-500" />
@@ -175,7 +180,11 @@ function ListingSelector({
           variant="outline"
           className="rounded-full text-[9px] font-bold uppercase tracking-wider border-primary/20 text-primary"
         >
-          {selected.type === "stay" ? "Stay" : selected.type === "experience" ? "Experience" : "Transport"}
+          {selected.type === "stay"
+            ? "Stay"
+            : selected.type === "experience"
+              ? "Experience"
+              : "Transport"}
         </Badge>
       )}
     </div>
@@ -216,22 +225,40 @@ function SeasonalPricingCard({
   entry: SeasonalPricingEntry;
   onRemove: (id: string) => void;
 }) {
-  const startDate = new Date(entry.from).toLocaleDateString("en-US", { month: "short", day: "numeric" });
-  const endDate = new Date(entry.to).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  const startDate = new Date(entry.from).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+  const endDate = new Date(entry.to).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 
   const isActive = entry.label?.toLowerCase().includes("peak");
   const colorClass = isActive
     ? "border-amber-200 bg-amber-50/50 dark:border-amber-800 dark:bg-amber-950/20"
     : "border-blue-200 bg-blue-50/50 dark:border-blue-800 dark:bg-blue-950/20";
-  const icon = isActive ? <Sun className="h-4 w-4 text-amber-500" /> : <Moon className="h-4 w-4 text-blue-500" />;
+  const icon = isActive ? (
+    <Sun className="h-4 w-4 text-amber-500" />
+  ) : (
+    <Moon className="h-4 w-4 text-blue-500" />
+  );
 
   return (
-    <div className={cn("flex items-center justify-between rounded-xl border p-4 transition-all", colorClass)}>
+    <div
+      className={cn(
+        "flex items-center justify-between rounded-xl border p-4 transition-all",
+        colorClass,
+      )}
+    >
       <div className="flex items-center gap-3 min-w-0">
-        <div className={cn(
-          "h-9 w-9 rounded-lg flex items-center justify-center shrink-0",
-          isActive ? "bg-amber-100 dark:bg-amber-900/30" : "bg-blue-100 dark:bg-blue-900/30",
-        )}>
+        <div
+          className={cn(
+            "h-9 w-9 rounded-lg flex items-center justify-center shrink-0",
+            isActive ? "bg-amber-100 dark:bg-amber-900/30" : "bg-blue-100 dark:bg-blue-900/30",
+          )}
+        >
           {icon}
         </div>
         <div className="min-w-0">
@@ -309,13 +336,10 @@ export function HostAvailabilityPage() {
   const daysInMonth = getDaysInMonth(currentYear, currentMonth);
   const firstDay = getFirstDayOfMonth(currentYear, currentMonth);
 
-  const monthEntries = useMemo(
-    () => {
-      if (!selectedListingId) return [];
-      return getAvailabilityForMonth(selectedListingId, currentYear, currentMonth);
-    },
-    [selectedListingId, currentYear, currentMonth, getAvailabilityForMonth],
-  );
+  const monthEntries = useMemo(() => {
+    if (!selectedListingId) return [];
+    return getAvailabilityForMonth(selectedListingId, currentYear, currentMonth);
+  }, [selectedListingId, currentYear, currentMonth, getAvailabilityForMonth]);
 
   const seasonalPricing = useMemo(
     () => getSeasonalPricingForListing(selectedListingId),
@@ -488,12 +512,13 @@ export function HostAvailabilityPage() {
   if (!selectedListingId) {
     return (
       <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-        <Navbar />
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <CalendarDays className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
             <h2 className="text-lg font-bold text-foreground">No listings yet</h2>
-            <p className="text-sm text-muted-foreground mt-1">Create a listing to manage its calendar.</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Create a listing to manage its calendar.
+            </p>
             <Button className="mt-6 rounded-full" asChild>
               <Link href="/host/create">Create Listing</Link>
             </Button>
@@ -505,8 +530,6 @@ export function HostAvailabilityPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-      <Navbar />
-
       <main className="flex-1">
         {/* ─── Header ──────────────────────────────────────────────── */}
         <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
@@ -582,7 +605,9 @@ export function HostAvailabilityPage() {
                     size="sm"
                     className={cn(
                       "h-8 rounded-lg text-xs font-semibold",
-                      showRangeForm ? "bg-primary/10 border-primary/30 text-primary" : "border-border/60",
+                      showRangeForm
+                        ? "bg-primary/10 border-primary/30 text-primary"
+                        : "border-border/60",
                     )}
                     onClick={() => setShowRangeForm(!showRangeForm)}
                   >
@@ -602,11 +627,15 @@ export function HostAvailabilityPage() {
                 <div className="rounded-xl border border-rose-200 bg-rose-50/50 dark:border-rose-800 dark:bg-rose-950/10 p-4 shadow-sm space-y-3">
                   <div className="flex items-center gap-2">
                     <Ban className="h-4 w-4 text-rose-500" />
-                    <span className="text-sm font-bold text-foreground">Block or Unblock Date Range</span>
+                    <span className="text-sm font-bold text-foreground">
+                      Block or Unblock Date Range
+                    </span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">From</Label>
+                      <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                        From
+                      </Label>
                       <Input
                         type="date"
                         value={rangeFrom}
@@ -615,7 +644,9 @@ export function HostAvailabilityPage() {
                       />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">To</Label>
+                      <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                        To
+                      </Label>
                       <Input
                         type="date"
                         value={rangeTo}
@@ -691,19 +722,25 @@ export function HostAvailabilityPage() {
                     <p className="text-lg font-bold text-foreground">
                       {Object.values(statusMap).filter((s) => s === "available").length}
                     </p>
-                    <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Available</p>
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
+                      Available
+                    </p>
                   </div>
                   <div className="rounded-xl border border-border/40 bg-card p-3 shadow-sm text-center">
                     <p className="text-lg font-bold text-foreground">
                       {Object.values(statusMap).filter((s) => s === "blocked").length}
                     </p>
-                    <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Blocked</p>
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
+                      Blocked
+                    </p>
                   </div>
                   <div className="rounded-xl border border-border/40 bg-card p-3 shadow-sm text-center">
                     <p className="text-lg font-bold text-foreground">
                       {Object.values(statusMap).filter((s) => s === "booked").length}
                     </p>
-                    <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Booked</p>
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
+                      Booked
+                    </p>
                   </div>
                 </div>
               )}
@@ -755,7 +792,9 @@ export function HostAvailabilityPage() {
                 {showPricingForm && (
                   <div className="mt-4 pt-4 border-t border-border/40 space-y-3">
                     <div className="space-y-1">
-                      <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Label (optional)</Label>
+                      <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                        Label (optional)
+                      </Label>
                       <Input
                         value={pricingLabel}
                         onChange={(e) => setPricingLabel(e.target.value)}
@@ -765,7 +804,9 @@ export function HostAvailabilityPage() {
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       <div className="space-y-1">
-                        <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">From</Label>
+                        <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                          From
+                        </Label>
                         <Input
                           type="date"
                           value={pricingFrom}
@@ -774,7 +815,9 @@ export function HostAvailabilityPage() {
                         />
                       </div>
                       <div className="space-y-1">
-                        <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">To</Label>
+                        <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                          To
+                        </Label>
                         <Input
                           type="date"
                           value={pricingTo}
@@ -795,7 +838,8 @@ export function HostAvailabilityPage() {
                         className="h-9 rounded-xl text-sm border-border/60"
                       />
                       <p className="text-[9px] text-muted-foreground/60">
-                        Labels containing &quot;peak&quot; get +30%, &quot;green&quot; or &quot;off&quot; get -20%.
+                        Labels containing &quot;peak&quot; get +30%, &quot;green&quot; or
+                        &quot;off&quot; get -20%.
                       </p>
                     </div>
                     <div className="flex items-center gap-2 pt-1">
@@ -827,8 +871,8 @@ export function HostAvailabilityPage() {
                     <div className="text-[10px] text-muted-foreground leading-relaxed">
                       <p className="font-semibold text-foreground mb-0.5">How pricing works</p>
                       <p>
-                        Peak season (Jun–Aug): +30%. Green season (Dec–Feb): -20%.
-                        Set a specific price override to lock in a custom rate.
+                        Peak season (Jun–Aug): +30%. Green season (Dec–Feb): -20%. Set a specific
+                        price override to lock in a custom rate.
                       </p>
                     </div>
                   </div>
@@ -850,14 +894,18 @@ export function HostAvailabilityPage() {
                       />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-sm font-bold text-foreground truncate">{selectedListing.name}</p>
+                      <p className="text-sm font-bold text-foreground truncate">
+                        {selectedListing.name}
+                      </p>
                       <p className="text-xs text-muted-foreground">{selectedListing.location}</p>
                     </div>
                   </div>
                   <div className="space-y-1.5 text-xs text-muted-foreground">
                     <div className="flex justify-between">
                       <span>Base price</span>
-                      <span className="font-bold text-foreground">{formatCurrency(selectedListing.price)}</span>
+                      <span className="font-bold text-foreground">
+                        {formatCurrency(selectedListing.price)}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span>Status</span>
@@ -884,9 +932,7 @@ export function HostAvailabilityPage() {
                     className="w-full mt-4 rounded-full text-xs font-semibold border-border/60"
                     asChild
                   >
-                    <Link href={`/host/listings/${selectedListing.id}`}>
-                      View Listing Details
-                    </Link>
+                    <Link href={`/host/listings/${selectedListing.id}`}>View Listing Details</Link>
                   </Button>
                 </div>
               )}
@@ -905,7 +951,7 @@ export function HostAvailabilityPage() {
                       // Block next weekend
                       const today = new Date();
                       const nextSat = new Date(today);
-                      nextSat.setDate(today.getDate() + (6 - today.getDay() + 7) % 7 + 7);
+                      nextSat.setDate(today.getDate() + ((6 - today.getDay() + 7) % 7) + 7);
                       const nextSun = new Date(nextSat);
                       nextSun.setDate(nextSat.getDate() + 1);
                       const fmt = (d: Date) => d.toISOString().split("T")[0];
@@ -923,13 +969,13 @@ export function HostAvailabilityPage() {
                     onClick={() => {
                       // Block the following month
                       const nextMonth = new Date(currentYear, currentMonth, 1);
-                      const lastDay = new Date(nextMonth.getFullYear(), nextMonth.getMonth() + 1, 0);
-                      const fmt = (d: Date) => d.toISOString().split("T")[0];
-                      blockDateRange(
-                        selectedListingId,
-                        fmt(nextMonth),
-                        fmt(lastDay),
+                      const lastDay = new Date(
+                        nextMonth.getFullYear(),
+                        nextMonth.getMonth() + 1,
+                        0,
                       );
+                      const fmt = (d: Date) => d.toISOString().split("T")[0];
+                      blockDateRange(selectedListingId, fmt(nextMonth), fmt(lastDay));
                       toast.success("All of next month blocked");
                     }}
                   >

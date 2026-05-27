@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { Package, MapPin, Star, Clock, ArrowRight, Sparkles } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { mockPackages } from "@/lib/mock-data";
@@ -10,8 +9,6 @@ import { mockPackages } from "@/lib/mock-data";
 export function PackagesPage() {
   return (
     <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-      <Navbar />
-
       <main className="flex-1">
         {/* Header */}
         <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-10">
@@ -81,11 +78,7 @@ export function PackagesPage() {
                       <span className="text-lg font-bold text-foreground">K{pkg.price}</span>
                       <span className="text-xs text-muted-foreground"> / person</span>
                     </div>
-                    <Button
-                      size="sm"
-                      className="rounded-full text-xs font-bold h-8"
-                      asChild
-                    >
+                    <Button size="sm" className="rounded-full text-xs font-bold h-8" asChild>
                       <Link href={`/checkout/book?type=experience&id=${pkg.id}`}>
                         View Details
                         <ArrowRight className="h-3 w-3 ml-1" />

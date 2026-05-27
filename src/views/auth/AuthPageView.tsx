@@ -14,7 +14,6 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -147,8 +146,6 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-      <Navbar />
-
       <main className="flex-1 flex items-center justify-center p-4 md:p-8">
         <div className="w-full max-w-5xl bg-white border border-[#e4e4e7] rounded-none shadow-sm overflow-hidden grid grid-cols-1 md:grid-cols-12 min-h-[580px]">
           {/* Left panel: high-impact minimal brand side */}

@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  type ReactNode,
-} from "react";
+import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -37,27 +31,16 @@ export function LoadingProvider({ children }: { children: ReactNode }) {
   const [loadingMessage, setLoadingMessage] = useState("");
 
   return (
-    <LoadingContext.Provider
-      value={{ isLoading, setLoading, loadingMessage, setLoadingMessage }}
-    >
+    <LoadingContext.Provider value={{ isLoading, setLoading, loadingMessage, setLoadingMessage }}>
       {children}
-      <LoadingOverlay
-        isLoading={isLoading}
-        message={loadingMessage}
-      />
+      <LoadingOverlay isLoading={isLoading} message={loadingMessage} />
     </LoadingContext.Provider>
   );
 }
 
 // ─── Overlay ────────────────────────────────────────────────────────────
 
-function LoadingOverlay({
-  isLoading,
-  message,
-}: {
-  isLoading: boolean;
-  message: string;
-}) {
+function LoadingOverlay({ isLoading, message }: { isLoading: boolean; message: string }) {
   if (!isLoading) return null;
 
   return (

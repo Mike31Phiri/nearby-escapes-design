@@ -2,8 +2,18 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { HelpCircle, ChevronDown, Search, MessageSquare, Mail, BookOpen, Shield, CreditCard, User, Building2 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
+import {
+  HelpCircle,
+  ChevronDown,
+  Search,
+  MessageSquare,
+  Mail,
+  BookOpen,
+  Shield,
+  CreditCard,
+  User,
+  Building2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -11,52 +21,62 @@ import { cn } from "@/lib/utils";
 const faqs = [
   {
     question: "How do I make a booking?",
-    answer: "Browse listings, select your preferred dates and guests, then proceed to checkout. You'll receive a confirmation email once your booking is confirmed by the host.",
+    answer:
+      "Browse listings, select your preferred dates and guests, then proceed to checkout. You'll receive a confirmation email once your booking is confirmed by the host.",
     category: "bookings",
   },
   {
     question: "What payment methods are accepted?",
-    answer: "We accept all major credit/debit cards and mobile money payments (Airtel Money, MTN Mobile Money). All transactions are securely processed through our payment gateway.",
+    answer:
+      "We accept all major credit/debit cards and mobile money payments (Airtel Money, MTN Mobile Money). All transactions are securely processed through our payment gateway.",
     category: "payments",
   },
   {
     question: "Can I cancel a booking?",
-    answer: "Yes, you can cancel from your Trips page. Refunds depend on the host's cancellation policy, which is clearly displayed before you book.",
+    answer:
+      "Yes, you can cancel from your Trips page. Refunds depend on the host's cancellation policy, which is clearly displayed before you book.",
     category: "bookings",
   },
   {
     question: "How do I become a host?",
-    answer: "Click 'Become a Host' in your account menu, fill in your details, and create your first listing. Our onboarding wizard will guide you through the process.",
+    answer:
+      "Click 'Become a Host' in your account menu, fill in your details, and create your first listing. Our onboarding wizard will guide you through the process.",
     category: "hosts",
   },
   {
     question: "How do I contact my host?",
-    answer: "After booking, you can message the host directly through the platform. Look for the contact options in your booking details or the listing page.",
+    answer:
+      "After booking, you can message the host directly through the platform. Look for the contact options in your booking details or the listing page.",
     category: "bookings",
   },
   {
     question: "Is my personal information safe?",
-    answer: "Absolutely. We use industry-standard encryption and security practices to protect your data. We never share your information with third parties without your consent.",
+    answer:
+      "Absolutely. We use industry-standard encryption and security practices to protect your data. We never share your information with third parties without your consent.",
     category: "account",
   },
   {
     question: "How do I leave a review?",
-    answer: "After your stay or experience is completed, you'll find a 'Review' button on your Trips page. You can rate and review your experience there.",
+    answer:
+      "After your stay or experience is completed, you'll find a 'Review' button on your Trips page. You can rate and review your experience there.",
     category: "bookings",
   },
   {
     question: "Can I modify a booking after confirmation?",
-    answer: "Modifications depend on the host's policy. We recommend contacting the host directly through the platform to discuss any changes to your booking.",
+    answer:
+      "Modifications depend on the host's policy. We recommend contacting the host directly through the platform to discuss any changes to your booking.",
     category: "bookings",
   },
   {
     question: "How do I reset my password?",
-    answer: "On the login page, click 'Forgot Password' and follow the instructions sent to your email. You'll be able to set a new password securely.",
+    answer:
+      "On the login page, click 'Forgot Password' and follow the instructions sent to your email. You'll be able to set a new password securely.",
     category: "account",
   },
   {
     question: "What fees does Nearby Escapes charge?",
-    answer: "We charge a small service fee on each booking, which is clearly displayed before you confirm. This fee covers platform maintenance, support, and payment processing.",
+    answer:
+      "We charge a small service fee on each booking, which is clearly displayed before you confirm. This fee covers platform maintenance, support, and payment processing.",
     category: "payments",
   },
 ];
@@ -76,7 +96,8 @@ export function HelpPage() {
 
   const filtered = faqs.filter((faq) => {
     const matchesCategory = activeCategory === "all" || faq.category === activeCategory;
-    const matchesSearch = searchQuery === "" ||
+    const matchesSearch =
+      searchQuery === "" ||
       faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
       faq.answer.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
@@ -84,8 +105,6 @@ export function HelpPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-      <Navbar />
-
       <main className="flex-1">
         {/* Header */}
         <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-12">
@@ -191,7 +210,11 @@ export function HelpPage() {
                   Email Support
                 </a>
               </Button>
-              <Button variant="outline" className="rounded-full font-semibold text-xs border-border/60" asChild>
+              <Button
+                variant="outline"
+                className="rounded-full font-semibold text-xs border-border/60"
+                asChild
+              >
                 <Link href="/legal/privacy">
                   <Shield className="h-4 w-4 mr-1.5" />
                   Privacy Policy

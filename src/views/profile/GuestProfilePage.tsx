@@ -35,7 +35,6 @@ import {
   DollarSign,
   Building2,
 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -83,17 +82,20 @@ function TripCard({ trip }: { trip: TripBooking }) {
     upcoming: {
       label: "Upcoming",
       icon: Clock,
-      className: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800",
+      className:
+        "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800",
     },
     completed: {
       label: "Completed",
       icon: CheckCircle2,
-      className: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800",
+      className:
+        "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800",
     },
     cancelled: {
       label: "Cancelled",
       icon: XCircle,
-      className: "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950 dark:text-rose-300 dark:border-rose-800",
+      className:
+        "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950 dark:text-rose-300 dark:border-rose-800",
     },
   };
 
@@ -131,7 +133,12 @@ function TripCard({ trip }: { trip: TripBooking }) {
               {trip.location}
             </p>
           </div>
-          <div className={cn("inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider shrink-0", cfg.className)}>
+          <div
+            className={cn(
+              "inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider shrink-0",
+              cfg.className,
+            )}
+          >
             <StatusIcon className="h-3 w-3" />
             {cfg.label}
           </div>
@@ -157,7 +164,11 @@ function TripCard({ trip }: { trip: TripBooking }) {
         className="shrink-0 h-8 w-8 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
         asChild
       >
-        <Link href={`/listings/${trip.type === "stay" ? "stays" : trip.type === "experience" ? "experiences" : "transport"}/${trip.id.split("-").pop()}`}>                  <ChevronRight className="h-4 w-4" />
+        <Link
+          href={`/listings/${trip.type === "stay" ? "stays" : trip.type === "experience" ? "experiences" : "transport"}/${trip.id.split("-").pop()}`}
+        >
+          {" "}
+          <ChevronRight className="h-4 w-4" />
         </Link>
       </Button>
     </div>
@@ -190,7 +201,10 @@ function ReviewCard({ review }: { review: UserReview }) {
           {Array.from({ length: 5 }).map((_, i) => (
             <Star
               key={i}
-              className={cn("h-3.5 w-3.5", i < review.rating ? "fill-amber-400 text-amber-400" : "text-muted-foreground/20")}
+              className={cn(
+                "h-3.5 w-3.5",
+                i < review.rating ? "fill-amber-400 text-amber-400" : "text-muted-foreground/20",
+              )}
             />
           ))}
         </div>
@@ -240,14 +254,17 @@ export function GuestProfilePage() {
   const tabs: { id: GuestTab; label: string; icon: React.ElementType; count?: number }[] = [
     { id: "saves", label: "Saved", icon: Heart, count: savedItems.length },
     { id: "trips", label: "Trips", icon: BookOpen, count: mockTrips.length },
-    { id: "reviews", label: "Reviews", icon: MessageSquare, count: mockReviews.length + storeReviews.length },
+    {
+      id: "reviews",
+      label: "Reviews",
+      icon: MessageSquare,
+      count: mockReviews.length + storeReviews.length,
+    },
     { id: "settings", label: "Settings", icon: Settings },
   ];
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-      <Navbar />
-
       <main className="flex-1">
         {/* Profile Header */}
         <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-12">
@@ -279,7 +296,10 @@ export function GuestProfilePage() {
                   <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
                     {user?.name ?? "Guest"}
                   </h1>
-                  <Badge variant="secondary" className="w-fit mx-auto md:mx-0 rounded-full text-[10px] font-bold uppercase tracking-wider px-3 py-1">
+                  <Badge
+                    variant="secondary"
+                    className="w-fit mx-auto md:mx-0 rounded-full text-[10px] font-bold uppercase tracking-wider px-3 py-1"
+                  >
                     <Award className="h-3 w-3 mr-1" />
                     Explorer
                   </Badge>
@@ -293,7 +313,8 @@ export function GuestProfilePage() {
                   Member since March 2025
                 </p>
                 <p className="text-sm text-muted-foreground/80 mt-3 max-w-lg mx-auto md:mx-0 leading-relaxed">
-                  Travel enthusiast exploring Zambia one destination at a time. Passionate about wildlife, culture, and hidden gems.
+                  Travel enthusiast exploring Zambia one destination at a time. Passionate about
+                  wildlife, culture, and hidden gems.
                 </p>
               </div>
 
@@ -314,9 +335,24 @@ export function GuestProfilePage() {
         {/* Stats Row */}
         <div className="mx-auto max-w-5xl px-4 md:px-6 -mt-6 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            <StatCard icon={Save} label="Saved Items" value={savedItems.length} sub="Across all categories" />
-            <StatCard icon={Compass} label="Trips Taken" value={completedTrips.length} sub={`${upcomingTrips.length} upcoming`} />
-            <StatCard icon={Star} label="Reviews Left" value={mockReviews.length + storeReviews.length} sub="4.8 avg rating" />
+            <StatCard
+              icon={Save}
+              label="Saved Items"
+              value={savedItems.length}
+              sub="Across all categories"
+            />
+            <StatCard
+              icon={Compass}
+              label="Trips Taken"
+              value={completedTrips.length}
+              sub={`${upcomingTrips.length} upcoming`}
+            />
+            <StatCard
+              icon={Star}
+              label="Reviews Left"
+              value={mockReviews.length + storeReviews.length}
+              sub="4.8 avg rating"
+            />
             <StatCard icon={MapPin} label="Destinations" value="4" sub="Zambia wide" />
           </div>
         </div>
@@ -337,13 +373,17 @@ export function GuestProfilePage() {
                       : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30",
                   )}
                 >
-                  <Icon className={cn("h-4 w-4", isActive ? "text-primary" : "text-muted-foreground")} />
+                  <Icon
+                    className={cn("h-4 w-4", isActive ? "text-primary" : "text-muted-foreground")}
+                  />
                   {label}
                   {count !== undefined && (
-                    <span className={cn(
-                      "ml-1 rounded-full px-2 py-0.5 text-[9px] font-bold",
-                      isActive ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
-                    )}>
+                    <span
+                      className={cn(
+                        "ml-1 rounded-full px-2 py-0.5 text-[9px] font-bold",
+                        isActive ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground",
+                      )}
+                    >
                       {count}
                     </span>
                   )}
@@ -364,9 +404,13 @@ export function GuestProfilePage() {
                     </div>
                     <h3 className="text-lg font-bold text-foreground">No saved items yet</h3>
                     <p className="text-sm text-muted-foreground mt-1 max-w-sm">
-                      Start exploring and save your favorite stays, experiences, and transport routes.
+                      Start exploring and save your favorite stays, experiences, and transport
+                      routes.
                     </p>
-                    <Button className="mt-6 rounded-full font-black uppercase tracking-widest text-xs" asChild>
+                    <Button
+                      className="mt-6 rounded-full font-black uppercase tracking-widest text-xs"
+                      asChild
+                    >
                       <Link href="/search">
                         Browse destinations <Compass className="h-4 w-4 ml-1.5" />
                       </Link>
@@ -379,10 +423,7 @@ export function GuestProfilePage() {
                         key={item.id}
                         className="group relative rounded-xl border border-border/50 bg-card overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
                       >
-                        <Link
-                          href={`/listings/stays/${item.id}`}
-                          className="block"
-                        >
+                        <Link href={`/listings/stays/${item.id}`} className="block">
                           <div className="relative aspect-[4/3] overflow-hidden bg-muted">
                             <img
                               src={item.image}
@@ -404,7 +445,9 @@ export function GuestProfilePage() {
                         <div className="p-3 flex items-center justify-between">
                           <p className="text-sm font-semibold text-foreground">
                             ${item.price}
-                            <span className="text-xs font-normal text-muted-foreground ml-1">night</span>
+                            <span className="text-xs font-normal text-muted-foreground ml-1">
+                              night
+                            </span>
                           </p>
                           <button
                             onClick={() => {
@@ -432,8 +475,12 @@ export function GuestProfilePage() {
                   <div>
                     <div className="flex items-center gap-2 mb-4">
                       <Clock className="h-4 w-4 text-primary" />
-                      <h3 className="text-sm font-black uppercase tracking-widest text-foreground">Upcoming</h3>
-                      <span className="text-xs text-muted-foreground">({upcomingTrips.length})</span>
+                      <h3 className="text-sm font-black uppercase tracking-widest text-foreground">
+                        Upcoming
+                      </h3>
+                      <span className="text-xs text-muted-foreground">
+                        ({upcomingTrips.length})
+                      </span>
                     </div>
                     <div className="space-y-3">
                       {upcomingTrips.map((trip) => (
@@ -448,8 +495,12 @@ export function GuestProfilePage() {
                   <div>
                     <div className="flex items-center gap-2 mb-4">
                       <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      <h3 className="text-sm font-black uppercase tracking-widest text-foreground">Completed</h3>
-                      <span className="text-xs text-muted-foreground">({completedTrips.length})</span>
+                      <h3 className="text-sm font-black uppercase tracking-widest text-foreground">
+                        Completed
+                      </h3>
+                      <span className="text-xs text-muted-foreground">
+                        ({completedTrips.length})
+                      </span>
                     </div>
                     <div className="space-y-3">
                       {completedTrips.map((trip) => (
@@ -464,8 +515,12 @@ export function GuestProfilePage() {
                   <div>
                     <div className="flex items-center gap-2 mb-4">
                       <AlertCircle className="h-4 w-4 text-muted-foreground" />
-                      <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground">Cancelled</h3>
-                      <span className="text-xs text-muted-foreground">({cancelledTrips.length})</span>
+                      <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground">
+                        Cancelled
+                      </h3>
+                      <span className="text-xs text-muted-foreground">
+                        ({cancelledTrips.length})
+                      </span>
                     </div>
                     <div className="space-y-3 opacity-60">
                       {cancelledTrips.map((trip) => (
@@ -567,25 +622,27 @@ export function GuestProfilePage() {
                       After your trips, come back and share your experience with the community.
                     </p>
                   </div>
-                ) : mockReviews.length > 0 && (
-                  <div>
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center">
-                        <MessageSquare className="h-3.5 w-3.5 text-muted-foreground" />
+                ) : (
+                  mockReviews.length > 0 && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center">
+                          <MessageSquare className="h-3.5 w-3.5 text-muted-foreground" />
+                        </div>
+                        <h3 className="text-sm font-black uppercase tracking-widest text-foreground">
+                          All Reviews
+                        </h3>
+                        <span className="text-xs text-muted-foreground">
+                          ({mockReviews.length + storeReviews.length})
+                        </span>
                       </div>
-                      <h3 className="text-sm font-black uppercase tracking-widest text-foreground">
-                        All Reviews
-                      </h3>
-                      <span className="text-xs text-muted-foreground">
-                        ({mockReviews.length + storeReviews.length})
-                      </span>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {[...storeReviews, ...mockReviews].map((review) => (
+                          <ReviewCard key={review.id} review={review} />
+                        ))}
+                      </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {[...storeReviews, ...mockReviews].map((review) => (
-                        <ReviewCard key={review.id} review={review} />
-                      ))}
-                    </div>
-                  </div>
+                  )
                 )}
               </div>
             )}
@@ -600,7 +657,10 @@ export function GuestProfilePage() {
                   </h3>
                   <div className="space-y-4">
                     <div className="space-y-1.5">
-                      <Label htmlFor="settings-name" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      <Label
+                        htmlFor="settings-name"
+                        className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
+                      >
                         Full Name
                       </Label>
                       <div className="relative">
@@ -615,7 +675,10 @@ export function GuestProfilePage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <Label htmlFor="settings-email" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      <Label
+                        htmlFor="settings-email"
+                        className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
+                      >
                         Email Address
                       </Label>
                       <div className="relative">
@@ -631,7 +694,10 @@ export function GuestProfilePage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <Label htmlFor="settings-phone" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      <Label
+                        htmlFor="settings-phone"
+                        className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
+                      >
                         Phone Number
                       </Label>
                       <div className="relative">
@@ -646,7 +712,10 @@ export function GuestProfilePage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <Label htmlFor="settings-bio" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      <Label
+                        htmlFor="settings-bio"
+                        className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
+                      >
                         Bio
                       </Label>
                       <textarea
@@ -664,7 +733,10 @@ export function GuestProfilePage() {
                       <CheckCircle2 className="h-4 w-4 mr-1.5" />
                       Save Changes
                     </Button>
-                    <Button variant="outline" className="rounded-full font-semibold text-xs border-border/60">
+                    <Button
+                      variant="outline"
+                      className="rounded-full font-semibold text-xs border-border/60"
+                    >
                       Cancel
                     </Button>
                   </div>
@@ -700,7 +772,11 @@ export function GuestProfilePage() {
                       {travelPreferences.travelInterests.length > 0 ? (
                         <div className="flex flex-wrap gap-1.5">
                           {travelPreferences.travelInterests.map((interest) => (
-                            <Badge key={interest} variant="secondary" className="rounded-full text-[10px] font-semibold capitalize">
+                            <Badge
+                              key={interest}
+                              variant="secondary"
+                              className="rounded-full text-[10px] font-semibold capitalize"
+                            >
                               {interest.replace(/-/g, " ")}
                             </Badge>
                           ))}
@@ -755,21 +831,27 @@ export function GuestProfilePage() {
                       <div className="flex items-center gap-3">
                         <Bell className="h-4 w-4 text-muted-foreground" />
                         <div>
-                          <p className="text-sm font-semibold text-foreground">Email Notifications</p>
-                          <p className="text-xs text-muted-foreground">Receive booking updates and confirmations</p>
+                          <p className="text-sm font-semibold text-foreground">
+                            Email Notifications
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Receive booking updates and confirmations
+                          </p>
                         </div>
                       </div>
                       <div
                         onClick={() => setShowNotifications(!showNotifications)}
                         className={cn(
                           "h-6 w-11 rounded-full transition-colors relative cursor-pointer",
-                          showNotifications ? "bg-primary" : "bg-muted-foreground/30"
+                          showNotifications ? "bg-primary" : "bg-muted-foreground/30",
                         )}
                       >
-                        <div className={cn(
-                          "absolute top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform",
-                          showNotifications ? "translate-x-5.5" : "translate-x-0.5"
-                        )} />
+                        <div
+                          className={cn(
+                            "absolute top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform",
+                            showNotifications ? "translate-x-5.5" : "translate-x-0.5",
+                          )}
+                        />
                       </div>
                     </label>
 
@@ -777,71 +859,77 @@ export function GuestProfilePage() {
                       <div className="flex items-center gap-3">
                         <Tag className="h-4 w-4 text-muted-foreground" />
                         <div>
-                          <p className="text-sm font-semibold text-foreground">Promotional Emails</p>
-                          <p className="text-xs text-muted-foreground">Get deals, discounts, and travel inspiration</p>
+                          <p className="text-sm font-semibold text-foreground">
+                            Promotional Emails
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Get deals, discounts, and travel inspiration
+                          </p>
                         </div>
                       </div>
                       <div
                         onClick={() => setShowPromotions(!showPromotions)}
                         className={cn(
                           "h-6 w-11 rounded-full transition-colors relative cursor-pointer",
-                          showPromotions ? "bg-primary" : "bg-muted-foreground/30"
+                          showPromotions ? "bg-primary" : "bg-muted-foreground/30",
                         )}
                       >
-                        <div className={cn(
-                          "absolute top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform",
-                          showPromotions ? "translate-x-5.5" : "translate-x-0.5"
-                        )} />
+                        <div
+                          className={cn(
+                            "absolute top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform",
+                            showPromotions ? "translate-x-5.5" : "translate-x-0.5",
+                          )}
+                        />
                       </div>
                     </label>
                   </div>
                 </div>
 
                 {/* Become a Host — only shown to guest users */}
-              {(!user?.role || user.role === "guest") && (
-                <>
-                  <hr className="border-border/50" />
-                  <div className="rounded-xl border-2 border-primary/20 bg-gradient-to-br from-primary/[0.03] to-primary/[0.08] p-6">
-                    <div className="flex flex-col md:flex-row items-start md:items-center gap-5">
-                      <div className="h-16 w-16 shrink-0 rounded-2xl bg-primary/10 flex items-center justify-center">
-                        <Building2 className="h-8 w-8 text-primary" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-bold text-foreground">Become a Host</h3>
-                        <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-                          Share your property, tours, or transport with travelers. Start earning and
-                          grow your hospitality business on Nearby Escapes.
-                        </p>
-                        <div className="flex flex-wrap gap-4 mt-3 text-xs text-muted-foreground">
-                          <span className="flex items-center gap-1.5">
-                            <TrendingUp className="h-3.5 w-3.5 text-emerald-500" />
-                            Set your own prices
-                          </span>
-                          <span className="flex items-center gap-1.5">
-                            <DollarSign className="h-3.5 w-3.5 text-emerald-500" />
-                            Earn extra income
-                          </span>
-                          <span className="flex items-center gap-1.5">
-                            <Sparkles className="h-3.5 w-3.5 text-emerald-500" />
-                            Reach thousands of travelers
-                          </span>
+                {(!user?.role || user.role === "guest") && (
+                  <>
+                    <hr className="border-border/50" />
+                    <div className="rounded-xl border-2 border-primary/20 bg-gradient-to-br from-primary/[0.03] to-primary/[0.08] p-6">
+                      <div className="flex flex-col md:flex-row items-start md:items-center gap-5">
+                        <div className="h-16 w-16 shrink-0 rounded-2xl bg-primary/10 flex items-center justify-center">
+                          <Building2 className="h-8 w-8 text-primary" />
                         </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-lg font-bold text-foreground">Become a Host</h3>
+                          <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+                            Share your property, tours, or transport with travelers. Start earning
+                            and grow your hospitality business on Nearby Escapes.
+                          </p>
+                          <div className="flex flex-wrap gap-4 mt-3 text-xs text-muted-foreground">
+                            <span className="flex items-center gap-1.5">
+                              <TrendingUp className="h-3.5 w-3.5 text-emerald-500" />
+                              Set your own prices
+                            </span>
+                            <span className="flex items-center gap-1.5">
+                              <DollarSign className="h-3.5 w-3.5 text-emerald-500" />
+                              Earn extra income
+                            </span>
+                            <span className="flex items-center gap-1.5">
+                              <Sparkles className="h-3.5 w-3.5 text-emerald-500" />
+                              Reach thousands of travelers
+                            </span>
+                          </div>
+                        </div>
+                        <Button
+                          className="rounded-full font-black uppercase tracking-widest text-xs shadow-lg shadow-primary/20 shrink-0 w-full md:w-auto"
+                          asChild
+                        >
+                          <Link href="/become-host">
+                            <Sparkles className="h-4 w-4 mr-1.5" />
+                            Get Started
+                          </Link>
+                        </Button>
                       </div>
-                      <Button
-                        className="rounded-full font-black uppercase tracking-widest text-xs shadow-lg shadow-primary/20 shrink-0 w-full md:w-auto"
-                        asChild
-                      >
-                        <Link href="/become-host">
-                          <Sparkles className="h-4 w-4 mr-1.5" />
-                          Get Started
-                        </Link>
-                      </Button>
                     </div>
-                  </div>
-                </>
-              )}
+                  </>
+                )}
 
-              <hr className="border-border/50" />
+                <hr className="border-border/50" />
 
                 {/* Danger Zone */}
                 <div className="rounded-xl border border-destructive/20 bg-destructive/[0.02] p-6">
@@ -882,5 +970,3 @@ export function GuestProfilePage() {
     </div>
   );
 }
-
-

@@ -129,29 +129,26 @@ export async function createPaymentToken(
 
   // ─── Live DPO API Integration ────────────────────────────────────────────
   try {
-    const response = await fetch(
-      "https://secure.directpay.online/directtrade/TPG/createToken",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          companyToken: config.companyToken,
-          accountType: "GENERAL",
-          transaction: {
-            paymentAmount: transaction.amount.toFixed(2),
-            paymentCurrency: transaction.currency,
-            companyRef: transaction.bookingRef,
-            customerFirstName: transaction.customer.name.split(" ")[0] || "",
-            customerLastName: transaction.customer.name.split(" ").slice(1).join(" ") || "",
-            customerPhone: transaction.customer.phone,
-            customerEmail: transaction.customer.email || "",
-            serviceTypeId: config.serviceTypeId,
-            redirectURL: transaction.callbackUrl,
-            backURL: transaction.callbackUrl,
-          },
-        }),
-      },
-    );
+    const response = await fetch("https://secure.directpay.online/directtrade/TPG/createToken", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        companyToken: config.companyToken,
+        accountType: "GENERAL",
+        transaction: {
+          paymentAmount: transaction.amount.toFixed(2),
+          paymentCurrency: transaction.currency,
+          companyRef: transaction.bookingRef,
+          customerFirstName: transaction.customer.name.split(" ")[0] || "",
+          customerLastName: transaction.customer.name.split(" ").slice(1).join(" ") || "",
+          customerPhone: transaction.customer.phone,
+          customerEmail: transaction.customer.email || "",
+          serviceTypeId: config.serviceTypeId,
+          redirectURL: transaction.callbackUrl,
+          backURL: transaction.callbackUrl,
+        },
+      }),
+    });
 
     const data = await response.json();
 
@@ -200,17 +197,14 @@ export async function verifyPayment(transToken: string): Promise<DPOVerification
 
   // ─── Live DPO API Integration ────────────────────────────────────────────
   try {
-    const response = await fetch(
-      "https://secure.directpay.online/directtrade/TPG/verifyToken",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          companyToken: config.companyToken,
-          transToken,
-        }),
-      },
-    );
+    const response = await fetch("https://secure.directpay.online/directtrade/TPG/verifyToken", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        companyToken: config.companyToken,
+        transToken,
+      }),
+    });
 
     const data = await response.json();
 

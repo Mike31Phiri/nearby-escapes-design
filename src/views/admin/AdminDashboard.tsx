@@ -53,16 +53,26 @@ function StatCard({
     <div className="group flex items-center gap-4 rounded-xl border border-border/50 bg-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:border-primary/20">
       <div
         className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
-        style={{ backgroundColor: accent ? `${accent}1a` : "var(--primary)1a", color: accent ?? "var(--primary)" }}
+        style={{
+          backgroundColor: accent ? `${accent}1a` : "var(--primary)1a",
+          color: accent ?? "var(--primary)",
+        }}
       >
         <Icon className="h-5.5 w-5.5" />
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-2xl font-bold tracking-tight text-foreground">{value}</p>
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+          {label}
+        </p>
         {sub && <p className="text-[11px] text-muted-foreground/70 mt-0.5">{sub}</p>}
         {trend && (
-          <p className={cn("text-[10px] font-bold mt-0.5 flex items-center gap-0.5", trend.positive ? "text-emerald-600" : "text-destructive")}>
+          <p
+            className={cn(
+              "text-[10px] font-bold mt-0.5 flex items-center gap-0.5",
+              trend.positive ? "text-emerald-600" : "text-destructive",
+            )}
+          >
             <TrendingUp className={cn("h-3 w-3", !trend.positive && "rotate-180")} />
             {trend.value}
           </p>
@@ -91,8 +101,23 @@ function ActivityItem({ log }: { log: ActivityLog }) {
 
   return (
     <div className="flex items-start gap-3 py-3 first:pt-0 last:pb-0">
-      <div className={cn("h-8 w-8 shrink-0 rounded-lg flex items-center justify-center text-xs font-bold", typeColors[log.type])}>
-        {log.type === "booking" ? "B" : log.type === "listing" ? "L" : log.type === "user" ? "U" : log.type === "payment" ? "$" : log.type === "report" ? "!" : "S"}
+      <div
+        className={cn(
+          "h-8 w-8 shrink-0 rounded-lg flex items-center justify-center text-xs font-bold",
+          typeColors[log.type],
+        )}
+      >
+        {log.type === "booking"
+          ? "B"
+          : log.type === "listing"
+            ? "L"
+            : log.type === "user"
+              ? "U"
+              : log.type === "payment"
+                ? "$"
+                : log.type === "report"
+                  ? "!"
+                  : "S"}
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-foreground">
@@ -134,15 +159,25 @@ export function AdminDashboard() {
           <div className="mx-auto max-w-7xl px-4 md:px-6 pt-6 md:pt-10">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Dashboard</h1>
+                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
+                  Dashboard
+                </h1>
                 <p className="text-sm text-muted-foreground mt-1">
                   Overview of all platform activity and metrics
                 </p>
               </div>
               <div className="hidden md:flex items-center gap-2">
-                <Button variant="outline" size="sm" className="rounded-lg text-xs font-semibold border-border/60">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="rounded-lg text-xs font-semibold border-border/60"
+                >
                   <CalendarDays className="h-3.5 w-3.5 mr-1" />
-                  {new Date().toLocaleDateString("en-ZM", { month: "long", day: "numeric", year: "numeric" })}
+                  {new Date().toLocaleDateString("en-ZM", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
                 </Button>
               </div>
             </div>
@@ -182,7 +217,10 @@ export function AdminDashboard() {
               label="Total Bookings"
               value={stats.totalBookings.toLocaleString()}
               sub={`${stats.completedBookings} completed`}
-              trend={{ value: `${((stats.completedBookings / stats.totalBookings) * 100).toFixed(0)}% completion rate`, positive: true }}
+              trend={{
+                value: `${((stats.completedBookings / stats.totalBookings) * 100).toFixed(0)}% completion rate`,
+                positive: true,
+              }}
               accent="#8b5cf6"
               href="/admin/bookings"
             />
@@ -200,9 +238,12 @@ export function AdminDashboard() {
                 <AlertTriangle className="h-5 w-5 text-amber-500 shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-bold text-amber-800 dark:text-amber-200">
-                    {pendingListings.length} listing{pendingListings.length > 1 ? "s" : ""} pending moderation
+                    {pendingListings.length} listing{pendingListings.length > 1 ? "s" : ""} pending
+                    moderation
                   </p>
-                  <p className="text-xs text-amber-600 dark:text-amber-400">Review and approve new submissions</p>
+                  <p className="text-xs text-amber-600 dark:text-amber-400">
+                    Review and approve new submissions
+                  </p>
                 </div>
                 <ChevronRight className="h-4 w-4 text-amber-500 shrink-0" />
               </Link>
@@ -215,9 +256,12 @@ export function AdminDashboard() {
                 <Users className="h-5 w-5 text-violet-500 shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-bold text-violet-800 dark:text-violet-200">
-                    {pendingUsers.length} user{pendingUsers.length > 1 ? "s" : ""} pending verification
+                    {pendingUsers.length} user{pendingUsers.length > 1 ? "s" : ""} pending
+                    verification
                   </p>
-                  <p className="text-xs text-violet-600 dark:text-violet-400">New accounts awaiting identity confirmation</p>
+                  <p className="text-xs text-violet-600 dark:text-violet-400">
+                    New accounts awaiting identity confirmation
+                  </p>
                 </div>
                 <ChevronRight className="h-4 w-4 text-violet-500 shrink-0" />
               </Link>
@@ -232,7 +276,9 @@ export function AdminDashboard() {
                   <p className="text-sm font-bold text-rose-800 dark:text-rose-200">
                     {stats.reportedListings} reported listing{stats.reportedListings > 1 ? "s" : ""}
                   </p>
-                  <p className="text-xs text-rose-600 dark:text-rose-400">Flagged content requires review</p>
+                  <p className="text-xs text-rose-600 dark:text-rose-400">
+                    Flagged content requires review
+                  </p>
                 </div>
                 <ChevronRight className="h-4 w-4 text-rose-500 shrink-0" />
               </Link>
@@ -248,8 +294,12 @@ export function AdminDashboard() {
               <div className="rounded-xl border border-border/50 bg-card p-6 shadow-sm">
                 <div className="flex items-center justify-between mb-6">
                   <div>
-                    <h3 className="text-sm font-black uppercase tracking-widest text-foreground">Monthly Revenue</h3>
-                    <p className="text-xs text-muted-foreground mt-0.5">Platform earnings over the last 12 months</p>
+                    <h3 className="text-sm font-black uppercase tracking-widest text-foreground">
+                      Monthly Revenue
+                    </h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Platform earnings over the last 12 months
+                    </p>
                   </div>
                   <div className="flex items-center gap-4 text-xs">
                     <span className="flex items-center gap-1.5">
@@ -267,7 +317,10 @@ export function AdminDashboard() {
                     const revHeight = (m.revenue / maxRev) * 100;
                     const commHeight = (m.commission / maxComm) * 100;
                     return (
-                      <div key={m.month} className="flex-1 flex flex-col items-center gap-0.5 group relative">
+                      <div
+                        key={m.month}
+                        className="flex-1 flex flex-col items-center gap-0.5 group relative"
+                      >
                         <div className="w-full flex items-end justify-center gap-[2px]">
                           <div
                             className="w-3 rounded-t-md bg-primary/60 transition-all duration-200 cursor-pointer group-hover:bg-primary/80"
@@ -281,7 +334,9 @@ export function AdminDashboard() {
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute -top-8 left-1/2 -translate-x-1/2 bg-foreground text-background text-[9px] font-bold px-2 py-1 rounded-md whitespace-nowrap pointer-events-none z-10">
                           K{(m.revenue / 1000).toFixed(0)}k revenue
                         </div>
-                        <span className="text-[9px] font-semibold text-muted-foreground mt-1">{m.month}</span>
+                        <span className="text-[9px] font-semibold text-muted-foreground mt-1">
+                          {m.month}
+                        </span>
                       </div>
                     );
                   })}
@@ -291,15 +346,21 @@ export function AdminDashboard() {
               {/* Secondary Stats */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
                 <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Avg. Rating</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                    Avg. Rating
+                  </p>
                   <div className="flex items-baseline gap-1.5">
                     <p className="text-3xl font-bold text-foreground">{stats.avgRating}</p>
                     <span className="text-sm text-muted-foreground">/ 5</span>
                   </div>
-                  <p className="text-xs text-muted-foreground font-medium mt-1">Across all listings</p>
+                  <p className="text-xs text-muted-foreground font-medium mt-1">
+                    Across all listings
+                  </p>
                 </div>
                 <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Monthly Growth</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                    Monthly Growth
+                  </p>
                   <div className="flex items-baseline gap-1.5">
                     <p className="text-3xl font-bold text-emerald-600">+{stats.growthRate}%</p>
                   </div>
@@ -308,7 +369,9 @@ export function AdminDashboard() {
                   </p>
                 </div>
                 <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Commission Rate</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                    Commission Rate
+                  </p>
                   <p className="text-3xl font-bold text-foreground">
                     {((stats.platformCommission / stats.totalRevenue) * 100).toFixed(0)}%
                   </p>
@@ -324,7 +387,9 @@ export function AdminDashboard() {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <Activity className="h-4 w-4 text-primary" />
-                  <h3 className="text-sm font-black uppercase tracking-widest text-foreground">Recent Activity</h3>
+                  <h3 className="text-sm font-black uppercase tracking-widest text-foreground">
+                    Recent Activity
+                  </h3>
                 </div>
               </div>
               <div className="divide-y divide-border/30">
@@ -345,17 +410,67 @@ export function AdminDashboard() {
 
           {/* Quick Access — All Admin Tools */}
           <div className="mt-8">
-            <h3 className="text-sm font-black uppercase tracking-widest text-foreground mb-5">All Admin Tools</h3>
+            <h3 className="text-sm font-black uppercase tracking-widest text-foreground mb-5">
+              All Admin Tools
+            </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {[
-                { icon: Users, label: "User Management", desc: "Manage guests, hosts & admins", href: "/admin/users", color: "#3b82f6" },
-                { icon: Building2, label: "Listing Moderation", desc: "Approve & review listings", href: "/admin/listings", color: "#10b981" },
-                { icon: CalendarDays, label: "Booking Oversight", desc: "Platform-wide bookings", href: "/admin/bookings", color: "#8b5cf6" },
-                { icon: Scale, label: "Disputes & Resolution", desc: "Handle guest-host conflicts", href: "/admin/disputes", color: "#ef4444" },
-                { icon: DollarSign, label: "Payout Management", desc: "Process host payments", href: "/admin/payouts", color: "#10b981" },
-                { icon: Sparkles, label: "Promotions", desc: "Promo codes & featured listings", href: "/admin/promotions", color: "#f59e0b" },
-                { icon: Activity, label: "Activity Log", desc: "Full audit trail", href: "/admin/activity", color: "#6b7280" },
-                { icon: BarChart3, label: "Reports & Analytics", desc: "Financial & growth metrics", href: "/admin/reports", color: "#f59e0b" },
+                {
+                  icon: Users,
+                  label: "User Management",
+                  desc: "Manage guests, hosts & admins",
+                  href: "/admin/users",
+                  color: "#3b82f6",
+                },
+                {
+                  icon: Building2,
+                  label: "Listing Moderation",
+                  desc: "Approve & review listings",
+                  href: "/admin/listings",
+                  color: "#10b981",
+                },
+                {
+                  icon: CalendarDays,
+                  label: "Booking Oversight",
+                  desc: "Platform-wide bookings",
+                  href: "/admin/bookings",
+                  color: "#8b5cf6",
+                },
+                {
+                  icon: Scale,
+                  label: "Disputes & Resolution",
+                  desc: "Handle guest-host conflicts",
+                  href: "/admin/disputes",
+                  color: "#ef4444",
+                },
+                {
+                  icon: DollarSign,
+                  label: "Payout Management",
+                  desc: "Process host payments",
+                  href: "/admin/payouts",
+                  color: "#10b981",
+                },
+                {
+                  icon: Sparkles,
+                  label: "Promotions",
+                  desc: "Promo codes & featured listings",
+                  href: "/admin/promotions",
+                  color: "#f59e0b",
+                },
+                {
+                  icon: Activity,
+                  label: "Activity Log",
+                  desc: "Full audit trail",
+                  href: "/admin/activity",
+                  color: "#6b7280",
+                },
+                {
+                  icon: BarChart3,
+                  label: "Reports & Analytics",
+                  desc: "Financial & growth metrics",
+                  href: "/admin/reports",
+                  color: "#f59e0b",
+                },
               ].map(({ icon: Icon, label, desc, href, color }) => (
                 <Link
                   key={label}

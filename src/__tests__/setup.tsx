@@ -74,7 +74,7 @@ vi.mock("@/components/ui/button", () => ({
     children: React.ReactNode;
     onClick?: () => void;
     className?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   }) => (
     <button onClick={onClick} className={className} {...props}>
       {children}
@@ -90,7 +90,7 @@ vi.mock("@/components/ui/badge", () => ({
   }: {
     children: React.ReactNode;
     className?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   }) => (
     <span className={className} {...props}>
       {children}
@@ -99,9 +99,7 @@ vi.mock("@/components/ui/badge", () => ({
 }));
 
 vi.mock("@/components/ui/input", () => ({
-  Input: (props: React.InputHTMLAttributes<HTMLInputElement>) => (
-    <input {...props} />
-  ),
+  Input: (props: React.InputHTMLAttributes<HTMLInputElement>) => <input {...props} />,
 }));
 
 vi.mock("@/components/ui/select", () => {
@@ -125,13 +123,7 @@ vi.mock("@/components/ui/select", () => {
         </div>
       );
     },
-    SelectTrigger: ({
-      children,
-      className,
-    }: {
-      children: React.ReactNode;
-      className?: string;
-    }) => (
+    SelectTrigger: ({ children, className }: { children: React.ReactNode; className?: string }) => (
       <button className={className} data-testid="select-trigger">
         {children}
       </button>
@@ -142,22 +134,14 @@ vi.mock("@/components/ui/select", () => {
     SelectContent: ({ children }: { children: React.ReactNode }) => (
       <div data-testid="select-content">{children}</div>
     ),
-    SelectItem: ({
-      children,
-      value,
-    }: {
-      children: React.ReactNode;
-      value: string;
-    }) => (
+    SelectItem: ({ children, value }: { children: React.ReactNode; value: string }) => (
       <button
         data-testid="select-item"
         data-value={value}
         onClick={() => {
           // Find the parent select-id and call its handler
           // We walk up because React batches renders; use closest approach
-          const btn = document.querySelector(
-            `[data-testid="select-item"][data-value="${value}"]`,
-          );
+          const btn = document.querySelector(`[data-testid="select-item"][data-value="${value}"]`);
           if (!btn) return;
           const selectEl = btn.closest("[data-testid='mock-select']");
           if (!selectEl) return;
@@ -172,13 +156,8 @@ vi.mock("@/components/ui/select", () => {
 });
 
 vi.mock("@/components/ui/alert-dialog", () => ({
-  AlertDialog: ({
-    children,
-    open,
-  }: {
-    children: React.ReactNode;
-    open?: boolean;
-  }) => (open ? <div data-testid="alert-dialog">{children}</div> : null),
+  AlertDialog: ({ children, open }: { children: React.ReactNode; open?: boolean }) =>
+    open ? <div data-testid="alert-dialog">{children}</div> : null,
   AlertDialogContent: ({
     children,
     className,
@@ -190,9 +169,7 @@ vi.mock("@/components/ui/alert-dialog", () => ({
       {children}
     </div>
   ),
-  AlertDialogHeader: ({ children }: { children: React.ReactNode }) => (
-    <>{children}</>
-  ),
+  AlertDialogHeader: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   AlertDialogFooter: ({
     children,
     className,

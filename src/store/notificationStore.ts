@@ -43,7 +43,7 @@ const mockNotifications: AppNotification[] = [
     type: "review_received",
     title: "New Review — Victoria Falls Helicopter Tour",
     description:
-      "Sarah left a 5-star review on your Victoria Falls Helicopter Tour. \"Absolutely breathtaking! Worth every kwacha.\"",
+      'Sarah left a 5-star review on your Victoria Falls Helicopter Tour. "Absolutely breathtaking! Worth every kwacha."',
     timestamp: "2025-06-05T14:22:00Z",
     read: false,
     actionUrl: "/host",
@@ -109,7 +109,7 @@ const mockNotifications: AppNotification[] = [
     type: "review_received",
     title: "New Review — Kafue Game Drive",
     description:
-      "David Mulenga left a 5-star review on Kafue Game Drive. \"Moses was the best guide we've ever had!\"",
+      'David Mulenga left a 5-star review on Kafue Game Drive. "Moses was the best guide we\'ve ever had!"',
     timestamp: "2025-06-02T10:30:00Z",
     read: true,
     actionUrl: "/host",
@@ -191,9 +191,7 @@ export const useNotificationStore = create<NotificationStore>()(
 
       markAsRead: (id) =>
         set((state) => ({
-          notifications: state.notifications.map((n) =>
-            n.id === id ? { ...n, read: true } : n,
-          ),
+          notifications: state.notifications.map((n) => (n.id === id ? { ...n, read: true } : n)),
         })),
 
       markAllAsRead: () =>
@@ -212,8 +210,7 @@ export const useNotificationStore = create<NotificationStore>()(
       getRecentNotifications: (limit = 5) =>
         get()
           .notifications.sort(
-            (a, b) =>
-              new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+            (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
           )
           .slice(0, limit),
     }),

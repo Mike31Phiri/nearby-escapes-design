@@ -6,10 +6,5 @@ import { useProfileStore } from "@/store/profileStore";
 export function ClientModals() {
   const { showTravelPreferences, dismissTravelPreferences } = useProfileStore();
 
-  return (
-    <TravelPreferencesModal
-      open={showTravelPreferences}
-      onClose={dismissTravelPreferences}
-    />
-  );
+  return <TravelPreferencesModal open={showTravelPreferences} onClose={dismissTravelPreferences} />;
 }

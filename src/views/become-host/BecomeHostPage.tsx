@@ -28,7 +28,6 @@ import {
   Award,
   Eye,
 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -157,13 +156,7 @@ const INITIAL_FORM: OnboardingForm = {
 
 // ─── Sub-Components ───────────────────────────────────────────────────────
 
-function StepIndicator({
-  currentStep,
-  totalSteps,
-}: {
-  currentStep: number;
-  totalSteps: number;
-}) {
+function StepIndicator({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) {
   return (
     <div className="w-full max-w-2xl mx-auto mb-10">
       <div className="flex items-center justify-between mb-3">
@@ -321,8 +314,7 @@ export function BecomeHostPage() {
         break;
       }
       case 2: {
-        if (form.interestedTypes.length === 0)
-          errs.interestedTypes = "Select at least one type";
+        if (form.interestedTypes.length === 0) errs.interestedTypes = "Select at least one type";
         break;
       }
       case 3: {
@@ -392,8 +384,8 @@ export function BecomeHostPage() {
               </h1>
               <p className="text-base text-muted-foreground max-w-lg mx-auto leading-relaxed">
                 Turn your property, expertise, or transport into income. Join{" "}
-                <span className="font-bold text-foreground">Nearby Escapes</span> and start
-                hosting travelers from around the world.
+                <span className="font-bold text-foreground">Nearby Escapes</span> and start hosting
+                travelers from around the world.
               </p>
             </div>
 
@@ -528,10 +520,8 @@ export function BecomeHostPage() {
                     Host Terms & Conditions
                   </span>{" "}
                   and{" "}
-                  <span className="text-primary underline underline-offset-2">
-                    Privacy Policy
-                  </span>
-                  . You confirm that all information provided is accurate.
+                  <span className="text-primary underline underline-offset-2">Privacy Policy</span>.
+                  You confirm that all information provided is accurate.
                 </p>
               </div>
             </label>
@@ -646,8 +636,8 @@ export function BecomeHostPage() {
               <div className="flex items-start gap-3">
                 <ShieldCheck className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Your payment information is encrypted and secure. Payouts are processed within
-                  48 hours after a guest&apos;s stay begins.
+                  Your payment information is encrypted and secure. Payouts are processed within 48
+                  hours after a guest&apos;s stay begins.
                 </p>
               </div>
             </div>
@@ -775,7 +765,8 @@ export function BecomeHostPage() {
                 {form.propertyLocation && (
                   <p className="text-sm text-muted-foreground flex items-center gap-1.5">
                     <MapPin className="h-3.5 w-3.5" />
-                    Based in <span className="font-semibold text-foreground">{form.propertyLocation}</span>
+                    Based in{" "}
+                    <span className="font-semibold text-foreground">{form.propertyLocation}</span>
                   </p>
                 )}
               </div>
@@ -843,8 +834,6 @@ export function BecomeHostPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-      <Navbar />
-
       <main className="flex-1">
         {/* Top Banner */}
         <div className="bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
@@ -865,9 +854,7 @@ export function BecomeHostPage() {
             </div>
 
             {/* Step Indicator (only show after step 0) */}
-            {step > 0 && (
-              <StepIndicator currentStep={step - 1} totalSteps={totalSteps - 1} />
-            )}
+            {step > 0 && <StepIndicator currentStep={step - 1} totalSteps={totalSteps - 1} />}
           </div>
         </div>
 

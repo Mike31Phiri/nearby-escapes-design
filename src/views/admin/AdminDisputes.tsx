@@ -62,14 +62,39 @@ const priorityConfig: Record<string, { label: string; className: string }> = {
   critical: { label: "Critical", className: "bg-red-50 text-red-800 border-red-300" },
 };
 
-const statusConfig: Record<string, { label: string; icon: React.ElementType; className: string }> = {
-  open: { label: "Open", icon: AlertTriangle, className: "bg-rose-50 text-rose-700 border-rose-200" },
-  investigating: { label: "Investigating", icon: Clock, className: "bg-amber-50 text-amber-700 border-amber-200" },
-  resolved_host: { label: "Resolved (Host)", icon: CheckCircle2, className: "bg-blue-50 text-blue-700 border-blue-200" },
-  resolved_guest: { label: "Resolved (Guest)", icon: CheckCircle2, className: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-  refunded: { label: "Refunded", icon: DollarSign, className: "bg-violet-50 text-violet-700 border-violet-200" },
-  closed: { label: "Closed", icon: ShieldAlert, className: "bg-zinc-50 text-zinc-600 border-zinc-200" },
-};
+const statusConfig: Record<string, { label: string; icon: React.ElementType; className: string }> =
+  {
+    open: {
+      label: "Open",
+      icon: AlertTriangle,
+      className: "bg-rose-50 text-rose-700 border-rose-200",
+    },
+    investigating: {
+      label: "Investigating",
+      icon: Clock,
+      className: "bg-amber-50 text-amber-700 border-amber-200",
+    },
+    resolved_host: {
+      label: "Resolved (Host)",
+      icon: CheckCircle2,
+      className: "bg-blue-50 text-blue-700 border-blue-200",
+    },
+    resolved_guest: {
+      label: "Resolved (Guest)",
+      icon: CheckCircle2,
+      className: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    },
+    refunded: {
+      label: "Refunded",
+      icon: DollarSign,
+      className: "bg-violet-50 text-violet-700 border-violet-200",
+    },
+    closed: {
+      label: "Closed",
+      icon: ShieldAlert,
+      className: "bg-zinc-50 text-zinc-600 border-zinc-200",
+    },
+  };
 
 // ─── Dispute Card ───────────────────────────────────────────────────────
 
@@ -133,10 +158,22 @@ function DisputeCard({
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2 flex-wrap">
                 <h4 className="font-bold text-foreground truncate">{dispute.listingName}</h4>
-                <Badge variant="outline" className={cn("rounded-full text-[8px] font-bold uppercase tracking-wider px-2 py-0.5", priCfg.className)}>
+                <Badge
+                  variant="outline"
+                  className={cn(
+                    "rounded-full text-[8px] font-bold uppercase tracking-wider px-2 py-0.5",
+                    priCfg.className,
+                  )}
+                >
                   {priCfg.label} Priority
                 </Badge>
-                <Badge variant="outline" className={cn("rounded-full text-[8px] font-bold uppercase tracking-wider px-2 py-0.5", statCfg.className)}>
+                <Badge
+                  variant="outline"
+                  className={cn(
+                    "rounded-full text-[8px] font-bold uppercase tracking-wider px-2 py-0.5",
+                    statCfg.className,
+                  )}
+                >
                   <StatusIcon className="h-2.5 w-2.5 mr-0.5" />
                   {statCfg.label}
                 </Badge>
@@ -165,7 +202,8 @@ function DisputeCard({
             {typeLabels[dispute.listingType]}
           </span>
           <span>
-            <strong>{dispute.guestName}</strong> (guest) vs <strong>{dispute.hostName}</strong> (host)
+            <strong>{dispute.guestName}</strong> (guest) vs <strong>{dispute.hostName}</strong>{" "}
+            (host)
           </span>
           <span className="font-semibold text-foreground">
             K{dispute.amount.toLocaleString()} disputed
@@ -177,13 +215,17 @@ function DisputeCard({
         {expanded && (
           <div className="mt-4 pt-4 border-t border-border/30 space-y-4">
             <div className="rounded-lg bg-muted/40 p-4">
-              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Description</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                Description
+              </p>
               <p className="text-sm text-foreground leading-relaxed">{dispute.description}</p>
             </div>
 
             {dispute.resolution && (
               <div className="rounded-lg bg-blue-50/50 border border-blue-100 p-4">
-                <p className="text-xs font-bold uppercase tracking-wider text-blue-700 mb-1.5">Resolution</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-blue-700 mb-1.5">
+                  Resolution
+                </p>
                 <p className="text-sm text-blue-800">{dispute.resolution}</p>
               </div>
             )}
@@ -213,10 +255,18 @@ function DisputeCard({
                   variant="outline"
                   className="h-8 rounded-lg text-xs font-semibold"
                   onClick={() => {
-                    withLoading(setLoading, setLoadingMessage, async () => {
-                      await new Promise((r) => setTimeout(r, 600));
-                      showInfo("Marked as investigating", "Case has been flagged for further review.");
-                    }, "Updating case...");
+                    withLoading(
+                      setLoading,
+                      setLoadingMessage,
+                      async () => {
+                        await new Promise((r) => setTimeout(r, 600));
+                        showInfo(
+                          "Marked as investigating",
+                          "Case has been flagged for further review.",
+                        );
+                      },
+                      "Updating case...",
+                    );
                   }}
                 >
                   <Clock className="h-3.5 w-3.5 mr-1" />
@@ -231,11 +281,19 @@ function DisputeCard({
                   size="sm"
                   className="h-8 rounded-lg text-xs font-semibold"
                   onClick={() => {
-                    withLoading(setLoading, setLoadingMessage, async () => {
-                      await new Promise((r) => setTimeout(r, 800));
-                      onRefund(dispute.id);
-                      showSuccess("Refund processed", `K${(dispute.amount * 0.5).toLocaleString()} has been refunded to the guest.`);
-                    }, "Processing refund...");
+                    withLoading(
+                      setLoading,
+                      setLoadingMessage,
+                      async () => {
+                        await new Promise((r) => setTimeout(r, 800));
+                        onRefund(dispute.id);
+                        showSuccess(
+                          "Refund processed",
+                          `K${(dispute.amount * 0.5).toLocaleString()} has been refunded to the guest.`,
+                        );
+                      },
+                      "Processing refund...",
+                    );
                   }}
                 >
                   <DollarSign className="h-3.5 w-3.5 mr-1" />
@@ -246,11 +304,16 @@ function DisputeCard({
                   variant="outline"
                   className="h-8 rounded-lg text-xs font-semibold"
                   onClick={() => {
-                    withLoading(setLoading, setLoadingMessage, async () => {
-                      await new Promise((r) => setTimeout(r, 600));
-                      onClose(dispute.id);
-                      showInfo("Case closed", "This dispute has been closed without refund.");
-                    }, "Closing case...");
+                    withLoading(
+                      setLoading,
+                      setLoadingMessage,
+                      async () => {
+                        await new Promise((r) => setTimeout(r, 600));
+                        onClose(dispute.id);
+                        showInfo("Case closed", "This dispute has been closed without refund.");
+                      },
+                      "Closing case...",
+                    );
                   }}
                 >
                   <ShieldAlert className="h-3.5 w-3.5 mr-1" />
@@ -276,7 +339,9 @@ function DisputeCard({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2">
-            <AlertDialogCancel className="rounded-xl font-semibold border-border/60">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="rounded-xl font-semibold border-border/60">
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => resolveDialog && handleResolve(resolveDialog)}
               className="rounded-xl bg-primary text-white hover:bg-primary/90 font-bold"
@@ -299,16 +364,21 @@ export function AdminDisputes() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [priorityFilter, setPriorityFilter] = useState<string>("all");
 
-  const stats = useMemo(() => ({
-    total: disputes.length,
-    open: disputes.filter((d) => d.status === "open").length,
-    investigating: disputes.filter((d) => d.status === "investigating").length,
-    resolved: disputes.filter((d) => d.status === "resolved_host" || d.status === "resolved_guest").length,
-    closed: disputes.filter((d) => d.status === "closed" || d.status === "refunded").length,
-    critical: disputes.filter((d) => d.priority === "critical").length,
-    high: disputes.filter((d) => d.priority === "high").length,
-    disputedAmount: disputes.reduce((s, d) => s + d.amount, 0),
-  }), [disputes]);
+  const stats = useMemo(
+    () => ({
+      total: disputes.length,
+      open: disputes.filter((d) => d.status === "open").length,
+      investigating: disputes.filter((d) => d.status === "investigating").length,
+      resolved: disputes.filter(
+        (d) => d.status === "resolved_host" || d.status === "resolved_guest",
+      ).length,
+      closed: disputes.filter((d) => d.status === "closed" || d.status === "refunded").length,
+      critical: disputes.filter((d) => d.priority === "critical").length,
+      high: disputes.filter((d) => d.priority === "high").length,
+      disputedAmount: disputes.reduce((s, d) => s + d.amount, 0),
+    }),
+    [disputes],
+  );
 
   const filteredDisputes = useMemo(() => {
     return disputes.filter((d) => {
@@ -329,7 +399,11 @@ export function AdminDisputes() {
     setDisputes((prev) =>
       prev.map((d) =>
         d.id === id
-          ? { ...d, status: inFavor === "host" ? "resolved_host" as const : "resolved_guest" as const, resolvedAt: new Date().toISOString() }
+          ? {
+              ...d,
+              status: inFavor === "host" ? ("resolved_host" as const) : ("resolved_guest" as const),
+              resolvedAt: new Date().toISOString(),
+            }
           : d,
       ),
     );
@@ -345,7 +419,12 @@ export function AdminDisputes() {
     setDisputes((prev) =>
       prev.map((d) =>
         d.id === id
-          ? { ...d, status: "closed" as const, resolvedAt: new Date().toISOString(), resolution: "Case closed after review — no further action required." }
+          ? {
+              ...d,
+              status: "closed" as const,
+              resolvedAt: new Date().toISOString(),
+              resolution: "Case closed after review — no further action required.",
+            }
           : d,
       ),
     );
@@ -359,14 +438,19 @@ export function AdminDisputes() {
           <div className="mx-auto max-w-6xl px-4 md:px-6 pt-6 md:pt-10">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Disputes &amp; Resolution</h1>
+                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
+                  Disputes &amp; Resolution
+                </h1>
                 <p className="text-sm text-muted-foreground mt-1">
                   {stats.total} cases — K{stats.disputedAmount.toLocaleString()} total disputed
                 </p>
               </div>
               <div className="flex items-center gap-2 text-xs">
                 {stats.critical > 0 && (
-                  <Badge variant="outline" className="rounded-full text-[9px] font-bold uppercase tracking-wider bg-red-50 text-red-700 border-red-200">
+                  <Badge
+                    variant="outline"
+                    className="rounded-full text-[9px] font-bold uppercase tracking-wider bg-red-50 text-red-700 border-red-200"
+                  >
                     {stats.critical} critical
                   </Badge>
                 )}
@@ -426,19 +510,29 @@ export function AdminDisputes() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
               <p className="text-2xl font-bold text-foreground">{stats.total}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Total Cases</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Total Cases
+              </p>
             </div>
             <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
               <p className="text-2xl font-bold text-amber-600">{stats.open}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Open</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Open
+              </p>
             </div>
             <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
               <p className="text-2xl font-bold text-emerald-600">{stats.resolved}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Resolved</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Resolved
+              </p>
             </div>
             <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
-              <p className="text-2xl font-bold text-blue-600">K{(stats.disputedAmount / 1000).toFixed(0)}k</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Disputed Amount</p>
+              <p className="text-2xl font-bold text-blue-600">
+                K{(stats.disputedAmount / 1000).toFixed(0)}k
+              </p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Disputed Amount
+              </p>
             </div>
           </div>
         </div>
@@ -458,7 +552,11 @@ export function AdminDisputes() {
                 variant="outline"
                 size="sm"
                 className="mt-6 rounded-full text-xs font-semibold"
-                onClick={() => { setSearch(""); setStatusFilter("all"); setPriorityFilter("all"); }}
+                onClick={() => {
+                  setSearch("");
+                  setStatusFilter("all");
+                  setPriorityFilter("all");
+                }}
               >
                 Clear Filters
               </Button>

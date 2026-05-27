@@ -3,13 +3,9 @@
 import { useState } from "react";
 import { LoadingProvider } from "@/lib/loading-context";
 import { AdminSidebar, MobileAdminNav } from "@/components/admin/AdminSidebar";
-import { Navbar } from "@/components/layout/Navbar";
+import { Bell, User } from "lucide-react";
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
@@ -35,7 +31,18 @@ export default function AdminLayout({
                   <p className="text-sm font-bold text-foreground hidden md:block">Admin Panel</p>
                 </div>
               </div>
-              <Navbar />
+              <div className="flex items-center gap-3">
+                <button
+                  className="relative p-2 rounded-xl hover:bg-accent/80 transition-colors"
+                  aria-label="Notifications"
+                >
+                  <Bell className="h-5 w-5 text-muted-foreground" />
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-destructive rounded-full" />
+                </button>
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center cursor-pointer hover:bg-primary/20 transition-colors">
+                  <User className="h-4 w-4 text-primary" />
+                </div>
+              </div>
             </div>
           </div>
 

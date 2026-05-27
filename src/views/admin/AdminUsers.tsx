@@ -29,45 +29,46 @@ import { cn } from "@/lib/utils";
 import { mockAdminUsers, statsFromUsers } from "@/lib/mock-admin-data";
 import type { AdminUser } from "@/lib/mock-admin-data";
 import { useLoading, withLoading } from "@/lib/loading-context";
-import {
-  showSuccess,
-  showWarning,
-} from "@/lib/admin-toast";
+import { showSuccess, showWarning } from "@/lib/admin-toast";
 
 // ─── Role Badge ─────────────────────────────────────────────────────────
 
 const roleConfig: Record<string, { label: string; className: string }> = {
   admin: {
     label: "Admin",
-    className: "bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950 dark:text-violet-300 dark:border-violet-800",
+    className:
+      "bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950 dark:text-violet-300 dark:border-violet-800",
   },
   host: {
     label: "Host",
-    className: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800",
+    className:
+      "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800",
   },
   guest: {
     label: "Guest",
-    className: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800",
+    className:
+      "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800",
   },
 };
 
-const statusConfig: Record<string, { label: string; icon: React.ElementType; className: string }> = {
-  active: {
-    label: "Active",
-    icon: CheckCircle2,
-    className: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  },
-  suspended: {
-    label: "Suspended",
-    icon: XCircle,
-    className: "bg-rose-50 text-rose-700 border-rose-200",
-  },
-  "pending verification": {
-    label: "Pending",
-    icon: Clock,
-    className: "bg-amber-50 text-amber-700 border-amber-200",
-  },
-};
+const statusConfig: Record<string, { label: string; icon: React.ElementType; className: string }> =
+  {
+    active: {
+      label: "Active",
+      icon: CheckCircle2,
+      className: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    },
+    suspended: {
+      label: "Suspended",
+      icon: XCircle,
+      className: "bg-rose-50 text-rose-700 border-rose-200",
+    },
+    "pending verification": {
+      label: "Pending",
+      icon: Clock,
+      className: "bg-amber-50 text-amber-700 border-amber-200",
+    },
+  };
 
 // ─── User Card ──────────────────────────────────────────────────────────
 
@@ -97,7 +98,13 @@ function UserCard({
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
               <h4 className="font-bold text-foreground truncate">{user.name}</h4>
-              <Badge variant="outline" className={cn("rounded-full text-[8px] font-bold uppercase tracking-wider px-2 py-0.5", roleCfg.className)}>
+              <Badge
+                variant="outline"
+                className={cn(
+                  "rounded-full text-[8px] font-bold uppercase tracking-wider px-2 py-0.5",
+                  roleCfg.className,
+                )}
+              >
                 {roleCfg.label}
               </Badge>
             </div>
@@ -140,10 +147,18 @@ function UserCard({
               size="sm"
               className="h-8 rounded-lg text-xs font-semibold"
               onClick={() =>
-                withLoading(setLoading, setLoadingMessage, async () => {
-                  await new Promise((r) => setTimeout(r, 600));
-                  showSuccess(`${user.name} reactivated`, "User has been restored to active status.");
-                }, "Reactivating user...")
+                withLoading(
+                  setLoading,
+                  setLoadingMessage,
+                  async () => {
+                    await new Promise((r) => setTimeout(r, 600));
+                    showSuccess(
+                      `${user.name} reactivated`,
+                      "User has been restored to active status.",
+                    );
+                  },
+                  "Reactivating user...",
+                )
               }
             >
               <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
@@ -157,7 +172,8 @@ function UserCard({
       <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs text-muted-foreground">
         <span className="flex items-center gap-1.5">
           <CalendarDays className="h-3 w-3" />
-          Joined {new Date(user.joined).toLocaleDateString("en-ZM", { month: "short", year: "numeric" })}
+          Joined{" "}
+          {new Date(user.joined).toLocaleDateString("en-ZM", { month: "short", year: "numeric" })}
         </span>
         {user.role !== "admin" && (
           <>
@@ -174,7 +190,10 @@ function UserCard({
         )}
         <Badge
           variant="outline"
-          className={cn("rounded-full text-[8px] font-bold uppercase tracking-wider px-2.5 py-0.5", statusCfg.className)}
+          className={cn(
+            "rounded-full text-[8px] font-bold uppercase tracking-wider px-2.5 py-0.5",
+            statusCfg.className,
+          )}
         >
           <StatusIcon className="h-2.5 w-2.5 mr-0.5" />
           {statusCfg.label}
@@ -184,12 +203,21 @@ function UserCard({
       {/* Mobile Actions */}
       <div className="md:hidden mt-3 flex gap-2">
         {user.status === "pending verification" && (
-          <Button size="sm" className="h-8 rounded-lg text-xs font-semibold flex-1" onClick={() => onVerify(user.id)}>
+          <Button
+            size="sm"
+            className="h-8 rounded-lg text-xs font-semibold flex-1"
+            onClick={() => onVerify(user.id)}
+          >
             <ShieldCheck className="h-3.5 w-3.5 mr-1" /> Verify
           </Button>
         )}
         {user.status === "active" && user.role !== "admin" && (
-          <Button variant="outline" size="sm" className="h-8 rounded-lg text-xs font-semibold flex-1 border-rose-200 text-rose-600" onClick={() => onSuspend(user.id)}>
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-8 rounded-lg text-xs font-semibold flex-1 border-rose-200 text-rose-600"
+            onClick={() => onSuspend(user.id)}
+          >
             <Ban className="h-3.5 w-3.5 mr-1" /> Suspend
           </Button>
         )}
@@ -198,10 +226,18 @@ function UserCard({
             size="sm"
             className="h-8 rounded-lg text-xs font-semibold flex-1"
             onClick={() =>
-              withLoading(setLoading, setLoadingMessage, async () => {
-                await new Promise((r) => setTimeout(r, 600));
-                showSuccess(`${user.name} reactivated`, "User has been restored to active status.");
-              }, "Reactivating user...")
+              withLoading(
+                setLoading,
+                setLoadingMessage,
+                async () => {
+                  await new Promise((r) => setTimeout(r, 600));
+                  showSuccess(
+                    `${user.name} reactivated`,
+                    "User has been restored to active status.",
+                  );
+                },
+                "Reactivating user...",
+              )
             }
           >
             <CheckCircle2 className="h-3.5 w-3.5 mr-1" /> Reactivate
@@ -218,7 +254,9 @@ export function AdminUsers() {
   const { setLoading, setLoadingMessage } = useLoading();
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<"all" | "guest" | "host" | "admin">("all");
-  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "suspended" | "pending verification">("all");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "active" | "suspended" | "pending verification"
+  >("all");
   const [users, setUsers] = useState<AdminUser[]>(mockAdminUsers);
 
   const userStats = useMemo(() => statsFromUsers(users), [users]);
@@ -237,29 +275,36 @@ export function AdminUsers() {
   }, [users, search, roleFilter, statusFilter]);
 
   const handleSuspend = (id: string) => {
-    withLoading(setLoading, setLoadingMessage, async () => {
-      await new Promise((r) => setTimeout(r, 600));
-      setUsers((prev) =>
-        prev.map((u) =>
-          u.id === id ? { ...u, status: "suspended" as const } : u,
-        ),
-      );
-      const user = users.find((u) => u.id === id);
-      if (user) showWarning(`${user.name} suspended`, "This user can no longer access the platform.");
-    }, "Suspending user...");
+    withLoading(
+      setLoading,
+      setLoadingMessage,
+      async () => {
+        await new Promise((r) => setTimeout(r, 600));
+        setUsers((prev) =>
+          prev.map((u) => (u.id === id ? { ...u, status: "suspended" as const } : u)),
+        );
+        const user = users.find((u) => u.id === id);
+        if (user)
+          showWarning(`${user.name} suspended`, "This user can no longer access the platform.");
+      },
+      "Suspending user...",
+    );
   };
 
   const handleVerify = (id: string) => {
-    withLoading(setLoading, setLoadingMessage, async () => {
-      await new Promise((r) => setTimeout(r, 600));
-      setUsers((prev) =>
-        prev.map((u) =>
-          u.id === id ? { ...u, status: "active" as const } : u,
-        ),
-      );
-      const user = users.find((u) => u.id === id);
-      if (user) showSuccess(`${user.name} verified`, "User account has been marked as verified.");
-    }, "Verifying user...");
+    withLoading(
+      setLoading,
+      setLoadingMessage,
+      async () => {
+        await new Promise((r) => setTimeout(r, 600));
+        setUsers((prev) =>
+          prev.map((u) => (u.id === id ? { ...u, status: "active" as const } : u)),
+        );
+        const user = users.find((u) => u.id === id);
+        if (user) showSuccess(`${user.name} verified`, "User account has been marked as verified.");
+      },
+      "Verifying user...",
+    );
   };
 
   return (
@@ -270,9 +315,12 @@ export function AdminUsers() {
           <div className="mx-auto max-w-7xl px-4 md:px-6 pt-6 md:pt-10">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">User Management</h1>
+                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
+                  User Management
+                </h1>
                 <p className="text-sm text-muted-foreground mt-1">
-                  {userStats.total} users — {userStats.guests} guests, {userStats.hosts} hosts, {userStats.admins} admins
+                  {userStats.total} users — {userStats.guests} guests, {userStats.hosts} hosts,{" "}
+                  {userStats.admins} admins
                 </p>
               </div>
               <div className="flex items-center gap-3">
@@ -280,7 +328,10 @@ export function AdminUsers() {
                   <span className="font-semibold text-foreground">{userStats.active}</span> active
                 </span>
                 {userStats.pendingVerification > 0 && (
-                  <Badge variant="outline" className="rounded-full text-[9px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border-amber-200">
+                  <Badge
+                    variant="outline"
+                    className="rounded-full text-[9px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border-amber-200"
+                  >
                     {userStats.pendingVerification} pending
                   </Badge>
                 )}
@@ -312,7 +363,10 @@ export function AdminUsers() {
                 <SelectItem value="admin">Admins</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}>
+            <Select
+              value={statusFilter}
+              onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}
+            >
               <SelectTrigger className="w-[160px] h-10 rounded-xl border-border/60">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
@@ -331,19 +385,27 @@ export function AdminUsers() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
               <p className="text-2xl font-bold text-foreground">{userStats.total}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Total Users</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Total Users
+              </p>
             </div>
             <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
               <p className="text-2xl font-bold text-blue-600">{userStats.hosts}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Hosts</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Hosts
+              </p>
             </div>
             <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
               <p className="text-2xl font-bold text-emerald-600">{userStats.guests}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Guests</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Guests
+              </p>
             </div>
             <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
               <p className="text-2xl font-bold text-amber-600">{userStats.pendingVerification}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Pending Verification</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Pending Verification
+              </p>
             </div>
           </div>
         </div>
@@ -363,7 +425,11 @@ export function AdminUsers() {
                 variant="outline"
                 size="sm"
                 className="mt-6 rounded-full text-xs font-semibold"
-                onClick={() => { setSearch(""); setRoleFilter("all"); setStatusFilter("all"); }}
+                onClick={() => {
+                  setSearch("");
+                  setRoleFilter("all");
+                  setStatusFilter("all");
+                }}
               >
                 Clear Filters
               </Button>

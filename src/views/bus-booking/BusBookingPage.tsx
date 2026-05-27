@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { Bus, MapPin, Clock, ArrowRight, CalendarDays } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { mockTransport } from "@/lib/mock-data";
@@ -10,8 +9,6 @@ import { mockTransport } from "@/lib/mock-data";
 export function BusBookingPage() {
   return (
     <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-      <Navbar />
-
       <main className="flex-1">
         {/* Header */}
         <div className="relative bg-gradient-to-b from-blue-500/5 via-primary/[0.02] to-transparent pb-10">
@@ -85,11 +82,7 @@ export function BusBookingPage() {
                     <CalendarDays className="h-3.5 w-3.5 text-muted-foreground/60" />
                     {route.departures}
                   </span>
-                  <Button
-                    size="sm"
-                    className="rounded-full text-xs font-bold h-8 ml-auto"
-                    asChild
-                  >
+                  <Button size="sm" className="rounded-full text-xs font-bold h-8 ml-auto" asChild>
                     <Link href={`/listings/transport/${route.id}`}>
                       Book Now
                       <ArrowRight className="h-3 w-3 ml-1" />
@@ -104,7 +97,10 @@ export function BusBookingPage() {
           <div className="rounded-xl border border-dashed border-border/50 bg-card/30 p-6 text-center">
             <p className="text-sm text-muted-foreground">
               More routes are being added. Know a transport provider?{" "}
-              <Link href="/become-host" className="text-primary font-semibold underline underline-offset-2">
+              <Link
+                href="/become-host"
+                className="text-primary font-semibold underline underline-offset-2"
+              >
                 List your service
               </Link>
             </p>

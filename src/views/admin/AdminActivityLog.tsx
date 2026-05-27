@@ -1,12 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import {
-  Activity,
-  Search,
-  CalendarDays,
-  ArrowUpDown,
-} from "lucide-react";
+import { Activity, Search, CalendarDays, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -47,16 +42,33 @@ function ActivityItem({ log }: { log: ActivityLog }) {
 
   return (
     <div className="flex items-start gap-4 py-4 first:pt-0 last:pb-0 border-b border-border/10 last:border-0">
-      <div className={cn("h-9 w-9 shrink-0 rounded-xl flex items-center justify-center text-xs font-bold", badgeColor)}>
-        {log.type === "booking" ? "B" : log.type === "listing" ? "L" : log.type === "user" ? "U" : log.type === "payment" ? "$" : log.type === "report" ? "!" : "S"}
+      <div
+        className={cn(
+          "h-9 w-9 shrink-0 rounded-xl flex items-center justify-center text-xs font-bold",
+          badgeColor,
+        )}
+      >
+        {log.type === "booking"
+          ? "B"
+          : log.type === "listing"
+            ? "L"
+            : log.type === "user"
+              ? "U"
+              : log.type === "payment"
+                ? "$"
+                : log.type === "report"
+                  ? "!"
+                  : "S"}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-sm font-bold text-foreground">{log.user}</span>
-          <span className={cn(
-            "text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full border",
-            badgeColor,
-          )}>
+          <span
+            className={cn(
+              "text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full border",
+              badgeColor,
+            )}
+          >
             {typeLabels[log.type]}
           </span>
           {log.userRole !== "admin" && (
@@ -69,7 +81,8 @@ function ActivityItem({ log }: { log: ActivityLog }) {
           <span className="font-medium text-foreground/80">{log.action.toLowerCase()}</span>
           {log.target && (
             <>
-              {" "}— <span className="font-medium text-foreground">{log.target}</span>
+              {" "}
+              — <span className="font-medium text-foreground">{log.target}</span>
             </>
           )}
         </p>
@@ -135,18 +148,21 @@ export function AdminActivityLog() {
     return logs;
   }, [search, typeFilter, userFilter, sortOrder]);
 
-  const stats = useMemo(() => ({
-    total: mockActivityLogs.length,
-    filtered: filteredLogs.length,
-    byType: {
-      booking: mockActivityLogs.filter((l) => l.type === "booking").length,
-      listing: mockActivityLogs.filter((l) => l.type === "listing").length,
-      user: mockActivityLogs.filter((l) => l.type === "user").length,
-      payment: mockActivityLogs.filter((l) => l.type === "payment").length,
-      report: mockActivityLogs.filter((l) => l.type === "report").length,
-      system: mockActivityLogs.filter((l) => l.type === "system").length,
-    },
-  }), []);
+  const stats = useMemo(
+    () => ({
+      total: mockActivityLogs.length,
+      filtered: filteredLogs.length,
+      byType: {
+        booking: mockActivityLogs.filter((l) => l.type === "booking").length,
+        listing: mockActivityLogs.filter((l) => l.type === "listing").length,
+        user: mockActivityLogs.filter((l) => l.type === "user").length,
+        payment: mockActivityLogs.filter((l) => l.type === "payment").length,
+        report: mockActivityLogs.filter((l) => l.type === "report").length,
+        system: mockActivityLogs.filter((l) => l.type === "system").length,
+      },
+    }),
+    [],
+  );
 
   return (
     <div className="flex-1">
@@ -154,7 +170,9 @@ export function AdminActivityLog() {
       <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
         <div className="mx-auto max-w-6xl px-4 md:px-6 pt-6 md:pt-10">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Audit Log</h1>
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
+              Audit Log
+            </h1>
             <p className="text-sm text-muted-foreground mt-1">
               {stats.total} total events — showing {stats.filtered}
             </p>
@@ -195,7 +213,9 @@ export function AdminActivityLog() {
             <SelectContent className="rounded-xl">
               <SelectItem value="all">All Users</SelectItem>
               {allUsers.map((user) => (
-                <SelectItem key={user} value={user}>{user}</SelectItem>
+                <SelectItem key={user} value={user}>
+                  {user}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -253,15 +273,17 @@ export function AdminActivityLog() {
                 variant="outline"
                 size="sm"
                 className="mt-6 rounded-full text-xs font-semibold"
-                onClick={() => { setSearch(""); setTypeFilter("all"); setUserFilter("all"); }}
+                onClick={() => {
+                  setSearch("");
+                  setTypeFilter("all");
+                  setUserFilter("all");
+                }}
               >
                 Clear All Filters
               </Button>
             </div>
           ) : (
-            filteredLogs.map((log) => (
-              <ActivityItem key={log.id} log={log} />
-            ))
+            filteredLogs.map((log) => <ActivityItem key={log.id} log={log} />)
           )}
         </div>
       </div>

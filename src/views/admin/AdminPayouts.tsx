@@ -29,10 +29,25 @@ import { showSuccess, showWarning } from "@/lib/admin-toast";
 
 // ─── Status Config ──────────────────────────────────────────────────────
 
-const payoutStatusConfig: Record<string, { label: string; icon: React.ElementType; className: string }> = {
-  pending: { label: "Pending", icon: Clock, className: "bg-amber-50 text-amber-700 border-amber-200" },
-  processing: { label: "Processing", icon: Loader2, className: "bg-blue-50 text-blue-700 border-blue-200" },
-  paid: { label: "Paid", icon: CheckCircle2, className: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+const payoutStatusConfig: Record<
+  string,
+  { label: string; icon: React.ElementType; className: string }
+> = {
+  pending: {
+    label: "Pending",
+    icon: Clock,
+    className: "bg-amber-50 text-amber-700 border-amber-200",
+  },
+  processing: {
+    label: "Processing",
+    icon: Loader2,
+    className: "bg-blue-50 text-blue-700 border-blue-200",
+  },
+  paid: {
+    label: "Paid",
+    icon: CheckCircle2,
+    className: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  },
   failed: { label: "Failed", icon: XCircle, className: "bg-rose-50 text-rose-700 border-rose-200" },
 };
 
@@ -65,7 +80,13 @@ function PayoutCard({
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
               <h4 className="font-bold text-foreground truncate">{payout.hostName}</h4>
-              <Badge variant="outline" className={cn("rounded-full text-[8px] font-bold uppercase tracking-wider px-2 py-0.5", cfg.className)}>
+              <Badge
+                variant="outline"
+                className={cn(
+                  "rounded-full text-[8px] font-bold uppercase tracking-wider px-2 py-0.5",
+                  cfg.className,
+                )}
+              >
                 <StatusIcon className="h-2.5 w-2.5 mr-0.5" />
                 {cfg.label}
               </Badge>
@@ -83,20 +104,39 @@ function PayoutCard({
         <div className="text-right shrink-0">
           <p className="text-sm font-bold text-foreground">K{payout.netAmount.toLocaleString()}</p>
           <p className="text-[10px] text-muted-foreground">
-            <span className="text-emerald-600 font-semibold">K{payout.amount.toLocaleString()}</span> gross
+            <span className="text-emerald-600 font-semibold">
+              K{payout.amount.toLocaleString()}
+            </span>{" "}
+            gross
           </p>
         </div>
       </div>
 
       {/* Commission Detail */}
       <div className="mt-3 flex items-center gap-3 text-xs text-muted-foreground">
-        <span className="font-medium">Commission: <span className="text-foreground font-semibold">K{payout.commission.toLocaleString()}</span></span>
+        <span className="font-medium">
+          Commission:{" "}
+          <span className="text-foreground font-semibold">
+            K{payout.commission.toLocaleString()}
+          </span>
+        </span>
         <span className="text-muted-foreground/30">·</span>
-        <span>Net: <span className="text-foreground font-semibold">K{payout.netAmount.toLocaleString()}</span></span>
+        <span>
+          Net:{" "}
+          <span className="text-foreground font-semibold">
+            K{payout.netAmount.toLocaleString()}
+          </span>
+        </span>
         {payout.processedAt && (
           <>
             <span className="text-muted-foreground/30">·</span>
-            <span>Processed {new Date(payout.processedAt).toLocaleDateString("en-ZM", { month: "short", day: "numeric" })}</span>
+            <span>
+              Processed{" "}
+              {new Date(payout.processedAt).toLocaleDateString("en-ZM", {
+                month: "short",
+                day: "numeric",
+              })}
+            </span>
           </>
         )}
       </div>
@@ -108,11 +148,19 @@ function PayoutCard({
             size="sm"
             className="h-8 rounded-lg text-xs font-semibold"
             onClick={() =>
-              withLoading(setLoading, setLoadingMessage, async () => {
-                await new Promise((r) => setTimeout(r, 1000));
-                onProcess(payout.id);
-                showSuccess("Payout processed", `K${payout.netAmount.toLocaleString()} has been sent to ${payout.hostName}.`);
-              }, "Processing payout...")
+              withLoading(
+                setLoading,
+                setLoadingMessage,
+                async () => {
+                  await new Promise((r) => setTimeout(r, 1000));
+                  onProcess(payout.id);
+                  showSuccess(
+                    "Payout processed",
+                    `K${payout.netAmount.toLocaleString()} has been sent to ${payout.hostName}.`,
+                  );
+                },
+                "Processing payout...",
+              )
             }
           >
             <Banknote className="h-3.5 w-3.5 mr-1" /> Process Payout
@@ -126,11 +174,19 @@ function PayoutCard({
             size="sm"
             className="h-8 rounded-lg text-xs font-semibold"
             onClick={() =>
-              withLoading(setLoading, setLoadingMessage, async () => {
-                await new Promise((r) => setTimeout(r, 1000));
-                onProcess(payout.id);
-                showSuccess("Payout retried", `K${payout.netAmount.toLocaleString()} payout to ${payout.hostName} has been retried.`);
-              }, "Retrying payout...")
+              withLoading(
+                setLoading,
+                setLoadingMessage,
+                async () => {
+                  await new Promise((r) => setTimeout(r, 1000));
+                  onProcess(payout.id);
+                  showSuccess(
+                    "Payout retried",
+                    `K${payout.netAmount.toLocaleString()} payout to ${payout.hostName} has been retried.`,
+                  );
+                },
+                "Retrying payout...",
+              )
             }
           >
             <Banknote className="h-3.5 w-3.5 mr-1" /> Retry Payout
@@ -148,17 +204,22 @@ export function AdminPayouts() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
-  const stats = useMemo(() => ({
-    total: payouts.length,
-    totalGross: payouts.reduce((s, p) => s + p.amount, 0),
-    totalCommission: payouts.reduce((s, p) => s + p.commission, 0),
-    totalNet: payouts.reduce((s, p) => s + p.netAmount, 0),
-    pending: payouts.filter((p) => p.status === "pending").length,
-    processing: payouts.filter((p) => p.status === "processing").length,
-    paid: payouts.filter((p) => p.status === "paid").length,
-    failed: payouts.filter((p) => p.status === "failed").length,
-    pendingAmount: payouts.filter((p) => p.status === "pending" || p.status === "processing").reduce((s, p) => s + p.netAmount, 0),
-  }), [payouts]);
+  const stats = useMemo(
+    () => ({
+      total: payouts.length,
+      totalGross: payouts.reduce((s, p) => s + p.amount, 0),
+      totalCommission: payouts.reduce((s, p) => s + p.commission, 0),
+      totalNet: payouts.reduce((s, p) => s + p.netAmount, 0),
+      pending: payouts.filter((p) => p.status === "pending").length,
+      processing: payouts.filter((p) => p.status === "processing").length,
+      paid: payouts.filter((p) => p.status === "paid").length,
+      failed: payouts.filter((p) => p.status === "failed").length,
+      pendingAmount: payouts
+        .filter((p) => p.status === "pending" || p.status === "processing")
+        .reduce((s, p) => s + p.netAmount, 0),
+    }),
+    [payouts],
+  );
 
   const filteredPayouts = useMemo(() => {
     return payouts.filter((p) => {
@@ -175,9 +236,7 @@ export function AdminPayouts() {
   const handleProcess = (id: string) => {
     setPayouts((prev) =>
       prev.map((p) =>
-        p.id === id
-          ? { ...p, status: "paid" as const, processedAt: new Date().toISOString() }
-          : p,
+        p.id === id ? { ...p, status: "paid" as const, processedAt: new Date().toISOString() } : p,
       ),
     );
   };
@@ -190,13 +249,18 @@ export function AdminPayouts() {
           <div className="mx-auto max-w-6xl px-4 md:px-6 pt-6 md:pt-10">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Payout Management</h1>
+                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
+                  Payout Management
+                </h1>
                 <p className="text-sm text-muted-foreground mt-1">
                   K{stats.totalGross.toLocaleString()} total payouts processed
                 </p>
               </div>
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <span className="text-amber-600 font-semibold">K{(stats.pendingAmount / 1000).toFixed(0)}k</span> pending payout
+                <span className="text-amber-600 font-semibold">
+                  K{(stats.pendingAmount / 1000).toFixed(0)}k
+                </span>{" "}
+                pending payout
               </div>
             </div>
           </div>
@@ -233,20 +297,32 @@ export function AdminPayouts() {
         <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
-              <p className="text-2xl font-bold text-foreground">K{(stats.totalGross / 1000).toFixed(0)}k</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Gross Payouts</p>
+              <p className="text-2xl font-bold text-foreground">
+                K{(stats.totalGross / 1000).toFixed(0)}k
+              </p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Gross Payouts
+              </p>
             </div>
             <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
-              <p className="text-2xl font-bold text-emerald-600">K{(stats.totalCommission / 1000).toFixed(0)}k</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Commission Earned</p>
+              <p className="text-2xl font-bold text-emerald-600">
+                K{(stats.totalCommission / 1000).toFixed(0)}k
+              </p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Commission Earned
+              </p>
             </div>
             <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
               <p className="text-2xl font-bold text-blue-600">{stats.paid}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Processed</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Processed
+              </p>
             </div>
             <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
               <p className="text-2xl font-bold text-amber-600">{stats.pending}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Pending</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Pending
+              </p>
             </div>
           </div>
         </div>
@@ -266,18 +342,17 @@ export function AdminPayouts() {
                 variant="outline"
                 size="sm"
                 className="mt-6 rounded-full text-xs font-semibold"
-                onClick={() => { setSearch(""); setStatusFilter("all"); }}
+                onClick={() => {
+                  setSearch("");
+                  setStatusFilter("all");
+                }}
               >
                 Clear Filters
               </Button>
             </div>
           ) : (
             filteredPayouts.map((payout) => (
-              <PayoutCard
-                key={payout.id}
-                payout={payout}
-                onProcess={handleProcess}
-              />
+              <PayoutCard key={payout.id} payout={payout} onProcess={handleProcess} />
             ))
           )}
         </div>

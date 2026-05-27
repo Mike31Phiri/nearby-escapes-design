@@ -3,7 +3,6 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useMemo, useEffect, Suspense } from "react";
 import { SlidersHorizontal, MapPin, Search, X, RotateCcw } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -331,8 +330,6 @@ function SearchContent() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background font-sans">
-      <Navbar />
-
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
         {/* Dynamic header / Title */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">

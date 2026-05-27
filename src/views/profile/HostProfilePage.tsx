@@ -34,26 +34,25 @@ import {
   ChevronRight,
   AlertTriangle,
 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
-import {
-  mockHostProfile,
-  mockEarnings,
-} from "@/lib/mock-profile-data";
+import { mockHostProfile, mockEarnings } from "@/lib/mock-profile-data";
 import type { HostListing } from "@/lib/mock-profile-data";
 import { toast } from "sonner";
 
 type HostTab = "listings" | "bookings" | "reviews" | "availability" | "analytics" | "settings";
 
 const statusStyles: Record<string, string> = {
-  active: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800",
-  pending: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800",
-  draft: "bg-zinc-100 text-zinc-600 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700",
+  active:
+    "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800",
+  pending:
+    "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800",
+  draft:
+    "bg-zinc-100 text-zinc-600 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700",
 };
 
 const typeIcons: Record<string, React.ElementType> = {
@@ -90,10 +89,12 @@ function StatCard({
           {label}
         </p>
         {trend && (
-          <p className={cn(
-            "text-[10px] font-bold mt-0.5 flex items-center gap-0.5",
-            trend.positive ? "text-emerald-600" : "text-destructive"
-          )}>
+          <p
+            className={cn(
+              "text-[10px] font-bold mt-0.5 flex items-center gap-0.5",
+              trend.positive ? "text-emerald-600" : "text-destructive",
+            )}
+          >
             <TrendingUp className={cn("h-3 w-3", !trend.positive && "rotate-180")} />
             {trend.value} from last month
           </p>
@@ -136,7 +137,10 @@ function ListingCard({ listing }: { listing: HostListing }) {
           </div>
           <Badge
             variant="outline"
-            className={cn("rounded-full text-[9px] font-bold uppercase tracking-wider px-2.5 py-0.5 shrink-0 border", statusClass)}
+            className={cn(
+              "rounded-full text-[9px] font-bold uppercase tracking-wider px-2.5 py-0.5 shrink-0 border",
+              statusClass,
+            )}
           >
             {listing.status}
           </Badge>
@@ -153,7 +157,9 @@ function ListingCard({ listing }: { listing: HostListing }) {
                   {listing.rating}
                 </span>
               )}
-              <span className="font-semibold text-emerald-600">${listing.revenue.toLocaleString()} earned</span>
+              <span className="font-semibold text-emerald-600">
+                ${listing.revenue.toLocaleString()} earned
+              </span>
             </>
           )}
         </div>
@@ -168,12 +174,28 @@ function ListingCard({ listing }: { listing: HostListing }) {
   );
 }
 
-function BookingItem({ booking }: { booking: typeof mockBookings[0] }) {
+function BookingItem({ booking }: { booking: (typeof mockBookings)[0] }) {
   const statusConfig = {
-    confirmed: { label: "Confirmed", icon: CheckCircle2, className: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-    pending: { label: "Pending", icon: Clock, className: "bg-amber-50 text-amber-700 border-amber-200" },
-    cancelled: { label: "Cancelled", icon: XCircle, className: "bg-rose-50 text-rose-700 border-rose-200" },
-    completed: { label: "Completed", icon: CheckCircle2, className: "bg-blue-50 text-blue-700 border-blue-200" },
+    confirmed: {
+      label: "Confirmed",
+      icon: CheckCircle2,
+      className: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    },
+    pending: {
+      label: "Pending",
+      icon: Clock,
+      className: "bg-amber-50 text-amber-700 border-amber-200",
+    },
+    cancelled: {
+      label: "Cancelled",
+      icon: XCircle,
+      className: "bg-rose-50 text-rose-700 border-rose-200",
+    },
+    completed: {
+      label: "Completed",
+      icon: CheckCircle2,
+      className: "bg-blue-50 text-blue-700 border-blue-200",
+    },
   };
 
   const cfg = statusConfig[booking.status];
@@ -182,18 +204,29 @@ function BookingItem({ booking }: { booking: typeof mockBookings[0] }) {
     <div className="flex items-center justify-between rounded-xl border border-border/50 bg-card p-4 shadow-sm transition-all duration-200 hover:shadow-md">
       <div className="flex items-center gap-3 min-w-0 flex-1">
         <div className="h-10 w-10 shrink-0 rounded-lg overflow-hidden bg-muted">
-          <img src={booking.image} alt={booking.listingName} className="h-full w-full object-cover" />
+          <img
+            src={booking.image}
+            alt={booking.listingName}
+            className="h-full w-full object-cover"
+          />
         </div>
         <div className="min-w-0">
           <p className="text-sm font-bold text-foreground truncate">{booking.listingName}</p>
           <p className="text-xs text-muted-foreground">
-            {booking.guestName} · {new Date(booking.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+            {booking.guestName} ·{" "}
+            {new Date(booking.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
           </p>
         </div>
       </div>
       <div className="flex items-center gap-4 shrink-0">
         <span className="text-sm font-semibold text-foreground">${booking.price}</span>
-        <Badge variant="outline" className={cn("rounded-full text-[9px] font-bold uppercase tracking-wider", cfg.className)}>
+        <Badge
+          variant="outline"
+          className={cn(
+            "rounded-full text-[9px] font-bold uppercase tracking-wider",
+            cfg.className,
+          )}
+        >
           {cfg.label}
         </Badge>
       </div>
@@ -201,7 +234,7 @@ function BookingItem({ booking }: { booking: typeof mockBookings[0] }) {
   );
 }
 
-function ReviewItem({ review }: { review: typeof mockHostReviews[0] }) {
+function ReviewItem({ review }: { review: (typeof mockHostReviews)[0] }) {
   return (
     <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm">
       <div className="flex items-start justify-between mb-3">
@@ -220,7 +253,7 @@ function ReviewItem({ review }: { review: typeof mockHostReviews[0] }) {
               key={i}
               className={cn(
                 "h-3.5 w-3.5",
-                i < review.rating ? "fill-amber-400 text-amber-400" : "text-muted-foreground/20"
+                i < review.rating ? "fill-amber-400 text-amber-400" : "text-muted-foreground/20",
               )}
             />
           ))}
@@ -228,7 +261,11 @@ function ReviewItem({ review }: { review: typeof mockHostReviews[0] }) {
       </div>
       <p className="text-sm text-muted-foreground leading-relaxed">{review.text}</p>
       <p className="text-[10px] text-muted-foreground/60 mt-2 font-medium">
-        {new Date(review.date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+        {new Date(review.date).toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        })}
       </p>
     </div>
   );
@@ -236,19 +273,95 @@ function ReviewItem({ review }: { review: typeof mockHostReviews[0] }) {
 
 // ----- MOCK HOST DATA -----
 const mockBookings = [
-  { id: "b1", listingName: "Luxury Safari Lodge", guestName: "Sarah Phiri", date: "2025-06-15", price: 450, status: "confirmed" as const, image: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=200&q=60" },
-  { id: "b2", listingName: "Kafue River Lodge", guestName: "James Banda", date: "2025-06-12", price: 380, status: "pending" as const, image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=200&q=60" },
-  { id: "b3", listingName: "Victoria Falls Helicopter Tour", guestName: "Emily Zulu", date: "2025-06-10", price: 180, status: "completed" as const, image: "https://images.unsplash.com/photo-1534234828563-02511c750b53?w=200&q=60" },
-  { id: "b4", listingName: "Luxury Safari Lodge", guestName: "Michael Tembo", date: "2025-06-08", price: 450, status: "completed" as const, image: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=200&q=60" },
-  { id: "b5", listingName: "Bangweulu Wetlands Camp", guestName: "Grace Mwale", date: "2025-06-05", price: 420, status: "cancelled" as const, image: "https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=200&q=60" },
-  { id: "b6", listingName: "Kafue Game Drive", guestName: "David Mulenga", date: "2025-06-03", price: 120, status: "completed" as const, image: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=200&q=60" },
+  {
+    id: "b1",
+    listingName: "Luxury Safari Lodge",
+    guestName: "Sarah Phiri",
+    date: "2025-06-15",
+    price: 450,
+    status: "confirmed" as const,
+    image: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=200&q=60",
+  },
+  {
+    id: "b2",
+    listingName: "Kafue River Lodge",
+    guestName: "James Banda",
+    date: "2025-06-12",
+    price: 380,
+    status: "pending" as const,
+    image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=200&q=60",
+  },
+  {
+    id: "b3",
+    listingName: "Victoria Falls Helicopter Tour",
+    guestName: "Emily Zulu",
+    date: "2025-06-10",
+    price: 180,
+    status: "completed" as const,
+    image: "https://images.unsplash.com/photo-1534234828563-02511c750b53?w=200&q=60",
+  },
+  {
+    id: "b4",
+    listingName: "Luxury Safari Lodge",
+    guestName: "Michael Tembo",
+    date: "2025-06-08",
+    price: 450,
+    status: "completed" as const,
+    image: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=200&q=60",
+  },
+  {
+    id: "b5",
+    listingName: "Bangweulu Wetlands Camp",
+    guestName: "Grace Mwale",
+    date: "2025-06-05",
+    price: 420,
+    status: "cancelled" as const,
+    image: "https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=200&q=60",
+  },
+  {
+    id: "b6",
+    listingName: "Kafue Game Drive",
+    guestName: "David Mulenga",
+    date: "2025-06-03",
+    price: 120,
+    status: "completed" as const,
+    image: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=200&q=60",
+  },
 ];
 
 const mockHostReviews = [
-  { id: "hr1", listingName: "Luxury Safari Lodge", guestName: "Sarah Phiri", rating: 5, date: "2025-06-10", text: "An absolutely stunning property! The attention to detail was incredible. Every need was anticipated, and the staff were exceptional. We'll definitely be back." },
-  { id: "hr2", listingName: "Kafue River Lodge", guestName: "James Banda", rating: 4, date: "2025-06-08", text: "Beautiful location right on the river. The rooms were comfortable and the food was great. Only minor issue was the WiFi connectivity in the rooms." },
-  { id: "hr3", listingName: "Victoria Falls Helicopter Tour", guestName: "Emily Zulu", rating: 5, date: "2025-06-05", text: "Worth every kwacha! The views of Victoria Falls from the helicopter were absolutely breathtaking. Our pilot was knowledgeable and made the experience unforgettable." },
-  { id: "hr4", listingName: "Kafue Game Drive", guestName: "David Mulenga", rating: 5, date: "2025-06-02", text: "Moses was the best guide we've ever had! He spotted a leopard within minutes and knew exactly where to find the lion pride. An incredible day in the bush." },
+  {
+    id: "hr1",
+    listingName: "Luxury Safari Lodge",
+    guestName: "Sarah Phiri",
+    rating: 5,
+    date: "2025-06-10",
+    text: "An absolutely stunning property! The attention to detail was incredible. Every need was anticipated, and the staff were exceptional. We'll definitely be back.",
+  },
+  {
+    id: "hr2",
+    listingName: "Kafue River Lodge",
+    guestName: "James Banda",
+    rating: 4,
+    date: "2025-06-08",
+    text: "Beautiful location right on the river. The rooms were comfortable and the food was great. Only minor issue was the WiFi connectivity in the rooms.",
+  },
+  {
+    id: "hr3",
+    listingName: "Victoria Falls Helicopter Tour",
+    guestName: "Emily Zulu",
+    rating: 5,
+    date: "2025-06-05",
+    text: "Worth every kwacha! The views of Victoria Falls from the helicopter were absolutely breathtaking. Our pilot was knowledgeable and made the experience unforgettable.",
+  },
+  {
+    id: "hr4",
+    listingName: "Kafue Game Drive",
+    guestName: "David Mulenga",
+    rating: 5,
+    date: "2025-06-02",
+    text: "Moses was the best guide we've ever had! He spotted a leopard within minutes and knew exactly where to find the lion pride. An incredible day in the bush.",
+  },
 ];
 
 export function HostProfilePage() {
@@ -264,12 +377,17 @@ export function HostProfilePage() {
 
   const totalRevenue = host.listings.reduce((sum, l) => sum + l.revenue, 0);
   const totalBookings = host.listings.reduce((sum, l) => sum + l.bookings, 0);
-  const avgRating = host.listings.filter((l) => l.rating > 0).reduce((sum, l, _i, arr) => sum + l.rating / arr.length, 0);
+  const avgRating = host.listings
+    .filter((l) => l.rating > 0)
+    .reduce((sum, l, _i, arr) => sum + l.rating / arr.length, 0);
 
   const currentMonthEarnings = mockEarnings[mockEarnings.length - 1];
   const prevMonthEarnings = mockEarnings[mockEarnings.length - 2];
   const earningsTrend = prevMonthEarnings
-    ? ((currentMonthEarnings.amount - prevMonthEarnings.amount) / prevMonthEarnings.amount * 100).toFixed(1)
+    ? (
+        ((currentMonthEarnings.amount - prevMonthEarnings.amount) / prevMonthEarnings.amount) *
+        100
+      ).toFixed(1)
     : "0";
 
   const tabs: { id: HostTab; label: string; icon: React.ElementType; count?: number }[] = [
@@ -283,8 +401,6 @@ export function HostProfilePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-      <Navbar />
-
       <main className="flex-1">
         {/* Profile Header */}
         <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-12">
@@ -293,11 +409,7 @@ export function HostProfilePage() {
               {/* Avatar */}
               <div className="relative shrink-0">
                 <div className="h-24 w-24 md:h-28 md:w-28 rounded-full border-4 border-white shadow-xl overflow-hidden bg-primary/5">
-                  <img
-                    src={host.avatar}
-                    alt={host.name}
-                    className="h-full w-full object-cover"
-                  />
+                  <img src={host.avatar} alt={host.name} className="h-full w-full object-cover" />
                 </div>
                 <div className="absolute -bottom-1 -right-1 h-7 w-7 rounded-full bg-primary border-2 border-white flex items-center justify-center">
                   <Award className="h-3.5 w-3.5 text-white" />
@@ -311,7 +423,10 @@ export function HostProfilePage() {
                     {host.name}
                   </h1>
                   <div className="flex items-center justify-center md:justify-start gap-2">
-                    <Badge variant="secondary" className="rounded-full text-[10px] font-bold uppercase tracking-wider px-3 py-1">
+                    <Badge
+                      variant="secondary"
+                      className="rounded-full text-[10px] font-bold uppercase tracking-wider px-3 py-1"
+                    >
                       <Award className="h-3 w-3 mr-1" />
                       Superhost
                     </Badge>
@@ -358,13 +473,20 @@ export function HostProfilePage() {
 
               {/* Quick Actions (desktop) */}
               <div className="hidden md:flex flex-col gap-2 shrink-0">
-                <Button className="rounded-full font-black uppercase tracking-widest text-xs" asChild>
+                <Button
+                  className="rounded-full font-black uppercase tracking-widest text-xs"
+                  asChild
+                >
                   <Link href="/host/create">
                     <Plus className="h-4 w-4 mr-1.5" />
                     New Listing
                   </Link>
                 </Button>
-                <Button variant="outline" size="sm" className="rounded-full font-black uppercase tracking-widest text-[10px] border-border/60">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full font-black uppercase tracking-widest text-[10px] border-border/60"
+                >
                   <Edit3 className="h-3.5 w-3.5 mr-1" />
                   Edit Profile
                 </Button>
@@ -376,7 +498,11 @@ export function HostProfilePage() {
         {/* Stats Row */}
         <div className="mx-auto max-w-5xl px-4 md:px-6 -mt-6 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            <StatCard icon={Building2} label="Total Listings" value={String(host.listings.length)} />
+            <StatCard
+              icon={Building2}
+              label="Total Listings"
+              value={String(host.listings.length)}
+            />
             <StatCard icon={Users} label="Total Bookings" value={String(totalBookings)} />
             <StatCard
               icon={DollarSign}
@@ -411,7 +537,9 @@ export function HostProfilePage() {
                       : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30",
                   )}
                 >
-                  <Icon className={cn("h-4 w-4", isActive ? "text-primary" : "text-muted-foreground")} />
+                  <Icon
+                    className={cn("h-4 w-4", isActive ? "text-primary" : "text-muted-foreground")}
+                  />
                   {label}
                   {count !== undefined && (
                     <span
@@ -440,8 +568,12 @@ export function HostProfilePage() {
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                        <h3 className="text-sm font-black uppercase tracking-widest text-foreground">Active</h3>
-                        <span className="text-xs text-muted-foreground">({activeListings.length})</span>
+                        <h3 className="text-sm font-black uppercase tracking-widest text-foreground">
+                          Active
+                        </h3>
+                        <span className="text-xs text-muted-foreground">
+                          ({activeListings.length})
+                        </span>
                       </div>
                     </div>
                     <div className="space-y-3">
@@ -457,8 +589,12 @@ export function HostProfilePage() {
                   <div>
                     <div className="flex items-center gap-2 mb-4">
                       <Clock className="h-4 w-4 text-muted-foreground" />
-                      <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground">Drafts</h3>
-                      <span className="text-xs text-muted-foreground">({draftListings.length})</span>
+                      <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground">
+                        Drafts
+                      </h3>
+                      <span className="text-xs text-muted-foreground">
+                        ({draftListings.length})
+                      </span>
                     </div>
                     <div className="space-y-3 opacity-70">
                       {draftListings.map((listing) => (
@@ -477,7 +613,10 @@ export function HostProfilePage() {
                     <p className="text-sm text-muted-foreground mt-1 max-w-sm">
                       Create your first listing and start sharing Zambia with travelers.
                     </p>
-                    <Button className="mt-6 rounded-full font-black uppercase tracking-widest text-xs" asChild>
+                    <Button
+                      className="mt-6 rounded-full font-black uppercase tracking-widest text-xs"
+                      asChild
+                    >
                       <Link href="/host/create">
                         <Plus className="h-4 w-4 mr-1.5" />
                         Create Listing
@@ -518,7 +657,10 @@ export function HostProfilePage() {
                     <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0" />
                     <p className="text-sm text-amber-800 dark:text-amber-200 font-medium">
                       {mockBookings.filter((b) => b.status === "pending").length} booking request
-                      {mockBookings.filter((b) => b.status === "pending").length > 1 ? "s" : ""} awaiting your response.
+                      {mockBookings.filter((b) => b.status === "pending").length > 1
+                        ? "s"
+                        : ""}{" "}
+                      awaiting your response.
                     </p>
                     <Link
                       href="/host/bookings"
@@ -578,27 +720,43 @@ export function HostProfilePage() {
                 {/* Revenue Summary */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">This Month</p>
-                    <p className="text-3xl font-bold text-foreground">${currentMonthEarnings.amount.toLocaleString()}</p>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                      This Month
+                    </p>
+                    <p className="text-3xl font-bold text-foreground">
+                      ${currentMonthEarnings.amount.toLocaleString()}
+                    </p>
                     <p className="text-xs text-emerald-600 font-semibold mt-1 flex items-center gap-0.5">
                       <TrendingUp className="h-3 w-3" />
                       {earningsTrend}% vs last month
                     </p>
                   </div>
                   <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Bookings</p>
-                    <p className="text-3xl font-bold text-foreground">{currentMonthEarnings.bookings}</p>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                      Bookings
+                    </p>
+                    <p className="text-3xl font-bold text-foreground">
+                      {currentMonthEarnings.bookings}
+                    </p>
                     <p className="text-xs text-emerald-600 font-semibold mt-1 flex items-center gap-0.5">
                       <TrendingUp className="h-3 w-3" />
-                      {currentMonthEarnings.bookings - prevMonthEarnings.bookings > 0 ? "+" : ""}{currentMonthEarnings.bookings - prevMonthEarnings.bookings} vs last month
+                      {currentMonthEarnings.bookings - prevMonthEarnings.bookings > 0 ? "+" : ""}
+                      {currentMonthEarnings.bookings - prevMonthEarnings.bookings} vs last month
                     </p>
                   </div>
                   <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Avg. Per Booking</p>
-                    <p className="text-3xl font-bold text-foreground">
-                      ${currentMonthEarnings.bookings > 0 ? Math.round(currentMonthEarnings.amount / currentMonthEarnings.bookings) : 0}
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                      Avg. Per Booking
                     </p>
-                    <p className="text-xs text-muted-foreground font-medium mt-1">Average order value</p>
+                    <p className="text-3xl font-bold text-foreground">
+                      $
+                      {currentMonthEarnings.bookings > 0
+                        ? Math.round(currentMonthEarnings.amount / currentMonthEarnings.bookings)
+                        : 0}
+                    </p>
+                    <p className="text-xs text-muted-foreground font-medium mt-1">
+                      Average order value
+                    </p>
                   </div>
                 </div>
 
@@ -613,7 +771,10 @@ export function HostProfilePage() {
                         const maxAmount = Math.max(...mockEarnings.map((e) => e.amount));
                         const height = (m.amount / maxAmount) * 100;
                         return (
-                          <div key={m.month} className="flex-1 flex flex-col items-center gap-1 group">
+                          <div
+                            key={m.month}
+                            className="flex-1 flex flex-col items-center gap-1 group"
+                          >
                             <span className="text-[9px] font-bold text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
                               ${m.amount / 1000}k
                             </span>
@@ -623,7 +784,9 @@ export function HostProfilePage() {
                             >
                               <div className="absolute inset-0 rounded-md bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                             </div>
-                            <span className="text-[9px] font-semibold text-muted-foreground">{m.month}</span>
+                            <span className="text-[9px] font-semibold text-muted-foreground">
+                              {m.month}
+                            </span>
                           </div>
                         );
                       })}
@@ -650,15 +813,25 @@ export function HostProfilePage() {
                             {idx + 1}
                           </span>
                           <div className="h-12 w-12 shrink-0 rounded-lg overflow-hidden bg-muted">
-                            <img src={listing.image} alt={listing.name} className="h-full w-full object-cover" />
+                            <img
+                              src={listing.image}
+                              alt={listing.name}
+                              className="h-full w-full object-cover"
+                            />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-bold text-foreground truncate">{listing.name}</p>
+                            <p className="text-sm font-bold text-foreground truncate">
+                              {listing.name}
+                            </p>
                             <p className="text-xs text-muted-foreground">{listing.location}</p>
                           </div>
                           <div className="text-right shrink-0">
-                            <p className="text-sm font-bold text-foreground">{listing.bookings} bookings</p>
-                            <p className="text-xs font-semibold text-emerald-600">${listing.revenue.toLocaleString()}</p>
+                            <p className="text-sm font-bold text-foreground">
+                              {listing.bookings} bookings
+                            </p>
+                            <p className="text-xs font-semibold text-emerald-600">
+                              ${listing.revenue.toLocaleString()}
+                            </p>
                           </div>
                         </div>
                       ))}
@@ -733,7 +906,10 @@ export function HostProfilePage() {
                       <CheckCircle2 className="h-4 w-4 mr-1.5" />
                       Save Changes
                     </Button>
-                    <Button variant="outline" className="rounded-full font-semibold text-xs border-border/60">
+                    <Button
+                      variant="outline"
+                      className="rounded-full font-semibold text-xs border-border/60"
+                    >
                       Cancel
                     </Button>
                   </div>
@@ -752,9 +928,15 @@ export function HostProfilePage() {
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-bold text-foreground">Bank Transfer</p>
-                      <p className="text-xs text-muted-foreground">Zambia National Bank · **** 4832</p>
+                      <p className="text-xs text-muted-foreground">
+                        Zambia National Bank · **** 4832
+                      </p>
                     </div>
-                    <Button variant="ghost" size="sm" className="rounded-full text-xs font-semibold">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="rounded-full text-xs font-semibold"
+                    >
                       Update
                     </Button>
                   </div>
@@ -769,9 +951,21 @@ export function HostProfilePage() {
                   </h3>
                   <div className="space-y-3">
                     {[
-                      { icon: Bell, label: "New Bookings", desc: "Get notified when guests book your listings" },
-                      { icon: MessageSquare, label: "Messages", desc: "Receive guest inquiries and messages" },
-                      { icon: Star, label: "New Reviews", desc: "Be notified when guests leave reviews" },
+                      {
+                        icon: Bell,
+                        label: "New Bookings",
+                        desc: "Get notified when guests book your listings",
+                      },
+                      {
+                        icon: MessageSquare,
+                        label: "Messages",
+                        desc: "Receive guest inquiries and messages",
+                      },
+                      {
+                        icon: Star,
+                        label: "New Reviews",
+                        desc: "Be notified when guests leave reviews",
+                      },
                     ].map(({ icon: Icon, label, desc }) => (
                       <label
                         key={label}

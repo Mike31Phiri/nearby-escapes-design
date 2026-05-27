@@ -19,7 +19,6 @@ import {
   Ban,
   Star,
 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -316,7 +315,12 @@ function BookingSection({
       ) : (
         <div className="space-y-3">
           {bookings.map((booking) => (
-            <BookingCard key={booking.bookingRef} booking={booking} onCancel={onCancel} onReview={onReview} />
+            <BookingCard
+              key={booking.bookingRef}
+              booking={booking}
+              onCancel={onCancel}
+              onReview={onReview}
+            />
           ))}
         </div>
       )}
@@ -353,10 +357,7 @@ export function TripsPage() {
     [bookings, now],
   );
 
-  const cancelled = useMemo(
-    () => bookings.filter((b) => b.status === "cancelled"),
-    [bookings],
-  );
+  const cancelled = useMemo(() => bookings.filter((b) => b.status === "cancelled"), [bookings]);
 
   const handleCancel = useCallback(
     (bookingRef: string) => {
@@ -373,8 +374,6 @@ export function TripsPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-      <Navbar />
-
       <main className="flex-1">
         {/* Page Header */}
         <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-10">
@@ -389,9 +388,7 @@ export function TripsPage() {
                     <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
                       My Trips
                     </h1>
-                    <p className="text-sm text-muted-foreground">
-                      All your bookings in one place
-                    </p>
+                    <p className="text-sm text-muted-foreground">All your bookings in one place</p>
                   </div>
                 </div>
               </div>
@@ -413,10 +410,30 @@ export function TripsPage() {
         {/* Stats Row */}
         <div className="mx-auto max-w-4xl px-4 md:px-6 -mt-6 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            <StatCard icon={CalendarDays} label="Total Bookings" value={bookings.length} sub="All time" />
-            <StatCard icon={Clock} label="Upcoming" value={upcoming.length} sub={`${past.length} completed`} />
-            <StatCard icon={CreditCard} label="Total Spent" value={`K${totalSpent.toLocaleString()}`} sub="Across all trips" />
-            <StatCard icon={Compass} label="Destinations" value={new Set(bookings.map((b) => b.location)).size} sub="Unique places" />
+            <StatCard
+              icon={CalendarDays}
+              label="Total Bookings"
+              value={bookings.length}
+              sub="All time"
+            />
+            <StatCard
+              icon={Clock}
+              label="Upcoming"
+              value={upcoming.length}
+              sub={`${past.length} completed`}
+            />
+            <StatCard
+              icon={CreditCard}
+              label="Total Spent"
+              value={`K${totalSpent.toLocaleString()}`}
+              sub="Across all trips"
+            />
+            <StatCard
+              icon={Compass}
+              label="Destinations"
+              value={new Set(bookings.map((b) => b.location)).size}
+              sub="Unique places"
+            />
           </div>
         </div>
 

@@ -41,19 +41,14 @@ export const useReviewStore = create<ReviewStore>()(
           ],
         })),
 
-      getReviewsByListing: (listingId) =>
-        get().reviews.filter((r) => r.listingId === listingId),
+      getReviewsByListing: (listingId) => get().reviews.filter((r) => r.listingId === listingId),
 
-      getReviewsByGuest: (guestName) =>
-        get().reviews.filter((r) => r.guestName === guestName),
+      getReviewsByGuest: (guestName) => get().reviews.filter((r) => r.guestName === guestName),
 
-      hasReviewedBooking: (bookingRef) =>
-        get().reviews.some((r) => r.bookingRef === bookingRef),
+      hasReviewedBooking: (bookingRef) => get().reviews.some((r) => r.bookingRef === bookingRef),
 
       hasReviewedListing: (listingId, guestName) =>
-        get().reviews.some(
-          (r) => r.listingId === listingId && r.guestName === guestName,
-        ),
+        get().reviews.some((r) => r.listingId === listingId && r.guestName === guestName),
     }),
     {
       name: "nearby-escapes-reviews",

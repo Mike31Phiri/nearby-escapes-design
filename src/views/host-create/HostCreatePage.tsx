@@ -52,7 +52,6 @@ import {
   Trash2,
   GripVertical,
 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -186,13 +185,7 @@ const LISTING_TYPE_CARDS: {
 
 // ─── Shared UI Components ───────────────────────────────────────────────
 
-function StepIndicator({
-  currentStep,
-  steps,
-}: {
-  currentStep: number;
-  steps: StepConfig[];
-}) {
+function StepIndicator({ currentStep, steps }: { currentStep: number; steps: StepConfig[] }) {
   const totalSteps = steps.length;
   return (
     <div className="w-full max-w-2xl mx-auto mb-10">
@@ -314,9 +307,7 @@ function ChipSelect<T extends string>({
             disabled={atMax}
             onClick={() =>
               onChange(
-                isSelected
-                  ? selected.filter((v) => v !== opt.value)
-                  : [...selected, opt.value],
+                isSelected ? selected.filter((v) => v !== opt.value) : [...selected, opt.value],
               )
             }
             className={cn(
@@ -428,20 +419,11 @@ function NearestAttractionInput({
   onChange: (attractions: NearestAttraction[]) => void;
 }) {
   const addAttraction = () => {
-    onChange([
-      ...attractions,
-      { name: "", distance: "", category: "landmark" },
-    ]);
+    onChange([...attractions, { name: "", distance: "", category: "landmark" }]);
   };
 
-  const updateAttraction = (
-    idx: number,
-    field: keyof NearestAttraction,
-    value: string,
-  ) => {
-    const next = attractions.map((a, i) =>
-      i === idx ? { ...a, [field]: value } : a,
-    );
+  const updateAttraction = (idx: number, field: keyof NearestAttraction, value: string) => {
+    const next = attractions.map((a, i) => (i === idx ? { ...a, [field]: value } : a));
     onChange(next);
   };
 
@@ -615,10 +597,7 @@ function ScheduleInput({
   return (
     <div className="space-y-4">
       <FormField label="Frequency">
-        <Select
-          value={schedule.frequency}
-          onValueChange={(v) => updateSched("frequency", v)}
-        >
+        <Select value={schedule.frequency} onValueChange={(v) => updateSched("frequency", v)}>
           <SelectTrigger className="h-11 rounded-xl border-border/60">
             <SelectValue />
           </SelectTrigger>
@@ -675,9 +654,7 @@ function ScheduleInput({
             variant="outline"
             size="sm"
             className="rounded-full text-xs font-semibold border-border/60"
-            onClick={() =>
-              updateSched("departureTimes", [...schedule.departureTimes, "12:00"])
-            }
+            onClick={() => updateSched("departureTimes", [...schedule.departureTimes, "12:00"])}
           >
             <Plus className="h-3.5 w-3.5 mr-1" />
             Add departure time
@@ -702,10 +679,7 @@ function ScheduleInput({
 
 type ValidationErrors = Record<string, string>;
 
-function validateStayStep(
-  step: number,
-  form: StayFormData,
-): ValidationErrors {
+function validateStayStep(step: number, form: StayFormData): ValidationErrors {
   const errs: ValidationErrors = {};
   switch (step) {
     case 0:
@@ -731,17 +705,13 @@ function validateStayStep(
     case 5:
       if (form.images.filter((u) => u.trim()).length === 0)
         errs.images = "At least one image required";
-      if (form.pricePerNight <= 0)
-        errs.pricePerNight = "Price is required";
+      if (form.pricePerNight <= 0) errs.pricePerNight = "Price is required";
       break;
   }
   return errs;
 }
 
-function validateTransportStep(
-  step: number,
-  form: TransportFormData,
-): ValidationErrors {
+function validateTransportStep(step: number, form: TransportFormData): ValidationErrors {
   const errs: ValidationErrors = {};
   switch (step) {
     case 0:
@@ -764,17 +734,15 @@ function validateTransportStep(
       if (!form.operatorContact.trim()) errs.operatorContact = "Contact required";
       break;
     case 4:
-      if (form.images.filter((u) => u.trim()).length === 0) errs.images = "At least one image required";
+      if (form.images.filter((u) => u.trim()).length === 0)
+        errs.images = "At least one image required";
       if (form.pricePerSeat <= 0) errs.pricePerSeat = "Price is required";
       break;
   }
   return errs;
 }
 
-function validateExperienceStep(
-  step: number,
-  form: ExperienceFormData,
-): ValidationErrors {
+function validateExperienceStep(step: number, form: ExperienceFormData): ValidationErrors {
   const errs: ValidationErrors = {};
   switch (step) {
     case 0:
@@ -793,17 +761,15 @@ function validateExperienceStep(
       if (form.timeSlots.length === 0) errs.timeSlots = "At least one time slot required";
       break;
     case 4:
-      if (form.images.filter((u) => u.trim()).length === 0) errs.images = "At least one image required";
+      if (form.images.filter((u) => u.trim()).length === 0)
+        errs.images = "At least one image required";
       if (form.pricePerPerson <= 0) errs.pricePerPerson = "Price is required";
       break;
   }
   return errs;
 }
 
-function validateGemStep(
-  step: number,
-  form: GemFormData,
-): ValidationErrors {
+function validateGemStep(step: number, form: GemFormData): ValidationErrors {
   const errs: ValidationErrors = {};
   switch (step) {
     case 0:
@@ -821,7 +787,8 @@ function validateGemStep(
       if (!form.recommendedDuration.trim()) errs.recommendedDuration = "Duration required";
       break;
     case 4:
-      if (form.images.filter((u) => u.trim()).length === 0) errs.images = "At least one image required";
+      if (form.images.filter((u) => u.trim()).length === 0)
+        errs.images = "At least one image required";
       break;
   }
   return errs;
@@ -846,15 +813,16 @@ export function HostCreatePage() {
 
   // ─── Derived ───────────────────────────────────────────────────────
 
-  const steps = listingType === "stay"
-    ? STAY_STEPS
-    : listingType === "transport"
-      ? TRANSPORT_STEPS
-      : listingType === "experience"
-        ? EXPERIENCE_STEPS
-        : listingType === "gem"
-          ? GEM_STEPS
-          : [];
+  const steps =
+    listingType === "stay"
+      ? STAY_STEPS
+      : listingType === "transport"
+        ? TRANSPORT_STEPS
+        : listingType === "experience"
+          ? EXPERIENCE_STEPS
+          : listingType === "gem"
+            ? GEM_STEPS
+            : [];
 
   const totalSteps = steps.length;
 
@@ -923,14 +891,22 @@ export function HostCreatePage() {
 
   const renderStayStep = () => {
     switch (step) {
-      case 0: return renderStayType();
-      case 1: return renderStayProperty();
-      case 2: return renderStayLocation();
-      case 3: return renderStayAmenities();
-      case 4: return renderStayRules();
-      case 5: return renderStayMedia();
-      case 6: return renderStayReview();
-      default: return null;
+      case 0:
+        return renderStayType();
+      case 1:
+        return renderStayProperty();
+      case 2:
+        return renderStayLocation();
+      case 3:
+        return renderStayAmenities();
+      case 4:
+        return renderStayRules();
+      case 5:
+        return renderStayMedia();
+      case 6:
+        return renderStayReview();
+      default:
+        return null;
     }
   };
 
@@ -994,7 +970,9 @@ export function HostCreatePage() {
               type="number"
               min={1}
               value={stayForm.bedrooms}
-              onChange={(e) => setStayForm((f) => ({ ...f, bedrooms: Number(e.target.value) || 1 }))}
+              onChange={(e) =>
+                setStayForm((f) => ({ ...f, bedrooms: Number(e.target.value) || 1 }))
+              }
               className="h-11 rounded-xl border-border/60"
             />
           </FormField>
@@ -1023,7 +1001,9 @@ export function HostCreatePage() {
                 type="number"
                 min={1}
                 value={stayForm.maxGuests}
-                onChange={(e) => setStayForm((f) => ({ ...f, maxGuests: Number(e.target.value) || 1 }))}
+                onChange={(e) =>
+                  setStayForm((f) => ({ ...f, maxGuests: Number(e.target.value) || 1 }))
+                }
                 className="pl-9 h-11 rounded-xl border-border/60"
               />
             </div>
@@ -1106,7 +1086,9 @@ export function HostCreatePage() {
                     : "border-border/50 bg-card text-muted-foreground hover:border-border hover:text-foreground",
                 )}
               >
-                <amenity.icon className={cn("h-4 w-4", selected ? "text-primary" : "text-muted-foreground")} />
+                <amenity.icon
+                  className={cn("h-4 w-4", selected ? "text-primary" : "text-muted-foreground")}
+                />
                 <span className="text-xs">{amenity.label}</span>
               </button>
             );
@@ -1162,7 +1144,10 @@ export function HostCreatePage() {
             <Select
               value={stayForm.cancellationPolicy}
               onValueChange={(v) =>
-                setStayForm((f) => ({ ...f, cancellationPolicy: v as "flexible" | "moderate" | "strict" }))
+                setStayForm((f) => ({
+                  ...f,
+                  cancellationPolicy: v as "flexible" | "moderate" | "strict",
+                }))
               }
             >
               <SelectTrigger className="h-11 rounded-xl border-border/60">
@@ -1216,7 +1201,9 @@ export function HostCreatePage() {
               type="number"
               min={1}
               value={stayForm.pricePerNight || ""}
-              onChange={(e) => setStayForm((f) => ({ ...f, pricePerNight: Number(e.target.value) || 0 }))}
+              onChange={(e) =>
+                setStayForm((f) => ({ ...f, pricePerNight: Number(e.target.value) || 0 }))
+              }
               placeholder="e.g. 450"
               className="pl-9 h-11 rounded-xl border-border/60"
             />
@@ -1230,19 +1217,27 @@ export function HostCreatePage() {
     const f = stayForm;
     return (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-8">
-        <SectionTitle icon={Eye} title="Review Your Stay Listing" subtitle="Double-check everything" />
+        <SectionTitle
+          icon={Eye}
+          title="Review Your Stay Listing"
+          subtitle="Double-check everything"
+        />
         <div className="flex items-center gap-3 pb-6 border-b border-border/40">
           <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
             <Bed className="h-7 w-7 text-primary" />
           </div>
           <div>
             <h3 className="text-xl font-bold">{f.name}</h3>
-            <p className="text-sm text-muted-foreground capitalize">{f.propertyType.replace(/-/g, " ")} · {f.location}</p>
+            <p className="text-sm text-muted-foreground capitalize">
+              {f.propertyType.replace(/-/g, " ")} · {f.location}
+            </p>
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Details</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+              Details
+            </h4>
             <div className="space-y-2 text-sm">
               <DetailRow icon={Bed} label="Bedrooms" value={String(f.bedrooms)} />
               <DetailRow icon={Bed} label="Beds" value={String(f.beds)} />
@@ -1254,7 +1249,9 @@ export function HostCreatePage() {
           </div>
           {f.nearestAttractions.length > 0 && (
             <div className="space-y-3">
-              <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Nearby Attractions</h4>
+              <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+                Nearby Attractions
+              </h4>
               <div className="space-y-1.5">
                 {f.nearestAttractions.map((attr, i) => (
                   <div key={i} className="flex items-center gap-2 text-sm">
@@ -1269,10 +1266,16 @@ export function HostCreatePage() {
         </div>
         {f.amenities.length > 0 && (
           <div className="space-y-2">
-            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Amenities</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+              Amenities
+            </h4>
             <div className="flex flex-wrap gap-1.5">
               {f.amenities.map((a) => (
-                <Badge key={a} variant="secondary" className="rounded-full text-[10px] font-semibold capitalize">
+                <Badge
+                  key={a}
+                  variant="secondary"
+                  className="rounded-full text-[10px] font-semibold capitalize"
+                >
                   {a.replace(/-/g, " ")}
                 </Badge>
               ))}
@@ -1281,10 +1284,16 @@ export function HostCreatePage() {
         )}
         {f.houseRules.length > 0 && (
           <div className="space-y-2">
-            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">House Rules</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+              House Rules
+            </h4>
             <div className="flex flex-wrap gap-1.5">
               {f.houseRules.map((r) => (
-                <Badge key={r} variant="outline" className="rounded-full text-[10px] font-medium capitalize">
+                <Badge
+                  key={r}
+                  variant="outline"
+                  className="rounded-full text-[10px] font-medium capitalize"
+                >
                   {r.replace(/-/g, " ")}
                 </Badge>
               ))}
@@ -1292,12 +1301,15 @@ export function HostCreatePage() {
           </div>
         )}
         <div className="space-y-2">
-          <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Check-in/Out</h4>
+          <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+            Check-in/Out
+          </h4>
           <p className="text-sm text-muted-foreground">
             Check-in: {f.checkInFrom}–{f.checkInUntil} · Check-out: before {f.checkOutBefore}
           </p>
           <p className="text-sm text-muted-foreground">
-            Cancellation: {CANCELLATION_POLICIES.find((cp) => cp.value === f.cancellationPolicy)?.label}
+            Cancellation:{" "}
+            {CANCELLATION_POLICIES.find((cp) => cp.value === f.cancellationPolicy)?.label}
           </p>
         </div>
         {renderDescription(f.description)}
@@ -1313,20 +1325,31 @@ export function HostCreatePage() {
 
   const renderTransportStep = () => {
     switch (step) {
-      case 0: return renderTransportBasic();
-      case 1: return renderTransportRoute();
-      case 2: return renderTransportSchedule();
-      case 3: return renderTransportVehicle();
-      case 4: return renderTransportMedia();
-      case 5: return renderTransportReview();
-      default: return null;
+      case 0:
+        return renderTransportBasic();
+      case 1:
+        return renderTransportRoute();
+      case 2:
+        return renderTransportSchedule();
+      case 3:
+        return renderTransportVehicle();
+      case 4:
+        return renderTransportMedia();
+      case 5:
+        return renderTransportReview();
+      default:
+        return null;
     }
   };
 
   function renderTransportBasic() {
     return (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
-        <SectionTitle icon={FileText} title="Basic Info" subtitle="Tell travelers about your transport service" />
+        <SectionTitle
+          icon={FileText}
+          title="Basic Info"
+          subtitle="Tell travelers about your transport service"
+        />
         <FormField label="Service Name" error={errors.name}>
           <Input
             value={transportForm.name}
@@ -1351,7 +1374,11 @@ export function HostCreatePage() {
   function renderTransportRoute() {
     return (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
-        <SectionTitle icon={Navigation} title="Route" subtitle="Where does this service start and end?" />
+        <SectionTitle
+          icon={Navigation}
+          title="Route"
+          subtitle="Where does this service start and end?"
+        />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FormField label="Departure Location" error={errors.from}>
             <div className="relative">
@@ -1387,7 +1414,11 @@ export function HostCreatePage() {
   function renderTransportSchedule() {
     return (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
-        <SectionTitle icon={Clock} title="Schedule & Duration" subtitle="When does this service run?" />
+        <SectionTitle
+          icon={Clock}
+          title="Schedule & Duration"
+          subtitle="When does this service run?"
+        />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FormField label="Journey Duration" error={errors.duration}>
             <div className="relative">
@@ -1405,7 +1436,9 @@ export function HostCreatePage() {
               <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 value={transportForm.bookingLeadTime}
-                onChange={(e) => setTransportForm((f) => ({ ...f, bookingLeadTime: e.target.value }))}
+                onChange={(e) =>
+                  setTransportForm((f) => ({ ...f, bookingLeadTime: e.target.value }))
+                }
                 placeholder="e.g. 1 hour before"
                 className="pl-9 h-11 rounded-xl border-border/60"
               />
@@ -1423,7 +1456,11 @@ export function HostCreatePage() {
   function renderTransportVehicle() {
     return (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
-        <SectionTitle icon={Bus} title="Vehicle & Operator" subtitle="Tell travelers about the vehicle and who runs it" />
+        <SectionTitle
+          icon={Bus}
+          title="Vehicle & Operator"
+          subtitle="Tell travelers about the vehicle and who runs it"
+        />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FormField label="Vehicle Type" error={errors.vehicleType}>
             <Select
@@ -1449,7 +1486,9 @@ export function HostCreatePage() {
                 type="number"
                 min={1}
                 value={transportForm.capacity}
-                onChange={(e) => setTransportForm((f) => ({ ...f, capacity: Number(e.target.value) || 1 }))}
+                onChange={(e) =>
+                  setTransportForm((f) => ({ ...f, capacity: Number(e.target.value) || 1 }))
+                }
                 className="pl-9 h-11 rounded-xl border-border/60"
               />
             </div>
@@ -1467,7 +1506,9 @@ export function HostCreatePage() {
               <Smartphone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 value={transportForm.operatorContact}
-                onChange={(e) => setTransportForm((f) => ({ ...f, operatorContact: e.target.value }))}
+                onChange={(e) =>
+                  setTransportForm((f) => ({ ...f, operatorContact: e.target.value }))
+                }
                 placeholder="e.g. +260 97 XXX XXXX"
                 className="pl-9 h-11 rounded-xl border-border/60"
               />
@@ -1497,7 +1538,9 @@ export function HostCreatePage() {
                       : "border-border/50 bg-card text-muted-foreground hover:border-border hover:text-foreground",
                   )}
                 >
-                  <amenity.icon className={cn("h-4 w-4", selected ? "text-primary" : "text-muted-foreground")} />
+                  <amenity.icon
+                    className={cn("h-4 w-4", selected ? "text-primary" : "text-muted-foreground")}
+                  />
                   <span className="text-xs">{amenity.label}</span>
                 </button>
               );
@@ -1511,7 +1554,11 @@ export function HostCreatePage() {
   function renderTransportMedia() {
     return (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
-        <SectionTitle icon={DollarSign} title="Photos & Pricing" subtitle="Add photos and set your price per seat" />
+        <SectionTitle
+          icon={DollarSign}
+          title="Photos & Pricing"
+          subtitle="Add photos and set your price per seat"
+        />
         <ImageUploader
           images={transportForm.images}
           onChange={(imgs) => setTransportForm((f) => ({ ...f, images: imgs }))}
@@ -1525,7 +1572,9 @@ export function HostCreatePage() {
               type="number"
               min={1}
               value={transportForm.pricePerSeat || ""}
-              onChange={(e) => setTransportForm((f) => ({ ...f, pricePerSeat: Number(e.target.value) || 0 }))}
+              onChange={(e) =>
+                setTransportForm((f) => ({ ...f, pricePerSeat: Number(e.target.value) || 0 }))
+              }
               placeholder="e.g. 250"
               className="pl-9 h-11 rounded-xl border-border/60"
             />
@@ -1539,19 +1588,27 @@ export function HostCreatePage() {
     const f = transportForm;
     return (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-8">
-        <SectionTitle icon={Eye} title="Review Your Transport Listing" subtitle="Double-check everything" />
+        <SectionTitle
+          icon={Eye}
+          title="Review Your Transport Listing"
+          subtitle="Double-check everything"
+        />
         <div className="flex items-center gap-3 pb-6 border-b border-border/40">
           <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
             <Bus className="h-7 w-7 text-primary" />
           </div>
           <div>
             <h3 className="text-xl font-bold">{f.name}</h3>
-            <p className="text-sm text-muted-foreground">{f.from} → {f.to}</p>
+            <p className="text-sm text-muted-foreground">
+              {f.from} → {f.to}
+            </p>
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Route</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+              Route
+            </h4>
             <div className="space-y-2 text-sm">
               <DetailRow icon={Navigation} label="Route" value={`${f.from} → ${f.to}`} />
               <DetailRow icon={Timer} label="Duration" value={f.duration} />
@@ -1560,7 +1617,9 @@ export function HostCreatePage() {
             </div>
           </div>
           <div className="space-y-3">
-            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Operator</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+              Operator
+            </h4>
             <div className="space-y-2 text-sm">
               <DetailRow icon={ShieldCheck} label="Name" value={f.operatorName} />
               <DetailRow icon={Smartphone} label="Contact" value={f.operatorContact} />
@@ -1570,14 +1629,20 @@ export function HostCreatePage() {
         </div>
         {f.stops.length > 0 && (
           <div className="space-y-2">
-            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Stops ({f.stops.length})</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+              Stops ({f.stops.length})
+            </h4>
             <div className="space-y-1">
               {f.stops.map((stop, i) => (
                 <div key={i} className="flex items-center gap-2 text-sm">
                   <MapPin className="h-3.5 w-3.5 text-muted-foreground/60 shrink-0" />
                   <span className="font-medium">{stop.name}</span>
-                  {stop.arrivalTime && <span className="text-muted-foreground text-xs">arr: {stop.arrivalTime}</span>}
-                  {stop.departureTime && <span className="text-muted-foreground text-xs">dep: {stop.departureTime}</span>}
+                  {stop.arrivalTime && (
+                    <span className="text-muted-foreground text-xs">arr: {stop.arrivalTime}</span>
+                  )}
+                  {stop.departureTime && (
+                    <span className="text-muted-foreground text-xs">dep: {stop.departureTime}</span>
+                  )}
                 </div>
               ))}
             </div>
@@ -1585,10 +1650,16 @@ export function HostCreatePage() {
         )}
         {f.vehicleAmenities.length > 0 && (
           <div className="space-y-2">
-            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Amenities</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+              Amenities
+            </h4>
             <div className="flex flex-wrap gap-1.5">
               {f.vehicleAmenities.map((a) => (
-                <Badge key={a} variant="secondary" className="rounded-full text-[10px] font-semibold capitalize">
+                <Badge
+                  key={a}
+                  variant="secondary"
+                  className="rounded-full text-[10px] font-semibold capitalize"
+                >
                   {a.replace(/-/g, " ")}
                 </Badge>
               ))}
@@ -1596,11 +1667,15 @@ export function HostCreatePage() {
           </div>
         )}
         <div className="space-y-2">
-          <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Schedule</h4>
+          <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+            Schedule
+          </h4>
           <p className="text-sm text-muted-foreground">
-            {f.schedule.frequency === "daily" ? "Daily departures" :
-             f.schedule.frequency === "weekly" ? `Weekly on ${(f.schedule.daysOfWeek || []).join(", ")}` :
-             "Custom schedule"}
+            {f.schedule.frequency === "daily"
+              ? "Daily departures"
+              : f.schedule.frequency === "weekly"
+                ? `Weekly on ${(f.schedule.daysOfWeek || []).join(", ")}`
+                : "Custom schedule"}
             {" · "}Times: {f.schedule.departureTimes.join(", ")}
           </p>
         </div>
@@ -1617,20 +1692,31 @@ export function HostCreatePage() {
 
   const renderExperienceStep = () => {
     switch (step) {
-      case 0: return renderExperienceBasic();
-      case 1: return renderExperienceActivity();
-      case 2: return renderExperienceIncluded();
-      case 3: return renderExperienceSchedule();
-      case 4: return renderExperienceMedia();
-      case 5: return renderExperienceReview();
-      default: return null;
+      case 0:
+        return renderExperienceBasic();
+      case 1:
+        return renderExperienceActivity();
+      case 2:
+        return renderExperienceIncluded();
+      case 3:
+        return renderExperienceSchedule();
+      case 4:
+        return renderExperienceMedia();
+      case 5:
+        return renderExperienceReview();
+      default:
+        return null;
     }
   };
 
   function renderExperienceBasic() {
     return (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
-        <SectionTitle icon={FileText} title="Basic Info" subtitle="Tell travelers about your experience" />
+        <SectionTitle
+          icon={FileText}
+          title="Basic Info"
+          subtitle="Tell travelers about your experience"
+        />
         <FormField label="Experience Name" error={errors.name}>
           <Input
             value={experienceForm.name}
@@ -1655,7 +1741,11 @@ export function HostCreatePage() {
   function renderExperienceActivity() {
     return (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
-        <SectionTitle icon={Ticket} title="Activity Details" subtitle="What kind of experience is it?" />
+        <SectionTitle
+          icon={Ticket}
+          title="Activity Details"
+          subtitle="What kind of experience is it?"
+        />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FormField label="Activity Type" error={errors.activityType}>
             <Select
@@ -1702,7 +1792,9 @@ export function HostCreatePage() {
                 type="number"
                 min={1}
                 value={experienceForm.maxParticipants}
-                onChange={(e) => setExperienceForm((f) => ({ ...f, maxParticipants: Number(e.target.value) || 1 }))}
+                onChange={(e) =>
+                  setExperienceForm((f) => ({ ...f, maxParticipants: Number(e.target.value) || 1 }))
+                }
                 className="pl-9 h-11 rounded-xl border-border/60"
               />
             </div>
@@ -1710,7 +1802,12 @@ export function HostCreatePage() {
           <FormField label="Difficulty Level">
             <Select
               value={experienceForm.difficultyLevel}
-              onValueChange={(v) => setExperienceForm((f) => ({ ...f, difficultyLevel: v as "easy" | "moderate" | "challenging" }))}
+              onValueChange={(v) =>
+                setExperienceForm((f) => ({
+                  ...f,
+                  difficultyLevel: v as "easy" | "moderate" | "challenging",
+                }))
+              }
             >
               <SelectTrigger className="h-11 rounded-xl border-border/60">
                 <SelectValue />
@@ -1745,7 +1842,11 @@ export function HostCreatePage() {
   function renderExperienceIncluded() {
     return (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
-        <SectionTitle icon={UtensilsCrossed} title="What's Included" subtitle="Let travelers know what's provided and what to bring" />
+        <SectionTitle
+          icon={UtensilsCrossed}
+          title="What's Included"
+          subtitle="Let travelers know what's provided and what to bring"
+        />
         <FormField label="What's Included">
           <ChipSelect
             options={EXPERIENCE_INCLUSIONS.map((i) => ({ value: i.value, label: i.label }))}
@@ -1778,7 +1879,11 @@ export function HostCreatePage() {
   function renderExperienceSchedule() {
     return (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
-        <SectionTitle icon={Clock} title="Schedule & Availability" subtitle="When is this experience available?" />
+        <SectionTitle
+          icon={Clock}
+          title="Schedule & Availability"
+          subtitle="When is this experience available?"
+        />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FormField label="Available Dates">
             <Input
@@ -1791,7 +1896,9 @@ export function HostCreatePage() {
           <FormField label="Booking Lead Time">
             <Input
               value={experienceForm.bookingLeadTime}
-              onChange={(e) => setExperienceForm((f) => ({ ...f, bookingLeadTime: e.target.value }))}
+              onChange={(e) =>
+                setExperienceForm((f) => ({ ...f, bookingLeadTime: e.target.value }))
+              }
               placeholder="e.g. 24 hours in advance"
               className="h-11 rounded-xl border-border/60"
             />
@@ -1842,7 +1949,11 @@ export function HostCreatePage() {
   function renderExperienceMedia() {
     return (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
-        <SectionTitle icon={DollarSign} title="Photos & Pricing" subtitle="Add photos and set pricing" />
+        <SectionTitle
+          icon={DollarSign}
+          title="Photos & Pricing"
+          subtitle="Add photos and set pricing"
+        />
         <ImageUploader
           images={experienceForm.images}
           onChange={(imgs) => setExperienceForm((f) => ({ ...f, images: imgs }))}
@@ -1857,7 +1968,9 @@ export function HostCreatePage() {
                 type="number"
                 min={1}
                 value={experienceForm.pricePerPerson || ""}
-                onChange={(e) => setExperienceForm((f) => ({ ...f, pricePerPerson: Number(e.target.value) || 0 }))}
+                onChange={(e) =>
+                  setExperienceForm((f) => ({ ...f, pricePerPerson: Number(e.target.value) || 0 }))
+                }
                 placeholder="e.g. 180"
                 className="pl-9 h-11 rounded-xl border-border/60"
               />
@@ -1870,7 +1983,9 @@ export function HostCreatePage() {
                 type="number"
                 min={0}
                 value={experienceForm.groupPrice || ""}
-                onChange={(e) => setExperienceForm((f) => ({ ...f, groupPrice: Number(e.target.value) || 0 }))}
+                onChange={(e) =>
+                  setExperienceForm((f) => ({ ...f, groupPrice: Number(e.target.value) || 0 }))
+                }
                 placeholder="e.g. 1500 (for group of 10+)"
                 className="pl-9 h-11 rounded-xl border-border/60"
               />
@@ -1894,62 +2009,107 @@ export function HostCreatePage() {
     const f = experienceForm;
     return (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-8">
-        <SectionTitle icon={Eye} title="Review Your Experience Listing" subtitle="Double-check everything" />
+        <SectionTitle
+          icon={Eye}
+          title="Review Your Experience Listing"
+          subtitle="Double-check everything"
+        />
         <div className="flex items-center gap-3 pb-6 border-b border-border/40">
           <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
             <Ticket className="h-7 w-7 text-primary" />
           </div>
           <div>
             <h3 className="text-xl font-bold">{f.name}</h3>
-            <p className="text-sm text-muted-foreground">{f.activityType?.replace(/-/g, " ")} · {f.duration}</p>
+            <p className="text-sm text-muted-foreground">
+              {f.activityType?.replace(/-/g, " ")} · {f.duration}
+            </p>
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Details</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+              Details
+            </h4>
             <div className="space-y-2 text-sm">
-              <DetailRow icon={Ticket} label="Type" value={EXPERIENCE_TYPES.find((et) => et.value === f.activityType)?.label || f.activityType} />
+              <DetailRow
+                icon={Ticket}
+                label="Type"
+                value={
+                  EXPERIENCE_TYPES.find((et) => et.value === f.activityType)?.label ||
+                  f.activityType
+                }
+              />
               <DetailRow icon={Timer} label="Duration" value={f.duration} />
               <DetailRow icon={Users} label="Max" value={String(f.maxParticipants)} />
-              <DetailRow icon={ShieldCheck} label="Difficulty" value={DIFFICULTY_LEVELS.find((dl) => dl.value === f.difficultyLevel)?.label || f.difficultyLevel} />
+              <DetailRow
+                icon={ShieldCheck}
+                label="Difficulty"
+                value={
+                  DIFFICULTY_LEVELS.find((dl) => dl.value === f.difficultyLevel)?.label ||
+                  f.difficultyLevel
+                }
+              />
               <DetailRow icon={MapPin} label="Meeting" value={f.meetingPoint} />
             </div>
           </div>
           <div className="space-y-3">
-            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Pricing</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+              Pricing
+            </h4>
             <div className="space-y-2 text-sm">
               <DetailRow icon={DollarSign} label="Per Person" value={`K${f.pricePerPerson}`} />
-              {f.groupPrice && f.groupPrice > 0 && <DetailRow icon={Users} label="Group" value={`K${f.groupPrice}`} />}
-              {f.privateOption && <DetailRow icon={Star} label="Private Option" value="Available" />}
+              {f.groupPrice && f.groupPrice > 0 && (
+                <DetailRow icon={Users} label="Group" value={`K${f.groupPrice}`} />
+              )}
+              {f.privateOption && (
+                <DetailRow icon={Star} label="Private Option" value="Available" />
+              )}
             </div>
           </div>
         </div>
         {f.whatsIncluded.length > 0 && (
           <div className="space-y-2">
-            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Included</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+              Included
+            </h4>
             <div className="flex flex-wrap gap-1.5">
               {f.whatsIncluded.map((i) => (
-                <Badge key={i} variant="secondary" className="rounded-full text-[10px]">{i.replace(/-/g, " ")}</Badge>
+                <Badge key={i} variant="secondary" className="rounded-full text-[10px]">
+                  {i.replace(/-/g, " ")}
+                </Badge>
               ))}
             </div>
           </div>
         )}
         {f.whatToBring.length > 0 && (
           <div className="space-y-2">
-            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Bring</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+              Bring
+            </h4>
             <div className="flex flex-wrap gap-1.5">
               {f.whatToBring.map((i) => (
-                <Badge key={i} variant="outline" className="rounded-full text-[10px]">{i.replace(/-/g, " ")}</Badge>
+                <Badge key={i} variant="outline" className="rounded-full text-[10px]">
+                  {i.replace(/-/g, " ")}
+                </Badge>
               ))}
             </div>
           </div>
         )}
         <div className="space-y-2">
-          <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Availability</h4>
+          <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+            Availability
+          </h4>
           <p className="text-sm text-muted-foreground">
-            {f.availableDates} · Slots: {f.timeSlots.map((t) => TIME_SLOT_OPTIONS.find((to) => to.value === t)?.label || t).join(", ")}
+            {f.availableDates} · Slots:{" "}
+            {f.timeSlots
+              .map((t) => TIME_SLOT_OPTIONS.find((to) => to.value === t)?.label || t)
+              .join(", ")}
           </p>
-          {f.bookingLeadTime && <p className="text-sm text-muted-foreground">Book at least {f.bookingLeadTime} in advance</p>}
+          {f.bookingLeadTime && (
+            <p className="text-sm text-muted-foreground">
+              Book at least {f.bookingLeadTime} in advance
+            </p>
+          )}
         </div>
         {renderDescription(f.description)}
         {renderImages(f.images)}
@@ -1964,13 +2124,20 @@ export function HostCreatePage() {
 
   const renderGemStep = () => {
     switch (step) {
-      case 0: return renderGemBasic();
-      case 1: return renderGemLocation();
-      case 2: return renderGemDiscovery();
-      case 3: return renderGemTips();
-      case 4: return renderGemMedia();
-      case 5: return renderGemReview();
-      default: return null;
+      case 0:
+        return renderGemBasic();
+      case 1:
+        return renderGemLocation();
+      case 2:
+        return renderGemDiscovery();
+      case 3:
+        return renderGemTips();
+      case 4:
+        return renderGemMedia();
+      case 5:
+        return renderGemReview();
+      default:
+        return null;
     }
   };
 
@@ -2048,7 +2215,11 @@ export function HostCreatePage() {
   function renderGemDiscovery() {
     return (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
-        <SectionTitle icon={Gem} title="Discovery Details" subtitle="What makes this gem special?" />
+        <SectionTitle
+          icon={Gem}
+          title="Discovery Details"
+          subtitle="What makes this gem special?"
+        />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FormField label="Best Time to Visit" error={errors.bestTimeToVisit}>
             <div className="relative">
@@ -2094,7 +2265,12 @@ export function HostCreatePage() {
           <FormField label="Difficulty Level">
             <Select
               value={gemForm.difficultyLevel}
-              onValueChange={(v) => setGemForm((f) => ({ ...f, difficultyLevel: v as "easy" | "moderate" | "challenging" }))}
+              onValueChange={(v) =>
+                setGemForm((f) => ({
+                  ...f,
+                  difficultyLevel: v as "easy" | "moderate" | "challenging",
+                }))
+              }
             >
               <SelectTrigger className="h-11 rounded-xl border-border/60">
                 <SelectValue />
@@ -2116,7 +2292,11 @@ export function HostCreatePage() {
   function renderGemTips() {
     return (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
-        <SectionTitle icon={Star} title="Tips & Nearby" subtitle="Help visitors make the most of their trip" />
+        <SectionTitle
+          icon={Star}
+          title="Tips & Nearby"
+          subtitle="Help visitors make the most of their trip"
+        />
         <FormField label="Tips for Visitors">
           <div className="space-y-2">
             {gemForm.tipsForVisitors.map((tip, idx) => (
@@ -2198,7 +2378,11 @@ export function HostCreatePage() {
     const f = gemForm;
     return (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-8">
-        <SectionTitle icon={Eye} title="Review Your Gem Listing" subtitle="Double-check everything" />
+        <SectionTitle
+          icon={Eye}
+          title="Review Your Gem Listing"
+          subtitle="Double-check everything"
+        />
         <div className="flex items-center gap-3 pb-6 border-b border-border/40">
           <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
             <Gem className="h-7 w-7 text-primary" />
@@ -2210,51 +2394,78 @@ export function HostCreatePage() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Location</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+              Location
+            </h4>
             <div className="space-y-2 text-sm">
               <DetailRow icon={MapPin} label="Location" value={f.location} />
-              <DetailRow icon={Car} label="Access" value={f.accessibility?.replace(/-/g, " ") || "—"} />
+              <DetailRow
+                icon={Car}
+                label="Access"
+                value={f.accessibility?.replace(/-/g, " ") || "—"}
+              />
               <DetailRow icon={Sun} label="Best Time" value={f.bestTimeToVisit} />
               <DetailRow icon={DollarSign} label="Entry Fee" value={f.entryFee || "Free"} />
             </div>
           </div>
           <div className="space-y-3">
-            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Visit</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+              Visit
+            </h4>
             <div className="space-y-2 text-sm">
               <DetailRow icon={Timer} label="Duration" value={f.recommendedDuration} />
-              <DetailRow icon={ShieldCheck} label="Difficulty" value={DIFFICULTY_LEVELS.find((dl) => dl.value === f.difficultyLevel)?.label || f.difficultyLevel} />
+              <DetailRow
+                icon={ShieldCheck}
+                label="Difficulty"
+                value={
+                  DIFFICULTY_LEVELS.find((dl) => dl.value === f.difficultyLevel)?.label ||
+                  f.difficultyLevel
+                }
+              />
             </div>
           </div>
         </div>
         {f.tipsForVisitors.filter((t) => t.trim()).length > 0 && (
           <div className="space-y-2">
-            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Tips</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+              Tips
+            </h4>
             <ul className="space-y-1">
-              {f.tipsForVisitors.filter((t) => t.trim()).map((tip, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                  <Star className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
-                  {tip}
-                </li>
-              ))}
+              {f.tipsForVisitors
+                .filter((t) => t.trim())
+                .map((tip, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <Star className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
+                    {tip}
+                  </li>
+                ))}
             </ul>
           </div>
         )}
         {f.nearbyAmenities.length > 0 && (
           <div className="space-y-2">
-            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Nearby</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+              Nearby
+            </h4>
             <div className="flex flex-wrap gap-1.5">
               {f.nearbyAmenities.map((a) => (
-                <Badge key={a} variant="secondary" className="rounded-full text-[10px]">{a.replace(/-/g, " ")}</Badge>
+                <Badge key={a} variant="secondary" className="rounded-full text-[10px]">
+                  {a.replace(/-/g, " ")}
+                </Badge>
               ))}
             </div>
           </div>
         )}
-        {f.safetyNotes && <div className="space-y-2">
-          <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Safety</h4>
-          <p className="text-sm text-muted-foreground bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/40 rounded-xl p-3">
-            {f.safetyNotes}
-          </p>
-        </div>}
+        {f.safetyNotes && (
+          <div className="space-y-2">
+            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+              Safety
+            </h4>
+            <p className="text-sm text-muted-foreground bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/40 rounded-xl p-3">
+              {f.safetyNotes}
+            </p>
+          </div>
+        )}
         {renderDescription(f.description)}
         {renderImages(f.images)}
         {renderSubmit()}
@@ -2269,7 +2480,9 @@ export function HostCreatePage() {
   function renderDescription(desc: string) {
     return (
       <div className="space-y-2">
-        <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Description</h4>
+        <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+          Description
+        </h4>
         <p className="text-sm text-muted-foreground leading-relaxed bg-muted/30 rounded-xl p-4 border border-border/40">
           {desc}
         </p>
@@ -2304,7 +2517,10 @@ export function HostCreatePage() {
       <div className="pt-4 border-t border-border/40">
         <p className="text-xs text-muted-foreground mb-4">
           By submitting, you confirm that all information provided is accurate and you agree to our{" "}
-          <span className="text-primary underline underline-offset-2 cursor-pointer">Terms of Service</span>.
+          <span className="text-primary underline underline-offset-2 cursor-pointer">
+            Terms of Service
+          </span>
+          .
         </p>
         <Button
           onClick={handleSubmit}
@@ -2359,7 +2575,9 @@ export function HostCreatePage() {
               <div
                 className={cn(
                   "h-14 w-14 rounded-2xl flex items-center justify-center mb-4 transition-colors",
-                  selected ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground",
+                  selected
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground",
                 )}
               >
                 <card.icon className="h-7 w-7" />
@@ -2385,8 +2603,6 @@ export function HostCreatePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-      <Navbar />
-
       <main className="flex-1">
         {/* Top Banner */}
         <div className="bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
@@ -2411,7 +2627,9 @@ export function HostCreatePage() {
               </div>
               <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/10">
                 <ShieldCheck className="h-4 w-4 text-primary" />
-                <span className="text-xs font-bold text-primary uppercase tracking-wider">Verified</span>
+                <span className="text-xs font-bold text-primary uppercase tracking-wider">
+                  Verified
+                </span>
               </div>
             </div>
 

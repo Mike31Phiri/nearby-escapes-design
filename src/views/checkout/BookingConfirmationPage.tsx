@@ -17,7 +17,6 @@ import {
   Search,
   ArrowLeft,
 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { useBookingStore } from "@/store/bookingStore";
 
@@ -38,7 +37,6 @@ export function BookingConfirmationPage() {
   if (!bookingRef && !status) {
     return (
       <div className="min-h-screen flex flex-col bg-background font-sans">
-        <Navbar />
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center max-w-md mx-auto px-4">
             <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
@@ -277,11 +275,7 @@ export function BookingConfirmationPage() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button
-                variant="outline"
-                className="h-11 rounded-xl"
-                onClick={() => router.back()}
-              >
+              <Button variant="outline" className="h-11 rounded-xl" onClick={() => router.back()}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Try Again
               </Button>
@@ -300,7 +294,10 @@ export function BookingConfirmationPage() {
         <div className="text-center mt-8">
           <p className="text-xs text-muted-foreground">
             Need help? Contact our support team at{" "}
-            <a href="mailto:support@nearbyescapes.com" className="text-primary underline underline-offset-2">
+            <a
+              href="mailto:support@nearbyescapes.com"
+              className="text-primary underline underline-offset-2"
+            >
               support@nearbyescapes.com
             </a>{" "}
             or call{" "}

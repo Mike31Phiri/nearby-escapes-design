@@ -48,7 +48,7 @@ export const useProfileStore = create<ProfileState>()(
         set((state) => ({
           travelPreferences: { ...state.travelPreferences, ...prefs },
         })),
-  setSeenTravelPrompt: () => set({ hasSeenTravelPrompt: true }),
+      setSeenTravelPrompt: () => set({ hasSeenTravelPrompt: true }),
       triggerTravelPreferences: () => set({ showTravelPreferences: true }),
       dismissTravelPreferences: () => set({ showTravelPreferences: false }),
 
@@ -64,9 +64,9 @@ export const useProfileStore = create<ProfileState>()(
           phone: "",
           homeCity: "",
           travelPreferences: { ...DEFAULT_TRAVEL_PREFERENCES },
-        hasCompletedCheckout: false,
-        hasSeenTravelPrompt: false,
-        showTravelPreferences: false,
+          hasCompletedCheckout: false,
+          hasSeenTravelPrompt: false,
+          showTravelPreferences: false,
         }),
     }),
     {

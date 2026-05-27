@@ -81,7 +81,12 @@ function PromoCodeCard({
   };
 
   return (
-    <div className={cn("rounded-xl border bg-card p-5 shadow-sm transition-all", promo.isActive ? "border-border/50 hover:shadow-md" : "border-border/30 bg-card/60")}>
+    <div
+      className={cn(
+        "rounded-xl border bg-card p-5 shadow-sm transition-all",
+        promo.isActive ? "border-border/50 hover:shadow-md" : "border-border/30 bg-card/60",
+      )}
+    >
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
@@ -98,11 +103,17 @@ function PromoCodeCard({
               )}
             </button>
             {promo.isActive ? (
-              <Badge variant="outline" className="rounded-full text-[8px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border-emerald-200">
+              <Badge
+                variant="outline"
+                className="rounded-full text-[8px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border-emerald-200"
+              >
                 Active
               </Badge>
             ) : (
-              <Badge variant="outline" className="rounded-full text-[8px] font-bold uppercase tracking-wider bg-zinc-50 text-zinc-600 border-zinc-200">
+              <Badge
+                variant="outline"
+                className="rounded-full text-[8px] font-bold uppercase tracking-wider bg-zinc-50 text-zinc-600 border-zinc-200"
+              >
                 {isExpired ? "Expired" : "Disabled"}
               </Badge>
             )}
@@ -114,7 +125,9 @@ function PromoCodeCard({
           <p className="text-lg font-bold text-foreground">
             {promo.type === "percentage" ? `${promo.value}%` : `K${promo.value}`}
           </p>
-          <p className="text-[10px] text-muted-foreground font-medium capitalize">{promo.type} off</p>
+          <p className="text-[10px] text-muted-foreground font-medium capitalize">
+            {promo.type} off
+          </p>
         </div>
       </div>
 
@@ -124,12 +137,15 @@ function PromoCodeCard({
           <Tag className="h-3 w-3" />
           {promo.appliesTo === "all" ? "All listings" : `${promo.appliesTo}s`}
         </span>
-        {promo.minSpend && (
-          <span>Min. K{promo.minSpend}</span>
-        )}
+        {promo.minSpend && <span>Min. K{promo.minSpend}</span>}
         <span className="flex items-center gap-1">
           <CalendarDays className="h-3 w-3" />
-          Expires {expiresAt.toLocaleDateString("en-ZM", { month: "short", day: "numeric", year: "numeric" })}
+          Expires{" "}
+          {expiresAt.toLocaleDateString("en-ZM", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          })}
         </span>
       </div>
 
@@ -139,10 +155,16 @@ function PromoCodeCard({
           <span className="text-muted-foreground font-medium">
             {promo.currentUses}/{promo.maxUses} used
           </span>
-          <span className={cn(
-            "font-semibold",
-            usagePct >= 90 ? "text-rose-600" : usagePct >= 70 ? "text-amber-600" : "text-emerald-600",
-          )}>
+          <span
+            className={cn(
+              "font-semibold",
+              usagePct >= 90
+                ? "text-rose-600"
+                : usagePct >= 70
+                  ? "text-amber-600"
+                  : "text-emerald-600",
+            )}
+          >
             {usagePct}%
           </span>
         </div>
@@ -164,11 +186,19 @@ function PromoCodeCard({
           variant={promo.isActive ? "outline" : "default"}
           className={cn("h-7 rounded-lg text-xs font-semibold", !promo.isActive && "")}
           onClick={() =>
-            withLoading(useLoading().setLoading, useLoading().setLoadingMessage, async () => {
-              await new Promise((r) => setTimeout(r, 400));
-              onToggle(promo.id);
-              showSuccess(promo.isActive ? "Promo code disabled" : "Promo code activated", promo.code);
-            }, "Updating...")
+            withLoading(
+              useLoading().setLoading,
+              useLoading().setLoadingMessage,
+              async () => {
+                await new Promise((r) => setTimeout(r, 400));
+                onToggle(promo.id);
+                showSuccess(
+                  promo.isActive ? "Promo code disabled" : "Promo code activated",
+                  promo.code,
+                );
+              },
+              "Updating...",
+            )
           }
         >
           {promo.isActive ? "Deactivate" : "Activate"}
@@ -202,7 +232,12 @@ function FeaturedCard({
   const PlacementIcon = pl.icon;
 
   return (
-    <div className={cn("rounded-xl border bg-card p-5 shadow-sm transition-all", featured.isActive ? "border-border/50" : "border-border/30 bg-card/60")}>
+    <div
+      className={cn(
+        "rounded-xl border bg-card p-5 shadow-sm transition-all",
+        featured.isActive ? "border-border/50" : "border-border/30 bg-card/60",
+      )}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0 flex-1">
           <div
@@ -231,7 +266,16 @@ function FeaturedCard({
 
       <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
         <CalendarDays className="h-3 w-3" />
-        {new Date(featured.startsAt).toLocaleDateString("en-ZM", { month: "short", day: "numeric" })} — {new Date(featured.endsAt).toLocaleDateString("en-ZM", { month: "short", day: "numeric", year: "numeric" })}
+        {new Date(featured.startsAt).toLocaleDateString("en-ZM", {
+          month: "short",
+          day: "numeric",
+        })}{" "}
+        —{" "}
+        {new Date(featured.endsAt).toLocaleDateString("en-ZM", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        })}
       </div>
 
       <div className="mt-3 pt-3 border-t border-border/30 flex items-center gap-2">
@@ -241,7 +285,10 @@ function FeaturedCard({
           className="h-7 rounded-lg text-xs font-semibold"
           onClick={() => {
             onToggle(featured.id);
-            showSuccess(featured.isActive ? "Featured listing ended" : "Featured listing activated", featured.listingName);
+            showSuccess(
+              featured.isActive ? "Featured listing ended" : "Featured listing activated",
+              featured.listingName,
+            );
           }}
         >
           {featured.isActive ? "End Promotion" : "Activate"}
@@ -262,27 +309,34 @@ export function AdminPromotions() {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
 
   const filteredCodes = useMemo(() => {
-    return promoCodes.filter((p) =>
-      !search || p.code.toLowerCase().includes(search.toLowerCase()) || p.description.toLowerCase().includes(search.toLowerCase()),
+    return promoCodes.filter(
+      (p) =>
+        !search ||
+        p.code.toLowerCase().includes(search.toLowerCase()) ||
+        p.description.toLowerCase().includes(search.toLowerCase()),
     );
   }, [promoCodes, search]);
 
   const filteredFeatured = useMemo(() => {
-    return featuredListings.filter((f) =>
-      !search || f.listingName.toLowerCase().includes(search.toLowerCase()) || f.hostName.toLowerCase().includes(search.toLowerCase()),
+    return featuredListings.filter(
+      (f) =>
+        !search ||
+        f.listingName.toLowerCase().includes(search.toLowerCase()) ||
+        f.hostName.toLowerCase().includes(search.toLowerCase()),
     );
   }, [featuredListings, search]);
 
-  const codeStats = useMemo(() => ({
-    total: promoCodes.length,
-    active: promoCodes.filter((p) => p.isActive).length,
-    totalUsed: promoCodes.reduce((s, p) => s + p.currentUses, 0),
-  }), [promoCodes]);
+  const codeStats = useMemo(
+    () => ({
+      total: promoCodes.length,
+      active: promoCodes.filter((p) => p.isActive).length,
+      totalUsed: promoCodes.reduce((s, p) => s + p.currentUses, 0),
+    }),
+    [promoCodes],
+  );
 
   const handleToggleCode = (id: string) => {
-    setPromoCodes((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, isActive: !p.isActive } : p)),
-    );
+    setPromoCodes((prev) => prev.map((p) => (p.id === id ? { ...p, isActive: !p.isActive } : p)));
   };
 
   const handleDeleteCode = (id: string) => {
@@ -297,114 +351,119 @@ export function AdminPromotions() {
 
   return (
     <div className="flex-1">
-        {/* Header */}
-        <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
-          <div className="mx-auto max-w-6xl px-4 md:px-6 pt-6 md:pt-10">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Promotions &amp; Marketing</h1>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {codeStats.active} active promo codes · {featuredListings.filter((f) => f.isActive).length} featured listings
-                </p>
+      {/* Header */}
+      <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
+        <div className="mx-auto max-w-6xl px-4 md:px-6 pt-6 md:pt-10">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
+                Promotions &amp; Marketing
+              </h1>
+              <p className="text-sm text-muted-foreground mt-1">
+                {codeStats.active} active promo codes ·{" "}
+                {featuredListings.filter((f) => f.isActive).length} featured listings
+              </p>
+            </div>
+            <Button
+              size="sm"
+              className="h-9 rounded-lg text-xs font-semibold"
+              onClick={() => {
+                setShowCreateDialog(true);
+              }}
+            >
+              <Plus className="h-3.5 w-3.5 mr-1" />
+              Create Promo Code
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Tab Bar */}
+      <div className="mx-auto max-w-6xl px-4 md:px-6 -mt-6 relative z-10">
+        <div className="flex items-center gap-1 rounded-xl border border-border/40 bg-card p-1 shadow-sm w-fit">
+          <button
+            onClick={() => setActiveTab("codes")}
+            className={cn(
+              "px-4 py-2 rounded-lg text-xs font-bold transition-all",
+              activeTab === "codes"
+                ? "bg-primary text-primary-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            <Tag className="h-3.5 w-3.5 inline mr-1.5" />
+            Promo Codes
+          </button>
+          <button
+            onClick={() => setActiveTab("featured")}
+            className={cn(
+              "px-4 py-2 rounded-lg text-xs font-bold transition-all",
+              activeTab === "featured"
+                ? "bg-primary text-primary-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            <Star className="h-3.5 w-3.5 inline mr-1.5" />
+            Featured Listings
+          </button>
+        </div>
+      </div>
+
+      {/* Search */}
+      <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6">
+        <div className="relative max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder={
+              activeTab === "codes" ? "Search promo codes..." : "Search featured listings..."
+            }
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9 h-10 rounded-xl border-border/60 text-sm"
+          />
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6 pb-16">
+        {activeTab === "codes" ? (
+          <div className="space-y-3">
+            {filteredCodes.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20 text-center">
+                <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                  <Tag className="h-7 w-7 text-muted-foreground/40" />
+                </div>
+                <h3 className="text-lg font-bold text-foreground">No promo codes found</h3>
+                <p className="text-sm text-muted-foreground mt-1">Try adjusting your search.</p>
               </div>
-              <Button
-                size="sm"
-                className="h-9 rounded-lg text-xs font-semibold"
-                onClick={() => {
-                  setShowCreateDialog(true);
-                }}
-              >
-                <Plus className="h-3.5 w-3.5 mr-1" />
-                Create Promo Code
-              </Button>
-            </div>
+            ) : (
+              filteredCodes.map((promo) => (
+                <PromoCodeCard
+                  key={promo.id}
+                  promo={promo}
+                  onToggle={handleToggleCode}
+                  onDelete={handleDeleteCode}
+                />
+              ))
+            )}
           </div>
-        </div>
-
-        {/* Tab Bar */}
-        <div className="mx-auto max-w-6xl px-4 md:px-6 -mt-6 relative z-10">
-          <div className="flex items-center gap-1 rounded-xl border border-border/40 bg-card p-1 shadow-sm w-fit">
-            <button
-              onClick={() => setActiveTab("codes")}
-              className={cn(
-                "px-4 py-2 rounded-lg text-xs font-bold transition-all",
-                activeTab === "codes" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              <Tag className="h-3.5 w-3.5 inline mr-1.5" />
-              Promo Codes
-            </button>
-            <button
-              onClick={() => setActiveTab("featured")}
-              className={cn(
-                "px-4 py-2 rounded-lg text-xs font-bold transition-all",
-                activeTab === "featured" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              <Star className="h-3.5 w-3.5 inline mr-1.5" />
-              Featured Listings
-            </button>
-          </div>
-        </div>
-
-        {/* Search */}
-        <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6">
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder={activeTab === "codes" ? "Search promo codes..." : "Search featured listings..."}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 h-10 rounded-xl border-border/60 text-sm"
-            />
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6 pb-16">
-          {activeTab === "codes" ? (
-            <div className="space-y-3">
-              {filteredCodes.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-20 text-center">
-                  <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                    <Tag className="h-7 w-7 text-muted-foreground/40" />
-                  </div>
-                  <h3 className="text-lg font-bold text-foreground">No promo codes found</h3>
-                  <p className="text-sm text-muted-foreground mt-1">Try adjusting your search.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {filteredFeatured.length === 0 ? (
+              <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
+                <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                  <Star className="h-7 w-7 text-muted-foreground/40" />
                 </div>
-              ) : (
-                filteredCodes.map((promo) => (
-                  <PromoCodeCard
-                    key={promo.id}
-                    promo={promo}
-                    onToggle={handleToggleCode}
-                    onDelete={handleDeleteCode}
-                  />
-                ))
-              )}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {filteredFeatured.length === 0 ? (
-                <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
-                  <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                    <Star className="h-7 w-7 text-muted-foreground/40" />
-                  </div>
-                  <h3 className="text-lg font-bold text-foreground">No featured listings found</h3>
-                  <p className="text-sm text-muted-foreground mt-1">Try adjusting your search.</p>
-                </div>
-              ) : (
-                filteredFeatured.map((feat) => (
-                  <FeaturedCard
-                    key={feat.id}
-                    featured={feat}
-                    onToggle={handleToggleFeatured}
-                  />
-                ))
-              )}
-            </div>
-          )}
-        </div>
+                <h3 className="text-lg font-bold text-foreground">No featured listings found</h3>
+                <p className="text-sm text-muted-foreground mt-1">Try adjusting your search.</p>
+              </div>
+            ) : (
+              filteredFeatured.map((feat) => (
+                <FeaturedCard key={feat.id} featured={feat} onToggle={handleToggleFeatured} />
+              ))
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Create Promo Dialog */}
       <AlertDialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
@@ -418,7 +477,10 @@ export function AdminPromotions() {
           <div className="space-y-4">
             <div>
               <label className="text-xs font-bold text-foreground mb-1 block">Code</label>
-              <Input placeholder="e.g. SUMMER25" className="h-10 rounded-xl border-border/60 font-mono font-bold tracking-wider" />
+              <Input
+                placeholder="e.g. SUMMER25"
+                className="h-10 rounded-xl border-border/60 font-mono font-bold tracking-wider"
+              />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
@@ -435,7 +497,11 @@ export function AdminPromotions() {
               </div>
               <div>
                 <label className="text-xs font-bold text-foreground mb-1 block">Value</label>
-                <Input type="number" placeholder="20" className="h-10 rounded-xl border-border/60" />
+                <Input
+                  type="number"
+                  placeholder="20"
+                  className="h-10 rounded-xl border-border/60"
+                />
               </div>
             </div>
             <div>
@@ -454,11 +520,16 @@ export function AdminPromotions() {
             </div>
           </div>
           <AlertDialogFooter className="gap-2">
-            <AlertDialogCancel className="rounded-xl font-semibold border-border/60">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="rounded-xl font-semibold border-border/60">
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 setShowCreateDialog(false);
-                showSuccess("Promo code created", "The new promo code is now active and available.");
+                showSuccess(
+                  "Promo code created",
+                  "The new promo code is now active and available.",
+                );
               }}
               className="rounded-xl bg-primary text-white hover:bg-primary/90 font-bold"
             >

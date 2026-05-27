@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { Heart, MapPin, Star, Trash2, ArrowRight, Search } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { useWishlistStore } from "@/store/wishlistStore";
 
@@ -11,8 +10,6 @@ export function WishlistPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
-      <Navbar />
-
       <main className="flex-1">
         {/* Header */}
         <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-10">
@@ -104,9 +101,7 @@ export function WishlistPage() {
                         <div className="flex items-center gap-1">
                           <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                           <span className="text-xs font-bold text-foreground">{item.rating}</span>
-                          <span className="text-xs text-muted-foreground">
-                            ({item.reviews})
-                          </span>
+                          <span className="text-xs text-muted-foreground">({item.reviews})</span>
                         </div>
                         <button
                           onClick={() => removeItem(item.id)}

@@ -378,9 +378,7 @@ export const TIME_SLOT_OPTIONS = [
   { value: "18:00", label: "Sunset (18:00)" },
 ];
 
-export const WEEK_DAYS = [
-  "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"
-];
+export const WEEK_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export const NEARBY_OPTIONS = [
   { value: "food", label: "Food & Restaurants" },
