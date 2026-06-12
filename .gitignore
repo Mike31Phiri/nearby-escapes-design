@@ -241,7 +241,6 @@ public/
 
 # Component
 component.json
-components/
 bower_components/
 
 # Sprockets
