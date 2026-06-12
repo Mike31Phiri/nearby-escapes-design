@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Menu, User, Heart, LogIn, Compass, ShieldCheck, Building2, Bell, CheckCheck, Clock, Inbox, Hotel, Search, HelpCircle, MessageSquare, LogOut, CalendarDays, TrainFront, Ticket, Gem, Tag } from "lucide-react";
+import { Menu, User, Heart, LogIn, Compass, ShieldCheck, Building2, Clock, Hotel, Search, HelpCircle, MessageSquare, LogOut, CalendarDays, TrainFront, Ticket, Gem, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
 import logo from "@/assets/logo.png";
@@ -14,34 +13,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { useNotificationStore } from "@/store/notificationStore";
-import { timeAgo } from "@/lib/utils";
-
-const NOTIF_TYPE_CONFIG: Record<string, { color: string }> = {
-  booking_confirmed: { color: "text-emerald-500" },
-  booking_cancelled: { color: "text-rose-500" },
-  booking_request: { color: "text-amber-500" },
-  review_received: { color: "text-amber-400" },
-  message: { color: "text-blue-500" },
-  system: { color: "text-primary" },
-  listing_approved: { color: "text-emerald-500" },
-  listing_rejected: { color: "text-rose-500" },
-  payout: { color: "text-emerald-500" },
-  promotion: { color: "text-purple-500" },
-};
-
 export function Navbar() {
-  const pathname = usePathname();
   const { isAuthenticated, user, logout } = useAuth();
   const isAdmin = user?.role === "admin";
-  const { notifications, getUnreadCount, markAsRead, markAllAsRead } = useNotificationStore();
-  const unreadCount = getUnreadCount();
-  const recentNotifications = notifications
-    .slice()
-    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-    .slice(0, 5);
-  const hasUnread = unreadCount > 0;
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur-lg">
@@ -60,133 +34,6 @@ export function Navbar() {
 
         {/* Right side actions */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* Search icon shortcut */}
-          <Link
-            href="/search"
-            className="h-9 w-9 rounded-lg flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
-            aria-label="Search"
-          >
-            <Search className="h-4.5 w-4.5" />
-          </Link>
-
-          {/* Wishlist */}
-          {isAuthenticated && (
-            <Link
-              href="/wishlist"
-              className="h-9 w-9 rounded-lg flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
-              aria-label="My wishlist"
-            >
-              <Heart className="h-4.5 w-4.5" />
-            </Link>
-          )}
-
-          {/* Notifications bell */}
-          {isAuthenticated && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  className="relative h-9 w-9 rounded-lg flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
-                  aria-label={`Notifications${hasUnread ? ` (${unreadCount} unread)` : ""}`}
-                >
-                  <Bell className="h-4.5 w-4.5" />
-                  {hasUnread && (
-                    <span className="absolute -top-0.5 -right-0.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground shadow-sm ring-2 ring-background">
-                      {unreadCount > 9 ? "9+" : unreadCount}
-                    </span>
-                  )}
-                </button>
-              </DropdownMenuTrigger>
-
-              <DropdownMenuContent
-                align="end"
-                className="w-80 rounded-2xl p-2 shadow-xl border-border/50"
-              >
-                <DropdownMenuLabel className="flex items-center justify-between px-2 py-1.5">
-                  <span className="font-bold text-sm">Notifications</span>
-                  {unreadCount > 0 && (
-                    <button
-                      onClick={markAllAsRead}
-                      className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
-                    >
-                      <CheckCheck className="h-3.5 w-3.5 inline mr-0.5" />
-                      Mark all read
-                    </button>
-                  )}
-                </DropdownMenuLabel>
-
-                <DropdownMenuSeparator />
-
-                {recentNotifications.length === 0 ? (
-                  <div className="flex flex-col items-center py-8 text-center px-4">
-                    <Inbox className="h-8 w-8 text-muted-foreground/30 mb-2" />
-                    <p className="text-sm font-medium text-muted-foreground">No notifications yet</p>
-                    <p className="text-xs text-muted-foreground/60 mt-0.5">
-                      Updates will appear here when they arrive.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="max-h-[360px] overflow-y-auto space-y-0.5">
-                    {recentNotifications.map((n) => {
-                      const cfg = NOTIF_TYPE_CONFIG[n.type] ?? { color: "text-muted-foreground" };
-                      return (
-                        <DropdownMenuItem
-                          key={n.id}
-                          onClick={() => markAsRead(n.id)}
-                          className={cn(
-                            "cursor-pointer rounded-xl px-3 py-2.5 flex items-start gap-3",
-                            !n.read && "bg-primary/[0.03]",
-                          )}
-                          asChild
-                        >
-                          <div>
-                            <div
-                              className={cn(
-                                "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg",
-                                n.read ? "bg-muted" : "bg-primary/10",
-                              )}
-                            >
-                              <Bell className={cn("h-4 w-4", n.read ? "text-muted-foreground/50" : cfg.color)} />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p
-                                className={cn(
-                                  "text-xs leading-snug",
-                                  n.read ? "font-medium text-foreground" : "font-bold text-foreground",
-                                )}
-                              >
-                                {n.title}
-                              </p>
-                              <div className="flex items-center gap-2 mt-1">
-                                {!n.read && (
-                                  <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
-                                )}
-                                <span className="text-[9px] text-muted-foreground/60 font-medium">
-                                  {timeAgo(n.timestamp)}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </DropdownMenuItem>
-                      );
-                    })}
-                  </div>
-                )}
-
-                <DropdownMenuSeparator />
-
-                <DropdownMenuItem asChild>
-                  <Link
-                    href="/notifications"
-                    className="cursor-pointer rounded-xl font-semibold text-center justify-center text-primary"
-                  >
-                    <Bell className="h-4 w-4 mr-2" />
-                    View All Notifications
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-
           {/* Become a Host CTA — always visible for non-admin users */}
           {!isAdmin && (
             <Link
@@ -260,6 +107,11 @@ export function Navbar() {
                   <DropdownMenuLabel className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 px-2 pb-1">
                     Travel
                   </DropdownMenuLabel>
+                  <DropdownMenuItem asChild>
+                    <Link href="/search" className="cursor-pointer rounded-xl font-medium">
+                      <Search className="h-4 w-4 mr-2.5 text-muted-foreground" /> Search
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/profile" className="cursor-pointer rounded-xl font-medium">
                       <User className="h-4 w-4 mr-2.5 text-muted-foreground" /> My Profile
@@ -382,6 +234,11 @@ export function Navbar() {
                   <DropdownMenuLabel className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 px-2 pb-1">
                     Browse
                   </DropdownMenuLabel>
+                  <DropdownMenuItem asChild>
+                    <Link href="/search" className="cursor-pointer rounded-xl font-medium">
+                      <Search className="h-4 w-4 mr-2.5 text-muted-foreground" /> Search
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/search?category=stays" className="cursor-pointer rounded-xl font-medium">
                       <Hotel className="h-4 w-4 mr-2.5 text-muted-foreground" /> Stays

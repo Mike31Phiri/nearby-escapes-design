@@ -1,4 +1,4 @@
-import { HostListingsPage } from "@/views/host-listings/HostListingsPage";
+import { HostListingsPage } from "@/components/host-listings/HostListingsPage";
 
 export default function HostListings() {
   return <HostListingsPage />;

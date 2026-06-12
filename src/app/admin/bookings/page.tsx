@@ -1,4 +1,4 @@
-import { AdminBookings } from "@/views/admin/AdminBookings";
+import { AdminBookings } from "@/components/admin/AdminBookings";
 
 export default function AdminBookingsRoute() {
   return <AdminBookings />;

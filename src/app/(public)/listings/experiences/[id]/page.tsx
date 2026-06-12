@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { mockExperiences, mockGems, mockPackages } from "@/lib/mock-data";
-import { ExperienceDetailPage } from "@/views/listings/ExperienceDetailPage";
+import { ExperienceDetailPage } from "@/components/listings/ExperienceDetailPage";
 
 interface Props {
   params: Promise<{ id: string }>;

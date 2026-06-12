@@ -1,4 +1,4 @@
-import { AdminActivityLog } from "@/views/admin/AdminActivityLog";
+import { AdminActivityLog } from "@/components/admin/AdminActivityLog";
 
 export default function AdminActivityLogRoute() {
   return <AdminActivityLog />;

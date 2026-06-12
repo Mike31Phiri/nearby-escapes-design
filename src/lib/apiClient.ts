@@ -122,10 +122,11 @@ async function request<T>(
   }
 
   // Don't JSON-stringify FormData — pass it as-is to fetch
-  const serializedBody = body instanceof FormData ? body : body !== undefined ? JSON.stringify(body) : undefined;
+  const serializedBody =
+    body instanceof FormData ? body : body !== undefined ? JSON.stringify(body) : undefined;
 
   // Attach CSRF token for state-changing requests (if available)
-  if (!skipCsrf && csrfToken && method !== "GET" && method !== "HEAD") {
+  if (!skipCsrf && csrfToken && method !== "GET") {
     headers["X-CSRF-Token"] = csrfToken;
   }
 
@@ -146,7 +147,11 @@ async function request<T>(
       triggerLogout();
       return {
         data: null,
-        error: { status: 401, code: "SESSION_EXPIRED", message: "Your session has expired. Please log in again." },
+        error: {
+          status: 401,
+          code: "SESSION_EXPIRED",
+          message: "Your session has expired. Please log in again.",
+        },
         ok: false,
       };
     }
@@ -158,7 +163,11 @@ async function request<T>(
       }
       return {
         data: null,
-        error: { status: 403, code: "FORBIDDEN", message: "You don't have permission to perform this action." },
+        error: {
+          status: 403,
+          code: "FORBIDDEN",
+          message: "You don't have permission to perform this action.",
+        },
         ok: false,
       };
     }
@@ -177,7 +186,9 @@ async function request<T>(
       const sanitized: ApiError = {
         status: response.status,
         code: rawError.code || "UNKNOWN_ERROR",
-        message: IS_PRODUCTION ? sanitizeMessage(rawError.message) : (rawError.message || "An unexpected error occurred."),
+        message: IS_PRODUCTION
+          ? sanitizeMessage(rawError.message)
+          : rawError.message || "An unexpected error occurred.",
         details: rawError.details || undefined,
       };
       return { data: null, error: sanitized, ok: false };
@@ -210,7 +221,9 @@ function sanitizeMessage(message: string): string {
   // Remove anything that looks like a file path or stack frame
   const cleaned = message.replace(/\([^)]+:\d+:\d+\)/g, "").replace(/at\s+\S+\s+\(.*?\)/g, "");
   // Truncate if suspiciously long
-  return cleaned.length > 200 ? "An unexpected error occurred." : cleaned.trim() || "An unexpected error occurred.";
+  return cleaned.length > 200
+    ? "An unexpected error occurred."
+    : cleaned.trim() || "An unexpected error occurred.";
 }
 
 // ─── Public API ───────────────────────────────────────────────────────────
@@ -263,8 +276,12 @@ export const api = {
  * Server-side API call (in Next.js Server Components / Route Handlers).
  * Does NOT include credentials or CSRF — use for public data fetching.
  */
-export async function serverFetch<T>(path: string, options?: { baseUrl?: string; revalidate?: number }) {
-  const base = options?.baseUrl || process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
+export async function serverFetch<T>(
+  path: string,
+  options?: { baseUrl?: string; revalidate?: number },
+) {
+  const base =
+    options?.baseUrl || process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
   const url = `${base}${path.startsWith("/") ? path : `/${path}`}`;
 
   const res = await fetch(url, {
@@ -272,7 +289,12 @@ export async function serverFetch<T>(path: string, options?: { baseUrl?: string;
     headers: { Accept: "application/json" },
   });
 
-  if (!res.ok) return { data: null, error: { status: res.status, message: res.statusText } as ApiError, ok: false as const };
+  if (!res.ok)
+    return {
+      data: null,
+      error: { status: res.status, message: res.statusText } as ApiError,
+      ok: false as const,
+    };
   const data = (await res.json()) as T;
   return { data, error: null, ok: true as const };
 }

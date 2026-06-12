@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { mockStays, mockTransport, mockExperiences, mockGems, mockPackages } from "@/lib/mock-data";
-import { BookingFormPage } from "@/views/checkout/BookingFormPage";
-import type { ListingData } from "@/views/checkout/BookingFormPage";
+import { BookingFormPage } from "@/components/checkout/BookingFormPage";
+import type { ListingData } from "@/components/checkout/BookingFormPage";
 
 export type { ListingData };
 

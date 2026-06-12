@@ -1,4 +1,4 @@
-import { AdminReports } from "@/views/admin/AdminReports";
+import { AdminReports } from "@/components/admin/AdminReports";
 
 export default function AdminReportsRoute() {
   return <AdminReports />;

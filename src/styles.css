@@ -1,5 +1,3 @@
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -157,8 +155,8 @@
   --popover-foreground: 0.984 0.003 247.858;
   --primary: 0.929 0.013 255.508;
   --primary-foreground: 0.208 0.042 265.755;
-  --secondary: 0.32 0.10 85;
-  --secondary-foreground: 0.92 0.10 85;
+  --secondary: 0.32 0.1 85;
+  --secondary-foreground: 0.92 0.1 85;
   --muted: 0.279 0.041 260.031;
   --muted-foreground: 0.704 0.04 256.788;
   --accent: 0.279 0.041 260.031;

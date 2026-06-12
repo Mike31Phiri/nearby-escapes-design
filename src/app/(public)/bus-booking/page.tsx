@@ -1,4 +1,4 @@
-import { BusBookingPage } from "@/views/bus-booking/BusBookingPage";
+import { BusBookingPage } from "@/components/bus-booking/BusBookingPage";
 
 export default function BusBookingRoute() {
   return <BusBookingPage />;

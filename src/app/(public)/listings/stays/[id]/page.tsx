@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { mockStays } from "@/lib/mock-data";
-import { StayDetailPage } from "@/views/listings/StayDetailPage";
+import { StayDetailPage } from "@/components/listings/StayDetailPage";
 
 interface Props {
   params: Promise<{ id: string }>;

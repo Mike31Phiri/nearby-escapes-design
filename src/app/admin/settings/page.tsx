@@ -1,4 +1,4 @@
-import { AdminSettings } from "@/views/admin/AdminSettings";
+import { AdminSettings } from "@/components/admin/AdminSettings";
 
 export default function AdminSettingsRoute() {
   return <AdminSettings />;

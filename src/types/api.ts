@@ -192,16 +192,11 @@ export interface ReqListingSearch {
 
 // ─── Bookings ─────────────────────────────────────────────────────────────
 
-export interface BookingDTO extends ConfirmedBooking {
-  id: string;
-  bookingRef: string;
+export interface BookingDTO extends Omit<ConfirmedBooking, "status"> {
+  status: "pending" | "confirmed" | "cancelled" | "completed";
   type: ListingType;
-  listingId: string;
-  listingName: string;
   guestId: string;
   hostId: string;
-  status: "pending" | "confirmed" | "cancelled" | "completed";
-  amount: number;
   currency: string;
   createdAt: string;
   updatedAt: string;
