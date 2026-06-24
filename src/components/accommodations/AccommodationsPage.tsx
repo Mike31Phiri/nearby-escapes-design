@@ -17,7 +17,7 @@ const amenityIcons: Record<string, React.ReactNode> = {
 
 export function AccommodationsPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
+    <div className="min-h-screen flex flex-col bg-muted font-sans">
       <main className="flex-1">
         {/* Header */}
         <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-10">
@@ -63,7 +63,7 @@ export function AccommodationsPage() {
             {mockStays.map((stay) => (
               <div
                 key={stay.id}
-                className="group relative rounded-2xl border border-border/50 bg-card shadow-sm overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                className="group relative rounded-2xl border border-border/50 bg-card shadow-sm card-shadow transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
                 {/* Image */}
                 <Link href={`/listings/stays/${stay.id}`} className="block">

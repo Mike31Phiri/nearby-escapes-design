@@ -1,7 +1,7 @@
 export interface HostListing {
   id: string;
   name: string;
-  type: "stay" | "experience" | "transport";
+  type: "stay" | "experience" | "transport" | "gem";
   location: string;
   status: "active" | "pending" | "draft";
   image: string;
@@ -13,7 +13,7 @@ export interface HostListing {
 
 export interface TripBooking {
   id: string;
-  type: "stay" | "experience" | "transport";
+  type: "stay" | "experience" | "transport" | "gem";
   name: string;
   location: string;
   image: string;
@@ -26,7 +26,7 @@ export interface TripBooking {
 export interface UserReview {
   id: string;
   listingName: string;
-  listingType: "stay" | "experience" | "transport";
+  listingType: "stay" | "experience" | "transport" | "gem";
   rating: number;
   date: string;
   text: string;
@@ -165,7 +165,172 @@ export const mockEarnings: MonthlyEarning[] = [
   { month: "Dec", amount: 16700, bookings: 33 },
 ];
 
-// ---- Guest Trip History ----
+// ---- Host profiles mapped by stay listing ID (for detail pages) ----
+// Each host gets a distinct personality, bio, and stats
+
+export interface StayHost {
+  id: string;
+  name: string;
+  avatarInitials: string;
+  avatarColor: string;
+  bio: string;
+  location: string;
+  joined: string;
+  rating: number;
+  reviewCount: number;
+  responseRate: number;
+  responseTime: string;
+  verifiedBadges: string[];
+  totalListings: number;
+  languages: string[];
+  superhost: boolean;
+}
+
+export const mockStayHosts: Record<string, StayHost> = {
+  "1": {
+    id: "host-1",
+    name: "Chanda Bwalya",
+    avatarInitials: "CB",
+    avatarColor: "#2A1B3D",
+    bio: "Zambian-born travel enthusiast and hospitality curator. I handpick the finest lodges, camps, and experiences across Zambia to ensure every guest leaves with unforgettable memories. When I'm not hosting, you'll find me exploring remote corners of the country or cooking traditional Nshima with my family.",
+    location: "Lusaka, Zambia",
+    joined: "January 2023",
+    rating: 4.92,
+    reviewCount: 187,
+    responseRate: 98,
+    responseTime: "within 1 hour",
+    verifiedBadges: ["Identity Verified", "Email Verified", "Phone Verified"],
+    totalListings: 6,
+    languages: ["English", "Bemba", "Nyanja"],
+    superhost: true,
+  },
+  "2": {
+    id: "host-2",
+    name: "Esther Phiri",
+    avatarInitials: "EP",
+    avatarColor: "#1A4A3A",
+    bio: "Livingstone native with a passion for hospitality. I've been welcoming travellers to Victoria Falls for over a decade. My goal is to make every guest feel at home while experiencing the wonder of Mosi-oa-Tunya — the Smoke that Thunders.",
+    location: "Livingstone, Zambia",
+    joined: "March 2022",
+    rating: 4.88,
+    reviewCount: 256,
+    responseRate: 100,
+    responseTime: "within 30 min",
+    verifiedBadges: ["Identity Verified", "Email Verified", "Business Verified"],
+    totalListings: 3,
+    languages: ["English", "Tonga", "Lozi"],
+    superhost: true,
+  },
+  "3": {
+    id: "host-3",
+    name: "Michael Tembo",
+    avatarInitials: "MT",
+    avatarColor: "#2A4A1A",
+    bio: "Former safari guide turned camp owner. I know the South Luangwa bush like the back of my hand and love sharing its secrets with adventurous souls. Every stay includes a complimentary guided morning walk — my way of showing you the real Zambia.",
+    location: "Mfuwe, Zambia",
+    joined: "June 2023",
+    rating: 4.85,
+    reviewCount: 89,
+    responseRate: 95,
+    responseTime: "within 2 hours",
+    verifiedBadges: ["Identity Verified", "Guide Certified"],
+    totalListings: 2,
+    languages: ["English", "Chewa", "Nsenga"],
+    superhost: false,
+  },
+  "4": {
+    id: "host-4",
+    name: "Nomsa Tembo",
+    avatarInitials: "NT",
+    avatarColor: "#1A3A5A",
+    bio: "Kariba born and raised. My family has been hosting travellers at the lake for three generations. I specialise in creating relaxed lakeside experiences — fishing, sunset cruises, and the best grilled bream you'll ever taste.",
+    location: "Kariba, Zambia",
+    joined: "September 2022",
+    rating: 4.78,
+    reviewCount: 145,
+    responseRate: 92,
+    responseTime: "within 3 hours",
+    verifiedBadges: ["Identity Verified", "Email Verified"],
+    totalListings: 4,
+    languages: ["English", "Tonga", "Shona"],
+    superhost: false,
+  },
+  "5": {
+    id: "host-5",
+    name: "David Mulenga",
+    avatarInitials: "DM",
+    avatarColor: "#4A2A1A",
+    bio: "Wildlife conservationist and lodge owner. Every booking at Kafue River Lodge directly supports our anti-poaching patrols. I believe travel should leave a positive footprint — and I'll make sure your safari is both luxurious and meaningful.",
+    location: "Kafue National Park, Zambia",
+    joined: "October 2021",
+    rating: 4.9,
+    reviewCount: 92,
+    responseRate: 97,
+    responseTime: "within 1 hour",
+    verifiedBadges: [
+      "Identity Verified",
+      "Email Verified",
+      "Phone Verified",
+      "Conservation Partner",
+    ],
+    totalListings: 5,
+    languages: ["English", "Bemba", "Kaonde"],
+    superhost: true,
+  },
+  "6": {
+    id: "host-6",
+    name: "Grace Banda",
+    avatarInitials: "GB",
+    avatarColor: "#3A2A4A",
+    bio: "Business traveller turned city host. After years of staying in hotels across the Copperbelt, I decided to create the stay I always wished existed — modern, clean, and welcoming. My boutique in Ndola is where comfort meets convenience.",
+    location: "Ndola, Zambia",
+    joined: "February 2024",
+    rating: 4.65,
+    reviewCount: 178,
+    responseRate: 99,
+    responseTime: "within 15 min",
+    verifiedBadges: ["Identity Verified", "Email Verified"],
+    totalListings: 2,
+    languages: ["English", "Bemba"],
+    superhost: false,
+  },
+  "7": {
+    id: "host-7",
+    name: "James Kasonde",
+    avatarInitials: "JK",
+    avatarColor: "#1A2A3A",
+    bio: "Remote wilderness specialist. I operate one of Zambia's most exclusive birding camps in the Bangweulu wetlands. If you're serious about seeing the shoebill stork in the wild, there's no better place on earth. I also run community education programmes in nearby villages.",
+    location: "Bangweulu, Zambia",
+    joined: "November 2020",
+    rating: 4.95,
+    reviewCount: 67,
+    responseRate: 90,
+    responseTime: "within 6 hours",
+    verifiedBadges: ["Identity Verified", "Guide Certified", "Conservation Partner"],
+    totalListings: 1,
+    languages: ["English", "Bemba", "Lungu"],
+    superhost: true,
+  },
+  "8": {
+    id: "host-8",
+    name: "Thandiwe Banda",
+    avatarInitials: "TB",
+    avatarColor: "#4A1A2A",
+    bio: "Lusaka local with an eye for design. I curate boutique stays in the capital for travellers who want more than a generic hotel. Each of my properties features original Zambian art, locally sourced furniture, and a carefully curated guide to the city's hidden gems.",
+    location: "Lusaka, Zambia",
+    joined: "July 2022",
+    rating: 4.82,
+    reviewCount: 203,
+    responseRate: 96,
+    responseTime: "within 1 hour",
+    verifiedBadges: ["Identity Verified", "Email Verified", "Phone Verified"],
+    totalListings: 3,
+    languages: ["English", "Nyanja", "Bemba"],
+    superhost: true,
+  },
+};
+
+// ---- Guest Trip History -----
 export const mockTrips: TripBooking[] = [
   {
     id: "trip-1",

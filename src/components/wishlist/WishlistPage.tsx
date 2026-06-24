@@ -1,7 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { Heart, MapPin, Star, Trash2, ArrowRight, Search } from "lucide-react";
+import {
+  Heart,
+  MapPin,
+  Star,
+  Trash2,
+  ArrowRight,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useWishlistStore } from "@/store/wishlistStore";
 
@@ -9,7 +18,7 @@ export function WishlistPage() {
   const { items, removeItem } = useWishlistStore();
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
+    <div className="min-h-screen flex flex-col bg-muted font-sans">
       <main className="flex-1">
         {/* Header */}
         <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-10">
@@ -59,61 +68,97 @@ export function WishlistPage() {
             </div>
           ) : (
             <div className="mt-8">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-                {items.map((item) => (
-                  <div
-                    key={item.id}
-                    className="group relative rounded-2xl border border-border/50 bg-card shadow-sm overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-                  >
-                    {/* Image */}
-                    <Link href={`/listings/stays/${item.id}`} className="block">
-                      <div className="relative h-52 overflow-hidden bg-muted">
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          loading="lazy"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                        {/* Price badge */}
-                        <div className="absolute bottom-3 left-3">
-                          <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-foreground shadow-sm">
-                            K{item.price}
-                            <span className="font-normal text-muted-foreground"> / night</span>
-                          </span>
-                        </div>
-                      </div>
-                    </Link>
+              <div className="relative flex items-center">
+                {/* Left arrow */}
+                <button
+                  onClick={() => {
+                    const el = document.getElementById("saved-scroll");
+                    el?.scrollBy({ left: -400, behavior: "smooth" });
+                  }}
+                  className="hidden md:flex shrink-0 h-8 w-8 items-center justify-center rounded-full bg-white border border-border/60 shadow-sm hover:bg-muted transition-all -ml-1 mr-2 z-10"
+                  aria-label="Scroll saved items left"
+                >
+                  <ChevronLeft className="h-4 w-4 text-foreground" />
+                </button>
 
-                    {/* Info */}
-                    <div className="p-4">
-                      <Link
-                        href={`/listings/stays/${item.id}`}
-                        className="font-bold text-sm text-foreground hover:text-primary transition-colors line-clamp-1"
-                      >
-                        {item.name}
-                      </Link>
-                      <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
-                        <MapPin className="h-3 w-3 shrink-0" />
-                        {item.location}
-                      </p>
-                      <div className="flex items-center justify-between mt-2.5">
-                        <div className="flex items-center gap-1">
-                          <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                          <span className="text-xs font-bold text-foreground">{item.rating}</span>
-                          <span className="text-xs text-muted-foreground">({item.reviews})</span>
+                {/* Scrollable saved items */}
+                <div
+                  id="saved-scroll"
+                  className="flex gap-4 md:gap-6 overflow-x-auto scrollbar-hide scroll-smooth flex-1 py-2"
+                >
+                  {items.map((item) => (
+                    <div
+                      key={item.id}
+                      className="min-w-[280px] sm:min-w-[300px] md:min-w-[320px] lg:min-w-[340px] shrink-0"
+                    >
+                      <div className="group relative rounded-2xl border border-border/50 bg-card shadow-sm card-shadow transition-all duration-300 hover:-translate-y-1 hover:shadow-lg h-full">
+                        {/* Image */}
+                        <Link href={`/listings/stays/${item.id}`} className="block">
+                          <div className="relative h-52 overflow-hidden rounded-t-2xl bg-muted">
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                              loading="lazy"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                            {/* Price badge */}
+                            <div className="absolute bottom-3 left-3">
+                              <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-foreground shadow-sm">
+                                K{item.price}
+                                <span className="font-normal text-muted-foreground"> / night</span>
+                              </span>
+                            </div>
+                          </div>
+                        </Link>
+
+                        {/* Info */}
+                        <div className="p-4">
+                          <Link
+                            href={`/listings/stays/${item.id}`}
+                            className="font-bold text-sm text-foreground hover:text-primary transition-colors line-clamp-1"
+                          >
+                            {item.name}
+                          </Link>
+                          <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+                            <MapPin className="h-3 w-3 shrink-0" />
+                            {item.location}
+                          </p>
+                          <div className="flex items-center justify-between mt-2.5">
+                            <div className="flex items-center gap-1">
+                              <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                              <span className="text-xs font-bold text-foreground">
+                                {item.rating}
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                ({item.reviews})
+                              </span>
+                            </div>
+                            <button
+                              onClick={() => removeItem(item.id)}
+                              className="h-7 w-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-colors"
+                              aria-label={`Remove ${item.name} from saved`}
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
                         </div>
-                        <button
-                          onClick={() => removeItem(item.id)}
-                          className="h-7 w-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-colors"
-                          aria-label={`Remove ${item.name} from saved`}
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </button>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+
+                {/* Right arrow */}
+                <button
+                  onClick={() => {
+                    const el = document.getElementById("saved-scroll");
+                    el?.scrollBy({ left: 400, behavior: "smooth" });
+                  }}
+                  className="hidden md:flex shrink-0 h-8 w-8 items-center justify-center rounded-full bg-white border border-border/60 shadow-sm hover:bg-muted transition-all ml-2 -mr-1 z-10"
+                  aria-label="Scroll saved items right"
+                >
+                  <ChevronRight className="h-4 w-4 text-foreground" />
+                </button>
               </div>
 
               {/* Bottom CTA */}

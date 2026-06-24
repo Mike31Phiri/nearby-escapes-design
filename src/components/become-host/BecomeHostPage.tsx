@@ -393,7 +393,7 @@ export function BecomeHostPage() {
               {HOSTING_BENEFITS.map((benefit) => (
                 <div
                   key={benefit.title}
-                  className="group flex items-start gap-4 rounded-xl border border-border/50 bg-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
+                  className="group flex items-start gap-4 rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
                 >
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110">
                     <benefit.icon className="h-5.5 w-5.5" />
@@ -503,7 +503,7 @@ export function BecomeHostPage() {
             </div>
 
             {/* Terms agreement */}
-            <label className="flex items-start gap-3 rounded-xl border border-border/50 bg-card p-4 cursor-pointer transition-colors hover:bg-muted/50">
+            <label className="flex items-start gap-3 rounded-xl border border-border/50 bg-card p-4 card-shadow cursor-pointer transition-colors hover:bg-muted/50">
               <input
                 type="checkbox"
                 checked={form.agreedToTerms}
@@ -562,7 +562,7 @@ export function BecomeHostPage() {
                         "relative flex flex-col items-center text-center p-4 rounded-xl border-2 transition-all duration-200",
                         selected
                           ? "border-primary bg-primary/5 shadow-md shadow-primary/5"
-                          : "border-border/50 bg-card hover:border-border hover:shadow-sm",
+                          : "border-border/50 bg-card card-shadow hover:border-border hover:shadow-sm",
                       )}
                     >
                       {selected && (
@@ -687,7 +687,7 @@ export function BecomeHostPage() {
                 </FormField>
               </div>
 
-              <div className="flex items-center gap-2 rounded-xl border border-border/50 bg-card p-4">
+              <div className="flex items-center gap-2 rounded-xl border border-border/50 bg-card card-shadow p-4">
                 <CreditCard className="h-5 w-5 text-muted-foreground shrink-0" />
                 <p className="text-xs text-muted-foreground">
                   <span className="font-semibold text-foreground">Mobile Money</span> also
@@ -710,7 +710,7 @@ export function BecomeHostPage() {
 
             <div className="space-y-6">
               {/* Personal Info Summary */}
-              <div className="rounded-xl border border-border/40 bg-card p-5 shadow-sm">
+              <div className="rounded-xl border border-border/40 bg-card p-5 shadow-sm card-shadow">
                 <div className="flex items-center gap-2 mb-4">
                   <ShieldCheck className="h-4 w-4 text-primary" />
                   <h3 className="text-xs font-black uppercase tracking-widest text-foreground">
@@ -741,7 +741,7 @@ export function BecomeHostPage() {
               </div>
 
               {/* Preferences Summary */}
-              <div className="rounded-xl border border-border/40 bg-card p-5 shadow-sm">
+              <div className="rounded-xl border border-border/40 bg-card p-5 shadow-sm card-shadow">
                 <div className="flex items-center gap-2 mb-4">
                   <Building2 className="h-4 w-4 text-primary" />
                   <h3 className="text-xs font-black uppercase tracking-widest text-foreground">
@@ -772,7 +772,7 @@ export function BecomeHostPage() {
               </div>
 
               {/* Payout Summary */}
-              <div className="rounded-xl border border-border/40 bg-card p-5 shadow-sm">
+              <div className="rounded-xl border border-border/40 bg-card p-5 shadow-sm card-shadow">
                 <div className="flex items-center gap-2 mb-4">
                   <Banknote className="h-4 w-4 text-primary" />
                   <h3 className="text-xs font-black uppercase tracking-widest text-foreground">
@@ -833,7 +833,7 @@ export function BecomeHostPage() {
   // ─── Render ────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
+    <div className="min-h-screen flex flex-col bg-muted font-sans">
       <main className="flex-1">
         {/* Top Banner */}
         <div className="bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">

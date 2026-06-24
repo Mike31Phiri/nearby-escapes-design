@@ -63,7 +63,7 @@ function NotificationCard({
   return (
     <div
       className={cn(
-        "group relative flex items-start gap-4 rounded-xl border bg-card p-4 md:p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md",
+        "group relative flex items-start gap-4 rounded-xl border bg-card p-4 md:p-5 shadow-sm card-shadow transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md",
         n.read ? "border-border/50" : "border-primary/20 bg-primary/[0.02]",
       )}
     >
@@ -156,7 +156,7 @@ export function NotificationsPage() {
   const unreadCount = getUnreadCount();
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
+    <div className="min-h-screen flex flex-col bg-muted font-sans">
       <main className="flex-1">
         <div className="mx-auto max-w-4xl px-4 md:px-6 pt-8 md:pt-12 pb-16">
           {/* Header */}

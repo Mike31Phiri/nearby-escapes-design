@@ -8,7 +8,7 @@ import { mockGems } from "@/lib/mock-data";
 
 export function GemsPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
+    <div className="min-h-screen flex flex-col bg-muted font-sans">
       <main className="flex-1">
         {/* Hero */}
         <div className="relative bg-gradient-to-br from-amber-500/10 via-primary/[0.02] to-transparent pb-12">
@@ -35,7 +35,7 @@ export function GemsPage() {
             {mockGems.map((gem, idx) => (
               <div
                 key={gem.id}
-                className="group relative rounded-2xl border border-border/50 bg-card shadow-sm overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex flex-col sm:flex-row"
+                className="group relative rounded-2xl border border-border/50 bg-card shadow-sm card-shadow transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex flex-col sm:flex-row"
               >
                 {/* Image */}
                 <div className="relative h-44 sm:h-auto sm:w-56 shrink-0 overflow-hidden bg-muted">

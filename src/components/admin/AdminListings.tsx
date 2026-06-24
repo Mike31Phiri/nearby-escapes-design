@@ -13,6 +13,7 @@ import {
   Ticket,
   Bus,
   AlertTriangle,
+  Gem,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -46,12 +47,14 @@ const typeIcons: Record<string, React.ElementType> = {
   stay: Bed,
   experience: Ticket,
   transport: Bus,
+  gem: Gem,
 };
 
 const typeLabels: Record<string, string> = {
   stay: "Stay",
   experience: "Experience",
   transport: "Transport",
+  gem: "Hidden Gem",
 };
 
 const listingStatusStyles: Record<string, string> = {
@@ -310,7 +313,7 @@ export function AdminListings() {
 
       {/* Filters */}
       <div className="mx-auto max-w-6xl px-4 md:px-6 -mt-6 relative z-10">
-        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border/40 bg-card p-3 shadow-sm">
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border/40 bg-card p-3 shadow-sm card-shadow">
           <div className="relative flex-1 min-w-[200px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -351,25 +354,26 @@ export function AdminListings() {
       {/* Stats Row */}
       <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
+          {" "}
+          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
             <p className="text-2xl font-bold text-foreground">{listingStats.total}</p>
             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
               Total
             </p>
           </div>
-          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
+          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
             <p className="text-2xl font-bold text-amber-600">{listingStats.pendingReview}</p>
             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
               Pending Review
             </p>
           </div>
-          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
+          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
             <p className="text-2xl font-bold text-emerald-600">{listingStats.approved}</p>
             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
               Approved
             </p>
           </div>
-          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
+          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
             <p className="text-2xl font-bold text-rose-600">{listingStats.rejected}</p>
             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
               Rejected

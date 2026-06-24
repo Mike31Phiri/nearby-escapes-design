@@ -8,7 +8,7 @@ import { mockTransport } from "@/lib/mock-data";
 
 export function BusBookingPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
+    <div className="min-h-screen flex flex-col bg-muted font-sans">
       <main className="flex-1">
         {/* Header */}
         <div className="relative bg-gradient-to-b from-blue-500/5 via-primary/[0.02] to-transparent pb-10">
@@ -34,7 +34,7 @@ export function BusBookingPage() {
           {mockTransport.map((route) => (
             <div
               key={route.id}
-              className="group relative rounded-2xl border border-border/50 bg-card shadow-sm overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg flex flex-col sm:flex-row"
+              className="group relative rounded-2xl border border-border/50 bg-card shadow-sm card-shadow transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg flex flex-col sm:flex-row"
             >
               {/* Image */}
               <div className="relative h-36 sm:h-auto sm:w-56 shrink-0 overflow-hidden bg-muted">

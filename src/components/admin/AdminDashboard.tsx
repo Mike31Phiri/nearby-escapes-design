@@ -50,7 +50,7 @@ function StatCard({
   href?: string;
 }) {
   const content = (
-    <div className="group flex items-center gap-4 rounded-xl border border-border/50 bg-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:border-primary/20">
+    <div className="group flex items-center gap-4 rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:border-primary/20">
       <div
         className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
         style={{
@@ -291,7 +291,7 @@ export function AdminDashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Monthly Revenue Chart */}
             <div className="lg:col-span-2">
-              <div className="rounded-xl border border-border/50 bg-card p-6 shadow-sm">
+              <div className="rounded-xl border border-border/50 bg-card p-6 shadow-sm card-shadow">
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <h3 className="text-sm font-black uppercase tracking-widest text-foreground">
@@ -345,7 +345,7 @@ export function AdminDashboard() {
 
               {/* Secondary Stats */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
-                <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm">
+                <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow">
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                     Avg. Rating
                   </p>
@@ -357,7 +357,7 @@ export function AdminDashboard() {
                     Across all listings
                   </p>
                 </div>
-                <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm">
+                <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow">
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                     Monthly Growth
                   </p>
@@ -368,7 +368,7 @@ export function AdminDashboard() {
                     <TrendingUp className="h-3 w-3" /> New user registrations
                   </p>
                 </div>
-                <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm">
+                <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow">
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                     Commission Rate
                   </p>
@@ -383,7 +383,7 @@ export function AdminDashboard() {
             </div>
 
             {/* Activity Feed */}
-            <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm">
+            <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <Activity className="h-4 w-4 text-primary" />
@@ -475,7 +475,7 @@ export function AdminDashboard() {
                 <Link
                   key={label}
                   href={href}
-                  className="group rounded-xl border border-border/50 bg-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:border-primary/20"
+                  className="group rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:border-primary/20"
                 >
                   <div
                     className="h-10 w-10 rounded-lg flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110"

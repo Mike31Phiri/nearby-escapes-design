@@ -16,6 +16,7 @@ import {
   ArrowUpRight,
   Copy,
   Trash2,
+  Gem,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -49,6 +50,7 @@ const typeIcons: Record<string, React.ElementType> = {
   stay: Bed,
   experience: Ticket,
   transport: Bus,
+  gem: Gem,
 };
 
 const placementConfig: Record<string, { label: string; icon: React.ElementType; color: string }> = {
@@ -69,6 +71,7 @@ function PromoCodeCard({
   onDelete: (id: string) => void;
 }) {
   const [copied, setCopied] = useState(false);
+  const { setLoading, setLoadingMessage } = useLoading();
   const expiresAt = new Date(promo.expiresAt);
   const isExpired = expiresAt < new Date();
   const usagePct = Math.round((promo.currentUses / promo.maxUses) * 100);
@@ -187,8 +190,8 @@ function PromoCodeCard({
           className={cn("h-7 rounded-lg text-xs font-semibold", !promo.isActive && "")}
           onClick={() =>
             withLoading(
-              useLoading().setLoading,
-              useLoading().setLoadingMessage,
+              setLoading,
+              setLoadingMessage,
               async () => {
                 await new Promise((r) => setTimeout(r, 400));
                 onToggle(promo.id);

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Heart, Star, MapPin } from "lucide-react";
+import { Heart, Star } from "lucide-react";
 import type { Stay } from "@/types/stay";
 import { cn } from "@/lib/utils";
 import { memo, useState } from "react";
@@ -14,6 +14,7 @@ import { useWishlistStore } from "@/store/wishlistStore";
 interface ListingCardProps {
   listing: Stay;
   className?: string;
+  isExclusive?: boolean;
 }
 
 export const ListingCard = memo(function ListingCard({ listing, className }: ListingCardProps) {
@@ -50,20 +51,24 @@ export const ListingCard = memo(function ListingCard({ listing, className }: Lis
           ? `/listings/stays/${listing.id}?${searchParams.toString()}`
           : `/listings/stays/${listing.id}`
       }
-      className={cn("group block", className)}
-      aria-label={`View details for ${listing.name} in ${listing.location}, priced at $${listing.price} per night`}
+      className={cn("group block transition-all duration-300 hover:-translate-y-0.5", className)}
+      aria-label={`View details for ${listing.name} in ${listing.location}, priced at ZMW ${listing.price} per night`}
     >
-      <div className="relative aspect-[4/3] overflow-hidden rounded-md mb-2 bg-muted">
+      {/* Image */}
+      <div className="relative aspect-[16/10] bg-[#F0EAE0] rounded-xl overflow-hidden transition-shadow duration-300 group-hover:shadow-sm">
         <img
           src={listing.image}
           alt={listing.name}
           loading="lazy"
           decoding="async"
-          className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-90"
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+        {/* Wishlist Button */}
         <button
           onClick={toggleFavorite}
-          className="absolute top-3 right-3 p-1.5 rounded-full bg-black/10 transition-colors hover:bg-black/20 z-10"
+          className="absolute top-3 right-3 p-1.5 rounded-full bg-black/20 backdrop-blur-md transition-colors hover:bg-black/40 z-10"
           aria-label={isFavorited ? "Remove from wishlist" : "Add to wishlist"}
         >
           <Heart
@@ -75,29 +80,25 @@ export const ListingCard = memo(function ListingCard({ listing, className }: Lis
         </button>
       </div>
 
-      <div className="flex flex-col py-1">
-        <div className="flex items-start justify-between gap-2">
-          <h3 className="font-bold text-sm tracking-tight text-foreground line-clamp-1">
+      {/* Info — Title, Price, Rating only */}
+      <div className="pt-2.5 px-0.5">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="text-[14px] font-semibold text-[#334155] leading-snug line-clamp-1 flex-1">
             {listing.name}
           </h3>
-
           <div className="flex items-center gap-1 shrink-0">
-            <Star className="h-3 w-3 fill-primary text-primary" />
-            <span className="font-semibold text-xs text-foreground">
+            <Star className="h-3 w-3 fill-[#C5A059] text-[#C5A059]" strokeWidth={1.5} />
+            <span className="text-[12px] font-semibold text-[#6B6258]">
               {listing.rating.toFixed(1)}
             </span>
           </div>
         </div>
-
-        <p className="text-xs text-muted-foreground mb-1 line-clamp-1">{listing.location}</p>
-
-        <div className="flex items-center">
-          <p className="text-sm font-semibold text-foreground">
-            ${listing.price}
-            <span className="text-xs font-normal text-muted-foreground ml-1">night</span>
-          </p>
+        <div className="flex items-baseline gap-0.5 mt-1.5">
+          <span className="text-[14px] font-bold text-[#2A1B3D]">ZMW {listing.price}</span>
+          <span className="text-[11px] text-[#8A8480]">/ night</span>
         </div>
       </div>
+
       <AuthGuardDialog
         isOpen={showAuthDialog}
         onClose={() => setShowAuthDialog(false)}

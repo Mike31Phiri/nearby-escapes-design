@@ -36,9 +36,7 @@ export function ReviewDialog({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="bg-background rounded-lg p-6 shadow-lg max-w-md w-full">
         <h2 className="text-xl font-semibold mb-4">Write a Review</h2>
-        {listingName && (
-          <p className="text-sm text-muted-foreground mb-4">for {listingName}</p>
-        )}
+        {listingName && <p className="text-sm text-muted-foreground mb-4">for {listingName}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-1">Rating</label>
@@ -48,9 +46,7 @@ export function ReviewDialog({
                   key={i}
                   type="button"
                   onClick={() => setRating(i + 1)}
-                  className={`text-2xl ${
-                    i < rating ? "text-yellow-400" : "text-gray-300"
-                  }`}
+                  className={`text-2xl ${i < rating ? "text-yellow-400" : "text-gray-300"}`}
                 >
                   ★
                 </button>
@@ -68,11 +64,7 @@ export function ReviewDialog({
             />
           </div>
           <div className="flex gap-2 justify-end">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-sm rounded-md border"
-            >
+            <button type="button" onClick={onClose} className="px-4 py-2 text-sm rounded-md border">
               Cancel
             </button>
             <button

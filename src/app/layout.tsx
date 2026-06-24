@@ -1,13 +1,19 @@
-import "@fontsource/figtree/400.css";
-import "@fontsource/figtree/500.css";
-import "@fontsource/figtree/600.css";
-import "@fontsource/figtree/700.css";
-import "@fontsource/figtree/800.css";
-import "@fontsource/manrope/400.css";
-import "@fontsource/manrope/500.css";
-import "@fontsource/manrope/600.css";
-import "@fontsource/manrope/700.css";
-import "@fontsource/manrope/800.css";
+import { Plus_Jakarta_Sans, Outfit, Dancing_Script } from "next/font/google";
+
+const fontSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const fontDisplay = Outfit({
+  subsets: ["latin"],
+  variable: "--font-display",
+});
+
+const fontScript = Dancing_Script({
+  subsets: ["latin"],
+  variable: "--font-script",
+});
 
 import type { Metadata } from "next";
 import "../styles.css";
@@ -75,11 +81,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" type="image/png" href="/favicon.png" />
-        <link rel="apple-touch-icon" href="/favicon.png" />
-        <meta name="theme-color" content="#0f766e" />
+        <link rel="icon" type="image/jpeg" href="/favicon.jpg" />
+        <link rel="apple-touch-icon" href="/favicon.jpg" />
+        <meta name="theme-color" content="#2A1B3D" />
       </head>
-      <body>
+      <body
+        className={`${fontSans.variable} ${fontDisplay.variable} ${fontScript.variable} font-sans antialiased`}
+      >
         <AuthProvider>
           <Suspense fallback={null}>
             <RouteProgressBar />

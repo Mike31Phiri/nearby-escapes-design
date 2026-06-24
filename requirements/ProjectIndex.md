@@ -1,14 +1,14 @@
-# Dream Stay Builder - Project Documentation Index
+# Nearby Escapes - Project Documentation Index
 
 ## Project Overview
 
-**Project Name:** Dream Stay Builder  
+**Project Name:** Nearby Escapes  
 **Documentation Standard:** Agile  
 **Last Updated:** Current Date
 
 ### Business Vision
 
-Dream Stay Builder is a comprehensive travel marketplace platform that connects guests with hosts offering diverse travel services including accommodations, experiences, transportation, and activities. The platform operates like Fiverr with two primary user roles: Guests (seeking travel services) and Hosts (offering various travel services), creating a unified ecosystem for travel planning and service delivery.
+Nearby Escapes is a comprehensive travel marketplace platform that connects guests with hosts offering diverse travel services including accommodations, experiences, transportation, and activities. The platform operates like Fiverr with two primary user roles: Guests (seeking travel services) and Hosts (offering various travel services), creating a unified ecosystem for travel planning and service delivery.
 
 ### Primary Stakeholders
 

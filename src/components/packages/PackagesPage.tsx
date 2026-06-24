@@ -8,7 +8,7 @@ import { mockPackages } from "@/lib/mock-data";
 
 export function PackagesPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
+    <div className="min-h-screen flex flex-col bg-muted font-sans">
       <main className="flex-1">
         {/* Header */}
         <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-10">
@@ -35,7 +35,7 @@ export function PackagesPage() {
             {mockPackages.map((pkg) => (
               <div
                 key={pkg.id}
-                className="group relative rounded-2xl border border-border/50 bg-card shadow-sm overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                className="group relative rounded-2xl border border-border/50 bg-card shadow-sm card-shadow transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
                 {/* Image */}
                 <div className="relative h-56 overflow-hidden bg-muted">

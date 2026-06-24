@@ -239,7 +239,7 @@ export function AdminSettings() {
           <div className="mt-8 flex items-center justify-between rounded-xl border border-border/50 bg-card p-4 shadow-sm">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-              All settings are saved locally. Click "Save Changes" to apply.
+              All settings are saved locally. Click &quot;Save Changes&quot; to apply.
             </div>
             <Button
               className="rounded-lg text-xs font-semibold"

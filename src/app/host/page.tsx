@@ -1,5 +1,5 @@
-import { HostProfilePage } from "@/components/profile/HostProfilePage";
+import { HostDashboardPage } from "@/components/host/HostDashboardPage";
 
 export default function HostPage() {
-  return <HostProfilePage />;
+  return <HostDashboardPage />;
 }

@@ -12,7 +12,7 @@ import {
   ChevronLeft,
   ChevronRight,
   MapPin,
-  Image,
+  Image as ImageIcon,
   DollarSign,
   Users,
   Sparkles,
@@ -67,6 +67,8 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { mockHostProfile } from "@/lib/mock-profile-data";
+import { mockGems } from "@/lib/mock-data";
 import {
   INITIAL_STAY_FORM,
   INITIAL_TRANSPORT_FORM,
@@ -140,7 +142,7 @@ const GEM_STEPS: StepConfig[] = [
   { id: "location", icon: MapPin, label: "Location & Access", short: "Location" },
   { id: "discovery", icon: Gem, label: "Discovery Details", short: "Discovery" },
   { id: "tips", icon: Star, label: "Tips & Nearby", short: "Tips" },
-  { id: "media", icon: Image, label: "Media", short: "Media" },
+  { id: "media", icon: ImageIcon, label: "Media", short: "Media" },
   { id: "review", icon: Eye, label: "Review", short: "Review" },
 ];
 
@@ -344,7 +346,7 @@ function ImageUploader({
       {images.map((url, idx) => (
         <div key={idx} className="flex items-center gap-2">
           <div className="relative flex-1">
-            <Image className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               value={url}
               onChange={(e) => {
@@ -862,10 +864,14 @@ export function HostCreatePage() {
   }, [validateStep, totalSteps]);
 
   const goBack = useCallback(() => {
-    setStep((s) => Math.max(s - 1, 0));
+    if (step === 0) {
+      setListingType(null);
+    } else {
+      setStep((s) => Math.max(s - 1, 0));
+    }
     setErrors({});
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+  }, [step]);
 
   const selectType = useCallback((type: ListingType) => {
     setListingType(type);
@@ -878,16 +884,83 @@ export function HostCreatePage() {
   const handleSubmit = useCallback(async () => {
     setSubmitting(true);
     await new Promise((r) => setTimeout(r, 1500));
+
+    // Save newly created listing to memory profile listings
+    if (listingType) {
+      let name = "";
+      let price = 0;
+      let location = "";
+      let image = "";
+
+      if (listingType === "stay") {
+        name = stayForm.name;
+        price = stayForm.pricePerNight;
+        location = stayForm.location;
+        image =
+          stayForm.images.filter(Boolean)[0] ||
+          "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&q=80";
+      } else if (listingType === "transport") {
+        name = transportForm.name;
+        price = transportForm.pricePerSeat;
+        location = `${transportForm.from} to ${transportForm.to}`;
+        image =
+          transportForm.images.filter(Boolean)[0] ||
+          "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=80";
+      } else if (listingType === "experience") {
+        name = experienceForm.name;
+        price = experienceForm.pricePerPerson;
+        location = experienceForm.meetingPoint;
+        image =
+          experienceForm.images.filter(Boolean)[0] ||
+          "https://images.unsplash.com/photo-1534234828563-02511c750b53?w=800&q=80";
+      } else if (listingType === "gem") {
+        name = gemForm.name;
+        const feeMatch = gemForm.entryFee.match(/\d+/);
+        price = feeMatch ? parseInt(feeMatch[0], 10) : 0;
+        location = gemForm.location;
+        image =
+          gemForm.images.filter(Boolean)[0] ||
+          "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80";
+      }
+
+      mockHostProfile.listings.push({
+        id: `h${mockHostProfile.listings.length + 1}-${Date.now()}`,
+        name: name || "New Listing",
+        type: listingType as "stay" | "experience" | "transport" | "gem",
+        location: location || "Lusaka, Zambia",
+        status: "active",
+        image: image,
+        price: price || 0,
+        bookings: 0,
+        rating: 5.0,
+        revenue: 0,
+      });
+
+      if (listingType === "gem") {
+        mockGems.push({
+          id: `g${mockGems.length + 1}-${Date.now()}`,
+          name: name || "New Gem",
+          location: location || "Lusaka",
+          rating: 5.0,
+          reviews: 0,
+          price: price || 0,
+          image: image,
+          category: gemForm.difficultyLevel === "challenging" ? "adventure" : "general",
+          description: gemForm.description,
+        });
+      }
+    }
+
     toast.success("Listing created successfully!", {
       description: "Your listing is now live and visible to travelers.",
     });
     setSubmitting(false);
     router.push("/host");
-  }, [router]);
+  }, [router, listingType, stayForm, transportForm, experienceForm, gemForm]);
 
-  // ═══════════════════════════════════════════════════════════════════
+  
   //  STAY FORM RENDERERS
-  // ═══════════════════════════════════════════════════════════════════
+  
 
   const renderStayStep = () => {
     switch (step) {
@@ -1319,9 +1392,9 @@ export function HostCreatePage() {
     );
   }
 
-  // ═══════════════════════════════════════════════════════════════════
+  
   //  TRANSPORT FORM RENDERERS
-  // ═══════════════════════════════════════════════════════════════════
+  
 
   const renderTransportStep = () => {
     switch (step) {
@@ -1686,9 +1759,9 @@ export function HostCreatePage() {
     );
   }
 
-  // ═══════════════════════════════════════════════════════════════════
+  
   //  EXPERIENCE FORM RENDERERS
-  // ═══════════════════════════════════════════════════════════════════
+  
 
   const renderExperienceStep = () => {
     switch (step) {
@@ -2118,9 +2191,9 @@ export function HostCreatePage() {
     );
   }
 
-  // ═══════════════════════════════════════════════════════════════════
+  
   //  GEM FORM RENDERERS
-  // ═══════════════════════════════════════════════════════════════════
+  
 
   const renderGemStep = () => {
     switch (step) {
@@ -2364,7 +2437,7 @@ export function HostCreatePage() {
   function renderGemMedia() {
     return (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
-        <SectionTitle icon={Image} title="Photos" subtitle="Show off this hidden gem" />
+        <SectionTitle icon={ImageIcon} title="Photos" subtitle="Show off this hidden gem" />
         <ImageUploader
           images={gemForm.images}
           onChange={(imgs) => setGemForm((f) => ({ ...f, images: imgs }))}
@@ -2473,9 +2546,9 @@ export function HostCreatePage() {
     );
   }
 
-  // ═══════════════════════════════════════════════════════════════════
+  
   //  SHARED REVIEW HELPERS
-  // ═══════════════════════════════════════════════════════════════════
+  
 
   function renderDescription(desc: string) {
     return (
@@ -2514,36 +2587,46 @@ export function HostCreatePage() {
 
   function renderSubmit() {
     return (
-      <div className="pt-4 border-t border-border/40">
-        <p className="text-xs text-muted-foreground mb-4">
+      <div className="pt-6 border-t border-border/40 space-y-4">
+        <p className="text-xs text-muted-foreground">
           By submitting, you confirm that all information provided is accurate and you agree to our{" "}
           <span className="text-primary underline underline-offset-2 cursor-pointer">
             Terms of Service
           </span>
           .
         </p>
-        <Button
-          onClick={handleSubmit}
-          disabled={submitting}
-          className="w-full h-13 rounded-xl font-black uppercase tracking-widest text-sm shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
-        >
-          {submitting ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" /> Publishing Listing...
-            </>
-          ) : (
-            <>
-              <Send className="h-4 w-4" /> Publish Listing
-            </>
-          )}
-        </Button>
+        <div className="flex gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={goBack}
+            className="rounded-xl font-semibold text-sm border-border/60 px-5"
+          >
+            <ChevronLeft className="h-4 w-4 mr-1" /> Back
+          </Button>
+          <Button
+            onClick={handleSubmit}
+            disabled={submitting}
+            className="flex-1 h-11 rounded-xl font-black uppercase tracking-widest text-sm shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
+          >
+            {submitting ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin mr-2" /> Publishing...
+              </>
+            ) : (
+              <>
+                <Send className="h-4 w-4 mr-2" /> Publish Listing
+              </>
+            )}
+          </Button>
+        </div>
       </div>
     );
   }
 
-  // ═══════════════════════════════════════════════════════════════════
+  
   //  TYPE SELECTION (Step 0)
-  // ═══════════════════════════════════════════════════════════════════
+  
 
   const renderTypeSelection = () => (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
@@ -2597,12 +2680,12 @@ export function HostCreatePage() {
     </div>
   );
 
-  // ═══════════════════════════════════════════════════════════════════
+  
   //  MAIN RENDER
-  // ═══════════════════════════════════════════════════════════════════
+  
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
+    <div className="min-h-screen flex flex-col bg-background font-sans">
       <main className="flex-1">
         {/* Top Banner */}
         <div className="bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
@@ -2640,7 +2723,7 @@ export function HostCreatePage() {
 
         {/* Wizard Content */}
         <div className="mx-auto max-w-3xl px-4 md:px-6 -mt-4 pb-20">
-          <div className="bg-card border border-border/40 rounded-2xl shadow-sm p-6 md:p-8">
+          <div className="bg-card border border-border/40 rounded-2xl shadow-sm card-shadow p-6 md:p-8">
             {/* Type Selection */}
             {!listingType && renderTypeSelection()}
 
@@ -2658,21 +2741,14 @@ export function HostCreatePage() {
 
             {/* Navigation Buttons (not on review step — those have their own submit) */}
             {listingType && step < totalSteps - 1 && (
-              <div
-                className={cn(
-                  "flex items-center justify-between pt-8 mt-8 border-t border-border/40",
-                  step === 0 ? "justify-end" : "",
-                )}
-              >
-                {step > 0 && (
-                  <Button
-                    variant="outline"
-                    onClick={goBack}
-                    className="rounded-xl font-semibold text-sm border-border/60"
-                  >
-                    <ChevronLeft className="h-4 w-4 mr-1" /> Back
-                  </Button>
-                )}
+              <div className="flex items-center justify-between pt-8 mt-8 border-t border-border/40">
+                <Button
+                  variant="outline"
+                  onClick={goBack}
+                  className="rounded-xl font-semibold text-sm border-border/60"
+                >
+                  <ChevronLeft className="h-4 w-4 mr-1" /> Back
+                </Button>
                 <Button
                   onClick={goNext}
                   className="rounded-xl font-black uppercase tracking-widest text-sm ml-auto shadow-md shadow-primary/10"

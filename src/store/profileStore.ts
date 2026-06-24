@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { safeLocalStorage } from "@/lib/safeStorage";
 
 export interface TravelPreferences {
   travelInterests: string[];
@@ -71,6 +72,7 @@ export const useProfileStore = create<ProfileState>()(
     }),
     {
       name: "dream-stay-profile",
+      storage: createJSONStorage(() => safeLocalStorage),
     },
   ),
 );

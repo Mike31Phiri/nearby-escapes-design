@@ -10,7 +10,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <LoadingProvider>
-      <div className="min-h-screen bg-[#fafafa]">
+      <div className="min-h-screen bg-muted">
         {/* Desktop Sidebar */}
         <AdminSidebar
           isCollapsed={sidebarCollapsed}

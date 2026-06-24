@@ -1,7 +1,8 @@
 "use client";
 
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { safeLocalStorage } from "@/lib/safeStorage";
 
 export interface ConfirmedBooking {
   id: string;
@@ -17,6 +18,9 @@ export interface ConfirmedBooking {
   transToken: string;
   customerName: string;
   customerPhone: string;
+  customerEmail?: string;
+  hostName?: string;
+  hostEmail?: string;
   details: {
     checkIn?: string;
     checkOut?: string;
@@ -78,6 +82,7 @@ export const useBookingStore = create<BookingStore>()(
     }),
     {
       name: "nearby-escapes-bookings",
+      storage: createJSONStorage(() => safeLocalStorage),
       partialize: (state) => ({ bookings: state.bookings }),
     },
   ),

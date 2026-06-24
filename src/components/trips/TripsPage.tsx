@@ -15,9 +15,11 @@ import {
   Compass,
   ArrowRight,
   Search,
+  ChevronLeft,
   ChevronRight,
   Ban,
   Star,
+  Gem,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -52,7 +54,7 @@ function StatCard({
   sub?: string;
 }) {
   return (
-    <div className="group flex items-center gap-4 rounded-xl border border-border/50 bg-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:border-primary/20">
+    <div className="group flex items-center gap-4 rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:border-primary/20">
       <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110">
         <Icon className="h-5.5 w-5.5" />
       </div>
@@ -73,12 +75,14 @@ const typeIcons = {
   stay: Hotel,
   experience: Ticket,
   transport: Bus,
+  gem: Gem,
 } as const;
 
 const typeLabels = {
   stay: "Stay",
   experience: "Experience",
   transport: "Transport",
+  gem: "Hidden Gem",
 } as const;
 
 // ─── Booking Card ────────────────────────────────────────────────────────
@@ -117,7 +121,7 @@ function BookingCard({
   }/${booking.listingId}`;
 
   return (
-    <div className="group flex flex-col sm:flex-row sm:items-start gap-4 rounded-xl border border-border/50 bg-card p-4 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+    <div className="group flex flex-col sm:flex-row sm:items-start gap-4 rounded-xl border border-border/50 bg-card p-4 shadow-sm card-shadow transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
       {/* Image */}
       <div className="relative h-28 w-full sm:h-24 sm:w-28 shrink-0 overflow-hidden rounded-lg bg-muted">
         <img
@@ -304,7 +308,7 @@ function BookingSection({
       </div>
 
       {bookings.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-12 text-center rounded-xl border border-dashed border-border/50 bg-card/30">
+        <div className="flex flex-col items-center justify-center py-12 text-center rounded-xl border border-dashed border-border/50 bg-card/30 card-shadow">
           <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mb-3">
             <EmptyIcon className="h-6 w-6 text-muted-foreground/40" />
           </div>
@@ -313,15 +317,46 @@ function BookingSection({
           {emptyAction && <div className="mt-4">{emptyAction}</div>}
         </div>
       ) : (
-        <div className="space-y-3">
-          {bookings.map((booking) => (
-            <BookingCard
-              key={booking.bookingRef}
-              booking={booking}
-              onCancel={onCancel}
-              onReview={onReview}
-            />
-          ))}
+        <div className="relative flex items-center">
+          <button
+            onClick={() => {
+              const el = document.getElementById(
+                `booking-scroll-${title.replace(/\s+/g, "-").toLowerCase()}`,
+              );
+              el?.scrollBy({ left: -350, behavior: "smooth" });
+            }}
+            className="hidden md:flex shrink-0 h-8 w-8 items-center justify-center rounded-full bg-white border border-border/60 shadow-sm hover:bg-muted transition-all -ml-2 mr-1 z-10"
+            aria-label={`Scroll ${title} left`}
+          >
+            <ChevronLeft className="h-4 w-4 text-foreground" />
+          </button>
+
+          <div
+            id={`booking-scroll-${title.replace(/\s+/g, "-").toLowerCase()}`}
+            className="flex gap-3 overflow-x-auto scrollbar-hide scroll-smooth flex-1 py-1"
+          >
+            {bookings.map((booking) => (
+              <div
+                key={booking.bookingRef}
+                className="min-w-[340px] md:min-w-[450px] lg:min-w-[520px] shrink-0"
+              >
+                <BookingCard booking={booking} onCancel={onCancel} onReview={onReview} />
+              </div>
+            ))}
+          </div>
+
+          <button
+            onClick={() => {
+              const el = document.getElementById(
+                `booking-scroll-${title.replace(/\s+/g, "-").toLowerCase()}`,
+              );
+              el?.scrollBy({ left: 350, behavior: "smooth" });
+            }}
+            className="hidden md:flex shrink-0 h-8 w-8 items-center justify-center rounded-full bg-white border border-border/60 shadow-sm hover:bg-muted transition-all ml-1 -mr-2 z-10"
+            aria-label={`Scroll ${title} right`}
+          >
+            <ChevronRight className="h-4 w-4 text-foreground" />
+          </button>
         </div>
       )}
     </div>
@@ -373,7 +408,7 @@ export function TripsPage() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
+    <div className="min-h-screen flex flex-col bg-muted font-sans">
       <main className="flex-1">
         {/* Page Header */}
         <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-10">
@@ -407,33 +442,68 @@ export function TripsPage() {
           </div>
         </div>
 
-        {/* Stats Row */}
+        {/* Stats Row — Horizontally scrollable with arrows */}
         <div className="mx-auto max-w-4xl px-4 md:px-6 -mt-6 relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            <StatCard
-              icon={CalendarDays}
-              label="Total Bookings"
-              value={bookings.length}
-              sub="All time"
-            />
-            <StatCard
-              icon={Clock}
-              label="Upcoming"
-              value={upcoming.length}
-              sub={`${past.length} completed`}
-            />
-            <StatCard
-              icon={CreditCard}
-              label="Total Spent"
-              value={`K${totalSpent.toLocaleString()}`}
-              sub="Across all trips"
-            />
-            <StatCard
-              icon={Compass}
-              label="Destinations"
-              value={new Set(bookings.map((b) => b.location)).size}
-              sub="Unique places"
-            />
+          <div className="relative flex items-center">
+            <button
+              onClick={() => {
+                const el = document.getElementById("trips-stats-scroll");
+                el?.scrollBy({ left: -300, behavior: "smooth" });
+              }}
+              className="hidden md:flex shrink-0 h-8 w-8 items-center justify-center rounded-full bg-white border border-border/60 shadow-sm hover:bg-muted transition-all mr-2 z-10"
+              aria-label="Scroll stats left"
+            >
+              <ChevronLeft className="h-4 w-4 text-foreground" />
+            </button>
+
+            <div
+              id="trips-stats-scroll"
+              className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-hide scroll-smooth flex-1 py-1"
+            >
+              <div className="min-w-[220px] md:min-w-[230px]">
+                <StatCard
+                  icon={CalendarDays}
+                  label="Total Bookings"
+                  value={bookings.length}
+                  sub="All time"
+                />
+              </div>
+              <div className="min-w-[220px] md:min-w-[230px]">
+                <StatCard
+                  icon={Clock}
+                  label="Upcoming"
+                  value={upcoming.length}
+                  sub={`${past.length} completed`}
+                />
+              </div>
+              <div className="min-w-[220px] md:min-w-[230px]">
+                <StatCard
+                  icon={CreditCard}
+                  label="Total Spent"
+                  value={`K${totalSpent.toLocaleString()}`}
+                  sub="Across all trips"
+                />
+              </div>
+              <div className="min-w-[220px] md:min-w-[230px]">
+                <StatCard
+                  icon={Compass}
+                  label="Destinations"
+                  value={new Set(bookings.map((b) => b.location)).size}
+                  sub="Unique places"
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                const el = document.getElementById("trips-stats-scroll");
+                el?.scrollBy({ left: 300, behavior: "smooth" });
+              }}
+              className="hidden md:flex shrink-0 h-8 w-8 items-center justify-center rounded-full bg-white border border-border/60 shadow-sm hover:bg-muted transition-all ml-2 z-10"
+              aria-label="Scroll stats right"
+            >
+              <ChevronRight className="h-4 w-4 text-foreground" />
+            </button>
           </div>
         </div>
 

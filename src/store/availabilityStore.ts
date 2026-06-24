@@ -1,7 +1,8 @@
 "use client";
 
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { safeLocalStorage } from "@/lib/safeStorage";
 
 /** A single date entry for a listing */
 export interface AvailabilityEntry {
@@ -249,6 +250,7 @@ export const useAvailabilityStore = create<AvailabilityStore>()(
     }),
     {
       name: "nearby-escapes-availability",
+      storage: createJSONStorage(() => safeLocalStorage),
       partialize: (state) => ({
         availability: state.availability,
         seasonalPricing: state.seasonalPricing,

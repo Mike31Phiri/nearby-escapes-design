@@ -161,7 +161,7 @@ export function AdminActivityLog() {
         system: mockActivityLogs.filter((l) => l.type === "system").length,
       },
     }),
-    [],
+    [filteredLogs.length],
   );
 
   return (
@@ -182,7 +182,7 @@ export function AdminActivityLog() {
 
       {/* Filters */}
       <div className="mx-auto max-w-6xl px-4 md:px-6 -mt-6 relative z-10">
-        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border/40 bg-card p-3 shadow-sm">
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border/40 bg-card p-3 shadow-sm card-shadow">
           <div className="relative flex-1 min-w-[200px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -259,7 +259,7 @@ export function AdminActivityLog() {
 
       {/* Activity List */}
       <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6 pb-16">
-        <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm">
+        <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow">
           {filteredLogs.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">

@@ -61,9 +61,7 @@ export function AdminSidebar({ isCollapsed = false, onToggle }: AdminSidebarProp
       }`}
     >
       <div className="flex items-center justify-between h-16 px-4 border-b">
-        {!isCollapsed && (
-          <span className="text-sm font-bold text-foreground">Admin</span>
-        )}
+        {!isCollapsed && <span className="text-sm font-bold text-foreground">Admin</span>}
         <button
           onClick={onToggle}
           className="p-1.5 rounded-lg hover:bg-muted transition-colors"
@@ -76,7 +74,9 @@ export function AdminSidebar({ isCollapsed = false, onToggle }: AdminSidebarProp
           )}
         </button>
       </div>
-      <nav className="p-2 space-y-1">          {navItems.map((item) => {
+      <nav className="p-2 space-y-1">
+        {" "}
+        {navItems.map((item) => {
           const isActive =
             pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href));
           const Icon = iconMap[item.icon];

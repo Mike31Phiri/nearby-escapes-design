@@ -11,21 +11,19 @@ import {
   ShieldCheck,
   Star,
   Users,
-  Info,
-  Calendar,
-  Phone,
-  User,
-  Coffee,
   CheckCircle2,
-  CalendarDays,
-  Gem,
-  Camera,
   Heart,
   Share2,
+  Sparkles,
 } from "lucide-react";
 import { ReviewSection } from "@/components/reviews/ReviewSection";
 import { cn } from "@/lib/utils";
 import type { Experience, Package } from "@/lib/mock-data";
+import { mockListingReviews } from "@/lib/mock-listing-reviews";
+import { toast } from "sonner";
+import { useAuth } from "@/lib/auth";
+import { useWishlistStore } from "@/store/wishlistStore";
+import { AuthGuardDialog } from "@/components/auth/AuthGuardDialog";
 
 // Custom premium descriptions for experiences, hidden gems, and packages
 const richDescriptions: Record<string, string> = {
@@ -92,6 +90,21 @@ const packageItineraries: Record<string, { title: string; desc: string }[]> = {
   ],
 };
 
+// Rating distribution helper
+function getRatingDistribution(reviews: { rating: number }[]) {
+  const dist = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+  reviews.forEach((r) => {
+    const key = Math.round(r.rating) as 1 | 2 | 3 | 4 | 5;
+    if (key >= 1 && key <= 5) dist[key]++;
+  });
+  const total = reviews.length || 1;
+  return Object.entries(dist).map(([star, count]) => ({
+    star: Number(star),
+    count,
+    percentage: (count / total) * 100,
+  }));
+}
+
 interface ExperienceDetailPageProps {
   item: Experience | Package;
   backHref?: string;
@@ -103,8 +116,11 @@ export function ExperienceDetailPage({
 }: ExperienceDetailPageProps) {
   const isPackage = item.id.startsWith("p");
   const isGem = item.id.startsWith("g");
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const { isSaved, addItem, removeItem } = useWishlistStore();
+  const isFavorited = isSaved(item.id);
 
-  // Category Label mapping
   let categoryLabel = "Attraction";
   if (isPackage) categoryLabel = "Curated Package";
   else if (isGem) categoryLabel = "Hidden Gem";
@@ -113,28 +129,51 @@ export function ExperienceDetailPage({
     richDescriptions[item.id] ||
     "Discover the wonders of Zambia with our curated local tours and packages. Expert guides, premium travel setups, and verified safety ensure an unforgettable journey.";
 
+  const reviews = mockListingReviews[item.id] || [];
+  const avgRating = "rating" in item ? item.rating : 4.8;
+  const reviewCount = "reviews" in item ? item.reviews : 0;
+  const ratingDist = getRatingDistribution(reviews);
+
+  const handleToggleFavorite = () => {
+    if (!isAuthenticated) {
+      setShowAuthDialog(true);
+      return;
+    }
+    if (isFavorited) {
+      removeItem(item.id);
+      toast.success(`Removed from collections`);
+    } else {
+      addItem(item);
+      toast.success(`Saved to collections`, {
+        icon: <Heart className="h-4 w-4 fill-primary text-primary" />,
+      });
+    }
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-background font-sans">
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-6 py-8">
-        {/* Back breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+    <div className="min-h-screen flex flex-col bg-background font-sans pb-20 md:pb-0">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8">
+        {/* Breadcrumbs row */}
+        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-5">
           <Link
             href={backHref}
             className="hover:text-primary transition-colors font-medium flex items-center gap-1"
           >
-            <ChevronLeft className="h-4 w-4" /> Back to results
+            <ChevronLeft className="h-4 w-4" /> Back
           </Link>
-          <span>/</span>
-          <span className="text-foreground font-semibold truncate">{item.name}</span>
+          <span className="text-muted-foreground/30">/</span>
+          <span className="text-muted-foreground">{categoryLabel}s</span>
+          <span className="text-muted-foreground/30">/</span>
+          <span className="text-foreground font-semibold truncate max-w-[200px]">{item.name}</span>
         </div>
 
         {/* Title Row */}
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-5">
           <div>
             <div className="flex items-center gap-2 mb-1.5">
               <span
                 className={cn(
-                  "text-xs font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full border",
+                  "text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full border",
                   isPackage
                     ? "bg-purple-500/10 text-purple-600 border-purple-500/20"
                     : isGem
@@ -145,32 +184,65 @@ export function ExperienceDetailPage({
                 {categoryLabel}
               </span>
               {"rating" in item && item.rating >= 4.8 && (
-                <span className="text-xs font-bold uppercase tracking-widest bg-amber-500/10 text-amber-600 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                  <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" /> Top Rated
+                <span className="text-[10px] font-bold uppercase tracking-widest bg-amber-500/10 text-amber-600 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                  <Star className="h-3 w-3 fill-amber-500 text-amber-500" /> Top Rated
                 </span>
               )}
             </div>
-            <h1 className="text-2xl md:text-3xl font-black tracking-tight text-foreground mb-2">
+            <h1 className="text-2xl md:text-3xl font-display font-black tracking-tight text-foreground mb-1.5">
               {item.name}
             </h1>
             <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
               {"rating" in item && (
                 <span className="flex items-center gap-1">
-                  <Star className="h-3.5 w-3.5 fill-primary text-primary" />
-                  <strong className="text-foreground">{item.rating.toFixed(1)}</strong>
-                  {"reviews" in item && <span>({item.reviews} reviews)</span>}
+                  <Star className="h-4 w-4 fill-accent text-accent" />
+                  <strong className="text-foreground">{avgRating.toFixed(1)}</strong>
+                  <span>
+                    ({reviews.length || reviewCount} {reviews.length === 1 ? "review" : "reviews"})
+                  </span>
                 </span>
               )}
               <span className="flex items-center gap-1">
-                <MapPin className="h-3.5 w-3.5 text-muted-foreground/60" />
+                <MapPin className="h-4 w-4 text-muted-foreground/60" />
                 {item.location}, Zambia
               </span>
+              {isPackage && "duration" in item && (
+                <span className="flex items-center gap-1">
+                  <Clock className="h-4 w-4 text-muted-foreground/60" />
+                  {item.duration}
+                </span>
+              )}
             </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => {
+                navigator.clipboard?.writeText(window.location.href);
+                toast.success("Link copied!");
+              }}
+              className="h-9 w-9 rounded-xl border border-border/60 bg-card flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-border transition-all shadow-sm"
+              aria-label="Share"
+            >
+              <Share2 className="h-4 w-4" />
+            </button>
+            <button
+              onClick={handleToggleFavorite}
+              className={cn(
+                "h-9 w-9 rounded-xl border bg-card flex items-center justify-center transition-all shadow-sm",
+                isFavorited
+                  ? "border-primary/30 text-primary bg-primary/5"
+                  : "border-border/60 text-muted-foreground hover:text-primary hover:border-primary/30",
+              )}
+              aria-label={isFavorited ? "Remove from wishlist" : "Save"}
+            >
+              <Heart className={cn("h-4 w-4", isFavorited && "fill-primary")} />
+            </button>
           </div>
         </div>
 
         {/* Banner Image */}
-        <div className="relative rounded-2xl overflow-hidden aspect-[21/9] mb-8 bg-muted shadow-sm max-h-[380px]">
+        <div className="relative rounded-2xl overflow-hidden aspect-[21/9] mb-7 bg-muted shadow-sm max-h-[380px]">
           <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
         </div>
@@ -201,23 +273,22 @@ export function ExperienceDetailPage({
 
             {/* Overview */}
             <section>
-              <h2 className="text-xl font-black tracking-tight text-foreground mb-3">Overview</h2>
+              <h2 className="text-xl font-display font-bold tracking-tight text-foreground mb-3">
+                {isPackage ? "What to Expect" : "Overview"}
+              </h2>
               <p className="text-muted-foreground leading-relaxed text-[15px]">{description}</p>
             </section>
 
             {/* If Package: show multi-day timeline */}
             {isPackage && packageItineraries[item.id] && (
               <section>
-                <h2 className="text-xl font-black tracking-tight text-foreground mb-6">
+                <h2 className="text-xl font-display font-bold tracking-tight text-foreground mb-6">
                   Holiday Itinerary
                 </h2>
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {packageItineraries[item.id].map((day, idx) => (
-                    <div
-                      key={idx}
-                      className="flex gap-4 p-5 rounded-2xl bg-muted/30 border border-border/40"
-                    >
-                      <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-black text-sm shrink-0 border border-primary/20">
+                    <div key={idx} className="flex gap-4 p-5 rounded-2xl bg-muted/30">
+                      <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-black text-sm shrink-0">
                         {idx + 1}
                       </div>
                       <div className="space-y-1">
@@ -231,11 +302,11 @@ export function ExperienceDetailPage({
             )}
 
             {/* Highlights / What is Included */}
-            <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h2 className="text-lg font-black tracking-tight text-foreground mb-4">
-                  Highlights
-                </h2>
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="p-5 rounded-2xl bg-muted/30">
+                <h3 className="font-bold text-sm uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-2">
+                  <Sparkles className="h-4 w-4" /> Highlights
+                </h3>
                 <ul className="space-y-2.5">
                   {[
                     "Stunning scenery and camera spots",
@@ -250,11 +321,10 @@ export function ExperienceDetailPage({
                   ))}
                 </ul>
               </div>
-
-              <div>
-                <h2 className="text-lg font-black tracking-tight text-foreground mb-4">
-                  What&apos;s Included
-                </h2>
+              <div className="p-5 rounded-2xl bg-muted/30">
+                <h3 className="font-bold text-sm uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-500" /> What&apos;s Included
+                </h3>
                 <ul className="space-y-2.5">
                   {[
                     "Professional guide fee",
@@ -272,13 +342,63 @@ export function ExperienceDetailPage({
             </section>
 
             {/* Guest Reviews */}
-            <ReviewSection listingId={item.id} listingName={item.name} listingType="experience" />
+            <section className="space-y-6">
+              {reviews.length > 0 && (
+                <div className="flex flex-col sm:flex-row gap-6 p-6 rounded-2xl bg-muted/30">
+                  <div className="flex flex-col items-center justify-center shrink-0">
+                    <span className="text-4xl font-black text-foreground">
+                      {avgRating.toFixed(1)}
+                    </span>
+                    <div className="flex items-center gap-0.5 mt-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          className={cn(
+                            "h-4 w-4",
+                            star <= Math.round(avgRating)
+                              ? "fill-accent text-accent"
+                              : "fill-muted-foreground/20 text-muted-foreground/20",
+                          )}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-xs text-muted-foreground mt-1 font-medium">
+                      {reviews.length || reviewCount} {reviews.length === 1 ? "review" : "reviews"}
+                    </span>
+                  </div>
+                  <div className="flex-1 space-y-1.5">
+                    {ratingDist.reverse().map(({ star, count, percentage }) => (
+                      <div key={star} className="flex items-center gap-2 text-sm">
+                        <span className="w-3 text-right text-muted-foreground font-medium text-xs">
+                          {star}
+                        </span>
+                        <Star className="h-3 w-3 fill-accent text-accent" />
+                        <div className="flex-1 h-2 bg-muted-foreground/10 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-accent rounded-full transition-all duration-500"
+                            style={{ width: `${percentage}%` }}
+                          />
+                        </div>
+                        <span className="w-6 text-right text-xs text-muted-foreground">
+                          {count}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <ReviewSection
+                listingId={item.id}
+                listingName={item.name}
+                listingType="experience"
+                reviews={reviews}
+              />
+            </section>
           </div>
 
           {/* Right: Booking Form Card */}
-          <aside className="lg:sticky lg:top-24">
-            <div className="bg-card border border-border/40 rounded-2xl shadow-[0_4px_32px_rgba(0,0,0,0.08)] overflow-hidden">
-              {/* Header Price */}
+          <aside className="hidden lg:block lg:sticky lg:top-24">
+            <div className="bg-card rounded-2xl card-shadow-lg overflow-hidden">
               <div className="bg-primary px-6 py-5 text-white">
                 <p className="text-primary-foreground/80 text-xs font-bold uppercase tracking-widest mb-1">
                   {isPackage ? "All-Inclusive Rate" : "Rate starting at"}
@@ -292,20 +412,18 @@ export function ExperienceDetailPage({
                 {"rating" in item && (
                   <div className="flex items-center gap-1 mt-1 text-primary-foreground/90 text-xs">
                     <Star className="h-3.5 w-3.5 fill-primary-foreground text-primary-foreground" />
-                    <span>{item.rating.toFixed(1)} rating</span>
+                    <span>{avgRating.toFixed(1)} rating</span>
                   </div>
                 )}
               </div>
 
-              {/* Invoice Summary */}
               <div className="p-6 space-y-5">
-                <h3 className="font-black text-lg text-foreground tracking-tight">
+                <h3 className="font-black text-lg text-foreground tracking-tight font-display">
                   Invoice Summary
                 </h3>
 
-                {/* What's Included */}
                 <div className="space-y-3">
-                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                     What&apos;s Included
                   </p>
                   <div className="space-y-2 text-sm">
@@ -330,9 +448,8 @@ export function ExperienceDetailPage({
 
                 <div className="h-px bg-border/40" />
 
-                {/* Highlights Preview */}
                 <div className="space-y-2">
-                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                     Highlights
                   </p>
                   <ul className="space-y-1.5">
@@ -351,9 +468,8 @@ export function ExperienceDetailPage({
 
                 <div className="h-px bg-border/40" />
 
-                {/* Price Summary */}
                 <div className="space-y-2">
-                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                     Price Breakdown
                   </p>
                   <div className="space-y-1.5 text-sm">
@@ -371,7 +487,6 @@ export function ExperienceDetailPage({
                   </p>
                 </div>
 
-                {/* CTA */}
                 <Link
                   href={`/checkout/book?type=experience&id=${item.id}`}
                   className="w-full h-12 rounded-xl bg-primary font-black uppercase tracking-widest text-sm text-primary-foreground shadow-md shadow-primary/20 hover:shadow-primary/30 transition-all hover:scale-[1.01] flex items-center justify-center gap-2"
@@ -388,6 +503,55 @@ export function ExperienceDetailPage({
           </aside>
         </div>
       </main>
+
+      {/* Mobile sticky booking bar */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-border/60 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] lg:hidden">
+        <div className="flex items-center justify-between px-4 py-3">
+          <div>
+            <div className="flex items-baseline gap-1">
+              <span className="text-lg font-black text-foreground">K{item.price}</span>
+              <span className="text-xs text-muted-foreground">
+                {isPackage ? "/package" : "/person"}
+              </span>
+            </div>
+            {"rating" in item && (
+              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                <Star className="h-3 w-3 fill-accent text-accent" />
+                <span>
+                  {avgRating.toFixed(1)} · {reviews.length || reviewCount} reviews
+                </span>
+              </div>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleToggleFavorite}
+              className={cn(
+                "h-10 w-10 rounded-xl border flex items-center justify-center transition-all",
+                isFavorited
+                  ? "border-primary/30 text-primary bg-primary/5"
+                  : "border-border/60 text-muted-foreground hover:text-primary",
+              )}
+            >
+              <Heart className={cn("h-4 w-4", isFavorited && "fill-primary")} />
+            </button>
+            <Link
+              href={`/checkout/book?type=experience&id=${item.id}`}
+              className="h-10 px-5 rounded-xl bg-primary font-bold text-sm text-primary-foreground shadow-sm shadow-primary/20 flex items-center justify-center gap-1.5"
+            >
+              Book Now
+              <ChevronRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <AuthGuardDialog
+        isOpen={showAuthDialog}
+        onClose={() => setShowAuthDialog(false)}
+        title="Save to your collections"
+        description="Sign in to save this experience and access it from any device."
+      />
     </div>
   );
 }

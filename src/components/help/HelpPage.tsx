@@ -104,7 +104,7 @@ export function HelpPage() {
   });
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
+    <div className="min-h-screen flex flex-col bg-muted font-sans">
       <main className="flex-1">
         {/* Header */}
         <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-12">
@@ -169,7 +169,7 @@ export function HelpPage() {
                 return (
                   <div
                     key={faq.question}
-                    className="rounded-xl border border-border/50 bg-card shadow-sm overflow-hidden transition-all"
+                    className="rounded-xl border border-border/50 bg-card shadow-sm card-shadow overflow-hidden transition-all"
                   >
                     <button
                       onClick={() => setOpenFaq(isOpen ? null : faq.question)}
@@ -197,7 +197,7 @@ export function HelpPage() {
           )}
 
           {/* Contact section */}
-          <div className="mt-12 rounded-2xl border border-border/50 bg-card p-8 shadow-sm text-center">
+          <div className="mt-12 rounded-2xl border border-border/50 bg-card p-8 shadow-sm card-shadow text-center">
             <MessageSquare className="h-8 w-8 text-primary mx-auto mb-4" />
             <h3 className="text-lg font-bold text-foreground mb-2">Still need help?</h3>
             <p className="text-sm text-muted-foreground max-w-md mx-auto mb-6">

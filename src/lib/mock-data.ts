@@ -18,6 +18,8 @@ export interface Stay {
   checkOutRules?: string[];
   lat?: number;
   lng?: number;
+  closestAttraction?: string;
+  distance?: string;
 }
 
 export interface Transport {
@@ -31,6 +33,35 @@ export interface Transport {
   image: string;
 }
 
+export type ExperienceCategory =
+  | "cultural"
+  | "wildlife"
+  | "farm"
+  | "industrial"
+  | "adventure"
+  | "water"
+  | "general";
+
+export const categoryLabels: Record<ExperienceCategory, string> = {
+  cultural: "Cultural & Community",
+  wildlife: "Wildlife & Nature",
+  farm: "Farm Visits & Agri-Tourism",
+  industrial: "Industrial Heritage",
+  adventure: "Adventure & Tours",
+  water: "Water Sports & Lakes",
+  general: "General Attractions",
+};
+
+export const categoryIcons: Record<ExperienceCategory, string> = {
+  cultural: "🎭",
+  wildlife: "🦁",
+  farm: "🌾",
+  industrial: "⚙️",
+  adventure: "🧗",
+  water: "🌊",
+  general: "📍",
+};
+
 export interface Experience {
   id: string;
   name: string;
@@ -39,6 +70,10 @@ export interface Experience {
   reviews: number;
   price: number;
   image: string;
+  category: ExperienceCategory;
+  duration?: string;
+  groupSize?: string;
+  description?: string;
 }
 
 export interface Package {
@@ -92,6 +127,8 @@ export const mockStays: Stay[] = [
     ],
     lat: -15.5,
     lng: 29.1,
+    closestAttraction: "Lower Zambezi National Park",
+    distance: "Inside Park",
   },
   {
     id: "2",
@@ -123,6 +160,8 @@ export const mockStays: Stay[] = [
     ],
     lat: -17.9243,
     lng: 25.8572,
+    closestAttraction: "Victoria Falls",
+    distance: "0.5km",
   },
   {
     id: "3",
@@ -153,6 +192,8 @@ export const mockStays: Stay[] = [
     checkOutRules: ["Depart by 10:00", "Bush transfer arrangements required"],
     lat: -13.1,
     lng: 31.8,
+    closestAttraction: "South Luangwa National Park",
+    distance: "Inside Park",
   },
   {
     id: "4",
@@ -179,6 +220,8 @@ export const mockStays: Stay[] = [
     checkOutRules: ["Check-out by 11:00"],
     lat: -16.5,
     lng: 28.8,
+    closestAttraction: "Lake Kariba",
+    distance: "Lakefront",
   },
   {
     id: "5",
@@ -205,6 +248,8 @@ export const mockStays: Stay[] = [
     checkOutRules: ["Check-out by 10:00"],
     lat: -14.5,
     lng: 26.1,
+    closestAttraction: "Kafue River",
+    distance: "Riverfront",
   },
   {
     id: "6",
@@ -231,6 +276,8 @@ export const mockStays: Stay[] = [
     checkOutRules: ["Check-out by 12:00", "Express check-out available"],
     lat: -12.97,
     lng: 28.64,
+    closestAttraction: "Ndola City Center",
+    distance: "1km",
   },
   {
     id: "7",
@@ -257,6 +304,8 @@ export const mockStays: Stay[] = [
     checkOutRules: ["Check-out by 09:00 for morning flight"],
     lat: -11.5,
     lng: 29.8,
+    closestAttraction: "Bangweulu Swamps",
+    distance: "Inside Reserve",
   },
   {
     id: "8",
@@ -283,6 +332,8 @@ export const mockStays: Stay[] = [
     checkOutRules: ["Check-out by 12:00"],
     lat: -15.4166,
     lng: 28.2833,
+    closestAttraction: "Lusaka National Museum",
+    distance: "4km",
   },
 ];
 
@@ -320,6 +371,7 @@ export const mockTransport: Transport[] = [
 ];
 
 export const mockExperiences: Experience[] = [
+  // ── Wildlife & Nature ──
   {
     id: "e1",
     name: "Victoria Falls Helicopter Tour",
@@ -328,6 +380,11 @@ export const mockExperiences: Experience[] = [
     reviews: 342,
     price: 180,
     image: "https://images.unsplash.com/photo-1534234828563-02511c750b53?w=800&q=80",
+    category: "adventure",
+    duration: "15 min",
+    groupSize: "1-6 people",
+    description:
+      "Soar above the legendary Victoria Falls for a bird's-eye view of the Smoke that Thunders. This helicopter tour offers unmatched aerial perspectives of the falls, the Zambezi River, and the Batoka Gorge.",
   },
   {
     id: "e2",
@@ -337,6 +394,11 @@ export const mockExperiences: Experience[] = [
     reviews: 189,
     price: 150,
     image: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=80",
+    category: "wildlife",
+    duration: "Half Day",
+    groupSize: "2-8 people",
+    description:
+      "Step off the vehicle and walk through the African bush with expert armed rangers. Learn tracking skills, identify medicinal plants, and encounter wildlife on foot — an unmatched safari experience.",
   },
   {
     id: "e3",
@@ -346,6 +408,11 @@ export const mockExperiences: Experience[] = [
     reviews: 156,
     price: 95,
     image: "https://images.unsplash.com/photo-1582967788606-a171f1080ca8?w=800&q=80",
+    category: "water",
+    duration: "Full Day",
+    groupSize: "1-10 people",
+    description:
+      "Plunge into the crystal-clear waters of Lake Tanganyika, the world's longest freshwater lake. Snorkel among hundreds of species of vibrant cichlid fish found nowhere else on earth.",
   },
   {
     id: "e4",
@@ -355,6 +422,189 @@ export const mockExperiences: Experience[] = [
     reviews: 201,
     price: 120,
     image: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=80",
+    category: "wildlife",
+    duration: "Full Day",
+    groupSize: "1-6 people",
+    description:
+      "Explore Zambia's oldest and largest national park on a full-day game drive. Track lions, leopards, wild dogs and elephants across diverse habitats with expert guides.",
+  },
+
+  // ── Farm Visits & Agri-Tourism ──
+  {
+    id: "e5",
+    name: "Chisamba Farm Stay & Milking Experience",
+    location: "Chisamba",
+    rating: 4.6,
+    reviews: 73,
+    price: 85,
+    image: "https://images.unsplash.com/photo-1500076656116-558758c991c1?w=800&q=80",
+    category: "farm",
+    duration: "Full Day",
+    groupSize: "1-8 people",
+    description:
+      "Spend a day on a working Zambian farm in the lush Chisamba Valley. Milk cows by hand, collect fresh eggs, help bake traditional bread, and enjoy a farm-to-table lunch with the family.",
+  },
+  {
+    id: "e6",
+    name: "Mkushi Organic Farm Tour",
+    location: "Mkushi",
+    rating: 4.7,
+    reviews: 54,
+    price: 70,
+    image: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&q=80",
+    category: "farm",
+    duration: "Half Day",
+    groupSize: "1-12 people",
+    description:
+      "Tour a thriving organic farm in Mkushi — Zambia's breadbasket. Walk through fields of maize, soya, and vegetables, learn about sustainable irrigation, and taste freshly harvested produce.",
+  },
+  {
+    id: "e7",
+    name: "Kapishya Hot Springs & Farm Tour",
+    location: "Mpika",
+    rating: 4.9,
+    reviews: 67,
+    price: 120,
+    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80",
+    category: "farm",
+    duration: "Full Day",
+    groupSize: "1-10 people",
+    description:
+      "Visit the historic Shiwa Ngandu estate and soak in the natural Kapishya Hot Springs. Tour the grand manor, explore working farmlands, and relax in geothermal springs nestled in the northern hills.",
+  },
+
+  // ── Cultural & Community ──
+  {
+    id: "e8",
+    name: "Livingstone Village Tour & Craft Market",
+    location: "Livingstone",
+    rating: 4.5,
+    reviews: 128,
+    price: 45,
+    image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80",
+    category: "cultural",
+    duration: "Half Day",
+    groupSize: "1-15 people",
+    description:
+      "Immerse yourself in a traditional Zambian village near Livingstone. Meet local artisans, watch batik and basket weaving demonstrations, and browse vibrant craft markets for authentic souvenirs.",
+  },
+  {
+    id: "e9",
+    name: "Lusaka Art & Food Walking Tour",
+    location: "Lusaka",
+    rating: 4.6,
+    reviews: 94,
+    price: 60,
+    image: "https://images.unsplash.com/photo-1559336194-973ee0c45b4b?w=800&q=80",
+    category: "cultural",
+    duration: "Half Day",
+    groupSize: "1-10 people",
+    description:
+      "Explore Lusaka's vibrant art scene and culinary culture. Visit local galleries, meet contemporary Zambian artists, sample street food delicacies, and learn to cook traditional Nshima.",
+  },
+  {
+    id: "e10",
+    name: "Mukuni Village Cultural Experience",
+    location: "Livingstone",
+    rating: 4.7,
+    reviews: 203,
+    price: 55,
+    image: "https://images.unsplash.com/photo-1580747182610-dac5e078f8f5?w=800&q=80",
+    category: "cultural",
+    duration: "Half Day",
+    groupSize: "1-20 people",
+    description:
+      "Visit the historic Mukuni Village, home of the Leya people. Tour the Chief's palace, watch traditional dancing and drumming performances, and learn about the deep cultural heritage of the region.",
+  },
+
+  // ── Industrial Heritage ──
+  {
+    id: "e11",
+    name: "Copperbelt Mining Heritage Tour",
+    location: "Kitwe",
+    rating: 4.4,
+    reviews: 67,
+    price: 110,
+    image: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=80",
+    category: "industrial",
+    duration: "Full Day",
+    groupSize: "1-10 people",
+    description:
+      "Journey into Zambia's industrial heartland. Tour active copper mines, visit the Mining Museum in Kitwe, and learn about the vital role copper has played in shaping Zambia's economy and identity.",
+  },
+  {
+    id: "e12",
+    name: "Kariba Dam Engineering Tour",
+    location: "Kariba",
+    rating: 4.5,
+    reviews: 82,
+    price: 95,
+    image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80",
+    category: "industrial",
+    duration: "Half Day",
+    groupSize: "1-8 people",
+    description:
+      "Stand at the foot of the massive Kariba Dam — one of Africa's largest hydroelectric projects. Tour the visitor centre, learn about the dam's construction and the legendary Nyami Nyami river god.",
+  },
+
+  // ── Adventure & Tours ──
+  {
+    id: "e13",
+    name: "Zambezi White Water Rafting",
+    location: "Livingstone",
+    rating: 4.9,
+    reviews: 276,
+    price: 160,
+    image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80",
+    category: "adventure",
+    duration: "Full Day",
+    groupSize: "1-12 people",
+    description:
+      "Tackle some of the world's most thrilling rapids in the Batoka Gorge below Victoria Falls. Professional guides, top-grade safety equipment, and breathtaking canyon scenery included.",
+  },
+  {
+    id: "e14",
+    name: "Kundalila Falls Hike & Picnic",
+    location: "Serenje",
+    rating: 4.8,
+    reviews: 92,
+    price: 45,
+    image: "https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=800&q=80",
+    category: "adventure",
+    duration: "Half Day",
+    groupSize: "1-10 people",
+    description:
+      "Trek through lush miombo woodlands to the spectacular Kundalila Falls. The Kaombe River plunges 70m into a deep basalt pool — perfect for a refreshing swim after the hike.",
+  },
+
+  // ── Water Sports & Lakes ──
+  {
+    id: "e15",
+    name: "Lake Kariba Sunset Cruise",
+    location: "Kariba",
+    rating: 4.7,
+    reviews: 115,
+    price: 85,
+    image: "https://images.unsplash.com/photo-1540206395-688085723adb?w=800&q=80",
+    category: "water",
+    duration: "3 Hours",
+    groupSize: "1-20 people",
+    description:
+      "Set sail on a tranquil sunset cruise across Lake Kariba. Watch elephants and buffalo graze along the shoreline as the sun paints the sky in brilliant oranges and purples. Drinks and snacks included.",
+  },
+  {
+    id: "e16",
+    name: "Lower Zambezi Canoe Safari",
+    location: "Lower Zambezi",
+    rating: 4.9,
+    reviews: 88,
+    price: 140,
+    image: "https://images.unsplash.com/photo-1505222011126-27b25b337dce?w=800&q=80",
+    category: "water",
+    duration: "Half Day",
+    groupSize: "1-6 people",
+    description:
+      "Paddle silently along the Zambezi River in a Canadian canoe. Glide past hippos, crocodiles, and elephants drinking at the water's edge — an intimate and unforgettable wildlife encounter.",
   },
 ];
 
@@ -367,6 +617,7 @@ export const mockGems: Experience[] = [
     reviews: 78,
     price: 200,
     image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80",
+    category: "farm",
   },
   {
     id: "g2",
@@ -376,6 +627,7 @@ export const mockGems: Experience[] = [
     reviews: 92,
     price: 45,
     image: "https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=800&q=80",
+    category: "adventure",
   },
   {
     id: "g3",
@@ -385,6 +637,7 @@ export const mockGems: Experience[] = [
     reviews: 64,
     price: 280,
     image: "https://images.unsplash.com/photo-1534759846116-5799c33ce22a?w=800&q=80",
+    category: "wildlife",
   },
   {
     id: "g4",
@@ -394,6 +647,7 @@ export const mockGems: Experience[] = [
     reviews: 115,
     price: 85,
     image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80",
+    category: "water",
   },
 ];
 

@@ -268,7 +268,7 @@ export function AdminPayouts() {
 
         {/* Filters */}
         <div className="mx-auto max-w-6xl px-4 md:px-6 -mt-6 relative z-10">
-          <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border/40 bg-card p-3 shadow-sm">
+          <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border/40 bg-card p-3 shadow-sm card-shadow">
             <div className="relative flex-1 min-w-[200px]">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -296,7 +296,7 @@ export function AdminPayouts() {
         {/* Stats Row */}
         <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
+            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
               <p className="text-2xl font-bold text-foreground">
                 K{(stats.totalGross / 1000).toFixed(0)}k
               </p>
@@ -304,7 +304,7 @@ export function AdminPayouts() {
                 Gross Payouts
               </p>
             </div>
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
+            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
               <p className="text-2xl font-bold text-emerald-600">
                 K{(stats.totalCommission / 1000).toFixed(0)}k
               </p>
@@ -312,13 +312,13 @@ export function AdminPayouts() {
                 Commission Earned
               </p>
             </div>
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
+            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
               <p className="text-2xl font-bold text-blue-600">{stats.paid}</p>
               <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                 Processed
               </p>
             </div>
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
+            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
               <p className="text-2xl font-bold text-amber-600">{stats.pending}</p>
               <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                 Pending

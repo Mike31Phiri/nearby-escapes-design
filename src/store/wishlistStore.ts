@@ -1,12 +1,23 @@
 "use client";
 
 import { create } from "zustand";
-import type { Stay } from "@/lib/mock-data";
+
+// Shared subset of properties that all listing types have
+export interface WishlistItem {
+  id: string;
+  name: string;
+  image: string;
+  price: number;
+  location: string;
+  rating: number;
+  reviews?: number;
+  type?: string;
+}
 
 interface WishlistState {
-  items: Stay[];
+  items: WishlistItem[];
   isSaved: (id: string) => boolean;
-  addItem: (item: Stay) => void;
+  addItem: (item: WishlistItem) => void;
   removeItem: (id: string) => void;
 }
 

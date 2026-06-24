@@ -28,6 +28,7 @@ import {
   ChevronRight,
   AlertTriangle,
   Copy,
+  Gem,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -55,18 +56,21 @@ const typeIcons: Record<string, React.ElementType> = {
   stay: Bed,
   experience: Ticket,
   transport: Bus,
+  gem: Gem,
 };
 
 const typeLabels: Record<string, string> = {
   stay: "Stay",
   experience: "Experience",
   transport: "Transport",
+  gem: "Hidden Gem",
 };
 
 const typeRoutes: Record<string, string> = {
   stay: "stays",
   experience: "experiences",
   transport: "transport",
+  gem: "experiences",
 };
 
 const statusStyles: Record<string, string> = {
@@ -219,7 +223,7 @@ function StatCard({
   accent?: string;
 }) {
   return (
-    <div className="group flex items-center gap-4 rounded-xl border border-border/50 bg-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:border-primary/20">
+    <div className="group flex items-center gap-4 rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:border-primary/20">
       <div
         className={cn(
           "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110",
@@ -268,7 +272,7 @@ function CompactBookingCard({ booking }: { booking: HostBooking }) {
   };
 
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-border/40 bg-card p-4 shadow-sm transition-all duration-200 hover:shadow-md">
+    <div className="flex items-center gap-3 rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow transition-all duration-200 hover:shadow-md">
       <div className="h-10 w-10 shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
         {booking.guestName.charAt(0)}
       </div>
@@ -438,7 +442,7 @@ export function HostListingDetailPage({ listing }: Props) {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#fafafa] font-sans">
+    <div className="min-h-screen flex flex-col bg-background font-sans">
       <main className="flex-1">
         {/* ─── Header ────────────────────────────────────────────────── */}
         <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
@@ -538,9 +542,9 @@ export function HostListingDetailPage({ listing }: Props) {
                       /
                       {listing.type === "stay"
                         ? "night"
-                        : listing.type === "experience"
-                          ? "person"
-                          : "seat"}
+                        : listing.type === "transport"
+                          ? "seat"
+                          : "person"}
                     </span>
                   </span>
                   <span className="flex items-center gap-1.5 text-muted-foreground">
@@ -601,7 +605,7 @@ export function HostListingDetailPage({ listing }: Props) {
 
         {/* ─── Management Actions Bar ────────────────────────────────── */}
         <div className="mx-auto max-w-5xl px-4 md:px-6 mt-6">
-          <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border/40 bg-card p-3 shadow-sm">
+          <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border/40 bg-card p-3 shadow-sm card-shadow">
             <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground mr-2">
               Management
             </span>
@@ -783,7 +787,7 @@ export function HostListingDetailPage({ listing }: Props) {
 
           {/* ─── Tab Content ──────────────────────────────────────────── */}
           <div className="mt-8 pb-16">
-            {/* ═══ OVERVIEW ═══ */}
+            {/*  OVERVIEW  */}
             {activeTab === "overview" && (
               <div className="space-y-10">
                 {/* Performance Chart */}
@@ -803,7 +807,7 @@ export function HostListingDetailPage({ listing }: Props) {
                       </span>
                     </div>
                   </div>
-                  <div className="rounded-xl border border-border/50 bg-card p-6 shadow-sm">
+                  <div className="rounded-xl border border-border/50 bg-card p-6 shadow-sm card-shadow">
                     <div className="flex items-end justify-between gap-2 h-44">
                       {perfData.map((m) => {
                         const revHeight = (m.revenue / maxRevenue) * 100;
@@ -842,7 +846,7 @@ export function HostListingDetailPage({ listing }: Props) {
 
                 {/* Quick Overview Stats */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm">
+                  <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow">
                     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                       Current Month
                     </p>
@@ -853,7 +857,7 @@ export function HostListingDetailPage({ listing }: Props) {
                       bookings this month
                     </p>
                   </div>
-                  <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm">
+                  <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow">
                     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                       Monthly Revenue
                     </p>
@@ -872,7 +876,7 @@ export function HostListingDetailPage({ listing }: Props) {
                       {stats.revenueTrend}% vs last month
                     </p>
                   </div>
-                  <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm">
+                  <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow">
                     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                       Pending Requests
                     </p>
@@ -885,7 +889,7 @@ export function HostListingDetailPage({ listing }: Props) {
               </div>
             )}
 
-            {/* ═══ BOOKINGS ═══ */}
+            {/*  BOOKINGS  */}
             {activeTab === "bookings" && (
               <div className="space-y-8">
                 {/* Upcoming / Confirmed */}
@@ -968,7 +972,7 @@ export function HostListingDetailPage({ listing }: Props) {
               </div>
             )}
 
-            {/* ═══ REVIEWS ═══ */}
+            {/*  REVIEWS  */}
             {activeTab === "reviews" && (
               <div>
                 {listingReviews.length === 0 ? (
@@ -986,7 +990,7 @@ export function HostListingDetailPage({ listing }: Props) {
                     {listingReviews.map((review) => (
                       <div
                         key={review.id}
-                        className="rounded-xl border border-border/50 bg-card p-5 shadow-sm"
+                        className="rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow"
                       >
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex items-center gap-3">
@@ -1028,7 +1032,7 @@ export function HostListingDetailPage({ listing }: Props) {
                   </div>
                 )}
                 {listingReviews.length > 0 && listing.rating > 0 && (
-                  <div className="mt-6 rounded-xl border border-border/50 bg-card p-5 shadow-sm">
+                  <div className="mt-6 rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow">
                     <div className="flex items-center gap-4">
                       <div className="text-center">
                         <p className="text-4xl font-black text-foreground">

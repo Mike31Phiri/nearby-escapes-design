@@ -1,7 +1,8 @@
 "use client";
 
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { safeLocalStorage } from "@/lib/safeStorage";
 
 export interface Review {
   id: string;
@@ -52,6 +53,7 @@ export const useReviewStore = create<ReviewStore>()(
     }),
     {
       name: "nearby-escapes-reviews",
+      storage: createJSONStorage(() => safeLocalStorage),
       partialize: (state) => ({ reviews: state.reviews }),
     },
   ),

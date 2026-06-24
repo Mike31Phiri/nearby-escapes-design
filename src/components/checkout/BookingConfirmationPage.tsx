@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
+import { useState, useMemo, useEffect } from "react";
 import {
   CheckCircle2,
   XCircle,
@@ -16,15 +16,22 @@ import {
   Home,
   Search,
   ArrowLeft,
+  Star,
+  Mail,
+  User,
+  CheckCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Navbar } from "@/components/layout/Navbar";
 import { useBookingStore } from "@/store/bookingStore";
+import { toast } from "sonner";
 
 export function BookingConfirmationPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  const [emailSent, setEmailSent] = useState(false);
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailTimestamp, setEmailTimestamp] = useState<string | null>(null);
   const bookingRef = searchParams.get("ref") || "";
   const status = searchParams.get("status") || "";
   const { getBookingByRef } = useBookingStore();
@@ -34,6 +41,22 @@ export function BookingConfirmationPage() {
   const isSuccess = status === "success" || (!status && !!booking);
   const isCancelled = status === "cancelled";
   const isFailed = status === "failed" || status === "error";
+
+  // Auto-simulate email receipt on page load for successful bookings
+  useEffect(() => {
+    if (isSuccess && booking) {
+      const timer = setTimeout(() => {
+        setEmailSent(true);
+        setEmailTimestamp(
+          new Date().toLocaleTimeString("en-ZM", {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        );
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [isSuccess, booking]);
 
   if (!bookingRef && !status) {
     return (
@@ -61,8 +84,6 @@ export function BookingConfirmationPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background font-sans">
-      <Navbar />
-
       <main className="flex-1 w-full max-w-2xl mx-auto px-4 md:px-6 py-12">
         {/* Status Icon */}
         <div className="text-center mb-8">
@@ -94,7 +115,7 @@ export function BookingConfirmationPage() {
 
         {/* Booking Details Card */}
         {booking && isSuccess && (
-          <div className="bg-card border border-border/40 rounded-2xl shadow-[0_4px_32px_rgba(0,0,0,0.08)] overflow-hidden mb-6 animate-in slide-in-from-bottom-4 duration-500">
+          <div className="bg-card border border-border/40 rounded-2xl shadow-[0_4px_32px_rgba(0,0,0,0.08)] card-shadow-lg overflow-hidden mb-6 animate-in slide-in-from-bottom-4 duration-500">
             {/* Listing Image Header */}
             <div className="relative h-48 overflow-hidden">
               <img
@@ -234,6 +255,110 @@ export function BookingConfirmationPage() {
                 </>
               )}
 
+              {/* Email Receipt Section */}
+              <div className="rounded-xl bg-[#F0FAF4] border border-[#2A7A3A]/20 p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-emerald-600" />
+                    <h3 className="text-xs font-bold text-[#334155]">Booking Receipt</h3>
+                  </div>
+                  {emailSent && (
+                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                      <CheckCheck className="h-3 w-3" />
+                      Delivered
+                    </span>
+                  )}
+                </div>
+
+                {/* Guest receipt line */}
+                <div className="flex items-center gap-2.5 p-2.5 rounded-lg bg-white/70 mb-1.5">
+                  <div className="w-7 h-7 rounded-full bg-[#2A1B3D]/10 flex items-center justify-center shrink-0">
+                    <Mail className="h-3.5 w-3.5 text-[#2A1B3D]" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[11px] font-semibold text-foreground">Confirmation to you</p>
+                    <p className="text-[10px] text-muted-foreground truncate">
+                      {booking.customerEmail || "guest@email.com"}
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    {emailSent ? (
+                      <span className="text-[9px] text-emerald-600 font-medium block">
+                        {emailTimestamp}
+                      </span>
+                    ) : sendingEmail ? (
+                      <div className="h-3 w-3 rounded-full border-2 border-emerald-300 border-t-emerald-600 animate-spin" />
+                    ) : null}
+                  </div>
+                </div>
+
+                {/* Host receipt line */}
+                <div className="flex items-center gap-2.5 p-2.5 rounded-lg bg-white/70">
+                  <div className="w-7 h-7 rounded-full bg-[#C5A059]/10 flex items-center justify-center shrink-0">
+                    <User className="h-3.5 w-3.5 text-[#C5A059]" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[11px] font-semibold text-foreground">
+                      Notification to host
+                    </p>
+                    <p className="text-[10px] text-muted-foreground truncate">
+                      {booking.hostName || "Chanda Bwalya"} (
+                      {booking.hostEmail || "chanda@nearbyescapes.com"})
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    {emailSent ? (
+                      <span className="text-[9px] text-emerald-600 font-medium block">
+                        {emailTimestamp}
+                      </span>
+                    ) : sendingEmail ? (
+                      <div className="h-3 w-3 rounded-full border-2 border-emerald-300 border-t-emerald-600 animate-spin" />
+                    ) : null}
+                  </div>
+                </div>
+
+                {!emailSent && (
+                  <button
+                    onClick={async () => {
+                      setSendingEmail(true);
+                      await new Promise((r) => setTimeout(r, 1500));
+                      setSendingEmail(false);
+                      setEmailSent(true);
+                      setEmailTimestamp(
+                        new Date().toLocaleTimeString("en-ZM", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        }),
+                      );
+                      toast.success("Receipt sent to guest and host");
+                    }}
+                    disabled={sendingEmail}
+                    className="mt-3 w-full h-8 rounded-lg bg-[#2A1B3D] text-[#F9F7F2] text-[10px] font-bold flex items-center justify-center gap-1.5 hover:bg-[#2A1B3D]/90 transition-colors disabled:opacity-50"
+                  >
+                    {sendingEmail ? (
+                      <>
+                        <div className="h-3 w-3 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <Mail className="h-3.5 w-3.5" />
+                        Send Receipt
+                      </>
+                    )}
+                  </button>
+                )}
+
+                {emailSent && (
+                  <div className="mt-3 pt-2.5 border-t border-emerald-100">
+                    <div className="flex items-center gap-2 text-[10px] text-emerald-700">
+                      <CheckCheck className="h-3.5 w-3.5" />
+                      <span>Receipt delivered to guest and host</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <Button
@@ -248,6 +373,13 @@ export function BookingConfirmationPage() {
                   Copy Details
                 </Button>
                 <Link
+                  href={`/reviews/${booking.bookingRef}`}
+                  className="flex-1 h-11 rounded-xl border border-[#C5A059]/40 text-[#334155] font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#C5A059]/5 transition-colors"
+                >
+                  <Star className="h-4 w-4 text-[#C5A059] fill-[#C5A059]" />
+                  Leave a Review
+                </Link>
+                <Link
                   href="/"
                   className="flex-1 h-11 rounded-xl bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center gap-2"
                 >
@@ -261,7 +393,7 @@ export function BookingConfirmationPage() {
 
         {/* Failed / Cancelled state */}
         {(!isSuccess || !booking) && (
-          <div className="bg-card border border-border/40 rounded-2xl p-8 text-center space-y-5">
+          <div className="bg-card border border-border/40 rounded-2xl shadow-sm card-shadow p-8 text-center space-y-5">
             <div className="space-y-2">
               <p className="text-muted-foreground text-sm">
                 {isCancelled
