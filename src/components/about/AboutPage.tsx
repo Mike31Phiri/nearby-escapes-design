@@ -67,7 +67,7 @@ export function AboutPage() {
   return (
     <div className="min-h-screen flex flex-col bg-[#F9F7F2]">
       {/*  Hero  */}
-      <section className="relative overflow-hidden bg-[#2A1B3D] pt-16 pb-24 md:pt-20 md:pb-28">
+      <section className="relative overflow-hidden bg-[#1A0B2E] pt-16 pb-24 md:pt-20 md:pb-28">
         <div className="absolute inset-0 opacity-20">
           <img
             src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1600&q=80"
@@ -75,7 +75,7 @@ export function AboutPage() {
             className="h-full w-full object-cover"
           />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-[#2A1B3D]/80 via-[#2A1B3D]/60 to-[#2A1B3D]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1A0B2E]/80 via-[#1A0B2E]/60 to-[#1A0B2E]" />
         <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-8">
           <Link
             href="/"
@@ -85,12 +85,12 @@ export function AboutPage() {
             Home
           </Link>
           <div className="max-w-3xl">
-            <p className="text-[#C5A059] text-[10px] font-bold uppercase tracking-[0.12em] mb-4">
+            <p className="text-[#D4AF37] text-[10px] font-bold uppercase tracking-[0.12em] mb-4">
               Our story
             </p>
             <h1 className="font-display text-3xl md:text-4xl lg:text-[3.25rem] font-black text-white leading-[1.1] mb-5">
               Connecting travellers with the{" "}
-              <span className="font-script text-[1.2em] font-normal text-[#C5A059] lowercase">
+              <span className="font-script text-[1.2em] font-normal text-[#D4AF37] lowercase">
                 real
               </span>{" "}
               Zambia
@@ -108,9 +108,9 @@ export function AboutPage() {
         <div className="bg-white rounded-2xl shadow-[0_4px_24px_rgba(42,27,61,0.10)] border border-[#E0DBD0] divide-y md:divide-y-0 md:divide-x divide-[#E0DBD0] grid grid-cols-2 md:grid-cols-4 overflow-hidden">
           {stats.map(({ value, label, sub }) => (
             <div key={label} className="py-5 text-center">
-              <p className="font-display text-2xl md:text-3xl font-black text-[#2A1B3D]">{value}</p>
-              <p className="text-xs text-[#8A8480] mt-0.5 font-medium">{label}</p>
-              {sub && <p className="text-[10px] text-[#8A8480]/60">{sub}</p>}
+              <p className="font-display text-2xl md:text-3xl font-black text-[#1A0B2E]">{value}</p>
+              <p className="text-xs text-[#64748B] mt-0.5 font-medium">{label}</p>
+              {sub && <p className="text-[10px] text-[#64748B]/60">{sub}</p>}
             </div>
           ))}
         </div>
@@ -122,16 +122,16 @@ export function AboutPage() {
           <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <Quote className="h-5 w-5 text-[#C5A059]" />
-                <span className="text-[10px] font-bold text-[#C5A059] uppercase tracking-[0.12em]">
+                <Quote className="h-5 w-5 text-[#D4AF37]" />
+                <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-[0.12em]">
                   Our mission
                 </span>
               </div>
               <h2 className="font-display text-2xl md:text-3xl font-bold text-[#334155] leading-[1.2] mb-5">
                 Zambia is full of hidden escapes.{" "}
-                <span className="text-[#2A1B3D]">We make them easy to find.</span>
+                <span className="text-[#1A0B2E]">We make them easy to find.</span>
               </h2>
-              <div className="space-y-4 text-[15px] text-[#8A8480] leading-relaxed">
+              <div className="space-y-4 text-[15px] text-[#64748B] leading-relaxed">
                 <p>
                   Nearby Escapes was born from a simple observation: Zambia has some of the most
                   incredible places to stay and things to do in Africa, yet finding and booking them
@@ -151,7 +151,7 @@ export function AboutPage() {
                 </p>
               </div>
             </div>
-            <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-[#2A1B3D] shadow-[0_8px_32px_rgba(42,27,61,0.15)]">
+            <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-[#1A0B2E] shadow-[0_8px_32px_rgba(42,27,61,0.15)]">
               <img
                 src="https://images.unsplash.com/photo-1523800503107-5bc3ba2a6f81?w=800&q=80"
                 alt="Zambian landscape"
@@ -169,10 +169,10 @@ export function AboutPage() {
         </section>
 
         {/*  Values  */}
-        <section className="bg-[#2A1B3D]">
+        <section className="bg-[#1A0B2E]">
           <div className="mx-auto max-w-7xl px-4 md:px-8 py-14 md:py-16">
             <div className="text-center mb-10 md:mb-12">
-              <p className="text-[#C5A059] text-[10px] font-bold uppercase tracking-[0.12em] mb-3">
+              <p className="text-[#D4AF37] text-[10px] font-bold uppercase tracking-[0.12em] mb-3">
                 What we stand for
               </p>
               <h2 className="font-display text-2xl md:text-3xl font-bold text-white">Our values</h2>
@@ -183,7 +183,7 @@ export function AboutPage() {
                   key={title}
                   className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/[0.08] transition-colors"
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#C5A059]/15 text-[#C5A059] mb-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#D4AF37]/15 text-[#D4AF37] mb-4">
                     <Icon className="h-5 w-5" />
                   </div>
                   <h3 className="text-white font-bold text-sm mb-2">{title}</h3>
@@ -197,7 +197,7 @@ export function AboutPage() {
         {/*  Timeline  */}
         <section className="mx-auto max-w-7xl px-4 md:px-8 py-14 md:py-16">
           <div className="text-center mb-10 md:mb-12">
-            <p className="text-[#C5A059] text-[10px] font-bold uppercase tracking-[0.12em] mb-3">
+            <p className="text-[#D4AF37] text-[10px] font-bold uppercase tracking-[0.12em] mb-3">
               Our journey
             </p>
             <h2 className="font-display text-2xl md:text-3xl font-bold text-[#334155]">
@@ -221,14 +221,14 @@ export function AboutPage() {
                       i % 2 === 0 ? "md:text-right md:pr-12" : "md:pl-12"
                     }`}
                   >
-                    <span className="inline-block text-[#C5A059] text-xs font-black tracking-widest mb-1">
+                    <span className="inline-block text-[#D4AF37] text-xs font-black tracking-widest mb-1">
                       {year}
                     </span>
                     <h3 className="font-display text-lg font-bold text-[#334155] mb-1">{title}</h3>
-                    <p className="text-sm text-[#8A8480] leading-relaxed">{desc}</p>
+                    <p className="text-sm text-[#64748B] leading-relaxed">{desc}</p>
                   </div>
                   {/* Dot */}
-                  <div className="absolute left-4 md:left-1/2 top-1 w-3 h-3 rounded-full bg-[#C5A059] border-2 border-white -translate-x-1/2 z-10" />
+                  <div className="absolute left-4 md:left-1/2 top-1 w-3 h-3 rounded-full bg-[#D4AF37] border-2 border-white -translate-x-1/2 z-10" />
                   {/* Spacer for alternating layout */}
                   <div className="flex-1 hidden md:block" />
                 </div>
@@ -241,7 +241,7 @@ export function AboutPage() {
         <section className="bg-white border-y border-[#E0DBD0]">
           <div className="mx-auto max-w-7xl px-4 md:px-8 py-14 md:py-16">
             <div className="text-center mb-10">
-              <p className="text-[#C5A059] text-[10px] font-bold uppercase tracking-[0.12em] mb-3">
+              <p className="text-[#D4AF37] text-[10px] font-bold uppercase tracking-[0.12em] mb-3">
                 The people behind it
               </p>
               <h2 className="font-display text-2xl md:text-3xl font-bold text-[#334155]">
@@ -251,11 +251,11 @@ export function AboutPage() {
             <div className="flex flex-wrap justify-center gap-8 md:gap-12">
               {team.map(({ name, role, initials }) => (
                 <div key={name} className="text-center">
-                  <div className="mx-auto h-16 w-16 rounded-full bg-[#2A1B3D] flex items-center justify-center text-white font-bold text-lg mb-3">
+                  <div className="mx-auto h-16 w-16 rounded-full bg-[#1A0B2E] flex items-center justify-center text-white font-bold text-lg mb-3">
                     {initials}
                   </div>
                   <h3 className="font-bold text-sm text-[#334155]">{name}</h3>
-                  <p className="text-xs text-[#8A8480]">{role}</p>
+                  <p className="text-xs text-[#64748B]">{role}</p>
                 </div>
               ))}
             </div>
@@ -264,7 +264,7 @@ export function AboutPage() {
 
         {/*  CTA  */}
         <section className="mx-auto max-w-7xl px-4 md:px-8 py-14 md:py-16">
-          <div className="bg-gradient-to-br from-[#2A1B3D] to-[#1A0B2D] rounded-3xl overflow-hidden">
+          <div className="bg-gradient-to-br from-[#1A0B2E] to-[#1A0B2D] rounded-3xl overflow-hidden">
             <div className="relative px-6 md:px-12 py-12 md:py-16 text-center">
               <div className="relative z-10 max-w-2xl mx-auto">
                 <h2 className="font-display text-2xl md:text-3xl font-bold text-white mb-3">
@@ -277,7 +277,7 @@ export function AboutPage() {
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <Link
                     href="/search"
-                    className="inline-flex items-center gap-2 h-12 px-7 rounded-xl bg-[#C5A059] text-[#334155] font-bold text-sm hover:bg-[#B48E3E] transition-colors"
+                    className="inline-flex items-center gap-2 h-12 px-7 rounded-xl bg-[#D4AF37] text-[#334155] font-bold text-sm hover:bg-[#B48E3E] transition-colors"
                   >
                     Start exploring <ArrowRight className="h-4 w-4" />
                   </Link>

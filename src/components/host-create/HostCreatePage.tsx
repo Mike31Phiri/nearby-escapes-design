@@ -100,7 +100,7 @@ import type {
   TransportSchedule,
 } from "@/types/listing";
 
-// ─── Step Configuration ─────────────────────────────────────────────────
+//Step Configuration ─────────────────────────────────────────────────
 
 interface StepConfig {
   id: string;
@@ -146,7 +146,7 @@ const GEM_STEPS: StepConfig[] = [
   { id: "review", icon: Eye, label: "Review", short: "Review" },
 ];
 
-// ─── Listing Type Cards ─────────────────────────────────────────────────
+//Listing Type Cards ─────────────────────────────────────────────────
 
 const LISTING_TYPE_CARDS: {
   value: ListingType;
@@ -185,7 +185,7 @@ const LISTING_TYPE_CARDS: {
   },
 ];
 
-// ─── Shared UI Components ───────────────────────────────────────────────
+//Shared UI Components ───────────────────────────────────────────────
 
 function StepIndicator({ currentStep, steps }: { currentStep: number; steps: StepConfig[] }) {
   const totalSteps = steps.length;
@@ -411,7 +411,7 @@ function ImageUploader({
   );
 }
 
-// ─── Nearest Attraction Input ───────────────────────────────────────────
+//Nearest Attraction Input ───────────────────────────────────────────
 
 function NearestAttractionInput({
   attractions,
@@ -500,7 +500,7 @@ function NearestAttractionInput({
   );
 }
 
-// ─── Route Stop Input ──────────────────────────────────────────────────
+//Route Stop Input ──────────────────────────────────────────────────
 
 function RouteStopInput({
   stops,
@@ -583,7 +583,7 @@ function RouteStopInput({
   );
 }
 
-// ─── Schedule Input ────────────────────────────────────────────────────
+//Schedule Input ────────────────────────────────────────────────────
 
 function ScheduleInput({
   schedule,
@@ -677,7 +677,7 @@ function ScheduleInput({
   );
 }
 
-// ─── Validation ─────────────────────────────────────────────────────────
+//Validation ─────────────────────────────────────────────────────────
 
 type ValidationErrors = Record<string, string>;
 
@@ -796,12 +796,12 @@ function validateGemStep(step: number, form: GemFormData): ValidationErrors {
   return errs;
 }
 
-// ─── Main Component ─────────────────────────────────────────────────────
+//Main Component ─────────────────────────────────────────────────────
 
 export function HostCreatePage() {
   const router = useRouter();
 
-  // ─── State ─────────────────────────────────────────────────────────
+  //State ─────────────────────────────────────────────────────────
 
   const [listingType, setListingType] = useState<ListingType | null>(null);
   const [step, setStep] = useState(0);
@@ -813,7 +813,7 @@ export function HostCreatePage() {
   const [experienceForm, setExperienceForm] = useState<ExperienceFormData>(INITIAL_EXPERIENCE_FORM);
   const [gemForm, setGemForm] = useState<GemFormData>(INITIAL_GEM_FORM);
 
-  // ─── Derived ───────────────────────────────────────────────────────
+  //Derived ───────────────────────────────────────────────────────
 
   const steps =
     listingType === "stay"
@@ -828,7 +828,7 @@ export function HostCreatePage() {
 
   const totalSteps = steps.length;
 
-  // ─── Validation ────────────────────────────────────────────────────
+  //Validation ────────────────────────────────────────────────────
 
   const validateStep = useCallback((): boolean => {
     if (!listingType) {
@@ -854,7 +854,7 @@ export function HostCreatePage() {
     return Object.keys(errs).length === 0;
   }, [listingType, step, stayForm, transportForm, experienceForm, gemForm]);
 
-  // ─── Navigation ────────────────────────────────────────────────────
+  //Navigation ────────────────────────────────────────────────────
 
   const goNext = useCallback(() => {
     if (validateStep()) {
@@ -879,7 +879,7 @@ export function HostCreatePage() {
     setErrors({});
   }, []);
 
-  // ─── Submit ────────────────────────────────────────────────────────
+  //Submit ────────────────────────────────────────────────────────
 
   const handleSubmit = useCallback(async () => {
     setSubmitting(true);
@@ -2764,7 +2764,7 @@ export function HostCreatePage() {
   );
 }
 
-// ─── Helper Components ─────────────────────────────────────────────────
+//Helper Components ─────────────────────────────────────────────────
 
 function DetailRow({
   icon: Icon,

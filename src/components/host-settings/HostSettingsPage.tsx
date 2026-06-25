@@ -31,7 +31,7 @@ import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-// ─── Toggle Switch ────────────────────────────────────────────────────────
+//Toggle Switch ────────────────────────────────────────────────────────
 
 function Toggle({ enabled, onChange }: { enabled: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -52,7 +52,7 @@ function Toggle({ enabled, onChange }: { enabled: boolean; onChange: (v: boolean
   );
 }
 
-// ─── Saved Payment Method Card ────────────────────────────────────────────
+//Saved Payment Method Card ────────────────────────────────────────────
 
 interface SavedPaymentMethod {
   id: string;
@@ -129,7 +129,7 @@ function PaymentMethodCard({
   );
 }
 
-// ─── Section Header ───────────────────────────────────────────────────────
+//Section Header ───────────────────────────────────────────────────────
 
 function SectionHeader({
   icon: Icon,
@@ -161,7 +161,7 @@ export function HostSettingsPage() {
   const router = useRouter();
   const { user, logout } = useAuth();
 
-  // ── Profile State ──
+  //Profile State ──
   const [name, setName] = useState(user?.name ?? "Chanda Bwalya");
   const [email, setEmail] = useState(user?.email ?? "chanda.bwalya@nearbyescapes.com");
   const [phone, setPhone] = useState("+260 97 765 4321");
@@ -171,18 +171,18 @@ export function HostSettingsPage() {
   );
   const [responseTime, setResponseTime] = useState("within 1 hour");
 
-  // ── Notification State ──
+  //Notification State ──
   const [notifyBookings, setNotifyBookings] = useState(true);
   const [notifyMessages, setNotifyMessages] = useState(true);
   const [notifyReviews, setNotifyReviews] = useState(true);
   const [notifyPromotions, setNotifyPromotions] = useState(false);
 
-  // ── Preferences State ──
+  //Preferences State ──
   const [language, setLanguage] = useState("english");
   const [currency, setCurrency] = useState("zmw");
   const [theme, setTheme] = useState<"light" | "dark" | "system">("light");
 
-  // ── Payment Methods ──
+  //Payment Methods ──
   const [paymentMethods, setPaymentMethods] = useState<SavedPaymentMethod[]>([
     {
       id: "pm-1",
@@ -205,11 +205,11 @@ export function HostSettingsPage() {
   const [newPaymentLabel, setNewPaymentLabel] = useState("");
   const [newPaymentDetails, setNewPaymentDetails] = useState("");
 
-  // ── Delete Account Confirmation ──
+  //Delete Account Confirmation ──
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
 
-  // ── Handlers ─────────────────────────────────────────────────────────────
+  //Handlers ─────────────────────────────────────────────────────────────
 
   const handleSaveProfile = () => {
     // Simulate saving
@@ -258,7 +258,7 @@ export function HostSettingsPage() {
   return (
     <div className="min-h-screen py-8">
       <div className="mx-auto max-3xl px-4 md:px-6 max-w-3xl">
-        {/* ── Header ── */}
+        {/* Header */}
         <div className="flex items-center gap-3 mb-8">
           <button
             onClick={() => router.back()}

@@ -37,7 +37,7 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 
-// ─── Types ────────────────────────────────────────────────────────────────
+//Types ────────────────────────────────────────────────────────────────
 
 type ListingInterest = "stay" | "experience" | "transport";
 
@@ -66,7 +66,7 @@ interface ValidationErrors {
   [key: string]: string;
 }
 
-// ─── Constants ────────────────────────────────────────────────────────────
+//Constants ────────────────────────────────────────────────────────────
 
 const STEPS = [
   { id: "welcome", label: "Welcome", icon: Sparkles, short: "Start" },
@@ -154,7 +154,7 @@ const INITIAL_FORM: OnboardingForm = {
   branchCode: "",
 };
 
-// ─── Sub-Components ───────────────────────────────────────────────────────
+//Sub-Components ───────────────────────────────────────────────────────
 
 function StepIndicator({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) {
   return (
@@ -254,7 +254,7 @@ function FormField({
   );
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────
+//Main Component ───────────────────────────────────────────────────────
 
 export function BecomeHostPage() {
   const router = useRouter();
@@ -367,11 +367,11 @@ export function BecomeHostPage() {
     router.push("/host");
   }, [router, user, login, form]);
 
-  // ─── Render step content ────────────────────────────────────────────
+  //Render step content ────────────────────────────────────────────
 
   const renderStepContent = () => {
     switch (step) {
-      // ── Step 0: Welcome ─────────────────────────────────────────
+      //Step 0: Welcome ─────────────────────────────────────────
       case 0:
         return (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
@@ -425,7 +425,7 @@ export function BecomeHostPage() {
           </div>
         );
 
-      // ── Step 1: Verification ──────────────────────────────────────
+      //Step 1: Verification ──────────────────────────────────────
       case 1:
         return (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
@@ -534,7 +534,7 @@ export function BecomeHostPage() {
           </div>
         );
 
-      // ── Step 2: Preferences ────────────────────────────────────────
+      //Step 2: Preferences ────────────────────────────────────────
       case 2:
         return (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
@@ -622,7 +622,7 @@ export function BecomeHostPage() {
           </div>
         );
 
-      // ── Step 3: Payout ─────────────────────────────────────────────
+      //Step 3: Payout ─────────────────────────────────────────────
       case 3:
         return (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
@@ -698,7 +698,7 @@ export function BecomeHostPage() {
           </div>
         );
 
-      // ── Step 4: Confirmation ────────────────────────────────────────
+      //Step 4: Confirmation ────────────────────────────────────────
       case 4:
         return (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
@@ -830,7 +830,7 @@ export function BecomeHostPage() {
     }
   };
 
-  // ─── Render ────────────────────────────────────────────────────────
+  //Render ────────────────────────────────────────────────────────
 
   return (
     <div className="min-h-screen flex flex-col bg-muted font-sans">

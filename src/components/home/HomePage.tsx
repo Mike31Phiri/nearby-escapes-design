@@ -5,10 +5,6 @@ import { useState, useRef, useEffect } from "react";
 import {
   Home,
   ArrowRight,
-  BadgeCheck,
-  Compass,
-  Sparkles,
-  MapPin,
   Trees,
   Waves,
   Sun,
@@ -23,6 +19,11 @@ import {
   Binoculars,
   CarProfile,
   MapTrifold,
+  Tent,
+  Buildings,
+  SealCheck,
+  MapPin,
+  Factory,
 } from "@phosphor-icons/react";
 import { SearchBar } from "@/components/explore/SearchBar";
 import { ListingCard } from "@/components/ListingCard";
@@ -33,42 +34,18 @@ import { cn } from "@/lib/utils";
 /* 
    DESIGN SYSTEM TOKENS
    ───────────────────────────────────────────────────────────────────────────
-   Primary:  #2A1B3D  (Deep Purple) — Premium, African twilight, gemstones
-   Gold:     #C5A059  — Trust, quality, warmth, universal value signal
+   Primary:  #1A0B2E  (Deep Purple) — Premium, African twilight, gemstones
+   Gold:     #D4AF37  — Trust, quality, warmth, universal value signal
    Canvas:   #FDFBF7  — Gallery-quality warm white
    Ink:      #111111  — Maximum readability
    Muted:    #6B7280  — Supporting copy
-   CTA:      #2A1B3D  — Deep brand purple for interactive elements
+   CTA:      #1A0B2E  — Deep brand purple for interactive elements
    Dark BG:  #1E1B4B  — Deep indigo for immersive sections
  */
 
-// ── Scroll-triggered entrance animation hook ────────────────────────────
-function useInView(
-  options?: IntersectionObserverInit,
-): [React.RefObject<HTMLDivElement | null>, boolean] {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const [inView, setInView] = useState(false);
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          observer.unobserve(el);
-        }
-      },
-      { threshold: 0.1, ...options },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [options]);
 
-  return [ref, inView];
-}
-
-// ── Animated Section Wrapper ────────────────────────────────────────────
+//Animated Section Wrapper ────────────────────────────────────────────
 function AnimatedSection({
   children,
   className,
@@ -78,21 +55,7 @@ function AnimatedSection({
   className?: string;
   delay?: number;
 }) {
-  const [ref, inView] = useInView();
-
-  return (
-    <div
-      ref={ref}
-      className={cn(
-        "transition-all duration-700 ease-out",
-        inView ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0",
-        className,
-      )}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
-      {children}
-    </div>
-  );
+  return <div className={className}>{children}</div>;
 }
 
 // Destinations — serves as visual discovery. Each card is a direct
@@ -155,22 +118,23 @@ const categories = [
   { id: "experiences", label: "Experiences", icon: Binoculars },
   { id: "transport", label: "Transport", icon: CarProfile },
   { id: "packages", label: "Packages", icon: MapTrifold },
+  { id: "local-tours", label: "Local Tours", icon: Factory },
 ];
 
 // Value propositions — original content, HTML design styling
 const valueProps = [
   {
-    icon: Compass,
+    icon: Tent,
     title: "Hidden Finds",
     desc: "Escapes you won't find on other platforms. Curated, vetted, and waiting to be discovered.",
   },
   {
-    icon: Sparkles,
+    icon: Buildings,
     title: "Affordable & Premium",
     desc: "Budget-friendly stays that don't compromise on quality, character or experience.",
   },
   {
-    icon: BadgeCheck,
+    icon: SealCheck,
     title: "Verified Hosts",
     desc: "Every host is verified by our team before going live. You're always in safe hands.",
   },
@@ -213,7 +177,7 @@ const collections = [
     desc: "Boutique hotels and city pads in Lusaka, Ndola, and Kitwe.",
     image: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=600&q=80",
     stayCount: 22,
-    color: "#2A1B3D",
+    color: "#1A0B2E",
   },
   {
     id: "copperbelt-heritage",
@@ -284,7 +248,7 @@ const flashDeals = [
   },
 ];
 
-// ── Section Header Component ────────────────────────────────────────────
+//Section Header Component ────────────────────────────────────────────
 function SectionHeader({
   eyebrow,
   title,
@@ -299,16 +263,16 @@ function SectionHeader({
   return (
     <div className="flex items-end justify-between mb-7">
       <div>
-        <p className="font-script text-xl md:text-2xl text-[#C5A059] mb-1">{eyebrow}</p>
-        <h2 className="font-display text-2xl font-bold tracking-tight text-[#2A1B3D] leading-[1.15]">
+        <p className="font-script text-xl md:text-2xl text-[#D4AF37] mb-1">{eyebrow}</p>
+        <h2 className="font-display text-2xl font-bold tracking-tight text-[#1A0B2E] leading-[1.15]">
           {title}
         </h2>
-        <p className="text-[#8A8480] mt-1.5 text-sm max-w-lg leading-relaxed">{desc}</p>
+        <p className="text-[#64748B] mt-1.5 text-sm max-w-lg leading-relaxed">{desc}</p>
       </div>
       {href && (
         <Link
           href={href}
-          className="hidden md:inline-flex items-center gap-1.5 text-sm font-semibold text-[#2A1B3D] hover:text-[#2A154A] transition-all duration-200 group"
+          className="hidden md:inline-flex items-center gap-1.5 text-sm font-semibold text-[#1A0B2E] hover:text-[#2A154A] transition-all duration-200 group"
         >
           <span>See all</span>
           <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -330,11 +294,11 @@ export function HomePage() {
           Taller hero, eyebrow → headline → subtext hierarchy, and the
           search bar floats as a card below the hero (overlapping the edge).
        */}
-      <section className="relative pt-14 pb-20 md:pt-20 md:pb-28 overflow-hidden bg-[#2A1B3D]">
+      <section className="relative pt-14 pb-20 md:pt-20 md:pb-28 overflow-hidden bg-[#1A0B2E]">
         <div className="relative mx-auto max-w-7xl px-4 md:px-8">
           <div className="max-w-3xl mx-auto text-center">
             {/* Eyebrow — gold uppercase, matching auth page style */}
-            <p className="font-script text-2xl text-[#C5A059] mb-4">
+            <p className="font-script text-2xl text-[#D4AF37] mb-4">
               Discover your backyard
             </p>
 
@@ -343,7 +307,7 @@ export function HomePage() {
               {/* Mobile: short version */}
               <span className="md:hidden">
                 Find your next{" "}
-                <span className="font-script text-[1.3em] font-normal text-[#C5A059] lowercase relative top-1">
+                <span className="font-script text-[1.3em] font-normal text-[#D4AF37] lowercase relative top-1">
                   escape
                 </span>{" "}
                 nearby
@@ -351,7 +315,7 @@ export function HomePage() {
               {/* Desktop: full version */}
               <span className="hidden md:inline">
                 Find your hidden{" "}
-                <span className="font-script text-[1.3em] font-normal text-[#C5A059] lowercase relative top-1">
+                <span className="font-script text-[1.3em] font-normal text-[#D4AF37] lowercase relative top-1">
                   escape
                 </span>
                 <br />
@@ -368,19 +332,19 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* ── Search Bar — floats below the hero as a card, overlapping the edge ── */}
+      {/* Search Bar — floats below the hero as a card, overlapping the edge */}
       <div className="relative z-20 -mt-12 md:-mt-14 mx-auto max-w-2xl px-4">
         <SearchBar />
       </div>
 
-      {/* ── Category tabs — matching HTML design's .cats-section ── */}
+      {/* Category tabs — matching HTML design's .cats-section */}
       <div className="border-b border-[#E0DBD0]">
         <div className="mx-auto w-full max-w-7xl px-4 md:px-8 py-5">
           <div className="flex items-start gap-5 md:gap-5 overflow-x-auto scrollbar-hide">
             {categories.map(({ id, label, icon: Icon }) => (
               <span
                 key={id}
-                className="flex flex-col items-center gap-1.5 py-4 px-6 border-b-2 border-transparent text-[#8A8480] hover:text-[#2A1B3D] hover:border-[#2A1B3D] text-sm font-semibold whitespace-nowrap shrink-0 cursor-pointer transition-all duration-200"
+                className="flex flex-col items-center gap-1.5 py-4 px-6 border-b-2 border-transparent text-[#64748B] hover:text-[#1A0B2E] hover:border-[#1A0B2E] text-sm font-semibold whitespace-nowrap shrink-0 cursor-pointer transition-all duration-200"
               >
                 <Icon className="h-5 w-5" weight="duotone" />
                 {label}
@@ -421,11 +385,11 @@ export function HomePage() {
                       className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                    <div className="absolute top-3 left-3 flex h-7 w-7 items-center justify-center rounded-full bg-[#C5A059]/20 backdrop-blur-sm border border-[#C5A059]/30">
-                      <Icon className="h-3.5 w-3.5 text-[#C5A059]" />
+                    <div className="absolute top-3 left-3 flex h-7 w-7 items-center justify-center rounded-full bg-[#D4AF37]/20 backdrop-blur-sm border border-[#D4AF37]/30">
+                      <Icon className="h-3.5 w-3.5 text-[#D4AF37]" />
                     </div>
                     <div className="absolute bottom-0 left-0 p-4 w-full">
-                      <p className="text-[#C5A059] text-[9px] font-bold uppercase tracking-widest mb-1">
+                      <p className="text-[#D4AF37] text-[9px] font-bold uppercase tracking-widest mb-1">
                         {destination.region}
                       </p>
                       <h3 className="font-display text-white font-bold text-sm leading-tight mb-1">
@@ -443,25 +407,25 @@ export function HomePage() {
               })}
             </div>
 
-            {/* ── Popular stays row ── */}
+            {/* Popular stays row */}
             <AnimatedSection delay={150}>
               <div className="mt-14 md:mt-16">
                 <div className="flex items-end justify-between mb-6">
                   <div>
-                    <p className="font-script text-xl md:text-2xl text-[#C5A059] mb-1">
+                    <p className="font-script text-xl md:text-2xl text-[#D4AF37] mb-1">
                       Accommodation
                     </p>
-                    <h3 className="font-display text-xl md:text-[1.5rem] font-bold tracking-tight text-[#2A1B3D]">
+                    <h3 className="font-display text-xl md:text-[1.5rem] font-bold tracking-tight text-[#1A0B2E]">
                       Popular Stays
                     </h3>
-                    <p className="hidden md:block text-[#8A8480] mt-1 text-sm max-w-lg leading-relaxed">
+                    <p className="hidden md:block text-[#64748B] mt-1 text-sm max-w-lg leading-relaxed">
                       Explore highly-rated safari lodges, city guesthouses, and farm retreats that
                       our guests love returning to time and time again.
                     </p>
                   </div>
                   <Link
                     href="/search?category=stays"
-                    className="hidden md:inline-flex items-center gap-1.5 text-sm font-semibold text-[#2A1B3D] hover:text-[#2A154A] transition-all duration-200 group shrink-0"
+                    className="hidden md:inline-flex items-center gap-1.5 text-sm font-semibold text-[#1A0B2E] hover:text-[#2A154A] transition-all duration-200 group shrink-0"
                   >
                     <span>See all stays</span>
                     <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -484,7 +448,7 @@ export function HomePage() {
                 <div className="mt-5 text-center md:hidden">
                   <Link
                     href="/search?category=stays"
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#2A1B3D] hover:text-[#2A154A] transition-all duration-200 group"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#1A0B2E] hover:text-[#2A154A] transition-all duration-200 group"
                   >
                     <span>See all stays</span>
                     <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -528,7 +492,7 @@ export function HomePage() {
                   }}
                 />
                 <div className="absolute top-3 left-3">
-                  <span className="inline-flex items-center gap-1 bg-[#C5A059] text-[#2A1B3D] text-[9px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">
+                  <span className="inline-flex items-center gap-1 bg-[#D4AF37] text-[#1A0B2E] text-[9px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">
                     {stayCount} escapes
                   </span>
                 </div>
@@ -547,16 +511,16 @@ export function HomePage() {
       {/* 
           STORY — Dark background to make gold pop, grid split with image
        */}
-      <section className="bg-[#2A1B3D]">
+      <section className="bg-[#1A0B2E]">
         <div className="mx-auto w-full max-w-7xl px-4 md:px-8 py-10 md:py-14">
           <AnimatedSection delay={80}>
             <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
               {/* Text side */}
               <div>
-                <p className="font-script text-xl md:text-2xl md:text-[1.6rem] text-[#C5A059] mb-3">
+                <p className="font-script text-xl md:text-2xl md:text-[1.6rem] text-[#D4AF37] mb-3">
                   A note on hidden gems
                 </p>
-                <div className="w-12 h-0.5 bg-[#C5A059] mb-6" />
+                <div className="w-12 h-0.5 bg-[#D4AF37] mb-6" />
                 <p className="text-[15px] md:text-[17px] text-white/70 leading-[1.8] md:leading-[1.85] font-light">
                   Every hidden gem has a story — and we believe you should get to know it before you
                   go. From the farmstead in Chisamba where roosters wake you instead of alarms, to
@@ -589,17 +553,17 @@ export function HomePage() {
         <section className="mx-auto w-full max-w-7xl px-4 md:px-8 py-12 md:py-16">
           <div className="flex items-end justify-between mb-7">
             <div>
-              <p className="font-script text-xl md:text-2xl text-[#C5A059] mb-1">Hidden Zambia</p>
-              <h2 className="font-display text-2xl font-bold tracking-tight text-[#2A1B3D] leading-[1.15]">
+              <p className="font-script text-xl md:text-2xl text-[#D4AF37] mb-1">Hidden Zambia</p>
+              <h2 className="font-display text-2xl font-bold tracking-tight text-[#1A0B2E] leading-[1.15]">
                 Discover Hidden Gems
               </h2>
-              <p className="text-[#8A8480] mt-1.5 text-sm max-w-lg leading-relaxed">
+              <p className="text-[#64748B] mt-1.5 text-sm max-w-lg leading-relaxed">
                 Off-the-beaten-path spots, farm stays, and local secrets only insiders know about.
               </p>
             </div>
             <Link
               href="/gems"
-              className="hidden md:inline-flex items-center gap-1.5 text-sm font-semibold text-[#2A1B3D] hover:text-[#2A154A] transition-all duration-200 group"
+              className="hidden md:inline-flex items-center gap-1.5 text-sm font-semibold text-[#1A0B2E] hover:text-[#2A154A] transition-all duration-200 group"
             >
               <span>Explore all</span>
               <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -647,7 +611,7 @@ export function HomePage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
                 <div className="absolute bottom-0 left-0 p-4 w-full">
-                  <p className="text-[#C5A059] text-[9px] font-bold uppercase tracking-[1.2px] mb-1">
+                  <p className="text-[#D4AF37] text-[9px] font-bold uppercase tracking-[1.2px] mb-1">
                     {tag}
                   </p>
                   <h3 className="font-display text-white font-bold text-sm leading-snug mb-1.5">
@@ -662,7 +626,7 @@ export function HomePage() {
           <div className="mt-5 text-center md:hidden">
             <Link
               href="/gems"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#2A1B3D] group"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#1A0B2E] group"
             >
               <span>Explore all gems</span>
               <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -711,7 +675,7 @@ export function HomePage() {
                   </span>
                 </div>
                 <div className="absolute bottom-0 left-0 p-4 w-full">
-                  <p className="text-[#C5A059] text-[9px] font-bold uppercase tracking-widest mb-1">
+                  <p className="text-[#D4AF37] text-[9px] font-bold uppercase tracking-widest mb-1">
                     {deal.location}
                   </p>
                   <h3 className="font-display text-white font-bold text-sm leading-tight mb-1.5">
@@ -731,7 +695,7 @@ export function HomePage() {
           <div className="mt-5 text-center md:hidden">
             <Link
               href="/search?category=stays"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#2A1B3D] group"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#1A0B2E] group"
             >
               <span>View all deals</span>
               <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -745,7 +709,7 @@ export function HomePage() {
        */}
       <AnimatedSection delay={100}>
         <section className="mx-auto w-full max-w-7xl px-4 md:px-8 mb-16">
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center bg-[#F9F7F2] rounded-2xl overflow-hidden border border-[#C5A059]/60">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center bg-[#F9F7F2] rounded-2xl overflow-hidden border border-[#D4AF37]/60">
             {/* Image side */}
             <div className="relative aspect-[4/3] md:aspect-auto md:h-full min-h-[280px] overflow-hidden">
               <img
@@ -758,18 +722,18 @@ export function HomePage() {
             </div>
             {/* Content side */}
             <div className="px-6 md:px-0 md:pr-10 py-8">
-              <p className="text-[10px] font-bold text-[#C5A059] tracking-[1px] uppercase mb-2">
+              <p className="text-[10px] font-bold text-[#D4AF37] tracking-[1px] uppercase mb-2">
                 For property owners
               </p>
               <h2 className="font-display text-xl md:text-2xl font-bold text-[#334155] leading-snug mb-3">
                 Your guest house deserves to be discovered
               </h2>
-              <p className="text-[13px] text-[#8A8480] leading-relaxed max-w-md mb-6">
+              <p className="text-[13px] text-[#64748B] leading-relaxed max-w-md mb-6">
                 List your property with fair commissions. We grow together.
               </p>
               <Link
                 href="/become-host"
-                className="inline-flex items-center justify-center gap-2 bg-[#C5A059] hover:bg-[#B48E3E] text-[#334155] text-sm font-bold px-8 py-3 rounded-xl transition-all duration-200 w-full sm:w-auto"
+                className="inline-flex items-center justify-center gap-2 bg-[#D4AF37] hover:bg-[#d5b069] text-[#111111] text-sm font-bold px-8 py-3 rounded-xl transition-all duration-200 w-full sm:w-auto"
               >
                 List your escape <ArrowRight className="h-4 w-4" />
               </Link>
@@ -783,7 +747,7 @@ export function HomePage() {
           Dark plum background with white text, gold icon containers,
           and a 3-column horizontal layout for value props.
        */}
-      <section className="pt-14 pb-0 md:py-[56px] bg-[#2A1B3D]">
+      <section className="pt-14 pb-8 md:pt-[56px] md:pb-8 bg-[#1A0B2E]">
         <div className="mx-auto w-full max-w-7xl px-4 md:px-8">
           <AnimatedSection delay={0}>
             <h2 className="text-xl md:text-2xl font-bold text-white mb-8 md:mb-[32px] text-center md:text-left">
@@ -795,8 +759,8 @@ export function HomePage() {
             {valueProps.map(({ icon: Icon, title, desc }, i) => (
               <AnimatedSection key={title} delay={i * 100}>
                 <div className="flex gap-4 items-start">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-[rgba(201,168,76,0.15)] text-[#C5A059]">
-                    <Icon className="h-[22px] w-[22px]" strokeWidth={2} />
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-[rgba(201,168,76,0.15)] text-[#D4AF37]">
+                    <Icon className="h-[22px] w-[22px]" weight="regular" />
                   </div>
                   <div className="min-w-0">
                     <h3 className="text-[15px] font-semibold text-white mb-1">{title}</h3>

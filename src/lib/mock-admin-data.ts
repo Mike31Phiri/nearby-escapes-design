@@ -73,7 +73,7 @@ export interface ActivityLog {
   type: "booking" | "listing" | "user" | "payment" | "report" | "system";
 }
 
-// ─── Platform Stats ─────────────────────────────────────────────────
+//Platform Stats ─────────────────────────────────────────────────
 
 export const mockPlatformStats: PlatformStats = {
   totalUsers: 2847,
@@ -91,7 +91,7 @@ export const mockPlatformStats: PlatformStats = {
   reportedListings: 3,
 };
 
-// ─── Monthly Data ───────────────────────────────────────────────────
+//Monthly Data ───────────────────────────────────────────────────
 
 export const mockMonthlyData: MonthlyPlatformData[] = [
   { month: "Jan", newUsers: 185, newBookings: 890, revenue: 342_000, commission: 51_300 },
@@ -108,7 +108,7 @@ export const mockMonthlyData: MonthlyPlatformData[] = [
   { month: "Dec", newUsers: 260, newBookings: 1180, revenue: 478_000, commission: 71_700 },
 ];
 
-// ─── Admin Users ────────────────────────────────────────────────────
+//Admin Users ────────────────────────────────────────────────────
 
 export const mockAdminUsers: AdminUser[] = [
   {
@@ -277,7 +277,7 @@ export const mockAdminUsers: AdminUser[] = [
   },
 ];
 
-// ─── Pending Listings (Moderation Queue) ────────────────────────────
+//Pending Listings (Moderation Queue) ────────────────────────────
 
 export const mockPendingListings: PendingListing[] = [
   {
@@ -379,7 +379,7 @@ export const mockPendingListings: PendingListing[] = [
   },
 ];
 
-// ─── Activity Log ───────────────────────────────────────────────────
+//Activity Log ───────────────────────────────────────────────────
 
 export const mockActivityLogs: ActivityLog[] = [
   {
@@ -492,7 +492,7 @@ export const mockActivityLogs: ActivityLog[] = [
   },
 ];
 
-// ─── System Settings ────────────────────────────────────────────────
+//System Settings ────────────────────────────────────────────────
 
 export const mockSystemSettings: SystemSetting[] = [
   {
@@ -606,7 +606,7 @@ export const mockSystemSettings: SystemSetting[] = [
   },
 ];
 
-// ─── Dispute Types ────────────────────────────────────────────────────
+//Dispute Types ────────────────────────────────────────────────────
 
 export interface DisputeCase {
   id: string;
@@ -669,7 +669,7 @@ export interface FeaturedListing {
   cost: number;
 }
 
-// ─── Mock Disputes ──────────────────────────────────────────────────
+//Mock Disputes ──────────────────────────────────────────────────
 
 export const mockDisputes: DisputeCase[] = [
   {
@@ -764,7 +764,7 @@ export const mockDisputes: DisputeCase[] = [
   },
 ];
 
-// ─── Mock Payouts ───────────────────────────────────────────────────
+//Mock Payouts ───────────────────────────────────────────────────
 
 export const mockPayouts: PayoutRecord[] = [
   {
@@ -869,7 +869,7 @@ export const mockPayouts: PayoutRecord[] = [
   },
 ];
 
-// ─── Mock Promotions ────────────────────────────────────────────────
+//Mock Promotions ────────────────────────────────────────────────
 
 export const mockPromoCodes: PromoCode[] = [
   {
@@ -989,7 +989,7 @@ export const mockFeaturedListings: FeaturedListing[] = [
   },
 ];
 
-// ─── Helpers ────────────────────────────────────────────────────────
+//Helpers ────────────────────────────────────────────────────────
 
 export function statsFromUsers(users: AdminUser[]) {
   return {

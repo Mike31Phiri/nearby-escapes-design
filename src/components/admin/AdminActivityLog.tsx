@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import { mockActivityLogs } from "@/lib/mock-admin-data";
 import type { ActivityLog } from "@/lib/mock-admin-data";
 
-// ─── Config ─────────────────────────────────────────────────────────────
+//Config ─────────────────────────────────────────────────────────────
 
 const typeColors: Record<string, string> = {
   booking: "bg-blue-100 text-blue-600 dark:bg-blue-950 dark:text-blue-300",
@@ -35,7 +35,7 @@ const typeLabels: Record<string, string> = {
   system: "System",
 };
 
-// ─── Activity Item ──────────────────────────────────────────────────────
+//Activity Item ──────────────────────────────────────────────────────
 
 function ActivityItem({ log }: { log: ActivityLog }) {
   const badgeColor = typeColors[log.type] ?? typeColors.system;
@@ -102,7 +102,7 @@ function ActivityItem({ log }: { log: ActivityLog }) {
   );
 }
 
-// ─── Main Component ─────────────────────────────────────────────────────
+//Main Component ─────────────────────────────────────────────────────
 
 export function AdminActivityLog() {
   const [search, setSearch] = useState("");

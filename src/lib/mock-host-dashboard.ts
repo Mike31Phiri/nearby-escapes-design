@@ -51,7 +51,7 @@ export interface ContextualTip {
   actionHref?: string;
 }
 
-// ── Mock Data ─────────────────────────────────────────────────────────────
+//Mock Data ─────────────────────────────────────────────────────────────
 
 export const mockDashboardAlerts: DashboardAlert[] = [
   {

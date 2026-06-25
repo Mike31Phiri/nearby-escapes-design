@@ -32,12 +32,12 @@ function ReviewCard({ review, onReply }: { review: HostReview; onReply: (id: str
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-baseline">
           <div className="text-[12px] font-medium text-[#1C1030]">{review.guestName}</div>
-          <div className="text-[10px] text-[#8A8480]">
+          <div className="text-[10px] text-[#64748B]">
             {new Date(review.date).toLocaleDateString("en-ZM", { month: "short", year: "numeric" })}
           </div>
         </div>
         <StarIcons rating={review.rating} />
-        <div className="text-[11px] text-[#8A8480] leading-relaxed mt-0.5">
+        <div className="text-[11px] text-[#64748B] leading-relaxed mt-0.5">
           &ldquo;{review.text}&rdquo;
         </div>
         {review.replied && review.replyText ? (
@@ -70,7 +70,7 @@ function DisputeRow({ dispute }: { dispute: Dispute }) {
         <div className="text-[12px] font-medium text-[#1C1030]">
           Booking #{dispute.id} — {dispute.issue.split(" ").slice(0, 4).join(" ")}...
         </div>
-        <div className="text-[10px] text-[#8A8480]">
+        <div className="text-[10px] text-[#64748B]">
           Raised{" "}
           {new Date(dispute.date).toLocaleDateString("en-ZM", { day: "numeric", month: "short" })} ·
           Awaiting admin response
@@ -107,32 +107,32 @@ export function HostReviewsPage() {
             <div className="flex-1 bg-white border border-[#E0DBD0] rounded-xl p-3 text-center">
               <div className="text-[28px] font-medium text-[#1C1030]">{avgRating.toFixed(1)}</div>
               <StarIcons rating={Math.round(avgRating)} />
-              <div className="text-[11px] text-[#8A8480] mt-1">{reviews.length} reviews</div>
+              <div className="text-[11px] text-[#64748B] mt-1">{reviews.length} reviews</div>
             </div>
             <div className="flex-1 bg-white border border-[#E0DBD0] rounded-xl p-3 flex flex-col gap-1">
               <div className="flex items-center gap-1.5">
                 <div className="flex-1 h-1 rounded-full bg-[#E8E3DC]">
                   <div className="w-[95%] h-1 rounded-full bg-[#C9A84C]"></div>
                 </div>
-                <span className="text-[10px] text-[#8A8480] w-[20px]">Loc</span>
+                <span className="text-[10px] text-[#64748B] w-[20px]">Loc</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="flex-1 h-1 rounded-full bg-[#E8E3DC]">
                   <div className="w-[90%] h-1 rounded-full bg-[#C9A84C]"></div>
                 </div>
-                <span className="text-[10px] text-[#8A8480] w-[20px]">Clean</span>
+                <span className="text-[10px] text-[#64748B] w-[20px]">Clean</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="flex-1 h-1 rounded-full bg-[#E8E3DC]">
                   <div className="w-[98%] h-1 rounded-full bg-[#C9A84C]"></div>
                 </div>
-                <span className="text-[10px] text-[#8A8480] w-[20px]">Value</span>
+                <span className="text-[10px] text-[#64748B] w-[20px]">Value</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="flex-1 h-1 rounded-full bg-[#E8E3DC]">
                   <div className="w-full h-1 rounded-full bg-[#C9A84C]"></div>
                 </div>
-                <span className="text-[10px] text-[#8A8480] w-[20px]">Host</span>
+                <span className="text-[10px] text-[#64748B] w-[20px]">Host</span>
               </div>
             </div>
           </div>

@@ -43,7 +43,7 @@ function BookingRow({
           <div className="text-[12px] font-medium text-[#1C1030]">
             {booking.guestName} · {booking.guests} guests
           </div>
-          <div className="text-[10px] text-[#8A8480]">
+          <div className="text-[10px] text-[#64748B]">
             {dates} · K{booking.amount.toLocaleString()}
           </div>
         </div>
@@ -292,7 +292,7 @@ export function HostBookingsPage() {
                       <div className="text-[12px] font-medium text-[#1C1030]">
                         {b.guestName} · {b.guests} guests
                       </div>
-                      <div className="text-[10px] text-[#8A8480]">
+                      <div className="text-[10px] text-[#64748B]">
                         K{b.amount.toLocaleString()} paid out
                       </div>
                     </div>
@@ -306,7 +306,7 @@ export function HostBookingsPage() {
         )}
 
         {filtered.length === 0 && (
-          <div className="px-4 py-10 text-center text-[12px] text-[#8A8480]">No bookings found</div>
+          <div className="px-4 py-10 text-center text-[12px] text-[#64748B]">No bookings found</div>
         )}
       </div>
     </div>

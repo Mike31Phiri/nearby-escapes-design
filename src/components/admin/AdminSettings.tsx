@@ -28,7 +28,7 @@ import type { SystemSetting } from "@/lib/mock-admin-data";
 import { useLoading, withLoading } from "@/lib/loading-context";
 import { toastSettingsSaved, toastSettingsReset } from "@/lib/admin-toast";
 
-// ─── Category Config ────────────────────────────────────────────────────
+//Category Config ────────────────────────────────────────────────────
 
 const categoryConfig: Record<string, { label: string; icon: React.ElementType; color: string }> = {
   commission: { label: "Commission & Payouts", icon: DollarSign, color: "#10b981" },
@@ -38,7 +38,7 @@ const categoryConfig: Record<string, { label: string; icon: React.ElementType; c
   notifications: { label: "Notifications", icon: Bell, color: "#ec4899" },
 };
 
-// ─── Setting Field ──────────────────────────────────────────────────────
+//Setting Field ──────────────────────────────────────────────────────
 
 function SettingField({
   setting,
@@ -113,7 +113,7 @@ function SettingField({
   );
 }
 
-// ─── Main Component ─────────────────────────────────────────────────────
+//Main Component ─────────────────────────────────────────────────────
 
 export function AdminSettings() {
   const [settings, setSettings] = useState<SystemSetting[]>(mockSystemSettings);

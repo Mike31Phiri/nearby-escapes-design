@@ -50,7 +50,7 @@ import { mockHostBookings } from "@/lib/mock-host-bookings";
 import type { HostBooking } from "@/lib/mock-host-bookings";
 import { toast } from "sonner";
 
-// ─── Type helpers ────────────────────────────────────────────────────────
+//Type helpers ────────────────────────────────────────────────────────
 
 const typeIcons: Record<string, React.ElementType> = {
   stay: Bed,
@@ -112,7 +112,7 @@ const bookingStatusConfig: Record<
   },
 };
 
-// ─── Mock monthly performance per listing ────────────────────────────────
+//Mock monthly performance per listing ────────────────────────────────
 
 interface MonthlyListingPerf {
   month: string;
@@ -207,7 +207,7 @@ const mockListingPerformance: Record<string, MonthlyListingPerf[]> = {
   ],
 };
 
-// ─── Stat Card ───────────────────────────────────────────────────────────
+//Stat Card ───────────────────────────────────────────────────────────
 
 function StatCard({
   icon: Icon,
@@ -256,7 +256,7 @@ function StatCard({
   );
 }
 
-// ─── Booking Card (compact) ──────────────────────────────────────────────
+//Booking Card (compact) ──────────────────────────────────────────────
 
 function CompactBookingCard({ booking }: { booking: HostBooking }) {
   const cfg = bookingStatusConfig[booking.status];
@@ -300,7 +300,7 @@ function CompactBookingCard({ booking }: { booking: HostBooking }) {
   );
 }
 
-// ─── Main Page Component ─────────────────────────────────────────────────
+//Main Page Component ─────────────────────────────────────────────────
 
 interface Props {
   listing: HostListing;
@@ -370,7 +370,7 @@ export function HostListingDetailPage({ listing }: Props) {
     [listingBookings],
   );
 
-  // ─── Management Actions ─────────────────────────────────────────────
+  //Management Actions ─────────────────────────────────────────────
 
   const handleDelete = useCallback(() => {
     setDeleting(true);
@@ -388,7 +388,7 @@ export function HostListingDetailPage({ listing }: Props) {
     toast.success("Listing link copied to clipboard");
   }, [listing.id, listing.type]);
 
-  // ─── Chart config ──────────────────────────────────────────────────
+  //Chart config ──────────────────────────────────────────────────
 
   const maxRevenue = Math.max(...perfData.map((m) => m.revenue), 1);
   const maxBookings = Math.max(...perfData.map((m) => m.bookings), 1);
@@ -444,7 +444,7 @@ export function HostListingDetailPage({ listing }: Props) {
   return (
     <div className="min-h-screen flex flex-col bg-background font-sans">
       <main className="flex-1">
-        {/* ─── Header ────────────────────────────────────────────────── */}
+        {/* Header */}
         <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
           <div className="mx-auto max-w-5xl px-4 md:px-6 pt-8 md:pt-12">
             {/* Back + Actions Row */}
@@ -561,7 +561,7 @@ export function HostListingDetailPage({ listing }: Props) {
           </div>
         </div>
 
-        {/* ─── Stats Row ─────────────────────────────────────────────── */}
+        {/* Stats Row */}
         <div className="mx-auto max-w-5xl px-4 md:px-6 -mt-6 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             <StatCard
@@ -603,7 +603,7 @@ export function HostListingDetailPage({ listing }: Props) {
           </div>
         </div>
 
-        {/* ─── Management Actions Bar ────────────────────────────────── */}
+        {/* Management Actions Bar */}
         <div className="mx-auto max-w-5xl px-4 md:px-6 mt-6">
           <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border/40 bg-card p-3 shadow-sm card-shadow">
             <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground mr-2">
@@ -760,7 +760,7 @@ export function HostListingDetailPage({ listing }: Props) {
           </div>
         </div>
 
-        {/* ─── Tabs Navigation ───────────────────────────────────────── */}
+        {/* Tabs Navigation */}
         <div className="mx-auto max-w-5xl px-4 md:px-6 mt-8">
           <div className="flex border-b border-border/50 gap-0 overflow-x-auto scrollbar-none">
             {tabs.map(({ id, label, icon: Icon }) => {
@@ -785,7 +785,7 @@ export function HostListingDetailPage({ listing }: Props) {
             })}
           </div>
 
-          {/* ─── Tab Content ──────────────────────────────────────────── */}
+          {/* Tab Content */}
           <div className="mt-8 pb-16">
             {/*  OVERVIEW  */}
             {activeTab === "overview" && (

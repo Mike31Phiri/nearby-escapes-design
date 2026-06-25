@@ -30,7 +30,7 @@ import type { HostBooking } from "@/lib/mock-host-bookings";
 import { useLoading, withLoading } from "@/lib/loading-context";
 import { toastBookingAccepted, toastBookingDeclined } from "@/lib/admin-toast";
 
-// ─── Type Helpers ───────────────────────────────────────────────────────
+//Type Helpers ───────────────────────────────────────────────────────
 
 const typeIcons: Record<string, React.ElementType> = {
   stay: Bed,
@@ -72,7 +72,7 @@ const bookingStatusConfig: Record<
   },
 };
 
-// ─── Booking Card ───────────────────────────────────────────────────────
+//Booking Card ───────────────────────────────────────────────────────
 
 function BookingCard({ booking }: { booking: HostBooking }) {
   const { setLoading, setLoadingMessage } = useLoading();
@@ -187,7 +187,7 @@ function BookingCard({ booking }: { booking: HostBooking }) {
   );
 }
 
-// ─── Main Component ─────────────────────────────────────────────────────
+//Main Component ─────────────────────────────────────────────────────
 
 export function AdminBookings() {
   const [search, setSearch] = useState("");

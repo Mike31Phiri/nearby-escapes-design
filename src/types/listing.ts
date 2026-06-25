@@ -16,11 +16,11 @@ import {
   Accessibility,
 } from "lucide-react";
 
-// ── Listing Type ──────────────────────────────────────────────────────────
+//Listing Type ──────────────────────────────────────────────────────────
 
 export type ListingType = "stay" | "experience" | "transport" | "gem";
 
-// ── Nearest Attraction (used by Stays) ────────────────────────────────────
+//Nearest Attraction (used by Stays) ────────────────────────────────────
 
 export interface NearestAttraction {
   name: string;
@@ -28,7 +28,7 @@ export interface NearestAttraction {
   category: "landmark" | "nature" | "restaurant" | "activity" | "town" | "other";
 }
 
-// ── Transport Route Stop ──────────────────────────────────────────────────
+//Transport Route Stop ──────────────────────────────────────────────────
 
 export interface RouteStop {
   name: string;
@@ -37,7 +37,7 @@ export interface RouteStop {
   notes?: string;
 }
 
-// ── Transport Schedule ────────────────────────────────────────────────────
+//Transport Schedule ────────────────────────────────────────────────────
 
 export interface TransportSchedule {
   frequency: "daily" | "weekly" | "custom";
@@ -46,7 +46,7 @@ export interface TransportSchedule {
   seasonalNotes?: string;
 }
 
-// ── Form Data ─────────────────────────────────────────────────────────────
+//Form Data ─────────────────────────────────────────────────────────────
 
 export interface StayFormData {
   // Step 1 - Basic Info
@@ -162,7 +162,7 @@ export interface GemFormData {
   images: string[];
 }
 
-// ── Initial Form Values ────────────────────────────────────────────────────
+//Initial Form Values ────────────────────────────────────────────────────
 
 export const INITIAL_STAY_FORM: StayFormData = {
   name: "",
@@ -246,7 +246,7 @@ export const INITIAL_GEM_FORM: GemFormData = {
   images: [],
 };
 
-// ── Constants ──────────────────────────────────────────────────────────────
+//Constants ──────────────────────────────────────────────────────────────
 
 export const PROPERTY_TYPES = [
   { value: "lodge", label: "Lodge" },
@@ -392,7 +392,7 @@ export const NEARBY_OPTIONS = [
   { value: "police", label: "Police Station" },
 ];
 
-// ── User Profile Extras (for JIT collection) ──────────────────────────────
+//User Profile Extras (for JIT collection) ──────────────────────────────
 
 export interface UserPreferences {
   homeCity: string;

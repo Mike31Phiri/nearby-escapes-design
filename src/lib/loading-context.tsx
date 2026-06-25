@@ -4,7 +4,7 @@ import { createContext, useContext, useState, useCallback, type ReactNode } from
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// ─── Context ────────────────────────────────────────────────────────────
+//Context ────────────────────────────────────────────────────────────
 
 interface LoadingContextValue {
   isLoading: boolean;
@@ -24,7 +24,7 @@ export function useLoading() {
   return useContext(LoadingContext);
 }
 
-// ─── Provider ───────────────────────────────────────────────────────────
+//Provider ───────────────────────────────────────────────────────────
 
 export function LoadingProvider({ children }: { children: ReactNode }) {
   const [isLoading, setLoading] = useState(false);
@@ -38,7 +38,7 @@ export function LoadingProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// ─── Overlay ────────────────────────────────────────────────────────────
+//Overlay ────────────────────────────────────────────────────────────
 
 function LoadingOverlay({ isLoading, message }: { isLoading: boolean; message: string }) {
   if (!isLoading) return null;
@@ -67,7 +67,7 @@ function LoadingOverlay({ isLoading, message }: { isLoading: boolean; message: s
   );
 }
 
-// ─── Action Helper ──────────────────────────────────────────────────────
+//Action Helper ──────────────────────────────────────────────────────
 // Wraps an async action with loading state and optional message/reset
 
 export function withLoading<T>(

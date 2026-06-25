@@ -113,7 +113,7 @@ export function AdminSidebar({ isCollapsed = false, onToggle }: AdminSidebarProp
   );
 }
 
-/* ─── MobileAdminNav ─── */
+/* MobileAdminNav */
 
 export function MobileAdminNav() {
   const pathname = usePathname();

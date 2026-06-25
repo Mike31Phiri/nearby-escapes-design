@@ -2,7 +2,7 @@
 
 import "@testing-library/jest-dom/vitest";
 
-// ─── Next.js Mocks ──────────────────────────────────────────────────────
+//Next.js Mocks ──────────────────────────────────────────────────────
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
@@ -34,7 +34,7 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-// ─── Library Mocks ──────────────────────────────────────────────────────
+//Library Mocks ──────────────────────────────────────────────────────
 
 vi.mock("lucide-react", async () => {
   const actual = await vi.importActual("lucide-react");
@@ -62,7 +62,7 @@ vi.mock("@/lib/admin-toast", () => ({
   showLoadingToast: vi.fn(() => vi.fn()),
 }));
 
-// ─── shadcn UI Component Mocks ───────────────────────────────────────────
+//shadcn UI Component Mocks ───────────────────────────────────────────
 
 vi.mock("@/components/ui/button", () => ({
   Button: ({

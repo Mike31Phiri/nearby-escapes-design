@@ -30,7 +30,7 @@ import {
 } from "@/lib/mock-admin-data";
 import type { ActivityLog } from "@/lib/mock-admin-data";
 
-// ─── Stat Card ──────────────────────────────────────────────────────────
+//Stat Card ──────────────────────────────────────────────────────────
 
 function StatCard({
   icon: Icon,
@@ -87,7 +87,7 @@ function StatCard({
   return content;
 }
 
-// ─── Activity Item ──────────────────────────────────────────────────────
+//Activity Item ──────────────────────────────────────────────────────
 
 function ActivityItem({ log }: { log: ActivityLog }) {
   const typeColors: Record<string, string> = {
@@ -144,7 +144,7 @@ function ActivityItem({ log }: { log: ActivityLog }) {
   );
 }
 
-// ─── Main Component ─────────────────────────────────────────────────────
+//Main Component ─────────────────────────────────────────────────────
 
 export function AdminDashboard() {
   const stats = mockPlatformStats;

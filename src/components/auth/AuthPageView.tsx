@@ -1,36 +1,21 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, Fragment } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Mail,
   Lock,
-  User,
-  ArrowRight,
   ArrowLeft,
   ShieldCheck,
-  AlertCircle,
   Eye,
   EyeOff,
-  Trees,
-  Tent,
-  Smartphone,
-  MessageSquare,
-  LockKeyhole,
   Check,
-  BellRing,
-  LockKeyholeOpen,
   Backpack,
   Home,
-  BellOff,
-  Gift,
-  Clock,
-  EyeOff as EyeOffIcon,
   ChevronDown,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { EnvelopeSimple as MessageSquare } from "@phosphor-icons/react";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
@@ -41,19 +26,146 @@ interface AuthPageViewProps {
   defaultTab?: "login" | "register" | "otp" | "reset";
 }
 
+//Shared hero section ────────────────────────────────────────────────
+
+function AuthHero({
+  eyebrow,
+  headline,
+  sub,
+}: {
+  eyebrow: string;
+  headline: React.ReactNode;
+  sub?: string;
+}) {
+  return (
+    <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-8">
+      <Link
+        href="/"
+        className="absolute top-4 left-4 md:top-6 md:left-6 flex items-center gap-1.5 no-underline z-10"
+      >
+        <span className="text-lg font-semibold text-white tracking-tight">Nearby</span>
+        <span className="font-script text-[#D4AF37] text-[1.3em] leading-none">Escapes</span>
+      </Link>
+      <div className="max-w-lg">
+        <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#D4AF37] mb-2">
+          {eyebrow}
+        </p>
+        <h1 className="font-display text-[1.75rem] md:text-[2.75rem] lg:text-[3rem] font-bold text-white leading-[1.15] tracking-tight">
+          {headline}
+        </h1>
+        {sub && (
+          <p className="text-sm text-white/60 mt-1.5 leading-relaxed max-w-md">
+            {sub}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+//Trust strip ────────────────────────────────────────────────────────
+
+function AuthTrustStrip() {
+  return (
+    <div className="flex items-center justify-center gap-6 px-4 py-3 border-t border-gray-100 bg-gray-50/50">
+      <span className="flex items-center gap-1.5 text-[10px] font-bold text-[#64748B] uppercase tracking-wider">
+        <ShieldCheck className="h-3.5 w-3.5 text-[#1A0B2E]" />
+        Secure &amp; encrypted
+      </span>
+      <span className="flex items-center gap-1.5 text-[10px] font-bold text-[#64748B] uppercase tracking-wider">
+        <Lock className="h-3.5 w-3.5 text-[#1A0B2E]" />
+        Data protected
+      </span>
+    </div>
+  );
+}
+
+//Password strength indicator ────────────────────────────────────────
+
+function PasswordStrength({ password }: { password: string }) {
+  const getStrength = (val: string) => {
+    if (!val) return { score: 0, label: "Enter a password", color: "text-gray-400", bar: "bg-gray-200" };
+    if (val.length < 6) return { score: 1, label: "Too short", color: "text-rose-500", bar: "bg-rose-500" };
+    if (val.length < 8) return { score: 2, label: "Weak", color: "text-amber-500", bar: "bg-amber-500" };
+    if (val.length < 12) return { score: 3, label: "Good", color: "text-emerald-600", bar: "bg-emerald-600" };
+    return { score: 4, label: "Strong ✓", color: "text-emerald-600", bar: "bg-emerald-600" };
+  };
+
+  const strength = getStrength(password);
+
+  return (
+    <div className="mt-2.5">
+      <div className="flex gap-1.5 mb-1.5">
+        {[1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            className={cn(
+              "h-1 flex-1 rounded-full transition-colors duration-300",
+              i <= strength.score ? strength.bar : "bg-gray-200",
+            )}
+          />
+        ))}
+      </div>
+      <p className={cn("text-[11px] font-semibold", strength.color)}>{strength.label}</p>
+    </div>
+  );
+}
+
+//OTP input group ────────────────────────────────────────────────────
+
+function OtpInputs({
+  value,
+  onChange,
+  onKeyDown,
+  fieldId,
+}: {
+  value: string[];
+  onChange: (index: number, val: string) => void;
+  onKeyDown: (index: number, e: React.KeyboardEvent<HTMLInputElement>) => void;
+  fieldId: string;
+}) {
+  return (
+    <div className="flex gap-3 justify-center">
+      {value.map((digit, idx) => (
+        <input
+          key={idx}
+          id={`${fieldId}-${idx}`}
+          className={cn(
+            "w-12 h-14 md:w-14 md:h-16 rounded-xl border-2 text-center text-xl md:text-2xl font-bold text-[#1A0B2E] font-display bg-white outline-none transition-all duration-200",
+            digit
+              ? "border-[#D4AF37] bg-[#D4AF37]/5"
+              : "border-gray-200 focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10",
+          )}
+          type="text"
+          maxLength={1}
+          value={digit}
+          onChange={(e) => {
+            const clean = e.target.value.replace(/[^0-9]/g, "").slice(-1);
+            onChange(idx, clean);
+          }}
+          onKeyDown={(e) => onKeyDown(idx, e)}
+          placeholder="·"
+          aria-label={`Digit ${idx + 1}`}
+        />
+      ))}
+    </div>
+  );
+}
+
+//Main Auth Component ────────────────────────────────────────────────
+
 export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { login } = useAuth();
   const activeTab = defaultTab;
-
   const redirectTarget = searchParams.get("next") || "/";
 
-  // Form Field States
+  // Login
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // Register States
+  // Register
   const [role, setRole] = useState<"traveller" | "host">("traveller");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -62,11 +174,11 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
   const [dealsAlerts, setDealsAlerts] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // OTP Verification States
+  // OTP
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
-  const [secs, setSecs] = useState(522); // 8:42 countdown timer
+  const [secs, setSecs] = useState(522);
 
-  // Password Reset States
+  // Reset
   const [resetStep, setResetStep] = useState<1 | 2 | 3>(1);
   const [resetEmail, setResetEmail] = useState("");
   const [resetOtp, setResetOtp] = useState<string[]>(Array(6).fill(""));
@@ -74,46 +186,26 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
 
-  // Countdown timer effect for OTP screen
   useEffect(() => {
     if (activeTab !== "otp") return;
-    const timer = setInterval(() => {
-      setSecs((s) => (s > 0 ? s - 1 : 0));
-    }, 1000);
+    const timer = setInterval(() => setSecs((s) => (s > 0 ? s - 1 : 0)), 1000);
     return () => clearInterval(timer);
   }, [activeTab]);
 
   const formatTimer = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-    return `${minutes}:${String(seconds).padStart(2, "0")}`;
+    const m = Math.floor(time / 60);
+    const s = time % 60;
+    return `${m}:${String(s).padStart(2, "0")}`;
   };
 
-  // Password strength calculation
-  const getPasswordStrength = (val: string) => {
-    if (!val) return { score: 0, label: "Enter a password", color: "text-gray-400" };
-    if (val.length < 6)
-      return { score: 1, label: "Too short", color: "text-rose-500", barClass: "bg-rose-500" };
-    if (val.length < 8)
-      return { score: 2, label: "Weak", color: "text-amber-500", barClass: "bg-amber-500" };
-    if (val.length < 12)
-      return { score: 3, label: "Good", color: "text-emerald-600", barClass: "bg-emerald-600" };
-    return { score: 4, label: "Strong ✓", color: "text-emerald-600", barClass: "bg-emerald-600" };
-  };
-
-  // OTP inputs key shifting
   const handleOtpChange = (index: number, val: string, field: "otp" | "resetOtp") => {
-    const cleanVal = val.replace(/[^0-9]/g, "").slice(-1);
     const target = field === "otp" ? otp : resetOtp;
     const setTarget = field === "otp" ? setOtp : setResetOtp;
-
     const next = [...target];
-    next[index] = cleanVal;
+    next[index] = val;
     setTarget(next);
-
-    if (cleanVal && index < 5) {
-      const nextInput = document.getElementById(`${field}-${index + 1}`) as HTMLInputElement;
-      nextInput?.focus();
+    if (val && index < 5) {
+      document.getElementById(`${field}-${index + 1}`)?.focus();
     }
   };
 
@@ -122,49 +214,36 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
     e: React.KeyboardEvent<HTMLInputElement>,
     field: "otp" | "resetOtp",
   ) => {
-    if (e.key === "Backspace") {
-      const target = field === "otp" ? otp : resetOtp;
-      const setTarget = field === "otp" ? setOtp : setResetOtp;
-      if (!target[index] && index > 0) {
-        const prevInput = document.getElementById(`${field}-${index - 1}`) as HTMLInputElement;
-        prevInput?.focus();
-        const next = [...target];
-        next[index - 1] = "";
-        setTarget(next);
-      }
+    const target = field === "otp" ? otp : resetOtp;
+    const setTarget = field === "otp" ? setOtp : setResetOtp;
+    if (e.key === "Backspace" && !target[index] && index > 0) {
+      const next = [...target];
+      next[index - 1] = "";
+      setTarget(next);
+      document.getElementById(`${field}-${index - 1}`)?.focus();
     }
   };
 
-  // Submit Actions
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !password.trim()) {
       toast.error("Please enter email/phone and password.");
       return;
     }
-
+    const name = email.split("@")[0];
     login({
-      name: email.split("@")[0].charAt(0).toUpperCase() + email.split("@")[0].slice(1),
+      name: name.charAt(0).toUpperCase() + name.slice(1),
       email: email.toLowerCase(),
       avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${email}`,
       role: "host",
     });
-
     toast.success("Welcome back! You have successfully signed in.");
-    setTimeout(() => {
-      router.push(redirectTarget);
-    }, 800);
+    setTimeout(() => router.push(redirectTarget), 800);
   };
 
   const handleRegisterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (
-      !firstName.trim() ||
-      !lastName.trim() ||
-      !email.trim() ||
-      !password.trim() ||
-      !phone.trim()
-    ) {
+    if (!firstName.trim() || !lastName.trim() || !email.trim() || !password.trim() || !phone.trim()) {
       toast.error("Please fill in all details.");
       return;
     }
@@ -172,19 +251,16 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
       toast.error("You must agree to the Terms of Service.");
       return;
     }
-
     toast.success("Details saved! Please verify your phone number to continue.");
     router.push("/auth/otp");
   };
 
   const handleOtpSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const code = otp.join("");
-    if (code.length < 6) {
+    if (otp.join("").length < 6) {
       toast.error("Please enter the complete 6-digit code.");
       return;
     }
-
     const name = firstName ? `${firstName} ${lastName}` : "Sarah Phiri";
     login({
       name,
@@ -192,776 +268,494 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
       avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${name}`,
       role: role === "traveller" ? "guest" : "host",
     });
-
     toast.success("Verification successful! Logging you in...");
-    setTimeout(() => {
-      if (role === "host") {
-        router.push("/host");
-      } else {
-        router.push(redirectTarget);
-      }
-    }, 800);
+    setTimeout(() => router.push(role === "host" ? "/host" : redirectTarget), 800);
   };
 
   const handleResetSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (resetStep === 1) {
-      if (!resetEmail) {
-        toast.error("Please enter your email.");
-        return;
-      }
+      if (!resetEmail) { toast.error("Please enter your email."); return; }
       toast.success("Reset link sent! Please check your email.");
       setResetStep(2);
     } else if (resetStep === 2) {
-      const code = resetOtp.join("");
-      if (code.length < 6) {
-        toast.error("Please enter the 6-digit reset code sent to your email.");
-        return;
-      }
-      toast.success("Code verified! You can now set your new password.");
+      if (resetOtp.join("").length < 6) { toast.error("Please enter the 6-digit code."); return; }
+      toast.success("Code verified! Set your new password.");
       setResetStep(3);
     } else {
-      if (!newPassword || newPassword.length < 6) {
-        toast.error("Password must be at least 6 characters.");
-        return;
-      }
-      if (newPassword !== confirmPassword) {
-        toast.error("Passwords do not match.");
-        return;
-      }
-
+      if (!newPassword || newPassword.length < 6) { toast.error("Password must be at least 6 characters."); return; }
+      if (newPassword !== confirmPassword) { toast.error("Passwords do not match."); return; }
       login({
         name: "Thandeka Mwale",
         email: resetEmail,
         avatar: `https://api.dicebear.com/7.x/initials/svg?seed=Thandeka`,
         role: "guest",
       });
-
       toast.success("Password reset successfully! You are now signed in.");
-      setTimeout(() => {
-        router.push(redirectTarget);
-      }, 800);
+      setTimeout(() => router.push(redirectTarget), 800);
     }
   };
 
+  //Hero content per view ───────────────────────────────────────────
+
+  const heroContent = {
+    login: {
+      eyebrow: "Welcome back",
+      headline: <>Your next <em className="text-[#D4AF37] not-italic">escape</em> is waiting</>,
+      sub: "Sign in to manage your bookings, saved lodges, and upcoming trips.",
+    },
+    register: {
+      eyebrow: "Join free today",
+      headline: <>Find your <em className="text-[#D4AF37] not-italic">hidden gem</em></>,
+    },
+    otp: {
+      eyebrow: "Almost there",
+      headline: <>Verify your <em className="text-[#D4AF37] not-italic">number</em></>,
+    },
+    reset: {
+      eyebrow: "Account recovery",
+      headline: <>Reset your <em className="text-[#D4AF37] not-italic">password</em></>,
+    },
+  };
+
+  //Cover image URL per view ────────────────────────────────────────
+
+  const coverImages: Record<string, string> = {
+    login: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&q=80",
+    register: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200&q=80",
+    otp: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=1200&q=80",
+    reset: "https://images.unsplash.com/photo-1516387938699-a93567ec168e?w=1200&q=80",
+  };
+
   return (
-    <div className="min-h-screen bg-background font-sans flex flex-col">
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-        :root {
-          --ne-forest: #2A1B3D; --ne-forest-light: #523185;
-          --ne-sand: #F5EFE0; --ne-sand-dark: #E8DFC8;
-          --ne-amber: #D4881A; --ne-amber-light: #F5A623;
-          --r: 12px; --rs: 8px;
-        }
-        .auth-wrap { width: 100%; flex: 1; display: flex; flex-direction: column; }
-        .view { display: flex; flex-direction: column; flex: 1; }
-        .brand-logo-hero {
-          position: absolute;
-          top: 1.5rem;
-          left: 1.5rem;
-          z-index: 20;
-        }
-        .brand-text { font-size: 15px; font-weight: 800; color: var(--ne-sand); letter-spacing: -0.02em; }
-        .brand-text span { color: var(--ne-amber-light); font-style: italic; font-weight: 400; }
+    <div className="min-h-screen bg-[#FDFBF7] font-sans flex flex-col">
+      {/* COVER HERO */}
+      <div className="relative h-[220px] md:h-[260px] w-full overflow-hidden bg-gradient-to-br from-[#1A0B2E] via-[#2E154A] to-[#3A1A5A]">
         
-        .auth-hero {
-          background: var(--ne-forest);
-          padding: 4rem 1.25rem 2rem;
-          position: relative; overflow: hidden;
-          min-height: 260px; display: flex; flex-direction: column; justify-content: flex-end;
-          align-items: center;
-        }
-        .brand-logo-hero {
-          position: absolute;
-          top: 1.5rem;
-          left: 1.5rem;
-          z-index: 20;
-        }
-        .brand-text { font-size: 15px; font-weight: 800; color: var(--ne-sand); letter-spacing: -0.02em; }
-        .brand-text span { color: var(--ne-amber-light); font-style: italic; font-weight: 400; }
-        
-        .auth-eyebrow { font-size: 10px; font-weight: 700; color: var(--ne-amber-light); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
-        .auth-headline { font-size: 26px; font-weight: 800; color: var(--ne-sand); line-height: 1.25; margin-bottom: 6px; tracking: -0.01em; }
-        .auth-headline em { color: var(--ne-amber-light); font-style: normal; }
-        .auth-sub { font-size: 13px; color: rgba(245,239,224,0.65); line-height: 1.5; font-weight: 500; }
-        
-        .auth-hero > .auth-eyebrow, .auth-hero > .auth-headline, .auth-hero > .auth-sub {
-          width: 100%; max-width: 480px; text-align: left;
-        }
-        
-        .auth-card {
-          background: white;
-          border: none;
-          padding: 2.5rem 1.5rem;
-          flex: 1;
-          display: flex; flex-direction: column; align-items: center;
-        }
-        .auth-card > form {
-          width: 100%; max-width: 480px;
-        }
-        .field { margin-bottom: 16px; }
-        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-        .field-label { font-size: 10px; font-weight: 700; color: #555555; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
-        .field-input-wrap { position: relative; }
-        .field-input {
-          width: 100%; padding: 12px 14px;
-          border: 1.5px solid var(--ne-sand-dark);
-          border-radius: var(--rs);
-          font-size: 14px; font-weight: 500;
-          color: #1a1a1a;
-          background: white;
-          outline: none; transition: border-color 0.2s;
-        }
-        .field-input:focus { border-color: var(--ne-forest); }
-        .field-icon {
-          position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-          font-size: 16px; color: #888888; cursor: pointer;
-        }
-        .field-hint { font-size: 11px; color: #666666; margin-top: 5px; }
-        .phone-row { display: grid; grid-template-columns: 96px 1fr; gap: 8px; }
-        .phone-prefix {
-          padding: 12px;
-          border: 1.5px solid var(--ne-sand-dark);
-          border-radius: var(--rs);
-          font-size: 14px; font-weight: 600;
-          color: #333333;
-          background: #FAF8F5;
-          display: flex; align-items: center; gap: 6px;
-          cursor: pointer;
-        }
-        
-        .pw-strength { margin-top: 8px; }
-        .pw-bars { display: flex; gap: 4px; margin-bottom: 4px; }
-        .pw-bar { flex: 1; height: 3px; border-radius: 2px; background: #e5e5e5; }
-        .pw-label { font-size: 11px; font-weight: 600; }
-        
-        .role-picker { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-        .role-card {
-          padding: 14px 10px; border-radius: var(--rs);
-          border: 1.5px solid var(--ne-sand-dark);
-          cursor: pointer; text-align: center; transition: all 0.15s;
-        }
-        .role-card.on { border-color: var(--ne-forest); background: #F0F6F3; }
-        .role-card-name { font-size: 13px; font-weight: 700; color: #111111; }
-        .role-card-desc { font-size: 11px; color: #666666; margin-top: 2px; }
-        
-        .checkbox-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 14px; }
-        .checkbox-custom {
-          width: 18px; height: 18px; border-radius: 4px;
-          border: 1.5px solid var(--ne-sand-dark);
-          display: flex; align-items: center; justify-content: center;
-          flex-shrink: 0; cursor: pointer; margin-top: 2px;
-        }
-        .checkbox-custom.on { background: var(--ne-forest); border-color: var(--ne-forest); }
-        .checkbox-custom-label { font-size: 12px; color: #555555; line-height: 1.5; font-weight: 500; }
-        .checkbox-custom-label a { color: var(--ne-forest); font-weight: 700; text-decoration: none; }
-        
-        .btn-submit {
-          width: 100%; padding: 14px;
-          background: var(--ne-forest); color: var(--ne-sand);
-          border: none; border-radius: var(--rs);
-          font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
-          cursor: pointer; transition: background 0.2s;
-          display: flex; align-items: center; justify-content: center; gap: 8px;
-          margin-bottom: 1.25rem;
-        }
-        .btn-submit:hover { background: var(--ne-forest-light); }
-        .switch-text { text-align: center; font-size: 13px; color: #666666; font-weight: 500; }
-        .switch-text a { color: var(--ne-forest); font-weight: 700; cursor: pointer; }
-        
-        .otp-wrap { text-align: center; padding: 0.5rem 0; }
-        .otp-icon { width: 56px; height: 56px; border-radius: 50%; background: #E1F5EE; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
-        .otp-title { font-size: 18px; font-weight: 700; color: #111111; margin-bottom: 6px; }
-        .otp-sub { font-size: 13px; color: #555555; margin-bottom: 1.75rem; line-height: 1.5; }
-        .otp-sub strong { color: #111111; }
-        .otp-boxes { display: flex; gap: 10px; justify-content: center; margin-bottom: 1.5rem; }
-        .otp-box {
-          width: 48px; height: 56px; border-radius: var(--rs);
-          border: 2px solid var(--ne-sand-dark);
-          font-size: 22px; font-weight: 700; text-align: center;
-          color: #111111; background: white; outline: none;
-          transition: border-color 0.2s;
-        }
-        .otp-box:focus { border-color: var(--ne-forest); }
-        .otp-box.filled { border-color: var(--ne-forest); background: #F0F6F3; }
-        .otp-resend { font-size: 13px; color: #555555; margin-bottom: 1.5rem; font-weight: 500; }
-        .otp-resend a { color: var(--ne-forest); font-weight: 700; cursor: pointer; }
-        .otp-change { font-size: 12px; color: #666666; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600; margin-top: 1rem; }
-        
-        .reset-steps { display: flex; align-items: center; gap: 6px; margin-bottom: 1.75rem; }
-        .rst-step { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #888888; font-weight: 600; }
-        .rst-step.done { color: #0F6E56; }
-        .rst-step.active { color: var(--ne-forest); font-weight: 700; }
-        .rst-dot { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--ne-sand-dark); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; }
-        .rst-step.done .rst-dot { background: #1D9E75; border-color: #1D9E75; color: white; }
-        .rst-step.active .rst-dot { background: var(--ne-forest); border-color: var(--ne-forest); color: var(--ne-sand); }
-        .rst-line { flex: 1; height: 1.5px; background: var(--ne-sand-dark); }
-        
-        .trust-strip { display: flex; justify-content: center; gap: 1.75rem; padding: 1.5rem 1.25rem; background: #FAF8F5; border-top: 1px solid var(--ne-sand-dark); width: 100%; }
-        .trust-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #666666; font-weight: 600; }
-        .trust-item svg { color: var(--ne-forest); }
-      `,
-        }}
-      />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1A0B2E] via-[#1A0B2E]/60 to-transparent" />
+        <AuthHero {...heroContent[activeTab]} />
+      </div>
 
-      <div className="auth-wrap">
-        {/* TAB SWITCHER */}
-        <div className="page-tabs">
-          <div className="page-tabs-inner">
-            <div className="page-tab-brand" style={{ gap: "4px" }}>
-              <Link
-                href="/"
-                className="flex items-center gap-1.5 no-underline outline-none focus-visible:outline-none"
-              >
-                <span className="text-[18px] font-semibold text-white tracking-tight">Nearby</span>
-                <span className="font-script text-[#C5A059] font-normal text-[1.3em] leading-none -mt-1">
-                  Escapes
-                </span>
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/*  LOGIN  */}
-        {activeTab === "login" && (
-          <div className="view active">
-            <div className="auth-hero">
-              <div className="brand-logo-hero">
-                <Link
-                  href="/"
-                  className="flex items-center gap-1.5 no-underline outline-none focus-visible:outline-none"
-                >
-                  <span className="text-[18px] font-semibold text-white tracking-tight">
-                    Nearby
-                  </span>
-                  <span className="font-script text-[#C5A059] font-normal text-[1.3em] leading-none -mt-1">
-                    Escapes
-                  </span>
-                </Link>
-              </div>
-              <div className="auth-eyebrow">Welcome back</div>
-              <div className="auth-headline">
-                Your next <em>escape</em>
-                <br />
-                is waiting
-              </div>
-              <div className="auth-sub">
-                Sign in to manage your bookings, saved lodges, and upcoming trips.
-              </div>
-            </div>
-
-            <div className="auth-card">
-              <form onSubmit={handleLoginSubmit}>
-                <div className="field">
-                  <div className="field-label">Email or phone</div>
-                  <div className="field-input-wrap">
-                    <input
-                      className="field-input"
-                      type="text"
-                      placeholder="you@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                    <Mail className="field-icon h-4 w-4" />
-                  </div>
-                </div>
-
-                <div className="field">
-                  <div className="field-label">Password</div>
-                  <div className="field-input-wrap">
-                    <input
-                      className="field-input"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                    {showPassword ? (
-                      <EyeOff
-                        className="field-icon h-4 w-4"
-                        onClick={() => setShowPassword(false)}
-                      />
-                    ) : (
-                      <Eye className="field-icon h-4 w-4" onClick={() => setShowPassword(true)} />
-                    )}
-                  </div>
-                  <div className="field-hint" style={{ textAlign: "right" }}>
-                    <span
-                      onClick={() => router.push("/auth/reset")}
-                      className="text-[12px] font-bold cursor-pointer hover:underline text-[#2A1B3D]"
-                    >
-                      Forgot password?
-                    </span>
-                  </div>
-                </div>
-
-                <div className="checkbox-row">
-                  <Checkbox
-                    id="remember-me"
-                    className="rounded border-[#E8DFC8] data-[state=checked]:bg-[#1A3C34] data-[state=checked]:border-[#1A3C34]"
-                  />
-                  <Label
-                    htmlFor="remember-me"
-                    className="checkbox-custom-label cursor-pointer select-none"
-                  >
-                    Keep me signed in on this device
-                  </Label>
-                </div>
-
-                <button type="submit" className="btn-submit">
-                  Sign in
-                </button>
-
-                <div className="switch-text">
-                  New to Nearby Escapes?{" "}
-                  <a onClick={() => router.push("/auth/register")}>Create a free account →</a>
-                </div>
-              </form>
-            </div>
-
-            <div className="trust-strip">
-              <div className="trust-item">
-                <ShieldCheck className="h-4 w-4" /> Secure login
-              </div>
-              <div className="trust-item">
-                <Lock className="h-4 w-4" /> Data protected
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/*  REGISTER  */}
-        {activeTab === "register" && (
-          <div className="view active">
-            <div className="auth-hero">
-              <div className="brand-logo-hero">
-                <Link
-                  href="/"
-                  className="flex items-center gap-1.5 no-underline outline-none focus-visible:outline-none"
-                >
-                  <span className="text-[18px] font-semibold text-white tracking-tight">
-                    Nearby
-                  </span>
-                  <span className="font-script text-[#C5A059] font-normal text-[1.3em] leading-none -mt-1">
-                    Escapes
-                  </span>
-                </Link>
-              </div>
-              <div className="auth-eyebrow">Join free today</div>
-              <div className="auth-headline">
-                Find your <em>hidden gem</em>
-              </div>
-              <div className="auth-sub">2,841 Zambians already exploring with Nearby Escapes.</div>
-            </div>
-
-            <div className="auth-card">
-              <form onSubmit={handleRegisterSubmit}>
-                {/* Role Picker */}
-                <div className="field-label" style={{ marginBottom: "8px" }}>
-                  I am a
-                </div>
-                <div className="role-picker">
-                  <div
-                    className={cn("role-card", role === "traveller" && "on")}
-                    onClick={() => setRole("traveller")}
-                  >
-                    <Backpack className="h-6 w-6 text-[#1A3C34] mx-auto mb-1" />
-                    <div className="role-card-name">Traveller</div>
-                    <div className="role-card-desc">I want to find & book escapes</div>
-                  </div>
-                  <div
-                    className={cn("role-card", role === "host" && "on")}
-                    onClick={() => setRole("host")}
-                  >
-                    <Home className="h-6 w-6 text-[#1A3C34] mx-auto mb-1" />
-                    <div className="role-card-name">Local host</div>
-                    <div className="role-card-desc">I want to list my property</div>
-                  </div>
-                </div>
-
-                <div className="field-row">
-                  <div>
-                    <div className="field-label">First name</div>
-                    <input
-                      className="field-input"
-                      type="text"
-                      placeholder="Thandeka"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <div className="field-label">Last name</div>
-                    <input
-                      className="field-input"
-                      type="text"
-                      placeholder="Mwale"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="field">
-                  <div className="field-label">Email address</div>
-                  <div className="field-input-wrap">
-                    <input
-                      className="field-input"
-                      type="email"
-                      placeholder="you@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                    <Mail className="field-icon h-4 w-4" />
-                  </div>
-                </div>
-
-                <div className="field">
-                  <div className="field-label">Phone number</div>
-                  <div className="phone-row">
-                    <div className="phone-prefix">
-                      <span>🇿🇲 +260</span>
-                      <ChevronDown className="h-3 w-3 text-gray-500" />
-                    </div>
-                    <input
-                      className="field-input"
-                      type="tel"
-                      placeholder="97 123 4567"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="field-hint">We&apos;ll send your booking confirmations here</div>
-                </div>
-
-                <div className="field">
-                  <div className="field-label">Password</div>
-                  <div className="field-input-wrap">
-                    <input
-                      className="field-input"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Create a strong password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                    {showPassword ? (
-                      <EyeOff
-                        className="field-icon h-4 w-4"
-                        onClick={() => setShowPassword(false)}
-                      />
-                    ) : (
-                      <Eye className="field-icon h-4 w-4" onClick={() => setShowPassword(true)} />
-                    )}
+      {/* FORM PANEL */}
+      <div className="flex-1 flex flex-col bg-[#FDFBF7]">
+        <div className="flex-1 px-5 md:px-8 py-6 md:py-8">
+          <div className="w-full max-w-lg mx-auto">
+            <div className="w-full max-w-lg mx-auto">
+              {/* LOGIN */}
+              {activeTab === "login" && (
+                <form onSubmit={handleLoginSubmit} className="space-y-5">
+                  <div className="mb-8">
+                    <h2 className="text-xl font-bold text-[#1A0B2E] font-display tracking-tight">Sign in</h2>
+                    <p className="text-sm text-[#64748B] mt-1">Welcome back to Nearby Escapes</p>
                   </div>
 
-                  {/* Password strength UI */}
-                  {password && (
-                    <div className="pw-strength">
-                      <div className="pw-bars">
-                        {[1, 2, 3, 4].map((barIdx) => {
-                          const strength = getPasswordStrength(password);
-                          return (
-                            <div
-                              key={barIdx}
-                              className={cn(
-                                "pw-bar",
-                                barIdx <= strength.score ? strength.barClass : "",
-                              )}
-                            />
-                          );
-                        })}
-                      </div>
-                      <div className={cn("pw-label", getPasswordStrength(password).color)}>
-                        {getPasswordStrength(password).label}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="checkbox-row">
-                  <Checkbox
-                    id="agree-terms"
-                    checked={agreeTerms}
-                    onCheckedChange={(checked) => setAgreeTerms(!!checked)}
-                    className="rounded border-[#E8DFC8] data-[state=checked]:bg-[#1A3C34] data-[state=checked]:border-[#1A3C34] mt-0.5"
-                    required
-                  />
-                  <Label
-                    htmlFor="agree-terms"
-                    className="checkbox-custom-label cursor-pointer select-none"
-                  >
-                    I agree to the <Link href="/legal/terms">Terms of Service</Link> and{" "}
-                    <Link href="/legal/privacy">Privacy Policy</Link>
-                  </Label>
-                </div>
-
-                <div className="checkbox-row" style={{ marginTop: "-6px" }}>
-                  <Checkbox
-                    id="deals-alerts"
-                    checked={dealsAlerts}
-                    onCheckedChange={(checked) => setDealsAlerts(!!checked)}
-                    className="rounded border-[#E8DFC8] data-[state=checked]:bg-[#1A3C34] data-[state=checked]:border-[#1A3C34] mt-0.5"
-                  />
-                  <Label
-                    htmlFor="deals-alerts"
-                    className="checkbox-custom-label cursor-pointer select-none"
-                  >
-                    Send me deals and hidden gem alerts for my area
-                  </Label>
-                </div>
-
-                <button type="submit" className="btn-submit">
-                  Create my account
-                </button>
-
-                <div className="switch-text">
-                  Already have an account? <a onClick={() => router.push("/auth/login")}>Sign in</a>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-
-        {/*  OTP VERIFY  */}
-        {activeTab === "otp" && (
-          <div className="view active">
-            <div className="auth-hero">
-              <div className="brand-logo-hero">
-                <Link
-                  href="/"
-                  className="flex items-center gap-1.5 no-underline outline-none focus-visible:outline-none"
-                >
-                  <span className="text-[18px] font-semibold text-white tracking-tight">
-                    Nearby
-                  </span>
-                  <span className="font-script text-[#C5A059] font-normal text-[1.3em] leading-none -mt-1">
-                    Escapes
-                  </span>
-                </Link>
-              </div>
-              <div className="auth-eyebrow">Almost there</div>
-              <div className="auth-headline">
-                Verify your <em>number</em>
-              </div>
-            </div>
-
-            <div className="auth-card">
-              <form onSubmit={handleOtpSubmit} className="otp-wrap">
-                <div className="otp-icon">
-                  <MessageSquare className="h-6 w-6 text-[#0F6E56]" />
-                </div>
-                <div className="otp-title">Check your messages</div>
-                <div className="otp-sub">
-                  We sent a 6-digit code to <strong>+260 97 ••• ••34</strong>.
-                  <br />
-                  It expires in 10 minutes.
-                </div>
-
-                <div className="otp-boxes">
-                  {otp.map((digit, idx) => (
-                    <input
-                      key={idx}
-                      id={`otp-${idx}`}
-                      className={cn("otp-box", digit && "filled")}
-                      type="text"
-                      maxLength={1}
-                      value={digit}
-                      onChange={(e) => handleOtpChange(idx, e.target.value, "otp")}
-                      onKeyDown={(e) => handleOtpKeyDown(idx, e, "otp")}
-                      placeholder="·"
-                      aria-label={`OTP digit ${idx + 1}`}
-                    />
-                  ))}
-                </div>
-
-                <div className="otp-resend">
-                  Didn&apos;t get it?{" "}
-                  <a onClick={() => toast.info("Verification code re-sent.")}>Resend code</a> ·{" "}
-                  <span id="otp-timer" className="color-[#1A3C34] font-bold">
-                    {formatTimer(secs)}
-                  </span>
-                </div>
-
-                <button type="submit" className="btn-submit">
-                  Verify & continue
-                </button>
-
-                <div className="otp-change" onClick={() => router.push("/auth/register")}>
-                  <ArrowLeft className="h-3.5 w-3.5" /> Change number
-                </div>
-              </form>
-            </div>
-
-            <div className="trust-strip">
-              <div className="trust-item">
-                <ShieldCheck className="h-4 w-4" /> Secure verification
-              </div>
-              <div className="trust-item">
-                <Clock className="h-4 w-4" /> Expires in 10 mins
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/*  RESET PASSWORD  */}
-        {activeTab === "reset" && (
-          <div className="view active">
-            <div className="auth-hero">
-              <div className="brand-logo-hero">
-                <Link
-                  href="/"
-                  className="flex items-center gap-1.5 no-underline outline-none focus-visible:outline-none"
-                >
-                  <span className="text-[18px] font-semibold text-white tracking-tight">
-                    Nearby
-                  </span>
-                  <span className="font-script text-[#C5A059] font-normal text-[1.3em] leading-none -mt-1">
-                    Escapes
-                  </span>
-                </Link>
-              </div>
-              <div className="auth-eyebrow">Account recovery</div>
-              <div className="auth-headline">
-                Reset your <em>password</em>
-              </div>
-            </div>
-
-            <div className="auth-card">
-              {/* STEP INDICATOR */}
-              <div className="reset-steps">
-                <div className={cn("rst-step", resetStep > 1 ? "done" : "active")}>
-                  <div className="rst-dot">
-                    {resetStep > 1 ? <Check className="h-3 w-3 text-white" /> : "1"}
-                  </div>
-                  <span>Email</span>
-                </div>
-                <div className="rst-line"></div>
-                <div
-                  className={cn(
-                    "rst-step",
-                    resetStep > 2 ? "done" : resetStep === 2 ? "active" : "",
-                  )}
-                >
-                  <div className="rst-dot">
-                    {resetStep > 2 ? <Check className="h-3 w-3 text-white" /> : "2"}
-                  </div>
-                  <span>Verify</span>
-                </div>
-                <div className="rst-line"></div>
-                <div className={cn("rst-step", resetStep === 3 ? "active" : "")}>
-                  <div className="rst-dot">3</div>
-                  <span>New password</span>
-                </div>
-              </div>
-
-              <form onSubmit={handleResetSubmit}>
-                {resetStep === 1 && (
-                  <div className="field">
-                    <div className="field-label">Enter your email</div>
-                    <div className="field-input-wrap">
+                  <div className="space-y-1.5">
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                      Email or phone
+                    </Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                       <input
-                        className="field-input"
-                        type="email"
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
+                        type="text"
                         placeholder="you@example.com"
-                        value={resetEmail}
-                        onChange={(e) => setResetEmail(e.target.value)}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         required
                       />
                     </div>
                   </div>
-                )}
 
-                {resetStep === 2 && (
-                  <div className="field">
-                    <div className="field-label">Verification code</div>
-                    <div className="field-hint mb-4 mt-0 text-gray-500">
-                      We sent a reset code to <strong>{resetEmail}</strong>.
+                  <div className="space-y-1.5">
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                      Password
+                    </Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <input
+                        className="w-full pl-10 pr-11 py-3 rounded-xl border border-gray-200 bg-white text-sm font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="••••••••"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
                     </div>
-                    <div
-                      className="otp-boxes"
-                      style={{ justifyContent: "flex-start", marginBottom: 0 }}
-                    >
-                      {resetOtp.map((digit, idx) => (
-                        <input
-                          key={idx}
-                          id={`resetOtp-${idx}`}
-                          className={cn("otp-box", digit && "filled")}
-                          type="text"
-                          maxLength={1}
-                          value={digit}
-                          onChange={(e) => handleOtpChange(idx, e.target.value, "resetOtp")}
-                          onKeyDown={(e) => handleOtpKeyDown(idx, e, "resetOtp")}
-                          placeholder="·"
-                          aria-label={`Code digit ${idx + 1}`}
-                        />
-                      ))}
+                    <div className="text-right mt-1">
+                      <button
+                        type="button"
+                        onClick={() => router.push("/auth/reset")}
+                        className="text-[11px] font-bold text-[#1A0B2E] hover:text-[#D4AF37] transition-colors"
+                      >
+                        Forgot password?
+                      </button>
                     </div>
                   </div>
-                )}
 
-                {resetStep === 3 && (
-                  <>
-                    <div className="field" style={{ marginTop: "14px" }}>
-                      <div className="field-label">New password</div>
-                      <div className="field-input-wrap">
+                  <div className="flex items-center gap-3">
+                    <Checkbox
+                      id="remember-me"
+                      className="rounded border-gray-300 data-[state=checked]:bg-[#1A0B2E] data-[state=checked]:border-[#1A0B2E]"
+                    />
+                    <Label htmlFor="remember-me" className="text-xs text-gray-600 cursor-pointer select-none">
+                      Keep me signed in on this device
+                    </Label>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-3.5 bg-[#1A0B2E] hover:bg-[#2E154A] text-white text-sm font-bold uppercase tracking-wider rounded-xl transition-all duration-200 shadow-lg shadow-[#1A0B2E]/20 active:scale-[0.98]"
+                  >
+                    Sign in
+                  </button>
+
+                  <p className="text-center text-sm text-[#64748B]">
+                    New to Nearby Escapes?{" "}
+                    <button
+                      type="button"
+                      onClick={() => router.push("/auth/register")}
+                      className="font-bold text-[#1A0B2E] hover:text-[#D4AF37] transition-colors"
+                    >
+                      Create a free account →
+                    </button>
+                  </p>
+                </form>
+              )}
+
+              {/* REGISTER */}
+              {activeTab === "register" && (
+                <form onSubmit={handleRegisterSubmit} className="space-y-5">
+                  <div className="mb-6">
+                    <h2 className="text-xl font-bold text-[#1A0B2E] font-display tracking-tight">Create your account</h2>
+                    <p className="text-sm text-[#64748B] mt-1">Join the community of explorers</p>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                      I am a
+                    </Label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setRole("traveller")}
+                        className={cn(
+                          "flex flex-col items-center gap-1.5 py-3.5 rounded-xl border-2 transition-all duration-200",
+                          role === "traveller"
+                            ? "border-[#D4AF37] bg-[#D4AF37]/5 shadow-sm"
+                            : "border-gray-200 bg-white hover:border-gray-300",
+                        )}
+                      >
+                        <Backpack className={cn("h-5 w-5", role === "traveller" ? "text-[#D4AF37]" : "text-gray-400")} />
+                        <span className="text-xs font-bold text-[#1A0B2E] font-display">Traveller</span>
+                        <span className="text-[9px] text-[#64748B]">Find &amp; book escapes</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setRole("host")}
+                        className={cn(
+                          "flex flex-col items-center gap-1.5 py-3.5 rounded-xl border-2 transition-all duration-200",
+                          role === "host"
+                            ? "border-[#D4AF37] bg-[#D4AF37]/5 shadow-sm"
+                            : "border-gray-200 bg-white hover:border-gray-300",
+                        )}
+                      >
+                        <Home className={cn("h-5 w-5", role === "host" ? "text-[#D4AF37]" : "text-gray-400")} />
+                        <span className="text-xs font-bold text-[#1A0B2E] font-display">Local host</span>
+                        <span className="text-[9px] text-[#64748B]">List your property</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">First name</Label>
+                      <input
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
+                        type="text"
+                        placeholder="Thandeka"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">Last name</Label>
+                      <input
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
+                        type="text"
+                        placeholder="Mwale"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">Email address</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <input
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
+                        type="email"
+                        placeholder="you@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">Phone number</Label>
+                    <div className="flex gap-2">
+                      <div className="flex items-center gap-1.5 px-3.5 py-3 rounded-xl border border-gray-200 bg-white text-sm font-semibold text-gray-700 shrink-0">
+                        🇿🇲 +260
+                        <ChevronDown className="h-3 w-3 text-gray-400" />
+                      </div>
+                      <input
+                        className="flex-1 px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
+                        type="tel"
+                        placeholder="97 123 4567"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1">We&apos;ll send booking confirmations here</p>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">Password</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <input
+                        className="w-full pl-10 pr-11 py-3 rounded-xl border border-gray-200 bg-white text-sm font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Create a strong password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
+                    {password && <PasswordStrength password={password} />}
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <Checkbox
+                      id="agree-terms"
+                      checked={agreeTerms}
+                      onCheckedChange={(c) => setAgreeTerms(!!c)}
+                      className="rounded border-gray-300 data-[state=checked]:bg-[#1A0B2E] data-[state=checked]:border-[#1A0B2E] mt-0.5"
+                      required
+                    />
+                    <Label htmlFor="agree-terms" className="text-xs text-gray-600 cursor-pointer select-none leading-relaxed">
+                      I agree to the <Link href="/legal/terms" className="font-bold text-[#1A0B2E] hover:text-[#D4AF37] transition-colors">Terms of Service</Link> and{" "}
+                      <Link href="/legal/privacy" className="font-bold text-[#1A0B2E] hover:text-[#D4AF37] transition-colors">Privacy Policy</Link>
+                    </Label>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <Checkbox
+                      id="deals-alerts"
+                      checked={dealsAlerts}
+                      onCheckedChange={(c) => setDealsAlerts(!!c)}
+                      className="rounded border-gray-300 data-[state=checked]:bg-[#1A0B2E] data-[state=checked]:border-[#1A0B2E] mt-0.5"
+                    />
+                    <Label htmlFor="deals-alerts" className="text-xs text-gray-600 cursor-pointer select-none leading-relaxed">
+                      Send me deals and hidden gem alerts for my area
+                    </Label>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-3.5 bg-[#1A0B2E] hover:bg-[#2E154A] text-white text-sm font-bold uppercase tracking-wider rounded-xl transition-all duration-200 shadow-lg shadow-[#1A0B2E]/20 active:scale-[0.98]"
+                  >
+                    Create my account
+                  </button>
+
+                  <p className="text-center text-sm text-[#64748B]">
+                    Already have an account?{" "}
+                    <button
+                      type="button"
+                      onClick={() => router.push("/auth/login")}
+                      className="font-bold text-[#1A0B2E] hover:text-[#D4AF37] transition-colors"
+                    >
+                      Sign in
+                    </button>
+                  </p>
+                </form>
+              )}
+
+              {/* OTP */}
+              {activeTab === "otp" && (
+                <form onSubmit={handleOtpSubmit} className="space-y-6 text-center">
+                  <div>
+                    <div className="h-16 w-16 rounded-full bg-[#D4AF37]/10 flex items-center justify-center mx-auto mb-5">
+                      <MessageSquare className="h-7 w-7 text-[#D4AF37]" weight="regular" />
+                    </div>
+                    <h2 className="text-xl md:text-2xl font-bold text-[#1A0B2E] font-display tracking-tight">
+                      Check your messages
+                    </h2>
+                    <p className="text-sm text-[#64748B] mt-2 leading-relaxed">
+                      We sent a 6-digit code to <strong className="text-[#1A0B2E] font-display">+260 97 ••• ••34</strong>.
+                      <br />
+                      It expires in 10 minutes.
+                    </p>
+                  </div>
+
+                  <OtpInputs
+                    value={otp}
+                    onChange={(i, v) => handleOtpChange(i, v, "otp")}
+                    onKeyDown={(i, e) => handleOtpKeyDown(i, e, "otp")}
+                    fieldId="otp"
+                  />
+
+                  <div className="text-sm text-[#64748B]">
+                    Didn&apos;t get it?{" "}
+                    <button
+                      type="button"
+                      onClick={() => toast.info("Verification code re-sent.")}
+                      className="font-bold text-[#1A0B2E] hover:text-[#D4AF37] transition-colors"
+                    >
+                      Resend code
+                    </button>{" "}
+                    ·{" "}
+                    <span className="font-bold text-gray-700">{formatTimer(secs)}</span>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-3.5 bg-[#1A0B2E] hover:bg-[#2E154A] text-white text-sm font-bold uppercase tracking-wider rounded-xl transition-all duration-200 shadow-lg shadow-[#1A0B2E]/20 active:scale-[0.98]"
+                  >
+                    Verify &amp; continue
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => router.push("/auth/register")}
+                    className="text-xs text-[#64748B] hover:text-gray-700 font-semibold flex items-center justify-center gap-1.5 transition-colors mx-auto"
+                  >
+                    <ArrowLeft className="h-3.5 w-3.5" /> Change number
+                  </button>
+                </form>
+              )}
+
+              {/* RESET PASSWORD */}
+              {activeTab === "reset" && (
+                <form onSubmit={handleResetSubmit} className="space-y-6">
+                  <div className="mb-2">
+                    <h2 className="text-xl font-bold text-[#1A0B2E] font-display tracking-tight">Reset password</h2>
+                    <p className="text-sm text-[#64748B] mt-1">We&apos;ll help you regain access</p>
+                  </div>
+
+                  {/* Step indicator */}
+                  <div className="flex items-center gap-2">
+                    {[
+                      { num: 1, label: "Email", done: resetStep > 1, active: resetStep === 1 },
+                      { num: 2, label: "Verify", done: resetStep > 2, active: resetStep === 2 },
+                      { num: 3, label: "New password", done: false, active: resetStep === 3 },
+                    ].map((step, i) => (
+                      <Fragment key={step.num}>
+                        <div className={cn(
+                          "flex items-center gap-1.5 text-xs font-semibold transition-colors",
+                          step.done ? "text-[#D4AF37]" : step.active ? "text-[#1A0B2E]" : "text-gray-400",
+                        )}>
+                          <div className={cn(
+                            "w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold border-2 transition-all",
+                            step.done
+                              ? "bg-[#D4AF37] border-[#D4AF37] text-white"
+                              : step.active
+                                ? "bg-[#1A0B2E] border-[#1A0B2E] text-white"
+                                : "bg-white border-gray-300 text-gray-400",
+                          )}>
+                            {step.done ? <Check className="h-3 w-3" /> : step.num}
+                          </div>
+                          <span className="hidden sm:inline">{step.label}</span>
+                        </div>
+                        {i < 2 && (
+                          <div className={cn(
+                            "flex-1 h-0.5 rounded transition-colors",
+                            step.done ? "bg-[#D4AF37]" : "bg-gray-200",
+                          )} />
+                        )}
+                      </Fragment>
+                    ))}
+                  </div>
+
+                  {resetStep === 1 && (
+                    <div className="space-y-1.5">
+                      <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">Enter your email</Label>
+                      <div className="relative">
+                        <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                         <input
-                          className="field-input"
-                          type={showNewPassword ? "text" : "password"}
-                          placeholder="Create new password"
-                          value={newPassword}
-                          onChange={(e) => setNewPassword(e.target.value)}
+                          className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
+                          type="email"
+                          placeholder="you@example.com"
+                          value={resetEmail}
+                          onChange={(e) => setResetEmail(e.target.value)}
                           required
                         />
-                        {showNewPassword ? (
-                          <EyeOff
-                            className="field-icon h-4 w-4"
-                            onClick={() => setShowNewPassword(false)}
+                      </div>
+                    </div>
+                  )}
+
+                  {resetStep === 2 && (
+                    <div className="space-y-3">
+                      <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">Verification code</Label>
+                      <p className="text-xs text-[#64748B]">We sent a code to <strong className="text-[#1A0B2E] font-display">{resetEmail}</strong></p>
+                      <OtpInputs
+                        value={resetOtp}
+                        onChange={(i, v) => handleOtpChange(i, v, "resetOtp")}
+                        onKeyDown={(i, e) => handleOtpKeyDown(i, e, "resetOtp")}
+                        fieldId="resetOtp"
+                      />
+                    </div>
+                  )}
+
+                  {resetStep === 3 && (
+                    <>
+                      <div className="space-y-1.5">
+                        <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">New password</Label>
+                        <div className="relative">
+                          <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                          <input
+                            className="w-full pl-10 pr-11 py-3 rounded-xl border border-gray-200 bg-white text-sm font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
+                            type={showNewPassword ? "text" : "password"}
+                            placeholder="Create new password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            required
                           />
-                        ) : (
-                          <Eye
-                            className="field-icon h-4 w-4"
-                            onClick={() => setShowNewPassword(true)}
-                          />
-                        )}
+                          <button
+                            type="button"
+                            onClick={() => setShowNewPassword(!showNewPassword)}
+                            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                          >
+                            {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </button>
+                        </div>
+                        {newPassword && <PasswordStrength password={newPassword} />}
                       </div>
 
-                      {newPassword && (
-                        <div className="pw-strength">
-                          <div className="pw-bars">
-                            {[1, 2, 3, 4].map((barIdx) => {
-                              const strength = getPasswordStrength(newPassword);
-                              return (
-                                <div
-                                  key={barIdx}
-                                  className={cn(
-                                    "pw-bar",
-                                    barIdx <= strength.score ? strength.barClass : "",
-                                  )}
-                                />
-                              );
-                            })}
-                          </div>
-                          <div className={cn("pw-label", getPasswordStrength(newPassword).color)}>
-                            {getPasswordStrength(newPassword).label}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="field">
-                      <div className="field-label">Confirm new password</div>
-                      <div className="field-input-wrap">
+                      <div className="space-y-1.5">
+                        <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">Confirm new password</Label>
                         <input
-                          className="field-input"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
                           type="password"
                           placeholder="Repeat new password"
                           value={confirmPassword}
@@ -969,34 +763,33 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                           required
                         />
                       </div>
-                    </div>
-                  </>
-                )}
+                    </>
+                  )}
 
-                <button type="submit" className="btn-submit" style={{ marginTop: "1rem" }}>
-                  {resetStep === 1
-                    ? "Send Reset Link"
-                    : resetStep === 2
-                      ? "Verify Code"
-                      : "Set new password"}
-                </button>
+                  <button
+                    type="submit"
+                    className="w-full py-3.5 bg-[#1A0B2E] hover:bg-[#2E154A] text-white text-sm font-bold uppercase tracking-wider rounded-xl transition-all duration-200 shadow-lg shadow-[#1A0B2E]/20 active:scale-[0.98]"
+                  >
+                    {resetStep === 1 ? "Send Reset Link" : resetStep === 2 ? "Verify Code" : "Set new password"}
+                  </button>
 
-                <div className="switch-text">
-                  Remembered it? <a onClick={() => router.push("/auth/login")}>Back to sign in</a>
-                </div>
-              </form>
-            </div>
-
-            <div className="trust-strip">
-              <div className="trust-item">
-                <ShieldCheck className="h-4 w-4" /> Encrypted reset
-              </div>
-              <div className="trust-item">
-                <Clock className="h-4 w-4" /> Link expires in 30 mins
-              </div>
+                  <p className="text-center text-sm text-[#64748B]">
+                    Remembered it?{" "}
+                    <button
+                      type="button"
+                      onClick={() => router.push("/auth/login")}
+                      className="font-bold text-[#1A0B2E] hover:text-[#D4AF37] transition-colors"
+                    >
+                      Back to sign in
+                    </button>
+                  </p>
+                </form>
+              )}
             </div>
           </div>
-        )}
+
+          <AuthTrustStrip />
+        </div>
       </div>
     </div>
   );

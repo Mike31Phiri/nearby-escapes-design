@@ -78,12 +78,12 @@ function MonthGrid({
 
   return (
     <div className="w-full">
-      <div className="text-[13px] font-semibold text-[#2A1B3D] text-center mb-3">
+      <div className="text-[13px] font-semibold text-[#1A0B2E] text-center mb-3">
         {MONTHS[month]} {year}
       </div>
       <div className="grid grid-cols-7 mb-1">
         {DAYS.map((d) => (
-          <div key={d} className="text-center text-[10px] font-medium text-[#8A8480] py-1">{d}</div>
+          <div key={d} className="text-center text-[10px] font-medium text-[#64748B] py-1">{d}</div>
         ))}
       </div>
       <div className="grid grid-cols-7">
@@ -102,9 +102,9 @@ function MonthGrid({
               key={date.toISOString()}
               className={cn(
                 "relative flex items-center justify-center",
-                inRange && "bg-[#2A1B3D]/10",
-                isCheckIn && rangeEnd && "rounded-l-full bg-[#2A1B3D]/10",
-                isCheckOut && "rounded-r-full bg-[#2A1B3D]/10",
+                inRange && "bg-[#1A0B2E]/10",
+                isCheckIn && rangeEnd && "rounded-l-full bg-[#1A0B2E]/10",
+                isCheckOut && "rounded-r-full bg-[#1A0B2E]/10",
               )}
             >
               <button
@@ -116,9 +116,9 @@ function MonthGrid({
                 className={cn(
                   "w-8 h-8 rounded-full text-[12px] font-medium transition-colors",
                   isPast && "text-[#C8C3BC] cursor-default",
-                  !isPast && !isCheckIn && !isCheckOut && "text-[#334155] hover:bg-[#2A1B3D]/15",
-                  isToday && !isCheckIn && !isCheckOut && "font-bold text-[#C5A059]",
-                  (isCheckIn || isCheckOut) && "bg-[#2A1B3D] text-white",
+                  !isPast && !isCheckIn && !isCheckOut && "text-[#334155] hover:bg-[#1A0B2E]/15",
+                  isToday && !isCheckIn && !isCheckOut && "font-bold text-[#D4AF37]",
+                  (isCheckIn || isCheckOut) && "bg-[#1A0B2E] text-white",
                 )}
               >
                 {date.getDate()}
@@ -188,12 +188,12 @@ export function DateRangePicker({ value, onChange, placeholder = "Any weekend", 
           onClick={() => setOpen((o) => !o)}
           className="flex items-center gap-1.5 w-full focus:outline-none"
         >
-          <CalendarDays className="h-4 w-4 text-[#2A1B3D] shrink-0" strokeWidth={1.5} />
-          <span className={cn("text-[13px] truncate", hasValue ? "text-[#334155]" : "text-[#8A8480]")}>
+          <CalendarDays className="h-4 w-4 text-[#1A0B2E] shrink-0" strokeWidth={1.5} />
+          <span className={cn("text-[13px] truncate", hasValue ? "text-[#334155]" : "text-[#64748B]")}>
             {label}
           </span>
           {hasValue && (
-            <span onClick={clear} className="ml-auto text-[#8A8480] hover:text-[#2A1B3D]">
+            <span onClick={clear} className="ml-auto text-[#64748B] hover:text-[#1A0B2E]">
               <X className="h-3 w-3" strokeWidth={2.5} />
             </span>
           )}
@@ -204,15 +204,15 @@ export function DateRangePicker({ value, onChange, placeholder = "Any weekend", 
           onClick={() => setOpen((o) => !o)}
           className="flex items-center gap-2.5 w-full focus:outline-none"
         >
-          <CalendarDays className="h-[18px] w-[18px] text-[#2A1B3D] shrink-0" strokeWidth={1.5} />
+          <CalendarDays className="h-[18px] w-[18px] text-[#1A0B2E] shrink-0" strokeWidth={1.5} />
           <div className="text-left flex-1 min-w-0">
-            <p className="text-[10px] text-[#8A8480]">Pick dates</p>
-            <p className={cn("text-[13px] font-medium truncate leading-tight", hasValue ? "text-[#334155]" : "text-[#8A8480]")}>
+            <p className="text-[10px] text-[#64748B]">Pick dates</p>
+            <p className={cn("text-[13px] font-medium truncate leading-tight", hasValue ? "text-[#334155]" : "text-[#64748B]")}>
               {label}
             </p>
           </div>
           {hasValue && (
-            <span onClick={clear} className="text-[#8A8480] hover:text-[#2A1B3D] shrink-0">
+            <span onClick={clear} className="text-[#64748B] hover:text-[#1A0B2E] shrink-0">
               <X className="h-3.5 w-3.5" strokeWidth={2.5} />
             </span>
           )}
@@ -232,7 +232,7 @@ export function DateRangePicker({ value, onChange, placeholder = "Any weekend", 
               }}
               className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-[#F0EAE0] transition-colors"
             >
-              <CaretLeft className="h-4 w-4 text-[#2A1B3D]" />
+              <CaretLeft className="h-4 w-4 text-[#1A0B2E]" />
             </button>
             <button
               type="button"
@@ -242,7 +242,7 @@ export function DateRangePicker({ value, onChange, placeholder = "Any weekend", 
               }}
               className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-[#F0EAE0] transition-colors"
             >
-              <CaretRight className="h-4 w-4 text-[#2A1B3D]" />
+              <CaretRight className="h-4 w-4 text-[#1A0B2E]" />
             </button>
           </div>
 
@@ -266,7 +266,7 @@ export function DateRangePicker({ value, onChange, placeholder = "Any weekend", 
 
           {/* Footer */}
           <div className="flex items-center justify-between mt-4 pt-3 border-t border-[#E0DBD0]">
-            <span className="text-[12px] text-[#8A8480]">
+            <span className="text-[12px] text-[#64748B]">
               {!value.checkIn
                 ? "Select check-in date"
                 : !value.checkOut
@@ -276,7 +276,7 @@ export function DateRangePicker({ value, onChange, placeholder = "Any weekend", 
             <button
               type="button"
               onClick={() => { onChange({ checkIn: null, checkOut: null }); }}
-              className="text-[12px] font-medium text-[#C5A059] hover:underline"
+              className="text-[12px] font-medium text-[#D4AF37] hover:underline"
             >
               Clear
             </button>

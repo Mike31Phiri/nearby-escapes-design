@@ -25,7 +25,7 @@ import { mockHostProfile } from "@/lib/mock-profile-data";
 import type { HostListing } from "@/lib/mock-profile-data";
 import { mockHostBookings } from "@/lib/mock-host-bookings";
 
-// ─── Type helpers ────────────────────────────────────────────────────────
+//Type helpers ────────────────────────────────────────────────────────
 
 const typeIcons: Record<string, React.ElementType> = {
   stay: Bed,
@@ -52,7 +52,7 @@ const statusStyles: Record<string, string> = {
 
 type FilterType = "all" | "active" | "pending" | "draft";
 
-// ─── Listing Card ────────────────────────────────────────────────────────
+//Listing Card ────────────────────────────────────────────────────────
 
 function ListingCard({ listing }: { listing: HostListing }) {
   const TypeIcon = typeIcons[listing.type];
@@ -159,7 +159,7 @@ function ListingCard({ listing }: { listing: HostListing }) {
   );
 }
 
-// ─── Stats Row ───────────────────────────────────────────────────────────
+//Stats Row ───────────────────────────────────────────────────────────
 
 function StatCard({
   icon: Icon,
@@ -191,7 +191,7 @@ function StatCard({
   );
 }
 
-// ─── Main Page ───────────────────────────────────────────────────────────
+//Main Page ───────────────────────────────────────────────────────────
 
 export function HostListingsPage() {
   const listings = mockHostProfile.listings;
@@ -232,7 +232,7 @@ export function HostListingsPage() {
   return (
     <div className="min-h-screen py-6 md:py-8">
       <div className="mx-auto max-w-6xl px-4 md:px-6">
-        {/* ─── Header ── */}
+        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
             <h1 className="font-display text-2xl md:text-3xl font-bold tracking-tight text-[#111111]">
@@ -250,7 +250,7 @@ export function HostListingsPage() {
           </Button>
         </div>
 
-        {/* ─── Stats ── */}
+        {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
           <StatCard
             icon={Building2}
@@ -273,7 +273,7 @@ export function HostListingsPage() {
           />
         </div>
 
-        {/* ─── Filters + Search ── */}
+        {/* Filters + Search */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div className="flex border-b border-gray-200 gap-0 overflow-x-auto">
             {filters.map(({ id, label, count }) => {
@@ -314,7 +314,7 @@ export function HostListingsPage() {
           </div>
         </div>
 
-        {/* ─── Listing Grid ── */}
+        {/* Listing Grid */}
         {filteredListings.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <div className="h-20 w-20 rounded-2xl bg-gray-100 flex items-center justify-center mb-6">

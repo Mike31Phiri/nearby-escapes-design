@@ -191,7 +191,7 @@ export const mockStayHosts: Record<string, StayHost> = {
     id: "host-1",
     name: "Chanda Bwalya",
     avatarInitials: "CB",
-    avatarColor: "#2A1B3D",
+    avatarColor: "#1A0B2E",
     bio: "Zambian-born travel enthusiast and hospitality curator. I handpick the finest lodges, camps, and experiences across Zambia to ensure every guest leaves with unforgettable memories. When I'm not hosting, you'll find me exploring remote corners of the country or cooking traditional Nshima with my family.",
     location: "Lusaka, Zambia",
     joined: "January 2023",

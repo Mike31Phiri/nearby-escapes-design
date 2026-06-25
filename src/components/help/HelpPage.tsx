@@ -6,7 +6,6 @@ import {
   HelpCircle,
   ChevronDown,
   Search,
-  MessageSquare,
   Mail,
   BookOpen,
   Shield,
@@ -14,6 +13,7 @@ import {
   User,
   Building2,
 } from "lucide-react";
+import { EnvelopeSimple as MessageSquare } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";

@@ -272,8 +272,8 @@ export function BookingConfirmationPage() {
 
                 {/* Guest receipt line */}
                 <div className="flex items-center gap-2.5 p-2.5 rounded-lg bg-white/70 mb-1.5">
-                  <div className="w-7 h-7 rounded-full bg-[#2A1B3D]/10 flex items-center justify-center shrink-0">
-                    <Mail className="h-3.5 w-3.5 text-[#2A1B3D]" />
+                  <div className="w-7 h-7 rounded-full bg-[#1A0B2E]/10 flex items-center justify-center shrink-0">
+                    <Mail className="h-3.5 w-3.5 text-[#1A0B2E]" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-[11px] font-semibold text-foreground">Confirmation to you</p>
@@ -294,8 +294,8 @@ export function BookingConfirmationPage() {
 
                 {/* Host receipt line */}
                 <div className="flex items-center gap-2.5 p-2.5 rounded-lg bg-white/70">
-                  <div className="w-7 h-7 rounded-full bg-[#C5A059]/10 flex items-center justify-center shrink-0">
-                    <User className="h-3.5 w-3.5 text-[#C5A059]" />
+                  <div className="w-7 h-7 rounded-full bg-[#D4AF37]/10 flex items-center justify-center shrink-0">
+                    <User className="h-3.5 w-3.5 text-[#D4AF37]" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-[11px] font-semibold text-foreground">
@@ -333,7 +333,7 @@ export function BookingConfirmationPage() {
                       toast.success("Receipt sent to guest and host");
                     }}
                     disabled={sendingEmail}
-                    className="mt-3 w-full h-8 rounded-lg bg-[#2A1B3D] text-[#F9F7F2] text-[10px] font-bold flex items-center justify-center gap-1.5 hover:bg-[#2A1B3D]/90 transition-colors disabled:opacity-50"
+                    className="mt-3 w-full h-8 rounded-lg bg-[#1A0B2E] text-[#F9F7F2] text-[10px] font-bold flex items-center justify-center gap-1.5 hover:bg-[#1A0B2E]/90 transition-colors disabled:opacity-50"
                   >
                     {sendingEmail ? (
                       <>
@@ -374,9 +374,9 @@ export function BookingConfirmationPage() {
                 </Button>
                 <Link
                   href={`/reviews/${booking.bookingRef}`}
-                  className="flex-1 h-11 rounded-xl border border-[#C5A059]/40 text-[#334155] font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#C5A059]/5 transition-colors"
+                  className="flex-1 h-11 rounded-xl border border-[#D4AF37]/40 text-[#334155] font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#D4AF37]/5 transition-colors"
                 >
-                  <Star className="h-4 w-4 text-[#C5A059] fill-[#C5A059]" />
+                  <Star className="h-4 w-4 text-[#D4AF37] fill-[#D4AF37]" />
                   Leave a Review
                 </Link>
                 <Link

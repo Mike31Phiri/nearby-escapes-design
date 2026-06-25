@@ -24,9 +24,9 @@ import {
   CheckCircle2,
   CalendarDays,
   X,
-  MessageSquare,
   Home,
 } from "lucide-react";
+import { EnvelopeSimple as MessageSquare } from "@phosphor-icons/react";
 
 import { toast } from "sonner";
 import { useWishlistStore } from "@/store/wishlistStore";
@@ -522,7 +522,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                 <div className="flex items-start gap-4 p-5 pb-4">
                   <div
                     className="w-14 h-14 rounded-full flex items-center justify-center font-bold text-white text-lg shrink-0 shadow-sm"
-                    style={{ backgroundColor: host?.avatarColor || "#2A1B3D" }}
+                    style={{ backgroundColor: host?.avatarColor || "#1A0B2E" }}
                   >
                     {host?.avatarInitials || "NE"}
                   </div>
@@ -530,8 +530,8 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                     <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="text-[15px] font-bold text-foreground">{hostName}</h3>
                       {host?.superhost && (
-                        <span className="inline-flex items-center gap-1 bg-[#C5A059]/10 text-[#C5A059] text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border border-[#C5A059]/20">
-                          <Star className="h-2.5 w-2.5 fill-[#C5A059]" />
+                        <span className="inline-flex items-center gap-1 bg-[#D4AF37]/10 text-[#D4AF37] text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border border-[#D4AF37]/20">
+                          <Star className="h-2.5 w-2.5 fill-[#D4AF37]" />
                           Superhost
                         </span>
                       )}
@@ -679,20 +679,20 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                     <div className="text-xs font-bold text-foreground line-clamp-1">
                       Farm tour & milking
                     </div>
-                    <div className="text-[11px] text-[#C5A059] font-semibold mt-1">
+                    <div className="text-[11px] text-[#D4AF37] font-semibold mt-1">
                       +K150/person
                     </div>
                   </div>
                 </div>
                 <div className="flex-shrink-0 w-[150px] bg-card border border-border/60 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                  <div className="h-20 bg-[#2A1A08] flex items-center justify-center text-[#C5A059]">
+                  <div className="h-20 bg-[#2A1A08] flex items-center justify-center text-[#D4AF37]">
                     <Sparkles className="h-8 w-8" />
                   </div>
                   <div className="p-3">
                     <div className="text-xs font-bold text-foreground line-clamp-1">
                       Bush braai evening
                     </div>
-                    <div className="text-[11px] text-[#C5A059] font-semibold mt-1">
+                    <div className="text-[11px] text-[#D4AF37] font-semibold mt-1">
                       +K200/person
                     </div>
                   </div>
@@ -705,7 +705,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                     <div className="text-xs font-bold text-foreground line-clamp-1">
                       Kafue river fishing
                     </div>
-                    <div className="text-[11px] text-[#C5A059] font-semibold mt-1">
+                    <div className="text-[11px] text-[#D4AF37] font-semibold mt-1">
                       +K300/person
                     </div>
                   </div>
@@ -776,27 +776,27 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
             {/* Mobile Booking Bar - inline calculator (visible on mobile only) */}
             <div
               id="booking-calculator"
-              className="lg:hidden bg-[#2A1B3D] rounded-2xl p-5 text-[#F9F7F2] space-y-4 shadow-lg border border-primary/20 mt-6"
+              className="lg:hidden bg-[#1A0B2E] rounded-2xl p-5 text-[#F9F7F2] space-y-4 shadow-lg border border-primary/20 mt-6"
             >
               <div className="flex justify-between items-baseline">
                 <div className="text-xl font-bold text-[#F9F7F2]">
                   K{stay.price} <span className="text-xs font-normal text-[#9B95A8]">/ night</span>
                 </div>
                 <div className="flex items-center gap-1 text-xs text-[#9B95A8]">
-                  <Star className="h-3.5 w-3.5 fill-[#C5A059] text-[#C5A059]" />
+                  <Star className="h-3.5 w-3.5 fill-[#D4AF37] text-[#D4AF37]" />
                   {avgRating.toFixed(1)} · {reviews.length || stay.reviews} reviews
                 </div>
               </div>
 
               {/* Dates */}
               <div className="grid grid-cols-2 gap-2">
-                <div className="bg-white/5 border border-[#C5A059]/30 rounded-xl p-3">
+                <div className="bg-white/5 border border-[#D4AF37]/30 rounded-xl p-3">
                   <div className="text-[10px] text-[#9B95A8] font-bold uppercase tracking-wider mb-1">
                     Check-in
                   </div>
                   <div className="text-xs font-semibold text-[#F9F7F2]">{checkIn}</div>
                 </div>
-                <div className="bg-white/5 border border-[#C5A059]/30 rounded-xl p-3">
+                <div className="bg-white/5 border border-[#D4AF37]/30 rounded-xl p-3">
                   <div className="text-[10px] text-[#9B95A8] font-bold uppercase tracking-wider mb-1">
                     Check-out
                   </div>
@@ -805,14 +805,14 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
               </div>
 
               {/* Guests Selector */}
-              <div className="bg-white/5 border border-[#C5A059]/30 rounded-xl p-3 flex justify-between items-center">
+              <div className="bg-white/5 border border-[#D4AF37]/30 rounded-xl p-3 flex justify-between items-center">
                 <div className="text-[10px] text-[#9B95A8] font-bold uppercase tracking-wider font-semibold">
                   Guests
                 </div>
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => setGuestCount((g) => Math.max(1, g - 1))}
-                    className="w-7 h-7 rounded-full border border-[#C5A059]/50 flex items-center justify-center text-[#C5A059] hover:bg-[#C5A059]/10 transition-colors font-bold text-sm"
+                    className="w-7 h-7 rounded-full border border-[#D4AF37]/50 flex items-center justify-center text-[#D4AF37] hover:bg-[#D4AF37]/10 transition-colors font-bold text-sm"
                   >
                     −
                   </button>
@@ -821,7 +821,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                   </span>
                   <button
                     onClick={() => setGuestCount((g) => Math.min(stay.guests || 8, g + 1))}
-                    className="w-7 h-7 rounded-full border border-[#C5A059]/50 flex items-center justify-center text-[#C5A059] hover:bg-[#C5A059]/10 transition-colors font-bold text-sm"
+                    className="w-7 h-7 rounded-full border border-[#D4AF37]/50 flex items-center justify-center text-[#D4AF37] hover:bg-[#D4AF37]/10 transition-colors font-bold text-sm"
                   >
                     +
                   </button>
@@ -829,7 +829,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
               </div>
 
               {/* Transport Toggle */}
-              <div className="flex items-center justify-between bg-white/5 border border-[#C5A059]/30 rounded-xl p-3">
+              <div className="flex items-center justify-between bg-white/5 border border-[#D4AF37]/30 rounded-xl p-3">
                 <div>
                   <div className="text-xs font-bold text-[#F9F7F2]">Add transport pickup</div>
                   <div className="text-[10px] text-[#9B95A8] mt-0.5">Lusaka CBD → Farm & back</div>
@@ -838,12 +838,12 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                   onClick={() => setAddTransport(!addTransport)}
                   className={cn(
                     "w-9 h-5 rounded-full p-0.5 transition-colors relative shrink-0",
-                    addTransport ? "bg-[#C5A059]" : "bg-white/20",
+                    addTransport ? "bg-[#D4AF37]" : "bg-white/20",
                   )}
                 >
                   <div
                     className={cn(
-                      "w-4 h-4 rounded-full bg-[#2A1B3D] transition-transform",
+                      "w-4 h-4 rounded-full bg-[#1A0B2E] transition-transform",
                       addTransport ? "translate-x-4" : "translate-x-0",
                     )}
                   />
@@ -887,7 +887,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                     `/checkout/book?type=stay&id=${stay.id}&guests=${guestCount}&transport=${addTransport}`,
                   );
                 }}
-                className="w-full bg-[#C5A059] text-[#334155] hover:bg-[#C5A059]/90 rounded-xl py-3 text-xs font-bold transition-colors uppercase tracking-wider"
+                className="w-full bg-[#D4AF37] text-[#334155] hover:bg-[#D4AF37]/90 rounded-xl py-3 text-xs font-bold transition-colors uppercase tracking-wider"
               >
                 Reserve now — K
                 {(

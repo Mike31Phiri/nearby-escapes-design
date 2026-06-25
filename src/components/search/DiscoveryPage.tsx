@@ -34,12 +34,13 @@ import {
   CarProfile,
   GlobeHemisphereWest,
   MapTrifold,
+  Factory,
 } from "@phosphor-icons/react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { mockStays, mockTransport, mockExperiences, mockGems, mockPackages } from "@/lib/mock-data";
 
-/* ─── Types ─── */
+/* Types */
 
 type UnifiedItem = {
   id: string;
@@ -85,17 +86,17 @@ type FilterSection = {
   options?: { slug: string; label: string; count?: number }[];
 };
 
-/* ─── Category Definitions ─── */
+/* Category Definitions */
 
 const CATEGORIES: CategoryDef[] = [
   { slug: "all", label: "All", icon: <GlobeHemisphereWest className="h-4 w-4" weight="duotone" /> },
   { slug: "stays", label: "Stays", icon: <Bed className="h-4 w-4" weight="duotone" /> },
   { slug: "experiences", label: "Experiences", icon: <Binoculars className="h-4 w-4" weight="duotone" /> },
   { slug: "transport", label: "Transport", icon: <CarProfile className="h-4 w-4" weight="duotone" /> },
-  { slug: "tours", label: "Tours", icon: <MapTrifold className="h-4 w-4" weight="duotone" /> },
+  { slug: "local-tours", label: "Local Tours", icon: <Factory className="h-4 w-4" weight="duotone" /> },
 ];
 
-/* ─── Computed filter options from mock data ─── */
+/* Computed filter options from mock data */
 function getPropertyTypeOptions() {
   const counts: Record<string, number> = {};
   mockStays.forEach((s) => {
@@ -150,7 +151,7 @@ function getTravelGroupOptions() {
   ];
 }
 
-/* ─── Per-category filter definitions ─── */
+/* Per-category filter definitions */
 const CATEGORY_FILTERS: Record<string, FilterSection[]> = {
   all: [
     {
@@ -212,7 +213,7 @@ const CATEGORY_FILTERS: Record<string, FilterSection[]> = {
 
 
 
-/* ─── Sub-type mapping: raw data → stay sub-type slug ─── */
+/* Sub-type mapping: raw data → stay sub-type slug */
 const STAY_SUB_TYPE_MAP: Record<string, string> = {
   Lodge: "lodges",
   Hotel: "hotels",
@@ -252,7 +253,7 @@ const categoryBgColors: Record<string, string> = {
 const DISTANCE_PILLS = ["Under 1 hr", "1–2 hrs", "2–4 hrs", "4+ hrs"];
 const AMENITY_OPTIONS = ["Wi-Fi", "Hot water", "Parking", "Pet friendly", "Kitchen", "Transport"];
 
-/* ─── Badge generator ─── */
+/* Badge generator */
 const getBadge = (id: string, idx: number): string | undefined => {
   const num = parseInt(id.replace(/\D/g, "") || "0", 10) + idx;
   const badges = ["Hot deal", "Unique", "New", "Trending", "Top rated", null, null, null];
@@ -261,7 +262,7 @@ const getBadge = (id: string, idx: number): string | undefined => {
 
 
 
-/* ─── Unified data builder ─── */
+/* Unified data builder */
 function buildUnifiedItems(): UnifiedItem[] {
   const items: UnifiedItem[] = [];
 
@@ -374,7 +375,7 @@ function buildUnifiedItems(): UnifiedItem[] {
   return items;
 }
 
-/* ─── Stats ─── */
+/* Stats */
 /* 
    MAIN COMPONENT
     */
@@ -422,7 +423,7 @@ function SearchContent() {
     [activeCategory],
   );
 
-  // ── Filtered items ──
+  //Filtered items ──
   const filteredItems = useMemo(() => {
     let items = [...allItems];
 
@@ -514,6 +515,17 @@ function SearchContent() {
       });
     }
 
+    // Date availability filter (simulated)
+    if (dateRange?.checkIn && dateRange?.checkOut) {
+      items = items.filter((i) => {
+        // Deterministic mock availability check based on id and start date
+        const day = dateRange.checkIn!.getDate();
+        const numId = parseInt(i.id.replace(/\D/g, "") || "0", 10);
+        // Exclude ~20% of items to simulate some being booked for the selected dates
+        return (numId + day) % 5 !== 0;
+      });
+    }
+
     // Travel group filter
     if (selectedTravelGroups.length > 0) {
       if (selectedTravelGroups.includes("family-friendly")) {
@@ -579,7 +591,7 @@ function SearchContent() {
     guestsCount,
   ]);
 
-  // ── Handlers ──
+  //Handlers ──
   const handleCategoryChange = (slug: string) => {
     setActiveCategory(slug);
     setSelectedSubTypes([]);
@@ -655,13 +667,13 @@ function SearchContent() {
     router.push("/search");
   };
 
-  // ── Render sidebar filter section by type ──
+  //Render sidebar filter section by type ──
   const renderFilterSection = (section: FilterSection) => {
     switch (section.type) {
       case "sub-type":
         return (
           <div key={section.id} className="pb-6 mb-6 border-b border-[#E0DBD0]/50 last:border-b-0">
-            <div className="text-[11px] font-semibold text-[#8A8480] uppercase tracking-[0.8px] mb-3">
+            <div className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.8px] mb-3">
               {section.label}
             </div>
             <div className="flex flex-col gap-[8px]">
@@ -673,15 +685,15 @@ function SearchContent() {
                 >
                   <div
                     className={cn(
-                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#2A1B3D]",
-                      selectedSubTypes.includes(opt.slug) && "bg-[#2A1B3D] border-[#2A1B3D]",
+                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#1A0B2E]",
+                      selectedSubTypes.includes(opt.slug) && "bg-[#1A0B2E] border-[#1A0B2E]",
                     )}
                   >
                     {selectedSubTypes.includes(opt.slug) && (
                       <Check className="h-[11px] w-[11px] text-[#F9F7F2]" strokeWidth={3} />
                     )}
                   </div>
-                  <span className="text-[12px] text-[#3A3040] transition-colors group-hover:text-[#2A1B3D]">
+                  <span className="text-[12px] text-[#3A3040] transition-colors group-hover:text-[#1A0B2E]">
                     {opt.label}
                   </span>
                 </label>
@@ -693,7 +705,7 @@ function SearchContent() {
       case "price":
         return (
           <div key={section.id} className="pb-6 mb-6 border-b border-[#E0DBD0]/50 last:border-b-0">
-            <div className="text-[11px] font-semibold text-[#8A8480] uppercase tracking-[0.8px] mb-3">
+            <div className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.8px] mb-3">
               {section.label}
             </div>
             <div className="flex items-center gap-2">
@@ -702,15 +714,15 @@ function SearchContent() {
                 value={priceMin}
                 onChange={(e) => setPriceMin(e.target.value)}
                 placeholder="Min"
-                className="w-0 flex-1 bg-white border border-[#E0DBD0] rounded-[8px] px-[9px] py-[7px] text-[12px] font-medium text-[#334155] text-center focus:outline-none focus:border-[#2A1B3D]"
+                className="w-0 flex-1 bg-white border border-[#E0DBD0] rounded-[8px] px-[9px] py-[7px] text-[12px] font-medium text-[#334155] text-center focus:outline-none focus:border-[#1A0B2E]"
               />
-              <span className="text-[12px] text-[#8A8480] shrink-0">—</span>
+              <span className="text-[12px] text-[#64748B] shrink-0">—</span>
               <input
                 type="text"
                 value={priceMax}
                 onChange={(e) => setPriceMax(e.target.value)}
                 placeholder="Max"
-                className="w-0 flex-1 bg-white border border-[#E0DBD0] rounded-[8px] px-[9px] py-[7px] text-[12px] font-medium text-[#334155] text-center focus:outline-none focus:border-[#2A1B3D]"
+                className="w-0 flex-1 bg-white border border-[#E0DBD0] rounded-[8px] px-[9px] py-[7px] text-[12px] font-medium text-[#334155] text-center focus:outline-none focus:border-[#1A0B2E]"
               />
             </div>
           </div>
@@ -719,7 +731,7 @@ function SearchContent() {
       case "amenities":
         return (
           <div key={section.id} className="pb-6 mb-6 border-b border-[#E0DBD0]/50 last:border-b-0">
-            <div className="text-[11px] font-semibold text-[#8A8480] uppercase tracking-[0.8px] mb-3">
+            <div className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.8px] mb-3">
               {section.label}
             </div>
             <div className="flex flex-col gap-[8px]">
@@ -735,15 +747,15 @@ function SearchContent() {
                 >
                   <div
                     className={cn(
-                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#2A1B3D]",
-                      selectedAmenities.includes(a) && "bg-[#2A1B3D] border-[#2A1B3D]",
+                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#1A0B2E]",
+                      selectedAmenities.includes(a) && "bg-[#1A0B2E] border-[#1A0B2E]",
                     )}
                   >
                     {selectedAmenities.includes(a) && (
                       <Check className="h-[11px] w-[11px] text-[#F9F7F2]" strokeWidth={3} />
                     )}
                   </div>
-                  <span className="text-[12px] text-[#3A3040] transition-colors group-hover:text-[#2A1B3D]">
+                  <span className="text-[12px] text-[#3A3040] transition-colors group-hover:text-[#1A0B2E]">
                     {a}
                   </span>
                 </label>
@@ -755,7 +767,7 @@ function SearchContent() {
       case "distance":
         return (
           <div key={section.id} className="pb-6 mb-6 border-b border-[#E0DBD0]/50 last:border-b-0">
-            <div className="text-[11px] font-semibold text-[#8A8480] uppercase tracking-[0.8px] mb-3">
+            <div className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.8px] mb-3">
               {section.label}
             </div>
             <div className="flex flex-wrap gap-[8px]">
@@ -766,8 +778,8 @@ function SearchContent() {
                   className={cn(
                     "px-[10px] py-[5px] rounded-[20px] text-[11px] border transition-colors",
                     selectedDistance === d
-                      ? "bg-[#2A1B3D] border-[#2A1B3D] text-[#F9F7F2]"
-                      : "bg-white border-[#E0DBD0] text-[#2A1B3D] hover:border-[#2A1B3D]/40",
+                      ? "bg-[#1A0B2E] border-[#1A0B2E] text-[#F9F7F2]"
+                      : "bg-white border-[#E0DBD0] text-[#1A0B2E] hover:border-[#1A0B2E]/40",
                   )}
                 >
                   {d}
@@ -780,10 +792,10 @@ function SearchContent() {
       case "operator":
         return (
           <div key={section.id} className="mb-6">
-            <div className="text-[11px] font-medium text-[#8A8480] uppercase tracking-[0.8px] mb-3">
+            <div className="text-[11px] font-medium text-[#64748B] uppercase tracking-[0.8px] mb-3">
               {section.label}
             </div>
-            <div className="text-[12px] text-[#8A8480] italic">
+            <div className="text-[12px] text-[#64748B] italic">
               Filter by bus operator (coming soon)
             </div>
           </div>
@@ -792,10 +804,10 @@ function SearchContent() {
       case "duration":
         return (
           <div key={section.id} className="mb-6">
-            <div className="text-[11px] font-medium text-[#8A8480] uppercase tracking-[0.8px] mb-3">
+            <div className="text-[11px] font-medium text-[#64748B] uppercase tracking-[0.8px] mb-3">
               {section.label}
             </div>
-            <div className="text-[12px] text-[#8A8480] italic">
+            <div className="text-[12px] text-[#64748B] italic">
               Filter by tour duration (coming soon)
             </div>
           </div>
@@ -805,7 +817,7 @@ function SearchContent() {
         const options = getPropertyTypeOptions();
         return (
           <div key={section.id} className="pb-6 mb-6 border-b border-[#E0DBD0]/50 last:border-b-0">
-            <div className="text-[11px] font-semibold text-[#8A8480] uppercase tracking-[0.8px] mb-3">
+            <div className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.8px] mb-3">
               {section.label}
             </div>
             <div className="flex flex-col gap-[8px]">
@@ -817,18 +829,18 @@ function SearchContent() {
                 >
                   <div
                     className={cn(
-                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#2A1B3D]",
-                      selectedPropertyTypes.includes(opt.slug) && "bg-[#2A1B3D] border-[#2A1B3D]",
+                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#1A0B2E]",
+                      selectedPropertyTypes.includes(opt.slug) && "bg-[#1A0B2E] border-[#1A0B2E]",
                     )}
                   >
                     {selectedPropertyTypes.includes(opt.slug) && (
                       <Check className="h-[11px] w-[11px] text-[#F9F7F2]" strokeWidth={3} />
                     )}
                   </div>
-                  <span className="text-[12px] text-[#3A3040] flex-1 transition-colors group-hover:text-[#2A1B3D]">
+                  <span className="text-[12px] text-[#3A3040] flex-1 transition-colors group-hover:text-[#1A0B2E]">
                     {opt.label}
                   </span>
-                  <span className="text-[11px] text-[#8A8480]">{opt.count}</span>
+                  <span className="text-[11px] text-[#64748B]">{opt.count}</span>
                 </label>
               ))}
             </div>
@@ -840,7 +852,7 @@ function SearchContent() {
         const options = getReviewScoreOptions();
         return (
           <div key={section.id} className="pb-6 mb-6 border-b border-[#E0DBD0]/50 last:border-b-0">
-            <div className="text-[11px] font-semibold text-[#8A8480] uppercase tracking-[0.8px] mb-3">
+            <div className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.8px] mb-3">
               {section.label}
             </div>
             <div className="flex flex-col gap-[8px]">
@@ -854,18 +866,18 @@ function SearchContent() {
                 >
                   <div
                     className={cn(
-                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#2A1B3D]",
-                      selectedReviewScore === opt.slug && "bg-[#2A1B3D] border-[#2A1B3D]",
+                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#1A0B2E]",
+                      selectedReviewScore === opt.slug && "bg-[#1A0B2E] border-[#1A0B2E]",
                     )}
                   >
                     {selectedReviewScore === opt.slug && (
                       <Check className="h-[11px] w-[11px] text-[#F9F7F2]" strokeWidth={3} />
                     )}
                   </div>
-                  <span className="text-[12px] text-[#3A3040] flex-1 transition-colors group-hover:text-[#2A1B3D]">
+                  <span className="text-[12px] text-[#3A3040] flex-1 transition-colors group-hover:text-[#1A0B2E]">
                     {opt.label}
                   </span>
-                  <span className="text-[11px] text-[#8A8480]">{opt.count}</span>
+                  <span className="text-[11px] text-[#64748B]">{opt.count}</span>
                 </label>
               ))}
             </div>
@@ -876,7 +888,7 @@ function SearchContent() {
       case "distance-centre":
         return (
           <div key={section.id} className="pb-6 mb-6 border-b border-[#E0DBD0]/50 last:border-b-0">
-            <div className="text-[11px] font-semibold text-[#8A8480] uppercase tracking-[0.8px] mb-3">
+            <div className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.8px] mb-3">
               {section.label}
             </div>
             <div className="flex flex-wrap gap-[8px]">
@@ -893,8 +905,8 @@ function SearchContent() {
                   className={cn(
                     "px-[10px] py-[5px] rounded-[20px] text-[11px] border transition-colors",
                     selectedDistanceCentre === d.slug
-                      ? "bg-[#2A1B3D] border-[#2A1B3D] text-[#F9F7F2]"
-                      : "bg-white border-[#E0DBD0] text-[#2A1B3D] hover:border-[#2A1B3D]/40",
+                      ? "bg-[#1A0B2E] border-[#1A0B2E] text-[#F9F7F2]"
+                      : "bg-white border-[#E0DBD0] text-[#1A0B2E] hover:border-[#1A0B2E]/40",
                   )}
                 >
                   {d.label}
@@ -908,7 +920,7 @@ function SearchContent() {
         const options = getLandmarkOptions();
         return (
           <div key={section.id} className="pb-6 mb-6 border-b border-[#E0DBD0]/50 last:border-b-0">
-            <div className="text-[11px] font-semibold text-[#8A8480] uppercase tracking-[0.8px] mb-3">
+            <div className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.8px] mb-3">
               {section.label}
             </div>
             <div className="flex flex-col gap-[8px]">
@@ -920,18 +932,18 @@ function SearchContent() {
                 >
                   <div
                     className={cn(
-                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#2A1B3D]",
-                      selectedLandmarks.includes(opt.slug) && "bg-[#2A1B3D] border-[#2A1B3D]",
+                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#1A0B2E]",
+                      selectedLandmarks.includes(opt.slug) && "bg-[#1A0B2E] border-[#1A0B2E]",
                     )}
                   >
                     {selectedLandmarks.includes(opt.slug) && (
                       <Check className="h-[11px] w-[11px] text-[#F9F7F2]" strokeWidth={3} />
                     )}
                   </div>
-                  <span className="text-[12px] text-[#3A3040] flex-1 transition-colors group-hover:text-[#2A1B3D]">
+                  <span className="text-[12px] text-[#3A3040] flex-1 transition-colors group-hover:text-[#1A0B2E]">
                     {opt.label}
                   </span>
-                  <span className="text-[11px] text-[#8A8480]">{opt.count}</span>
+                  <span className="text-[11px] text-[#64748B]">{opt.count}</span>
                 </label>
               ))}
             </div>
@@ -943,7 +955,7 @@ function SearchContent() {
         const options = getTravelGroupOptions();
         return (
           <div key={section.id} className="pb-6 mb-6 border-b border-[#E0DBD0]/50 last:border-b-0">
-            <div className="text-[11px] font-semibold text-[#8A8480] uppercase tracking-[0.8px] mb-3">
+            <div className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.8px] mb-3">
               {section.label}
             </div>
             <div className="flex flex-col gap-[8px]">
@@ -955,18 +967,18 @@ function SearchContent() {
                 >
                   <div
                     className={cn(
-                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#2A1B3D]",
-                      selectedTravelGroups.includes(opt.slug) && "bg-[#2A1B3D] border-[#2A1B3D]",
+                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#1A0B2E]",
+                      selectedTravelGroups.includes(opt.slug) && "bg-[#1A0B2E] border-[#1A0B2E]",
                     )}
                   >
                     {selectedTravelGroups.includes(opt.slug) && (
                       <Check className="h-[11px] w-[11px] text-[#F9F7F2]" strokeWidth={3} />
                     )}
                   </div>
-                  <span className="text-[12px] text-[#3A3040] flex-1 transition-colors group-hover:text-[#2A1B3D]">
+                  <span className="text-[12px] text-[#3A3040] flex-1 transition-colors group-hover:text-[#1A0B2E]">
                     {opt.label}
                   </span>
-                  <span className="text-[11px] text-[#8A8480]">{opt.count}</span>
+                  <span className="text-[11px] text-[#64748B]">{opt.count}</span>
                 </label>
               ))}
             </div>
@@ -979,7 +991,7 @@ function SearchContent() {
     }
   };
 
-  // ── Mobile filter bottom sheet ──
+  //Mobile filter bottom sheet ──
   const renderMobileFilterSheet = () => {
     if (!mobileFilterOpen) return null;
     return (
@@ -1012,13 +1024,13 @@ function SearchContent() {
                 clearFilters();
                 setMobileFilterOpen(false);
               }}
-              className="bg-white border border-[#E0DBD0] rounded-[10px] py-3 text-[13px] font-medium text-[#2A1B3D]"
+              className="bg-white border border-[#E0DBD0] rounded-[10px] py-3 text-[13px] font-medium text-[#1A0B2E]"
             >
               Clear all
             </button>
             <button
               onClick={() => setMobileFilterOpen(false)}
-              className="bg-[#2A1B3D] rounded-[10px] py-3 text-[13px] font-medium text-[#F9F7F2] border-none"
+              className="bg-[#1A0B2E] rounded-[10px] py-3 text-[13px] font-medium text-[#F9F7F2] border-none"
             >
               Show {filteredItems.length} escape{filteredItems.length !== 1 ? "s" : ""}
             </button>
@@ -1028,7 +1040,7 @@ function SearchContent() {
     );
   };
 
-  // ── Grid card renderer ──
+  //Grid card renderer ──
   const renderCard = (item: UnifiedItem) => (
     <Link
       key={item.id}
@@ -1045,7 +1057,7 @@ function SearchContent() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         {item.badge && (
-          <span className="absolute top-3 left-3 bg-[#C5A059] text-[#111111] text-[9px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">
+          <span className="absolute top-3 left-3 bg-[#D4AF37] text-[#111111] text-[9px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">
             {item.badge}
           </span>
         )}
@@ -1061,19 +1073,19 @@ function SearchContent() {
         <div className="flex items-start justify-between gap-3">
           <h3 className="text-[14px] font-semibold text-[#334155] leading-snug line-clamp-1 flex-1">{item.name}</h3>
           <div className="flex items-center gap-1 shrink-0">
-            <Star className="h-3 w-3 fill-[#C5A059] text-[#C5A059]" strokeWidth={1.5} />
+            <Star className="h-3 w-3 fill-[#D4AF37] text-[#D4AF37]" strokeWidth={1.5} />
             <span className="text-[12px] font-semibold text-[#6B6258]">{item.rating.toFixed(1)}</span>
           </div>
         </div>
         <div className="flex items-baseline gap-0.5 mt-1.5">
-          <span className="text-[14px] font-bold text-[#2A1B3D]">K{item.price.toLocaleString()}</span>
-          <span className="text-[11px] text-[#8A8480]">{item.priceLabel}</span>
+          <span className="text-[14px] font-bold text-[#1A0B2E]">K{item.price.toLocaleString()}</span>
+          <span className="text-[11px] text-[#64748B]">{item.priceLabel}</span>
         </div>
       </div>
     </Link>
   );
 
-  // ── List card renderer ──
+  //List card renderer ──
   const renderListCard = (item: UnifiedItem) => (
     <Link
       key={item.id}
@@ -1090,7 +1102,7 @@ function SearchContent() {
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
         {item.badge && (
-          <span className="absolute top-2.5 left-2.5 bg-[#C5A059] text-[#111111] text-[9px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">
+          <span className="absolute top-2.5 left-2.5 bg-[#D4AF37] text-[#111111] text-[9px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">
             {item.badge}
           </span>
         )}
@@ -1106,29 +1118,29 @@ function SearchContent() {
               className="p-1.5 rounded-full hover:bg-[#F0EAE0] transition-colors shrink-0"
               aria-label="Save to wishlist"
             >
-              <Heart className="h-4 w-4 text-[#8A8480]" />
+              <Heart className="h-4 w-4 text-[#64748B]" />
             </button>
           </div>
           <div className="flex items-center gap-1 mb-2">
-            <MapPin className="h-3.5 w-3.5 text-[#8A8480]" strokeWidth={1.5} />
-            <span className="text-[12px] text-[#8A8480] line-clamp-1">{item.location}</span>
+            <MapPin className="h-3.5 w-3.5 text-[#64748B]" strokeWidth={1.5} />
+            <span className="text-[12px] text-[#64748B] line-clamp-1">{item.location}</span>
             <span className="text-[12px] text-[#C8C3BC] mx-1">·</span>
-            <span className="text-[12px] text-[#8A8480]">{item.distance}</span>
+            <span className="text-[12px] text-[#64748B]">{item.distance}</span>
           </div>
-          <span className="inline-block text-[11px] font-medium text-[#8A8480] bg-[#F0EAE0] px-2 py-0.5 rounded-md">
+          <span className="inline-block text-[11px] font-medium text-[#64748B] bg-[#F0EAE0] px-2 py-0.5 rounded-md">
             {item.category}
           </span>
         </div>
 
         <div className="flex items-center justify-between mt-3">
           <div className="flex items-center gap-1">
-            <Star className="h-3.5 w-3.5 fill-[#C5A059] text-[#C5A059]" strokeWidth={1.5} />
+            <Star className="h-3.5 w-3.5 fill-[#D4AF37] text-[#D4AF37]" strokeWidth={1.5} />
             <span className="text-[13px] font-semibold text-[#6B6258]">{item.rating.toFixed(1)}</span>
-            <span className="text-[12px] text-[#8A8480]">({item.reviews})</span>
+            <span className="text-[12px] text-[#64748B]">({item.reviews})</span>
           </div>
           <div className="flex items-baseline gap-0.5">
-            <span className="text-[16px] font-bold text-[#2A1B3D]">K{item.price.toLocaleString()}</span>
-            <span className="text-[11px] text-[#8A8480]">{item.priceLabel}</span>
+            <span className="text-[16px] font-bold text-[#1A0B2E]">K{item.price.toLocaleString()}</span>
+            <span className="text-[11px] text-[#64748B]">{item.priceLabel}</span>
           </div>
         </div>
       </div>
@@ -1139,59 +1151,86 @@ function SearchContent() {
     <div className="min-h-screen bg-[#F9F7F2] font-sans">
       {/*  MOBILE VIEW  */}
       <div className="md:hidden">
-        <div className="bg-[#F9F7F2] px-4 pb-2 pt-4">
-          <div className="text-[15px] font-medium text-[#334155] mb-3">
-            search for your next escape nearby
+        <div className="bg-[#F9F7F2] px-4 pb-4 pt-6">
+          <div className="text-[22px] font-display font-bold text-[#1A0B2E] mb-4">
+            Search your next escape
           </div>
-          <div className="flex items-center gap-2.5">
-            <form onSubmit={handleSearch} className="flex-1">
-              <div className="flex items-center gap-2 bg-white border border-[#E0DBD0] rounded-[10px] px-3 py-2">
-                <Search className="h-4 w-4 text-[#C5A059]" strokeWidth={2} />
+          <div className="flex flex-col gap-3 mb-5">
+            <form onSubmit={handleSearch} className="flex flex-col gap-3">
+              <div className="flex items-center gap-3 bg-white border border-[#E0DBD0] rounded-xl px-4 py-3 shadow-sm focus-within:border-[#D4AF37] focus-within:ring-2 focus-within:ring-[#D4AF37]/20 transition-all">
+                <Search className="h-5 w-5 text-[#D4AF37]" strokeWidth={2} />
                 <input
                   type="text"
                   value={searchText}
                   onChange={(e) => setSearchText(e.target.value)}
-                  placeholder="Discover escapes in Zambia"
-                  className="flex-1 bg-transparent text-[13px] text-[#8A8480] placeholder:text-[#8A8480] focus:outline-none border-none p-0"
+                  placeholder="Where are you going?"
+                  className="flex-1 bg-transparent text-[15px] font-medium text-[#334155] placeholder:text-[#A09898] placeholder:font-normal focus:outline-none border-none p-0"
                 />
-                <div className="h-4 w-px bg-[#E0DBD0] shrink-0" />
-                <DateRangePicker
-                  value={dateRange}
-                  onChange={setDateRange}
-                  variant="compact"
-                  className="w-28 shrink-0"
-                />
-                <div className="h-4 w-px bg-[#E0DBD0] shrink-0" />
-                <input
-                  type="number"
-                  min={1}
-                  value={guestsCount}
-                  onChange={(e) => setGuestsCount(Math.max(1, Number(e.target.value)))}
-                  className="w-10 bg-transparent text-[12px] text-[#8A8480] focus:outline-none border-none p-0 shrink-0"
-                />
-                <span className="text-[12px] text-[#8A8480] shrink-0">guests</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex-1 bg-white border border-[#E0DBD0] rounded-xl px-4 py-3 shadow-sm flex items-center justify-center focus-within:border-[#D4AF37] focus-within:ring-2 focus-within:ring-[#D4AF37]/20 transition-all">
+                  <DateRangePicker
+                    value={dateRange}
+                    onChange={setDateRange}
+                    variant="compact"
+                    className="w-full text-center text-[14px]"
+                  />
+                </div>
+                <div className="flex items-center justify-center gap-2 bg-white border border-[#E0DBD0] rounded-xl px-4 py-3 shadow-sm w-[110px] shrink-0 focus-within:border-[#D4AF37] focus-within:ring-2 focus-within:ring-[#D4AF37]/20 transition-all">
+                  <Users className="h-[18px] w-[18px] text-[#D4AF37]" />
+                  <input
+                    type="number"
+                    min={1}
+                    value={guestsCount}
+                    onChange={(e) => setGuestsCount(Math.max(1, Number(e.target.value)))}
+                    className="w-8 bg-transparent text-[15px] font-medium text-[#334155] focus:outline-none text-center p-0"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
+                  className="w-[48px] h-[48px] rounded-xl bg-[#1A0B2E] flex items-center justify-center shrink-0 shadow-md transition-transform active:scale-95 hover:bg-[#2E1A4E]"
+                  aria-label="Open Filters"
+                >
+                  <SlidersHorizontal className="h-[22px] w-[22px] text-[#F9F7F2]" strokeWidth={1.5} />
+                </button>
               </div>
             </form>
-            <button
-              onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
-              className="w-9 h-9 rounded-[10px] bg-[#C5A059] flex items-center justify-center shrink-0"
-            >
-              <SlidersHorizontal className="h-[18px] w-[18px] text-[#334155]" strokeWidth={1.5} />
-            </button>
+          </div>
+
+          {/* Categories Navigation (Mobile) */}
+          <div className="flex items-center gap-3 overflow-x-auto pb-2 -mx-4 px-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat.slug}
+                onClick={() => handleCategoryChange(cat.slug)}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2.5 rounded-full border whitespace-nowrap transition-all duration-200 shrink-0 shadow-sm",
+                  activeCategory === cat.slug
+                    ? "bg-[#1A0B2E] border-[#1A0B2E] text-[#D4AF37]"
+                    : "bg-white border-[#E0DBD0] text-[#64748B] hover:border-[#D4AF37]/40 hover:text-[#1A0B2E]"
+                )}
+              >
+                {cat.icon}
+                <span className={cn("text-[13px] font-semibold", activeCategory === cat.slug ? "text-white" : "text-[#334155]")}>
+                  {cat.label}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
 
 
 
         <div className="flex items-center justify-between px-4 py-2">
-          <div className="text-[12px] text-[#8A8480]">
+          <div className="text-[12px] text-[#64748B]">
             {filteredItems.length} result{filteredItems.length !== 1 ? "s" : ""} found
           </div>
           <div className="flex items-center gap-1">
             <select
               value={sortBy}
               onChange={(e) => handleSortChange(e.target.value)}
-              className="text-[12px] text-[#2A1B3D] font-medium bg-transparent border-none focus:outline-none cursor-pointer appearance-none pr-4"
+              className="text-[12px] text-[#1A0B2E] font-medium bg-transparent border-none focus:outline-none cursor-pointer appearance-none pr-4"
               style={{ backgroundImage: "none" }}
             >
               <option value="recommended">Best value</option>
@@ -1199,7 +1238,7 @@ function SearchContent() {
               <option value="price-high">Price: High</option>
               <option value="rating">Top rated</option>
             </select>
-            <ChevronDown className="h-3 w-3 text-[#2A1B3D]" strokeWidth={2} />
+            <ChevronDown className="h-3 w-3 text-[#1A0B2E]" strokeWidth={2} />
           </div>
         </div>
 
@@ -1208,18 +1247,18 @@ function SearchContent() {
         </div>
 
         {filteredItems.length > 12 && (
-          <button className="mx-4 mb-4 border border-[#E0DBD0] rounded-[10px] py-3 text-center text-[13px] font-medium text-[#2A1B3D] bg-white w-[calc(100%-32px)]">
+          <button className="mx-4 mb-4 border border-[#E0DBD0] rounded-[10px] py-3 text-center text-[13px] font-medium text-[#1A0B2E] bg-white w-[calc(100%-32px)]">
             Load more escapes
           </button>
         )}
 
         {filteredItems.length === 0 && (
           <div className="px-4 pb-8 text-center">
-            <div className="text-[15px] font-medium text-[#2A1B3D] mb-1">No results found</div>
-            <div className="text-[12px] text-[#8A8480] mb-3">Try adjusting your filters</div>
+            <div className="text-[15px] font-medium text-[#1A0B2E] mb-1">No results found</div>
+            <div className="text-[12px] text-[#64748B] mb-3">Try adjusting your filters</div>
             <button
               onClick={clearFilters}
-              className="text-[12px] font-medium text-[#C5A059] underline"
+              className="text-[12px] font-medium text-[#D4AF37] underline"
             >
               Clear all filters
             </button>
@@ -1239,7 +1278,7 @@ function SearchContent() {
               className="bg-white border border-[#E0DBD0] rounded-[12px] px-5 py-4 flex items-center gap-2 shadow-sm hover:shadow-md transition-shadow"
             >
               <div className="flex-[2] flex items-center gap-2.5">
-                <MapPin className="h-4 w-4 text-[#2A1B3D] shrink-0" strokeWidth={1.5} />
+                <MapPin className="h-4 w-4 text-[#1A0B2E] shrink-0" strokeWidth={1.5} />
                 <input
                   type="text"
                   value={searchText}
@@ -1258,20 +1297,20 @@ function SearchContent() {
                 />
               </div>
               <div className="h-5 w-px bg-[#E0DBD0]" />
-              <div className="flex items-center gap-2 text-[13px] text-[#8A8480] whitespace-nowrap">
-                <Users className="h-4 w-4 text-[#2A1B3D] shrink-0" strokeWidth={1.5} />
+              <div className="flex items-center gap-2 text-[13px] text-[#64748B] whitespace-nowrap">
+                <Users className="h-4 w-4 text-[#1A0B2E] shrink-0" strokeWidth={1.5} />
                 <input
                   type="number"
                   min={1}
                   value={guestsCount}
                   onChange={(e) => setGuestsCount(Math.max(1, Number(e.target.value)))}
-                  className="w-8 bg-transparent text-[13px] text-[#8A8480] focus:outline-none p-0 hidden lg:block"
+                  className="w-8 bg-transparent text-[13px] text-[#64748B] focus:outline-none p-0 hidden lg:block"
                 />
-                <span className="hidden lg:inline text-[#8A8480]">guests</span>
+                <span className="hidden lg:inline text-[#64748B]">guests</span>
               </div>
               <button
                 type="submit"
-                className="bg-[#2A1B3D] rounded-[9px] px-4 py-[9px] text-[13px] font-medium text-[#F9F7F2] flex items-center gap-1.5 shrink-0 hover:bg-[#2E1A4E] transition-colors"
+                className="bg-[#D4AF37] hover:bg-[#d5b069] text-[#111111] rounded-[9px] px-4 py-[9px] text-[13px] font-bold flex items-center gap-1.5 shrink-0 transition-colors shadow-sm"
               >
                 <Search className="h-3.5 w-3.5" strokeWidth={2} />
                 <span className="hidden sm:inline">Search</span>
@@ -1279,8 +1318,29 @@ function SearchContent() {
             </form>
           </div>
 
+          {/* Categories Navigation (Desktop) */}
+          <div className="flex items-center gap-3 overflow-x-auto pb-2 border-b border-[#E0DBD0]/50 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat.slug}
+                onClick={() => handleCategoryChange(cat.slug)}
+                className={cn(
+                  "flex items-center gap-2 px-5 py-3 rounded-full border transition-all duration-200 shrink-0 shadow-sm",
+                  activeCategory === cat.slug
+                    ? "bg-[#1A0B2E] border-[#1A0B2E] text-[#D4AF37]"
+                    : "bg-white border-[#E0DBD0] text-[#64748B] hover:border-[#D4AF37]/40 hover:text-[#1A0B2E]"
+                )}
+              >
+                {cat.icon}
+                <span className={cn("text-[14px] font-semibold", activeCategory === cat.slug ? "text-white" : "text-[#334155]")}>
+                  {cat.label}
+                </span>
+              </button>
+            ))}
+          </div>
+
           <div className="flex gap-10 items-start">
-            {/* ── Sidebar: clean, cardless filter column ── */}
+            {/* Sidebar: clean, cardless filter column */}
             <aside className="w-[260px] shrink-0 sticky top-28 self-start">
               <div className="px-1">
                 <div className="text-[17px] font-semibold text-[#334155] mb-5">Filters</div>
@@ -1288,26 +1348,40 @@ function SearchContent() {
                 <div className="h-px bg-[#E0DBD0] my-5" />
                 <button
                   onClick={clearFilters}
-                  className="w-full bg-[#2A1B3D] rounded-[10px] py-3 text-[13px] font-medium text-[#F9F7F2] hover:bg-[#2E1A4E] transition-colors"
+                  className="w-full bg-[#1A0B2E] rounded-[10px] py-3 text-[13px] font-medium text-[#F9F7F2] hover:bg-[#2E1A4E] transition-colors"
                 >
                   Reset filters
                 </button>
               </div>
             </aside>
 
-            {/* ── Main Content: floating listing grid ── */}
+            {/* Main Content: floating listing grid */}
             <main className="flex-1 min-w-0 flex flex-col gap-6">
 
 
               <div className="flex items-center justify-between">
-                <div className="text-[14px] text-[#8A8480]">
-                  {filteredItems.length} result{filteredItems.length !== 1 ? "s" : ""} found
+                <div className="text-[14px] text-[#64748B]">
+                  <span className="font-semibold text-[#1A0B2E]">{filteredItems.length}</span> result{filteredItems.length !== 1 ? "s" : ""} found
+                  {(searchText || (dateRange?.checkIn && dateRange?.checkOut) || guestsCount > 1) && (
+                    <span>
+                      {" for "}
+                      {searchText && <span className="font-semibold text-[#1A0B2E]">"{searchText}"</span>}
+                      {searchText && ((dateRange?.checkIn && dateRange?.checkOut) || guestsCount > 1) && " · "}
+                      {dateRange?.checkIn && dateRange?.checkOut && (
+                        <span className="font-semibold text-[#1A0B2E]">
+                          {dateRange.checkIn.toLocaleDateString("en-US", { month: "short", day: "numeric" })} - {dateRange.checkOut.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                        </span>
+                      )}
+                      {dateRange?.checkIn && dateRange?.checkOut && guestsCount > 1 && " · "}
+                      {guestsCount > 1 && <span className="font-semibold text-[#1A0B2E]">{guestsCount} guests</span>}
+                    </span>
+                  )}
                 </div>
                 <div className="flex items-center gap-3">
                   <select
                     value={sortBy}
                     onChange={(e) => handleSortChange(e.target.value)}
-                    className="flex items-center gap-1.5 bg-white border border-[#E0DBD0] rounded-[10px] px-4 py-[10px] text-[13px] font-medium text-[#2A1B3D] cursor-pointer focus:outline-none focus:border-[#2A1B3D]"
+                    className="flex items-center gap-1.5 bg-white border border-[#E0DBD0] rounded-[10px] px-4 py-[10px] text-[13px] font-medium text-[#1A0B2E] cursor-pointer focus:outline-none focus:border-[#1A0B2E]"
                     aria-label="Sort order"
                   >
                     <option value="recommended">Best value</option>
@@ -1321,24 +1395,24 @@ function SearchContent() {
                       className={cn(
                         "w-8 h-8 rounded-[8px] border flex items-center justify-center transition-colors",
                         viewMode === "grid"
-                          ? "bg-[#2A1B3D] border-[#2A1B3D]"
-                          : "bg-white border-[#E0DBD0] hover:border-[#2A1B3D]/40",
+                          ? "bg-[#1A0B2E] border-[#1A0B2E]"
+                          : "bg-white border-[#E0DBD0] hover:border-[#1A0B2E]/40",
                       )}
                       aria-label="Grid view"
                     >
-                      <LayoutGrid className={cn("h-4 w-4", viewMode === "grid" ? "text-[#F9F7F2]" : "text-[#8A8480]")} strokeWidth={1.5} />
+                      <LayoutGrid className={cn("h-4 w-4", viewMode === "grid" ? "text-[#F9F7F2]" : "text-[#64748B]")} strokeWidth={1.5} />
                     </button>
                     <button
                       onClick={() => setViewMode("list")}
                       className={cn(
                         "w-8 h-8 rounded-[8px] border flex items-center justify-center transition-colors",
                         viewMode === "list"
-                          ? "bg-[#2A1B3D] border-[#2A1B3D]"
-                          : "bg-white border-[#E0DBD0] hover:border-[#2A1B3D]/40",
+                          ? "bg-[#1A0B2E] border-[#1A0B2E]"
+                          : "bg-white border-[#E0DBD0] hover:border-[#1A0B2E]/40",
                       )}
                       aria-label="List view"
                     >
-                      <List className={cn("h-4 w-4", viewMode === "list" ? "text-[#F9F7F2]" : "text-[#8A8480]")} strokeWidth={1.5} />
+                      <List className={cn("h-4 w-4", viewMode === "list" ? "text-[#F9F7F2]" : "text-[#64748B]")} strokeWidth={1.5} />
                     </button>
                   </div>
                 </div>
@@ -1355,29 +1429,29 @@ function SearchContent() {
               )}
 
               <div className="flex items-center justify-between pt-2">
-                <div className="text-[14px] text-[#8A8480]">
+                <div className="text-[14px] text-[#64748B]">
                   Showing {Math.min(filteredItems.length, 12)} of {filteredItems.length} result
                   {filteredItems.length !== 1 ? "s" : ""}
                 </div>
                 <div className="flex gap-2 items-center">
-                  <button className="w-10 h-10 rounded-[10px] bg-[#2A1B3D] border border-[#2A1B3D] flex items-center justify-center text-[14px] font-medium text-[#F9F7F2]">
+                  <button className="w-10 h-10 rounded-[10px] bg-[#1A0B2E] border border-[#1A0B2E] flex items-center justify-center text-[14px] font-medium text-[#F9F7F2]">
                     1
                   </button>
                   {filteredItems.length > 12 && (
                     <>
-                      <button className="w-10 h-10 rounded-[10px] bg-white border border-[#E0DBD0] flex items-center justify-center text-[14px] font-medium text-[#2A1B3D] hover:border-[#2A1B3D]/40">
+                      <button className="w-10 h-10 rounded-[10px] bg-white border border-[#E0DBD0] flex items-center justify-center text-[14px] font-medium text-[#1A0B2E] hover:border-[#1A0B2E]/40">
                         2
                       </button>
-                      <button className="w-10 h-10 rounded-[10px] bg-white border border-[#E0DBD0] flex items-center justify-center text-[14px] font-medium text-[#2A1B3D] hover:border-[#2A1B3D]/40">
+                      <button className="w-10 h-10 rounded-[10px] bg-white border border-[#E0DBD0] flex items-center justify-center text-[14px] font-medium text-[#1A0B2E] hover:border-[#1A0B2E]/40">
                         3
                       </button>
-                      <span className="h-10 rounded-[10px] bg-white border border-[#E0DBD0] flex items-center justify-center text-[14px] font-medium text-[#2A1B3D] px-4">
+                      <span className="h-10 rounded-[10px] bg-white border border-[#E0DBD0] flex items-center justify-center text-[14px] font-medium text-[#1A0B2E] px-4">
                         ···
                       </span>
-                      <button className="w-10 h-10 rounded-[10px] bg-white border border-[#E0DBD0] flex items-center justify-center text-[14px] font-medium text-[#2A1B3D] hover:border-[#2A1B3D]/40">
+                      <button className="w-10 h-10 rounded-[10px] bg-white border border-[#E0DBD0] flex items-center justify-center text-[14px] font-medium text-[#1A0B2E] hover:border-[#1A0B2E]/40">
                         {Math.ceil(filteredItems.length / 12)}
                       </button>
-                      <button className="h-10 rounded-[10px] bg-white border border-[#E0DBD0] flex items-center justify-center text-[14px] font-medium text-[#2A1B3D] px-4 hover:border-[#2A1B3D]/40">
+                      <button className="h-10 rounded-[10px] bg-white border border-[#E0DBD0] flex items-center justify-center text-[14px] font-medium text-[#1A0B2E] px-4 hover:border-[#1A0B2E]/40">
                         <ArrowRight className="h-4 w-4" strokeWidth={2} />
                       </button>
                     </>
@@ -1387,15 +1461,15 @@ function SearchContent() {
 
               {filteredItems.length === 0 && (
                 <div className="bg-white border border-[#E0DBD0] rounded-[14px] p-12 text-center shadow-sm">
-                  <div className="text-[20px] font-medium text-[#2A1B3D] mb-3">
+                  <div className="text-[20px] font-medium text-[#1A0B2E] mb-3">
                     No results found
                   </div>
-                  <div className="text-[14px] text-[#8A8480] mb-5">
+                  <div className="text-[14px] text-[#64748B] mb-5">
                     Try adjusting your search or filters
                   </div>
                   <button
                     onClick={clearFilters}
-                    className="bg-[#2A1B3D] rounded-[10px] px-6 py-3 text-[14px] font-medium text-[#F9F7F2] hover:bg-[#2E1A4E] transition-colors"
+                    className="bg-[#1A0B2E] rounded-[10px] px-6 py-3 text-[14px] font-medium text-[#F9F7F2] hover:bg-[#2E1A4E] transition-colors"
                   >
                     Clear all filters
                   </button>
@@ -1414,7 +1488,7 @@ export function SearchPage() {
     <Suspense
       fallback={
         <div className="min-h-screen flex items-center justify-center bg-[#F9F7F2]">
-          <div className="text-[14px] font-medium text-[#2A1B3D]">Loading escapes...</div>
+          <div className="text-[14px] font-medium text-[#1A0B2E]">Loading escapes...</div>
         </div>
       }
     >

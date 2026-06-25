@@ -6,7 +6,6 @@ import {
   LayoutDashboard,
   CalendarDays,
   CalendarCheck,
-  MessageSquare,
   DollarSign,
   Star,
   User,
@@ -17,6 +16,7 @@ import {
   PlusCircle,
   LucideIcon,
 } from "lucide-react";
+import { EnvelopeSimple as MessageSquare } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle } from "@/components/ui/sheet";
 
@@ -80,7 +80,7 @@ export function HostNav() {
             className="flex items-center gap-2 shrink-0 group no-underline outline-none"
           >
             <span className="text-lg font-semibold text-white tracking-tight">Nearby</span>
-            <span className="font-script text-[#C9A84C] text-[1.2em] leading-none -mt-1">
+            <span className="font-script text-[#C9A84C] text-[1.2em] leading-none">
               Escapes
             </span>
           </Link>

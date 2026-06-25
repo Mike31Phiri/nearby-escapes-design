@@ -28,7 +28,7 @@ interface PageShellProps {
   className?: string;
 }
 
-// ── Main wrapper ──
+//Main wrapper ──
 
 export function PageShell({ children, className }: PageShellProps) {
   return (
@@ -38,7 +38,7 @@ export function PageShell({ children, className }: PageShellProps) {
   );
 }
 
-// ── Header with breadcrumbs, title, description, actions ──
+//Header with breadcrumbs, title, description, actions ──
 
 export function PageShellHeader({
   title,
@@ -86,7 +86,7 @@ export function PageShellHeader({
   );
 }
 
-// ── Content area with consistent max-width containers ──
+//Content area with consistent max-width containers ──
 
 export function PageShellContent({ children, className, size = "lg" }: PageShellContentProps) {
   return (

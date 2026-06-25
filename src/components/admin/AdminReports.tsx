@@ -25,7 +25,7 @@ import { mockMonthlyData, mockPlatformStats } from "@/lib/mock-admin-data";
 import { useLoading, withLoading } from "@/lib/loading-context";
 import { toastReportExported } from "@/lib/admin-toast";
 
-// ─── Metric Card ────────────────────────────────────────────────────────
+//Metric Card ────────────────────────────────────────────────────────
 
 function MetricCard({
   icon: Icon,
@@ -70,7 +70,7 @@ function MetricCard({
   );
 }
 
-// ─── Main Component ─────────────────────────────────────────────────────
+//Main Component ─────────────────────────────────────────────────────
 
 export function AdminReports() {
   const { setLoading, setLoadingMessage } = useLoading();

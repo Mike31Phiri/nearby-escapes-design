@@ -42,7 +42,7 @@ import type { DisputeCase } from "@/lib/mock-admin-data";
 import { useLoading, withLoading } from "@/lib/loading-context";
 import { showSuccess, showWarning, showInfo } from "@/lib/admin-toast";
 
-// ─── Type Helpers ───────────────────────────────────────────────────────
+//Type Helpers ───────────────────────────────────────────────────────
 
 const typeIcons: Record<string, React.ElementType> = {
   stay: Bed,
@@ -99,7 +99,7 @@ const statusConfig: Record<string, { label: string; icon: React.ElementType; cla
     },
   };
 
-// ─── Dispute Card ───────────────────────────────────────────────────────
+//Dispute Card ───────────────────────────────────────────────────────
 
 function DisputeCard({
   dispute,
@@ -359,7 +359,7 @@ function DisputeCard({
   );
 }
 
-// ─── Main Component ─────────────────────────────────────────────────────
+//Main Component ─────────────────────────────────────────────────────
 
 export function AdminDisputes() {
   const [disputes, setDisputes] = useState<DisputeCase[]>(mockDisputes);

@@ -167,7 +167,7 @@ export function HostAvailabilityPage() {
           <div className="bg-white border border-[#E0DBD0] rounded-xl overflow-hidden p-3 mb-4">
             <div className="grid grid-cols-7 gap-1 mb-1">
               {DAY_NAMES.map((n) => (
-                <div key={n} className="text-[9px] text-[#8A8480] text-center py-1 font-medium">
+                <div key={n} className="text-[9px] text-[#64748B] text-center py-1 font-medium">
                   {n}
                 </div>
               ))}
@@ -184,7 +184,7 @@ export function HostAvailabilityPage() {
                 else if (status === "booked")
                   className += " bg-[#3D2463] text-[#EDE8F5] font-medium cursor-default";
                 else if (status === "blocked")
-                  className += " bg-[#E8E3DC] text-[#8A8480] cursor-pointer hover:opacity-80";
+                  className += " bg-[#E8E3DC] text-[#64748B] cursor-pointer hover:opacity-80";
                 else className += " bg-transparent cursor-pointer hover:bg-[#FAF7F2]";
                 if (today) className += " border-[1.5px] border-[#C9A84C]";
                 return (
@@ -201,7 +201,7 @@ export function HostAvailabilityPage() {
                       <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-3 h-[3px] rounded-full bg-[#3D2463]" />
                     )}
                     {status === "blocked" && (
-                      <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-3 h-[3px] rounded-full bg-[#8A8480]" />
+                      <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-3 h-[3px] rounded-full bg-[#64748B]" />
                     )}
                   </button>
                 );
@@ -209,17 +209,17 @@ export function HostAvailabilityPage() {
             </div>
             {/* Legend */}
             <div className="flex gap-2.5 mt-2 pt-2 border-t border-[#E0DBD0]">
-              <div className="flex items-center gap-1 text-[10px] text-[#8A8480]">
+              <div className="flex items-center gap-1 text-[10px] text-[#64748B]">
                 <div className="w-2.5 h-2.5 rounded-[3px] bg-[#3D2463]"></div>Booked
               </div>
-              <div className="flex items-center gap-1 text-[10px] text-[#8A8480]">
+              <div className="flex items-center gap-1 text-[10px] text-[#64748B]">
                 <div className="w-2.5 h-2.5 rounded-[3px] bg-[#E8E3DC]"></div>Blocked
               </div>
-              <div className="flex items-center gap-1 text-[10px] text-[#8A8480]">
+              <div className="flex items-center gap-1 text-[10px] text-[#64748B]">
                 <div className="w-2.5 h-2.5 rounded-[3px] bg-[#E6F4EE] border border-[#2A5C3F]"></div>
                 Check-out
               </div>
-              <div className="flex items-center gap-1 text-[10px] text-[#8A8480]">
+              <div className="flex items-center gap-1 text-[10px] text-[#64748B]">
                 <div className="w-2.5 h-2.5 rounded-[3px] bg-[#C9A84C]"></div>Check-in
               </div>
             </div>
@@ -269,15 +269,15 @@ export function HostAvailabilityPage() {
           <div className="bg-white border border-[#E0DBD0] rounded-xl overflow-hidden">
             <div className="divide-y divide-[#E0DBD0]">
               <div className="flex justify-between items-center px-3 py-[7px]">
-                <span className="text-[12px] text-[#8A8480]">Base nightly rate</span>
+                <span className="text-[12px] text-[#64748B]">Base nightly rate</span>
                 <span className="text-[13px] font-medium text-[#1C1030]">K850</span>
               </div>
               <div className="flex justify-between items-center px-3 py-[7px]">
-                <span className="text-[12px] text-[#8A8480]">Weekend rate (Fri–Sat)</span>
+                <span className="text-[12px] text-[#64748B]">Weekend rate (Fri–Sat)</span>
                 <span className="text-[13px] font-medium text-[#C9A84C]">K1,050</span>
               </div>
               <div className="flex justify-between items-center px-3 py-[7px]">
-                <span className="text-[12px] text-[#8A8480]">Min. stay (weekends)</span>
+                <span className="text-[12px] text-[#64748B]">Min. stay (weekends)</span>
                 <span className="text-[13px] font-medium text-[#1C1030]">2 nights</span>
               </div>
             </div>

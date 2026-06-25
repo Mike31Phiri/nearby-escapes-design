@@ -46,7 +46,7 @@ interface AvailabilityStore {
   getSeasonalPricingForDate: (listingId: string, date: string) => SeasonalPricingEntry | undefined;
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────
+//Helpers ──────────────────────────────────────────────────────────────
 
 function generateMockAvailability(
   listingId: string,
@@ -110,7 +110,7 @@ function generateInitialSeasonalPricing(): SeasonalPricingEntry[] {
   return MOCK_LISTING_IDS.flatMap((id) => generateMockSeasonalPricing(id));
 }
 
-// ─── Store ────────────────────────────────────────────────────────────────
+//Store ────────────────────────────────────────────────────────────────
 
 export const useAvailabilityStore = create<AvailabilityStore>()(
   persist(
@@ -118,7 +118,7 @@ export const useAvailabilityStore = create<AvailabilityStore>()(
       availability: generateInitialAvailability(),
       seasonalPricing: generateInitialSeasonalPricing(),
 
-      // ─── Date Blocking ─────────────────────────────────────────────
+      //Date Blocking ─────────────────────────────────────────────
 
       toggleDateBlock: (listingId, date) =>
         set((state) => {
@@ -202,7 +202,7 @@ export const useAvailabilityStore = create<AvailabilityStore>()(
         return entries.filter((e) => e.date.startsWith(prefix));
       },
 
-      // ─── Seasonal Pricing ─────────────────────────────────────────
+      //Seasonal Pricing ─────────────────────────────────────────
 
       addSeasonalPricing: (entry) =>
         set((state) => ({

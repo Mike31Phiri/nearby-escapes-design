@@ -42,7 +42,7 @@ import { createPaymentToken, generateBookingRef } from "@/lib/dpo";
 import { useBookingStore } from "@/store/bookingStore";
 import { useProfileStore } from "@/store/profileStore";
 
-// ─── Types ───────────────────────────────────────────────────────────────
+//Types ───────────────────────────────────────────────────────────────
 
 type ListingType = "stay" | "experience" | "transport";
 
@@ -114,7 +114,7 @@ function parseDateParam(val: string | null): string {
   return "";
 }
 
-// ─── Component ───────────────────────────────────────────────────────────
+//Component ───────────────────────────────────────────────────────────
 
 export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
   const router = useRouter();
@@ -206,7 +206,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
     }
   };
 
-  // ─── Price Calculation ────────────────────────────────────────────────
+  //Price Calculation ────────────────────────────────────────────────
 
   interface PriceBreakdown {
     subtotal: number;
@@ -367,7 +367,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
     promoDiscount,
   ]);
 
-  // ─── Handle Submit ────────────────────────────────────────────────────
+  //Handle Submit ────────────────────────────────────────────────────
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -563,62 +563,62 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
         {/* Desktop Stepper */}
         <div className="hidden lg:flex items-center justify-between bg-card border border-border/40 rounded-2xl p-5 mb-8 shadow-sm">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-[#2A1B3D] text-[#F9F7F2] text-xs font-bold flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-[#1A0B2E] text-[#F9F7F2] text-xs font-bold flex items-center justify-center">
               <Check className="h-3.5 w-3.5" />
             </div>
-            <span className="text-xs font-semibold text-[#2A1B3D]">Choose your escape</span>
+            <span className="text-xs font-semibold text-[#1A0B2E]">Choose your escape</span>
           </div>
-          <div className="flex-1 h-0.5 bg-[#2A1B3D] mx-6" />
+          <div className="flex-1 h-0.5 bg-[#1A0B2E] mx-6" />
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-[#C5A059] text-[#334155] text-xs font-bold flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-[#D4AF37] text-[#334155] text-xs font-bold flex items-center justify-center">
               2
             </div>
-            <span className="text-xs font-bold text-[#2A1B3D]">Review booking</span>
+            <span className="text-xs font-bold text-[#1A0B2E]">Review booking</span>
           </div>
           <div className="flex-1 h-0.5 bg-border/40 mx-6" />
           <div className="flex items-center gap-2 opacity-65">
-            <div className="w-6 h-6 rounded-full bg-[#E8E3DC] text-[#8A8480] text-xs font-bold flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-[#E8E3DC] text-[#64748B] text-xs font-bold flex items-center justify-center">
               3
             </div>
-            <span className="text-xs font-medium text-[#8A8480]">Payment</span>
+            <span className="text-xs font-medium text-[#64748B]">Payment</span>
           </div>
           <div className="flex-1 h-0.5 bg-border/40 mx-6" />
           <div className="flex items-center gap-2 opacity-65">
-            <div className="w-6 h-6 rounded-full bg-[#E8E3DC] text-[#8A8480] text-xs font-bold flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-[#E8E3DC] text-[#64748B] text-xs font-bold flex items-center justify-center">
               4
             </div>
-            <span className="text-xs font-medium text-[#8A8480]">Confirmation</span>
+            <span className="text-xs font-medium text-[#64748B]">Confirmation</span>
           </div>
         </div>
 
         {/* Mobile Stepper */}
         <div className="lg:hidden flex items-center justify-between bg-card border border-border/40 rounded-2xl p-4 mb-6 shadow-sm">
           <div className="flex flex-col items-center gap-1.5 flex-1">
-            <div className="w-6 h-6 rounded-full bg-[#2A1B3D] text-[#F9F7F2] text-xs font-bold flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-[#1A0B2E] text-[#F9F7F2] text-xs font-bold flex items-center justify-center">
               <Check className="h-3 w-3" />
             </div>
-            <span className="text-[10px] font-bold text-[#2A1B3D]">Choose</span>
+            <span className="text-[10px] font-bold text-[#1A0B2E]">Choose</span>
           </div>
-          <div className="w-6 h-0.5 bg-[#2A1B3D] mb-4 shrink-0" />
+          <div className="w-6 h-0.5 bg-[#1A0B2E] mb-4 shrink-0" />
           <div className="flex flex-col items-center gap-1.5 flex-1">
-            <div className="w-6 h-6 rounded-full bg-[#C5A059] text-[#334155] text-xs font-bold flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-[#D4AF37] text-[#334155] text-xs font-bold flex items-center justify-center">
               2
             </div>
-            <span className="text-[10px] font-bold text-[#C5A059]">Review</span>
+            <span className="text-[10px] font-bold text-[#D4AF37]">Review</span>
           </div>
           <div className="w-6 h-0.5 bg-[#E8E3DC] mb-4 shrink-0" />
           <div className="flex flex-col items-center gap-1.5 flex-1">
-            <div className="w-6 h-6 rounded-full bg-[#E8E3DC] text-[#8A8480] text-xs font-bold flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-[#E8E3DC] text-[#64748B] text-xs font-bold flex items-center justify-center">
               3
             </div>
-            <span className="text-[10px] font-medium text-[#8A8480]">Pay</span>
+            <span className="text-[10px] font-medium text-[#64748B]">Pay</span>
           </div>
           <div className="w-6 h-0.5 bg-[#E8E3DC] mb-4 shrink-0" />
           <div className="flex flex-col items-center gap-1.5 flex-1">
-            <div className="w-6 h-6 rounded-full bg-[#E8E3DC] text-[#8A8480] text-xs font-bold flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-[#E8E3DC] text-[#64748B] text-xs font-bold flex items-center justify-center">
               4
             </div>
-            <span className="text-[10px] font-medium text-[#8A8480]">Confirm</span>
+            <span className="text-[10px] font-medium text-[#64748B]">Confirm</span>
           </div>
         </div>
 
@@ -627,18 +627,18 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
           onSubmit={handleSubmit}
           className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 items-start"
         >
-          {/* ─── LEFT: Main Booking Content Stack ────────────────────── */}
+          {/* LEFT: Main Booking Content Stack */}
           <div className="space-y-6">
             {/* Mobile Only: Your Escape Card */}
             <div className="bg-card border border-border/40 rounded-2xl p-4 shadow-sm lg:hidden">
               <div className="flex items-center justify-between mb-3 border-b border-border/40 pb-2">
                 <div className="flex items-center gap-2">
                   <div className="w-7 h-7 rounded-lg bg-[#EDE8F5] flex items-center justify-center">
-                    <Home className="h-4 w-4 text-[#2A1B3D]" />
+                    <Home className="h-4 w-4 text-[#1A0B2E]" />
                   </div>
                   <span className="font-bold text-xs text-[#334155]">Your escape</span>
                 </div>
-                <Link href={backHref} className="text-xs text-[#2A1B3D] font-bold hover:underline">
+                <Link href={backHref} className="text-xs text-[#1A0B2E] font-bold hover:underline">
                   Change
                 </Link>
               </div>
@@ -649,16 +649,16 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   className="w-16 h-14 rounded-xl object-cover shrink-0"
                 />
                 <div className="min-w-0">
-                  <span className="text-[10px] font-bold text-[#C5A059] uppercase tracking-wider">
+                  <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-wider">
                     {listing.type === "stay" ? "Farm stay" : listing.type}
                   </span>
                   <h4 className="font-bold text-xs text-[#334155] truncate">{listing.name}</h4>
                   <div className="flex items-center gap-1 text-[11px] text-muted-foreground mt-0.5">
-                    <MapPin className="h-3 w-3 text-[#C5A059]" />
+                    <MapPin className="h-3 w-3 text-[#D4AF37]" />
                     <span className="truncate">{listing.location}</span>
                   </div>
                   <div className="flex items-center gap-1 text-[11px] text-muted-foreground mt-0.5">
-                    <Star className="h-3 w-3 fill-[#C5A059] text-[#C5A059]" />
+                    <Star className="h-3 w-3 fill-[#D4AF37] text-[#D4AF37]" />
                     <span>
                       {listing.rating ? listing.rating.toFixed(1) : "4.8"} · (
                       {listing.reviews || "63"} reviews)
@@ -673,11 +673,11 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
               <div className="flex items-center justify-between mb-4 border-b border-border/40 pb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-lg bg-[#EDE8F5] flex items-center justify-center">
-                    <Home className="h-4.5 w-4.5 text-[#2A1B3D]" />
+                    <Home className="h-4.5 w-4.5 text-[#1A0B2E]" />
                   </div>
                   <span className="font-bold text-sm text-[#334155]">Your escape</span>
                 </div>
-                <Link href={backHref} className="text-xs text-[#2A1B3D] font-bold hover:underline">
+                <Link href={backHref} className="text-xs text-[#1A0B2E] font-bold hover:underline">
                   Change
                 </Link>
               </div>
@@ -688,16 +688,16 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   className="w-20 h-16 rounded-xl object-cover shrink-0"
                 />
                 <div className="min-w-0">
-                  <span className="text-xs font-bold text-[#C5A059] uppercase tracking-wider">
+                  <span className="text-xs font-bold text-[#D4AF37] uppercase tracking-wider">
                     {listing.type === "stay" ? "Farm stay" : listing.type}
                   </span>
                   <h3 className="font-bold text-base text-[#334155] truncate">{listing.name}</h3>
                   <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
-                    <MapPin className="h-3.5 w-3.5 text-[#C5A059]" />
+                    <MapPin className="h-3.5 w-3.5 text-[#D4AF37]" />
                     <span className="truncate">{listing.location} · 1.5 hrs from Lusaka</span>
                   </div>
                   <div className="flex items-center gap-1 text-[11px] text-muted-foreground mt-1">
-                    <Star className="h-3 w-3 fill-[#C5A059] text-[#C5A059]" />
+                    <Star className="h-3 w-3 fill-[#D4AF37] text-[#D4AF37]" />
                     <span>
                       {listing.rating ? listing.rating.toFixed(1) : "4.8"} ·{" "}
                       {listing.reviews || "63"} reviews · Hosted by Beatrice M.
@@ -711,7 +711,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
             <section className="bg-card border border-border/40 rounded-2xl shadow-sm p-5 space-y-4">
               <div className="flex items-center gap-2 border-b border-border/40 pb-3">
                 <div className="w-7 h-7 rounded-lg bg-[#FFF4DC] flex items-center justify-center">
-                  <CalendarDays className="h-4 w-4 text-[#C5A059]" />
+                  <CalendarDays className="h-4 w-4 text-[#D4AF37]" />
                 </div>
                 <h2 className="font-bold text-sm text-[#334155]">Dates & guests</h2>
               </div>
@@ -720,7 +720,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <Label className="text-[10px] font-bold uppercase tracking-wider text-[#C5A059]">
+                      <Label className="text-[10px] font-bold uppercase tracking-wider text-[#D4AF37]">
                         Check-In
                       </Label>
                       <Input
@@ -733,7 +733,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                       />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-[10px] font-bold uppercase tracking-wider text-[#C5A059]">
+                      <Label className="text-[10px] font-bold uppercase tracking-wider text-[#D4AF37]">
                         Check-Out
                       </Label>
                       <Input
@@ -799,7 +799,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
               {isExperience && (
                 <div className="space-y-4">
                   <div className="space-y-1">
-                    <Label className="text-[10px] font-bold uppercase tracking-wider text-[#C5A059]">
+                    <Label className="text-[10px] font-bold uppercase tracking-wider text-[#D4AF37]">
                       Preferred Date
                     </Label>
                     <Input
@@ -859,7 +859,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
               {isTransport && (
                 <div className="space-y-4">
                   <div className="space-y-1">
-                    <Label className="text-[10px] font-bold uppercase tracking-wider text-[#C5A059]">
+                    <Label className="text-[10px] font-bold uppercase tracking-wider text-[#D4AF37]">
                       Travel Date
                     </Label>
                     <Input
@@ -921,7 +921,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
             <section className="bg-card border border-border/40 rounded-2xl shadow-sm p-5 space-y-4">
               <div className="flex items-center gap-2 border-b border-border/40 pb-3">
                 <div className="w-7 h-7 rounded-lg bg-[#EDE8F5] flex items-center justify-center">
-                  <User className="h-4 w-4 text-[#2A1B3D]" />
+                  <User className="h-4 w-4 text-[#1A0B2E]" />
                 </div>
                 <h2 className="font-bold text-sm text-[#334155]">Your Details</h2>
               </div>
@@ -1006,13 +1006,13 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
 
                 <div className="space-y-3">
                   {/* Transport */}
-                  <div className="flex items-center justify-between p-3.5 bg-[#EDE8F5]/50 border border-[#2A1B3D]/10 rounded-xl hover:bg-[#EDE8F5]/85 transition-all">
+                  <div className="flex items-center justify-between p-3.5 bg-[#EDE8F5]/50 border border-[#1A0B2E]/10 rounded-xl hover:bg-[#EDE8F5]/85 transition-all">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-[#2A1B3D] flex items-center justify-center shrink-0">
-                        <Truck className="h-4.5 w-4.5 text-[#C5A059]" />
+                      <div className="w-9 h-9 rounded-lg bg-[#1A0B2E] flex items-center justify-center shrink-0">
+                        <Truck className="h-4.5 w-4.5 text-[#D4AF37]" />
                       </div>
                       <div>
-                        <div className="text-xs font-bold text-[#2A1B3D]">
+                        <div className="text-xs font-bold text-[#1A0B2E]">
                           Return transport pickup
                         </div>
                         <div className="text-[10px] text-[#6A5A8A] mt-0.5">
@@ -1021,12 +1021,12 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                       </div>
                     </div>
                     <div className="flex items-center gap-3 shrink-0">
-                      <span className="text-xs font-bold text-[#2A1B3D]">K280</span>
+                      <span className="text-xs font-bold text-[#1A0B2E]">K280</span>
                       <input
                         type="checkbox"
                         checked={addTransport}
                         onChange={(e) => setAddTransport(e.target.checked)}
-                        className="h-4 w-4 rounded border-border text-[#2A1B3D] focus:ring-[#2A1B3D]"
+                        className="h-4 w-4 rounded border-border text-[#1A0B2E] focus:ring-[#1A0B2E]"
                       />
                     </div>
                   </div>
@@ -1094,7 +1094,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
             <div className="bg-card border border-border/40 rounded-2xl p-5 shadow-sm lg:hidden space-y-4">
               <div className="flex items-center gap-2 border-b border-border/40 pb-3">
                 <div className="w-7 h-7 rounded-lg bg-[#FFF4DC] flex items-center justify-center">
-                  <Receipt className="h-4 w-4 text-[#C5A059]" />
+                  <Receipt className="h-4 w-4 text-[#D4AF37]" />
                 </div>
                 <h3 className="font-bold text-sm text-[#334155]">Price breakdown</h3>
               </div>
@@ -1209,7 +1209,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
 
                 <div className="border-t border-border/40 pt-2 flex justify-between font-black text-sm text-foreground">
                   <span>Total</span>
-                  <span className="text-[#2A1B3D] text-base">
+                  <span className="text-[#1A0B2E] text-base">
                     K{priceBreakdown.total.toLocaleString()}
                   </span>
                 </div>
@@ -1227,7 +1227,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                 <button
                   type="button"
                   onClick={handleApplyPromo}
-                  className="bg-[#2A1B3D] text-white rounded-xl px-4 py-2 text-xs font-bold hover:bg-[#2A1B3D]/90 transition-colors"
+                  className="bg-[#1A0B2E] text-white rounded-xl px-4 py-2 text-xs font-bold hover:bg-[#1A0B2E]/90 transition-colors"
                 >
                   Apply
                 </button>
@@ -1238,14 +1238,14 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
             <section className="bg-card border border-border/40 rounded-2xl shadow-sm p-5 space-y-4">
               <div className="flex items-center gap-2 border-b border-border/40 pb-3">
                 <div className="w-7 h-7 rounded-lg bg-[#EDE8F5] flex items-center justify-center">
-                  <ShieldCheck className="h-4 w-4 text-[#2A1B3D]" />
+                  <ShieldCheck className="h-4 w-4 text-[#1A0B2E]" />
                 </div>
                 <h2 className="font-bold text-sm text-[#334155]">Booking policies</h2>
               </div>
 
               <div className="space-y-3.5">
                 <div className="flex gap-3 items-start">
-                  <Clock className="h-4 w-4 text-[#2A1B3D] mt-0.5 shrink-0" />
+                  <Clock className="h-4 w-4 text-[#1A0B2E] mt-0.5 shrink-0" />
                   <div>
                     <h4 className="text-xs font-bold text-[#334155]">Free cancellation</h4>
                     <p className="text-[11px] text-muted-foreground leading-relaxed mt-0.5">
@@ -1254,7 +1254,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   </div>
                 </div>
                 <div className="flex gap-3 items-start border-t border-border/40 pt-3">
-                  <CheckCircle2 className="h-4 w-4 text-[#2A1B3D] mt-0.5 shrink-0" />
+                  <CheckCircle2 className="h-4 w-4 text-[#1A0B2E] mt-0.5 shrink-0" />
                   <div>
                     <h4 className="text-xs font-bold text-[#334155]">Instant confirmation</h4>
                     <p className="text-[11px] text-muted-foreground leading-relaxed mt-0.5">
@@ -1263,7 +1263,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   </div>
                 </div>
                 <div className="flex gap-3 items-start border-t border-border/40 pt-3">
-                  <Lock className="h-4 w-4 text-[#2A1B3D] mt-0.5 shrink-0" />
+                  <Lock className="h-4 w-4 text-[#1A0B2E] mt-0.5 shrink-0" />
                   <div>
                     <h4 className="text-xs font-bold text-[#334155]">Secure payment</h4>
                     <p className="text-[11px] text-muted-foreground leading-relaxed mt-0.5">
@@ -1291,7 +1291,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                 id="terms"
                 checked={agreedToTerms}
                 onChange={(e) => setAgreedToTerms(e.target.checked)}
-                className="mt-1 h-4 w-4 rounded border-border text-[#2A1B3D] focus:ring-[#2A1B3D]"
+                className="mt-1 h-4 w-4 rounded border-border text-[#1A0B2E] focus:ring-[#1A0B2E]"
               />
               <Label
                 htmlFor="terms"
@@ -1313,7 +1313,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
             </div>
           </div>
 
-          {/* ─── RIGHT: Sticky Sidebar Order Summary (Desktop Only) ─────── */}
+          {/* RIGHT: Sticky Sidebar Order Summary (Desktop Only) */}
           <aside className="hidden lg:block lg:sticky lg:top-24">
             <div className="bg-card border border-border/40 rounded-2xl shadow-[0_4px_32px_rgba(0,0,0,0.08)] overflow-hidden">
               {/* Listing preview header */}
@@ -1323,9 +1323,9 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   alt={listing.name}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#2A1B3D]/90 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1A0B2E]/90 to-transparent" />
                 <div className="absolute bottom-4 left-5 right-5 text-white">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#C5A059]">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#D4AF37]">
                     {isStay ? "Farm stay" : isExperience ? "Experience" : "Transport"}
                   </span>
                   <h3 className="font-bold text-sm truncate mt-0.5">{listing.name}</h3>
@@ -1471,7 +1471,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
 
                     <div className="border-t border-border/40 pt-2.5 flex justify-between font-black text-sm text-foreground">
                       <span>Total</span>
-                      <span className="text-[#2A1B3D] text-base">
+                      <span className="text-[#1A0B2E] text-base">
                         K{priceBreakdown.total.toLocaleString()}
                       </span>
                     </div>
@@ -1490,7 +1490,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   <button
                     type="button"
                     onClick={handleApplyPromo}
-                    className="bg-[#2A1B3D] text-white rounded-xl px-3 py-1.5 text-xs font-bold hover:bg-[#2A1B3D]/90 transition-colors"
+                    className="bg-[#1A0B2E] text-white rounded-xl px-3 py-1.5 text-xs font-bold hover:bg-[#1A0B2E]/90 transition-colors"
                   >
                     Apply
                   </button>
@@ -1511,7 +1511,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   <Button
                     type="submit"
                     disabled={isSubmitting || !agreedToTerms}
-                    className="w-full h-12 rounded-xl bg-[#C5A059] hover:bg-[#C5A059]/90 text-[#334155] font-black uppercase tracking-widest text-xs shadow-md shadow-[#C5A059]/10 transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2"
+                    className="w-full h-12 rounded-xl bg-[#D4AF37] hover:bg-[#D4AF37]/90 text-[#334155] font-black uppercase tracking-widest text-xs shadow-md shadow-[#D4AF37]/10 transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2"
                   >
                     {isSubmitting ? (
                       <>
@@ -1535,8 +1535,8 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
             </div>
           </aside>
 
-          {/* ─── MOBILE: Sticky bottom CTA bar ─────────────────────────── */}
-          <div className="fixed bottom-0 left-0 right-0 z-40 bg-[#2A1B3D] border-t border-border/60 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] lg:hidden">
+          {/* MOBILE: Sticky bottom CTA bar */}
+          <div className="fixed bottom-0 left-0 right-0 z-40 bg-[#1A0B2E] border-t border-border/60 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] lg:hidden">
             <div className="px-4 py-3.5 flex items-center justify-between gap-4">
               <div>
                 <div className="text-[10px] text-[#9B95A8] uppercase tracking-wider font-semibold">
@@ -1550,7 +1550,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                 <Button
                   type="submit"
                   disabled={isSubmitting || !agreedToTerms}
-                  className="w-full h-11 rounded-xl bg-[#C5A059] hover:bg-[#C5A059]/90 text-[#334155] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 disabled:opacity-50"
+                  className="w-full h-11 rounded-xl bg-[#D4AF37] hover:bg-[#D4AF37]/90 text-[#334155] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <>

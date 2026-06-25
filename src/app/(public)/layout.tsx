@@ -12,10 +12,11 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
   const shouldHideBottomNav =
     pathname?.startsWith("/listings/") || pathname?.startsWith("/checkout");
   const isCheckout = pathname?.startsWith("/checkout");
+  const shouldHideNavbar = pathname?.startsWith("/profile");
 
   return (
     <>
-      <Navbar />
+      {!shouldHideNavbar && <Navbar />}
       <div className={shouldHideBottomNav ? "" : "pb-16 lg:pb-0"}>{children}</div>
       {!shouldHideBottomNav && <MobileBottomNav />}
 

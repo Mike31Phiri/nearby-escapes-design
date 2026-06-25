@@ -35,22 +35,22 @@ export function HostDashboardPage() {
         <div className="mx-auto max-w-7xl px-4 md:px-6 py-6 md:py-8">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[10px] sm:text-xs font-bold text-[#C5A059] uppercase tracking-widest mb-1.5">Host Dashboard</p>
-              <h1 className="font-display text-2xl md:text-3xl font-bold tracking-tight text-[#2A1B3D] leading-[1.15]">
+              <p className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-1.5">Host Dashboard</p>
+              <h1 className="font-display text-2xl md:text-3xl font-bold tracking-tight text-[#1A0B2E] leading-[1.15]">
                 Welcome back, {host.name.split(" ")[0]}
               </h1>
             </div>
             <Link
               href="/host/profile"
-              className="hidden sm:inline-flex items-center gap-3 px-4 py-2.5 bg-[#faf9f5] border border-[#e0dbd0]/60 rounded-xl hover:border-[#C5A059]/40 hover:shadow-sm transition-all"
+              className="hidden sm:inline-flex items-center gap-3 px-4 py-2.5 bg-[#faf9f5] border border-[#e0dbd0]/60 rounded-xl hover:border-[#D4AF37]/40 hover:shadow-sm transition-all"
             >
-              <div className="w-8 h-8 rounded-full bg-[#2A1B3D] flex items-center justify-center text-xs font-bold text-[#C5A059]">
+              <div className="w-8 h-8 rounded-full bg-[#1A0B2E] flex items-center justify-center text-xs font-bold text-[#D4AF37]">
                 {host.name
                   .split(" ")
                   .map((n) => n[0])
                   .join("")}
               </div>
-              <span className="text-sm font-semibold text-[#2A1B3D]">View Profile</span>
+              <span className="text-sm font-semibold text-[#1A0B2E]">View Profile</span>
             </Link>
           </div>
         </div>
@@ -86,16 +86,16 @@ export function HostDashboardPage() {
         {/* Section Title */}
         <div className="flex items-end justify-between mb-7">
           <div>
-            <p className="text-[10px] sm:text-xs font-bold text-[#C5A059] uppercase tracking-widest mb-1.5">Insights</p>
-            <h2 className="font-display text-2xl font-bold tracking-tight text-[#2A1B3D] leading-[1.15]">
+            <p className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-1.5">Insights</p>
+            <h2 className="font-display text-2xl font-bold tracking-tight text-[#1A0B2E] leading-[1.15]">
               Performance Metrics
             </h2>
-            <p className="text-[#8A8480] mt-1.5 text-sm max-w-lg leading-relaxed">
+            <p className="text-[#64748B] mt-1.5 text-sm max-w-lg leading-relaxed">
               How your business is doing this month
             </p>
           </div>
-          <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-[#e0dbd0]/60 text-sm font-bold text-[#2A1B3D] shadow-sm">
-            <Calendar className="h-4 w-4 text-[#C5A059]" />
+          <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-[#e0dbd0]/60 text-sm font-bold text-[#1A0B2E] shadow-sm">
+            <Calendar className="h-4 w-4 text-[#D4AF37]" />
             July 2025
           </span>
         </div>
@@ -195,17 +195,17 @@ export function HostDashboardPage() {
             <div className="space-y-5">
               <div className="flex items-end justify-between">
                 <div>
-                  <p className="text-[10px] sm:text-xs font-bold text-[#C5A059] uppercase tracking-widest mb-1">Schedule</p>
-                  <h3 className="font-display text-xl font-bold tracking-tight text-[#2A1B3D] leading-[1.15]">
+                  <p className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-1">Schedule</p>
+                  <h3 className="font-display text-xl font-bold tracking-tight text-[#1A0B2E] leading-[1.15]">
                     Upcoming Check-ins
                   </h3>
-                  <p className="text-[#8A8480] mt-1 text-sm">
+                  <p className="text-[#64748B] mt-1 text-sm">
                     Guests arriving in the next few days
                   </p>
                 </div>
                 <Link
                   href="/host/bookings"
-                  className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-[#2A1B3D] hover:text-[#2A154A] transition-all duration-200 group"
+                  className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-[#1A0B2E] hover:text-[#2A154A] transition-all duration-200 group"
                 >
                   <span>Manage bookings</span>
                   <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -294,17 +294,17 @@ export function HostDashboardPage() {
             <div className="space-y-5">
               <div className="flex items-end justify-between">
                 <div>
-                  <p className="text-[10px] sm:text-xs font-bold text-[#C5A059] uppercase tracking-widest mb-1">Activity</p>
-                  <h3 className="font-display text-xl font-bold tracking-tight text-[#2A1B3D] leading-[1.15]">
+                  <p className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-1">Activity</p>
+                  <h3 className="font-display text-xl font-bold tracking-tight text-[#1A0B2E] leading-[1.15]">
                     Recent Transactions
                   </h3>
-                  <p className="text-[#8A8480] mt-1 text-sm">
+                  <p className="text-[#64748B] mt-1 text-sm">
                     Latest bookings and reservation updates
                   </p>
                 </div>
                 <Link
                   href="/host/bookings"
-                  className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-[#2A1B3D] hover:text-[#2A154A] transition-all duration-200 group"
+                  className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-[#1A0B2E] hover:text-[#2A154A] transition-all duration-200 group"
                 >
                   <span>All bookings</span>
                   <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -368,8 +368,8 @@ export function HostDashboardPage() {
             {/* Quick Actions Grid */}
             <div className="space-y-5">
               <div>
-                <p className="text-[10px] sm:text-xs font-bold text-[#C5A059] uppercase tracking-widest mb-1">Shortcuts</p>
-                <h3 className="font-display text-xl font-bold tracking-tight text-[#2A1B3D] leading-[1.15]">
+                <p className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-1">Shortcuts</p>
+                <h3 className="font-display text-xl font-bold tracking-tight text-[#1A0B2E] leading-[1.15]">
                   Quick Management
                 </h3>
               </div>

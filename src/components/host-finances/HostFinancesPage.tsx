@@ -99,7 +99,7 @@ export function HostFinancesPage() {
   return (
     <div className="min-h-screen bg-background pb-12 font-sans">
       <div className="mx-auto max-w-6xl px-4 md:px-6 py-6">
-        {/* ─── Header ─── */}
+        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
@@ -120,7 +120,7 @@ export function HostFinancesPage() {
           )}
         </div>
 
-        {/* ─── Auto-Payout Banner ─── */}
+        {/* Auto-Payout Banner */}
         <div className="flex items-start gap-3 bg-emerald-50 border border-emerald-100/60 rounded-2xl p-4 mb-8">
           <div className="h-9 w-9 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
             <CheckCircle2 className="h-5 w-5" />
@@ -151,7 +151,7 @@ export function HostFinancesPage() {
           </div>
         </div>
 
-        {/* ─── Stats Grid ─── */}
+        {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           {/* Card 1: Total YTD */}
           <div className="bg-white border border-[#E0DBD0]/70 rounded-2xl p-5 shadow-sm">
@@ -204,7 +204,7 @@ export function HostFinancesPage() {
           </div>
         </div>
 
-        {/* ─── Main Content Layout ─── */}
+        {/* Main Content Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* LEFT/MAIN: Monthly Breakdown & Transactions */}
           <div className="lg:col-span-2 space-y-6">
@@ -393,7 +393,7 @@ export function HostFinancesPage() {
                   <div className="flex items-center gap-2 pt-2">
                     <button
                       onClick={handleSavePayoutMethod}
-                      className="flex-1 h-8 rounded-lg bg-[#3D2463] text-white hover:bg-[#2A1B3D] text-[10px] font-black uppercase tracking-wider transition-all"
+                      className="flex-1 h-8 rounded-lg bg-[#3D2463] text-white hover:bg-[#1A0B2E] text-[10px] font-black uppercase tracking-wider transition-all"
                     >
                       Save Method
                     </button>

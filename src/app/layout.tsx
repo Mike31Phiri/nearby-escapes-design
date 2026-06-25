@@ -83,7 +83,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" type="image/jpeg" href="/favicon.jpg" />
         <link rel="apple-touch-icon" href="/favicon.jpg" />
-        <meta name="theme-color" content="#2A1B3D" />
+        <meta name="theme-color" content="#1A0B2E" />
       </head>
       <body
         className={`${fontSans.variable} ${fontDisplay.variable} ${fontScript.variable} font-sans antialiased`}

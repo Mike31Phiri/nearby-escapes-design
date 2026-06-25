@@ -31,7 +31,7 @@ import type { AdminUser } from "@/lib/mock-admin-data";
 import { useLoading, withLoading } from "@/lib/loading-context";
 import { showSuccess, showWarning } from "@/lib/admin-toast";
 
-// ─── Role Badge ─────────────────────────────────────────────────────────
+//Role Badge ─────────────────────────────────────────────────────────
 
 const roleConfig: Record<string, { label: string; className: string }> = {
   admin: {
@@ -70,7 +70,7 @@ const statusConfig: Record<string, { label: string; icon: React.ElementType; cla
     },
   };
 
-// ─── User Card ──────────────────────────────────────────────────────────
+//User Card ──────────────────────────────────────────────────────────
 
 function UserCard({
   user,
@@ -248,7 +248,7 @@ function UserCard({
   );
 }
 
-// ─── Main Component ─────────────────────────────────────────────────────
+//Main Component ─────────────────────────────────────────────────────
 
 export function AdminUsers() {
   const { setLoading, setLoadingMessage } = useLoading();

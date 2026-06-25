@@ -371,7 +371,7 @@ export const mockTransport: Transport[] = [
 ];
 
 export const mockExperiences: Experience[] = [
-  // ── Wildlife & Nature ──
+  //Wildlife & Nature ──
   {
     id: "e1",
     name: "Victoria Falls Helicopter Tour",
@@ -429,7 +429,7 @@ export const mockExperiences: Experience[] = [
       "Explore Zambia's oldest and largest national park on a full-day game drive. Track lions, leopards, wild dogs and elephants across diverse habitats with expert guides.",
   },
 
-  // ── Farm Visits & Agri-Tourism ──
+  //Farm Visits & Agri-Tourism ──
   {
     id: "e5",
     name: "Chisamba Farm Stay & Milking Experience",
@@ -473,7 +473,7 @@ export const mockExperiences: Experience[] = [
       "Visit the historic Shiwa Ngandu estate and soak in the natural Kapishya Hot Springs. Tour the grand manor, explore working farmlands, and relax in geothermal springs nestled in the northern hills.",
   },
 
-  // ── Cultural & Community ──
+  //Cultural & Community ──
   {
     id: "e8",
     name: "Livingstone Village Tour & Craft Market",
@@ -517,7 +517,7 @@ export const mockExperiences: Experience[] = [
       "Visit the historic Mukuni Village, home of the Leya people. Tour the Chief's palace, watch traditional dancing and drumming performances, and learn about the deep cultural heritage of the region.",
   },
 
-  // ── Industrial Heritage ──
+  //Industrial Heritage ──
   {
     id: "e11",
     name: "Copperbelt Mining Heritage Tour",
@@ -547,7 +547,7 @@ export const mockExperiences: Experience[] = [
       "Stand at the foot of the massive Kariba Dam — one of Africa's largest hydroelectric projects. Tour the visitor centre, learn about the dam's construction and the legendary Nyami Nyami river god.",
   },
 
-  // ── Adventure & Tours ──
+  //Adventure & Tours ──
   {
     id: "e13",
     name: "Zambezi White Water Rafting",
@@ -577,7 +577,7 @@ export const mockExperiences: Experience[] = [
       "Trek through lush miombo woodlands to the spectacular Kundalila Falls. The Kaombe River plunges 70m into a deep basalt pool — perfect for a refreshing swim after the hike.",
   },
 
-  // ── Water Sports & Lakes ──
+  //Water Sports & Lakes ──
   {
     id: "e15",
     name: "Lake Kariba Sunset Cruise",

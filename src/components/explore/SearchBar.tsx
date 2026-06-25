@@ -31,19 +31,19 @@ export function SearchBar({ className }: { className?: string }) {
     >
       {/*  MOBILE: Vertical stacked layout  */}
       <div className="md:hidden bg-white rounded-2xl p-5 shadow-[0_12px_48px_rgba(42,27,61,0.25)]">
-        <p className="text-[11px] font-bold text-[#8A8480] uppercase tracking-[1.2px] mb-3">
+        <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-[1.2px] mb-3">
           Where do you want to escape?
         </p>
 
-        <div className="flex items-center gap-3 bg-[#F9F7F2] rounded-xl px-4 py-3.5 mb-3 transition-all duration-200 focus-within:ring-2 focus-within:ring-[#C5A059]/40">
-          <MapPin className="h-5 w-5 text-[#2A1B3D] shrink-0" strokeWidth={1.5} />
+        <div className="flex items-center gap-3 bg-[#F9F7F2] rounded-xl px-4 py-3.5 mb-3 transition-all duration-200 focus-within:ring-2 focus-within:ring-[#D4AF37]/40">
+          <MapPin className="h-5 w-5 text-[#1A0B2E] shrink-0" strokeWidth={1.5} />
           <div className="flex-1">
             <input
               type="text"
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
               placeholder="Destination or type"
-              className="w-full bg-transparent text-[15px] font-medium text-[#334155] placeholder:text-[#8A8480] focus:outline-none p-0"
+              className="w-full bg-transparent text-[15px] font-medium text-[#334155] placeholder:text-[#64748B] focus:outline-none p-0"
             />
           </div>
         </div>
@@ -53,9 +53,9 @@ export function SearchBar({ className }: { className?: string }) {
             <DateRangePicker value={dateRange} onChange={setDateRange} />
           </div>
           <div className="flex items-center gap-2.5 bg-[#F9F7F2] rounded-xl px-3.5 py-3">
-            <Users className="h-[18px] w-[18px] text-[#2A1B3D] shrink-0" strokeWidth={1.5} />
+            <Users className="h-[18px] w-[18px] text-[#1A0B2E] shrink-0" strokeWidth={1.5} />
             <div className="text-left flex-1">
-              <p className="text-[10px] text-[#8A8480]">Guests</p>
+              <p className="text-[10px] text-[#64748B]">Guests</p>
               <input
                 type="number"
                 min={1}
@@ -69,7 +69,7 @@ export function SearchBar({ className }: { className?: string }) {
 
         <button
           type="submit"
-          className="group w-full bg-gradient-to-br from-[#C5A059] to-[#B89430] hover:from-[#D4B45A] hover:to-[#C5A059] text-[#334155] rounded-xl py-3.5 text-[15px] font-bold flex items-center justify-center gap-2 transition-all duration-200 shadow-[0_4px_16px_rgba(197,160,89,0.35)]"
+          className="group w-full bg-gradient-to-br from-[#D4AF37] to-[#B89430] hover:from-[#D4B45A] hover:to-[#D4AF37] text-[#334155] rounded-xl py-3.5 text-[15px] font-bold flex items-center justify-center gap-2 transition-all duration-200 shadow-[0_4px_16px_rgba(197,160,89,0.35)]"
         >
           <Search className="h-[18px] w-[18px]" strokeWidth={2.5} />
           Find my escape
@@ -85,7 +85,7 @@ export function SearchBar({ className }: { className?: string }) {
         <div className="flex items-center">
           {/* Destination */}
           <div className="flex items-center gap-2.5 flex-[2] px-4 py-2 rounded-full transition-all duration-200 hover:bg-[#F9F7F2]/60 cursor-pointer">
-            <MapPin className="h-5 w-5 text-[#2A1B3D] shrink-0" strokeWidth={1.5} />
+            <MapPin className="h-5 w-5 text-[#1A0B2E] shrink-0" strokeWidth={1.5} />
             <div className="flex-1">
               <p className="text-[11px] font-semibold text-[#334155] leading-tight">Where</p>
               <input
@@ -93,7 +93,7 @@ export function SearchBar({ className }: { className?: string }) {
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
                 placeholder="Destination or experience type"
-                className="w-full bg-transparent text-[13px] text-[#8A8480] placeholder:text-[#8A8480] focus:outline-none p-0"
+                className="w-full bg-transparent text-[13px] text-[#64748B] placeholder:text-[#64748B] focus:outline-none p-0"
               />
             </div>
           </div>
@@ -114,7 +114,7 @@ export function SearchBar({ className }: { className?: string }) {
 
           {/* Guests */}
           <div className="flex items-center gap-2.5 flex-1 px-4 py-2 rounded-full transition-all duration-200 hover:bg-[#F9F7F2]/60">
-            <Users className="h-5 w-5 text-[#2A1B3D] shrink-0" strokeWidth={1.5} />
+            <Users className="h-5 w-5 text-[#1A0B2E] shrink-0" strokeWidth={1.5} />
             <div className="flex-1">
               <p className="text-[11px] font-semibold text-[#334155] leading-tight">Guests</p>
               <input
@@ -122,7 +122,7 @@ export function SearchBar({ className }: { className?: string }) {
                 min={1}
                 value={guests}
                 onChange={(e) => setGuests(Math.max(1, Number(e.target.value)))}
-                className="w-full bg-transparent text-[13px] text-[#8A8480] focus:outline-none p-0"
+                className="w-full bg-transparent text-[13px] text-[#64748B] focus:outline-none p-0"
               />
             </div>
           </div>
@@ -130,7 +130,7 @@ export function SearchBar({ className }: { className?: string }) {
           {/* Search button */}
           <button
             type="submit"
-            className="mr-0.5 flex items-center gap-2 bg-gradient-to-br from-[#C5A059] to-[#B89430] hover:from-[#D4B45A] hover:to-[#C5A059] text-[#334155] rounded-full px-5 py-3 text-[13px] font-bold transition-all duration-200 shadow-[0_2px_12px_rgba(197,160,89,0.3)] hover:shadow-[0_4px_16px_rgba(197,160,89,0.4)] shrink-0"
+            className="mr-0.5 flex items-center gap-2 bg-[#D4AF37] hover:bg-[#d5b069] text-[#111111] rounded-full px-5 py-3 text-[13px] font-bold transition-all duration-200 shadow-[0_2px_12px_rgba(197,160,89,0.3)] hover:shadow-[0_4px_16px_rgba(197,160,89,0.4)] shrink-0"
           >
             <Search className="h-[18px] w-[18px]" strokeWidth={2.5} />
             <span className="hidden lg:inline">Search</span>
