@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { Loader2 } from "lucide-react";
 import { mockHostBookings } from "@/lib/mock-host-bookings";
+import { HostPageHeader } from "@/components/layout/HostPageHeader";
 import type { HostBooking } from "@/lib/mock-host-bookings";
 import { toast } from "sonner";
 
@@ -163,14 +164,16 @@ export function HostBookingsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#faf9f5]">
+      <HostPageHeader
+        eyebrow="Reservations"
+        title="My Bookings"
+        description="View and manage all your upcoming and past guest stays."
+      />
       <div className="mx-auto max-w-7xl px-4 md:px-6 py-6">
-        <div className="mb-4 px-4 pt-4">
-          <h1 className="text-[15px] font-medium text-[#1C1030]">My bookings</h1>
-        </div>
 
         {/* Filter pills */}
-        <div className="flex gap-1.5 px-4 pb-3 overflow-x-auto scrollbar-none">
+        <div className="flex gap-1.5 pb-3 overflow-x-auto scrollbar-none mt-2">
           {filters.map((f) => (
             <button
               key={f.key}

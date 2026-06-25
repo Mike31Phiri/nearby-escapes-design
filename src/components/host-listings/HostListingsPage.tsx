@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { HostPageHeader } from "@/components/layout/HostPageHeader";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { mockHostProfile } from "@/lib/mock-profile-data";
@@ -230,28 +231,23 @@ export function HostListingsPage() {
   ];
 
   return (
-    <div className="min-h-screen py-6 md:py-8">
-      <div className="mx-auto max-w-6xl px-4 md:px-6">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <div>
-            <h1 className="font-display text-2xl md:text-3xl font-bold tracking-tight text-[#111111]">
-              My Listings
-            </h1>
-            <p className="text-sm text-gray-500 mt-1">
-              Manage and monitor all your properties and services
-            </p>
-          </div>
-          <Button className="h-9 rounded-lg text-xs font-bold shadow-sm" asChild>
+    <div className="min-h-screen bg-background pb-8">
+      <HostPageHeader
+        eyebrow="Portfolio"
+        title="My Listings"
+        description="Manage and monitor all your properties and services"
+        actions={
+          <Button className="h-10 px-5 rounded-xl text-sm font-bold bg-gradient-to-r from-[#D4AF37] to-[#B89430] text-[#1A0B2E] hover:from-[#B89430] hover:to-[#967825] shadow-sm border-none" asChild>
             <Link href="/host/create">
-              <Plus className="h-4 w-4 mr-1" />
+              <Plus className="h-4 w-4 mr-1.5" />
               New Listing
             </Link>
           </Button>
-        </div>
+        }
+      />
 
+      <div className="mx-auto max-w-7xl px-4 md:px-6 mt-8">
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
           <StatCard
             icon={Building2}
             label="Total Listings"

@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { mockHostProfile } from "@/lib/mock-profile-data";
+import { HostPageHeader } from "@/components/layout/HostPageHeader";
 import { useAvailabilityStore } from "@/store/availabilityStore";
 import { toast } from "sonner";
 
@@ -132,11 +133,13 @@ export function HostAvailabilityPage() {
   }, [year, month, daysInMonth, firstDay]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="mx-auto max-w-7xl px-4 md:px-6 py-6">
-        <div className="px-4 pt-4 pb-1">
-          <h1 className="text-[15px] font-medium text-[#1C1030]">Availability calendar</h1>
-        </div>
+    <div className="min-h-screen bg-[#faf9f5] pb-12">
+      <HostPageHeader
+        eyebrow="Calendar"
+        title="Availability Calendar"
+        description="Manage the availability of your properties across all dates."
+      />
+      <div className="mx-auto max-w-7xl px-4 md:px-6 py-6 mt-4">
 
         <div className="px-4 pb-1 md:px-0">
           {/* Listing selector */}

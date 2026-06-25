@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Bell, CalendarCheck, CalendarX, Wallet, Info, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { HostPageHeader } from "@/components/layout/HostPageHeader";
 import { toast } from "sonner";
 
 type NotificationType = "booking" | "cancellation" | "payout" | "system";
@@ -107,28 +108,32 @@ export function HostNotificationsPage() {
   const unreadCount = notifications.filter((n) => n.isUnread).length;
 
   return (
-    <div className="min-h-screen py-6 md:py-8 bg-background">
-      <div className="mx-auto max-w-3xl px-4 md:px-6">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Notifications</h1>
+    <div className="min-h-screen pb-6 md:pb-8 bg-background">
+      <HostPageHeader
+        eyebrow="Updates"
+        title="Notifications"
+        description="Stay on top of bookings, messages, and platform alerts."
+        actions={
+          <div className="flex items-center gap-3">
             {unreadCount > 0 && (
-              <span className="bg-[#D4AF37] text-[#1C1030] text-[10px] font-black px-2 py-0.5 rounded-full">
+              <span className="bg-[#D4AF37] text-[#1A0B2E] text-xs font-black px-3 py-1 rounded-full shadow-sm">
                 {unreadCount} new
               </span>
             )}
+            {notifications.length > 0 && unreadCount > 0 && (
+              <button
+                onClick={markAllAsRead}
+                className="text-sm font-bold text-white/80 hover:text-white transition-colors outline-none"
+              >
+                Mark all as read
+              </button>
+            )}
           </div>
-          {notifications.length > 0 && unreadCount > 0 && (
-            <button
-              onClick={markAllAsRead}
-              className="text-[13px] font-bold text-secondary hover:text-[#B08D3A] transition-colors outline-none"
-            >
-              Mark all as read
-            </button>
-          )}
-        </div>
+        }
+      />
+      <div className="mx-auto max-w-3xl px-4 md:px-6 mt-8">
 
-        <div className="bg-transparent border-t border-gray-300/60 pt-2 flex flex-col">
+        <div className="bg-transparent pt-2 flex flex-col">
           {notifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
               <div className="h-14 w-14 rounded-full bg-primary/5 flex items-center justify-center mb-4">

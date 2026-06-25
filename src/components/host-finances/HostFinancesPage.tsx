@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { mockFinances } from "@/lib/mock-host-finances";
 import type { Transaction } from "@/lib/mock-host-finances";
 import { toast } from "sonner";
+import { HostPageHeader } from "@/components/layout/HostPageHeader";
 import {
   Wallet,
   DollarSign,
@@ -98,27 +99,23 @@ export function HostFinancesPage() {
 
   return (
     <div className="min-h-screen bg-background pb-12 font-sans">
-      <div className="mx-auto max-w-6xl px-4 md:px-6 py-6">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
-              Earnings & Finances
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Automated payout settings and financial logs
-            </p>
-          </div>
-          {expectedPayouts > 0 && (
+      <HostPageHeader
+        eyebrow="Revenue"
+        title="Earnings & Finances"
+        description="Automated payout settings and financial logs"
+        actions={
+          expectedPayouts > 0 ? (
             <button
               onClick={simulateAutoPayout}
-              className="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black uppercase tracking-wider h-10 px-4 rounded-xl shadow-sm transition-all duration-200"
+              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#D4AF37] to-[#B89430] hover:from-[#B89430] hover:to-[#967825] text-[#1A0B2E] text-xs font-black uppercase tracking-wider h-10 px-4 rounded-xl shadow-sm transition-all duration-200 border-none"
               title="Test the background bulk payment worker"
             >
               <RefreshCw className="h-3.5 w-3.5" /> Simulate Auto-Payout
             </button>
-          )}
-        </div>
+          ) : null
+        }
+      />
+      <div className="mx-auto max-w-7xl px-4 md:px-6 mt-8">
 
         {/* Auto-Payout Banner */}
         <div className="flex items-start gap-3 bg-emerald-50 border border-emerald-100/60 rounded-2xl p-4 mb-8">

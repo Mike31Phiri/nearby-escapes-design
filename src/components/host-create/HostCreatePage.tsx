@@ -69,6 +69,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { mockHostProfile } from "@/lib/mock-profile-data";
 import { mockGems } from "@/lib/mock-data";
+import { HostPageHeader } from "@/components/layout/HostPageHeader";
 import {
   INITIAL_STAY_FORM,
   INITIAL_TRANSPORT_FORM,
@@ -2687,34 +2688,29 @@ export function HostCreatePage() {
   return (
     <div className="min-h-screen flex flex-col bg-background font-sans">
       <main className="flex-1">
-        {/* Top Banner */}
-        <div className="bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
-          <div className="mx-auto max-w-3xl px-4 md:px-6 pt-8 md:pt-12">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <Link
-                  href="/host"
-                  className="text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 mb-3"
-                >
-                  <ChevronLeft className="h-3.5 w-3.5" />
-                  Back to Dashboard
-                </Link>
-                <h1 className="text-2xl md:text-3xl font-black tracking-tight text-foreground">
-                  Create New Listing
-                </h1>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {listingType
-                    ? `${steps[step]?.label || ""} — step ${step + 1} of ${totalSteps}`
-                    : "Select a listing type to get started"}
-                </p>
-              </div>
-              <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/10">
-                <ShieldCheck className="h-4 w-4 text-primary" />
-                <span className="text-xs font-bold text-primary uppercase tracking-wider">
+        <HostPageHeader
+          eyebrow={listingType ? `${steps[step]?.label || ""} — step ${step + 1} of ${totalSteps}` : "Select a type"}
+          title="Create New Listing"
+          actions={
+            <div className="flex items-center gap-4">
+              <Link
+                href="/host"
+                className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 transition-colors text-white font-bold text-sm shadow-sm"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Back to Dashboard
+              </Link>
+              <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                <ShieldCheck className="h-4 w-4 text-emerald-400" />
+                <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
                   Verified
                 </span>
               </div>
             </div>
+          }
+        />
+
+        <div className="mx-auto max-w-3xl px-4 md:px-6 pt-8">
 
             {/* Step Indicator (only when a type is selected) */}
             {listingType && <StepIndicator currentStep={step} steps={steps} />}

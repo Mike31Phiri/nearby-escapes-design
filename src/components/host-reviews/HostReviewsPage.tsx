@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
+import { HostPageHeader } from "@/components/layout/HostPageHeader";
 import { mockHostReviews, mockDisputes } from "@/lib/mock-host-inbox";
 import type { HostReview, Dispute } from "@/lib/mock-host-inbox";
 import { toast } from "sonner";
@@ -95,11 +96,13 @@ export function HostReviewsPage() {
   const handleReply = (id: string) => toast.success("Reply form opened for review");
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#faf9f5]">
+      <HostPageHeader
+        eyebrow="Feedback"
+        title="Reviews & Disputes"
+        description="Monitor guest feedback and handle any resolutions."
+      />
       <div className="mx-auto max-w-7xl px-4 md:px-6 py-6">
-        <div className="px-4 pt-4 pb-1">
-          <h1 className="text-[15px] font-medium text-[#1C1030]">Reviews & disputes</h1>
-        </div>
 
         <div className="px-4 pb-1 md:px-0">
           {/* Rating + Breakdown side by side */}

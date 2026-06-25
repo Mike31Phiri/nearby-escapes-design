@@ -24,6 +24,7 @@ import {
   Upload,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { HostPageHeader } from "@/components/layout/HostPageHeader";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -256,24 +257,24 @@ export function HostSettingsPage() {
   };
 
   return (
-    <div className="min-h-screen py-8">
-      <div className="mx-auto max-3xl px-4 md:px-6 max-w-3xl">
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-8">
+    <div className="min-h-screen bg-[#faf9f5] pb-16">
+      <HostPageHeader
+        eyebrow="Preferences"
+        title="Host Settings"
+        description="Manage your profile, payments, and account preferences"
+        actions={
           <button
             onClick={() => router.back()}
-            className="flex h-9 w-9 items-center justify-center rounded-xl hover:bg-gray-100 transition-colors -ml-1"
-            aria-label="Go back"
+            className="flex h-10 px-4 items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 transition-colors text-white font-bold text-sm shadow-sm"
           >
-            <ChevronLeft className="h-5 w-5 text-[#111111]" />
+            <ChevronLeft className="h-4 w-4 mr-1.5" />
+            Back
           </button>
-          <div>
-            <h1 className="text-lg font-bold tracking-tight text-[#111111]">Host Settings</h1>
-            <p className="text-sm text-gray-500">Manage your profile, payments, and preferences</p>
-          </div>
-        </div>
+        }
+      />
+      <div className="mx-auto px-4 md:px-6 max-w-3xl mt-8">
 
-        <div className="space-y-10 pb-16">
+        <div className="space-y-10">
           {/* 
               PROFILE SECTION
            */}

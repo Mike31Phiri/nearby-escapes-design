@@ -24,37 +24,32 @@ import { mockHostProfile } from "@/lib/mock-profile-data";
 import { mockHostBookings } from "@/lib/mock-host-bookings";
 import { mockHostReviews } from "@/lib/mock-host-inbox";
 
+import { HostPageHeader } from "@/components/layout/HostPageHeader";
+
 export function HostDashboardPage() {
   const host = mockHostProfile;
   const arriving = mockOperationalQueue.filter((q) => q.type === "arriving");
 
   return (
     <div className="min-h-screen bg-[#faf9f5]">
-      {/*  Dashboard Header  */}
-      <div className="bg-white border-b border-[#e0dbd0]/60 shadow-sm relative z-10">
-        <div className="mx-auto max-w-7xl px-4 md:px-6 py-6 md:py-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-1.5">Host Dashboard</p>
-              <h1 className="font-display text-2xl md:text-3xl font-bold tracking-tight text-[#1A0B2E] leading-[1.15]">
-                Welcome back, {host.name.split(" ")[0]}
-              </h1>
+      <HostPageHeader
+        eyebrow="Host Dashboard"
+        title={`Welcome back, ${host.name.split(" ")[0]}`}
+        actions={
+          <Link
+            href="/host/profile"
+            className="hidden sm:inline-flex items-center gap-3 px-5 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/20 hover:shadow-md transition-all shadow-sm"
+          >
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#B89430] flex items-center justify-center text-sm font-bold text-[#1A0B2E] border border-[#1A0B2E]/20">
+              {host.name
+                .split(" ")
+                .map((n) => n[0])
+                .join("")}
             </div>
-            <Link
-              href="/host/profile"
-              className="hidden sm:inline-flex items-center gap-3 px-4 py-2.5 bg-[#faf9f5] border border-[#e0dbd0]/60 rounded-xl hover:border-[#D4AF37]/40 hover:shadow-sm transition-all"
-            >
-              <div className="w-8 h-8 rounded-full bg-[#1A0B2E] flex items-center justify-center text-xs font-bold text-[#D4AF37]">
-                {host.name
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")}
-              </div>
-              <span className="text-sm font-semibold text-[#1A0B2E]">View Profile</span>
-            </Link>
-          </div>
-        </div>
-      </div>
+            <span className="text-sm font-bold text-white tracking-wide">View Profile</span>
+          </Link>
+        }
+      />
 
       {/*  Content Container  */}
       <div className="mx-auto max-w-7xl px-4 md:px-6 py-8">
