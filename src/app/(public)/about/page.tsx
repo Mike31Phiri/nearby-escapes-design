@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { AboutPage } from "@/components/about/AboutPage";
+import { AboutPage } from "@/components/guest/about/AboutPage";
 
 export default function AboutRoute() {
   return (
@@ -19,6 +19,6 @@ export async function generateMetadata() {
   return {
     title: "About Nearby Escapes — Our Story & Mission",
     description:
-      "Nearby Escapes is a Zambian-built marketplace connecting travellers with authentic local stays, experiences, and transport across Zambia. Learn our story.",
+      "Nearby Escapes is a Zambian-built marketplace connecting guests with authentic local stays, experiences, and transport across Zambia. Learn our story.",
   };
 }

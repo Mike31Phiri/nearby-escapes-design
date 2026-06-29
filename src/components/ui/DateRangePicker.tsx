@@ -18,14 +18,26 @@ interface Props {
 
 const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 const MONTHS = [
-  "January","February","March","April","May","June",
-  "July","August","September","October","November","December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 function isSameDay(a: Date, b: Date) {
-  return a.getFullYear() === b.getFullYear() &&
+  return (
+    a.getFullYear() === b.getFullYear() &&
     a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate();
+    a.getDate() === b.getDate()
+  );
 }
 
 function startOfDay(d: Date) {
@@ -42,34 +54,43 @@ export function serializeDates(range: DateRange): string {
   if (!range.checkIn) return "";
   const fmt = (d: Date) =>
     `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-  return range.checkOut
-    ? `${fmt(range.checkIn)}_${fmt(range.checkOut)}`
-    : fmt(range.checkIn);
+  return range.checkOut ? `${fmt(range.checkIn)}_${fmt(range.checkOut)}` : fmt(range.checkIn);
 }
 
 /** Deserialize URL string → range */
 export function deserializeDates(s: string): DateRange {
   if (!s) return { checkIn: null, checkOut: null };
   const parts = s.split("_");
-  const parse = (str: string) => { const d = new Date(str); return isNaN(d.getTime()) ? null : d; };
+  const parse = (str: string) => {
+    const d = new Date(str);
+    return isNaN(d.getTime()) ? null : d;
+  };
   return { checkIn: parse(parts[0]), checkOut: parts[1] ? parse(parts[1]) : null };
 }
 
 function MonthGrid({
-  year, month, checkIn, checkOut, hovered,
-  onDayClick, onDayHover,
+  year,
+  month,
+  checkIn,
+  checkOut,
+  hovered,
+  onDayClick,
+  onDayHover,
 }: {
-  year: number; month: number;
-  checkIn: Date | null; checkOut: Date | null; hovered: Date | null;
-  onDayClick: (d: Date) => void; onDayHover: (d: Date | null) => void;
+  year: number;
+  month: number;
+  checkIn: Date | null;
+  checkOut: Date | null;
+  hovered: Date | null;
+  onDayClick: (d: Date) => void;
+  onDayHover: (d: Date | null) => void;
 }) {
   const today = startOfDay(new Date());
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-  const rangeEnd = checkIn && !checkOut && hovered
-    ? (hovered > checkIn ? hovered : null)
-    : checkOut;
+  const rangeEnd =
+    checkIn && !checkOut && hovered ? (hovered > checkIn ? hovered : null) : checkOut;
 
   const cells: (Date | null)[] = [
     ...Array(firstDay).fill(null),
@@ -83,7 +104,9 @@ function MonthGrid({
       </div>
       <div className="grid grid-cols-7 mb-1">
         {DAYS.map((d) => (
-          <div key={d} className="text-center text-[10px] font-medium text-[#64748B] py-1">{d}</div>
+          <div key={d} className="text-center text-[10px] font-medium text-[#64748B] py-1">
+            {d}
+          </div>
         ))}
       </div>
       <div className="grid grid-cols-7">
@@ -93,9 +116,7 @@ function MonthGrid({
           const isPast = date < today;
           const isCheckIn = checkIn && isSameDay(date, checkIn);
           const isCheckOut = rangeEnd && isSameDay(date, rangeEnd);
-          const inRange =
-            checkIn && rangeEnd &&
-            date > checkIn && date < rangeEnd;
+          const inRange = checkIn && rangeEnd && date > checkIn && date < rangeEnd;
 
           return (
             <div
@@ -131,7 +152,13 @@ function MonthGrid({
   );
 }
 
-export function DateRangePicker({ value, onChange, placeholder = "Any weekend", className, variant = "default" }: Props) {
+export function DateRangePicker({
+  value,
+  onChange,
+  placeholder = "Any weekend",
+  className,
+  variant = "default",
+}: Props) {
   const [open, setOpen] = useState(false);
   const [hovered, setHovered] = useState<Date | null>(null);
   const today = new Date();
@@ -189,7 +216,9 @@ export function DateRangePicker({ value, onChange, placeholder = "Any weekend", 
           className="flex items-center gap-1.5 w-full focus:outline-none"
         >
           <CalendarDays className="h-4 w-4 text-[#1A0B2E] shrink-0" strokeWidth={1.5} />
-          <span className={cn("text-[13px] truncate", hasValue ? "text-[#334155]" : "text-[#64748B]")}>
+          <span
+            className={cn("text-[13px] truncate", hasValue ? "text-[#334155]" : "text-[#64748B]")}
+          >
             {label}
           </span>
           {hasValue && (
@@ -207,7 +236,12 @@ export function DateRangePicker({ value, onChange, placeholder = "Any weekend", 
           <CalendarDays className="h-[18px] w-[18px] text-[#1A0B2E] shrink-0" strokeWidth={1.5} />
           <div className="text-left flex-1 min-w-0">
             <p className="text-[10px] text-[#64748B]">Pick dates</p>
-            <p className={cn("text-[13px] font-medium truncate leading-tight", hasValue ? "text-[#334155]" : "text-[#64748B]")}>
+            <p
+              className={cn(
+                "text-[13px] font-medium truncate leading-tight",
+                hasValue ? "text-[#334155]" : "text-[#64748B]",
+              )}
+            >
               {label}
             </p>
           </div>
@@ -227,8 +261,10 @@ export function DateRangePicker({ value, onChange, placeholder = "Any weekend", 
             <button
               type="button"
               onClick={() => {
-                if (viewMonth === 0) { setViewMonth(11); setViewYear((y) => y - 1); }
-                else setViewMonth((m) => m - 1);
+                if (viewMonth === 0) {
+                  setViewMonth(11);
+                  setViewYear((y) => y - 1);
+                } else setViewMonth((m) => m - 1);
               }}
               className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-[#F0EAE0] transition-colors"
             >
@@ -237,8 +273,10 @@ export function DateRangePicker({ value, onChange, placeholder = "Any weekend", 
             <button
               type="button"
               onClick={() => {
-                if (viewMonth === 11) { setViewMonth(0); setViewYear((y) => y + 1); }
-                else setViewMonth((m) => m + 1);
+                if (viewMonth === 11) {
+                  setViewMonth(0);
+                  setViewYear((y) => y + 1);
+                } else setViewMonth((m) => m + 1);
               }}
               className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-[#F0EAE0] transition-colors"
             >
@@ -249,17 +287,25 @@ export function DateRangePicker({ value, onChange, placeholder = "Any weekend", 
           {/* Calendar grids */}
           <div className="flex gap-6">
             <MonthGrid
-              year={viewYear} month={viewMonth}
-              checkIn={value.checkIn} checkOut={value.checkOut} hovered={hovered}
-              onDayClick={handleDayClick} onDayHover={setHovered}
+              year={viewYear}
+              month={viewMonth}
+              checkIn={value.checkIn}
+              checkOut={value.checkOut}
+              hovered={hovered}
+              onDayClick={handleDayClick}
+              onDayHover={setHovered}
             />
             {/* Second month — hidden on mobile */}
             <div className="hidden md:block w-px bg-[#E0DBD0] shrink-0" />
             <div className="hidden md:block flex-1">
               <MonthGrid
-                year={nextYear} month={nextMonth}
-                checkIn={value.checkIn} checkOut={value.checkOut} hovered={hovered}
-                onDayClick={handleDayClick} onDayHover={setHovered}
+                year={nextYear}
+                month={nextMonth}
+                checkIn={value.checkIn}
+                checkOut={value.checkOut}
+                hovered={hovered}
+                onDayClick={handleDayClick}
+                onDayHover={setHovered}
               />
             </div>
           </div>
@@ -275,7 +321,9 @@ export function DateRangePicker({ value, onChange, placeholder = "Any weekend", 
             </span>
             <button
               type="button"
-              onClick={() => { onChange({ checkIn: null, checkOut: null }); }}
+              onClick={() => {
+                onChange({ checkIn: null, checkOut: null });
+              }}
               className="text-[12px] font-medium text-[#D4AF37] hover:underline"
             >
               Clear

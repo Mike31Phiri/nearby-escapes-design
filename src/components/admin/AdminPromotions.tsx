@@ -21,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { AdminPageHeader } from "@/components/layout/AdminPageHeader";
 import {
   Select,
   SelectContent,
@@ -353,36 +354,27 @@ export function AdminPromotions() {
   };
 
   return (
-    <div className="flex-1">
-      {/* Header */}
-      <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
-        <div className="mx-auto max-w-6xl px-4 md:px-6 pt-6 md:pt-10">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
-                Promotions &amp; Marketing
-              </h1>
-              <p className="text-sm text-muted-foreground mt-1">
-                {codeStats.active} active promo codes ·{" "}
-                {featuredListings.filter((f) => f.isActive).length} featured listings
-              </p>
-            </div>
-            <Button
-              size="sm"
-              className="h-9 rounded-lg text-xs font-semibold"
-              onClick={() => {
-                setShowCreateDialog(true);
-              }}
-            >
-              <Plus className="h-3.5 w-3.5 mr-1" />
-              Create Promo Code
-            </Button>
-          </div>
-        </div>
-      </div>
+    <div className="flex-1 min-h-screen bg-[#faf9f5]">
+      <AdminPageHeader
+        eyebrow="Marketing"
+        title="Promotions &amp; Marketing"
+        description={`${codeStats.active} active promo codes · ${featuredListings.filter((f) => f.isActive).length} featured listings`}
+        actions={
+          <Button
+            size="sm"
+            className="h-9 rounded-lg text-xs font-semibold bg-[#D4AF37] hover:bg-[#B89430] text-[#1A0B2E]"
+            onClick={() => {
+              setShowCreateDialog(true);
+            }}
+          >
+            <Plus className="h-3.5 w-3.5 mr-1" />
+            Create Promo Code
+          </Button>
+        }
+      />
 
       {/* Tab Bar */}
-      <div className="mx-auto max-w-6xl px-4 md:px-6 -mt-6 relative z-10">
+      <div className="mx-auto max-w-7xl px-4 md:px-6 -mt-6 relative z-10">
         <div className="flex items-center gap-1 rounded-xl border border-border/40 bg-card p-1 shadow-sm w-fit">
           <button
             onClick={() => setActiveTab("codes")}
@@ -412,7 +404,7 @@ export function AdminPromotions() {
       </div>
 
       {/* Search */}
-      <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6">
+      <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6">
         <div className="relative max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -427,7 +419,7 @@ export function AdminPromotions() {
       </div>
 
       {/* Content */}
-      <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6 pb-16">
+      <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 pb-16">
         {activeTab === "codes" ? (
           <div className="space-y-3">
             {filteredCodes.length === 0 ? (

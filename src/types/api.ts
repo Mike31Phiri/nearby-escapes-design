@@ -10,7 +10,7 @@
  *   - *DTO  = Data Transfer Object (server-side entity shape)
  */
 
-import type { AuthUser } from "@/lib/auth";
+import type { User as AuthUser } from "@/types/user";
 import type { ConfirmedBooking } from "@/store/bookingStore";
 import type { AppNotification, NotificationType } from "@/store/notificationStore";
 import type { Review } from "@/store/reviewStore";

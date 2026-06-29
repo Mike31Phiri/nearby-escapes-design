@@ -1,4 +1,4 @@
-import { HostBookingsPage } from "@/components/host-bookings/HostBookingsPage";
+import { HostBookingsPage } from "@/components/host/HostBookingsPage";
 
 export default function HostBookingsRoute() {
   return <HostBookingsPage />;

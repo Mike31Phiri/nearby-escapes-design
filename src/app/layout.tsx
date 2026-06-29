@@ -1,13 +1,9 @@
-import { Plus_Jakarta_Sans, Outfit, Dancing_Script } from "next/font/google";
+import { Work_Sans, Dancing_Script } from "next/font/google";
+import { AuthProvider } from "@/components/guest/auth/AuthProvider";
 
-const fontSans = Plus_Jakarta_Sans({
+const fontSans = Work_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
-});
-
-const fontDisplay = Outfit({
-  subsets: ["latin"],
-  variable: "--font-display",
 });
 
 const fontScript = Dancing_Script({
@@ -17,11 +13,11 @@ const fontScript = Dancing_Script({
 
 import type { Metadata } from "next";
 import "../styles.css";
-import { AuthProvider } from "@/lib/auth";
 import { Toaster } from "@/components/ui/sonner";
 import { RouteProgressBar } from "@/components/ui/RouteProgressBar";
 import { ClientModals } from "./ClientModals";
 import { Suspense } from "react";
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Nearby Escapes — Stay, travel, explore Zambia",
@@ -73,11 +69,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const hasToken = cookieStore.has("access_token");
+
   return (
     <html lang="en">
       <head>
@@ -86,15 +85,15 @@ export default function RootLayout({
         <meta name="theme-color" content="#1A0B2E" />
       </head>
       <body
-        className={`${fontSans.variable} ${fontDisplay.variable} ${fontScript.variable} font-sans antialiased`}
+        className={`${fontSans.variable} ${fontScript.variable} font-sans antialiased`}
       >
-        <AuthProvider>
+        <AuthProvider initialIsAuthenticated={hasToken}>
           <Suspense fallback={null}>
             <RouteProgressBar />
           </Suspense>
+          <ClientModals />
           {children}
           <Toaster />
-          <ClientModals />
         </AuthProvider>
       </body>
     </html>

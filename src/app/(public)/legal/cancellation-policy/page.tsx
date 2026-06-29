@@ -1,4 +1,4 @@
-import { CancellationPolicyPage } from "@/components/legal/CancellationPolicyPage";
+import { CancellationPolicyPage } from "@/components/guest/legal/CancellationPolicyPage";
 
 export default function CancellationPolicyRoute() {
   return <CancellationPolicyPage />;

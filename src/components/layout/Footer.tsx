@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/lib/store/authStore";
 import {
   Facebook,
   Instagram,
@@ -67,7 +67,7 @@ export function Footer() {
 
   if (
     pathname?.startsWith("/auth") ||
-    pathname?.startsWith("/profile") ||
+    pathname?.startsWith("/account") ||
     pathname?.startsWith("/settings") ||
     pathname?.startsWith("/trips") ||
     pathname?.startsWith("/wishlist") ||

@@ -1,6 +1,6 @@
 "use client";
 
-import { TravelPreferencesModal } from "@/components/TravelPreferencesModal";
+import { TravelPreferencesModal } from "@/components/guest/TravelPreferencesModal";
 import { useProfileStore } from "@/store/profileStore";
 
 export function ClientModals() {

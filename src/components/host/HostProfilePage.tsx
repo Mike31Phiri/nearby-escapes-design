@@ -22,7 +22,9 @@ export function HostProfilePage() {
                 .join("")}
             </div>
             <div className="min-w-0">
-              <div className="font-display text-xl md:text-2xl font-bold tracking-tight text-white">{host.name}</div>
+              <div className="font-display text-xl md:text-2xl font-bold tracking-tight text-white">
+                {host.name}
+              </div>
               <div className="text-sm text-[#64748B] mt-0.5">{host.location}</div>
               <div className="flex items-center gap-1.5 mt-1 text-xs font-medium text-[#D4AF37]">
                 <svg
@@ -53,9 +55,13 @@ export function HostProfilePage() {
                 <span className="font-semibold text-[#1A0B2E]">{avgRating.toFixed(1)}</span>
               </div>
               <span>·</span>
-              <div><span className="font-semibold text-[#1A0B2E]">{host.reviewCount}</span> reviews</div>
+              <div>
+                <span className="font-semibold text-[#1A0B2E]">{host.reviewCount}</span> reviews
+              </div>
               <span>·</span>
-              <div><span className="font-semibold text-[#1A0B2E]">{host.responseRate}%</span> response</div>
+              <div>
+                <span className="font-semibold text-[#1A0B2E]">{host.responseRate}%</span> response
+              </div>
             </div>
 
             {/* Bio */}
@@ -100,9 +106,7 @@ export function HostProfilePage() {
                       className="w-10 h-10 rounded-lg object-cover shrink-0"
                     />
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-bold text-[#1A0B2E] truncate">
-                        {l.name}
-                      </div>
+                      <div className="text-sm font-bold text-[#1A0B2E] truncate">{l.name}</div>
                       <div className="flex items-center gap-1 text-xs text-[#64748B] mt-0.5">
                         <MapPin className="h-3.5 w-3.5" />
                         {l.location}
@@ -110,7 +114,9 @@ export function HostProfilePage() {
                     </div>
                     <div className="text-right">
                       <div className="text-sm font-bold text-[#1A0B2E]">K{l.price}</div>
-                      <div className="text-[10px] text-[#64748B] uppercase tracking-wider">/ night</div>
+                      <div className="text-[10px] text-[#64748B] uppercase tracking-wider">
+                        / night
+                      </div>
                     </div>
                   </div>
                 ))}

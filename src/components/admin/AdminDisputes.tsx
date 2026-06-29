@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { AdminPageHeader } from "@/components/layout/AdminPageHeader";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -434,41 +435,33 @@ export function AdminDisputes() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col font-sans">
+    <div className="min-h-screen flex flex-col font-sans bg-[#faf9f5]">
       <div className="flex-1">
-        {/* Header */}
-        <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
-          <div className="mx-auto max-w-6xl px-4 md:px-6 pt-6 md:pt-10">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
-                  Disputes &amp; Resolution
-                </h1>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {stats.total} cases — K{stats.disputedAmount.toLocaleString()} total disputed
-                </p>
-              </div>
-              <div className="flex items-center gap-2 text-xs">
-                {stats.critical > 0 && (
-                  <Badge
-                    variant="outline"
-                    className="rounded-full text-[9px] font-bold uppercase tracking-wider bg-red-50 text-red-700 border-red-200"
-                  >
-                    {stats.critical} critical
-                  </Badge>
-                )}
-                <span className="text-muted-foreground">
-                  <span className="font-semibold text-amber-600">{stats.open}</span> open
-                </span>
-                <span className="text-muted-foreground/30">·</span>
-                <span className="text-emerald-600 font-semibold">{stats.resolved} resolved</span>
-              </div>
+        <AdminPageHeader
+          eyebrow="Resolution Center"
+          title="Disputes &amp; Resolution"
+          description={`${stats.total} cases — K${stats.disputedAmount.toLocaleString()} total disputed`}
+          actions={
+            <div className="flex items-center gap-2 text-xs">
+              {stats.critical > 0 && (
+                <Badge
+                  variant="outline"
+                  className="rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-50 text-red-700 border-red-200"
+                >
+                  {stats.critical} critical
+                </Badge>
+              )}
+              <span className="text-white/80">
+                <span className="font-semibold text-[#D4AF37]">{stats.open}</span> open
+              </span>
+              <span className="text-white/30">·</span>
+              <span className="text-emerald-400 font-semibold">{stats.resolved} resolved</span>
             </div>
-          </div>
-        </div>
+          }
+        />
 
         {/* Filters */}
-        <div className="mx-auto max-w-6xl px-4 md:px-6 -mt-6 relative z-10">
+        <div className="mx-auto max-w-7xl px-4 md:px-6 -mt-6 relative z-10">
           <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border/40 bg-card p-3 shadow-sm card-shadow">
             <div className="relative flex-1 min-w-[200px]">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -508,40 +501,8 @@ export function AdminDisputes() {
           </div>
         </div>
 
-        {/* Stats Row */}
-        <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
-              <p className="text-2xl font-bold text-foreground">{stats.total}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                Total Cases
-              </p>
-            </div>
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
-              <p className="text-2xl font-bold text-amber-600">{stats.open}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                Open
-              </p>
-            </div>
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
-              <p className="text-2xl font-bold text-emerald-600">{stats.resolved}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                Resolved
-              </p>
-            </div>
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
-              <p className="text-2xl font-bold text-blue-600">
-                K{(stats.disputedAmount / 1000).toFixed(0)}k
-              </p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                Disputed Amount
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* Cases List */}
-        <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6 pb-16 space-y-3">
+        <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 pb-8 space-y-3">
           {filteredDisputes.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
               <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
@@ -575,6 +536,41 @@ export function AdminDisputes() {
               />
             ))
           )}
+        </div>
+
+        {/* Stats Row */}
+        <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 pb-16">
+          <h3 className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-3">
+            Analysis
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
+              <p className="text-2xl font-bold text-foreground">{stats.total}</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Total Cases
+              </p>
+            </div>
+            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
+              <p className="text-2xl font-bold text-amber-600">{stats.open}</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Open
+              </p>
+            </div>
+            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
+              <p className="text-2xl font-bold text-emerald-600">{stats.resolved}</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Resolved
+              </p>
+            </div>
+            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
+              <p className="text-2xl font-bold text-blue-600">
+                K{(stats.disputedAmount / 1000).toFixed(0)}k
+              </p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Disputed Amount
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

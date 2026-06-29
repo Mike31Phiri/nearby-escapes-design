@@ -132,7 +132,6 @@ export function HostNotificationsPage() {
         }
       />
       <div className="mx-auto max-w-3xl px-4 md:px-6 mt-8">
-
         <div className="bg-transparent pt-2 flex flex-col">
           {notifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">

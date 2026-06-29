@@ -95,7 +95,7 @@ export const mockStays: Stay[] = [
   {
     id: "1",
     name: "Luxury Safari Lodge",
-    location: "Lower Zambezi",
+    location: "Lower Zambezi, Southern Province",
     rating: 4.9,
     reviews: 128,
     price: 450,
@@ -133,7 +133,7 @@ export const mockStays: Stay[] = [
   {
     id: "2",
     name: "Victoria Falls Hotel",
-    location: "Livingstone",
+    location: "Livingstone, Southern Province",
     rating: 4.8,
     reviews: 256,
     price: 320,
@@ -166,7 +166,7 @@ export const mockStays: Stay[] = [
   {
     id: "3",
     name: "Bush Camp Adventure",
-    location: "South Luangwa",
+    location: "South Luangwa, Eastern Province",
     rating: 4.7,
     reviews: 89,
     price: 280,
@@ -198,7 +198,7 @@ export const mockStays: Stay[] = [
   {
     id: "4",
     name: "Lake Kariba Retreat",
-    location: "Kariba",
+    location: "Kariba, Southern Province",
     rating: 4.6,
     reviews: 145,
     price: 195,
@@ -226,7 +226,7 @@ export const mockStays: Stay[] = [
   {
     id: "5",
     name: "Kafue River Lodge",
-    location: "Kafue National Park",
+    location: "Kafue National Park, Central Province",
     rating: 4.8,
     reviews: 92,
     price: 380,
@@ -254,7 +254,7 @@ export const mockStays: Stay[] = [
   {
     id: "6",
     name: "Copperbelt City Hotel",
-    location: "Ndola",
+    location: "Ndola, Copperbelt Province",
     rating: 4.5,
     reviews: 178,
     price: 150,
@@ -282,7 +282,7 @@ export const mockStays: Stay[] = [
   {
     id: "7",
     name: "Bangweulu Wetlands Camp",
-    location: "Bangweulu",
+    location: "Bangweulu, Luapula Province",
     rating: 4.9,
     reviews: 67,
     price: 420,
@@ -310,7 +310,7 @@ export const mockStays: Stay[] = [
   {
     id: "8",
     name: "Lusaka Boutique Stay",
-    location: "Lusaka",
+    location: "Lusaka, Lusaka Province",
     rating: 4.6,
     reviews: 203,
     price: 120,
@@ -375,7 +375,7 @@ export const mockExperiences: Experience[] = [
   {
     id: "e1",
     name: "Victoria Falls Helicopter Tour",
-    location: "Livingstone",
+    location: "Livingstone, Southern Province",
     rating: 4.9,
     reviews: 342,
     price: 180,
@@ -389,7 +389,7 @@ export const mockExperiences: Experience[] = [
   {
     id: "e2",
     name: "South Luangwa Walking Safari",
-    location: "Mfuwe",
+    location: "Mfuwe, Eastern Province",
     rating: 4.8,
     reviews: 189,
     price: 150,
@@ -403,7 +403,7 @@ export const mockExperiences: Experience[] = [
   {
     id: "e3",
     name: "Lake Tanganyika Snorkeling",
-    location: "Nsumbu",
+    location: "Nsumbu, Northern Province",
     rating: 4.7,
     reviews: 156,
     price: 95,
@@ -417,7 +417,7 @@ export const mockExperiences: Experience[] = [
   {
     id: "e4",
     name: "Kafue Game Drive",
-    location: "Kafue National Park",
+    location: "Kafue National Park, Central Province",
     rating: 4.8,
     reviews: 201,
     price: 120,
@@ -433,7 +433,7 @@ export const mockExperiences: Experience[] = [
   {
     id: "e5",
     name: "Chisamba Farm Stay & Milking Experience",
-    location: "Chisamba",
+    location: "Chisamba, Central Province",
     rating: 4.6,
     reviews: 73,
     price: 85,
@@ -447,7 +447,7 @@ export const mockExperiences: Experience[] = [
   {
     id: "e6",
     name: "Mkushi Organic Farm Tour",
-    location: "Mkushi",
+    location: "Mkushi, Central Province",
     rating: 4.7,
     reviews: 54,
     price: 70,
@@ -461,7 +461,7 @@ export const mockExperiences: Experience[] = [
   {
     id: "e7",
     name: "Kapishya Hot Springs & Farm Tour",
-    location: "Mpika",
+    location: "Mpika, Northern Province",
     rating: 4.9,
     reviews: 67,
     price: 120,
@@ -477,7 +477,7 @@ export const mockExperiences: Experience[] = [
   {
     id: "e8",
     name: "Livingstone Village Tour & Craft Market",
-    location: "Livingstone",
+    location: "Livingstone, Southern Province",
     rating: 4.5,
     reviews: 128,
     price: 45,
@@ -491,7 +491,7 @@ export const mockExperiences: Experience[] = [
   {
     id: "e9",
     name: "Lusaka Art & Food Walking Tour",
-    location: "Lusaka",
+    location: "Lusaka, Lusaka Province",
     rating: 4.6,
     reviews: 94,
     price: 60,
@@ -505,7 +505,7 @@ export const mockExperiences: Experience[] = [
   {
     id: "e10",
     name: "Mukuni Village Cultural Experience",
-    location: "Livingstone",
+    location: "Livingstone, Southern Province",
     rating: 4.7,
     reviews: 203,
     price: 55,
@@ -521,7 +521,7 @@ export const mockExperiences: Experience[] = [
   {
     id: "e11",
     name: "Copperbelt Mining Heritage Tour",
-    location: "Kitwe",
+    location: "Kitwe, Copperbelt Province",
     rating: 4.4,
     reviews: 67,
     price: 110,
@@ -535,7 +535,7 @@ export const mockExperiences: Experience[] = [
   {
     id: "e12",
     name: "Kariba Dam Engineering Tour",
-    location: "Kariba",
+    location: "Kariba, Southern Province",
     rating: 4.5,
     reviews: 82,
     price: 95,
@@ -551,7 +551,7 @@ export const mockExperiences: Experience[] = [
   {
     id: "e13",
     name: "Zambezi White Water Rafting",
-    location: "Livingstone",
+    location: "Livingstone, Southern Province",
     rating: 4.9,
     reviews: 276,
     price: 160,
@@ -565,7 +565,7 @@ export const mockExperiences: Experience[] = [
   {
     id: "e14",
     name: "Kundalila Falls Hike & Picnic",
-    location: "Serenje",
+    location: "Serenje, Central Province",
     rating: 4.8,
     reviews: 92,
     price: 45,
@@ -581,7 +581,7 @@ export const mockExperiences: Experience[] = [
   {
     id: "e15",
     name: "Lake Kariba Sunset Cruise",
-    location: "Kariba",
+    location: "Kariba, Southern Province",
     rating: 4.7,
     reviews: 115,
     price: 85,
@@ -595,7 +595,7 @@ export const mockExperiences: Experience[] = [
   {
     id: "e16",
     name: "Lower Zambezi Canoe Safari",
-    location: "Lower Zambezi",
+    location: "Lower Zambezi, Southern Province",
     rating: 4.9,
     reviews: 88,
     price: 140,
@@ -612,7 +612,7 @@ export const mockGems: Experience[] = [
   {
     id: "g1",
     name: "Shiwa Ngandu Estate",
-    location: "Mpika",
+    location: "Mpika, Northern Province",
     rating: 4.9,
     reviews: 78,
     price: 200,
@@ -622,7 +622,7 @@ export const mockGems: Experience[] = [
   {
     id: "g2",
     name: "Kundalila Falls Hike",
-    location: "Serenje",
+    location: "Serenje, Central Province",
     rating: 4.8,
     reviews: 92,
     price: 45,
@@ -632,7 +632,7 @@ export const mockGems: Experience[] = [
   {
     id: "g3",
     name: "Liuwa Plain Migration",
-    location: "Liuwa Plain",
+    location: "Liuwa Plain, Western Province",
     rating: 4.9,
     reviews: 64,
     price: 280,
@@ -642,7 +642,7 @@ export const mockGems: Experience[] = [
   {
     id: "g4",
     name: "Chapel Island Sunset Cruise",
-    location: "Lake Kariba",
+    location: "Lake Kariba, Southern Province",
     rating: 4.7,
     reviews: 115,
     price: 85,
@@ -655,7 +655,7 @@ export const mockPackages: Package[] = [
   {
     id: "p1",
     name: "Victoria Falls Weekend",
-    location: "Livingstone",
+    location: "Livingstone, Southern Province",
     rating: 4.8,
     price: 550,
     image: "https://images.unsplash.com/photo-1588880331179-bc9b93a8cb5e?w=800&q=80",
@@ -664,7 +664,7 @@ export const mockPackages: Package[] = [
   {
     id: "p2",
     name: "South Luangwa Safari",
-    location: "South Luangwa",
+    location: "South Luangwa, Eastern Province",
     rating: 4.9,
     price: 1200,
     image: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800&q=80",
@@ -673,7 +673,7 @@ export const mockPackages: Package[] = [
   {
     id: "p3",
     name: "Lake Kariba Relaxation",
-    location: "Kariba",
+    location: "Kariba, Southern Province",
     rating: 4.7,
     price: 380,
     image: "https://images.unsplash.com/photo-1540206395-688085723adb?w=800&q=80",

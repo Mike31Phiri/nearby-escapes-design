@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { AdminPageHeader } from "@/components/layout/AdminPageHeader";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -280,36 +281,27 @@ export function AdminListings() {
   };
 
   return (
-    <div className="flex-1">
-      {/* Header */}
-      <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
-        <div className="mx-auto max-w-7xl px-4 md:px-6 pt-8 md:pt-12">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
-                Listing Moderation
-              </h1>
-              <p className="text-sm text-muted-foreground mt-1">
-                {listingStats.total} submissions — {listingStats.pendingReview} pending review
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-xs text-muted-foreground">
-                <span className="font-semibold text-foreground">{listingStats.approved}</span>{" "}
-                approved
-              </span>
-              {listingStats.pendingReview > 0 && (
-                <Badge
-                  variant="outline"
-                  className="rounded-full text-[9px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border-amber-200"
-                >
-                  {listingStats.pendingReview} pending
-                </Badge>
-              )}
-            </div>
+    <div className="flex-1 min-h-screen bg-[#faf9f5]">
+      <AdminPageHeader
+        eyebrow="Moderation"
+        title="Listing Moderation"
+        description={`${listingStats.total} submissions — ${listingStats.pendingReview} pending review`}
+        actions={
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-white/80">
+              <span className="font-semibold text-white">{listingStats.approved}</span> approved
+            </span>
+            {listingStats.pendingReview > 0 && (
+              <Badge
+                variant="outline"
+                className="rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#D4AF37] text-[#1A0B2E] border-none"
+              >
+                {listingStats.pendingReview} pending
+              </Badge>
+            )}
           </div>
-        </div>
-      </div>
+        }
+      />
 
       {/* Filters */}
       <div className="mx-auto max-w-6xl px-4 md:px-6 -mt-6 relative z-10">
@@ -351,39 +343,8 @@ export function AdminListings() {
         </div>
       </div>
 
-      {/* Stats Row */}
-      <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {" "}
-          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
-            <p className="text-2xl font-bold text-foreground">{listingStats.total}</p>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-              Total
-            </p>
-          </div>
-          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
-            <p className="text-2xl font-bold text-amber-600">{listingStats.pendingReview}</p>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-              Pending Review
-            </p>
-          </div>
-          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
-            <p className="text-2xl font-bold text-emerald-600">{listingStats.approved}</p>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-              Approved
-            </p>
-          </div>
-          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
-            <p className="text-2xl font-bold text-rose-600">{listingStats.rejected}</p>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-              Rejected
-            </p>
-          </div>
-        </div>
-      </div>
-
       {/* Listings */}
-      <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6 pb-16 space-y-3">
+      <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 pb-8 space-y-3">
         {filteredListings.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
@@ -420,6 +381,40 @@ export function AdminListings() {
             />
           ))
         )}
+      </div>
+
+      {/* Stats Row */}
+      <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 pb-16">
+        <h3 className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-3">
+          Analysis
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {" "}
+          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
+            <p className="text-2xl font-bold text-foreground">{listingStats.total}</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Total
+            </p>
+          </div>
+          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
+            <p className="text-2xl font-bold text-amber-600">{listingStats.pendingReview}</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Pending Review
+            </p>
+          </div>
+          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
+            <p className="text-2xl font-bold text-emerald-600">{listingStats.approved}</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Approved
+            </p>
+          </div>
+          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
+            <p className="text-2xl font-bold text-rose-600">{listingStats.rejected}</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Rejected
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

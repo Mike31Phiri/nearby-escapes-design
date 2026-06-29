@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { mockExperiences, mockGems } from "@/lib/mock-data";
 import type { Experience, ExperienceCategory } from "@/lib/mock-data";
 import { categoryLabels } from "@/lib/mock-data";
-import { ExperienceCategoryPage } from "@/components/experiences/ExperienceCategoryPage";
+import { ExperienceCategoryPage } from "@/components/guest/experiences/ExperienceCategoryPage";
 
 interface Props {
   params: Promise<{ slug: string }>;

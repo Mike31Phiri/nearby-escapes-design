@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { AdminPageHeader } from "@/components/layout/AdminPageHeader";
 
 import { cn } from "@/lib/utils";
 import { mockAdminUsers, statsFromUsers } from "@/lib/mock-admin-data";
@@ -308,37 +309,28 @@ export function AdminUsers() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col font-sans">
+    <div className="min-h-screen flex flex-col font-sans bg-[#faf9f5]">
       <div className="flex-1">
-        {/* Header */}
-        <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
-          <div className="mx-auto max-w-7xl px-4 md:px-6 pt-6 md:pt-10">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
-                  User Management
-                </h1>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {userStats.total} users — {userStats.guests} guests, {userStats.hosts} hosts,{" "}
-                  {userStats.admins} admins
-                </p>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-xs text-muted-foreground">
-                  <span className="font-semibold text-foreground">{userStats.active}</span> active
-                </span>
-                {userStats.pendingVerification > 0 && (
-                  <Badge
-                    variant="outline"
-                    className="rounded-full text-[9px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border-amber-200"
-                  >
-                    {userStats.pendingVerification} pending
-                  </Badge>
-                )}
-              </div>
+        <AdminPageHeader
+          eyebrow="Users"
+          title="User Management"
+          description={`${userStats.total} users — ${userStats.guests} guests, ${userStats.hosts} hosts, ${userStats.admins} admins`}
+          actions={
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-white/80">
+                <span className="font-semibold text-white">{userStats.active}</span> active
+              </span>
+              {userStats.pendingVerification > 0 && (
+                <Badge
+                  variant="outline"
+                  className="rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#D4AF37] text-[#1A0B2E] border-none"
+                >
+                  {userStats.pendingVerification} pending
+                </Badge>
+              )}
             </div>
-          </div>
-        </div>
+          }
+        />
 
         {/* Filters */}
         <div className="mx-auto max-w-7xl px-4 md:px-6 -mt-6 relative z-10">
@@ -380,38 +372,8 @@ export function AdminUsers() {
           </div>
         </div>
 
-        {/* Stats Row */}
-        <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
-              <p className="text-2xl font-bold text-foreground">{userStats.total}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                Total Users
-              </p>
-            </div>
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
-              <p className="text-2xl font-bold text-blue-600">{userStats.hosts}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                Hosts
-              </p>
-            </div>
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
-              <p className="text-2xl font-bold text-emerald-600">{userStats.guests}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                Guests
-              </p>
-            </div>
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
-              <p className="text-2xl font-bold text-amber-600">{userStats.pendingVerification}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                Pending Verification
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* Users List */}
-        <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 pb-16">
+        <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 pb-8">
           {filteredUsers.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
               <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
@@ -446,6 +408,39 @@ export function AdminUsers() {
               ))}
             </div>
           )}
+        </div>
+
+        {/* Stats Row */}
+        <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 pb-16">
+          <h3 className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-3">
+            Analysis
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
+              <p className="text-2xl font-bold text-foreground">{userStats.total}</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Total Users
+              </p>
+            </div>
+            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
+              <p className="text-2xl font-bold text-blue-600">{userStats.hosts}</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Hosts
+              </p>
+            </div>
+            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
+              <p className="text-2xl font-bold text-emerald-600">{userStats.guests}</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Guests
+              </p>
+            </div>
+            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm text-center">
+              <p className="text-2xl font-bold text-amber-600">{userStats.pendingVerification}</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Pending Verification
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

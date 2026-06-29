@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { mockTransport } from "@/lib/mock-data";
-import { TransportDetailPage } from "@/components/listings/TransportDetailPage";
+import { TransportDetailPage } from "@/components/guest/listings/TransportDetailPage";
 
 interface Props {
   params: Promise<{ id: string }>;

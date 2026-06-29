@@ -1,4 +1,4 @@
-import { HostListingDetailPage } from "@/components/host-listings/HostListingDetailPage";
+import { HostListingDetailPage } from "@/components/host/HostListingDetailPage";
 import { mockHostProfile } from "@/lib/mock-profile-data";
 import { notFound } from "next/navigation";
 

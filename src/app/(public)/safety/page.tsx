@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { SafetyTrustPage } from "@/components/safety/SafetyTrustPage";
+import { SafetyTrustPage } from "@/components/guest/safety/SafetyTrustPage";
 
 export default function SafetyRoute() {
   return (

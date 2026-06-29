@@ -1,4 +1,4 @@
-import { HostAvailabilityPage } from "@/components/host-availability/HostAvailabilityPage";
+import { HostAvailabilityPage } from "@/components/host/HostAvailabilityPage";
 
 export default function HostCalendarPage() {
   return <HostAvailabilityPage />;

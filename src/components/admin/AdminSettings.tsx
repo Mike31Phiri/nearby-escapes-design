@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { AdminPageHeader } from "@/components/layout/AdminPageHeader";
 import {
   Select,
   SelectContent,
@@ -145,104 +146,24 @@ export function AdminSettings() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col font-sans">
-      <div className="flex-1">
-        {/* Header */}
-        <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
-          <div className="mx-auto max-w-5xl px-4 md:px-6 pt-6 md:pt-10">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
-                  System Settings
-                </h1>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Configure platform-wide settings and policies
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-9 rounded-lg text-xs font-semibold border-border/60"
-                  onClick={handleReset}
-                >
-                  Reset
-                </Button>
-                <Button
-                  size="sm"
-                  className="h-9 rounded-lg text-xs font-semibold"
-                  onClick={handleSave}
-                  disabled={saving}
-                >
-                  {saving ? (
-                    <>
-                      <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" /> Saving...
-                    </>
-                  ) : (
-                    <>
-                      <Save className="h-3.5 w-3.5 mr-1" /> Save Changes
-                    </>
-                  )}
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Settings by Category */}
-        <div className="mx-auto max-w-5xl px-4 md:px-6 pb-16">
-          <div className="space-y-8">
-            {categories.map((category) => {
-              const cfg = categoryConfig[category] ?? {
-                label: category,
-                icon: Settings,
-                color: "#6b7280",
-              };
-              const Icon = cfg.icon;
-              const categorySettings = settings.filter((s) => s.category === category);
-
-              return (
-                <div
-                  key={category}
-                  className="rounded-xl border border-border/50 bg-card shadow-sm"
-                >
-                  <div className="flex items-center gap-3 px-6 py-4 border-b border-border/30">
-                    <div
-                      className="h-8 w-8 rounded-lg flex items-center justify-center"
-                      style={{ backgroundColor: `${cfg.color}1a`, color: cfg.color }}
-                    >
-                      <Icon className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-bold text-foreground">{cfg.label}</h3>
-                      <p className="text-xs text-muted-foreground">
-                        {categorySettings.length} settings
-                      </p>
-                    </div>
-                  </div>
-                  <div className="px-6 py-2 divide-y divide-border/20">
-                    {categorySettings.map((setting) => (
-                      <SettingField
-                        key={setting.id}
-                        setting={setting}
-                        value={setting.value}
-                        onChange={handleChange}
-                      />
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Save Bar (sticky on mobile) */}
-          <div className="mt-8 flex items-center justify-between rounded-xl border border-border/50 bg-card p-4 shadow-sm">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-              All settings are saved locally. Click &quot;Save Changes&quot; to apply.
-            </div>
+    <div className="flex-1 min-h-screen bg-[#faf9f5]">
+      <AdminPageHeader
+        eyebrow="Configuration"
+        title="System Settings"
+        description="Configure platform-wide settings and policies"
+        actions={
+          <div className="flex items-center gap-2">
             <Button
-              className="rounded-lg text-xs font-semibold"
+              variant="outline"
+              size="sm"
+              className="h-9 rounded-lg text-xs font-semibold bg-transparent border-white/20 text-white hover:bg-white/10 hover:text-white"
+              onClick={handleReset}
+            >
+              Reset
+            </Button>
+            <Button
+              size="sm"
+              className="h-9 rounded-lg text-xs font-semibold bg-[#D4AF37] hover:bg-[#B89430] text-[#1A0B2E]"
               onClick={handleSave}
               disabled={saving}
             >
@@ -257,6 +178,73 @@ export function AdminSettings() {
               )}
             </Button>
           </div>
+        }
+      />
+
+      {/* Settings by Category */}
+      <div className="mx-auto max-w-7xl px-4 md:px-6 pb-16 mt-6">
+        <div className="space-y-8">
+          {categories.map((category) => {
+            const cfg = categoryConfig[category] ?? {
+              label: category,
+              icon: Settings,
+              color: "#6b7280",
+            };
+            const Icon = cfg.icon;
+            const categorySettings = settings.filter((s) => s.category === category);
+
+            return (
+              <div key={category} className="rounded-xl border border-border/50 bg-card shadow-sm">
+                <div className="flex items-center gap-3 px-6 py-4 border-b border-border/30">
+                  <div
+                    className="h-8 w-8 rounded-lg flex items-center justify-center"
+                    style={{ backgroundColor: `${cfg.color}1a`, color: cfg.color }}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-foreground">{cfg.label}</h3>
+                    <p className="text-xs text-muted-foreground">
+                      {categorySettings.length} settings
+                    </p>
+                  </div>
+                </div>
+                <div className="px-6 py-2 divide-y divide-border/20">
+                  {categorySettings.map((setting) => (
+                    <SettingField
+                      key={setting.id}
+                      setting={setting}
+                      value={setting.value}
+                      onChange={handleChange}
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Save Bar (sticky on mobile) */}
+        <div className="mt-8 flex items-center justify-between rounded-xl border border-border/50 bg-card p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+            All settings are saved locally. Click &quot;Save Changes&quot; to apply.
+          </div>
+          <Button
+            className="rounded-lg text-xs font-semibold"
+            onClick={handleSave}
+            disabled={saving}
+          >
+            {saving ? (
+              <>
+                <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" /> Saving...
+              </>
+            ) : (
+              <>
+                <Save className="h-3.5 w-3.5 mr-1" /> Save Changes
+              </>
+            )}
+          </Button>
         </div>
       </div>
     </div>

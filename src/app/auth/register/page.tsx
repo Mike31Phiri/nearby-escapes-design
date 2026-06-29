@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { AuthPageView } from "@/components/auth/AuthPageView";
+import { AuthPageView } from "@/components/guest/auth/AuthPageView";
 
 export default function RegisterPage() {
   return (

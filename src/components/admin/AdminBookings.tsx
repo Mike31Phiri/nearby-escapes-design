@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { AdminPageHeader } from "@/components/layout/AdminPageHeader";
 import {
   Select,
   SelectContent,
@@ -225,136 +226,128 @@ export function AdminBookings() {
   }, [allBookings, search, statusFilter, typeFilter]);
 
   return (
-    <div className="min-h-screen flex flex-col font-sans">
-      <div className="flex-1">
-        {/* Header */}
-        <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
-          <div className="mx-auto max-w-6xl px-4 md:px-6 pt-6 md:pt-10">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
-                  Platform Bookings
-                </h1>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {bookingStats.total} bookings — K{bookingStats.totalRevenue.toLocaleString()}{" "}
-                  total value
-                </p>
-              </div>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <span>{bookingStats.pending} pending</span>
-                <span className="text-muted-foreground/30">·</span>
-                <span className="text-emerald-600 font-semibold">
-                  {bookingStats.completed} completed
-                </span>
-              </div>
-            </div>
+    <div className="flex-1 min-h-screen bg-[#faf9f5]">
+      <AdminPageHeader
+        eyebrow="Transactions"
+        title="Platform Bookings"
+        description={`${bookingStats.total} bookings — K${bookingStats.totalRevenue.toLocaleString()} total value`}
+        actions={
+          <div className="flex items-center gap-2 text-xs text-white/80">
+            <span>{bookingStats.pending} pending</span>
+            <span className="text-white/30">·</span>
+            <span className="text-emerald-400 font-semibold">
+              {bookingStats.completed} completed
+            </span>
           </div>
-        </div>
+        }
+      />
 
-        {/* Filters */}
-        <div className="mx-auto max-w-6xl px-4 md:px-6 -mt-6 relative z-10">
-          <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border/40 bg-card p-3 shadow-sm card-shadow">
-            <div className="relative flex-1 min-w-[200px]">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search by guest, listing, or reference..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 h-10 rounded-xl border-border/60 text-sm"
-              />
+      {/* Filters */}
+      <div className="mx-auto max-w-6xl px-4 md:px-6 -mt-6 relative z-10">
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border/40 bg-card p-3 shadow-sm card-shadow">
+          <div className="relative flex-1 min-w-[200px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by guest, listing, or reference..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9 h-10 rounded-xl border-border/60 text-sm"
+            />
+          </div>
+          <Select value={typeFilter} onValueChange={(v) => setTypeFilter(v as typeof typeFilter)}>
+            <SelectTrigger className="w-[140px] h-10 rounded-xl border-border/60">
+              <SelectValue placeholder="Type" />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl">
+              <SelectItem value="all">All Types</SelectItem>
+              <SelectItem value="stay">Stays</SelectItem>
+              <SelectItem value="experience">Experiences</SelectItem>
+              <SelectItem value="transport">Transport</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select
+            value={statusFilter}
+            onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}
+          >
+            <SelectTrigger className="w-[150px] h-10 rounded-xl border-border/60">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl">
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="confirmed">Confirmed</SelectItem>
+              <SelectItem value="completed">Completed</SelectItem>
+              <SelectItem value="cancelled">Cancelled</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Bookings List */}
+      <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 pb-8 space-y-3">
+        {filteredBookings.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
+              <CalendarDays className="h-7 w-7 text-muted-foreground/40" />
             </div>
-            <Select value={typeFilter} onValueChange={(v) => setTypeFilter(v as typeof typeFilter)}>
-              <SelectTrigger className="w-[140px] h-10 rounded-xl border-border/60">
-                <SelectValue placeholder="Type" />
-              </SelectTrigger>
-              <SelectContent className="rounded-xl">
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="stay">Stays</SelectItem>
-                <SelectItem value="experience">Experiences</SelectItem>
-                <SelectItem value="transport">Transport</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select
-              value={statusFilter}
-              onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}
+            <h3 className="text-lg font-bold text-foreground">No bookings found</h3>
+            <p className="text-sm text-muted-foreground mt-1 max-w-sm">
+              Try adjusting your search or filter criteria.
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-6 rounded-full text-xs font-semibold"
+              onClick={() => {
+                setSearch("");
+                setStatusFilter("all");
+                setTypeFilter("all");
+              }}
             >
-              <SelectTrigger className="w-[150px] h-10 rounded-xl border-border/60">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent className="rounded-xl">
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="confirmed">Confirmed</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-                <SelectItem value="cancelled">Cancelled</SelectItem>
-              </SelectContent>
-            </Select>
+              Clear Filters
+            </Button>
           </div>
-        </div>
+        ) : (
+          filteredBookings.map((booking) => <BookingCard key={booking.id} booking={booking} />)
+        )}
+      </div>
 
-        {/* Stats Row */}
-        <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
-              <p className="text-2xl font-bold text-foreground">{bookingStats.total}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                Total
-              </p>
-            </div>
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
-              <p className="text-2xl font-bold text-amber-600">{bookingStats.pending}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                Pending
-              </p>
-            </div>
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
-              <p className="text-2xl font-bold text-blue-600">{bookingStats.confirmed}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                Confirmed
-              </p>
-            </div>
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
-              <p className="text-2xl font-bold text-emerald-600">{bookingStats.completed}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                Completed
-              </p>
-            </div>
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
-              <p className="text-2xl font-bold text-rose-600">{bookingStats.cancelled}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                Cancelled
-              </p>
-            </div>
+      {/* Stats Row */}
+      <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 pb-16">
+        <h3 className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-3">
+          Analysis
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
+            <p className="text-2xl font-bold text-foreground">{bookingStats.total}</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Total
+            </p>
           </div>
-        </div>
-
-        {/* Bookings List */}
-        <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6 pb-16 space-y-3">
-          {filteredBookings.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-              <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                <CalendarDays className="h-7 w-7 text-muted-foreground/40" />
-              </div>
-              <h3 className="text-lg font-bold text-foreground">No bookings found</h3>
-              <p className="text-sm text-muted-foreground mt-1 max-w-sm">
-                Try adjusting your search or filter criteria.
-              </p>
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-6 rounded-full text-xs font-semibold"
-                onClick={() => {
-                  setSearch("");
-                  setStatusFilter("all");
-                  setTypeFilter("all");
-                }}
-              >
-                Clear Filters
-              </Button>
-            </div>
-          ) : (
-            filteredBookings.map((booking) => <BookingCard key={booking.id} booking={booking} />)
-          )}
+          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
+            <p className="text-2xl font-bold text-amber-600">{bookingStats.pending}</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Pending
+            </p>
+          </div>
+          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
+            <p className="text-2xl font-bold text-blue-600">{bookingStats.confirmed}</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Confirmed
+            </p>
+          </div>
+          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
+            <p className="text-2xl font-bold text-emerald-600">{bookingStats.completed}</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Completed
+            </p>
+          </div>
+          <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
+            <p className="text-2xl font-bold text-rose-600">{bookingStats.cancelled}</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Cancelled
+            </p>
+          </div>
         </div>
       </div>
     </div>

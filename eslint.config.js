@@ -10,7 +10,7 @@ const compat = new FlatCompat({
 });
 
 export default tseslint.config(
-  { ignores: ["dist", ".next", ".output"] },
+  { ignores: ["dist", ".next", ".output", "next-env.d.ts"] },
   ...compat.extends("next/core-web-vitals"),
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
@@ -25,6 +25,8 @@ export default tseslint.config(
     rules: {
       ...reactHooks.configs.recommended.rules,
       "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@next/next/no-img-element": "warn",
     },
   },
   eslintPluginPrettier,

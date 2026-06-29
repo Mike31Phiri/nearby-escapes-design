@@ -12,6 +12,7 @@ import {
   CalendarDays,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AdminPageHeader } from "@/components/layout/AdminPageHeader";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
@@ -242,32 +243,24 @@ export function AdminPayouts() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col font-sans">
+    <div className="min-h-screen flex flex-col font-sans bg-[#faf9f5]">
       <div className="flex-1">
-        {/* Header */}
-        <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
-          <div className="mx-auto max-w-6xl px-4 md:px-6 pt-6 md:pt-10">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
-                  Payout Management
-                </h1>
-                <p className="text-sm text-muted-foreground mt-1">
-                  K{stats.totalGross.toLocaleString()} total payouts processed
-                </p>
-              </div>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <span className="text-amber-600 font-semibold">
-                  K{(stats.pendingAmount / 1000).toFixed(0)}k
-                </span>{" "}
-                pending payout
-              </div>
+        <AdminPageHeader
+          eyebrow="Finances"
+          title="Payout Management"
+          description={`K${stats.totalGross.toLocaleString()} total payouts processed`}
+          actions={
+            <div className="flex items-center gap-2 text-xs text-white/80">
+              <span className="text-[#D4AF37] font-semibold">
+                K{(stats.pendingAmount / 1000).toFixed(0)}k
+              </span>{" "}
+              pending payout
             </div>
-          </div>
-        </div>
+          }
+        />
 
         {/* Filters */}
-        <div className="mx-auto max-w-6xl px-4 md:px-6 -mt-6 relative z-10">
+        <div className="mx-auto max-w-7xl px-4 md:px-6 -mt-6 relative z-10">
           <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border/40 bg-card p-3 shadow-sm card-shadow">
             <div className="relative flex-1 min-w-[200px]">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -293,8 +286,41 @@ export function AdminPayouts() {
           </div>
         </div>
 
+        {/* Payouts List */}
+        <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 pb-8 space-y-3">
+          {filteredPayouts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                <DollarSign className="h-7 w-7 text-muted-foreground/40" />
+              </div>
+              <h3 className="text-lg font-bold text-foreground">No payouts found</h3>
+              <p className="text-sm text-muted-foreground mt-1 max-w-sm">
+                Try adjusting your search or filter criteria.
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-6 rounded-full text-xs font-semibold"
+                onClick={() => {
+                  setSearch("");
+                  setStatusFilter("all");
+                }}
+              >
+                Clear Filters
+              </Button>
+            </div>
+          ) : (
+            filteredPayouts.map((payout) => (
+              <PayoutCard key={payout.id} payout={payout} onProcess={handleProcess} />
+            ))
+          )}
+        </div>
+
         {/* Stats Row */}
-        <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6">
+        <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 pb-16">
+          <h3 className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-3">
+            Analysis
+          </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
               <p className="text-2xl font-bold text-foreground">
@@ -325,36 +351,6 @@ export function AdminPayouts() {
               </p>
             </div>
           </div>
-        </div>
-
-        {/* Payouts List */}
-        <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6 pb-16 space-y-3">
-          {filteredPayouts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-              <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                <DollarSign className="h-7 w-7 text-muted-foreground/40" />
-              </div>
-              <h3 className="text-lg font-bold text-foreground">No payouts found</h3>
-              <p className="text-sm text-muted-foreground mt-1 max-w-sm">
-                Try adjusting your search or filter criteria.
-              </p>
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-6 rounded-full text-xs font-semibold"
-                onClick={() => {
-                  setSearch("");
-                  setStatusFilter("all");
-                }}
-              >
-                Clear Filters
-              </Button>
-            </div>
-          ) : (
-            filteredPayouts.map((payout) => (
-              <PayoutCard key={payout.id} payout={payout} onProcess={handleProcess} />
-            ))
-          )}
         </div>
       </div>
     </div>

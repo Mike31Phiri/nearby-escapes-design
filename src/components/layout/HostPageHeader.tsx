@@ -28,11 +28,7 @@ export function HostPageHeader({ title, description, eyebrow, actions }: HostPag
               </p>
             )}
           </div>
-          {actions && (
-            <div className="flex items-center gap-3 shrink-0">
-              {actions}
-            </div>
-          )}
+          {actions && <div className="flex items-center gap-3 shrink-0">{actions}</div>}
         </div>
       </div>
     </div>

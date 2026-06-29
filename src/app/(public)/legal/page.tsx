@@ -1,4 +1,4 @@
-import { TermsPage } from "@/components/legal/TermsPage";
+import { TermsPage } from "@/components/guest/legal/TermsPage";
 
 export default function TermsRoute() {
   return <TermsPage />;

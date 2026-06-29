@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { mockDisputes } from "@/lib/mock-admin-data";
 import { Button } from "@/components/ui/button";
+import { AdminPageHeader } from "@/components/layout/AdminPageHeader";
 import { cn } from "@/lib/utils";
 import {
   mockPlatformStats,
@@ -152,40 +153,34 @@ export function AdminDashboard() {
   const pendingUsers = mockAdminUsers.filter((u) => u.status === "pending verification");
 
   return (
-    <div className="min-h-screen flex flex-col font-sans">
+    <div className="min-h-screen flex flex-col font-sans bg-[#faf9f5]">
       <div className="flex-1">
-        {/* Header */}
-        <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
-          <div className="mx-auto max-w-7xl px-4 md:px-6 pt-6 md:pt-10">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
-                  Dashboard
-                </h1>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Overview of all platform activity and metrics
-                </p>
-              </div>
-              <div className="hidden md:flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="rounded-lg text-xs font-semibold border-border/60"
-                >
-                  <CalendarDays className="h-3.5 w-3.5 mr-1" />
-                  {new Date().toLocaleDateString("en-ZM", {
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <AdminPageHeader
+          eyebrow="Admin"
+          title="Dashboard"
+          description="Overview of all platform activity and metrics"
+          actions={
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-xl text-xs font-semibold border-white/20 bg-white/10 text-white hover:bg-white/20 transition-all shadow-sm h-10 px-4"
+            >
+              <CalendarDays className="h-4 w-4 mr-2" />
+              {new Date().toLocaleDateString("en-ZM", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </Button>
+          }
+        />
 
+        {/* Quick Actions & Alerts */}
         {/* Stats Row */}
-        <div className="mx-auto max-w-7xl px-4 md:px-6 -mt-6 relative z-10">
+        <div className="mx-auto max-w-7xl px-4 md:px-6 mt-8 relative z-10">
+          <h3 className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-3">
+            Analysis
+          </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             <StatCard
               icon={Users}
@@ -227,66 +222,7 @@ export function AdminDashboard() {
           </div>
         </div>
 
-        {/* Quick Actions & Alerts */}
-        <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {pendingListings.length > 0 && (
-              <Link
-                href="/admin/listings"
-                className="flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50/50 dark:border-amber-800 dark:bg-amber-950/30 px-5 py-3 transition-all hover:shadow-md"
-              >
-                <AlertTriangle className="h-5 w-5 text-amber-500 shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-amber-800 dark:text-amber-200">
-                    {pendingListings.length} listing{pendingListings.length > 1 ? "s" : ""} pending
-                    moderation
-                  </p>
-                  <p className="text-xs text-amber-600 dark:text-amber-400">
-                    Review and approve new submissions
-                  </p>
-                </div>
-                <ChevronRight className="h-4 w-4 text-amber-500 shrink-0" />
-              </Link>
-            )}
-            {pendingUsers.length > 0 && (
-              <Link
-                href="/admin/users"
-                className="flex items-center gap-3 rounded-xl border border-violet-200 bg-violet-50/50 dark:border-violet-800 dark:bg-violet-950/30 px-5 py-3 transition-all hover:shadow-md"
-              >
-                <Users className="h-5 w-5 text-violet-500 shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-violet-800 dark:text-violet-200">
-                    {pendingUsers.length} user{pendingUsers.length > 1 ? "s" : ""} pending
-                    verification
-                  </p>
-                  <p className="text-xs text-violet-600 dark:text-violet-400">
-                    New accounts awaiting identity confirmation
-                  </p>
-                </div>
-                <ChevronRight className="h-4 w-4 text-violet-500 shrink-0" />
-              </Link>
-            )}
-            {stats.reportedListings > 0 && (
-              <Link
-                href="/admin/listings"
-                className="flex items-center gap-3 rounded-xl border border-rose-200 bg-rose-50/50 dark:border-rose-800 dark:bg-rose-950/30 px-5 py-3 transition-all hover:shadow-md"
-              >
-                <AlertTriangle className="h-5 w-5 text-rose-500 shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-rose-800 dark:text-rose-200">
-                    {stats.reportedListings} reported listing{stats.reportedListings > 1 ? "s" : ""}
-                  </p>
-                  <p className="text-xs text-rose-600 dark:text-rose-400">
-                    Flagged content requires review
-                  </p>
-                </div>
-                <ChevronRight className="h-4 w-4 text-rose-500 shrink-0" />
-              </Link>
-            )}
-          </div>
-        </div>
-
-        {/* Main Grid: Chart + Activity */}
+        {/* Main Grid: Chart */}
         <div className="mx-auto max-w-7xl px-4 md:px-6 mt-8 pb-16">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Monthly Revenue Chart */}

@@ -1,4 +1,4 @@
-import { HostReviewsPage } from "@/components/host-reviews/HostReviewsPage";
+import { HostReviewsPage } from "@/components/host/HostReviewsPage";
 
 export default function HostReviewsRoute() {
   return <HostReviewsPage />;

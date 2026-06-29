@@ -1,4 +1,4 @@
-import { HostSettingsPage } from "@/components/host-settings/HostSettingsPage";
+import { HostSettingsPage } from "@/components/host/HostSettingsPage";
 
 export default function HostSettingsRoute() {
   return <HostSettingsPage />;
