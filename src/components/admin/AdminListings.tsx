@@ -294,7 +294,7 @@ export function AdminListings() {
             {listingStats.pendingReview > 0 && (
               <Badge
                 variant="outline"
-                className="rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#D4AF37] text-[#1A0B2E] border-none"
+                className="rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#f2ba0d] text-[#1f1433] border-none"
               >
                 {listingStats.pendingReview} pending
               </Badge>
@@ -385,7 +385,7 @@ export function AdminListings() {
 
       {/* Stats Row */}
       <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 pb-16">
-        <h3 className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-3">
+        <h3 className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-3">
           Analysis
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -419,3 +419,4 @@ export function AdminListings() {
     </div>
   );
 }
+

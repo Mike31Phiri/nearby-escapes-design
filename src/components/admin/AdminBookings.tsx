@@ -314,7 +314,7 @@ export function AdminBookings() {
 
       {/* Stats Row */}
       <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 pb-16">
-        <h3 className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-3">
+        <h3 className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-3">
           Analysis
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -353,3 +353,4 @@ export function AdminBookings() {
     </div>
   );
 }
+

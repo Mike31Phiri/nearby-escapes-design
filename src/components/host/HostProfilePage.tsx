@@ -12,10 +12,10 @@ export function HostProfilePage() {
   return (
     <div className="min-h-screen bg-background">
       {/*  Full-width Host Header  */}
-      <div className="bg-[#1A0B2E] w-full">
+      <div className="bg-[#f2ba0d] w-full">
         <div className="mx-auto max-w-7xl px-4 md:px-6 py-6">
           <div className="flex items-center gap-4">
-            <div className="w-[56px] h-[56px] rounded-full bg-[#1E1B4B] border-2 border-[#D4AF37] flex items-center justify-center text-[20px] font-bold text-[#D4AF37] shrink-0">
+            <div className="w-[56px] h-[56px] rounded-full bg-[#1E1B4B] border-2 border-[#1f1433] flex items-center justify-center text-[20px] font-bold text-[#1f1433] shrink-0">
               {host.name
                 .split(" ")
                 .map((n) => n[0])
@@ -26,7 +26,7 @@ export function HostProfilePage() {
                 {host.name}
               </div>
               <div className="text-sm text-[#64748B] mt-0.5">{host.location}</div>
-              <div className="flex items-center gap-1.5 mt-1 text-xs font-medium text-[#D4AF37]">
+              <div className="flex items-center gap-1.5 mt-1 text-xs font-medium text-[#1f1433]">
                 <svg
                   className="h-4 w-4"
                   viewBox="0 0 24 24"
@@ -51,37 +51,37 @@ export function HostProfilePage() {
             {/* Stats row */}
             <div className="flex items-center gap-4 text-sm text-[#64748B]">
               <div className="flex items-center gap-1">
-                <Star className="h-4 w-4 text-[#D4AF37] fill-[#D4AF37]" />
-                <span className="font-semibold text-[#1A0B2E]">{avgRating.toFixed(1)}</span>
+                <Star className="h-4 w-4 text-[#1f1433] fill-[#1f1433]" />
+                <span className="font-semibold text-[#1f1433]">{avgRating.toFixed(1)}</span>
               </div>
               <span>·</span>
               <div>
-                <span className="font-semibold text-[#1A0B2E]">{host.reviewCount}</span> reviews
+                <span className="font-semibold text-[#1f1433]">{host.reviewCount}</span> reviews
               </div>
               <span>·</span>
               <div>
-                <span className="font-semibold text-[#1A0B2E]">{host.responseRate}%</span> response
+                <span className="font-semibold text-[#1f1433]">{host.responseRate}%</span> response
               </div>
             </div>
 
             {/* Bio */}
             <div>
-              <div className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-1.5">
+              <div className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-1.5">
                 About
               </div>
-              <p className="text-sm text-[#1A0B2E] leading-relaxed">{host.bio}</p>
+              <p className="text-sm text-[#1f1433] leading-relaxed">{host.bio}</p>
             </div>
 
             {/* Verified badges */}
             <div>
-              <div className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-1.5">
+              <div className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-1.5">
                 Verifications
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {host.verifiedBadges.map((b) => (
                   <span
                     key={b}
-                    className="text-xs text-[#1A0B2E] bg-muted px-2.5 py-1 rounded-full font-medium"
+                    className="text-xs text-[#1f1433] bg-muted px-2.5 py-1 rounded-full font-medium"
                   >
                     {b}
                   </span>
@@ -91,7 +91,7 @@ export function HostProfilePage() {
 
             {/* Listings */}
             <div>
-              <div className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-1.5">
+              <div className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-1.5">
                 Listings ({host.listings.length})
               </div>
               <div className="space-y-2">
@@ -106,14 +106,14 @@ export function HostProfilePage() {
                       className="w-10 h-10 rounded-lg object-cover shrink-0"
                     />
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-bold text-[#1A0B2E] truncate">{l.name}</div>
+                      <div className="text-sm font-bold text-[#1f1433] truncate">{l.name}</div>
                       <div className="flex items-center gap-1 text-xs text-[#64748B] mt-0.5">
                         <MapPin className="h-3.5 w-3.5" />
                         {l.location}
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-sm font-bold text-[#1A0B2E]">K{l.price}</div>
+                      <div className="text-sm font-bold text-[#1f1433]">K{l.price}</div>
                       <div className="text-[10px] text-[#64748B] uppercase tracking-wider">
                         / night
                       </div>
@@ -125,26 +125,26 @@ export function HostProfilePage() {
 
             {/* Contact */}
             <div className="bg-[#faf9f5] border border-[#E0DBD0] rounded-xl p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-[#1A0B2E] flex items-center justify-center text-[#D4AF37] text-lg font-bold shrink-0">
+              <div className="w-12 h-12 rounded-full bg-[#f2ba0d] flex items-center justify-center text-[#1f1433] text-lg font-bold shrink-0">
                 {host.name
                   .split(" ")
                   .map((n) => n[0])
                   .join("")}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="font-display text-base font-bold text-[#1A0B2E]">{host.name}</div>
+                <div className="font-display text-base font-bold text-[#1f1433]">{host.name}</div>
                 <div className="text-xs text-[#64748B] mt-0.5">
                   Hosting since {host.joined} · Responds {host.responseTime}
                 </div>
               </div>
-              <button className="px-4 py-2 text-sm font-bold text-[#1A0B2E] bg-white border border-[#E0DBD0] rounded-lg hover:border-[#D4AF37] hover:text-[#D4AF37] transition-colors flex items-center gap-1.5 shadow-sm">
+              <button className="px-4 py-2 text-sm font-bold text-[#1f1433] bg-white border border-[#E0DBD0] rounded-lg hover:border-[#1f1433] hover:text-[#1f1433] transition-colors flex items-center gap-1.5 shadow-sm">
                 <MessageSquare className="h-4 w-4" /> Message
               </button>
             </div>
 
             {/* Reviews */}
             <div>
-              <div className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-1.5">
+              <div className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-1.5">
                 Guest reviews
               </div>
               <div className="space-y-3">
@@ -165,14 +165,14 @@ export function HostProfilePage() {
                       {r.initials}
                     </div>
                     <div>
-                      <div className="text-sm font-bold text-[#1A0B2E]">{r.name}</div>
+                      <div className="text-sm font-bold text-[#1f1433]">{r.name}</div>
                       <div className="flex gap-0.5 my-1">
                         {Array(5)
                           .fill(0)
                           .map((_, s) => (
                             <svg
                               key={s}
-                              className="h-3.5 w-3.5 text-[#D4AF37]"
+                              className="h-3.5 w-3.5 text-[#1f1433]"
                               viewBox="0 0 24 24"
                               fill="currentColor"
                             >
@@ -180,7 +180,7 @@ export function HostProfilePage() {
                             </svg>
                           ))}
                       </div>
-                      <div className="text-sm text-[#1A0B2E] italic leading-relaxed">
+                      <div className="text-sm text-[#1f1433] italic leading-relaxed">
                         &ldquo;{r.text}&rdquo;
                       </div>
                     </div>
@@ -194,3 +194,4 @@ export function HostProfilePage() {
     </div>
   );
 }
+

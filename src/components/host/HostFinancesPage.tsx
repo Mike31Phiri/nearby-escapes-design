@@ -107,7 +107,7 @@ export function HostFinancesPage() {
           expectedPayouts > 0 ? (
             <button
               onClick={simulateAutoPayout}
-              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#D4AF37] to-[#B89430] hover:from-[#B89430] hover:to-[#967825] text-[#1A0B2E] text-xs font-black uppercase tracking-wider h-10 px-4 rounded-xl shadow-sm transition-all duration-200 border-none"
+              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#1f1433] to-[#150d22] hover:from-[#150d22] hover:to-[#967825] text-[#1f1433] text-xs font-black uppercase tracking-wider h-10 px-4 rounded-xl shadow-sm transition-all duration-200 border-none"
               title="Test the background bulk payment worker"
             >
               <RefreshCw className="h-3.5 w-3.5" /> Simulate Auto-Payout
@@ -253,7 +253,7 @@ export function HostFinancesPage() {
                     placeholder="Search transactions..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-9 pr-4 py-1.5 h-8 bg-background border border-[#E0DBD0]/60 rounded-xl text-xs focus:outline-none focus:border-[#C9A84C]"
+                    className="w-full pl-9 pr-4 py-1.5 h-8 bg-background border border-[#E0DBD0]/60 rounded-xl text-xs focus:outline-none focus:border-[#2a1b47]"
                   />
                 </div>
               </div>
@@ -352,7 +352,7 @@ export function HostFinancesPage() {
                       setTempAccount(payoutMethod.account);
                       setIsEditingMethod(true);
                     }}
-                    className="text-xs font-bold text-[#C9A84C] hover:text-[#B08D3A] transition-colors"
+                    className="text-xs font-bold text-[#2a1b47] hover:text-[#B08D3A] transition-colors"
                   >
                     Edit
                   </button>
@@ -368,7 +368,7 @@ export function HostFinancesPage() {
                     <select
                       value={tempMethod}
                       onChange={(e) => setTempMethod(e.target.value)}
-                      className="w-full h-9 rounded-lg border border-[#E0DBD0] px-3 text-xs bg-white text-foreground focus:outline-none focus:border-[#C9A84C]"
+                      className="w-full h-9 rounded-lg border border-[#E0DBD0] px-3 text-xs bg-white text-foreground focus:outline-none focus:border-[#2a1b47]"
                     >
                       <option value="Airtel Money">Airtel Mobile Money</option>
                       <option value="MTN Mobile Money">MTN Mobile Money</option>
@@ -383,13 +383,13 @@ export function HostFinancesPage() {
                       type="text"
                       value={tempAccount}
                       onChange={(e) => setTempAccount(e.target.value)}
-                      className="w-full h-9 rounded-lg border border-[#E0DBD0] px-3 text-xs text-foreground bg-white focus:outline-none focus:border-[#C9A84C]"
+                      className="w-full h-9 rounded-lg border border-[#E0DBD0] px-3 text-xs text-foreground bg-white focus:outline-none focus:border-[#2a1b47]"
                     />
                   </div>
                   <div className="flex items-center gap-2 pt-2">
                     <button
                       onClick={handleSavePayoutMethod}
-                      className="flex-1 h-8 rounded-lg bg-[#3D2463] text-white hover:bg-[#1A0B2E] text-[10px] font-black uppercase tracking-wider transition-all"
+                      className="flex-1 h-8 rounded-lg bg-[#3D2463] text-white hover:bg-[#f2ba0d] text-[10px] font-black uppercase tracking-wider transition-all"
                     >
                       Save Method
                     </button>
@@ -466,3 +466,4 @@ export function HostFinancesPage() {
     </div>
   );
 }
+

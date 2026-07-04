@@ -362,7 +362,7 @@ export function AdminPromotions() {
         actions={
           <Button
             size="sm"
-            className="h-9 rounded-lg text-xs font-semibold bg-[#D4AF37] hover:bg-[#B89430] text-[#1A0B2E]"
+            className="h-9 rounded-lg text-xs font-semibold bg-[#f2ba0d] hover:bg-[#B89430] text-[#1f1433]"
             onClick={() => {
               setShowCreateDialog(true);
             }}
@@ -537,3 +537,4 @@ export function AdminPromotions() {
     </div>
   );
 }
+

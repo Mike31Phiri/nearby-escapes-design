@@ -17,12 +17,12 @@ export function AdminPageHeader({
   className,
 }: AdminPageHeaderProps) {
   return (
-    <div className={cn("bg-[#1A0B2E] w-full", className)}>
+    <div className={cn("bg-[#f2ba0d] w-full", className)}>
       <div className="mx-auto max-w-7xl px-4 md:px-6 py-6 md:py-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             {eyebrow && (
-              <p className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-1">
+              <p className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-1">
                 {eyebrow}
               </p>
             )}
@@ -39,3 +39,4 @@ export function AdminPageHeader({
     </div>
   );
 }
+

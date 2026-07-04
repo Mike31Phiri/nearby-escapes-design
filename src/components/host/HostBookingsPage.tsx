@@ -180,7 +180,7 @@ export function HostBookingsPage() {
               className={`shrink-0 px-3.5 py-1.5 rounded-full text-[11px] font-medium transition-colors ${
                 activeFilter === f.key
                   ? "bg-[#3D2463] text-[#FAF7F2]"
-                  : "bg-white border border-[#E0DBD0] text-[#3D2463] hover:border-[#C9A84C]/40"
+                  : "bg-white border border-[#E0DBD0] text-[#3D2463] hover:border-[#2a1b47]/40"
               }`}
             >
               {f.label}
@@ -194,7 +194,7 @@ export function HostBookingsPage() {
             <div className="flex items-center gap-2 mb-2">
               <div className="w-[26px] h-[26px] rounded-lg bg-[#FFF4DC] flex items-center justify-center">
                 <svg
-                  className="h-3.5 w-3.5 text-[#C9A84C]"
+                  className="h-3.5 w-3.5 text-[#2a1b47]"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -272,7 +272,7 @@ export function HostBookingsPage() {
                 </div>
                 <span className="text-[12px] font-medium text-[#1C1030]">Completed</span>
               </div>
-              <span className="text-[11px] text-[#C9A84C] font-medium cursor-pointer">
+              <span className="text-[11px] text-[#2a1b47] font-medium cursor-pointer">
                 View all
               </span>
             </div>
@@ -284,7 +284,7 @@ export function HostBookingsPage() {
                     key={b.id}
                     className="border-b border-[#E0DBD0] last:border-b-0 px-3 py-2.5 flex items-center gap-2.5"
                   >
-                    <div className="w-8 h-8 rounded-full bg-[#3A2A10] text-[#C9A84C] flex items-center justify-center text-[11px] font-medium shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-[#3A2A10] text-[#2a1b47] flex items-center justify-center text-[11px] font-medium shrink-0">
                       {b.guestName
                         .split(" ")
                         .map((n) => n[0])

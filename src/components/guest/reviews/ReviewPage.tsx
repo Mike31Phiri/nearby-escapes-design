@@ -119,7 +119,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
                   key={i}
                   className={cn(
                     "h-6 w-6",
-                    i < rating ? "fill-[#D4AF37] text-[#D4AF37]" : "fill-gray-200 text-gray-200",
+                    i < rating ? "fill-[#1f1433] text-[#1f1433]" : "fill-gray-200 text-gray-200",
                   )}
                 />
               ))}
@@ -130,7 +130,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
           <div className="text-left space-y-3 mb-8 animate-in slide-in-from-bottom-4 duration-500 delay-200">
             {successTips.map(({ icon: Icon, text }) => (
               <div key={text} className="flex items-start gap-3 text-sm text-[#64748B]">
-                <Icon className="h-4 w-4 text-[#D4AF37] shrink-0 mt-0.5" />
+                <Icon className="h-4 w-4 text-[#1f1433] shrink-0 mt-0.5" />
                 <span>{text}</span>
               </div>
             ))}
@@ -139,7 +139,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
           <div className="flex flex-col sm:flex-row gap-3 justify-center animate-in slide-in-from-bottom-4 duration-500 delay-300">
             <Link
               href="/trips"
-              className="h-11 px-6 rounded-xl bg-[#1A0B2E] text-white font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#3A2B4D] transition-colors"
+              className="h-11 px-6 rounded-xl bg-[#f2ba0d] text-white font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#3A2B4D] transition-colors"
             >
               <Home className="h-4 w-4" /> Back to My Trips
             </Link>
@@ -209,7 +209,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
               </span>
             </div>
           </div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#D4AF37] bg-[#D4AF37]/10 px-2.5 py-1 rounded-full shrink-0">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#1f1433] bg-[#f2ba0d]/10 px-2.5 py-1 rounded-full shrink-0">
             {booking.type === "stay"
               ? "Stay"
               : booking.type === "experience"
@@ -237,7 +237,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
                   className={cn(
                     "h-10 w-10 md:h-12 md:w-12 transition-all duration-150",
                     (hoverRating || rating) >= star
-                      ? "fill-[#D4AF37] text-[#D4AF37] drop-shadow-sm"
+                      ? "fill-[#1f1433] text-[#1f1433] drop-shadow-sm"
                       : "fill-gray-200 text-gray-200 hover:fill-gray-300",
                   )}
                 />
@@ -274,7 +274,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
                         className={cn(
                           "h-6 w-6 transition-all duration-150",
                           (categoryRatings[key] || 0) >= star
-                            ? "fill-[#D4AF37] text-[#D4AF37]"
+                            ? "fill-[#1f1433] text-[#1f1433]"
                             : "fill-gray-200 text-gray-200",
                         )}
                       />
@@ -302,7 +302,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
             onChange={(e) => setContent(e.target.value)}
             rows={5}
             placeholder="Share the details of your experience — the good, the unexpected, and the unforgettable..."
-            className="w-full rounded-xl border border-[#E0DBD0] bg-[#F9F7F2] px-4 py-3 text-sm text-[#334155] placeholder:text-[#64748B]/50 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] resize-none transition-all"
+            className="w-full rounded-xl border border-[#E0DBD0] bg-[#F9F7F2] px-4 py-3 text-sm text-[#334155] placeholder:text-[#64748B]/50 focus:outline-none focus:ring-2 focus:ring-[#1f1433]/30 focus:border-[#1f1433] resize-none transition-all"
           />
           <div className="flex items-center justify-between mt-2">
             <span className="text-[11px] text-[#64748B]">{content.length} / 5000 characters</span>
@@ -322,7 +322,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
             <button
               type="button"
               onClick={() => toast.success("Photo upload coming soon!")}
-              className="flex items-center justify-center h-20 w-20 rounded-xl border-2 border-dashed border-[#E0DBD0] hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/5 transition-all text-[#64748B] hover:text-[#D4AF37]"
+              className="flex items-center justify-center h-20 w-20 rounded-xl border-2 border-dashed border-[#E0DBD0] hover:border-[#1f1433]/50 hover:bg-[#f2ba0d]/5 transition-all text-[#64748B] hover:text-[#1f1433]"
             >
               <Camera className="h-6 w-6" />
             </button>
@@ -341,7 +341,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
             placeholder="Your name or nickname"
-            className="w-full rounded-xl border border-[#E0DBD0] bg-[#F9F7F2] px-4 py-2.5 text-sm text-[#334155] placeholder:text-[#64748B]/50 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition-all"
+            className="w-full rounded-xl border border-[#E0DBD0] bg-[#F9F7F2] px-4 py-2.5 text-sm text-[#334155] placeholder:text-[#64748B]/50 focus:outline-none focus:ring-2 focus:ring-[#1f1433]/30 focus:border-[#1f1433] transition-all"
           />
         </div>
 
@@ -353,7 +353,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
           className={cn(
             "w-full h-12 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all duration-200",
             canSubmit && !submitting
-              ? "bg-[#1A0B2E] text-white hover:bg-[#3A2B4D] shadow-md shadow-[#1A0B2E]/20 hover:shadow-lg hover:-translate-y-0.5"
+              ? "bg-[#f2ba0d] text-white hover:bg-[#3A2B4D] shadow-md shadow-[#1f1433]/20 hover:shadow-lg hover:-translate-y-0.5"
               : "bg-gray-200 text-gray-400 cursor-not-allowed",
             submitting && "opacity-70",
           )}
@@ -378,3 +378,4 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
     </div>
   );
 }
+

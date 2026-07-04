@@ -85,20 +85,20 @@ const DEFAULT_FILTERS: Record<string, any> = {
 
 function TransportCard({ route }: { route: Transport }) {
   return (
-    <div className="group bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md hover:border-[#1A0B2E]">
+    <div className="group bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md hover:border-[#1f1433]">
       {/* Route header */}
-      <div className="bg-gradient-to-r from-[#1A0B2E] to-[#2d1a4a] p-5 text-white">
+      <div className="bg-gradient-to-r from-[#1f1433] to-[#2d1a4a] p-5 text-white">
         <div className="flex items-center gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 text-xl font-bold tracking-tight font-display">
               <span className="truncate">{route.from}</span>
-              <ArrowRight className="h-5 w-5 text-[#D4AF37] shrink-0" />
+              <ArrowRight className="h-5 w-5 text-[#1f1433] shrink-0" />
               <span className="truncate">{route.to}</span>
             </div>
             <p className="text-white/60 text-xs mt-1 font-medium">{route.operator}</p>
           </div>
           <div className="text-right shrink-0">
-            <p className="text-2xl font-bold text-[#D4AF37]">K{route.price}</p>
+            <p className="text-2xl font-bold text-[#1f1433]">K{route.price}</p>
             <p className="text-white/50 text-[10px] font-medium">per seat</p>
           </div>
         </div>
@@ -122,14 +122,14 @@ function TransportCard({ route }: { route: Transport }) {
         </div>
 
         <div className="mt-4 flex items-center justify-between gap-3">
-          <span className="inline-flex items-center gap-1.5 bg-[#1A0B2E]/5 text-[#1A0B2E] text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
+          <span className="inline-flex items-center gap-1.5 bg-[#f2ba0d]/5 text-[#1f1433] text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
             <Bus className="h-3 w-3" />
             Transport
           </span>
           <Link href={`/transport/${route.id}`}>
             <Button
               size="sm"
-              className="bg-[#1A0B2E] hover:bg-[#2d1a4a] text-white font-bold rounded-lg h-8 px-4 text-xs transition-colors"
+              className="bg-[#f2ba0d] hover:bg-[#2d1a4a] text-white font-bold rounded-lg h-8 px-4 text-xs transition-colors"
             >
               Book Route
               <ChevronRight className="h-3.5 w-3.5 ml-1" />
@@ -155,12 +155,12 @@ function TransportSortBar({
   return (
     <div className="flex items-center justify-between gap-4">
       <p className="text-sm text-gray-500 font-medium">
-        <span className="text-[#1A0B2E] font-bold">{total}</span> routes available
+        <span className="text-[#1f1433] font-bold">{total}</span> routes available
       </p>
       <select
         value={sortValue}
         onChange={(e) => onSortChange(e.target.value)}
-        className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#1A0B2E]/20 focus:border-[#1A0B2E] transition-colors cursor-pointer"
+        className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#1f1433]/20 focus:border-[#1f1433] transition-colors cursor-pointer"
         aria-label="Sort results"
       >
         <option value="recommended">Recommended</option>
@@ -286,7 +286,7 @@ export function TransportPage() {
         : "Transport Routes";
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] font-sans">
+    <div className="min-h-screen bg-[#ffffff] font-sans">
       {/* Header */}
       <div className="bg-gradient-to-b from-blue-600/[0.04] via-blue-600/[0.02] to-transparent pt-8 pb-10">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
@@ -297,15 +297,15 @@ export function TransportPage() {
           >
             <span>Zambia</span>
             <ChevronRight className="h-3 w-3 text-gray-300" />
-            <span className="text-[#1A0B2E] font-semibold">Transport</span>
+            <span className="text-[#1f1433] font-semibold">Transport</span>
           </nav>
 
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1A0B2E]/10 text-[#1A0B2E]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f2ba0d]/10 text-[#1f1433]">
               <Bus className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1A0B2E] font-display">
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1f1433] font-display">
                 {headline}
               </h1>
               <p className="text-sm text-gray-500 mt-0.5">
@@ -342,14 +342,14 @@ export function TransportPage() {
           {filteredRoutes.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-gray-100 mt-6">
               <Bus className="h-10 w-10 text-gray-200 mb-4" />
-              <h3 className="font-bold text-lg text-[#1A0B2E]">No routes found</h3>
+              <h3 className="font-bold text-lg text-[#1f1433]">No routes found</h3>
               <p className="text-gray-500 text-sm max-w-sm text-center mt-2">
                 Try adjusting your filters to see more routes.
               </p>
               <Button
                 onClick={handleReset}
                 variant="outline"
-                className="mt-6 border-[#1A0B2E] text-[#1A0B2E] hover:bg-[#1A0B2E] hover:text-white"
+                className="mt-6 border-[#1f1433] text-[#1f1433] hover:bg-[#f2ba0d] hover:text-white"
               >
                 Clear all filters
               </Button>
@@ -368,12 +368,12 @@ export function TransportPage() {
       <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
         <button
           onClick={() => setMobileFiltersOpen(true)}
-          className="flex items-center gap-2 bg-[#1A0B2E] text-white text-sm font-bold px-5 py-3 rounded-full shadow-lg hover:bg-[#2d1a4a] transition-colors"
+          className="flex items-center gap-2 bg-[#f2ba0d] text-white text-sm font-bold px-5 py-3 rounded-full shadow-lg hover:bg-[#2d1a4a] transition-colors"
         >
           <SlidersHorizontal className="h-4 w-4" />
           Filters
           {chips.length > 0 && (
-            <span className="bg-[#D4AF37] text-[#1A0B2E] text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
+            <span className="bg-[#f2ba0d] text-[#1f1433] text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
               {chips.length}
             </span>
           )}
@@ -387,9 +387,9 @@ export function TransportPage() {
             className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
             onClick={() => setMobileFiltersOpen(false)}
           />
-          <div className="fixed inset-x-0 bottom-0 z-50 bg-[#FDFBF7] rounded-t-2xl shadow-2xl max-h-[85vh] overflow-y-auto">
-            <div className="sticky top-0 bg-[#FDFBF7] flex items-center justify-between px-5 py-4 border-b border-gray-100">
-              <span className="text-base font-bold text-[#1A0B2E]">Filters</span>
+          <div className="fixed inset-x-0 bottom-0 z-50 bg-[#ffffff] rounded-t-2xl shadow-2xl max-h-[85vh] overflow-y-auto">
+            <div className="sticky top-0 bg-[#ffffff] flex items-center justify-between px-5 py-4 border-b border-gray-100">
+              <span className="text-base font-bold text-[#1f1433]">Filters</span>
               <button
                 onClick={() => setMobileFiltersOpen(false)}
                 className="h-8 w-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
@@ -406,10 +406,10 @@ export function TransportPage() {
                 onReset={handleReset}
               />
             </div>
-            <div className="sticky bottom-0 bg-[#FDFBF7] px-5 py-4 border-t border-gray-100">
+            <div className="sticky bottom-0 bg-[#ffffff] px-5 py-4 border-t border-gray-100">
               <Button
                 onClick={() => setMobileFiltersOpen(false)}
-                className="w-full bg-[#1A0B2E] hover:bg-[#2d1a4a] text-white font-bold"
+                className="w-full bg-[#f2ba0d] hover:bg-[#2d1a4a] text-white font-bold"
               >
                 Show {filteredRoutes.length} routes
               </Button>
@@ -420,3 +420,4 @@ export function TransportPage() {
     </div>
   );
 }
+

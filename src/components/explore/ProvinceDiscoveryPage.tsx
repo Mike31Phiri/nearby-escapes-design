@@ -12,11 +12,11 @@ import {
   mockTransport,
   mockPackages,
 } from "@/lib/mock-data";
-import { DiscoveryHero } from "@/components/guest/explore/DiscoveryHero";
-import { DiscoverySection } from "@/components/guest/explore/DiscoverySection";
-import { AttractionCard } from "@/components/guest/explore/AttractionCard";
-import { MiniCard, TransportMiniCard, PackageMiniCard } from "@/components/guest/explore/MiniCard";
-import { ExploreFilterBar, type ExploreFilterType } from "@/components/guest/explore/ExploreFilterBar";
+import { DiscoveryHero } from "@/components/explore/DiscoveryHero";
+import { DiscoverySection } from "@/components/explore/DiscoverySection";
+import { AttractionCard } from "@/components/explore/AttractionCard";
+import { MiniCard, TransportMiniCard, PackageMiniCard } from "@/components/explore/MiniCard";
+import { ExploreFilterBar, type ExploreFilterType } from "@/components/explore/ExploreFilterBar";
 import { useState } from "react";
 
 interface ProvinceDiscoveryPageProps {
@@ -29,65 +29,54 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
   const cities = getCitiesByProvince(province.id);
   let filteredAttractions = getAttractionsByProvince(province.id);
 
+  // Loose string match — check if stay.location contains any city name in this province
   const cityNames = cities.map((c) => c.name.toLowerCase());
   const provinceName = province.name.toLowerCase();
 
-  const inProvince = (str: string) =>
-    cityNames.some((cn) => str.toLowerCase().includes(cn)) ||
-    str.toLowerCase().includes(provinceName);
+  let filteredStays = mockStays.filter(
+    (s) => cityNames.some((cn) => s.location.toLowerCase().includes(cn)) || s.location.toLowerCase().includes(provinceName)
+  );
 
-  let filteredStays       = mockStays.filter((s) => inProvince(s.location));
-  let filteredExperiences = mockExperiences.filter((e) => inProvince(e.location));
-  let filteredTransport   = mockTransport.filter((t) => inProvince(t.from) || inProvince(t.to));
-  let filteredPackages    = mockPackages.filter((p) => inProvince(p.location));
+  let filteredExperiences = mockExperiences.filter(
+    (e) => cityNames.some((cn) => e.location.toLowerCase().includes(cn)) || e.location.toLowerCase().includes(provinceName)
+  );
 
-  // Apply global filter logic
+  let filteredTransport = mockTransport.filter(
+    (t) =>
+      cityNames.some((cn) => t.from.toLowerCase().includes(cn) || t.to.toLowerCase().includes(cn)) ||
+      t.from.toLowerCase().includes(provinceName) ||
+      t.to.toLowerCase().includes(provinceName)
+  );
+
+  let filteredPackages = mockPackages.filter(
+    (p) => cityNames.some((cn) => p.location.toLowerCase().includes(cn)) || p.location.toLowerCase().includes(provinceName)
+  );
+
+  // Apply Global Filter Logic
   if (globalFilter === "popular") {
-    filteredStays       = filteredStays.filter((s) => s.rating >= 4.7);
-    filteredExperiences = filteredExperiences.filter((e) => e.rating >= 4.7);
+    filteredStays = filteredStays.filter(s => s.rating >= 4.7);
+    filteredExperiences = filteredExperiences.filter(e => e.rating >= 4.7);
   } else if (globalFilter === "hidden-gems") {
-    filteredStays       = filteredStays.filter((s) =>
-      ["farm", "eco-camp", "lodge"].some((t) => s.type.toLowerCase().includes(t))
-    );
-    filteredExperiences = filteredExperiences.filter((e) =>
-      ["farm", "general"].includes(e.category)
-    );
-    filteredAttractions = filteredAttractions.filter((a) =>
-      ["other", "natural-landmark"].includes(a.category)
-    );
+    filteredStays = filteredStays.filter(s => ["farm", "eco-camp", "lodge"].some(t => s.type.toLowerCase().includes(t)));
+    filteredExperiences = filteredExperiences.filter(e => ["farm", "general"].includes(e.category));
+    filteredAttractions = filteredAttractions.filter(a => ["other", "natural-landmark"].includes(a.category));
   } else if (globalFilter === "adventure") {
-    filteredExperiences = filteredExperiences.filter((e) =>
-      ["adventure", "wildlife"].includes(e.category)
-    );
-    filteredAttractions = filteredAttractions.filter((a) =>
-      ["game-reserve", "waterfall"].includes(a.category)
-    );
+    filteredExperiences = filteredExperiences.filter(e => ["adventure", "wildlife"].includes(e.category));
+    filteredAttractions = filteredAttractions.filter(a => ["game-reserve", "waterfall"].includes(a.category));
   } else if (globalFilter === "history") {
-    filteredExperiences = filteredExperiences.filter((e) =>
-      ["cultural", "industrial"].includes(e.category)
-    );
-    filteredAttractions = filteredAttractions.filter((a) => a.category === "heritage-site");
+    filteredExperiences = filteredExperiences.filter(e => ["cultural", "industrial"].includes(e.category));
+    filteredAttractions = filteredAttractions.filter(a => a.category === "heritage-site");
   } else if (globalFilter === "family") {
-    filteredStays       = filteredStays.filter((s) =>
-      s.amenities.some((a) => a.toLowerCase().includes("pool"))
-    );
-    filteredExperiences = filteredExperiences.filter((e) => e.category !== "adventure");
+    filteredStays = filteredStays.filter(s => s.amenities.some(a => a.toLowerCase().includes("pool")));
+    filteredExperiences = filteredExperiences.filter(e => e.category !== "adventure");
   } else if (globalFilter === "relaxation") {
-    filteredStays       = filteredStays.filter((s) =>
-      s.amenities.some((a) =>
-        a.toLowerCase().includes("spa") || a.toLowerCase().includes("pool")
-      )
-    );
-    filteredExperiences = filteredExperiences.filter((e) =>
-      ["water", "cultural"].includes(e.category)
-    );
-    filteredAttractions = filteredAttractions.filter((a) =>
-      ["lake", "waterfall", "viewpoint"].includes(a.category)
-    );
+    filteredStays = filteredStays.filter(s => s.amenities.some(a => a.toLowerCase().includes("spa") || a.toLowerCase().includes("pool")));
+    filteredExperiences = filteredExperiences.filter(e => ["water", "cultural"].includes(e.category));
+    filteredAttractions = filteredAttractions.filter(a => ["lake", "waterfall", "viewpoint"].includes(a.category));
   }
 
   return (
-    <div className="bg-[#FAF7F2] min-h-screen">
+    <div className="bg-[#FDFBF7] min-h-screen">
       {/* Hero */}
       <DiscoveryHero
         title={province.name}
@@ -99,10 +88,10 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
         ]}
       />
 
-      {/* City pills */}
+      {/* ── City Pills ──────────────────────────────────────────── */}
       {cities.length > 0 && (
-        <div className="px-5 md:px-8 max-w-7xl mx-auto py-5">
-          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#9AB3A8] mb-3">
+        <div className="px-4 md:px-8 max-w-7xl mx-auto py-5">
+          <p className="text-xs font-bold uppercase tracking-widest text-[#94A3B8] mb-3">
             Cities in {province.name}
           </p>
           <div className="flex flex-wrap gap-2">
@@ -110,10 +99,10 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
               <Link
                 key={city.id}
                 href={`/explore/${province.id}/${city.id}`}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border-[1.5px] border-[#1C3A2F]/18 bg-white text-[13px] font-semibold text-[#1C3A2F] hover:bg-[#1C3A2F] hover:text-white hover:border-[#1C3A2F] transition-all duration-200"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-[#1A0B2E]/20 text-sm font-semibold text-[#1A0B2E] hover:bg-[#1A0B2E] hover:text-white hover:border-[#1A0B2E] transition-all duration-200"
               >
                 {city.name}
-                <span className="text-[11px] font-normal text-[#9AB3A8]">
+                <span className="text-[10px] font-normal text-[#94A3B8] group-hover:text-white/60">
                   {city.stayCount} stays
                 </span>
               </Link>
@@ -122,12 +111,12 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
         </div>
       )}
 
-      {/* Sticky filter bar */}
-      <div className="sticky top-[72px] md:top-[80px] z-30 bg-[#FAF7F2]/90 backdrop-blur-md border-b border-[#1C3A2F]/08 shadow-[0_1px_0_rgba(28,58,47,0.06)]">
+      {/* ── Global Filter Bar ─────────────────────────────────── */}
+      <div className="sticky top-[72px] md:top-[80px] z-30 bg-[#FDFBF7]/90 backdrop-blur-md border-b border-[#E0DBD0]/50 shadow-sm">
         <ExploreFilterBar active={globalFilter} onChange={setGlobalFilter} />
       </div>
 
-      {/* Attractions */}
+      {/* ── Attractions ─────────────────────────────────────────── */}
       <DiscoverySection
         title="Attractions"
         emoji="🏛️"
@@ -145,7 +134,7 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
         ))}
       </DiscoverySection>
 
-      {/* Stays */}
+      {/* ── Stays ───────────────────────────────────────────────── */}
       <DiscoverySection
         title="Places to Stay"
         emoji="🏡"
@@ -169,7 +158,7 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
         ))}
       </DiscoverySection>
 
-      {/* Experiences */}
+      {/* ── Experiences ─────────────────────────────────────────── */}
       <DiscoverySection
         title="Experiences"
         emoji="🎭"
@@ -192,7 +181,7 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
         ))}
       </DiscoverySection>
 
-      {/* Transport */}
+      {/* ── Transport ───────────────────────────────────────────── */}
       <DiscoverySection
         title="Getting There"
         emoji="🚌"
@@ -206,7 +195,7 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
         ))}
       </DiscoverySection>
 
-      {/* Packages */}
+      {/* ── Packages ────────────────────────────────────────────── */}
       <DiscoverySection
         title="Packages"
         emoji="📦"
@@ -220,7 +209,7 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
         ))}
       </DiscoverySection>
 
-      <div className="h-12" />
+      <div className="h-10" />
     </div>
   );
 }

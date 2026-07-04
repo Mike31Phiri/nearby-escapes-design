@@ -36,12 +36,12 @@ import { cn } from "@/lib/utils";
 /* 
    DESIGN SYSTEM TOKENS
    ───────────────────────────────────────────────────────────────────────────
-   Primary:  #1A0B2E  (Deep Purple) — Premium, African twilight, gemstones
-   Gold:     #D4AF37  — Trust, quality, warmth, universal value signal
-   Canvas:   #FDFBF7  — Gallery-quality warm white
+   Primary:  #1f1433  (Deep Purple) — Premium, African twilight, gemstones
+   Gold:     #1f1433  — Trust, quality, warmth, universal value signal
+   Canvas:   #ffffff  — Gallery-quality warm white
    Ink:      #111111  — Maximum readability
    Muted:    #6B7280  — Supporting copy
-   CTA:      #1A0B2E  — Deep brand purple for interactive elements
+   CTA:      #1f1433  — Deep brand purple for interactive elements
    Dark BG:  #1E1B4B  — Deep indigo for immersive sections
  */
 
@@ -183,7 +183,7 @@ const collections = [
     desc: "Boutique hotels and city pads in Lusaka, Ndola, and Kitwe.",
     image: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=600&q=80",
     stayCount: 22,
-    color: "#1A0B2E",
+    color: "#1f1433",
   },
   {
     id: "copperbelt-heritage",
@@ -269,8 +269,8 @@ function SectionHeader({
   return (
     <div className="flex items-end justify-between mb-7">
       <div>
-        <p className="font-script text-xl md:text-2xl text-[#D4AF37] mb-1">{eyebrow}</p>
-        <h2 className="font-display text-2xl font-bold tracking-tight text-[#1A0B2E] leading-[1.15]">
+        <p className="font-script text-xl md:text-2xl text-[#1f1433] mb-1">{eyebrow}</p>
+        <h2 className="font-display text-2xl font-bold tracking-tight text-[#1f1433] leading-[1.15]">
           {title}
         </h2>
         <p className="text-[#64748B] mt-1.5 text-sm max-w-lg leading-relaxed">{desc}</p>
@@ -278,7 +278,7 @@ function SectionHeader({
       {href && (
         <Link
           href={href}
-          className="hidden md:inline-flex items-center gap-1.5 text-sm font-semibold text-[#1A0B2E] hover:text-[#2A154A] transition-all duration-200 group"
+          className="hidden md:inline-flex items-center gap-1.5 text-sm font-semibold text-[#1f1433] hover:text-[#2A154A] transition-all duration-200 group"
         >
           <span>See all</span>
           <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -302,24 +302,24 @@ export function HomePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background overflow-x-hidden">
+    <div className="min-h-screen flex flex-col bg-[#FDFBF7] overflow-x-hidden">
       {/* 
           HERO — Borrowing the auth page's big header layout.
           Taller hero, eyebrow → headline → subtext hierarchy, and the
           search bar floats as a card below the hero (overlapping the edge).
        */}
-      <section className="relative pt-14 pb-20 md:pt-20 md:pb-28 overflow-hidden bg-[#1A0B2E]">
+      <section className="relative pt-14 pb-20 md:pt-20 md:pb-28 overflow-hidden bg-[#FDFBF7]">
         <div className="relative mx-auto max-w-7xl px-4 md:px-8">
           <div className="max-w-3xl mx-auto text-center">
             {/* Eyebrow — gold uppercase, matching auth page style */}
-            <p className="font-script text-2xl text-[#D4AF37] mb-4">Discover your backyard</p>
+            <p className="font-script text-2xl text-[#1f1433] mb-4">Discover your backyard</p>
 
             {/* Headline — bold but respectful sizing */}
-            <h1 className="font-display text-[1.75rem] md:text-[2.75rem] lg:text-[3rem] font-bold tracking-tight text-white leading-[1.15]">
+            <h1 className="font-display text-[1.75rem] md:text-[2.75rem] lg:text-[3rem] font-bold tracking-tight text-[#111111] leading-[1.15]">
               {/* Mobile: short version */}
               <span className="md:hidden">
                 Find your next{" "}
-                <span className="font-script text-[1.3em] font-normal text-[#D4AF37] lowercase relative top-1">
+                <span className="font-script text-[1.3em] font-normal text-[#1f1433] lowercase relative top-1">
                   escape
                 </span>{" "}
                 nearby
@@ -327,7 +327,7 @@ export function HomePage() {
               {/* Desktop: full version */}
               <span className="hidden md:inline">
                 Find your hidden{" "}
-                <span className="font-script text-[1.3em] font-normal text-[#D4AF37] lowercase relative top-1">
+                <span className="font-script text-[1.3em] font-normal text-[#1f1433] lowercase relative top-1">
                   escape
                 </span>
                 <br />
@@ -336,7 +336,7 @@ export function HomePage() {
             </h1>
 
             {/* Subtext — respectful size like auth page */}
-            <p className="mt-4 text-[14px] md:text-[15px] text-white/60 leading-relaxed max-w-lg mx-auto">
+            <p className="mt-4 text-[14px] md:text-[15px] text-[#64748B] leading-relaxed max-w-lg mx-auto">
               Lodges, camps, and guesthouses within reach — curated around Zambia&apos;s secret
               spots.
             </p>
@@ -360,8 +360,8 @@ export function HomePage() {
                 className={cn(
                   "flex flex-col items-center gap-1.5 py-4 px-6 border-b-2 text-sm font-semibold whitespace-nowrap shrink-0 cursor-pointer transition-all duration-200",
                   activeCategory === id
-                    ? "border-[#1A0B2E] text-[#1A0B2E]"
-                    : "border-transparent text-[#64748B] hover:text-[#1A0B2E] hover:border-[#1A0B2E]",
+                    ? "border-[#1f1433] text-[#1f1433]"
+                    : "border-transparent text-[#64748B] hover:text-[#1f1433] hover:border-[#1f1433]",
                 )}
               >
                 <Icon className="h-5 w-5" weight="duotone" />
@@ -403,11 +403,11 @@ export function HomePage() {
                       className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                    <div className="absolute top-3 left-3 flex h-7 w-7 items-center justify-center rounded-full bg-[#D4AF37]/20 backdrop-blur-sm border border-[#D4AF37]/30">
-                      <Icon className="h-3.5 w-3.5 text-[#D4AF37]" />
+                    <div className="absolute top-3 left-3 flex h-7 w-7 items-center justify-center rounded-full bg-[#f2ba0d]/20 backdrop-blur-sm border border-[#1f1433]/30">
+                      <Icon className="h-3.5 w-3.5 text-[#1f1433]" />
                     </div>
                     <div className="absolute bottom-0 left-0 p-4 w-full">
-                      <p className="text-[#D4AF37] text-[9px] font-bold uppercase tracking-widest mb-1">
+                      <p className="text-[#1f1433] text-[9px] font-bold uppercase tracking-widest mb-1">
                         {destination.region}
                       </p>
                       <h3 className="font-display text-white font-bold text-sm leading-tight mb-1">
@@ -430,10 +430,10 @@ export function HomePage() {
               <div className="mt-14 md:mt-16">
                 <div className="flex items-end justify-between mb-6">
                   <div>
-                    <p className="font-script text-xl md:text-2xl text-[#D4AF37] mb-1">
+                    <p className="font-script text-xl md:text-2xl text-[#1f1433] mb-1">
                       Accommodation
                     </p>
-                    <h3 className="font-display text-xl md:text-[1.5rem] font-bold tracking-tight text-[#1A0B2E]">
+                    <h3 className="font-display text-xl md:text-[1.5rem] font-bold tracking-tight text-[#1f1433]">
                       Popular Stays
                     </h3>
                     <p className="hidden md:block text-[#64748B] mt-1 text-sm max-w-lg leading-relaxed">
@@ -443,7 +443,7 @@ export function HomePage() {
                   </div>
                   <Link
                     href="/stays"
-                    className="hidden md:inline-flex items-center gap-1.5 text-sm font-semibold text-[#1A0B2E] hover:text-[#2A154A] transition-all duration-200 group shrink-0"
+                    className="hidden md:inline-flex items-center gap-1.5 text-sm font-semibold text-[#1f1433] hover:text-[#2A154A] transition-all duration-200 group shrink-0"
                   >
                     <span>See all stays</span>
                     <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -466,7 +466,7 @@ export function HomePage() {
                 <div className="mt-5 text-center md:hidden">
                   <Link
                     href="/stays"
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#1A0B2E] hover:text-[#2A154A] transition-all duration-200 group"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#1f1433] hover:text-[#2A154A] transition-all duration-200 group"
                   >
                     <span>See all stays</span>
                     <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -510,7 +510,7 @@ export function HomePage() {
                   }}
                 />
                 <div className="absolute top-3 left-3">
-                  <span className="inline-flex items-center gap-1 bg-[#D4AF37] text-[#1A0B2E] text-[9px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">
+                  <span className="inline-flex items-center gap-1 bg-[#f2ba0d] text-[#1f1433] text-[9px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">
                     {stayCount} escapes
                   </span>
                 </div>
@@ -529,16 +529,16 @@ export function HomePage() {
       {/* 
           STORY — Dark background to make gold pop, grid split with image
        */}
-      <section className="bg-[#1A0B2E]">
+      <section className="bg-[#f2ba0d]">
         <div className="mx-auto w-full max-w-7xl px-4 md:px-8 py-10 md:py-14">
           <AnimatedSection delay={80}>
             <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
               {/* Text side */}
               <div>
-                <p className="font-script text-xl md:text-2xl md:text-[1.6rem] text-[#D4AF37] mb-3">
+                <p className="font-script text-xl md:text-2xl md:text-[1.6rem] text-[#1f1433] mb-3">
                   A note on hidden gems
                 </p>
-                <div className="w-12 h-0.5 bg-[#D4AF37] mb-6" />
+                <div className="w-12 h-0.5 bg-[#f2ba0d] mb-6" />
                 <p className="text-[15px] md:text-[17px] text-white/70 leading-[1.8] md:leading-[1.85] font-light">
                   Every hidden gem has a story — and we believe you should get to know it before you
                   go. From the farmstead in Chisamba where roosters wake you instead of alarms, to
@@ -571,8 +571,8 @@ export function HomePage() {
         <section className="mx-auto w-full max-w-7xl px-4 md:px-8 py-12 md:py-16">
           <div className="flex items-end justify-between mb-7">
             <div>
-              <p className="font-script text-xl md:text-2xl text-[#D4AF37] mb-1">Hidden Zambia</p>
-              <h2 className="font-display text-2xl font-bold tracking-tight text-[#1A0B2E] leading-[1.15]">
+              <p className="font-script text-xl md:text-2xl text-[#1f1433] mb-1">Hidden Zambia</p>
+              <h2 className="font-display text-2xl font-bold tracking-tight text-[#1f1433] leading-[1.15]">
                 Discover Hidden Gems
               </h2>
               <p className="text-[#64748B] mt-1.5 text-sm max-w-lg leading-relaxed">
@@ -581,7 +581,7 @@ export function HomePage() {
             </div>
             <Link
               href="/explore"
-              className="hidden md:inline-flex items-center gap-1.5 text-sm font-semibold text-[#1A0B2E] hover:text-[#2A154A] transition-all duration-200 group"
+              className="hidden md:inline-flex items-center gap-1.5 text-sm font-semibold text-[#1f1433] hover:text-[#2A154A] transition-all duration-200 group"
             >
               <span>Explore all</span>
               <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -629,7 +629,7 @@ export function HomePage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
                 <div className="absolute bottom-0 left-0 p-4 w-full">
-                  <p className="text-[#D4AF37] text-[9px] font-bold uppercase tracking-[1.2px] mb-1">
+                  <p className="text-[#1f1433] text-[9px] font-bold uppercase tracking-[1.2px] mb-1">
                     {tag}
                   </p>
                   <h3 className="font-display text-white font-bold text-sm leading-snug mb-1.5">
@@ -644,7 +644,7 @@ export function HomePage() {
           <div className="mt-5 text-center md:hidden">
             <Link
               href="/explore"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#1A0B2E] group"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#1f1433] group"
             >
               <span>Explore all gems</span>
               <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -693,7 +693,7 @@ export function HomePage() {
                   </span>
                 </div>
                 <div className="absolute bottom-0 left-0 p-4 w-full">
-                  <p className="text-[#D4AF37] text-[9px] font-bold uppercase tracking-widest mb-1">
+                  <p className="text-[#1f1433] text-[9px] font-bold uppercase tracking-widest mb-1">
                     {deal.location}
                   </p>
                   <h3 className="font-display text-white font-bold text-sm leading-tight mb-1.5">
@@ -713,7 +713,7 @@ export function HomePage() {
           <div className="mt-5 text-center md:hidden">
             <Link
               href="/stays"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#1A0B2E] group"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#1f1433] group"
             >
               <span>View all deals</span>
               <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -727,7 +727,7 @@ export function HomePage() {
        */}
       <AnimatedSection delay={100}>
         <section className="mx-auto w-full max-w-7xl px-4 md:px-8 mb-16">
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center bg-[#F9F7F2] rounded-2xl overflow-hidden border border-[#D4AF37]/60">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center bg-[#F9F7F2] rounded-2xl overflow-hidden border border-[#1f1433]/60">
             {/* Image side */}
             <div className="relative aspect-[4/3] md:aspect-auto md:h-full min-h-[280px] overflow-hidden">
               <img
@@ -740,7 +740,7 @@ export function HomePage() {
             </div>
             {/* Content side */}
             <div className="px-6 md:px-0 md:pr-10 py-8">
-              <p className="text-[10px] font-bold text-[#D4AF37] tracking-[1px] uppercase mb-2">
+              <p className="text-[10px] font-bold text-[#1f1433] tracking-[1px] uppercase mb-2">
                 For property owners
               </p>
               <h2 className="font-display text-xl md:text-2xl font-bold text-[#334155] leading-snug mb-3">
@@ -751,7 +751,7 @@ export function HomePage() {
               </p>
               <Link
                 href="/become-host"
-                className="inline-flex items-center justify-center gap-2 bg-[#D4AF37] hover:bg-[#d5b069] text-[#111111] text-sm font-bold px-8 py-3 rounded-xl transition-all duration-200 w-full sm:w-auto"
+                className="inline-flex items-center justify-center gap-2 bg-[#f2ba0d] hover:bg-[#d4b065] text-[#111111] text-sm font-bold px-8 py-3 rounded-xl transition-all duration-200 w-full sm:w-auto"
               >
                 List your escape <ArrowRight className="h-4 w-4" />
               </Link>
@@ -765,7 +765,7 @@ export function HomePage() {
           Dark plum background with white text, gold icon containers,
           and a 3-column horizontal layout for value props.
        */}
-      <section className="pt-14 pb-8 md:pt-[56px] md:pb-8 bg-[#1A0B2E]">
+      <section className="pt-14 pb-8 md:pt-[56px] md:pb-8 bg-[#f2ba0d]">
         <div className="mx-auto w-full max-w-7xl px-4 md:px-8">
           <AnimatedSection delay={0}>
             <h2 className="text-xl md:text-2xl font-bold text-white mb-8 md:mb-[32px] text-center md:text-left">
@@ -777,7 +777,7 @@ export function HomePage() {
             {valueProps.map(({ icon: Icon, title, desc }, i) => (
               <AnimatedSection key={title} delay={i * 100}>
                 <div className="flex gap-4 items-start">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-[rgba(201,168,76,0.15)] text-[#D4AF37]">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-[rgba(201,168,76,0.15)] text-[#1f1433]">
                     <Icon className="h-[22px] w-[22px]" weight="regular" />
                   </div>
                   <div className="min-w-0">
@@ -795,3 +795,5 @@ export function HomePage() {
     </div>
   );
 }
+
+

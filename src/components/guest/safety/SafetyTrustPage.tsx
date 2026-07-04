@@ -111,7 +111,7 @@ export function SafetyTrustPage() {
   return (
     <div className="min-h-screen flex flex-col bg-[#F9F7F2]">
       {/*  Hero  */}
-      <section className="relative overflow-hidden bg-[#1A0B2E] pt-16 pb-20 md:pt-20 md:pb-24">
+      <section className="relative overflow-hidden bg-[#f2ba0d] pt-16 pb-20 md:pt-20 md:pb-24">
         <div className="absolute inset-0 opacity-15">
           <img
             src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1600&q=80"
@@ -119,7 +119,7 @@ export function SafetyTrustPage() {
             className="h-full w-full object-cover"
           />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1A0B2E]/90 to-[#1A0B2E]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1f1433]/90 to-[#1f1433]" />
         <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-8">
           <Link
             href="/"
@@ -129,15 +129,15 @@ export function SafetyTrustPage() {
             Home
           </Link>
           <div className="max-w-3xl">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#D4AF37]/15 text-[#D4AF37] mb-4">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f2ba0d]/15 text-[#1f1433] mb-4">
               <ShieldCheck className="h-5 w-5" />
             </div>
-            <p className="text-[#D4AF37] text-[10px] font-bold uppercase tracking-[0.12em] mb-3">
+            <p className="text-[#1f1433] text-[10px] font-bold uppercase tracking-[0.12em] mb-3">
               Trust & safety
             </p>
             <h1 className="font-display text-3xl md:text-4xl lg:text-[3.25rem] font-black text-white leading-[1.1] mb-4">
               Your safety is our{" "}
-              <span className="font-script text-[1.2em] font-normal text-[#D4AF37] lowercase">
+              <span className="font-script text-[1.2em] font-normal text-[#1f1433] lowercase">
                 promise
               </span>
             </h1>
@@ -151,7 +151,7 @@ export function SafetyTrustPage() {
 
       {/*  Trust Pillars  */}
       <main className="flex-1 mx-auto max-w-7xl px-4 md:px-8 py-14 md:py-16">
-        <p className="text-[#D4AF37] text-[10px] font-bold uppercase tracking-[0.12em] mb-3 text-center">
+        <p className="text-[#1f1433] text-[10px] font-bold uppercase tracking-[0.12em] mb-3 text-center">
           How we keep you safe
         </p>
         <h2 className="font-display text-2xl md:text-3xl font-bold text-[#334155] text-center mb-10 md:mb-12">
@@ -165,7 +165,7 @@ export function SafetyTrustPage() {
               className="bg-white border border-[#E0DBD0] rounded-2xl p-6 md:p-8 shadow-sm"
             >
               <div className="flex items-start gap-4 md:gap-6">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#1A0B2E]/5 text-[#1A0B2E]">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#f2ba0d]/5 text-[#1f1433]">
                   <Icon className="h-5 w-5" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -174,7 +174,7 @@ export function SafetyTrustPage() {
                   <div className="grid sm:grid-cols-2 gap-x-6 gap-y-2">
                     {items.map((item) => (
                       <div key={item} className="flex items-start gap-2 text-sm text-[#64748B]">
-                        <CheckCircle2 className="h-4 w-4 text-[#D4AF37] mt-0.5 shrink-0" />
+                        <CheckCircle2 className="h-4 w-4 text-[#1f1433] mt-0.5 shrink-0" />
                         <span>{item}</span>
                       </div>
                     ))}
@@ -187,7 +187,7 @@ export function SafetyTrustPage() {
 
         {/*  Community Guidelines  */}
         <section className="mt-14 md:mt-16">
-          <p className="text-[#D4AF37] text-[10px] font-bold uppercase tracking-[0.12em] mb-3 text-center">
+          <p className="text-[#1f1433] text-[10px] font-bold uppercase tracking-[0.12em] mb-3 text-center">
             Together we thrive
           </p>
           <h2 className="font-display text-2xl md:text-3xl font-bold text-[#334155] text-center mb-3">
@@ -203,7 +203,7 @@ export function SafetyTrustPage() {
                 key={title}
                 className="bg-white border border-[#E0DBD0] rounded-2xl p-5 text-center"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1A0B2E]/5 text-[#1A0B2E] mx-auto mb-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f2ba0d]/5 text-[#1f1433] mx-auto mb-3">
                   <Icon className="h-5 w-5" />
                 </div>
                 <h3 className="font-bold text-sm text-[#334155] mb-1">{title}</h3>
@@ -216,7 +216,7 @@ export function SafetyTrustPage() {
         {/*  Safety Tips  */}
         <section className="mt-14 md:mt-16">
           <div className="bg-white border border-[#E0DBD0] rounded-2xl p-6 md:p-8 shadow-sm">
-            <p className="text-[#D4AF37] text-[10px] font-bold uppercase tracking-[0.12em] mb-3">
+            <p className="text-[#1f1433] text-[10px] font-bold uppercase tracking-[0.12em] mb-3">
               For guests
             </p>
             <h2 className="font-display text-xl md:text-2xl font-bold text-[#334155] mb-1">
@@ -228,7 +228,7 @@ export function SafetyTrustPage() {
             <div className="grid sm:grid-cols-2 gap-5">
               {safetyTips.map(({ title, desc }) => (
                 <div key={title} className="flex gap-3">
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#D4AF37]/10 text-[#D4AF37] text-xs font-black">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#f2ba0d]/10 text-[#1f1433] text-xs font-black">
                     <CheckCircle2 className="h-4 w-4" />
                   </div>
                   <div>
@@ -242,8 +242,8 @@ export function SafetyTrustPage() {
         </section>
 
         {/*  Report an Issue  */}
-        <section className="mt-14 md:mt-16 bg-gradient-to-br from-[#1A0B2E] to-[#1A0B2D] rounded-2xl p-8 md:p-10 text-center">
-          <AlertTriangle className="h-8 w-8 text-[#D4AF37] mx-auto mb-4" />
+        <section className="mt-14 md:mt-16 bg-gradient-to-br from-[#1f1433] to-[#1A0B2D] rounded-2xl p-8 md:p-10 text-center">
+          <AlertTriangle className="h-8 w-8 text-[#1f1433] mx-auto mb-4" />
           <h2 className="font-display text-xl md:text-2xl font-bold text-white mb-2">
             Report a concern
           </h2>
@@ -254,7 +254,7 @@ export function SafetyTrustPage() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/help"
-              className="inline-flex items-center gap-2 h-11 px-6 rounded-xl bg-[#D4AF37] text-[#334155] font-bold text-sm hover:bg-[#B48E3E] transition-colors"
+              className="inline-flex items-center gap-2 h-11 px-6 rounded-xl bg-[#f2ba0d] text-[#334155] font-bold text-sm hover:bg-[#d4b065] transition-colors"
             >
               <MessageSquare className="h-4 w-4" /> Contact support
             </Link>
@@ -271,7 +271,7 @@ export function SafetyTrustPage() {
         <div className="mt-10 rounded-2xl border border-[#E0DBD0] bg-white p-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
             <div className="flex items-center gap-3 text-[#64748B]">
-              <Phone className="h-4 w-4 text-[#D4AF37]" />
+              <Phone className="h-4 w-4 text-[#1f1433]" />
               <span>
                 Emergency support:{" "}
                 <a
@@ -283,7 +283,7 @@ export function SafetyTrustPage() {
               </span>
             </div>
             <div className="flex items-center gap-3 text-[#64748B]">
-              <Mail className="h-4 w-4 text-[#D4AF37]" />
+              <Mail className="h-4 w-4 text-[#1f1433]" />
               <span>
                 General inquiries:{" "}
                 <a
@@ -296,7 +296,7 @@ export function SafetyTrustPage() {
             </div>
             <Link
               href="/legal/privacy"
-              className="text-sm font-semibold text-[#334155] hover:text-[#1A0B2E] transition-colors flex items-center gap-1"
+              className="text-sm font-semibold text-[#334155] hover:text-[#1f1433] transition-colors flex items-center gap-1"
             >
               Privacy Policy <ArrowRight className="h-3.5 w-3.5" />
             </Link>
@@ -306,3 +306,4 @@ export function SafetyTrustPage() {
     </div>
   );
 }
+

@@ -20,7 +20,7 @@ export default async function ReviewRoute({ params }: Props) {
     <Suspense
       fallback={
         <div className="min-h-screen flex items-center justify-center bg-[#F9F7F2]">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#1A0B2E] border-t-transparent" />
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#1f1433] border-t-transparent" />
         </div>
       }
     >

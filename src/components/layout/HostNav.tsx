@@ -80,7 +80,7 @@ export function HostNav() {
             className="flex items-center gap-2 shrink-0 group no-underline outline-none"
           >
             <span className="text-lg font-semibold text-white tracking-tight">Nearby</span>
-            <span className="font-script text-[#C9A84C] text-[1.2em] leading-none">Escapes</span>
+            <span className="font-script text-[#2a1b47] text-[1.2em] leading-none">Escapes</span>
           </Link>
 
           {/* Desktop Nav Links */}
@@ -96,7 +96,7 @@ export function HostNav() {
                     className={cn(
                       "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 no-underline outline-none",
                       active
-                        ? "bg-[#C9A84C]/15 text-[#C9A84C]"
+                        ? "bg-[#d4b065]/15 text-[#2a1b47]"
                         : "text-white/80 hover:bg-white/5 hover:text-white",
                     )}
                   >
@@ -115,8 +115,8 @@ export function HostNav() {
                 className={cn(
                   "relative flex items-center justify-center h-9 w-9 rounded-full border transition-all",
                   isActive("/host/notifications")
-                    ? "border-[#C9A84C] bg-white/10 text-[#C9A84C]"
-                    : "border-[#C9A84C]/20 hover:bg-white/5 text-[#C9A84C] hover:text-white",
+                    ? "border-[#2a1b47] bg-white/10 text-[#2a1b47]"
+                    : "border-[#2a1b47]/20 hover:bg-white/5 text-[#2a1b47] hover:text-white",
                 )}
                 aria-label="Notifications"
               >
@@ -129,7 +129,7 @@ export function HostNav() {
               <Sheet>
                 <SheetTrigger asChild>
                   <button
-                    className="flex items-center justify-center h-9 w-9 rounded-full border border-[#C9A84C]/20 hover:bg-white/5 transition-colors text-[#C9A84C]"
+                    className="flex items-center justify-center h-9 w-9 rounded-full border border-[#2a1b47]/20 hover:bg-white/5 transition-colors text-[#2a1b47]"
                     aria-label="Menu"
                   >
                     <Menu className="h-5 w-5" strokeWidth={2.5} />
@@ -137,13 +137,13 @@ export function HostNav() {
                 </SheetTrigger>
                 <SheetContent
                   side="right"
-                  className="w-[280px] p-0 flex flex-col bg-[#3D2463] border-l border-[#C9A84C]/15 text-white"
+                  className="w-[280px] p-0 flex flex-col bg-[#3D2463] border-l border-[#2a1b47]/15 text-white"
                 >
                   <SheetTitle className="sr-only">Host Menu</SheetTitle>
                   <div className="flex-1 overflow-y-auto px-4 py-8 flex flex-col gap-6">
                     {/* Account Section */}
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-[#C9A84C] mb-2.5 px-3">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-[#2a1b47] mb-2.5 px-3">
                         Account
                       </p>
                       <div className="flex flex-col gap-1">
@@ -153,7 +153,7 @@ export function HostNav() {
                             className={cn(
                               "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all",
                               pathname === "/host/profile"
-                                ? "bg-[#C9A84C]/15 text-[#C9A84C]"
+                                ? "bg-[#d4b065]/15 text-[#2a1b47]"
                                 : "text-white/80 hover:bg-white/5 hover:text-white",
                             )}
                           >
@@ -166,7 +166,7 @@ export function HostNav() {
                             className={cn(
                               "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all",
                               pathname === "/host/settings"
-                                ? "bg-[#C9A84C]/15 text-[#C9A84C]"
+                                ? "bg-[#d4b065]/15 text-[#2a1b47]"
                                 : "text-white/80 hover:bg-white/5 hover:text-white",
                             )}
                           >
@@ -179,7 +179,7 @@ export function HostNav() {
                     <div className="h-px bg-white/10" />
 
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-[#C9A84C] mb-2.5 px-3">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-[#2a1b47] mb-2.5 px-3">
                         Host Dashboard
                       </p>
                       <div className="flex flex-col gap-1">
@@ -192,7 +192,7 @@ export function HostNav() {
                                 className={cn(
                                   "flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-semibold transition-all",
                                   isActive(item.href)
-                                    ? "bg-[#C9A84C]/15 text-[#C9A84C]"
+                                    ? "bg-[#d4b065]/15 text-[#2a1b47]"
                                     : "text-white/80 hover:bg-white/5 hover:text-white",
                                 )}
                               >
@@ -229,7 +229,7 @@ export function HostNav() {
 
       {/*  Bottom Navigation (.h-bnav)  */}
       {isHostRoute && (
-        <nav className="fixed bottom-0 left-0 right-0 z-50 bg-[#1C1030] border-t border-[#C9A84C]/20 lg:hidden">
+        <nav className="fixed bottom-0 left-0 right-0 z-50 bg-[#1C1030] border-t border-[#2a1b47]/20 lg:hidden">
           <div className="flex items-center justify-around py-2.5 pb-3.5 px-2">
             {bottomNavItems.map((item) => {
               const Icon = item.icon;
@@ -244,11 +244,11 @@ export function HostNav() {
                     <Icon
                       className={cn(
                         "h-[19px] w-[19px]",
-                        active ? "text-[#C9A84C]" : "text-[#5A5070]",
+                        active ? "text-[#2a1b47]" : "text-[#5A5070]",
                       )}
                     />
                     {item.badge && (
-                      <span className="absolute -top-1 -right-1.5 h-3.5 w-3.5 rounded-full bg-[#C9A84C] text-[#1C1030] text-[7px] font-bold flex items-center justify-center">
+                      <span className="absolute -top-1 -right-1.5 h-3.5 w-3.5 rounded-full bg-[#d4b065] text-[#1C1030] text-[7px] font-bold flex items-center justify-center">
                         {item.badge}
                       </span>
                     )}
@@ -256,7 +256,7 @@ export function HostNav() {
                   <span
                     className={cn(
                       "text-[9px] font-medium",
-                      active ? "text-[#C9A84C]" : "text-[#5A5070]",
+                      active ? "text-[#2a1b47]" : "text-[#5A5070]",
                     )}
                   >
                     {item.label}

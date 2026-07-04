@@ -60,7 +60,7 @@ const categoryHero: Record<
     tagline: "🧗 Thrills & excitement",
     description:
       "For the adrenaline seekers and explorers. Raft the Zambezi's legendary rapids, soar above Victoria Falls in a helicopter, or hike to hidden waterfalls.",
-    gradient: "from-[#1A0B2E] via-[#3A2B4D] to-[#1A0B2E]",
+    gradient: "from-[#1f1433] via-[#3A2B4D] to-[#1f1433]",
     image: "https://images.unsplash.com/photo-1534234828563-02511c750b53?w=1200&q=80",
   },
   water: {
@@ -76,7 +76,7 @@ const categoryHero: Record<
     tagline: "📍 Discover Zambia",
     description:
       "Browse all experiences, tours, and activities across Zambia. From city tours to wilderness adventures — find your next unforgettable experience.",
-    gradient: "from-[#1A0B2E] via-[#3A2B4D] to-[#1A0B2E]",
+    gradient: "from-[#1f1433] via-[#3A2B4D] to-[#1f1433]",
     image: "https://images.unsplash.com/photo-1534234828563-02511c750b53?w=1200&q=80",
   },
 };
@@ -120,7 +120,7 @@ export function ExperienceCategoryPage({ category, experiences }: ExperienceCate
         {/* Content */}
         <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-8">
           <div className="max-w-2xl">
-            <p className="text-[#D4AF37] text-sm font-bold uppercase tracking-widest mb-3">
+            <p className="text-[#1f1433] text-sm font-bold uppercase tracking-widest mb-3">
               {hero.tagline}
             </p>
             <h1 className="font-display text-3xl md:text-4xl font-black text-white leading-[1.1] mb-4">
@@ -142,8 +142,8 @@ export function ExperienceCategoryPage({ category, experiences }: ExperienceCate
                 className={cn(
                   "inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-200",
                   slug === category
-                    ? "bg-[#1A0B2E] text-white shadow-sm"
-                    : "text-[#64748B] hover:text-[#1A0B2E] hover:bg-[#F9F7F2]",
+                    ? "bg-[#f2ba0d] text-white shadow-sm"
+                    : "text-[#64748B] hover:text-[#1f1433] hover:bg-[#F9F7F2]",
                 )}
               >
                 <span>{categoryIcons[slug]}</span>
@@ -190,7 +190,7 @@ export function ExperienceCategoryPage({ category, experiences }: ExperienceCate
                       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute top-3 left-3">
-                      <span className="inline-flex items-center gap-1 bg-[#1A0B2E]/80 text-white text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-md backdrop-blur-sm">
+                      <span className="inline-flex items-center gap-1 bg-[#f2ba0d]/80 text-white text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-md backdrop-blur-sm">
                         {categoryIcons[exp.category]} {categoryLabels[exp.category]}
                       </span>
                     </div>
@@ -200,7 +200,7 @@ export function ExperienceCategoryPage({ category, experiences }: ExperienceCate
                       {exp.name}
                     </h3>
                     <div className="flex items-center gap-1 text-[13px] text-[#64748B] mb-3">
-                      <MapPin className="h-3.5 w-3.5 text-[#D4AF37] shrink-0" />
+                      <MapPin className="h-3.5 w-3.5 text-[#1f1433] shrink-0" />
                       <span className="line-clamp-1">{exp.location}</span>
                     </div>
 
@@ -223,13 +223,13 @@ export function ExperienceCategoryPage({ category, experiences }: ExperienceCate
                     {/* Price + Rating */}
                     <div className="flex items-center justify-between pt-2 border-t border-gray-100">
                       <div className="flex items-baseline gap-0.5">
-                        <span className="text-[15px] font-bold text-[#1A0B2E]">
+                        <span className="text-[15px] font-bold text-[#1f1433]">
                           ZMW {exp.price}
                         </span>
                         <span className="text-[12px] text-[#64748B]">/ person</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <Star className="h-3 w-3 fill-[#D4AF37] text-[#D4AF37]" />
+                        <Star className="h-3 w-3 fill-[#1f1433] text-[#1f1433]" />
                         <span className="text-[13px] font-semibold text-[#64748B]">
                           {exp.rating.toFixed(1)}
                         </span>
@@ -245,3 +245,4 @@ export function ExperienceCategoryPage({ category, experiences }: ExperienceCate
     </div>
   );
 }
+

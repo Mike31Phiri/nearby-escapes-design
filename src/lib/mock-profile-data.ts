@@ -191,7 +191,7 @@ export const mockStayHosts: Record<string, StayHost> = {
     id: "host-1",
     name: "Chanda Bwalya",
     avatarInitials: "CB",
-    avatarColor: "#1A0B2E",
+    avatarColor: "#1f1433",
     bio: "Zambian-born travel enthusiast and hospitality curator. I handpick the finest lodges, camps, and experiences across Zambia to ensure every guest leaves with unforgettable memories. When I'm not hosting, you'll find me exploring remote corners of the country or cooking traditional Nshima with my family.",
     location: "Lusaka, Zambia",
     joined: "January 2023",
@@ -435,3 +435,4 @@ export const mockReviews: UserReview[] = [
     text: "Walking with experienced rangers through the bush was a life-changing experience. Got up close (but safe!) with giraffes, zebras, and even a pride of lions. This is a must-do!",
   },
 ];
+

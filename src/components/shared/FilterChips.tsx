@@ -18,7 +18,7 @@ export function FilterChips({ chips, onClearAll }: FilterChipsProps) {
       {chips.map((chip, i) => (
         <span
           key={i}
-          className="inline-flex items-center gap-1.5 bg-[#1A0B2E] text-white text-xs px-3 py-1 rounded-full whitespace-nowrap flex-shrink-0"
+          className="inline-flex items-center gap-1.5 bg-[#f2ba0d] text-white text-xs px-3 py-1 rounded-full whitespace-nowrap flex-shrink-0"
         >
           {chip.label}
           <button
@@ -33,7 +33,7 @@ export function FilterChips({ chips, onClearAll }: FilterChipsProps) {
       {chips.length >= 2 && onClearAll && (
         <button
           onClick={onClearAll}
-          className="text-xs text-[#1A0B2E] font-semibold whitespace-nowrap flex-shrink-0 underline underline-offset-2 hover:text-[#D4AF37] transition-colors"
+          className="text-xs text-[#1f1433] font-semibold whitespace-nowrap flex-shrink-0 underline underline-offset-2 hover:text-[#1f1433] transition-colors"
         >
           Clear all
         </button>
@@ -41,3 +41,4 @@ export function FilterChips({ chips, onClearAll }: FilterChipsProps) {
     </div>
   );
 }
+

@@ -238,7 +238,7 @@ export function HostListingsPage() {
         description="Manage and monitor all your properties and services"
         actions={
           <Button
-            className="h-10 px-5 rounded-xl text-sm font-bold bg-gradient-to-r from-[#D4AF37] to-[#B89430] text-[#1A0B2E] hover:from-[#B89430] hover:to-[#967825] shadow-sm border-none"
+            className="h-10 px-5 rounded-xl text-sm font-bold bg-gradient-to-r from-[#1f1433] to-[#150d22] text-[#1f1433] hover:from-[#150d22] hover:to-[#967825] shadow-sm border-none"
             asChild
           >
             <Link href="/host/create">
@@ -365,3 +365,4 @@ export function HostListingsPage() {
     </div>
   );
 }
+

@@ -41,7 +41,7 @@ function FilterSection({
         className="flex items-center justify-between w-full text-left mb-3 group"
         aria-expanded={open}
       >
-        <span className="text-sm font-semibold text-[#1A0B2E]">{filter.label}</span>
+        <span className="text-sm font-semibold text-[#1f1433]">{filter.label}</span>
         <ChevronDown
           className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
@@ -67,10 +67,10 @@ function FilterSection({
                         : [...current, opt.value];
                       onChange(next);
                     }}
-                    className="h-4 w-4 rounded border-gray-300 accent-[#1A0B2E] cursor-pointer"
+                    className="h-4 w-4 rounded border-gray-300 accent-[#1f1433] cursor-pointer"
                     aria-label={opt.label}
                   />
-                  <span className="text-sm text-gray-700 group-hover/cb:text-[#1A0B2E] transition-colors flex-1">
+                  <span className="text-sm text-gray-700 group-hover/cb:text-[#1f1433] transition-colors flex-1">
                     {opt.label}
                   </span>
                   {opt.count !== undefined && (
@@ -89,10 +89,10 @@ function FilterSection({
                   value={opt.value}
                   checked={(activeValue ?? filter.options?.[0]?.value) === opt.value}
                   onChange={() => onChange(opt.value)}
-                  className="h-4 w-4 accent-[#1A0B2E] cursor-pointer"
+                  className="h-4 w-4 accent-[#1f1433] cursor-pointer"
                   aria-label={opt.label}
                 />
-                <span className="text-sm text-gray-700 group-hover/rb:text-[#1A0B2E] transition-colors">
+                <span className="text-sm text-gray-700 group-hover/rb:text-[#1f1433] transition-colors">
                   {opt.label}
                 </span>
               </label>
@@ -115,7 +115,7 @@ function FilterSection({
                     step={filter.step ?? 1}
                     value={activeValue?.min ?? filter.min ?? 0}
                     onChange={(e) => onChange({ ...activeValue, min: Number(e.target.value) })}
-                    className="w-full border border-gray-200 rounded-lg py-1.5 pl-6 pr-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1A0B2E]/20 focus:border-[#1A0B2E] transition-colors"
+                    className="w-full border border-gray-200 rounded-lg py-1.5 pl-6 pr-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1f1433]/20 focus:border-[#1f1433] transition-colors"
                     aria-label="Minimum price"
                   />
                 </div>
@@ -136,7 +136,7 @@ function FilterSection({
                     step={filter.step ?? 1}
                     value={activeValue?.max ?? filter.max ?? 9999}
                     onChange={(e) => onChange({ ...activeValue, max: Number(e.target.value) })}
-                    className="w-full border border-gray-200 rounded-lg py-1.5 pl-6 pr-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1A0B2E]/20 focus:border-[#1A0B2E] transition-colors"
+                    className="w-full border border-gray-200 rounded-lg py-1.5 pl-6 pr-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1f1433]/20 focus:border-[#1f1433] transition-colors"
                     aria-label="Maximum price"
                   />
                 </div>
@@ -152,7 +152,7 @@ function FilterSection({
                 aria-checked={!!activeValue}
                 onClick={() => onChange(!activeValue)}
                 className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-200 ${
-                  activeValue ? "bg-[#1A0B2E]" : "bg-gray-200"
+                  activeValue ? "bg-[#f2ba0d]" : "bg-gray-200"
                 }`}
               >
                 <span
@@ -178,10 +178,10 @@ export function VerticalFilterSidebar({
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 sticky top-24">
       <div className="flex items-center justify-between mb-1">
-        <h2 className="text-base font-bold text-[#1A0B2E]">Filters</h2>
+        <h2 className="text-base font-bold text-[#1f1433]">Filters</h2>
         <button
           onClick={onReset}
-          className="text-sm font-semibold text-[#D4AF37] hover:text-[#b8942e] transition-colors"
+          className="text-sm font-semibold text-[#1f1433] hover:text-[#b8942e] transition-colors"
         >
           Reset all
         </button>
@@ -199,3 +199,4 @@ export function VerticalFilterSidebar({
     </div>
   );
 }
+

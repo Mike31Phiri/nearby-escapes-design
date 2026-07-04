@@ -88,7 +88,7 @@ type FilterSection = {
     | "landmarks"
     | "travel-group"
     | "distance-centre";
-  options?: { slug: string; label: string; count?: number }[];
+    options?: { slug: string; label: string; count?: number }[];
 };
 
 /* Category Definitions */
@@ -698,15 +698,15 @@ function SearchContent() {
                 >
                   <div
                     className={cn(
-                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#1A0B2E]",
-                      selectedSubTypes.includes(opt.slug) && "bg-[#1A0B2E] border-[#1A0B2E]",
+                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#1f1433]",
+                      selectedSubTypes.includes(opt.slug) && "bg-[#1f1433] border-[#1f1433]",
                     )}
                   >
                     {selectedSubTypes.includes(opt.slug) && (
                       <Check className="h-[11px] w-[11px] text-[#F9F7F2]" strokeWidth={3} />
                     )}
                   </div>
-                  <span className="text-[12px] text-[#3A3040] transition-colors group-hover:text-[#1A0B2E]">
+                  <span className="text-[12px] text-[#3A3040] transition-colors group-hover:text-[#1f1433]">
                     {opt.label}
                   </span>
                 </label>
@@ -727,7 +727,7 @@ function SearchContent() {
                 value={priceMin}
                 onChange={(e) => setPriceMin(e.target.value)}
                 placeholder="Min"
-                className="w-0 flex-1 bg-white border border-[#E0DBD0] rounded-[8px] px-[9px] py-[7px] text-[12px] font-medium text-[#334155] text-center focus:outline-none focus:border-[#1A0B2E]"
+                className="w-0 flex-1 bg-white border border-[#E0DBD0] rounded-[8px] px-[9px] py-[7px] text-[12px] font-medium text-[#334155] text-center focus:outline-none focus:border-[#1f1433]"
               />
               <span className="text-[12px] text-[#64748B] shrink-0">—</span>
               <input
@@ -735,7 +735,7 @@ function SearchContent() {
                 value={priceMax}
                 onChange={(e) => setPriceMax(e.target.value)}
                 placeholder="Max"
-                className="w-0 flex-1 bg-white border border-[#E0DBD0] rounded-[8px] px-[9px] py-[7px] text-[12px] font-medium text-[#334155] text-center focus:outline-none focus:border-[#1A0B2E]"
+                className="w-0 flex-1 bg-white border border-[#E0DBD0] rounded-[8px] px-[9px] py-[7px] text-[12px] font-medium text-[#334155] text-center focus:outline-none focus:border-[#1f1433]"
               />
             </div>
           </div>
@@ -760,15 +760,15 @@ function SearchContent() {
                 >
                   <div
                     className={cn(
-                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#1A0B2E]",
-                      selectedAmenities.includes(a) && "bg-[#1A0B2E] border-[#1A0B2E]",
+                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#1f1433]",
+                      selectedAmenities.includes(a) && "bg-[#1f1433] border-[#1f1433]",
                     )}
                   >
                     {selectedAmenities.includes(a) && (
                       <Check className="h-[11px] w-[11px] text-[#F9F7F2]" strokeWidth={3} />
                     )}
                   </div>
-                  <span className="text-[12px] text-[#3A3040] transition-colors group-hover:text-[#1A0B2E]">
+                  <span className="text-[12px] text-[#3A3040] transition-colors group-hover:text-[#1f1433]">
                     {a}
                   </span>
                 </label>
@@ -791,8 +791,8 @@ function SearchContent() {
                   className={cn(
                     "px-[10px] py-[5px] rounded-[20px] text-[11px] border transition-colors",
                     selectedDistance === d
-                      ? "bg-[#1A0B2E] border-[#1A0B2E] text-[#F9F7F2]"
-                      : "bg-white border-[#E0DBD0] text-[#1A0B2E] hover:border-[#1A0B2E]/40",
+                      ? "bg-[#1f1433] border-[#1f1433] text-[#F9F7F2]"
+                      : "bg-white border-[#E0DBD0] text-[#1f1433] hover:border-[#1f1433]/40",
                   )}
                 >
                   {d}
@@ -842,15 +842,15 @@ function SearchContent() {
                 >
                   <div
                     className={cn(
-                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#1A0B2E]",
-                      selectedPropertyTypes.includes(opt.slug) && "bg-[#1A0B2E] border-[#1A0B2E]",
+                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#1f1433]",
+                      selectedPropertyTypes.includes(opt.slug) && "bg-[#1f1433] border-[#1f1433]",
                     )}
                   >
                     {selectedPropertyTypes.includes(opt.slug) && (
                       <Check className="h-[11px] w-[11px] text-[#F9F7F2]" strokeWidth={3} />
                     )}
                   </div>
-                  <span className="text-[12px] text-[#3A3040] flex-1 transition-colors group-hover:text-[#1A0B2E]">
+                  <span className="text-[12px] text-[#3A3040] flex-1 transition-colors group-hover:text-[#1f1433]">
                     {opt.label}
                   </span>
                   <span className="text-[11px] text-[#64748B]">{opt.count}</span>
@@ -879,15 +879,15 @@ function SearchContent() {
                 >
                   <div
                     className={cn(
-                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#1A0B2E]",
-                      selectedReviewScore === opt.slug && "bg-[#1A0B2E] border-[#1A0B2E]",
+                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#1f1433]",
+                      selectedReviewScore === opt.slug && "bg-[#1f1433] border-[#1f1433]",
                     )}
                   >
                     {selectedReviewScore === opt.slug && (
                       <Check className="h-[11px] w-[11px] text-[#F9F7F2]" strokeWidth={3} />
                     )}
                   </div>
-                  <span className="text-[12px] text-[#3A3040] flex-1 transition-colors group-hover:text-[#1A0B2E]">
+                  <span className="text-[12px] text-[#3A3040] flex-1 transition-colors group-hover:text-[#1f1433]">
                     {opt.label}
                   </span>
                   <span className="text-[11px] text-[#64748B]">{opt.count}</span>
@@ -918,8 +918,8 @@ function SearchContent() {
                   className={cn(
                     "px-[10px] py-[5px] rounded-[20px] text-[11px] border transition-colors",
                     selectedDistanceCentre === d.slug
-                      ? "bg-[#1A0B2E] border-[#1A0B2E] text-[#F9F7F2]"
-                      : "bg-white border-[#E0DBD0] text-[#1A0B2E] hover:border-[#1A0B2E]/40",
+                      ? "bg-[#1f1433] border-[#1f1433] text-[#F9F7F2]"
+                      : "bg-white border-[#E0DBD0] text-[#1f1433] hover:border-[#1f1433]/40",
                   )}
                 >
                   {d.label}
@@ -945,15 +945,15 @@ function SearchContent() {
                 >
                   <div
                     className={cn(
-                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#1A0B2E]",
-                      selectedLandmarks.includes(opt.slug) && "bg-[#1A0B2E] border-[#1A0B2E]",
+                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#1f1433]",
+                      selectedLandmarks.includes(opt.slug) && "bg-[#1f1433] border-[#1f1433]",
                     )}
                   >
                     {selectedLandmarks.includes(opt.slug) && (
                       <Check className="h-[11px] w-[11px] text-[#F9F7F2]" strokeWidth={3} />
                     )}
                   </div>
-                  <span className="text-[12px] text-[#3A3040] flex-1 transition-colors group-hover:text-[#1A0B2E]">
+                  <span className="text-[12px] text-[#3A3040] flex-1 transition-colors group-hover:text-[#1f1433]">
                     {opt.label}
                   </span>
                   <span className="text-[11px] text-[#64748B]">{opt.count}</span>
@@ -980,15 +980,15 @@ function SearchContent() {
                 >
                   <div
                     className={cn(
-                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#1A0B2E]",
-                      selectedTravelGroups.includes(opt.slug) && "bg-[#1A0B2E] border-[#1A0B2E]",
+                      "w-4 h-4 rounded-[4px] border border-[#E0DBD0] bg-white shrink-0 flex items-center justify-center transition-colors group-hover:border-[#1f1433]",
+                      selectedTravelGroups.includes(opt.slug) && "bg-[#1f1433] border-[#1f1433]",
                     )}
                   >
                     {selectedTravelGroups.includes(opt.slug) && (
                       <Check className="h-[11px] w-[11px] text-[#F9F7F2]" strokeWidth={3} />
                     )}
                   </div>
-                  <span className="text-[12px] text-[#3A3040] flex-1 transition-colors group-hover:text-[#1A0B2E]">
+                  <span className="text-[12px] text-[#3A3040] flex-1 transition-colors group-hover:text-[#1f1433]">
                     {opt.label}
                   </span>
                   <span className="text-[11px] text-[#64748B]">{opt.count}</span>
@@ -1037,13 +1037,13 @@ function SearchContent() {
                 clearFilters();
                 setMobileFilterOpen(false);
               }}
-              className="bg-white border border-[#E0DBD0] rounded-[10px] py-3 text-[13px] font-medium text-[#1A0B2E]"
+              className="bg-white border border-[#E0DBD0] rounded-[10px] py-3 text-[13px] font-medium text-[#1f1433]"
             >
               Clear all
             </button>
             <button
               onClick={() => setMobileFilterOpen(false)}
-              className="bg-[#1A0B2E] rounded-[10px] py-3 text-[13px] font-medium text-[#F9F7F2] border-none"
+              className="bg-[#1f1433] rounded-[10px] py-3 text-[13px] font-medium text-[#F9F7F2] border-none"
             >
               Show {filteredItems.length} escape{filteredItems.length !== 1 ? "s" : ""}
             </button>
@@ -1070,7 +1070,7 @@ function SearchContent() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         {item.badge && (
-          <span className="absolute top-3 left-3 bg-[#D4AF37] text-[#111111] text-[9px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">
+          <span className="absolute top-3 left-3 bg-[#f2ba0d] text-[#111111] text-[9px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">
             {item.badge}
           </span>
         )}
@@ -1091,14 +1091,14 @@ function SearchContent() {
             {item.name}
           </h3>
           <div className="flex items-center gap-1 shrink-0">
-            <Star className="h-3 w-3 fill-[#D4AF37] text-[#D4AF37]" strokeWidth={1.5} />
+            <Star className="h-3 w-3 fill-[#f2ba0d] text-[#f2ba0d]" strokeWidth={1.5} />
             <span className="text-[12px] font-semibold text-[#6B6258]">
               {item.rating.toFixed(1)}
             </span>
           </div>
         </div>
         <div className="flex items-baseline gap-0.5 mt-1.5">
-          <span className="text-[14px] font-bold text-[#1A0B2E]">
+          <span className="text-[14px] font-bold text-[#1f1433]">
             K{item.price.toLocaleString()}
           </span>
           <span className="text-[11px] text-[#64748B]">{item.priceLabel}</span>
@@ -1124,7 +1124,7 @@ function SearchContent() {
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
         {item.badge && (
-          <span className="absolute top-2.5 left-2.5 bg-[#D4AF37] text-[#111111] text-[9px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">
+          <span className="absolute top-2.5 left-2.5 bg-[#f2ba0d] text-[#111111] text-[9px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">
             {item.badge}
           </span>
         )}
@@ -1161,14 +1161,14 @@ function SearchContent() {
 
         <div className="flex items-center justify-between mt-3">
           <div className="flex items-center gap-1">
-            <Star className="h-3.5 w-3.5 fill-[#D4AF37] text-[#D4AF37]" strokeWidth={1.5} />
+            <Star className="h-3.5 w-3.5 fill-[#f2ba0d] text-[#f2ba0d]" strokeWidth={1.5} />
             <span className="text-[13px] font-semibold text-[#6B6258]">
               {item.rating.toFixed(1)}
             </span>
             <span className="text-[12px] text-[#64748B]">({item.reviews})</span>
           </div>
           <div className="flex items-baseline gap-0.5">
-            <span className="text-[16px] font-bold text-[#1A0B2E]">
+            <span className="text-[16px] font-bold text-[#1f1433]">
               K{item.price.toLocaleString()}
             </span>
             <span className="text-[11px] text-[#64748B]">{item.priceLabel}</span>
@@ -1183,13 +1183,13 @@ function SearchContent() {
       {/*  MOBILE VIEW  */}
       <div className="md:hidden">
         <div className="bg-[#F9F7F2] px-4 pb-4 pt-6">
-          <div className="text-[22px] font-display font-bold text-[#1A0B2E] mb-4">
+          <div className="text-[22px] font-display font-bold text-[#1f1433] mb-4">
             Search your next escape
           </div>
           <div className="flex flex-col gap-3 mb-5">
             <form onSubmit={handleSearch} className="flex flex-col gap-3">
-              <div className="flex items-center gap-3 bg-white border border-[#E0DBD0] rounded-xl px-4 py-3 shadow-sm focus-within:border-[#D4AF37] focus-within:ring-2 focus-within:ring-[#D4AF37]/20 transition-all">
-                <Search className="h-5 w-5 text-[#D4AF37]" strokeWidth={2} />
+              <div className="flex items-center gap-3 bg-white border border-[#E0DBD0] rounded-xl px-4 py-3 shadow-sm focus-within:border-[#f2ba0d] focus-within:ring-2 focus-within:ring-[#f2ba0d]/20 transition-all">
+                <Search className="h-5 w-5 text-[#f2ba0d]" strokeWidth={2} />
                 <input
                   type="text"
                   value={searchText}
@@ -1199,7 +1199,7 @@ function SearchContent() {
                 />
               </div>
               <div className="flex items-center gap-3">
-                <div className="flex-1 bg-white border border-[#E0DBD0] rounded-xl px-4 py-3 shadow-sm flex items-center justify-center focus-within:border-[#D4AF37] focus-within:ring-2 focus-within:ring-[#D4AF37]/20 transition-all">
+                <div className="flex-1 bg-white border border-[#E0DBD0] rounded-xl px-4 py-3 shadow-sm flex items-center justify-center focus-within:border-[#f2ba0d] focus-within:ring-2 focus-within:ring-[#f2ba0d]/20 transition-all">
                   <DateRangePicker
                     value={dateRange}
                     onChange={setDateRange}
@@ -1207,8 +1207,8 @@ function SearchContent() {
                     className="w-full text-center text-[14px]"
                   />
                 </div>
-                <div className="flex items-center justify-center gap-2 bg-white border border-[#E0DBD0] rounded-xl px-4 py-3 shadow-sm w-[110px] shrink-0 focus-within:border-[#D4AF37] focus-within:ring-2 focus-within:ring-[#D4AF37]/20 transition-all">
-                  <Users className="h-[18px] w-[18px] text-[#D4AF37]" />
+                <div className="flex items-center justify-center gap-2 bg-white border border-[#E0DBD0] rounded-xl px-4 py-3 shadow-sm w-[110px] shrink-0 focus-within:border-[#f2ba0d] focus-within:ring-2 focus-within:ring-[#f2ba0d]/20 transition-all">
+                  <Users className="h-[18px] w-[18px] text-[#f2ba0d]" />
                   <input
                     type="number"
                     min={1}
@@ -1220,7 +1220,7 @@ function SearchContent() {
                 <button
                   type="button"
                   onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
-                  className="w-[48px] h-[48px] rounded-xl bg-[#1A0B2E] flex items-center justify-center shrink-0 shadow-md transition-transform active:scale-95 hover:bg-[#2E1A4E]"
+                  className="w-[48px] h-[48px] rounded-xl bg-[#1f1433] flex items-center justify-center shrink-0 shadow-md transition-transform active:scale-95 hover:bg-[#2E1A4E]"
                   aria-label="Open Filters"
                 >
                   <SlidersHorizontal
@@ -1241,8 +1241,8 @@ function SearchContent() {
                 className={cn(
                   "flex items-center gap-2 px-4 py-2.5 rounded-full border whitespace-nowrap transition-all duration-200 shrink-0 shadow-sm",
                   activeCategory === cat.slug
-                    ? "bg-[#1A0B2E] border-[#1A0B2E] text-[#D4AF37]"
-                    : "bg-white border-[#E0DBD0] text-[#64748B] hover:border-[#D4AF37]/40 hover:text-[#1A0B2E]",
+                    ? "bg-[#1f1433] border-[#1f1433] text-[#f2ba0d]"
+                    : "bg-white border-[#E0DBD0] text-[#64748B] hover:border-[#f2ba0d]/40 hover:text-[#1f1433]",
                 )}
               >
                 {cat.icon}
@@ -1267,7 +1267,7 @@ function SearchContent() {
             <select
               value={sortBy}
               onChange={(e) => handleSortChange(e.target.value)}
-              className="text-[12px] text-[#1A0B2E] font-medium bg-transparent border-none focus:outline-none cursor-pointer appearance-none pr-4"
+              className="text-[12px] text-[#1f1433] font-medium bg-transparent border-none focus:outline-none cursor-pointer appearance-none pr-4"
               style={{ backgroundImage: "none" }}
             >
               <option value="recommended">Best value</option>
@@ -1275,7 +1275,7 @@ function SearchContent() {
               <option value="price-high">Price: High</option>
               <option value="rating">Top rated</option>
             </select>
-            <ChevronDown className="h-3 w-3 text-[#1A0B2E]" strokeWidth={2} />
+            <ChevronDown className="h-3 w-3 text-[#1f1433]" strokeWidth={2} />
           </div>
         </div>
 
@@ -1284,18 +1284,18 @@ function SearchContent() {
         </div>
 
         {filteredItems.length > 12 && (
-          <button className="mx-4 mb-4 border border-[#E0DBD0] rounded-[10px] py-3 text-center text-[13px] font-medium text-[#1A0B2E] bg-white w-[calc(100%-32px)]">
+          <button className="mx-4 mb-4 border border-[#E0DBD0] rounded-[10px] py-3 text-center text-[13px] font-medium text-[#1f1433] bg-white w-[calc(100%-32px)]">
             Load more escapes
           </button>
         )}
 
         {filteredItems.length === 0 && (
           <div className="px-4 pb-8 text-center">
-            <div className="text-[15px] font-medium text-[#1A0B2E] mb-1">No results found</div>
+            <div className="text-[15px] font-medium text-[#1f1433] mb-1">No results found</div>
             <div className="text-[12px] text-[#64748B] mb-3">Try adjusting your filters</div>
             <button
               onClick={clearFilters}
-              className="text-[12px] font-medium text-[#D4AF37] underline"
+              className="text-[12px] font-medium text-[#f2ba0d] underline"
             >
               Clear all filters
             </button>
@@ -1315,7 +1315,7 @@ function SearchContent() {
               className="bg-white border border-[#E0DBD0] rounded-[12px] px-5 py-4 flex items-center gap-2 shadow-sm hover:shadow-md transition-shadow"
             >
               <div className="flex-[2] flex items-center gap-2.5">
-                <MapPin className="h-4 w-4 text-[#1A0B2E] shrink-0" strokeWidth={1.5} />
+                <MapPin className="h-4 w-4 text-[#1f1433] shrink-0" strokeWidth={1.5} />
                 <input
                   type="text"
                   value={searchText}
@@ -1335,7 +1335,7 @@ function SearchContent() {
               </div>
               <div className="h-5 w-px bg-[#E0DBD0]" />
               <div className="flex items-center gap-2 text-[13px] text-[#64748B] whitespace-nowrap">
-                <Users className="h-4 w-4 text-[#1A0B2E] shrink-0" strokeWidth={1.5} />
+                <Users className="h-4 w-4 text-[#1f1433] shrink-0" strokeWidth={1.5} />
                 <input
                   type="number"
                   min={1}
@@ -1347,7 +1347,7 @@ function SearchContent() {
               </div>
               <button
                 type="submit"
-                className="bg-[#D4AF37] hover:bg-[#d5b069] text-[#111111] rounded-[9px] px-4 py-[9px] text-[13px] font-bold flex items-center gap-1.5 shrink-0 transition-colors shadow-sm"
+                className="bg-[#f2ba0d] hover:bg-[#d5b069] text-[#111111] rounded-[9px] px-4 py-[9px] text-[13px] font-bold flex items-center gap-1.5 shrink-0 transition-colors shadow-sm"
               >
                 <Search className="h-3.5 w-3.5" strokeWidth={2} />
                 <span className="hidden sm:inline">Search</span>
@@ -1364,8 +1364,8 @@ function SearchContent() {
                 className={cn(
                   "flex items-center gap-2 px-5 py-3 rounded-full border transition-all duration-200 shrink-0 shadow-sm",
                   activeCategory === cat.slug
-                    ? "bg-[#1A0B2E] border-[#1A0B2E] text-[#D4AF37]"
-                    : "bg-white border-[#E0DBD0] text-[#64748B] hover:border-[#D4AF37]/40 hover:text-[#1A0B2E]",
+                    ? "bg-[#1f1433] border-[#1f1433] text-[#f2ba0d]"
+                    : "bg-white border-[#E0DBD0] text-[#64748B] hover:border-[#f2ba0d]/40 hover:text-[#1f1433]",
                 )}
               >
                 {cat.icon}
@@ -1390,7 +1390,7 @@ function SearchContent() {
                 <div className="h-px bg-[#E0DBD0] my-5" />
                 <button
                   onClick={clearFilters}
-                  className="w-full bg-[#1A0B2E] rounded-[10px] py-3 text-[13px] font-medium text-[#F9F7F2] hover:bg-[#2E1A4E] transition-colors"
+                  className="w-full bg-[#1f1433] rounded-[10px] py-3 text-[13px] font-medium text-[#F9F7F2] hover:bg-[#2E1A4E] transition-colors"
                 >
                   Reset filters
                 </button>
@@ -1401,7 +1401,7 @@ function SearchContent() {
             <main className="flex-1 min-w-0 flex flex-col gap-6">
               <div className="flex items-center justify-between">
                 <div className="text-[14px] text-[#64748B]">
-                  <span className="font-semibold text-[#1A0B2E]">{filteredItems.length}</span>{" "}
+                  <span className="font-semibold text-[#1f1433]">{filteredItems.length}</span>{" "}
                   result{filteredItems.length !== 1 ? "s" : ""} found
                   {(searchText ||
                     (dateRange?.checkIn && dateRange?.checkOut) ||
@@ -1409,7 +1409,7 @@ function SearchContent() {
                     <span>
                       {" for "}
                       {searchText && (
-                        <span className="font-semibold text-[#1A0B2E]">
+                        <span className="font-semibold text-[#1f1433]">
                           &ldquo;{searchText}&rdquo;
                         </span>
                       )}
@@ -1417,7 +1417,7 @@ function SearchContent() {
                         ((dateRange?.checkIn && dateRange?.checkOut) || guestsCount > 1) &&
                         " · "}
                       {dateRange?.checkIn && dateRange?.checkOut && (
-                        <span className="font-semibold text-[#1A0B2E]">
+                        <span className="font-semibold text-[#1f1433]">
                           {dateRange.checkIn.toLocaleDateString("en-US", {
                             month: "short",
                             day: "numeric",
@@ -1431,7 +1431,7 @@ function SearchContent() {
                       )}
                       {dateRange?.checkIn && dateRange?.checkOut && guestsCount > 1 && " · "}
                       {guestsCount > 1 && (
-                        <span className="font-semibold text-[#1A0B2E]">{guestsCount} guests</span>
+                        <span className="font-semibold text-[#1f1433]">{guestsCount} guests</span>
                       )}
                     </span>
                   )}
@@ -1440,7 +1440,7 @@ function SearchContent() {
                   <select
                     value={sortBy}
                     onChange={(e) => handleSortChange(e.target.value)}
-                    className="flex items-center gap-1.5 bg-white border border-[#E0DBD0] rounded-[10px] px-4 py-[10px] text-[13px] font-medium text-[#1A0B2E] cursor-pointer focus:outline-none focus:border-[#1A0B2E]"
+                    className="flex items-center gap-1.5 bg-white border border-[#E0DBD0] rounded-[10px] px-4 py-[10px] text-[13px] font-medium text-[#1f1433] cursor-pointer focus:outline-none focus:border-[#1f1433]"
                     aria-label="Sort order"
                   >
                     <option value="recommended">Best value</option>
@@ -1454,8 +1454,8 @@ function SearchContent() {
                       className={cn(
                         "w-8 h-8 rounded-[8px] border flex items-center justify-center transition-colors",
                         viewMode === "grid"
-                          ? "bg-[#1A0B2E] border-[#1A0B2E]"
-                          : "bg-white border-[#E0DBD0] hover:border-[#1A0B2E]/40",
+                          ? "bg-[#1f1433] border-[#1f1433]"
+                          : "bg-white border-[#E0DBD0] hover:border-[#1f1433]/40",
                       )}
                       aria-label="Grid view"
                     >
@@ -1472,8 +1472,8 @@ function SearchContent() {
                       className={cn(
                         "w-8 h-8 rounded-[8px] border flex items-center justify-center transition-colors",
                         viewMode === "list"
-                          ? "bg-[#1A0B2E] border-[#1A0B2E]"
-                          : "bg-white border-[#E0DBD0] hover:border-[#1A0B2E]/40",
+                          ? "bg-[#1f1433] border-[#1f1433]"
+                          : "bg-white border-[#E0DBD0] hover:border-[#1f1433]/40",
                       )}
                       aria-label="List view"
                     >
@@ -1505,24 +1505,24 @@ function SearchContent() {
                   {filteredItems.length !== 1 ? "s" : ""}
                 </div>
                 <div className="flex gap-2 items-center">
-                  <button className="w-10 h-10 rounded-[10px] bg-[#1A0B2E] border border-[#1A0B2E] flex items-center justify-center text-[14px] font-medium text-[#F9F7F2]">
+                  <button className="w-10 h-10 rounded-[10px] bg-[#1f1433] border border-[#1f1433] flex items-center justify-center text-[14px] font-medium text-[#F9F7F2]">
                     1
                   </button>
                   {filteredItems.length > 12 && (
                     <>
-                      <button className="w-10 h-10 rounded-[10px] bg-white border border-[#E0DBD0] flex items-center justify-center text-[14px] font-medium text-[#1A0B2E] hover:border-[#1A0B2E]/40">
+                      <button className="w-10 h-10 rounded-[10px] bg-white border border-[#E0DBD0] flex items-center justify-center text-[14px] font-medium text-[#1f1433] hover:border-[#1f1433]/40">
                         2
                       </button>
-                      <button className="w-10 h-10 rounded-[10px] bg-white border border-[#E0DBD0] flex items-center justify-center text-[14px] font-medium text-[#1A0B2E] hover:border-[#1A0B2E]/40">
+                      <button className="w-10 h-10 rounded-[10px] bg-white border border-[#E0DBD0] flex items-center justify-center text-[14px] font-medium text-[#1f1433] hover:border-[#1f1433]/40">
                         3
                       </button>
-                      <span className="h-10 rounded-[10px] bg-white border border-[#E0DBD0] flex items-center justify-center text-[14px] font-medium text-[#1A0B2E] px-4">
+                      <span className="h-10 rounded-[10px] bg-white border border-[#E0DBD0] flex items-center justify-center text-[14px] font-medium text-[#1f1433] px-4">
                         ···
                       </span>
-                      <button className="w-10 h-10 rounded-[10px] bg-white border border-[#E0DBD0] flex items-center justify-center text-[14px] font-medium text-[#1A0B2E] hover:border-[#1A0B2E]/40">
+                      <button className="w-10 h-10 rounded-[10px] bg-white border border-[#E0DBD0] flex items-center justify-center text-[14px] font-medium text-[#1f1433] hover:border-[#1f1433]/40">
                         {Math.ceil(filteredItems.length / 12)}
                       </button>
-                      <button className="h-10 rounded-[10px] bg-white border border-[#E0DBD0] flex items-center justify-center text-[14px] font-medium text-[#1A0B2E] px-4 hover:border-[#1A0B2E]/40">
+                      <button className="h-10 rounded-[10px] bg-white border border-[#E0DBD0] flex items-center justify-center text-[14px] font-medium text-[#1f1433] px-4 hover:border-[#1f1433]/40">
                         <ArrowRight className="h-4 w-4" strokeWidth={2} />
                       </button>
                     </>
@@ -1532,7 +1532,7 @@ function SearchContent() {
 
               {filteredItems.length === 0 && (
                 <div className="bg-white border border-[#E0DBD0] rounded-[14px] p-12 text-center shadow-sm">
-                  <div className="text-[20px] font-medium text-[#1A0B2E] mb-3">
+                  <div className="text-[20px] font-medium text-[#1f1433] mb-3">
                     No results found
                   </div>
                   <div className="text-[14px] text-[#64748B] mb-5">
@@ -1540,7 +1540,7 @@ function SearchContent() {
                   </div>
                   <button
                     onClick={clearFilters}
-                    className="bg-[#1A0B2E] rounded-[10px] px-6 py-3 text-[14px] font-medium text-[#F9F7F2] hover:bg-[#2E1A4E] transition-colors"
+                    className="bg-[#1f1433] rounded-[10px] px-6 py-3 text-[14px] font-medium text-[#F9F7F2] hover:bg-[#2E1A4E] transition-colors"
                   >
                     Clear all filters
                   </button>
@@ -1559,7 +1559,7 @@ export function SearchPage() {
     <Suspense
       fallback={
         <div className="min-h-screen flex items-center justify-center bg-[#F9F7F2]">
-          <div className="text-[14px] font-medium text-[#1A0B2E]">Loading escapes...</div>
+          <div className="text-[14px] font-medium text-[#1f1433]">Loading escapes...</div>
         </div>
       }
     >
@@ -1567,3 +1567,4 @@ export function SearchPage() {
     </Suspense>
   );
 }
+

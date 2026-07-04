@@ -40,7 +40,7 @@ export function HostDashboardPage() {
             href="/host/profile"
             className="hidden sm:inline-flex items-center gap-3 px-5 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/20 hover:shadow-md transition-all shadow-sm"
           >
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#B89430] flex items-center justify-center text-sm font-bold text-[#1A0B2E] border border-[#1A0B2E]/20">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#1f1433] to-[#150d22] flex items-center justify-center text-sm font-bold text-[#1f1433] border border-[#1f1433]/20">
               {host.name
                 .split(" ")
                 .map((n) => n[0])
@@ -78,18 +78,18 @@ export function HostDashboardPage() {
         {/* Section Title */}
         <div className="flex items-end justify-between mb-7">
           <div>
-            <p className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-1.5">
+            <p className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-1.5">
               Insights
             </p>
-            <h2 className="font-display text-2xl font-bold tracking-tight text-[#1A0B2E] leading-[1.15]">
+            <h2 className="font-display text-2xl font-bold tracking-tight text-[#1f1433] leading-[1.15]">
               Performance Metrics
             </h2>
             <p className="text-[#64748B] mt-1.5 text-sm max-w-lg leading-relaxed">
               How your business is doing this month
             </p>
           </div>
-          <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-[#e0dbd0]/60 text-sm font-bold text-[#1A0B2E] shadow-sm">
-            <Calendar className="h-4 w-4 text-[#D4AF37]" />
+          <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-[#e0dbd0]/60 text-sm font-bold text-[#1f1433] shadow-sm">
+            <Calendar className="h-4 w-4 text-[#1f1433]" />
             July 2025
           </span>
         </div>
@@ -181,10 +181,10 @@ export function HostDashboardPage() {
             <div className="space-y-5">
               <div className="flex items-end justify-between">
                 <div>
-                  <p className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-1">
+                  <p className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-1">
                     Schedule
                   </p>
-                  <h3 className="font-display text-xl font-bold tracking-tight text-[#1A0B2E] leading-[1.15]">
+                  <h3 className="font-display text-xl font-bold tracking-tight text-[#1f1433] leading-[1.15]">
                     Upcoming Check-ins
                   </h3>
                   <p className="text-[#64748B] mt-1 text-sm">
@@ -193,7 +193,7 @@ export function HostDashboardPage() {
                 </div>
                 <Link
                   href="/host/bookings"
-                  className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-[#1A0B2E] hover:text-[#2A154A] transition-all duration-200 group"
+                  className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-[#1f1433] hover:text-[#2A154A] transition-all duration-200 group"
                 >
                   <span>Manage bookings</span>
                   <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -284,10 +284,10 @@ export function HostDashboardPage() {
             <div className="space-y-5">
               <div className="flex items-end justify-between">
                 <div>
-                  <p className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-1">
+                  <p className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-1">
                     Activity
                   </p>
-                  <h3 className="font-display text-xl font-bold tracking-tight text-[#1A0B2E] leading-[1.15]">
+                  <h3 className="font-display text-xl font-bold tracking-tight text-[#1f1433] leading-[1.15]">
                     Recent Transactions
                   </h3>
                   <p className="text-[#64748B] mt-1 text-sm">
@@ -296,7 +296,7 @@ export function HostDashboardPage() {
                 </div>
                 <Link
                   href="/host/bookings"
-                  className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-[#1A0B2E] hover:text-[#2A154A] transition-all duration-200 group"
+                  className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-[#1f1433] hover:text-[#2A154A] transition-all duration-200 group"
                 >
                   <span>All bookings</span>
                   <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -360,10 +360,10 @@ export function HostDashboardPage() {
             {/* Quick Actions Grid */}
             <div className="space-y-5">
               <div>
-                <p className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-1">
+                <p className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-1">
                   Shortcuts
                 </p>
-                <h3 className="font-display text-xl font-bold tracking-tight text-[#1A0B2E] leading-[1.15]">
+                <h3 className="font-display text-xl font-bold tracking-tight text-[#1f1433] leading-[1.15]">
                   Quick Management
                 </h3>
               </div>
@@ -429,3 +429,4 @@ export function HostDashboardPage() {
     </div>
   );
 }
+

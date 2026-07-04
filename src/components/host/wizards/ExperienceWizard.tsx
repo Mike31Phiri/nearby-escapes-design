@@ -501,7 +501,7 @@ export function ExperienceWizard() {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-[#D4AF37] hover:bg-[#B89430] text-[#1A0B2E] font-bold"
+              className="bg-[#f2ba0d] hover:bg-[#B89430] text-[#1f1433] font-bold"
             >
               {isSubmitting ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
               Publish Listing
@@ -522,3 +522,4 @@ function Badge({ children, className, variant }: any) {
     </span>
   );
 }
+

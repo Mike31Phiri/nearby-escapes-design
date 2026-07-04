@@ -82,7 +82,7 @@ export default async function RootLayout({
       <head>
         <link rel="icon" type="image/jpeg" href="/favicon.jpg" />
         <link rel="apple-touch-icon" href="/favicon.jpg" />
-        <meta name="theme-color" content="#1A0B2E" />
+        <meta name="theme-color" content="#1f1433" />
       </head>
       <body
         className={`${fontSans.variable} ${fontScript.variable} font-sans antialiased`}
@@ -99,3 +99,4 @@ export default async function RootLayout({
     </html>
   );
 }
+

@@ -155,7 +155,7 @@ function BookingCard({
               <div className="min-w-0">
                 <Link
                   href={listingHref}
-                  className="text-sm font-bold text-gray-900 hover:text-[#1A0B2E] transition-colors line-clamp-1"
+                  className="text-sm font-bold text-gray-900 hover:text-[#1f1433] transition-colors line-clamp-1"
                 >
                   {booking.listingName}
                 </Link>
@@ -395,16 +395,16 @@ export function TripsPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background font-sans">
       {/* COVER HERO */}
-      <div className="relative h-[200px] md:h-[240px] w-full overflow-hidden bg-gradient-to-br from-[#1A0B2E] via-[#2E154A] to-[#3A1A5A]">
+      <div className="relative h-[200px] md:h-[240px] w-full overflow-hidden bg-gradient-to-br from-[#1f1433] via-[#2E154A] to-[#3A1A5A]">
         <img
           src="https://images.unsplash.com/photo-1488085061387-422e29b40080?w=1600&q=60"
           alt=""
           className="absolute inset-0 h-full w-full object-cover opacity-30 md:opacity-25"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1A0B2E] via-[#1A0B2E]/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1f1433] via-[#1f1433]/60 to-transparent" />
 
         <div className="absolute bottom-6 left-4 md:left-8 md:bottom-8">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-[#D4AF37]/80 mb-2">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-[#1f1433]/80 mb-2">
             Travel History
           </p>
           <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-sm tracking-tight">
@@ -466,7 +466,7 @@ export function TripsPage() {
                 emptyAction={
                   <Button
                     size="sm"
-                    className="rounded-xl bg-[#1A0B2E] hover:bg-[#2E154A] text-white font-bold text-xs tracking-wider px-5 shadow-lg shadow-[#1A0B2E]/20"
+                    className="rounded-xl bg-[#f2ba0d] hover:bg-[#2E154A] text-white font-bold text-xs tracking-wider px-5 shadow-lg shadow-[#1f1433]/20"
                     asChild
                   >
                     <Link href="/search">
@@ -508,8 +508,8 @@ export function TripsPage() {
             </>
           ) : (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <div className="h-20 w-20 rounded-full bg-gradient-to-br from-[#D4AF37]/10 to-[#D4AF37]/5 flex items-center justify-center mb-6 border border-[#D4AF37]/10">
-                <Compass className="h-10 w-10 text-[#D4AF37]/40" strokeWidth={1.5} />
+              <div className="h-20 w-20 rounded-full bg-gradient-to-br from-[#1f1433]/10 to-[#1f1433]/5 flex items-center justify-center mb-6 border border-[#1f1433]/10">
+                <Compass className="h-10 w-10 text-[#1f1433]/40" strokeWidth={1.5} />
               </div>
               <h2 className="text-xl font-bold tracking-tight text-gray-900 mb-2">No trips yet</h2>
               <p className="text-sm text-gray-500 max-w-md mb-8 leading-relaxed">
@@ -518,7 +518,7 @@ export function TripsPage() {
               </p>
               <Button
                 size="lg"
-                className="rounded-xl bg-[#1A0B2E] hover:bg-[#2E154A] text-white font-bold text-xs tracking-wider px-8 shadow-lg shadow-[#1A0B2E]/20"
+                className="rounded-xl bg-[#f2ba0d] hover:bg-[#2E154A] text-white font-bold text-xs tracking-wider px-8 shadow-lg shadow-[#1f1433]/20"
                 asChild
               >
                 <Link href="/search">
@@ -545,3 +545,4 @@ export function TripsPage() {
     </div>
   );
 }
+

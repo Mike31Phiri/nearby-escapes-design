@@ -100,7 +100,7 @@ function ExperienceCard({ exp }: { exp: Experience }) {
   return (
     <Link
       href={`/experiences/${exp.id}`}
-      className="group block bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md hover:border-[#1A0B2E] hover:scale-[1.01]"
+      className="group block bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md hover:border-[#1f1433] hover:scale-[1.01]"
     >
       {/* Image */}
       <div className="relative aspect-[3/2] overflow-hidden">
@@ -112,14 +112,14 @@ function ExperienceCard({ exp }: { exp: Experience }) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
         {/* Category badge */}
-        <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 bg-white/90 backdrop-blur-sm text-[#1A0B2E] text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm">
+        <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 bg-white/90 backdrop-blur-sm text-[#1f1433] text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm">
           <span role="img" aria-label={label}>
             {icon}
           </span>
           {label}
         </span>
         {/* Price */}
-        <span className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm text-[#1A0B2E] text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">
+        <span className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm text-[#1f1433] text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">
           From K{exp.price}
           <span className="text-gray-500 font-normal">/person</span>
         </span>
@@ -129,13 +129,13 @@ function ExperienceCard({ exp }: { exp: Experience }) {
       <div className="p-4">
         {/* Rating */}
         <div className="flex items-center gap-1 mb-1.5">
-          <Star className="h-3.5 w-3.5 fill-[#D4AF37] text-[#D4AF37]" />
+          <Star className="h-3.5 w-3.5 fill-[#1f1433] text-[#1f1433]" />
           <span className="text-xs font-bold text-gray-900">{exp.rating}</span>
           <span className="text-xs text-gray-400">({exp.reviews} reviews)</span>
         </div>
 
         {/* Name */}
-        <h3 className="font-bold text-sm text-[#1A0B2E] line-clamp-2 leading-snug group-hover:text-[#D4AF37] transition-colors">
+        <h3 className="font-bold text-sm text-[#1f1433] line-clamp-2 leading-snug group-hover:text-[#1f1433] transition-colors">
           {exp.name}
         </h3>
 
@@ -163,7 +163,7 @@ function ExperienceCard({ exp }: { exp: Experience }) {
 
         {/* CTA */}
         <div className="mt-3 pt-3 border-t border-gray-50">
-          <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#1A0B2E] group-hover:text-[#D4AF37] transition-colors">
+          <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#1f1433] group-hover:text-[#1f1433] transition-colors">
             Book Experience <ChevronRight className="h-3.5 w-3.5" />
           </span>
         </div>
@@ -317,9 +317,9 @@ export function ExperiencesPage() {
         : "Experiences in Zambia";
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] font-sans">
+    <div className="min-h-screen bg-[#ffffff] font-sans">
       {/* Header */}
-      <div className="bg-gradient-to-b from-[#D4AF37]/[0.06] via-[#D4AF37]/[0.02] to-transparent pt-8 pb-10">
+      <div className="bg-gradient-to-b from-[#1f1433]/[0.06] via-[#1f1433]/[0.02] to-transparent pt-8 pb-10">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           {/* Breadcrumb */}
           <nav
@@ -330,7 +330,7 @@ export function ExperiencesPage() {
               <span key={part} className="flex items-center gap-1.5">
                 {i > 0 && <ChevronRight className="h-3 w-3 text-gray-300" />}
                 <span
-                  className={i === breadcrumbParts.length - 1 ? "text-[#1A0B2E] font-semibold" : ""}
+                  className={i === breadcrumbParts.length - 1 ? "text-[#1f1433] font-semibold" : ""}
                 >
                   {part}
                 </span>
@@ -339,20 +339,20 @@ export function ExperiencesPage() {
             {breadcrumbParts.length > 0 && (
               <>
                 <ChevronRight className="h-3 w-3 text-gray-300" />
-                <span className="text-[#1A0B2E] font-semibold">Experiences</span>
+                <span className="text-[#1f1433] font-semibold">Experiences</span>
               </>
             )}
             {breadcrumbParts.length === 0 && (
-              <span className="text-[#1A0B2E] font-semibold">Experiences in Zambia</span>
+              <span className="text-[#1f1433] font-semibold">Experiences in Zambia</span>
             )}
           </nav>
 
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#D4AF37]/10 text-[#D4AF37]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f2ba0d]/10 text-[#1f1433]">
               <Compass className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1A0B2E] font-display">
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1f1433] font-display">
                 {headline}
               </h1>
               <p className="text-sm text-gray-500 mt-0.5">
@@ -390,14 +390,14 @@ export function ExperiencesPage() {
           {filteredExperiences.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-gray-100 mt-6">
               <Compass className="h-10 w-10 text-gray-200 mb-4" />
-              <h3 className="font-bold text-lg text-[#1A0B2E]">No experiences found</h3>
+              <h3 className="font-bold text-lg text-[#1f1433]">No experiences found</h3>
               <p className="text-gray-500 text-sm max-w-sm text-center mt-2">
                 Try adjusting your filters to discover more.
               </p>
               <Button
                 onClick={handleReset}
                 variant="outline"
-                className="mt-6 border-[#1A0B2E] text-[#1A0B2E] hover:bg-[#1A0B2E] hover:text-white"
+                className="mt-6 border-[#1f1433] text-[#1f1433] hover:bg-[#f2ba0d] hover:text-white"
               >
                 Clear all filters
               </Button>
@@ -416,12 +416,12 @@ export function ExperiencesPage() {
       <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
         <button
           onClick={() => setMobileFiltersOpen(true)}
-          className="flex items-center gap-2 bg-[#1A0B2E] text-white text-sm font-bold px-5 py-3 rounded-full shadow-lg hover:bg-[#2d1a4a] transition-colors"
+          className="flex items-center gap-2 bg-[#f2ba0d] text-white text-sm font-bold px-5 py-3 rounded-full shadow-lg hover:bg-[#2d1a4a] transition-colors"
         >
           <SlidersHorizontal className="h-4 w-4" />
           Filters
           {chips.length > 0 && (
-            <span className="bg-[#D4AF37] text-[#1A0B2E] text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
+            <span className="bg-[#f2ba0d] text-[#1f1433] text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
               {chips.length}
             </span>
           )}
@@ -435,9 +435,9 @@ export function ExperiencesPage() {
             className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
             onClick={() => setMobileFiltersOpen(false)}
           />
-          <div className="fixed inset-x-0 bottom-0 z-50 bg-[#FDFBF7] rounded-t-2xl shadow-2xl max-h-[85vh] overflow-y-auto">
-            <div className="sticky top-0 bg-[#FDFBF7] flex items-center justify-between px-5 py-4 border-b border-gray-100">
-              <span className="text-base font-bold text-[#1A0B2E]">Filters</span>
+          <div className="fixed inset-x-0 bottom-0 z-50 bg-[#ffffff] rounded-t-2xl shadow-2xl max-h-[85vh] overflow-y-auto">
+            <div className="sticky top-0 bg-[#ffffff] flex items-center justify-between px-5 py-4 border-b border-gray-100">
+              <span className="text-base font-bold text-[#1f1433]">Filters</span>
               <button
                 onClick={() => setMobileFiltersOpen(false)}
                 className="h-8 w-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
@@ -454,10 +454,10 @@ export function ExperiencesPage() {
                 onReset={handleReset}
               />
             </div>
-            <div className="sticky bottom-0 bg-[#FDFBF7] px-5 py-4 border-t border-gray-100">
+            <div className="sticky bottom-0 bg-[#ffffff] px-5 py-4 border-t border-gray-100">
               <Button
                 onClick={() => setMobileFiltersOpen(false)}
-                className="w-full bg-[#1A0B2E] hover:bg-[#2d1a4a] text-white font-bold"
+                className="w-full bg-[#f2ba0d] hover:bg-[#2d1a4a] text-white font-bold"
               >
                 Show {filteredExperiences.length} experiences
               </Button>
@@ -468,3 +468,4 @@ export function ExperiencesPage() {
     </div>
   );
 }
+

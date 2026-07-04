@@ -67,7 +67,7 @@ export function HostNotificationsPage() {
       case "cancellation":
         return <CalendarX className="h-5 w-5 text-rose-600" />;
       case "payout":
-        return <Wallet className="h-5 w-5 text-[#D4AF37]" />;
+        return <Wallet className="h-5 w-5 text-[#1f1433]" />;
       case "system":
         return <Info className="h-5 w-5 text-blue-600" />;
       default:
@@ -116,7 +116,7 @@ export function HostNotificationsPage() {
         actions={
           <div className="flex items-center gap-3">
             {unreadCount > 0 && (
-              <span className="bg-[#D4AF37] text-[#1A0B2E] text-xs font-black px-3 py-1 rounded-full shadow-sm">
+              <span className="bg-[#f2ba0d] text-[#1f1433] text-xs font-black px-3 py-1 rounded-full shadow-sm">
                 {unreadCount} new
               </span>
             )}
@@ -177,7 +177,7 @@ export function HostNotificationsPage() {
                     {notif.message}
                   </p>
                   {notif.actionText && (
-                    <button className="text-[13px] font-bold text-[#1A0B2E] hover:text-[#2A1846] transition-colors outline-none">
+                    <button className="text-[13px] font-bold text-[#1f1433] hover:text-[#2A1846] transition-colors outline-none">
                       {notif.actionText} &rarr;
                     </button>
                   )}
@@ -200,3 +200,4 @@ export function HostNotificationsPage() {
     </div>
   );
 }
+

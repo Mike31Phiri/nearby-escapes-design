@@ -6,7 +6,7 @@ export default function SafetyRoute() {
     <Suspense
       fallback={
         <div className="min-h-screen flex items-center justify-center bg-[#F9F7F2]">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#1A0B2E] border-t-transparent" />
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#1f1433] border-t-transparent" />
         </div>
       }
     >
@@ -22,3 +22,4 @@ export async function generateMetadata() {
       "Learn how Nearby Escapes keeps guests and hosts safe. Verified profiles, secure payments, guest protections, community guidelines, and 24/7 support.",
   };
 }
+

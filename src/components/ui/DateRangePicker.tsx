@@ -99,7 +99,7 @@ function MonthGrid({
 
   return (
     <div className="w-full">
-      <div className="text-[13px] font-semibold text-[#1A0B2E] text-center mb-3">
+      <div className="text-[13px] font-semibold text-[#1f1433] text-center mb-3">
         {MONTHS[month]} {year}
       </div>
       <div className="grid grid-cols-7 mb-1">
@@ -123,9 +123,9 @@ function MonthGrid({
               key={date.toISOString()}
               className={cn(
                 "relative flex items-center justify-center",
-                inRange && "bg-[#1A0B2E]/10",
-                isCheckIn && rangeEnd && "rounded-l-full bg-[#1A0B2E]/10",
-                isCheckOut && "rounded-r-full bg-[#1A0B2E]/10",
+                inRange && "bg-[#f2ba0d]/10",
+                isCheckIn && rangeEnd && "rounded-l-full bg-[#f2ba0d]/10",
+                isCheckOut && "rounded-r-full bg-[#f2ba0d]/10",
               )}
             >
               <button
@@ -137,9 +137,9 @@ function MonthGrid({
                 className={cn(
                   "w-8 h-8 rounded-full text-[12px] font-medium transition-colors",
                   isPast && "text-[#C8C3BC] cursor-default",
-                  !isPast && !isCheckIn && !isCheckOut && "text-[#334155] hover:bg-[#1A0B2E]/15",
-                  isToday && !isCheckIn && !isCheckOut && "font-bold text-[#D4AF37]",
-                  (isCheckIn || isCheckOut) && "bg-[#1A0B2E] text-white",
+                  !isPast && !isCheckIn && !isCheckOut && "text-[#334155] hover:bg-[#f2ba0d]/15",
+                  isToday && !isCheckIn && !isCheckOut && "font-bold text-[#1f1433]",
+                  (isCheckIn || isCheckOut) && "bg-[#f2ba0d] text-white",
                 )}
               >
                 {date.getDate()}
@@ -215,14 +215,14 @@ export function DateRangePicker({
           onClick={() => setOpen((o) => !o)}
           className="flex items-center gap-1.5 w-full focus:outline-none"
         >
-          <CalendarDays className="h-4 w-4 text-[#1A0B2E] shrink-0" strokeWidth={1.5} />
+          <CalendarDays className="h-4 w-4 text-[#1f1433] shrink-0" strokeWidth={1.5} />
           <span
             className={cn("text-[13px] truncate", hasValue ? "text-[#334155]" : "text-[#64748B]")}
           >
             {label}
           </span>
           {hasValue && (
-            <span onClick={clear} className="ml-auto text-[#64748B] hover:text-[#1A0B2E]">
+            <span onClick={clear} className="ml-auto text-[#64748B] hover:text-[#1f1433]">
               <X className="h-3 w-3" strokeWidth={2.5} />
             </span>
           )}
@@ -233,7 +233,7 @@ export function DateRangePicker({
           onClick={() => setOpen((o) => !o)}
           className="flex items-center gap-2.5 w-full focus:outline-none"
         >
-          <CalendarDays className="h-[18px] w-[18px] text-[#1A0B2E] shrink-0" strokeWidth={1.5} />
+          <CalendarDays className="h-[18px] w-[18px] text-[#1f1433] shrink-0" strokeWidth={1.5} />
           <div className="text-left flex-1 min-w-0">
             <p className="text-[10px] text-[#64748B]">Pick dates</p>
             <p
@@ -246,7 +246,7 @@ export function DateRangePicker({
             </p>
           </div>
           {hasValue && (
-            <span onClick={clear} className="text-[#64748B] hover:text-[#1A0B2E] shrink-0">
+            <span onClick={clear} className="text-[#64748B] hover:text-[#1f1433] shrink-0">
               <X className="h-3.5 w-3.5" strokeWidth={2.5} />
             </span>
           )}
@@ -268,7 +268,7 @@ export function DateRangePicker({
               }}
               className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-[#F0EAE0] transition-colors"
             >
-              <CaretLeft className="h-4 w-4 text-[#1A0B2E]" />
+              <CaretLeft className="h-4 w-4 text-[#1f1433]" />
             </button>
             <button
               type="button"
@@ -280,7 +280,7 @@ export function DateRangePicker({
               }}
               className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-[#F0EAE0] transition-colors"
             >
-              <CaretRight className="h-4 w-4 text-[#1A0B2E]" />
+              <CaretRight className="h-4 w-4 text-[#1f1433]" />
             </button>
           </div>
 
@@ -324,7 +324,7 @@ export function DateRangePicker({
               onClick={() => {
                 onChange({ checkIn: null, checkOut: null });
               }}
-              className="text-[12px] font-medium text-[#D4AF37] hover:underline"
+              className="text-[12px] font-medium text-[#1f1433] hover:underline"
             >
               Clear
             </button>
@@ -334,3 +334,4 @@ export function DateRangePicker({
     </div>
   );
 }
+

@@ -12,11 +12,11 @@ interface HostPageHeaderProps {
 
 export function HostPageHeader({ title, description, eyebrow, actions }: HostPageHeaderProps) {
   return (
-    <div className="bg-[#1A0B2E] shadow-lg relative z-10 w-full">
+    <div className="bg-[#f2ba0d] shadow-lg relative z-10 w-full">
       <div className="mx-auto max-w-7xl px-4 md:px-6 py-6 md:py-10">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <p className="text-[10px] sm:text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-1.5 drop-shadow-sm">
+            <p className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-1.5 drop-shadow-sm">
               {eyebrow || "Overview"}
             </p>
             <h1 className="font-display text-3xl md:text-4xl font-bold tracking-tight text-white leading-[1.15]">
@@ -34,3 +34,4 @@ export function HostPageHeader({ title, description, eyebrow, actions }: HostPag
     </div>
   );
 }
+

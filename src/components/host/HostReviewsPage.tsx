@@ -13,7 +13,7 @@ function StarIcons({ rating }: { rating: number }) {
       {[1, 2, 3, 4, 5].map((s) => (
         <svg
           key={s}
-          className={`h-3 w-3 ${s <= rating ? "text-[#C9A84C]" : "text-[#E0DBD0]"}`}
+          className={`h-3 w-3 ${s <= rating ? "text-[#2a1b47]" : "text-[#E0DBD0]"}`}
           viewBox="0 0 24 24"
           fill="currentColor"
         >
@@ -114,25 +114,25 @@ export function HostReviewsPage() {
             <div className="flex-1 bg-white border border-[#E0DBD0] rounded-xl p-3 flex flex-col gap-1">
               <div className="flex items-center gap-1.5">
                 <div className="flex-1 h-1 rounded-full bg-[#E8E3DC]">
-                  <div className="w-[95%] h-1 rounded-full bg-[#C9A84C]"></div>
+                  <div className="w-[95%] h-1 rounded-full bg-[#d4b065]"></div>
                 </div>
                 <span className="text-[10px] text-[#64748B] w-[20px]">Loc</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="flex-1 h-1 rounded-full bg-[#E8E3DC]">
-                  <div className="w-[90%] h-1 rounded-full bg-[#C9A84C]"></div>
+                  <div className="w-[90%] h-1 rounded-full bg-[#d4b065]"></div>
                 </div>
                 <span className="text-[10px] text-[#64748B] w-[20px]">Clean</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="flex-1 h-1 rounded-full bg-[#E8E3DC]">
-                  <div className="w-[98%] h-1 rounded-full bg-[#C9A84C]"></div>
+                  <div className="w-[98%] h-1 rounded-full bg-[#d4b065]"></div>
                 </div>
                 <span className="text-[10px] text-[#64748B] w-[20px]">Value</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="flex-1 h-1 rounded-full bg-[#E8E3DC]">
-                  <div className="w-full h-1 rounded-full bg-[#C9A84C]"></div>
+                  <div className="w-full h-1 rounded-full bg-[#d4b065]"></div>
                 </div>
                 <span className="text-[10px] text-[#64748B] w-[20px]">Host</span>
               </div>
@@ -142,7 +142,7 @@ export function HostReviewsPage() {
           {/* Recent reviews */}
           <div className="flex items-center justify-between mb-2">
             <span className="text-[13px] font-medium text-[#1C1030]">Recent reviews</span>
-            <span className="text-[11px] text-[#C9A84C] font-medium cursor-pointer">View all</span>
+            <span className="text-[11px] text-[#2a1b47] font-medium cursor-pointer">View all</span>
           </div>
           <div className="bg-white border border-[#E0DBD0] rounded-xl overflow-hidden mb-4">
             {reviews.map((r) => (
@@ -163,7 +163,7 @@ export function HostReviewsPage() {
                 className="flex items-center gap-2 cursor-pointer"
                 onClick={() => toast.success("Opening new dispute form...")}
               >
-                <Plus className="h-4 w-4 text-[#C9A84C]" />
+                <Plus className="h-4 w-4 text-[#2a1b47]" />
                 <span className="text-[12px] font-medium text-[#3D2463]">
                   Raise a new dispute or support request
                 </span>

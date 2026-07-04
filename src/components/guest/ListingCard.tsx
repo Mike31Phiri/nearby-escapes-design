@@ -87,14 +87,14 @@ export const ListingCard = memo(function ListingCard({ listing, className }: Lis
             {listing.name}
           </h3>
           <div className="flex items-center gap-1 shrink-0">
-            <Star className="h-3 w-3 fill-[#D4AF37] text-[#D4AF37]" strokeWidth={1.5} />
+            <Star className="h-3 w-3 fill-[#1f1433] text-[#1f1433]" strokeWidth={1.5} />
             <span className="text-[12px] font-semibold text-[#6B6258]">
               {listing.rating.toFixed(1)}
             </span>
           </div>
         </div>
         <div className="flex items-baseline gap-0.5 mt-1.5">
-          <span className="text-[14px] font-bold text-[#1A0B2E]">ZMW {listing.price}</span>
+          <span className="text-[14px] font-bold text-[#1f1433]">ZMW {listing.price}</span>
           <span className="text-[11px] text-[#64748B]">/ night</span>
         </div>
       </div>
@@ -108,3 +108,4 @@ export const ListingCard = memo(function ListingCard({ listing, className }: Lis
     </Link>
   );
 });
+

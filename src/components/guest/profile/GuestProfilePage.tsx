@@ -185,11 +185,11 @@ export function GuestProfilePage() {
   return (
     <div className="min-h-screen flex flex-col bg-background font-sans">
       {/* PREMIUM PURPLE HERO */}
-      <div className="relative w-full overflow-hidden bg-[#1A0B2E] pt-6 pb-12 px-4 md:px-8 shadow-xl">
+      <div className="relative w-full overflow-hidden bg-[#f2ba0d] pt-6 pb-12 px-4 md:px-8 shadow-xl">
         {/* Background Layers */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1A0B2E] via-[#2E154A] to-[#3A1A5A] opacity-90" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1f1433] via-[#2E154A] to-[#3A1A5A] opacity-90" />
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&q=60')] opacity-10 object-cover mix-blend-overlay" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1A0B2E] to-transparent opacity-80" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1f1433] to-transparent opacity-80" />
 
         <div className="max-w-5xl mx-auto relative z-10 flex flex-col">
           {/* Top Nav Row */}
@@ -220,7 +220,7 @@ export function GuestProfilePage() {
               className="relative shrink-0 group cursor-pointer"
               onClick={() => toast.info("Change profile photo coming soon")}
             >
-              <div className="h-[100px] w-[100px] md:h-[130px] md:w-[130px] rounded-full bg-gradient-to-br from-[#D4AF37] to-[#A38322] flex items-center justify-center text-[36px] md:text-[48px] font-bold text-[#1A0B2E] border-4 border-[#1A0B2E] shadow-2xl relative overflow-hidden transition-transform duration-300 group-hover:scale-[1.02]">
+              <div className="h-[100px] w-[100px] md:h-[130px] md:w-[130px] rounded-full bg-gradient-to-br from-[#1f1433] to-[#A38322] flex items-center justify-center text-[36px] md:text-[48px] font-bold text-[#1f1433] border-4 border-[#1f1433] shadow-2xl relative overflow-hidden transition-transform duration-300 group-hover:scale-[1.02]">
                 <span className="relative z-10 group-hover:opacity-0 transition-opacity duration-300">
                   {user?.name
                     ?.split(" ")
@@ -231,7 +231,7 @@ export function GuestProfilePage() {
                   <Camera className="h-8 w-8 text-white" />
                 </div>
               </div>
-              <div className="absolute bottom-1 right-1 md:bottom-2 md:right-2 w-8 h-8 rounded-full bg-emerald-500 border-[3px] border-[#1A0B2E] flex items-center justify-center shadow-lg z-30">
+              <div className="absolute bottom-1 right-1 md:bottom-2 md:right-2 w-8 h-8 rounded-full bg-emerald-500 border-[3px] border-[#1f1433] flex items-center justify-center shadow-lg z-30">
                 <ShieldCheck className="h-4 w-4 text-white" />
               </div>
             </div>
@@ -242,15 +242,15 @@ export function GuestProfilePage() {
                 {user?.name ?? "Guest"}
               </h1>
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-4 gap-y-2 text-[13px] md:text-[14px] text-white/80">
-                <span className="inline-flex items-center gap-1.5 font-bold text-[#D4AF37] bg-[#D4AF37]/10 px-3 py-1 rounded-full border border-[#D4AF37]/20 shadow-sm uppercase tracking-wider text-[11px]">
+                <span className="inline-flex items-center gap-1.5 font-bold text-[#1f1433] bg-[#f2ba0d]/10 px-3 py-1 rounded-full border border-[#1f1433]/20 shadow-sm uppercase tracking-wider text-[11px]">
                   <Award className="h-3.5 w-3.5" /> Explorer Level 4
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <MapPin className="h-4 w-4 text-[#D4AF37]" /> Lusaka, Zambia
+                  <MapPin className="h-4 w-4 text-[#1f1433]" /> Lusaka, Zambia
                 </span>
                 <span className="hidden sm:inline text-white/30">·</span>
                 <span className="flex items-center gap-1.5">
-                  <School className="h-4 w-4 text-[#D4AF37]" /> UNZA student
+                  <School className="h-4 w-4 text-[#1f1433]" /> UNZA student
                 </span>
                 <span className="hidden sm:inline text-white/30">·</span>
                 <span className="text-white/40">Member since Mar 2025</span>
@@ -277,13 +277,13 @@ export function GuestProfilePage() {
               value: mockTrips.length,
               label: "Escapes Taken",
               icon: Tent,
-              color: "text-[#D4AF37] bg-[#D4AF37]/10 border-[#D4AF37]/20",
+              color: "text-[#1f1433] bg-[#f2ba0d]/10 border-[#1f1433]/20",
             },
             {
               value: storeReviews.length + mockReviews.length,
               label: "Reviews Left",
               icon: Star,
-              color: "text-[#1A0B2E] bg-[#1A0B2E]/5 border-[#1A0B2E]/10",
+              color: "text-[#1f1433] bg-[#f2ba0d]/5 border-[#1f1433]/10",
             },
             {
               value: savedItems.length || 8,
@@ -321,8 +321,8 @@ export function GuestProfilePage() {
           {/* Explorer Badges */}
           <div className="md:col-span-3 bg-white border border-gray-100 rounded-xl p-5 shadow-sm">
             <div className="flex items-center justify-between mb-5">
-              <h3 className="text-lg font-display font-bold text-[#1A0B2E]">Explorer Badges</h3>
-              <span className="text-[10px] font-bold text-[#D4AF37] bg-[#D4AF37]/10 px-3 py-1 rounded-full border border-[#D4AF37]/20 uppercase tracking-widest">
+              <h3 className="text-lg font-display font-bold text-[#1f1433]">Explorer Badges</h3>
+              <span className="text-[10px] font-bold text-[#1f1433] bg-[#f2ba0d]/10 px-3 py-1 rounded-full border border-[#1f1433]/20 uppercase tracking-widest">
                 4 earned
               </span>
             </div>
@@ -352,7 +352,7 @@ export function GuestProfilePage() {
 
           {/* Travel Preferences */}
           <div className="md:col-span-2 bg-white border border-gray-100 rounded-xl p-5 shadow-sm">
-            <h3 className="text-lg font-display font-bold text-[#1A0B2E] mb-5">
+            <h3 className="text-lg font-display font-bold text-[#1f1433] mb-5">
               Travel Preferences
             </h3>
             <div className="space-y-3">
@@ -375,13 +375,13 @@ export function GuestProfilePage() {
         {/* RECENT & UPCOMING TRIPS */}
         <div className="mb-10">
           <div className="flex items-center justify-between mb-5">
-            <h3 className="text-xl font-display font-bold text-[#1A0B2E] flex items-center gap-2">
-              <CalendarDays className="h-5 w-5 text-[#D4AF37]" />
+            <h3 className="text-xl font-display font-bold text-[#1f1433] flex items-center gap-2">
+              <CalendarDays className="h-5 w-5 text-[#1f1433]" />
               Recent &amp; Upcoming Trips
             </h3>
             <Link
               href="/trips"
-              className="text-[12px] font-bold uppercase tracking-wider text-[#D4AF37] hover:text-[#EAB308] transition-colors flex items-center gap-1"
+              className="text-[12px] font-bold uppercase tracking-wider text-[#1f1433] hover:text-[#EAB308] transition-colors flex items-center gap-1"
             >
               View all <ArrowRight className="h-4 w-4" />
             </Link>
@@ -415,12 +415,12 @@ export function GuestProfilePage() {
                   className={cn(
                     "flex-1 flex items-center justify-center gap-1.5 py-4 text-[10px] font-bold uppercase tracking-wider border-b-2 transition-all duration-200",
                     isActive
-                      ? "border-[#1A0B2E] text-[#1A0B2E]"
+                      ? "border-[#1f1433] text-[#1f1433]"
                       : "border-transparent text-gray-400 hover:text-gray-600",
                   )}
                 >
                   <Icon
-                    className={cn("h-4 w-4", isActive ? "text-[#1A0B2E]" : "text-gray-400")}
+                    className={cn("h-4 w-4", isActive ? "text-[#1f1433]" : "text-gray-400")}
                     strokeWidth={1.5}
                   />
                   {label}
@@ -428,7 +428,7 @@ export function GuestProfilePage() {
                     <span
                       className={cn(
                         "ml-0.5 rounded-full px-1.5 py-0.5 text-[8px] font-bold",
-                        isActive ? "bg-[#1A0B2E] text-white" : "bg-gray-100 text-gray-500",
+                        isActive ? "bg-[#f2ba0d] text-white" : "bg-gray-100 text-gray-500",
                       )}
                     >
                       {count}
@@ -453,7 +453,7 @@ export function GuestProfilePage() {
                     Start exploring and save your favorites to plan your next escape
                   </p>
                   <Button
-                    className="mt-6 rounded-xl bg-[#1A0B2E] hover:bg-[#2E154A] text-white font-bold text-xs uppercase tracking-wider px-6 py-5 shadow-lg shadow-[#1A0B2E]/20"
+                    className="mt-6 rounded-xl bg-[#f2ba0d] hover:bg-[#2E154A] text-white font-bold text-xs uppercase tracking-wider px-6 py-5 shadow-lg shadow-[#1f1433]/20"
                     asChild
                   >
                     <Link href="/search">
@@ -519,7 +519,7 @@ export function GuestProfilePage() {
                     Your booking history will appear here once you book your first escape
                   </p>
                   <Button
-                    className="mt-6 rounded-xl bg-[#1A0B2E] hover:bg-[#2E154A] text-white font-bold text-xs uppercase tracking-wider px-6 py-5 shadow-lg shadow-[#1A0B2E]/20"
+                    className="mt-6 rounded-xl bg-[#f2ba0d] hover:bg-[#2E154A] text-white font-bold text-xs uppercase tracking-wider px-6 py-5 shadow-lg shadow-[#1f1433]/20"
                     asChild
                   >
                     <Link href="/search">
@@ -644,3 +644,4 @@ export function GuestProfilePage() {
     </div>
   );
 }
+

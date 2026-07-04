@@ -108,7 +108,7 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
 
         <button
           type="submit"
-          className="group w-full bg-gradient-to-br from-[#D4AF37] to-[#B89430] hover:from-[#D4B45A] hover:to-[#D4AF37] text-[#334155] rounded-xl py-3.5 text-[15px] font-bold flex items-center justify-center gap-2 transition-all duration-200 shadow-[0_4px_16px_rgba(197,160,89,0.35)]"
+          className="group w-full bg-gradient-to-br from-[#D4AF37] to-[#150d22] hover:from-[#D4B45A] hover:to-[#D4AF37] text-[#334155] rounded-xl py-3.5 text-[15px] font-bold flex items-center justify-center gap-2 transition-all duration-200 shadow-[0_4px_16px_rgba(197,160,89,0.35)]"
         >
           <Search className="h-[18px] w-[18px]" strokeWidth={2.5} />
           Find my escape
@@ -122,8 +122,8 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
       {/*  DESKTOP: Horizontal bar layout  */}
       <div className="hidden md:block bg-white rounded-full overflow-visible shadow-[0_12px_48px_rgba(42,27,61,0.25)] px-1 py-1">
         <div className="flex items-center w-full">
-          {/* Destination */}
-          <div className="flex items-center gap-2.5 flex-1 px-4 py-2 rounded-full transition-all duration-200 hover:bg-[#F9F7F2]/60 cursor-pointer">
+          {/* Destination — stretches to fill when extras are hidden */}
+          <div className={cn("flex items-center gap-2.5 px-4 py-2 rounded-full transition-all duration-200 hover:bg-[#F9F7F2]/60 cursor-pointer", showExtras ? "flex-[3]" : "flex-1")}>
             <MapPin className="h-5 w-5 text-[#1A0B2E] shrink-0" strokeWidth={1.5} />
             <div className="flex-1">
               <p className="text-[11px] font-semibold text-[#334155] leading-tight">Where</p>
@@ -137,19 +137,18 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
             </div>
           </div>
 
-          {/* Always in DOM — hidden with CSS when not needed to keep bar width consistent */}
+          {/* Date — removed from flow when hidden so Where stretches fully */}
           <div
             className={cn(
               "h-10 w-px bg-[#E0DBD0] shrink-0 transition-all duration-300",
-              !showExtras && "invisible",
+              !showExtras && "hidden",
             )}
           />
 
-          {/* Date */}
           <div
             className={cn(
               "flex-1 px-4 py-2 transition-all duration-300",
-              !showExtras && "invisible pointer-events-none",
+              !showExtras && "hidden",
             )}
           >
             <p className="text-[11px] font-semibold text-[#334155] leading-tight mb-0.5">
@@ -161,15 +160,15 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
           <div
             className={cn(
               "h-10 w-px bg-[#E0DBD0] shrink-0 transition-all duration-300",
-              !showExtras && "invisible",
+              !showExtras && "hidden",
             )}
           />
 
-          {/* Guests */}
+          {/* Guests — removed from flow when hidden */}
           <div
             className={cn(
               "flex items-center gap-2.5 flex-1 px-4 py-2 rounded-full transition-all duration-200 hover:bg-[#F9F7F2]/60",
-              !showExtras && "invisible pointer-events-none",
+              !showExtras && "hidden",
             )}
           >
             <Users className="h-5 w-5 text-[#1A0B2E] shrink-0" strokeWidth={1.5} />
@@ -188,7 +187,7 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
           {/* Search button */}
           <button
             type="submit"
-            className="mr-0.5 flex items-center gap-2 bg-[#D4AF37] hover:bg-[#d5b069] text-[#111111] rounded-full px-5 py-3 text-[13px] font-bold transition-all duration-200 shadow-[0_2px_12px_rgba(197,160,89,0.3)] hover:shadow-[0_4px_16px_rgba(197,160,89,0.4)] shrink-0"
+            className="mr-0.5 flex items-center gap-2 bg-[#D4AF37] hover:bg-[#d4b065] text-[#111111] rounded-full px-5 py-3 text-[13px] font-bold transition-all duration-200 shadow-[0_2px_12px_rgba(197,160,89,0.3)] hover:shadow-[0_4px_16px_rgba(197,160,89,0.4)] shrink-0"
           >
             <Search className="h-[18px] w-[18px]" strokeWidth={2.5} />
             <span className="hidden lg:inline">Search</span>

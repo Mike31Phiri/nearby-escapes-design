@@ -48,13 +48,13 @@ export function SettingsPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background font-sans pb-24">
       {/* COVER HERO */}
-      <div className="relative h-[180px] md:h-[220px] w-full overflow-hidden bg-gradient-to-br from-[#1A0B2E] via-[#2E154A] to-[#3A1A5A]">
+      <div className="relative h-[180px] md:h-[220px] w-full overflow-hidden bg-gradient-to-br from-[#1f1433] via-[#2E154A] to-[#3A1A5A]">
         <img
           src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1600&q=60"
           alt=""
           className="absolute inset-0 h-full w-full object-cover opacity-30 md:opacity-25"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1A0B2E] via-[#1A0B2E]/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1f1433] via-[#1f1433]/60 to-transparent" />
 
         {/* Back button */}
         <button
@@ -70,8 +70,8 @@ export function SettingsPage() {
         {/* PAGE HEADER */}
         <div className="bg-white border border-gray-100 rounded-xl shadow-sm p-5 md:p-6 mb-6">
           <div className="flex items-center gap-4">
-            <div className="h-14 w-14 rounded-xl bg-gradient-to-br from-[#D4AF37]/20 to-[#D4AF37]/5 flex items-center justify-center border border-[#D4AF37]/20 shrink-0">
-              <Palette className="h-7 w-7 text-[#D4AF37]" strokeWidth={1.5} />
+            <div className="h-14 w-14 rounded-xl bg-gradient-to-br from-[#1f1433]/20 to-[#1f1433]/5 flex items-center justify-center border border-[#1f1433]/20 shrink-0">
+              <Palette className="h-7 w-7 text-[#1f1433]" strokeWidth={1.5} />
             </div>
             <div>
               <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">
@@ -104,7 +104,7 @@ export function SettingsPage() {
                   <Input
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="pl-10 h-11 rounded-xl border-gray-200 bg-white focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 transition-all text-sm"
+                    className="pl-10 h-11 rounded-xl border-gray-200 bg-white focus:border-[#1f1433] focus:ring-2 focus:ring-[#1f1433]/10 transition-all text-sm"
                   />
                 </div>
               </div>
@@ -118,7 +118,7 @@ export function SettingsPage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 h-11 rounded-xl border-gray-200 bg-white focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 transition-all text-sm"
+                    className="pl-10 h-11 rounded-xl border-gray-200 bg-white focus:border-[#1f1433] focus:ring-2 focus:ring-[#1f1433]/10 transition-all text-sm"
                   />
                 </div>
               </div>
@@ -137,13 +137,13 @@ export function SettingsPage() {
                     setPhone(e.target.value);
                     savePhone(e.target.value);
                   }}
-                  className="pl-10 h-11 rounded-xl border-gray-200 bg-white focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 transition-all text-sm"
+                  className="pl-10 h-11 rounded-xl border-gray-200 bg-white focus:border-[#1f1433] focus:ring-2 focus:ring-[#1f1433]/10 transition-all text-sm"
                 />
               </div>
             </div>
 
             <Button
-              className="rounded-xl bg-[#1A0B2E] hover:bg-[#2E154A] text-white text-xs font-bold tracking-wider h-11 px-8 shadow-lg shadow-[#1A0B2E]/20"
+              className="rounded-xl bg-[#f2ba0d] hover:bg-[#2E154A] text-white text-xs font-bold tracking-wider h-11 px-8 shadow-lg shadow-[#1f1433]/20"
               onClick={() => toast.success("Profile updated successfully!")}
             >
               Save Changes
@@ -172,7 +172,7 @@ export function SettingsPage() {
                     value={savedHomeCity}
                     onChange={(e) => saveHomeCity(e.target.value)}
                     placeholder="e.g. Lusaka, Ndola"
-                    className="pl-10 h-11 rounded-xl border-gray-200 bg-white focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 transition-all text-sm"
+                    className="pl-10 h-11 rounded-xl border-gray-200 bg-white focus:border-[#1f1433] focus:ring-2 focus:ring-[#1f1433]/10 transition-all text-sm"
                   />
                 </div>
               </div>
@@ -262,7 +262,7 @@ export function SettingsPage() {
                 onClick={() => setShowNotifications(!showNotifications)}
                 className={cn(
                   "relative h-6 w-11 shrink-0 rounded-full transition-colors cursor-pointer",
-                  showNotifications ? "bg-[#1A0B2E]" : "bg-gray-200",
+                  showNotifications ? "bg-[#f2ba0d]" : "bg-gray-200",
                 )}
               >
                 <div
@@ -290,7 +290,7 @@ export function SettingsPage() {
                 onClick={() => setShowPromotions(!showPromotions)}
                 className={cn(
                   "relative h-6 w-11 shrink-0 rounded-full transition-colors cursor-pointer",
-                  showPromotions ? "bg-[#1A0B2E]" : "bg-gray-200",
+                  showPromotions ? "bg-[#f2ba0d]" : "bg-gray-200",
                 )}
               >
                 <div
@@ -307,13 +307,13 @@ export function SettingsPage() {
         {/* BECOME A HOST */}
         {(!user?.role || user.role === "guest") && (
           <section className="mb-6">
-            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[#1A0B2E] to-[#2E154A] p-6 md:p-8">
-              <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-[#D4AF37]/10 blur-3xl" />
+            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[#1f1433] to-[#2E154A] p-6 md:p-8">
+              <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-[#f2ba0d]/10 blur-3xl" />
               <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-white/5 blur-3xl" />
 
               <div className="relative flex flex-col md:flex-row items-start md:items-center gap-6">
-                <div className="h-14 w-14 shrink-0 rounded-xl bg-[#D4AF37]/15 border border-[#D4AF37]/20 flex items-center justify-center">
-                  <Building2 className="h-7 w-7 text-[#D4AF37]" />
+                <div className="h-14 w-14 shrink-0 rounded-xl bg-[#f2ba0d]/15 border border-[#1f1433]/20 flex items-center justify-center">
+                  <Building2 className="h-7 w-7 text-[#1f1433]" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="text-lg font-bold text-white">Become a Host</h3>
@@ -323,21 +323,21 @@ export function SettingsPage() {
                   </p>
                   <div className="flex flex-wrap gap-4 mt-4 text-xs text-white/50">
                     <span className="flex items-center gap-1.5">
-                      <TrendingUp className="h-3.5 w-3.5 text-[#D4AF37]" />
+                      <TrendingUp className="h-3.5 w-3.5 text-[#1f1433]" />
                       Set your own prices
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <DollarSign className="h-3.5 w-3.5 text-[#D4AF37]" />
+                      <DollarSign className="h-3.5 w-3.5 text-[#1f1433]" />
                       Earn extra income
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <Sparkles className="h-3.5 w-3.5 text-[#D4AF37]" />
+                      <Sparkles className="h-3.5 w-3.5 text-[#1f1433]" />
                       Reach thousands of travelers
                     </span>
                   </div>
                 </div>
                 <Button
-                  className="rounded-xl bg-[#D4AF37] hover:bg-[#d5b069] text-[#111111] font-bold text-xs tracking-wider h-11 px-7 shrink-0 w-full md:w-auto shadow-lg shadow-[#D4AF37]/25"
+                  className="rounded-xl bg-[#f2ba0d] hover:bg-[#d4b065] text-[#111111] font-bold text-xs tracking-wider h-11 px-7 shrink-0 w-full md:w-auto shadow-lg shadow-[#1f1433]/25"
                   asChild
                 >
                   <Link href="/become-host">
@@ -379,3 +379,4 @@ export function SettingsPage() {
     </div>
   );
 }
+

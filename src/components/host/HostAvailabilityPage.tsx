@@ -159,7 +159,7 @@ export function HostAvailabilityPage() {
             <span className="text-[13px] font-medium text-[#1C1030]">
               {MONTH_NAMES[month - 1]} {year}
             </span>
-            <span className="flex items-center gap-1.5 text-[#C9A84C]">
+            <span className="flex items-center gap-1.5 text-[#2a1b47]">
               <ChevronLeft className="h-3.5 w-3.5 cursor-pointer" onClick={goBack} />
               <ChevronRight className="h-3.5 w-3.5 cursor-pointer" onClick={goNext} />
             </span>
@@ -188,7 +188,7 @@ export function HostAvailabilityPage() {
                 else if (status === "blocked")
                   className += " bg-[#E8E3DC] text-[#64748B] cursor-pointer hover:opacity-80";
                 else className += " bg-transparent cursor-pointer hover:bg-[#FAF7F2]";
-                if (today) className += " border-[1.5px] border-[#C9A84C]";
+                if (today) className += " border-[1.5px] border-[#2a1b47]";
                 return (
                   <button
                     key={cell.dateStr}
@@ -222,7 +222,7 @@ export function HostAvailabilityPage() {
                 Check-out
               </div>
               <div className="flex items-center gap-1 text-[10px] text-[#64748B]">
-                <div className="w-2.5 h-2.5 rounded-[3px] bg-[#C9A84C]"></div>Check-in
+                <div className="w-2.5 h-2.5 rounded-[3px] bg-[#d4b065]"></div>Check-in
               </div>
             </div>
           </div>
@@ -234,7 +234,7 @@ export function HostAvailabilityPage() {
           <div className="bg-white border border-[#E0DBD0] rounded-xl p-3 mb-4">
             <div className="flex gap-2 mb-2.5">
               <div className="flex-1 bg-[#FAF7F2] rounded-lg px-3 py-2 border border-[#E0DBD0]">
-                <div className="text-[10px] text-[#C9A84C] font-medium uppercase tracking-wide mb-0.5">
+                <div className="text-[10px] text-[#2a1b47] font-medium uppercase tracking-wide mb-0.5">
                   From
                 </div>
                 <input
@@ -245,7 +245,7 @@ export function HostAvailabilityPage() {
                 />
               </div>
               <div className="flex-1 bg-[#FAF7F2] rounded-lg px-3 py-2 border border-[#E0DBD0]">
-                <div className="text-[10px] text-[#C9A84C] font-medium uppercase tracking-wide mb-0.5">
+                <div className="text-[10px] text-[#2a1b47] font-medium uppercase tracking-wide mb-0.5">
                   To
                 </div>
                 <input
@@ -276,7 +276,7 @@ export function HostAvailabilityPage() {
               </div>
               <div className="flex justify-between items-center px-3 py-[7px]">
                 <span className="text-[12px] text-[#64748B]">Weekend rate (Fri–Sat)</span>
-                <span className="text-[13px] font-medium text-[#C9A84C]">K1,050</span>
+                <span className="text-[13px] font-medium text-[#2a1b47]">K1,050</span>
               </div>
               <div className="flex justify-between items-center px-3 py-[7px]">
                 <span className="text-[12px] text-[#64748B]">Min. stay (weekends)</span>
@@ -285,7 +285,7 @@ export function HostAvailabilityPage() {
             </div>
             <div className="px-3 py-2.5 border-t border-[#E0DBD0]">
               <span
-                className="text-[12px] text-[#C9A84C] font-medium cursor-pointer"
+                className="text-[12px] text-[#2a1b47] font-medium cursor-pointer"
                 onClick={() => toast.success("Opening pricing editor...")}
               >
                 Edit pricing rules
