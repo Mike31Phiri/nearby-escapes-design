@@ -96,7 +96,7 @@ function PromoCodeCard({
           <div className="flex items-center gap-2 flex-wrap">
             <button
               onClick={handleCopy}
-              className="group flex items-center gap-1.5 rounded-lg bg-primary/5 px-3 py-1 text-sm font-bold text-primary font-mono hover:bg-primary/10 transition-colors"
+              className="group flex items-center gap-1.5 rounded-lg bg-primary/5 px-3 py-1 text-base font-bold text-primary font-mono hover:bg-primary/10 transition-colors"
               title="Copy code"
             >
               {promo.code}
@@ -122,11 +122,11 @@ function PromoCodeCard({
               </Badge>
             )}
           </div>
-          <p className="text-xs text-muted-foreground mt-1.5">{promo.description}</p>
+          <p className="text-sm text-muted-foreground mt-1.5">{promo.description}</p>
         </div>
 
         <div className="text-right shrink-0">
-          <p className="text-lg font-bold text-foreground">
+          <p className="text-xl font-bold text-foreground">
             {promo.type === "percentage" ? `${promo.value}%` : `K${promo.value}`}
           </p>
           <p className="text-[10px] text-muted-foreground font-medium capitalize">
@@ -136,7 +136,7 @@ function PromoCodeCard({
       </div>
 
       {/* Details */}
-      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
+      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-muted-foreground">
         <span className="flex items-center gap-1">
           <Tag className="h-3 w-3" />
           {promo.appliesTo === "all" ? "All listings" : `${promo.appliesTo}s`}
@@ -155,7 +155,7 @@ function PromoCodeCard({
 
       {/* Usage Bar */}
       <div className="mt-3">
-        <div className="flex items-center justify-between text-xs mb-1">
+        <div className="flex items-center justify-between text-sm mb-1">
           <span className="text-muted-foreground font-medium">
             {promo.currentUses}/{promo.maxUses} used
           </span>
@@ -188,7 +188,7 @@ function PromoCodeCard({
         <Button
           size="sm"
           variant={promo.isActive ? "outline" : "default"}
-          className={cn("h-7 rounded-lg text-xs font-semibold", !promo.isActive && "")}
+          className={cn("h-7 rounded-lg text-sm font-semibold", !promo.isActive && "")}
           onClick={() =>
             withLoading(
               setLoading,
@@ -252,23 +252,23 @@ function FeaturedCard({
           </div>
           <div className="min-w-0 flex-1">
             <h4 className="font-bold text-foreground truncate">{featured.listingName}</h4>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               {featured.hostName} · {featured.listingType}
             </p>
           </div>
         </div>
         <div className="text-right shrink-0">
-          <p className="text-sm font-bold text-foreground">K{featured.cost}</p>
+          <p className="text-base font-bold text-foreground">K{featured.cost}</p>
           <p className="text-[10px] text-muted-foreground">/ month</p>
         </div>
       </div>
 
-      <div className="mt-3 flex items-center gap-2 text-xs">
+      <div className="mt-3 flex items-center gap-2 text-sm">
         <PlacementIcon className="h-3 w-3 text-muted-foreground" />
         <span className="font-medium text-foreground">{pl.label}</span>
       </div>
 
-      <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
+      <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
         <CalendarDays className="h-3 w-3" />
         {new Date(featured.startsAt).toLocaleDateString("en-ZM", {
           month: "short",
@@ -286,7 +286,7 @@ function FeaturedCard({
         <Button
           size="sm"
           variant={featured.isActive ? "outline" : "default"}
-          className="h-7 rounded-lg text-xs font-semibold"
+          className="h-7 rounded-lg text-sm font-semibold"
           onClick={() => {
             onToggle(featured.id);
             showSuccess(
@@ -362,7 +362,7 @@ export function AdminPromotions() {
         actions={
           <Button
             size="sm"
-            className="h-9 rounded-lg text-xs font-semibold bg-[#f2ba0d] hover:bg-[#B89430] text-[#1f1433]"
+            className="h-9 rounded-lg text-sm font-semibold bg-[#f2ba0d] hover:bg-[#B89430] text-[#1f1433]"
             onClick={() => {
               setShowCreateDialog(true);
             }}
@@ -379,7 +379,7 @@ export function AdminPromotions() {
           <button
             onClick={() => setActiveTab("codes")}
             className={cn(
-              "px-4 py-2 rounded-lg text-xs font-bold transition-all",
+              "px-4 py-2 rounded-lg text-sm font-bold transition-all",
               activeTab === "codes"
                 ? "bg-primary text-primary-foreground shadow-sm"
                 : "text-muted-foreground hover:text-foreground",
@@ -391,7 +391,7 @@ export function AdminPromotions() {
           <button
             onClick={() => setActiveTab("featured")}
             className={cn(
-              "px-4 py-2 rounded-lg text-xs font-bold transition-all",
+              "px-4 py-2 rounded-lg text-sm font-bold transition-all",
               activeTab === "featured"
                 ? "bg-primary text-primary-foreground shadow-sm"
                 : "text-muted-foreground hover:text-foreground",
@@ -413,7 +413,7 @@ export function AdminPromotions() {
             }
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 h-10 rounded-xl border-border/60 text-sm"
+            className="pl-9 h-10 rounded-xl border-border/60 text-base"
           />
         </div>
       </div>
@@ -427,8 +427,8 @@ export function AdminPromotions() {
                 <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
                   <Tag className="h-7 w-7 text-muted-foreground/40" />
                 </div>
-                <h3 className="text-lg font-bold text-foreground">No promo codes found</h3>
-                <p className="text-sm text-muted-foreground mt-1">Try adjusting your search.</p>
+                <h3 className="text-xl font-bold text-foreground">No promo codes found</h3>
+                <p className="text-base text-muted-foreground mt-1">Try adjusting your search.</p>
               </div>
             ) : (
               filteredCodes.map((promo) => (
@@ -448,8 +448,8 @@ export function AdminPromotions() {
                 <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
                   <Star className="h-7 w-7 text-muted-foreground/40" />
                 </div>
-                <h3 className="text-lg font-bold text-foreground">No featured listings found</h3>
-                <p className="text-sm text-muted-foreground mt-1">Try adjusting your search.</p>
+                <h3 className="text-xl font-bold text-foreground">No featured listings found</h3>
+                <p className="text-base text-muted-foreground mt-1">Try adjusting your search.</p>
               </div>
             ) : (
               filteredFeatured.map((feat) => (
@@ -464,14 +464,14 @@ export function AdminPromotions() {
       <AlertDialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
         <AlertDialogContent className="rounded-2xl max-w-md">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-lg font-bold">Create Promo Code</AlertDialogTitle>
-            <AlertDialogDescription className="text-sm text-muted-foreground">
+            <AlertDialogTitle className="text-xl font-bold">Create Promo Code</AlertDialogTitle>
+            <AlertDialogDescription className="text-base text-muted-foreground">
               Add a new promotional code for users to apply at checkout.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="space-y-4">
             <div>
-              <label className="text-xs font-bold text-foreground mb-1 block">Code</label>
+              <label className="text-sm font-bold text-foreground mb-1 block">Code</label>
               <Input
                 placeholder="e.g. SUMMER25"
                 className="h-10 rounded-xl border-border/60 font-mono font-bold tracking-wider"
@@ -479,7 +479,7 @@ export function AdminPromotions() {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-xs font-bold text-foreground mb-1 block">Type</label>
+                <label className="text-sm font-bold text-foreground mb-1 block">Type</label>
                 <Select defaultValue="percentage">
                   <SelectTrigger className="h-10 rounded-xl border-border/60">
                     <SelectValue />
@@ -491,7 +491,7 @@ export function AdminPromotions() {
                 </Select>
               </div>
               <div>
-                <label className="text-xs font-bold text-foreground mb-1 block">Value</label>
+                <label className="text-sm font-bold text-foreground mb-1 block">Value</label>
                 <Input
                   type="number"
                   placeholder="20"
@@ -500,7 +500,7 @@ export function AdminPromotions() {
               </div>
             </div>
             <div>
-              <label className="text-xs font-bold text-foreground mb-1 block">Applies To</label>
+              <label className="text-sm font-bold text-foreground mb-1 block">Applies To</label>
               <Select defaultValue="all">
                 <SelectTrigger className="h-10 rounded-xl border-border/60">
                   <SelectValue />
@@ -537,4 +537,3 @@ export function AdminPromotions() {
     </div>
   );
 }
-

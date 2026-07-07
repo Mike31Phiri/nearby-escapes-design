@@ -60,7 +60,7 @@ export function TransportDetailPage({
     <div className="min-h-screen flex flex-col bg-background font-sans pb-20 md:pb-0">
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8">
         {/* Breadcrumbs */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-5">
+        <div className="flex items-center gap-2 text-base text-muted-foreground mb-5">
           <Link
             href={backHref}
             className="hover:text-blue-600 transition-colors font-medium flex items-center gap-1"
@@ -85,7 +85,7 @@ export function TransportDetailPage({
             <h1 className="text-2xl md:text-3xl font-display font-black tracking-tight text-foreground mb-1.5">
               {title}
             </h1>
-            <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-3 text-base text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
                 <strong className="text-foreground">{transport.rating || "New"}</strong>
@@ -156,7 +156,7 @@ export function TransportDetailPage({
                 <span className="text-[10px] text-muted-foreground uppercase font-bold mt-1">
                   Capacity
                 </span>
-                <span className="text-xs font-bold text-foreground">
+                <span className="text-sm font-bold text-foreground">
                   {transport.passengerCapacity || transport.capacity || 4} seats
                 </span>
               </div>
@@ -165,7 +165,7 @@ export function TransportDetailPage({
                 <span className="text-[10px] text-muted-foreground uppercase font-bold mt-1">
                   Transmission
                 </span>
-                <span className="text-xs font-bold text-foreground">
+                <span className="text-sm font-bold text-foreground">
                   {transport.transmission || "Automatic"}
                 </span>
               </div>
@@ -174,7 +174,7 @@ export function TransportDetailPage({
                 <span className="text-[10px] text-muted-foreground uppercase font-bold mt-1">
                   Fuel Type
                 </span>
-                <span className="text-xs font-bold text-foreground">
+                <span className="text-sm font-bold text-foreground">
                   {transport.fuelType || "Gasoline"}
                 </span>
               </div>
@@ -183,7 +183,7 @@ export function TransportDetailPage({
                 <span className="text-[10px] text-muted-foreground uppercase font-bold mt-1">
                   Year
                 </span>
-                <span className="text-xs font-bold text-foreground">
+                <span className="text-sm font-bold text-foreground">
                   {transport.vehicleYear || new Date().getFullYear()}
                 </span>
               </div>
@@ -192,7 +192,7 @@ export function TransportDetailPage({
             {/* Description */}
             <section>
               <h2 className="text-xl font-bold mb-3">About this vehicle</h2>
-              <p className="text-muted-foreground text-sm leading-relaxed">
+              <p className="text-muted-foreground text-base leading-relaxed">
                 {transport.description}
               </p>
             </section>
@@ -202,14 +202,14 @@ export function TransportDetailPage({
           <div className="sticky top-24 bg-card border border-border/60 rounded-2xl p-6 shadow-xl card-shadow hidden lg:block">
             <div className="flex items-baseline gap-1 mb-4">
               <span className="text-2xl font-black">K{priceDisplay}</span>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-base text-muted-foreground">
                 {transport.from ? "/ seat" : "/ day"}
               </span>
             </div>
-            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold h-12 text-base">
+            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold h-12 text-lg">
               Request Booking
             </Button>
-            <p className="text-xs text-center text-muted-foreground mt-3">
+            <p className="text-sm text-center text-muted-foreground mt-3">
               You won&apos;t be charged yet
             </p>
           </div>

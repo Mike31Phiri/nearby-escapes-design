@@ -77,7 +77,7 @@ export function SettingsPage() {
               <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">
                 Settings
               </h1>
-              <p className="text-sm text-gray-500 mt-0.5">
+              <p className="text-base text-gray-500 mt-0.5">
                 Manage your account, preferences, and notifications
               </p>
             </div>
@@ -90,7 +90,7 @@ export function SettingsPage() {
             <div className="h-9 w-9 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center">
               <User className="h-4 w-4 text-indigo-600" strokeWidth={1.5} />
             </div>
-            <h2 className="text-sm font-bold tracking-tight text-gray-900">Account Details</h2>
+            <h2 className="text-base font-bold tracking-tight text-gray-900">Account Details</h2>
           </div>
 
           <div className="p-5 md:p-6 space-y-5">
@@ -104,7 +104,7 @@ export function SettingsPage() {
                   <Input
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="pl-10 h-11 rounded-xl border-gray-200 bg-white focus:border-[#1f1433] focus:ring-2 focus:ring-[#1f1433]/10 transition-all text-sm"
+                    className="pl-10 h-11 rounded-xl border-gray-200 bg-white focus:border-[#1f1433] focus:ring-2 focus:ring-[#1f1433]/10 transition-all text-base"
                   />
                 </div>
               </div>
@@ -118,7 +118,7 @@ export function SettingsPage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 h-11 rounded-xl border-gray-200 bg-white focus:border-[#1f1433] focus:ring-2 focus:ring-[#1f1433]/10 transition-all text-sm"
+                    className="pl-10 h-11 rounded-xl border-gray-200 bg-white focus:border-[#1f1433] focus:ring-2 focus:ring-[#1f1433]/10 transition-all text-base"
                   />
                 </div>
               </div>
@@ -137,13 +137,13 @@ export function SettingsPage() {
                     setPhone(e.target.value);
                     savePhone(e.target.value);
                   }}
-                  className="pl-10 h-11 rounded-xl border-gray-200 bg-white focus:border-[#1f1433] focus:ring-2 focus:ring-[#1f1433]/10 transition-all text-sm"
+                  className="pl-10 h-11 rounded-xl border-gray-200 bg-white focus:border-[#1f1433] focus:ring-2 focus:ring-[#1f1433]/10 transition-all text-base"
                 />
               </div>
             </div>
 
             <Button
-              className="rounded-xl bg-[#f2ba0d] hover:bg-[#2E154A] text-white text-xs font-bold tracking-wider h-11 px-8 shadow-lg shadow-[#1f1433]/20"
+              className="rounded-xl bg-[#f2ba0d] hover:bg-[#2E154A] text-white text-sm font-bold tracking-wider h-11 px-8 shadow-lg shadow-[#1f1433]/20"
               onClick={() => toast.success("Profile updated successfully!")}
             >
               Save Changes
@@ -157,7 +157,7 @@ export function SettingsPage() {
             <div className="h-9 w-9 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center">
               <MapPin className="h-4 w-4 text-emerald-600" strokeWidth={1.5} />
             </div>
-            <h2 className="text-sm font-bold tracking-tight text-gray-900">Travel Preferences</h2>
+            <h2 className="text-base font-bold tracking-tight text-gray-900">Travel Preferences</h2>
           </div>
 
           <div className="p-5 md:p-6 space-y-5">
@@ -172,7 +172,7 @@ export function SettingsPage() {
                     value={savedHomeCity}
                     onChange={(e) => saveHomeCity(e.target.value)}
                     placeholder="e.g. Lusaka, Ndola"
-                    className="pl-10 h-11 rounded-xl border-gray-200 bg-white focus:border-[#1f1433] focus:ring-2 focus:ring-[#1f1433]/10 transition-all text-sm"
+                    className="pl-10 h-11 rounded-xl border-gray-200 bg-white focus:border-[#1f1433] focus:ring-2 focus:ring-[#1f1433]/10 transition-all text-base"
                   />
                 </div>
               </div>
@@ -191,7 +191,7 @@ export function SettingsPage() {
                       </span>
                     ))
                   ) : (
-                    <p className="text-sm text-gray-400">No interests set yet</p>
+                    <p className="text-base text-gray-400">No interests set yet</p>
                   )}
                 </div>
               </div>
@@ -204,7 +204,7 @@ export function SettingsPage() {
                 </p>
                 <div className="flex items-center gap-2">
                   <DollarSign className="h-4 w-4 text-amber-500" />
-                  <p className="text-sm font-bold text-amber-900 capitalize">
+                  <p className="text-base font-bold text-amber-900 capitalize">
                     {travelPreferences.budgetRange}
                   </p>
                 </div>
@@ -215,7 +215,7 @@ export function SettingsPage() {
                 </p>
                 <div className="flex items-center gap-2">
                   <User className="h-4 w-4 text-sky-500" />
-                  <p className="text-sm font-bold text-sky-900 capitalize">
+                  <p className="text-base font-bold text-sky-900 capitalize">
                     {travelPreferences.travelGroup}
                   </p>
                 </div>
@@ -225,7 +225,7 @@ export function SettingsPage() {
             <Button
               variant="outline"
               size="sm"
-              className="rounded-xl border-gray-200 text-gray-600 hover:bg-gray-50 text-xs font-bold h-10 px-5"
+              className="rounded-xl border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-bold h-10 px-5"
               onClick={() => {
                 useProfileStore.getState().triggerTravelPreferences();
               }}
@@ -242,7 +242,7 @@ export function SettingsPage() {
             <div className="h-9 w-9 rounded-lg bg-amber-50 border border-amber-100 flex items-center justify-center">
               <Bell className="h-4 w-4 text-amber-600" strokeWidth={1.5} />
             </div>
-            <h2 className="text-sm font-bold tracking-tight text-gray-900">Notifications</h2>
+            <h2 className="text-base font-bold tracking-tight text-gray-900">Notifications</h2>
           </div>
 
           <div className="p-5 md:p-6 space-y-3">
@@ -252,8 +252,8 @@ export function SettingsPage() {
                   <Bell className="h-4 w-4 text-indigo-600" strokeWidth={1.5} />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-gray-900">Email Notifications</p>
-                  <p className="text-xs text-gray-500 mt-0.5">
+                  <p className="text-base font-semibold text-gray-900">Email Notifications</p>
+                  <p className="text-sm text-gray-500 mt-0.5">
                     Receive booking updates and confirmations
                   </p>
                 </div>
@@ -280,8 +280,8 @@ export function SettingsPage() {
                   <Tag className="h-4 w-4 text-rose-600" strokeWidth={1.5} />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-gray-900">Promotional Emails</p>
-                  <p className="text-xs text-gray-500 mt-0.5">
+                  <p className="text-base font-semibold text-gray-900">Promotional Emails</p>
+                  <p className="text-sm text-gray-500 mt-0.5">
                     Get deals, discounts, and travel inspiration
                   </p>
                 </div>
@@ -316,12 +316,12 @@ export function SettingsPage() {
                   <Building2 className="h-7 w-7 text-[#1f1433]" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-lg font-bold text-white">Become a Host</h3>
-                  <p className="text-sm text-white/60 mt-1 leading-relaxed max-w-lg">
+                  <h3 className="text-xl font-bold text-white">Become a Host</h3>
+                  <p className="text-base text-white/60 mt-1 leading-relaxed max-w-lg">
                     Share your property, tours, or transport with travelers. Start earning and grow
                     your hospitality business.
                   </p>
-                  <div className="flex flex-wrap gap-4 mt-4 text-xs text-white/50">
+                  <div className="flex flex-wrap gap-4 mt-4 text-sm text-white/50">
                     <span className="flex items-center gap-1.5">
                       <TrendingUp className="h-3.5 w-3.5 text-[#1f1433]" />
                       Set your own prices
@@ -337,7 +337,7 @@ export function SettingsPage() {
                   </div>
                 </div>
                 <Button
-                  className="rounded-xl bg-[#f2ba0d] hover:bg-[#d4b065] text-[#111111] font-bold text-xs tracking-wider h-11 px-7 shrink-0 w-full md:w-auto shadow-lg shadow-[#1f1433]/25"
+                  className="rounded-xl bg-[#f2ba0d] hover:bg-[#d4b065] text-[#111111] font-bold text-sm tracking-wider h-11 px-7 shrink-0 w-full md:w-auto shadow-lg shadow-[#1f1433]/25"
                   asChild
                 >
                   <Link href="/become-host">
@@ -355,15 +355,15 @@ export function SettingsPage() {
             <div className="h-9 w-9 rounded-lg bg-red-50 border border-red-100 flex items-center justify-center">
               <ShieldCheck className="h-4 w-4 text-red-600" strokeWidth={1.5} />
             </div>
-            <h2 className="text-sm font-bold tracking-tight text-gray-900">Account</h2>
+            <h2 className="text-base font-bold tracking-tight text-gray-900">Account</h2>
           </div>
           <div className="p-5 md:p-6">
-            <p className="text-sm text-gray-500 mb-5 max-w-md leading-relaxed">
+            <p className="text-base text-gray-500 mb-5 max-w-md leading-relaxed">
               Sign out of your account. You can always come back and sign in again.
             </p>
             <Button
               variant="outline"
-              className="rounded-xl border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 font-bold text-xs tracking-wider h-11 px-6"
+              className="rounded-xl border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 font-bold text-sm tracking-wider h-11 px-6"
               onClick={() => {
                 logout();
                 toast.success("Signed out successfully");
@@ -379,4 +379,3 @@ export function SettingsPage() {
     </div>
   );
 }
-

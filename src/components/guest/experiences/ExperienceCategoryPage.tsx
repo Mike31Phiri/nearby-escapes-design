@@ -109,8 +109,8 @@ export function ExperienceCategoryPage({ category, experiences }: ExperienceCate
         {/* Breadcrumb */}
         <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-8 mb-6">
           <Link
-            href="/search?category=attractions"
-            className="inline-flex items-center gap-1 text-sm text-white/60 hover:text-white/90 transition-colors"
+            href="/experiences"
+            className="inline-flex items-center gap-1 text-base text-white/60 hover:text-white/90 transition-colors"
           >
             <ChevronLeft className="h-4 w-4" />
             All experiences
@@ -120,7 +120,7 @@ export function ExperienceCategoryPage({ category, experiences }: ExperienceCate
         {/* Content */}
         <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-8">
           <div className="max-w-2xl">
-            <p className="text-[#1f1433] text-sm font-bold uppercase tracking-widest mb-3">
+            <p className="text-[#1f1433] text-base font-bold uppercase tracking-widest mb-3">
               {hero.tagline}
             </p>
             <h1 className="font-display text-3xl md:text-4xl font-black text-white leading-[1.1] mb-4">
@@ -140,7 +140,7 @@ export function ExperienceCategoryPage({ category, experiences }: ExperienceCate
                 key={slug}
                 href={`/experiences/category/${slug}`}
                 className={cn(
-                  "inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-200",
+                  "inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all duration-200",
                   slug === category
                     ? "bg-[#f2ba0d] text-white shadow-sm"
                     : "text-[#64748B] hover:text-[#1f1433] hover:bg-[#F9F7F2]",
@@ -159,8 +159,8 @@ export function ExperienceCategoryPage({ category, experiences }: ExperienceCate
         {experiences.length === 0 ? (
           <div className="text-center py-20">
             <Compass className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
-            <h2 className="text-lg font-bold text-foreground mb-2">No experiences found</h2>
-            <p className="text-sm text-muted-foreground max-w-md mx-auto">
+            <h2 className="text-xl font-bold text-foreground mb-2">No experiences found</h2>
+            <p className="text-base text-muted-foreground max-w-md mx-auto">
               We couldn&apos;t find any experiences in this category yet. Check back soon or explore
               other categories.
             </p>
@@ -168,7 +168,7 @@ export function ExperienceCategoryPage({ category, experiences }: ExperienceCate
         ) : (
           <>
             <div className="flex items-center justify-between mb-6">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-base text-muted-foreground">
                 <strong className="text-foreground">{experiences.length}</strong>{" "}
                 {experiences.length === 1 ? "experience" : "experiences"} found
               </p>
@@ -245,4 +245,3 @@ export function ExperienceCategoryPage({ category, experiences }: ExperienceCate
     </div>
   );
 }
-

@@ -28,8 +28,10 @@ export default function ProvincePage({ params }: { params: { province: string } 
   return (
     <div className="bg-[#ffffff] min-h-screen text-[#111111]">
       {/* Breadcrumbs */}
-      <div className="max-w-7xl mx-auto px-4 md:px-8 pt-6 text-xs text-[#6B7280] space-x-1">
-        <Link href="/explore" className="hover:text-[#1f1433]">Zambia</Link>
+      <div className="max-w-7xl mx-auto px-4 md:px-8 pt-6 text-sm text-[#6B7280] space-x-1">
+        <Link href="/explore" className="hover:text-[#1f1433]">
+          Zambia
+        </Link>
         <span>→</span>
         <span className="capitalize text-[#1f1433] font-semibold">{province} Province</span>
       </div>
@@ -38,7 +40,7 @@ export default function ProvincePage({ params }: { params: { province: string } 
         <h1 className="text-3xl md:text-4xl font-display font-bold text-[#1f1433] capitalize">
           {province} Province Guide
         </h1>
-        <p className="text-[#6B7280] mt-2 max-w-2xl text-sm leading-relaxed">
+        <p className="text-[#6B7280] mt-2 max-w-2xl text-base leading-relaxed">
           {currentRegion.desc}
         </p>
       </header>
@@ -54,7 +56,7 @@ export default function ProvincePage({ params }: { params: { province: string } 
                 href={`/explore/${province}/${city}`}
                 className="p-4 bg-white border border-[#E0DBD0] rounded-xl hover:border-[#f2ba0d] hover:shadow-sm transition-all group flex justify-between items-center"
               >
-                <span className="capitalize font-medium text-sm">{city}</span>
+                <span className="capitalize font-medium text-base">{city}</span>
                 <ArrowRight className="h-4 w-4 text-[#6B7280] group-hover:text-[#1f1433] group-hover:translate-x-0.5 transition-transform" />
               </Link>
             ))}
@@ -66,10 +68,13 @@ export default function ProvincePage({ params }: { params: { province: string } 
           {/* Column 1: Stays */}
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="font-display font-bold text-lg text-[#1f1433] flex items-center gap-2">
+              <h3 className="font-display font-bold text-xl text-[#1f1433] flex items-center gap-2">
                 <Bed className="h-4 w-4 text-[#f2ba0d]" /> Featured Stays
               </h3>
-              <Link href={`/search?category=stays&province=${province}`} className="text-xs font-semibold text-[#f2ba0d] hover:underline">
+              <Link
+                href={`/stays`}
+                className="text-sm font-semibold text-[#f2ba0d] hover:underline"
+              >
                 See All
               </Link>
             </div>
@@ -78,7 +83,7 @@ export default function ProvincePage({ params }: { params: { province: string } 
                 <div key={i} className="bg-white p-3 rounded-xl border border-[#E0DBD0] flex gap-3">
                   <div className="w-16 h-16 rounded-lg bg-gray-200 shrink-0" />
                   <div>
-                    <h4 className="text-xs font-bold text-[#1f1433]">Premium Regional Lodge {i}</h4>
+                    <h4 className="text-sm font-bold text-[#1f1433]">Premium Regional Lodge {i}</h4>
                     <p className="text-[11px] text-[#6B7280] mt-0.5">From ZMW 1,800 / night</p>
                   </div>
                 </div>
@@ -89,10 +94,13 @@ export default function ProvincePage({ params }: { params: { province: string } 
           {/* Column 2: Experiences */}
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="font-display font-bold text-lg text-[#1f1433] flex items-center gap-2">
+              <h3 className="font-display font-bold text-xl text-[#1f1433] flex items-center gap-2">
                 <Binoculars className="h-4 w-4 text-[#f2ba0d]" /> Key Experiences
               </h3>
-              <Link href={`/search?category=experiences&province=${province}`} className="text-xs font-semibold text-[#f2ba0d] hover:underline">
+              <Link
+                href={`/experiences`}
+                className="text-sm font-semibold text-[#f2ba0d] hover:underline"
+              >
                 See All
               </Link>
             </div>
@@ -101,7 +109,9 @@ export default function ProvincePage({ params }: { params: { province: string } 
                 <div key={i} className="bg-white p-3 rounded-xl border border-[#E0DBD0] flex gap-3">
                   <div className="w-16 h-16 rounded-lg bg-gray-200 shrink-0" />
                   <div>
-                    <h4 className="text-xs font-bold text-[#1f1433]">Curated Wilderness Trek {i}</h4>
+                    <h4 className="text-sm font-bold text-[#1f1433]">
+                      Curated Wilderness Trek {i}
+                    </h4>
                     <p className="text-[11px] text-[#6B7280] mt-0.5">Guided Local Activity</p>
                   </div>
                 </div>
@@ -112,11 +122,15 @@ export default function ProvincePage({ params }: { params: { province: string } 
           {/* Column 3: Transit */}
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="font-display font-bold text-lg text-[#1f1433] flex items-center gap-2">
+              <h3 className="font-display font-bold text-xl text-[#1f1433] flex items-center gap-2">
                 {/* FIXED: Uses the clean lucide Car icon component here */}
-                <Car className="h-4 w-4 text-[#f2ba0d]" / >Coach Services
+                <Car className="h-4 w-4 text-[#f2ba0d]" />
+                Coach Services
               </h3>
-              <Link href={`/search?category=transport&province=${province}`} className="text-xs font-semibold text-[#f2ba0d] hover:underline">
+              <Link
+                href={`/transport`}
+                className="text-sm font-semibold text-[#f2ba0d] hover:underline"
+              >
                 See All
               </Link>
             </div>
@@ -125,8 +139,10 @@ export default function ProvincePage({ params }: { params: { province: string } 
                 <div key={i} className="bg-white p-3 rounded-xl border border-[#E0DBD0] flex gap-3">
                   <div className="w-16 h-16 rounded-lg bg-gray-200 shrink-0" />
                   <div>
-                    <h4 className="text-xs font-bold text-[#1f1433]">Regional Transfer Link {i}</h4>
-                    <p className="text-[11px] text-[#6B7280] mt-0.5">Available Shuttle & 4x4 Hire</p>
+                    <h4 className="text-sm font-bold text-[#1f1433]">Regional Transfer Link {i}</h4>
+                    <p className="text-[11px] text-[#6B7280] mt-0.5">
+                      Available Shuttle & 4x4 Hire
+                    </p>
                   </div>
                 </div>
               ))}

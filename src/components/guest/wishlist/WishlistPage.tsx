@@ -31,7 +31,7 @@ export function WishlistPage() {
                 <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
                   My Collections
                 </h1>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-base text-muted-foreground">
                   {items.length > 0
                     ? `${items.length} saved ${items.length === 1 ? "property" : "properties"}`
                     : "Your saved listings will appear here"}
@@ -51,16 +51,16 @@ export function WishlistPage() {
               <h2 className="text-xl font-bold tracking-tight text-foreground mb-2">
                 Nothing saved yet
               </h2>
-              <p className="text-sm text-muted-foreground max-w-md mb-8">
+              <p className="text-base text-muted-foreground max-w-md mb-8">
                 Tap the heart icon on any listing to save it here — your personal collection of
                 stays, experiences, and transport options across Zambia.
               </p>
               <Button
                 size="lg"
-                className="rounded-full font-black uppercase tracking-widest text-xs shadow-lg"
+                className="rounded-full font-black uppercase tracking-widest text-sm shadow-lg"
                 asChild
               >
-                <Link href="/search">
+                <Link href="/explore">
                   <Search className="h-4 w-4 mr-2" />
                   Explore listings
                 </Link>
@@ -104,7 +104,7 @@ export function WishlistPage() {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                             {/* Price badge */}
                             <div className="absolute bottom-3 left-3">
-                              <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-foreground shadow-sm">
+                              <span className="rounded-full bg-white/90 px-3 py-1 text-sm font-bold text-foreground shadow-sm">
                                 K{item.price}
                                 <span className="font-normal text-muted-foreground"> / night</span>
                               </span>
@@ -116,21 +116,21 @@ export function WishlistPage() {
                         <div className="p-4">
                           <Link
                             href={`/listings/stays/${item.id}`}
-                            className="font-bold text-sm text-foreground hover:text-primary transition-colors line-clamp-1"
+                            className="font-bold text-base text-foreground hover:text-primary transition-colors line-clamp-1"
                           >
                             {item.name}
                           </Link>
-                          <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+                          <p className="text-sm text-muted-foreground flex items-center gap-1 mt-0.5">
                             <MapPin className="h-3 w-3 shrink-0" />
                             {item.location}
                           </p>
                           <div className="flex items-center justify-between mt-2.5">
                             <div className="flex items-center gap-1">
                               <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                              <span className="text-xs font-bold text-foreground">
+                              <span className="text-sm font-bold text-foreground">
                                 {item.rating}
                               </span>
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-sm text-muted-foreground">
                                 ({item.reviews})
                               </span>
                             </div>
@@ -165,10 +165,10 @@ export function WishlistPage() {
               <div className="flex justify-center mt-12">
                 <Button
                   variant="outline"
-                  className="rounded-full border-border/60 font-semibold text-xs"
+                  className="rounded-full border-border/60 font-semibold text-sm"
                   asChild
                 >
-                  <Link href="/search">
+                  <Link href="/explore">
                     <Search className="h-3.5 w-3.5 mr-1.5" />
                     Discover more
                     <ArrowRight className="h-3.5 w-3.5 ml-1.5" />

@@ -95,7 +95,7 @@ function TransportCard({ route }: { route: Transport }) {
               <ArrowRight className="h-5 w-5 text-[#1f1433] shrink-0" />
               <span className="truncate">{route.to}</span>
             </div>
-            <p className="text-white/60 text-xs mt-1 font-medium">{route.operator}</p>
+            <p className="text-white/60 text-sm mt-1 font-medium">{route.operator}</p>
           </div>
           <div className="text-right shrink-0">
             <p className="text-2xl font-bold text-[#1f1433]">K{route.price}</p>
@@ -106,7 +106,7 @@ function TransportCard({ route }: { route: Transport }) {
 
       {/* Details */}
       <div className="p-4">
-        <div className="flex items-center gap-5 text-xs text-gray-500">
+        <div className="flex items-center gap-5 text-sm text-gray-500">
           <span className="flex items-center gap-1.5">
             <Clock className="h-3.5 w-3.5 text-gray-400 shrink-0" />
             {route.duration}
@@ -129,7 +129,7 @@ function TransportCard({ route }: { route: Transport }) {
           <Link href={`/transport/${route.id}`}>
             <Button
               size="sm"
-              className="bg-[#f2ba0d] hover:bg-[#2d1a4a] text-white font-bold rounded-lg h-8 px-4 text-xs transition-colors"
+              className="bg-[#f2ba0d] hover:bg-[#2d1a4a] text-white font-bold rounded-lg h-8 px-4 text-sm transition-colors"
             >
               Book Route
               <ChevronRight className="h-3.5 w-3.5 ml-1" />
@@ -154,13 +154,13 @@ function TransportSortBar({
 }) {
   return (
     <div className="flex items-center justify-between gap-4">
-      <p className="text-sm text-gray-500 font-medium">
+      <p className="text-base text-gray-500 font-medium">
         <span className="text-[#1f1433] font-bold">{total}</span> routes available
       </p>
       <select
         value={sortValue}
         onChange={(e) => onSortChange(e.target.value)}
-        className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#1f1433]/20 focus:border-[#1f1433] transition-colors cursor-pointer"
+        className="text-base border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#1f1433]/20 focus:border-[#1f1433] transition-colors cursor-pointer"
         aria-label="Sort results"
       >
         <option value="recommended">Recommended</option>
@@ -293,7 +293,7 @@ export function TransportPage() {
           {/* Breadcrumb */}
           <nav
             aria-label="Breadcrumb"
-            className="flex items-center gap-1.5 text-xs text-gray-500 mb-4"
+            className="flex items-center gap-1.5 text-sm text-gray-500 mb-4"
           >
             <span>Zambia</span>
             <ChevronRight className="h-3 w-3 text-gray-300" />
@@ -308,7 +308,7 @@ export function TransportPage() {
               <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1f1433] font-display">
                 {headline}
               </h1>
-              <p className="text-sm text-gray-500 mt-0.5">
+              <p className="text-base text-gray-500 mt-0.5">
                 Shuttles, charters and private transfers across Zambia
               </p>
             </div>
@@ -342,8 +342,8 @@ export function TransportPage() {
           {filteredRoutes.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-gray-100 mt-6">
               <Bus className="h-10 w-10 text-gray-200 mb-4" />
-              <h3 className="font-bold text-lg text-[#1f1433]">No routes found</h3>
-              <p className="text-gray-500 text-sm max-w-sm text-center mt-2">
+              <h3 className="font-bold text-xl text-[#1f1433]">No routes found</h3>
+              <p className="text-gray-500 text-base max-w-sm text-center mt-2">
                 Try adjusting your filters to see more routes.
               </p>
               <Button
@@ -368,7 +368,7 @@ export function TransportPage() {
       <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
         <button
           onClick={() => setMobileFiltersOpen(true)}
-          className="flex items-center gap-2 bg-[#f2ba0d] text-white text-sm font-bold px-5 py-3 rounded-full shadow-lg hover:bg-[#2d1a4a] transition-colors"
+          className="flex items-center gap-2 bg-[#f2ba0d] text-white text-base font-bold px-5 py-3 rounded-full shadow-lg hover:bg-[#2d1a4a] transition-colors"
         >
           <SlidersHorizontal className="h-4 w-4" />
           Filters
@@ -389,7 +389,7 @@ export function TransportPage() {
           />
           <div className="fixed inset-x-0 bottom-0 z-50 bg-[#ffffff] rounded-t-2xl shadow-2xl max-h-[85vh] overflow-y-auto">
             <div className="sticky top-0 bg-[#ffffff] flex items-center justify-between px-5 py-4 border-b border-gray-100">
-              <span className="text-base font-bold text-[#1f1433]">Filters</span>
+              <span className="text-lg font-bold text-[#1f1433]">Filters</span>
               <button
                 onClick={() => setMobileFiltersOpen(false)}
                 className="h-8 w-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
@@ -420,4 +420,3 @@ export function TransportPage() {
     </div>
   );
 }
-

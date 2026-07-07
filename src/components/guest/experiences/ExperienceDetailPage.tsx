@@ -58,7 +58,7 @@ export function ExperienceDetailPage({
     <div className="min-h-screen flex flex-col bg-background font-sans pb-20 md:pb-0">
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8">
         {/* Breadcrumbs */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-5">
+        <div className="flex items-center gap-2 text-base text-muted-foreground mb-5">
           <Link
             href={backHref}
             className="hover:text-amber-600 transition-colors font-medium flex items-center gap-1"
@@ -82,7 +82,7 @@ export function ExperienceDetailPage({
             <h1 className="text-2xl md:text-3xl font-display font-black tracking-tight text-foreground mb-1.5">
               {title}
             </h1>
-            <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-3 text-base text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
                 <strong className="text-foreground">{experience.rating || "New"}</strong>
@@ -153,7 +153,7 @@ export function ExperienceDetailPage({
                 <span className="text-[10px] text-muted-foreground uppercase font-bold mt-1">
                   Duration
                 </span>
-                <span className="text-xs font-bold text-foreground">
+                <span className="text-sm font-bold text-foreground">
                   {experience.duration || `${experience.durationHours} hrs`}
                 </span>
               </div>
@@ -162,7 +162,7 @@ export function ExperienceDetailPage({
                 <span className="text-[10px] text-muted-foreground uppercase font-bold mt-1">
                   Group Size
                 </span>
-                <span className="text-xs font-bold text-foreground">
+                <span className="text-sm font-bold text-foreground">
                   Up to {experience.maxGroupSize || experience.maxParticipants || 10}
                 </span>
               </div>
@@ -171,7 +171,7 @@ export function ExperienceDetailPage({
                 <span className="text-[10px] text-muted-foreground uppercase font-bold mt-1">
                   Difficulty
                 </span>
-                <span className="text-xs font-bold text-foreground">
+                <span className="text-sm font-bold text-foreground">
                   {experience.difficulty || experience.difficultyLevel || "Moderate"}
                 </span>
               </div>
@@ -180,7 +180,7 @@ export function ExperienceDetailPage({
                 <span className="text-[10px] text-muted-foreground uppercase font-bold mt-1">
                   Min Age
                 </span>
-                <span className="text-xs font-bold text-foreground">
+                <span className="text-sm font-bold text-foreground">
                   {experience.minAge ? `${experience.minAge}+` : "All Ages"}
                 </span>
               </div>
@@ -189,7 +189,7 @@ export function ExperienceDetailPage({
             {/* Description */}
             <section>
               <h2 className="text-xl font-bold mb-3">About this experience</h2>
-              <p className="text-muted-foreground text-sm leading-relaxed">
+              <p className="text-muted-foreground text-base leading-relaxed">
                 {experience.description}
               </p>
             </section>
@@ -200,7 +200,7 @@ export function ExperienceDetailPage({
                 <h2 className="text-xl font-bold mb-3">What&apos;s Included</h2>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {experience.whatsIncluded.map((item: string, i: number) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-foreground">
+                    <li key={i} className="flex items-start gap-2 text-base text-foreground">
                       <CheckCircle2 className="h-4 w-4 text-emerald-500 mt-0.5" /> {item}
                     </li>
                   ))}
@@ -213,12 +213,12 @@ export function ExperienceDetailPage({
           <div className="sticky top-24 bg-card border border-border/60 rounded-2xl p-6 shadow-xl card-shadow hidden lg:block">
             <div className="flex items-baseline gap-1 mb-4">
               <span className="text-2xl font-black">K{priceDisplay}</span>
-              <span className="text-sm text-muted-foreground">/ person</span>
+              <span className="text-base text-muted-foreground">/ person</span>
             </div>
-            <Button className="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold h-12 text-base">
+            <Button className="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold h-12 text-lg">
               Book Experience
             </Button>
-            <p className="text-xs text-center text-muted-foreground mt-3">
+            <p className="text-sm text-center text-muted-foreground mt-3">
               You won&apos;t be charged yet
             </p>
           </div>

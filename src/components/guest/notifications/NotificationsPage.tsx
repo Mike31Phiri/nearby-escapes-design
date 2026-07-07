@@ -89,7 +89,7 @@ function NotificationCard({
             <div className="flex items-center gap-2 mb-0.5">
               <p
                 className={cn(
-                  "text-sm leading-snug",
+                  "text-base leading-snug",
                   n.read ? "font-medium text-foreground" : "font-bold text-foreground",
                 )}
               >
@@ -104,7 +104,7 @@ function NotificationCard({
                 {config.label}
               </span>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed mt-1">{n.description}</p>
+            <p className="text-base text-muted-foreground leading-relaxed mt-1">{n.description}</p>
           </div>
         </div>
 
@@ -169,7 +169,7 @@ export function NotificationsPage() {
                 <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
                   Notifications
                 </h1>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-base text-muted-foreground">
                   {unreadCount > 0
                     ? `You have ${unreadCount} unread notification${unreadCount > 1 ? "s" : ""}`
                     : "All caught up!"}
@@ -182,7 +182,7 @@ export function NotificationsPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="rounded-full border-border/60 text-xs font-bold"
+                  className="rounded-full border-border/60 text-sm font-bold"
                   onClick={markAllAsRead}
                 >
                   <CheckCheck className="h-4 w-4 mr-1.5" />
@@ -192,7 +192,7 @@ export function NotificationsPage() {
               <Button
                 variant={showUnreadOnly ? "default" : "outline"}
                 size="sm"
-                className="rounded-full text-xs font-bold"
+                className="rounded-full text-sm font-bold"
                 onClick={() => setShowUnreadOnly(!showUnreadOnly)}
               >
                 {showUnreadOnly ? "All" : "Unread Only"}
@@ -211,7 +211,7 @@ export function NotificationsPage() {
                   key={tab.id}
                   onClick={() => setActiveFilter(tab.id)}
                   className={cn(
-                    "flex items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-200",
+                    "flex items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold uppercase tracking-wider transition-all duration-200",
                     isActive
                       ? "bg-primary text-primary-foreground shadow-sm"
                       : "bg-card text-muted-foreground hover:text-foreground hover:bg-muted border border-border/50",
@@ -240,7 +240,7 @@ export function NotificationsPage() {
                 <Inbox className="h-9 w-9 text-muted-foreground/40" />
               </div>
               <h3 className="text-xl font-bold text-foreground">No notifications</h3>
-              <p className="text-sm text-muted-foreground mt-1.5 max-w-sm">
+              <p className="text-base text-muted-foreground mt-1.5 max-w-sm">
                 {showUnreadOnly
                   ? "You've read all your notifications. Great job staying on top of things!"
                   : "No notifications match this filter. Try a different category."}
@@ -248,7 +248,7 @@ export function NotificationsPage() {
               {showUnreadOnly && (
                 <Button
                   variant="outline"
-                  className="mt-6 rounded-full text-xs font-bold"
+                  className="mt-6 rounded-full text-sm font-bold"
                   onClick={() => setShowUnreadOnly(false)}
                 >
                   <Bell className="h-4 w-4 mr-1.5" />

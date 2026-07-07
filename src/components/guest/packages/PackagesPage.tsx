@@ -21,7 +21,7 @@ export function PackagesPage() {
                 <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
                   Travel Packages
                 </h1>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-base text-muted-foreground">
                   Curated multi-day packages combining stays, transport, and experiences
                 </p>
               </div>
@@ -53,8 +53,8 @@ export function PackagesPage() {
                     </Badge>
                   </div>
                   <div className="absolute bottom-3 left-3 right-3">
-                    <h3 className="text-lg font-bold text-white drop-shadow-sm">{pkg.name}</h3>
-                    <p className="text-xs text-white/80 flex items-center gap-1 mt-0.5">
+                    <h3 className="text-xl font-bold text-white drop-shadow-sm">{pkg.name}</h3>
+                    <p className="text-sm text-white/80 flex items-center gap-1 mt-0.5">
                       <MapPin className="h-3 w-3" />
                       {pkg.location}
                     </p>
@@ -66,19 +66,19 @@ export function PackagesPage() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1">
                       <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                      <span className="text-xs font-bold text-foreground">{pkg.rating}</span>
+                      <span className="text-sm font-bold text-foreground">{pkg.rating}</span>
                     </div>
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
                       <Clock className="h-3 w-3" />
                       {pkg.duration}
                     </div>
                   </div>
                   <div className="flex items-center justify-between pt-1 border-t border-border/40">
                     <div>
-                      <span className="text-lg font-bold text-foreground">K{pkg.price}</span>
-                      <span className="text-xs text-muted-foreground"> / person</span>
+                      <span className="text-xl font-bold text-foreground">K{pkg.price}</span>
+                      <span className="text-sm text-muted-foreground"> / person</span>
                     </div>
-                    <Button size="sm" className="rounded-full text-xs font-bold h-8" asChild>
+                    <Button size="sm" className="rounded-full text-sm font-bold h-8" asChild>
                       <Link href={`/checkout/book?type=experience&id=${pkg.id}`}>
                         View Details
                         <ArrowRight className="h-3 w-3 ml-1" />

@@ -41,7 +41,7 @@ function FilterSection({
         className="flex items-center justify-between w-full text-left mb-3 group"
         aria-expanded={open}
       >
-        <span className="text-sm font-semibold text-[#1f1433]">{filter.label}</span>
+        <span className="text-base font-semibold text-[#1f1433]">{filter.label}</span>
         <ChevronDown
           className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
@@ -70,11 +70,11 @@ function FilterSection({
                     className="h-4 w-4 rounded border-gray-300 accent-[#1f1433] cursor-pointer"
                     aria-label={opt.label}
                   />
-                  <span className="text-sm text-gray-700 group-hover/cb:text-[#1f1433] transition-colors flex-1">
+                  <span className="text-base text-gray-700 group-hover/cb:text-[#1f1433] transition-colors flex-1">
                     {opt.label}
                   </span>
                   {opt.count !== undefined && (
-                    <span className="text-xs text-gray-400">{opt.count}</span>
+                    <span className="text-sm text-gray-400">{opt.count}</span>
                   )}
                 </label>
               );
@@ -92,7 +92,7 @@ function FilterSection({
                   className="h-4 w-4 accent-[#1f1433] cursor-pointer"
                   aria-label={opt.label}
                 />
-                <span className="text-sm text-gray-700 group-hover/rb:text-[#1f1433] transition-colors">
+                <span className="text-base text-gray-700 group-hover/rb:text-[#1f1433] transition-colors">
                   {opt.label}
                 </span>
               </label>
@@ -105,7 +105,7 @@ function FilterSection({
                   Min
                 </label>
                 <div className="relative">
-                  <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-gray-500 font-medium">
+                  <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-sm text-gray-500 font-medium">
                     {filter.unit ?? ""}
                   </span>
                   <input
@@ -115,7 +115,7 @@ function FilterSection({
                     step={filter.step ?? 1}
                     value={activeValue?.min ?? filter.min ?? 0}
                     onChange={(e) => onChange({ ...activeValue, min: Number(e.target.value) })}
-                    className="w-full border border-gray-200 rounded-lg py-1.5 pl-6 pr-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1f1433]/20 focus:border-[#1f1433] transition-colors"
+                    className="w-full border border-gray-200 rounded-lg py-1.5 pl-6 pr-2 text-base focus:outline-none focus:ring-2 focus:ring-[#1f1433]/20 focus:border-[#1f1433] transition-colors"
                     aria-label="Minimum price"
                   />
                 </div>
@@ -126,7 +126,7 @@ function FilterSection({
                   Max
                 </label>
                 <div className="relative">
-                  <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-gray-500 font-medium">
+                  <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-sm text-gray-500 font-medium">
                     {filter.unit ?? ""}
                   </span>
                   <input
@@ -136,7 +136,7 @@ function FilterSection({
                     step={filter.step ?? 1}
                     value={activeValue?.max ?? filter.max ?? 9999}
                     onChange={(e) => onChange({ ...activeValue, max: Number(e.target.value) })}
-                    className="w-full border border-gray-200 rounded-lg py-1.5 pl-6 pr-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1f1433]/20 focus:border-[#1f1433] transition-colors"
+                    className="w-full border border-gray-200 rounded-lg py-1.5 pl-6 pr-2 text-base focus:outline-none focus:ring-2 focus:ring-[#1f1433]/20 focus:border-[#1f1433] transition-colors"
                     aria-label="Maximum price"
                   />
                 </div>
@@ -146,7 +146,7 @@ function FilterSection({
 
           {filter.type === "toggle" && (
             <label className="flex items-center justify-between cursor-pointer">
-              <span className="text-sm text-gray-700">Enabled</span>
+              <span className="text-base text-gray-700">Enabled</span>
               <button
                 role="switch"
                 aria-checked={!!activeValue}
@@ -178,10 +178,10 @@ export function VerticalFilterSidebar({
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 sticky top-24">
       <div className="flex items-center justify-between mb-1">
-        <h2 className="text-base font-bold text-[#1f1433]">Filters</h2>
+        <h2 className="text-lg font-bold text-[#1f1433]">Filters</h2>
         <button
           onClick={onReset}
-          className="text-sm font-semibold text-[#1f1433] hover:text-[#b8942e] transition-colors"
+          className="text-base font-semibold text-[#1f1433] hover:text-[#b8942e] transition-colors"
         >
           Reset all
         </button>
@@ -199,4 +199,3 @@ export function VerticalFilterSidebar({
     </div>
   );
 }
-

@@ -115,7 +115,7 @@ export function HelpPage() {
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground mb-2">
               Help Center
             </h1>
-            <p className="text-sm text-muted-foreground max-w-lg mx-auto mb-8">
+            <p className="text-base text-muted-foreground max-w-lg mx-auto mb-8">
               Find answers to common questions or get in touch with our support team
             </p>
 
@@ -126,7 +126,7 @@ export function HelpPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search for help..."
-                className="h-12 pl-11 rounded-2xl border-border/60 shadow-sm text-sm"
+                className="h-12 pl-11 rounded-2xl border-border/60 shadow-sm text-base"
               />
             </div>
           </div>
@@ -141,7 +141,7 @@ export function HelpPage() {
                 key={id}
                 onClick={() => setActiveCategory(id)}
                 className={cn(
-                  "flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold border transition-all",
+                  "flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold border transition-all",
                   activeCategory === id
                     ? "bg-primary text-primary-foreground border-primary shadow-sm"
                     : "bg-card text-muted-foreground border-border/60 hover:border-primary/30 hover:text-foreground",
@@ -157,8 +157,8 @@ export function HelpPage() {
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center py-16 text-center">
               <HelpCircle className="h-12 w-12 text-muted-foreground/30 mb-4" />
-              <h3 className="text-lg font-bold text-foreground mb-1">No results found</h3>
-              <p className="text-sm text-muted-foreground max-w-sm">
+              <h3 className="text-xl font-bold text-foreground mb-1">No results found</h3>
+              <p className="text-base text-muted-foreground max-w-sm">
                 Try different keywords or browse by category above.
               </p>
             </div>
@@ -175,7 +175,9 @@ export function HelpPage() {
                       onClick={() => setOpenFaq(isOpen ? null : faq.question)}
                       className="w-full flex items-center justify-between gap-4 p-4 text-left"
                     >
-                      <span className="text-sm font-semibold text-foreground">{faq.question}</span>
+                      <span className="text-base font-semibold text-foreground">
+                        {faq.question}
+                      </span>
                       <ChevronDown
                         className={cn(
                           "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",
@@ -185,7 +187,7 @@ export function HelpPage() {
                     </button>
                     {isOpen && (
                       <div className="px-4 pb-4 animate-in fade-in slide-in-from-top-1 duration-200">
-                        <p className="text-sm text-muted-foreground leading-relaxed">
+                        <p className="text-base text-muted-foreground leading-relaxed">
                           {faq.answer}
                         </p>
                       </div>
@@ -199,12 +201,12 @@ export function HelpPage() {
           {/* Contact section */}
           <div className="mt-12 rounded-2xl border border-border/50 bg-card p-8 shadow-sm card-shadow text-center">
             <MessageSquare className="h-8 w-8 text-primary mx-auto mb-4" />
-            <h3 className="text-lg font-bold text-foreground mb-2">Still need help?</h3>
-            <p className="text-sm text-muted-foreground max-w-md mx-auto mb-6">
+            <h3 className="text-xl font-bold text-foreground mb-2">Still need help?</h3>
+            <p className="text-base text-muted-foreground max-w-md mx-auto mb-6">
               Our support team is available Monday to Friday, 8am–6pm, and Saturday 9am–4pm.
             </p>
             <div className="flex flex-wrap justify-center gap-3">
-              <Button className="rounded-full font-bold text-xs" asChild>
+              <Button className="rounded-full font-bold text-sm" asChild>
                 <a href="mailto:support@nearbyescapes.com">
                   <Mail className="h-4 w-4 mr-1.5" />
                   Email Support
@@ -212,7 +214,7 @@ export function HelpPage() {
               </Button>
               <Button
                 variant="outline"
-                className="rounded-full font-semibold text-xs border-border/60"
+                className="rounded-full font-semibold text-sm border-border/60"
                 asChild
               >
                 <Link href="/legal/privacy">

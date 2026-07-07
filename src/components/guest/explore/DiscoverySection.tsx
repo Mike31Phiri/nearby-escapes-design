@@ -41,15 +41,15 @@ export function DiscoverySection({
               className="text-[13px] font-semibold text-[#E8952E] hover:text-[#C97720] transition-colors duration-150 flex items-center gap-0.5 shrink-0 ml-4"
             >
               {seeAllLabel ?? "See all"}
-              <span aria-hidden="true" className="ml-0.5">→</span>
+              <span aria-hidden="true" className="ml-0.5">
+                →
+              </span>
             </Link>
           )}
         </div>
 
         {isEmpty ? (
-          <p className="text-sm text-[#9AB3A8] py-8 text-center px-5">
-            {emptyMessage}
-          </p>
+          <p className="text-base text-[#9AB3A8] py-8 text-center px-5">{emptyMessage}</p>
         ) : (
           <div className="relative">
             <div

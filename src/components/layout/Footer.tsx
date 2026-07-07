@@ -22,11 +22,11 @@ const footerColumns = [
   {
     title: "Explore",
     links: [
-      { label: "Stays", href: "/search?category=stays" },
-      { label: "Transport", href: "/search?category=transport" },
-      { label: "Experiences", href: "/search?category=attractions" },
-      { label: "Hidden Gems", href: "/search?category=gems" },
-      { label: "Packages", href: "/search?category=packages" },
+      { label: "Stays", href: "/stays" },
+      { label: "Transport", href: "/transport" },
+      { label: "Experiences", href: "/experiences" },
+      { label: "Hidden Gems", href: "/gems" },
+      { label: "Packages", href: "/packages" },
     ],
   },
   {
@@ -90,16 +90,16 @@ export function Footer() {
   };
 
   return (
-    <footer className="mt-0 border-t border-transparent text-[#111111]">
+    <footer className="mt-0 border-t border-transparent text-black">
       {/* Newsletter Pre-Footer — only on homepage for unauthenticated users */}
       {!isAuthenticated && pathname === "/" && (
-        <div className="border-t border-[#111111]/5" style={{ backgroundColor: "#FAFAFA" }}>
+        <div className="border-t border-black/5 bg-white-soft">
           <div className="mx-auto max-w-7xl px-6 pt-10 pb-10 md:pt-10 md:pb-12 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-center md:text-left">
-              <h3 className="font-display text-lg md:text-xl font-bold tracking-tight text-[#111111]">
+              <h3 className="font-display text-xl md:text-xl font-bold tracking-tight text-black">
                 Get travel inspiration &amp; deals
               </h3>
-              <p className="text-sm text-[#111111]/50 mt-1 max-w-md leading-relaxed">
+              <p className="text-base text-black-muted mt-1 max-w-md leading-relaxed">
                 Subscribe to receive curated travel guides, exclusive offers, and hidden gems
                 straight to your inbox.
               </p>
@@ -109,19 +109,19 @@ export function Footer() {
               className="flex w-full md:w-auto items-center gap-2 shrink-0"
             >
               <div className="relative flex-1 md:min-w-[280px]">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-[18px] w-[18px] text-gray-400" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-[18px] w-[18px] text-black-faint" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email address"
                   required
-                  className="w-full h-[44px] md:h-12 rounded-full bg-white border border-transparent pl-11 pr-4 text-[14px] md:text-[15px] text-[#111111] placeholder:text-gray-400 outline-none focus:border-[#1f1433] focus:ring-2 focus:ring-[#1f1433]/20 transition-all duration-200 shadow-md"
+                  className="w-full h-[44px] md:h-12 rounded-full bg-white border border-transparent pl-11 pr-4 text-[14px] md:text-[15px] text-black placeholder:text-black-faint outline-none focus:border-purple focus:ring-2 focus:ring-purple-muted transition-all duration-200 shadow-md"
                 />
               </div>
               <button
                 type="submit"
-                className="flex items-center justify-center gap-2 rounded-full bg-[#f2ba0d] text-[#111111] hover:bg-[#d4b065] h-[36px] md:h-12 px-4 md:px-6 text-[13px] md:text-[14px] font-bold transition-all duration-200 active:scale-[0.97] shadow-sm shrink-0"
+                className="btn-cta rounded-full h-[36px] md:h-12 px-4 md:px-6 text-[13px] md:text-[14px] active:scale-[0.97] shadow-sm shrink-0"
               >
                 <span>Subscribe</span>
                 <ArrowRight className="h-4 w-4 hidden md:block" />
@@ -132,75 +132,56 @@ export function Footer() {
       )}
 
       {/* Main Footer Columns */}
-      <div style={{ backgroundColor: "#FAFAFA" }}>
+      <div className="bg-white-soft">
         <div className="mx-auto max-w-7xl px-6 py-12 md:py-16">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-12">
             {/* Brand column */}
             <div className="md:col-span-1">
               {/* Text-based logo matching Navbar (no broken image refs) */}
               <Link href="/" className="flex items-center gap-1.5 mb-4 group">
-                <span className="font-display font-extrabold text-[1.2rem] tracking-tight text-[#111111] group-hover:text-[#1f1433] transition-colors duration-200">
+                <span className="font-display font-extrabold text-[1.2rem] tracking-tight text-black">
                   Nearby
                 </span>
-                <span className="font-script font-bold text-[1.5rem] text-[#1f1433] group-hover:text-[#111111] transition-colors duration-200">
+                <span className="font-script font-bold text-[1.5rem] text-purple">
                   Escapes
                 </span>
               </Link>
-              <p className="text-sm text-[#111111]/50 leading-relaxed mb-6">
+              <p className="text-base text-black-muted leading-relaxed mb-6">
                 Your trusted partner for accommodation, transport, and experiences across Zambia.
               </p>
               {/* Contact details */}
-              <ul className="space-y-2.5 text-sm text-[#111111]/40 mb-6">
+              <ul className="space-y-2.5 text-base text-black-faint mb-6">
                 <li className="flex items-center gap-2.5">
-                  <MapPin className="h-4 w-4 shrink-0 text-[#1f1433]/50" />
+                  <MapPin className="h-4 w-4 shrink-0 text-purple/50" />
                   <span>Lusaka, Zambia</span>
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <Phone className="h-4 w-4 shrink-0 text-[#1f1433]/50" />
+                  <Phone className="h-4 w-4 shrink-0 text-purple/50" />
                   <span>+260 211 123 456</span>
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <Mail className="h-4 w-4 shrink-0 text-[#1f1433]/50" />
+                  <Mail className="h-4 w-4 shrink-0 text-purple/50" />
                   <span>info@nearbyescapes.com</span>
                 </li>
               </ul>
               {/* Social links — gold hover state */}
               <div className="flex items-center gap-2.5">
-                <a
-                  href="#"
-                  aria-label="Facebook"
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white/8 hover:bg-[#f2ba0d]/20 text-[#111111]/50 hover:text-[#1f1433] transition-all duration-200"
-                >
-                  <Facebook className="h-4 w-4" />
-                </a>
-                <a
-                  href="#"
-                  aria-label="Instagram"
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white/8 hover:bg-[#f2ba0d]/20 text-[#111111]/50 hover:text-[#1f1433] transition-all duration-200"
-                >
-                  <Instagram className="h-4 w-4" />
-                </a>
-                <a
-                  href="#"
-                  aria-label="Twitter"
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white/8 hover:bg-[#f2ba0d]/20 text-[#111111]/50 hover:text-[#1f1433] transition-all duration-200"
-                >
-                  <Twitter className="h-4 w-4" />
-                </a>
-                <a
-                  href="#"
-                  aria-label="Youtube"
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white/8 hover:bg-[#f2ba0d]/20 text-[#111111]/50 hover:text-[#1f1433] transition-all duration-200"
-                >
-                  <Youtube className="h-4 w-4" />
-                </a>
-                <a
-                  href="#"
-                  aria-label="TikTok"
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white/8 hover:bg-[#f2ba0d]/20 text-[#111111]/50 hover:text-[#1f1433] transition-all duration-200"
-                >
-                  <Music2 className="h-4 w-4" />
-                </a>
+                {(["Facebook", "Instagram", "Twitter", "Youtube", "TikTok"] as const).map(
+                  (label, i) => {
+                    const icons = [Facebook, Instagram, Twitter, Youtube, Music2];
+                    const Icon = icons[i];
+                    return (
+                      <a
+                        key={label}
+                        href="#"
+                        aria-label={label}
+                        className="flex h-9 w-9 items-center justify-center rounded-full bg-black/5 hover:bg-gold-muted text-black-faint hover:text-purple transition-all duration-200"
+                      >
+                        <Icon className="h-4 w-4" />
+                      </a>
+                    );
+                  },
+                )}
               </div>
             </div>
 
@@ -208,7 +189,7 @@ export function Footer() {
             {footerColumns.map((col) => (
               <div key={col.title} className="md:col-span-1">
                 {/* Desktop: always visible */}
-                <h4 className="hidden md:block text-xs font-bold uppercase tracking-[0.2em] text-[#1f1433]/60 mb-4">
+                <h4 className="hidden md:block text-sm font-bold uppercase tracking-[0.2em] text-purple/60 mb-4">
                   {col.title}
                 </h4>
 
@@ -217,13 +198,13 @@ export function Footer() {
                   onClick={() => toggleSection(col.title)}
                   aria-expanded={openSections[col.title] || false}
                   aria-controls={`footer-section-${col.title.replace(/\s+/g, "-").toLowerCase()}`}
-                  className="md:hidden flex w-full items-center justify-between py-3 text-xs font-bold uppercase tracking-[0.2em] text-[#1f1433]/60 border-b border-white/8"
+                  className="md:hidden flex w-full items-center justify-between py-3 text-sm font-bold uppercase tracking-[0.2em] text-purple/60 border-b border-black/8"
                 >
                   {col.title}
                   {openSections[col.title] ? (
-                    <ChevronUp className="h-3.5 w-3.5 text-[#1f1433]/40" />
+                    <ChevronUp className="h-3.5 w-3.5 text-purple/40" />
                   ) : (
-                    <ChevronDown className="h-3.5 w-3.5 text-[#1f1433]/40" />
+                    <ChevronDown className="h-3.5 w-3.5 text-purple/40" />
                   )}
                 </button>
 
@@ -240,7 +221,7 @@ export function Footer() {
                     <li key={link.label}>
                       <Link
                         href={link.href}
-                        className="block py-1.5 md:py-0 text-sm text-[#111111]/50 hover:text-[#1f1433] transition-colors duration-200"
+                        className="block py-1.5 md:py-0 text-base text-black-muted hover:text-purple transition-colors duration-200"
                       >
                         {link.label}
                       </Link>
@@ -253,38 +234,28 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Bottom Bar: Minimal — just copyright + legal links */}
-      <div className="border-t border-white/8" style={{ backgroundColor: "#120A20" }}>
+      {/* Bottom Bar — dark purple brand strip */}
+      <div className="border-t border-white/10 bg-purple-deep">
         <div className="mx-auto max-w-7xl px-6 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-            <p className="text-xs text-[#111111]/30">
+            <p className="text-sm text-white/80">
               © {new Date().getFullYear()} Nearby Escapes. All rights reserved.
             </p>
             <div className="flex items-center gap-5">
-              <Link
-                href="/legal/privacy"
-                className="text-xs text-[#111111]/40 hover:text-[#1f1433] transition-colors duration-200"
-              >
-                Privacy
-              </Link>
-              <Link
-                href="/legal/terms"
-                className="text-xs text-[#111111]/40 hover:text-[#1f1433] transition-colors duration-200"
-              >
-                Terms
-              </Link>
-              <Link
-                href="/legal/cookies"
-                className="text-xs text-[#111111]/40 hover:text-[#1f1433] transition-colors duration-200"
-              >
-                Cookies
-              </Link>
-              <Link
-                href="/help"
-                className="text-xs text-[#111111]/40 hover:text-[#1f1433] transition-colors duration-200"
-              >
-                Help
-              </Link>
+              {[
+                { label: "Privacy", href: "/legal/privacy" },
+                { label: "Terms", href: "/legal/terms" },
+                { label: "Cookies", href: "/legal/cookies" },
+                { label: "Help", href: "/help" },
+              ].map(({ label, href }) => (
+                <Link
+                  key={label}
+                  href={href}
+                  className="text-sm text-white/90 hover:text-gold transition-colors duration-200"
+                >
+                  {label}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
@@ -292,4 +263,3 @@ export function Footer() {
     </footer>
   );
 }
-

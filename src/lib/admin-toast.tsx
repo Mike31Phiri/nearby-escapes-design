@@ -33,8 +33,8 @@ function ToastContent({
         <Icon className="h-4 w-4" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-foreground">{title}</p>
-        {description && <p className="text-xs text-muted-foreground mt-0.5">{description}</p>}
+        <p className="text-base font-semibold text-foreground">{title}</p>
+        {description && <p className="text-sm text-muted-foreground mt-0.5">{description}</p>}
       </div>
     </div>
   );
@@ -105,8 +105,8 @@ export function showLoadingToast(
           <Loader2 className="h-4 w-4 text-primary animate-spin" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-foreground">{title}</p>
-          {description && <p className="text-xs text-muted-foreground mt-0.5">{description}</p>}
+          <p className="text-base font-semibold text-foreground">{title}</p>
+          {description && <p className="text-sm text-muted-foreground mt-0.5">{description}</p>}
         </div>
       </div>
     ),

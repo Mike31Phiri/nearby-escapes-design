@@ -28,7 +28,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <div className="flex items-center gap-3">
                 <MobileAdminNav />
                 <div>
-                  <p className="text-sm font-bold text-foreground hidden md:block">Admin Panel</p>
+                  <p className="text-base font-bold text-foreground hidden md:block">Admin Panel</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">

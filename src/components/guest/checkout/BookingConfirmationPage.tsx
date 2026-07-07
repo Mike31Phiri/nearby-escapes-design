@@ -67,12 +67,12 @@ export function BookingConfirmationPage() {
               <Search className="h-6 w-6 text-muted-foreground" />
             </div>
             <h1 className="text-xl font-black tracking-tight mb-2">No booking reference found</h1>
-            <p className="text-muted-foreground text-sm mb-6">
+            <p className="text-muted-foreground text-base mb-6">
               This page is for viewing booking confirmations. Please use a valid booking link.
             </p>
             <Link
               href="/"
-              className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-primary text-primary-foreground font-bold text-sm"
+              className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-primary text-primary-foreground font-bold text-base"
             >
               <Home className="h-4 w-4" /> Go to Home
             </Link>
@@ -125,15 +125,15 @@ export function BookingConfirmationPage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
               <div className="absolute bottom-4 left-5 right-5">
-                <span className="text-xs font-bold uppercase tracking-widest bg-emerald-500 text-white px-2.5 py-0.5 rounded-full mb-2 inline-block">
+                <span className="text-sm font-bold uppercase tracking-widest bg-emerald-500 text-white px-2.5 py-0.5 rounded-full mb-2 inline-block">
                   {booking.type === "stay"
                     ? "Accommodation"
                     : booking.type === "experience"
                       ? "Experience"
                       : "Transport"}
                 </span>
-                <h2 className="font-black text-white text-lg">{booking.listingName}</h2>
-                <p className="text-white/70 text-sm flex items-center gap-1">
+                <h2 className="font-black text-white text-xl">{booking.listingName}</h2>
+                <p className="text-white/70 text-base flex items-center gap-1">
                   <MapPin className="h-3.5 w-3.5" />
                   {booking.location}
                 </p>
@@ -144,10 +144,10 @@ export function BookingConfirmationPage() {
               {/* Booking Reference */}
               <div className="bg-primary/5 border border-primary/10 rounded-xl px-4 py-3 flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  <p className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
                     Booking Reference
                   </p>
-                  <p className="font-mono font-black text-lg text-foreground">
+                  <p className="font-mono font-black text-xl text-foreground">
                     {booking.bookingRef}
                   </p>
                 </div>
@@ -155,7 +155,7 @@ export function BookingConfirmationPage() {
                   onClick={() => {
                     navigator.clipboard?.writeText(booking.bookingRef);
                   }}
-                  className="text-xs text-primary font-bold uppercase tracking-wider hover:underline"
+                  className="text-sm text-primary font-bold uppercase tracking-wider hover:underline"
                 >
                   Copy
                 </button>
@@ -164,11 +164,11 @@ export function BookingConfirmationPage() {
               {/* Trip Details */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                  <p className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
                     <CalendarDays className="h-3.5 w-3.5" />
                     {booking.details.checkIn ? "Check-In" : "Date"}
                   </p>
-                  <p className="font-semibold text-sm text-foreground">
+                  <p className="font-semibold text-base text-foreground">
                     {booking.details.checkIn
                       ? new Date(booking.details.checkIn).toLocaleDateString("en-ZM", {
                           weekday: "short",
@@ -188,11 +188,11 @@ export function BookingConfirmationPage() {
                 </div>
                 {booking.details.checkOut && (
                   <div className="space-y-1">
-                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                    <p className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
                       <CalendarDays className="h-3.5 w-3.5" />
                       Check-Out
                     </p>
-                    <p className="font-semibold text-sm text-foreground">
+                    <p className="font-semibold text-base text-foreground">
                       {new Date(booking.details.checkOut).toLocaleDateString("en-ZM", {
                         weekday: "short",
                         day: "numeric",
@@ -203,20 +203,20 @@ export function BookingConfirmationPage() {
                   </div>
                 )}
                 <div className="space-y-1">
-                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                  <p className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
                     <Users className="h-3.5 w-3.5" />
                     Guests
                   </p>
-                  <p className="font-semibold text-sm text-foreground">
+                  <p className="font-semibold text-base text-foreground">
                     {booking.details.guests} guest{booking.details.guests > 1 ? "s" : ""}
                   </p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                  <p className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
                     <CreditCard className="h-3.5 w-3.5" />
                     Paid
                   </p>
-                  <p className="font-semibold text-sm text-foreground">
+                  <p className="font-semibold text-base text-foreground">
                     K{booking.amount.toLocaleString()}
                   </p>
                 </div>
@@ -225,8 +225,8 @@ export function BookingConfirmationPage() {
               <div className="h-px bg-border/40" />
 
               {/* Customer Details */}
-              <div className="space-y-2 text-sm">
-                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              <div className="space-y-2 text-base">
+                <p className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
                   Booked By
                 </p>
                 <p className="text-foreground font-medium">{booking.customerName}</p>
@@ -237,15 +237,15 @@ export function BookingConfirmationPage() {
               {booking.details.extras && Object.keys(booking.details.extras).length > 0 && (
                 <>
                   <div className="h-px bg-border/40" />
-                  <div className="space-y-2 text-sm">
-                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  <div className="space-y-2 text-base">
+                    <p className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
                       Extras Selected
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {Object.entries(booking.details.extras).map(([key, val]) => (
                         <span
                           key={key}
-                          className="text-xs bg-muted px-2.5 py-1 rounded-full text-muted-foreground"
+                          className="text-sm bg-muted px-2.5 py-1 rounded-full text-muted-foreground"
                         >
                           {key.replace(/([A-Z])/g, " $1").trim()}: {val}
                         </span>
@@ -260,7 +260,7 @@ export function BookingConfirmationPage() {
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <Mail className="h-4 w-4 text-emerald-600" />
-                    <h3 className="text-xs font-bold text-[#334155]">Booking Receipt</h3>
+                    <h3 className="text-sm font-bold text-[#334155]">Booking Receipt</h3>
                   </div>
                   {emailSent && (
                     <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
@@ -374,14 +374,14 @@ export function BookingConfirmationPage() {
                 </Button>
                 <Link
                   href={`/reviews/${booking.bookingRef}`}
-                  className="flex-1 h-11 rounded-xl border border-[#1f1433]/40 text-[#334155] font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#f2ba0d]/5 transition-colors"
+                  className="flex-1 h-11 rounded-xl border border-[#1f1433]/40 text-[#334155] font-bold text-base flex items-center justify-center gap-2 hover:bg-[#f2ba0d]/5 transition-colors"
                 >
                   <Star className="h-4 w-4 text-[#1f1433] fill-[#1f1433]" />
                   Leave a Review
                 </Link>
                 <Link
                   href="/"
-                  className="flex-1 h-11 rounded-xl bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center gap-2"
+                  className="flex-1 h-11 rounded-xl bg-primary text-primary-foreground font-bold text-base flex items-center justify-center gap-2"
                 >
                   <Home className="h-4 w-4" />
                   Back to Home
@@ -395,13 +395,13 @@ export function BookingConfirmationPage() {
         {(!isSuccess || !booking) && (
           <div className="bg-card border border-border/40 rounded-2xl shadow-sm card-shadow p-8 text-center space-y-5">
             <div className="space-y-2">
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground text-base">
                 {isCancelled
                   ? "You have cancelled the payment. Your booking has not been processed and no charges have been made."
                   : "Your payment could not be processed. This could be due to insufficient funds, network issues, or a declined transaction."}
               </p>
               {bookingRef && (
-                <p className="text-xs text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   Reference: <span className="font-mono font-semibold">{bookingRef}</span>
                 </p>
               )}
@@ -414,7 +414,7 @@ export function BookingConfirmationPage() {
               </Button>
               <Link
                 href="/"
-                className="h-11 rounded-xl bg-primary text-primary-foreground font-bold text-sm inline-flex items-center justify-center gap-2 px-5"
+                className="h-11 rounded-xl bg-primary text-primary-foreground font-bold text-base inline-flex items-center justify-center gap-2 px-5"
               >
                 <Home className="h-4 w-4" />
                 Go Home
@@ -425,7 +425,7 @@ export function BookingConfirmationPage() {
 
         {/* Support */}
         <div className="text-center mt-8">
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             Need help? Contact our support team at{" "}
             <a
               href="mailto:support@nearbyescapes.com"
@@ -443,4 +443,3 @@ export function BookingConfirmationPage() {
     </div>
   );
 }
-

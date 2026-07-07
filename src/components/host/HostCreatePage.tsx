@@ -71,17 +71,17 @@ export function HostCreatePage() {
                 <Icon className="h-6 w-6" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
+                <h3 className="text-xl font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
                   {type.title}
                 </h3>
-                <p className="text-sm text-muted-foreground">{type.description}</p>
+                <p className="text-base text-muted-foreground">{type.description}</p>
               </div>
             </button>
           );
         })}
       </div>
 
-      <p className="text-xs text-muted-foreground text-center pt-4">
+      <p className="text-sm text-muted-foreground text-center pt-4">
         Packages are curated by the Nearby Escapes team and cannot be self-listed.
       </p>
     </div>
@@ -97,14 +97,14 @@ export function HostCreatePage() {
             <div className="flex items-center gap-4">
               <Link
                 href="/host"
-                className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 transition-colors text-white font-bold text-sm shadow-sm"
+                className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 transition-colors text-white font-bold text-base shadow-sm"
               >
                 <ChevronLeft className="h-4 w-4" />
                 Back to Dashboard
               </Link>
               <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20">
                 <ShieldCheck className="h-4 w-4 text-emerald-400" />
-                <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
+                <span className="text-sm font-bold text-emerald-400 uppercase tracking-wider">
                   Verified
                 </span>
               </div>
@@ -116,7 +116,7 @@ export function HostCreatePage() {
           {listingType && (
             <button
               onClick={() => setListingType(null)}
-              className="mb-6 flex items-center text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
+              className="mb-6 flex items-center text-base font-semibold text-muted-foreground hover:text-foreground transition-colors"
             >
               <ChevronLeft className="h-4 w-4 mr-1" />
               Change listing type

@@ -66,13 +66,13 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
               <MessageSquare className="h-6 w-6 text-muted-foreground" />
             </div>
             <h1 className="text-xl font-black tracking-tight mb-2">Booking not found</h1>
-            <p className="text-muted-foreground text-sm mb-6">
+            <p className="text-muted-foreground text-base mb-6">
               We couldn&apos;t find a booking with this reference. Please check your booking details
               and try again.
             </p>
             <Link
               href="/trips"
-              className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-primary text-primary-foreground font-bold text-sm"
+              className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-primary text-primary-foreground font-bold text-base"
             >
               <Home className="h-4 w-4" /> Go to My Trips
             </Link>
@@ -109,7 +109,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
             <h1 className="text-2xl font-black tracking-tight text-[#334155] mb-2">
               Review Submitted! 🎉
             </h1>
-            <p className="text-[#64748B] text-sm mb-2">
+            <p className="text-[#64748B] text-base mb-2">
               Thank you for reviewing{" "}
               <strong className="text-[#334155]">{booking.listingName}</strong>
             </p>
@@ -129,7 +129,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
           {/* Tips */}
           <div className="text-left space-y-3 mb-8 animate-in slide-in-from-bottom-4 duration-500 delay-200">
             {successTips.map(({ icon: Icon, text }) => (
-              <div key={text} className="flex items-start gap-3 text-sm text-[#64748B]">
+              <div key={text} className="flex items-start gap-3 text-base text-[#64748B]">
                 <Icon className="h-4 w-4 text-[#1f1433] shrink-0 mt-0.5" />
                 <span>{text}</span>
               </div>
@@ -139,13 +139,13 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
           <div className="flex flex-col sm:flex-row gap-3 justify-center animate-in slide-in-from-bottom-4 duration-500 delay-300">
             <Link
               href="/trips"
-              className="h-11 px-6 rounded-xl bg-[#f2ba0d] text-white font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#3A2B4D] transition-colors"
+              className="h-11 px-6 rounded-xl bg-[#f2ba0d] text-white font-bold text-base flex items-center justify-center gap-2 hover:bg-[#3A2B4D] transition-colors"
             >
               <Home className="h-4 w-4" /> Back to My Trips
             </Link>
             <Link
               href={`/listings/${booking.type === "stay" ? "stays" : booking.type === "experience" ? "experiences" : "transport"}/${booking.listingId}`}
-              className="h-11 px-6 rounded-xl border border-[#E0DBD0] text-[#334155] font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#F9F7F2] transition-colors"
+              className="h-11 px-6 rounded-xl border border-[#E0DBD0] text-[#334155] font-bold text-base flex items-center justify-center gap-2 hover:bg-[#F9F7F2] transition-colors"
             >
               View listing
             </Link>
@@ -161,7 +161,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
         {/* Back link */}
         <Link
           href="/trips"
-          className="inline-flex items-center gap-1 text-sm text-[#64748B] hover:text-[#334155] transition-colors mb-6"
+          className="inline-flex items-center gap-1 text-base text-[#64748B] hover:text-[#334155] transition-colors mb-6"
         >
           <ChevronLeft className="h-4 w-4" />
           Back to My Trips
@@ -172,7 +172,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
           <h1 className="text-2xl md:text-3xl font-black tracking-tight text-[#334155] mb-2">
             Leave a review
           </h1>
-          <p className="text-[#64748B] text-sm">
+          <p className="text-[#64748B] text-base">
             Share your experience to help other guests make informed choices.
           </p>
         </div>
@@ -187,8 +187,8 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
             />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="font-bold text-sm text-[#334155] line-clamp-1">{booking.listingName}</p>
-            <p className="text-xs text-[#64748B] flex items-center gap-1 mt-0.5">
+            <p className="font-bold text-base text-[#334155] line-clamp-1">{booking.listingName}</p>
+            <p className="text-sm text-[#64748B] flex items-center gap-1 mt-0.5">
               <MapPin className="h-3 w-3" />
               {booking.location}
             </p>
@@ -220,8 +220,8 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
 
         {/* Overall Rating */}
         <div className="bg-white border border-[#E0DBD0] rounded-2xl p-6 shadow-sm mb-4">
-          <h2 className="font-bold text-[#334155] text-sm mb-1">Overall rating</h2>
-          <p className="text-xs text-[#64748B] mb-4">Tap a star to rate your experience</p>
+          <h2 className="font-bold text-[#334155] text-base mb-1">Overall rating</h2>
+          <p className="text-sm text-[#64748B] mb-4">Tap a star to rate your experience</p>
           <div className="flex items-center gap-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
@@ -243,7 +243,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
                 />
               </button>
             ))}
-            <span className="text-sm font-bold text-[#334155] ml-2">
+            <span className="text-base font-bold text-[#334155] ml-2">
               {rating > 0 ? `${rating}/5` : ""}
             </span>
           </div>
@@ -251,12 +251,12 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
 
         {/* Category Ratings */}
         <div className="bg-white border border-[#E0DBD0] rounded-2xl p-6 shadow-sm mb-4">
-          <h2 className="font-bold text-[#334155] text-sm mb-3">Rate specific aspects</h2>
+          <h2 className="font-bold text-[#334155] text-base mb-3">Rate specific aspects</h2>
           <div className="space-y-4">
             {categoryLabels.map(({ key, label }) => (
               <div key={key}>
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-xs font-medium text-[#64748B]">{label}</span>
+                  <span className="text-sm font-medium text-[#64748B]">{label}</span>
                   <span className="text-[10px] font-bold text-[#334155]">
                     {categoryRatings[key] ? `${categoryRatings[key]}/5` : "—"}
                   </span>
@@ -285,7 +285,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
             ))}
           </div>
           {avgCategoryRating > 0 && (
-            <p className="text-xs text-[#64748B] mt-3 text-center">
+            <p className="text-sm text-[#64748B] mt-3 text-center">
               Average: <strong className="text-[#334155]">{avgCategoryRating.toFixed(1)}</strong>/5
             </p>
           )}
@@ -293,8 +293,8 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
 
         {/* Written Review */}
         <div className="bg-white border border-[#E0DBD0] rounded-2xl p-6 shadow-sm mb-4">
-          <h2 className="font-bold text-[#334155] text-sm mb-1">Your review</h2>
-          <p className="text-xs text-[#64748B] mb-3">
+          <h2 className="font-bold text-[#334155] text-base mb-1">Your review</h2>
+          <p className="text-sm text-[#64748B] mb-3">
             What did you like or dislike? What stood out about your experience?
           </p>
           <textarea
@@ -302,7 +302,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
             onChange={(e) => setContent(e.target.value)}
             rows={5}
             placeholder="Share the details of your experience — the good, the unexpected, and the unforgettable..."
-            className="w-full rounded-xl border border-[#E0DBD0] bg-[#F9F7F2] px-4 py-3 text-sm text-[#334155] placeholder:text-[#64748B]/50 focus:outline-none focus:ring-2 focus:ring-[#1f1433]/30 focus:border-[#1f1433] resize-none transition-all"
+            className="w-full rounded-xl border border-[#E0DBD0] bg-[#F9F7F2] px-4 py-3 text-base text-[#334155] placeholder:text-[#64748B]/50 focus:outline-none focus:ring-2 focus:ring-[#1f1433]/30 focus:border-[#1f1433] resize-none transition-all"
           />
           <div className="flex items-center justify-between mt-2">
             <span className="text-[11px] text-[#64748B]">{content.length} / 5000 characters</span>
@@ -314,8 +314,8 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
 
         {/* Add Photos (placeholder) */}
         <div className="bg-white border border-[#E0DBD0] rounded-2xl p-6 shadow-sm mb-4">
-          <h2 className="font-bold text-[#334155] text-sm mb-1">Add photos (optional)</h2>
-          <p className="text-xs text-[#64748B] mb-3">
+          <h2 className="font-bold text-[#334155] text-base mb-1">Add photos (optional)</h2>
+          <p className="text-sm text-[#64748B] mb-3">
             Show off your experience — photos make reviews more helpful
           </p>
           <div className="flex items-center gap-3">
@@ -332,8 +332,8 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
 
         {/* Display Name */}
         <div className="bg-white border border-[#E0DBD0] rounded-2xl p-6 shadow-sm mb-6">
-          <h2 className="font-bold text-[#334155] text-sm mb-1">Display name</h2>
-          <p className="text-xs text-[#64748B] mb-3">
+          <h2 className="font-bold text-[#334155] text-base mb-1">Display name</h2>
+          <p className="text-sm text-[#64748B] mb-3">
             This name will appear publicly with your review
           </p>
           <input
@@ -341,7 +341,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
             placeholder="Your name or nickname"
-            className="w-full rounded-xl border border-[#E0DBD0] bg-[#F9F7F2] px-4 py-2.5 text-sm text-[#334155] placeholder:text-[#64748B]/50 focus:outline-none focus:ring-2 focus:ring-[#1f1433]/30 focus:border-[#1f1433] transition-all"
+            className="w-full rounded-xl border border-[#E0DBD0] bg-[#F9F7F2] px-4 py-2.5 text-base text-[#334155] placeholder:text-[#64748B]/50 focus:outline-none focus:ring-2 focus:ring-[#1f1433]/30 focus:border-[#1f1433] transition-all"
           />
         </div>
 
@@ -351,7 +351,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
           onClick={handleSubmit}
           disabled={!canSubmit || submitting}
           className={cn(
-            "w-full h-12 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all duration-200",
+            "w-full h-12 rounded-xl font-black text-base flex items-center justify-center gap-2 transition-all duration-200",
             canSubmit && !submitting
               ? "bg-[#f2ba0d] text-white hover:bg-[#3A2B4D] shadow-md shadow-[#1f1433]/20 hover:shadow-lg hover:-translate-y-0.5"
               : "bg-gray-200 text-gray-400 cursor-not-allowed",
@@ -378,4 +378,3 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
     </div>
   );
 }
-

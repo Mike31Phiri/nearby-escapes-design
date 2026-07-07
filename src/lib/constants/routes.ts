@@ -11,7 +11,7 @@ export const ROUTES = {
   // ─── Public verticals ────────────────────────────────────────────────────
   stays: {
     index: "/stays",
-    search: "/stays/search",
+    search: "/stays",
     detail: (slug: string) => `/stays/${slug}`,
     category: (cat: string) => `/stays/category/${cat}`,
     province: (prov: string) => `/stays/province/${prov}`,
@@ -19,7 +19,7 @@ export const ROUTES = {
 
   experiences: {
     index: "/experiences",
-    search: "/experiences/search",
+    search: "/experiences",
     detail: (slug: string) => `/experiences/${slug}`,
     category: (cat: string) => `/experiences/category/${cat}`,
     province: (prov: string) => `/experiences/province/${prov}`,
@@ -27,7 +27,7 @@ export const ROUTES = {
 
   transport: {
     index: "/transport",
-    search: "/transport/search",
+    search: "/transport",
     detail: (slug: string) => `/transport/${slug}`,
     route: (r: string) => `/transport/routes/${r}`,
   },
@@ -64,7 +64,7 @@ export const ROUTES = {
 
   // ─── Guest account ───────────────────────────────────────────────────────
   account: {
-    dashboard: "/account/dashboard",
+    profile: "/profile",
     trips: "/account/trips",
     trip: (id: string) => `/account/trips/${id}`,
     saved: "/account/saved",

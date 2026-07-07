@@ -47,10 +47,7 @@ interface TransportDetailPageProps {
   backHref?: string;
 }
 
-export function TransportDetailPage({
-  route,
-  backHref = "/search?category=transport",
-}: TransportDetailPageProps) {
+export function TransportDetailPage({ route, backHref = "/transport" }: TransportDetailPageProps) {
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const { isAuthenticated } = useAuth();
   const { isSaved, addItem, removeItem } = useWishlistStore();
@@ -62,10 +59,6 @@ export function TransportDetailPage({
   const ratingDist = getRatingDistribution(reviews);
 
   const handleToggleFavorite = () => {
-    if (!isAuthenticated) {
-      setShowAuthDialog(true);
-      return;
-    }
     if (isFavorited) {
       removeItem(route.id);
       toast.success(`Removed from collections`);
@@ -90,7 +83,7 @@ export function TransportDetailPage({
     <div className="min-h-screen flex flex-col bg-background font-sans pb-20 md:pb-0">
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8">
         {/* Breadcrumbs row */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-5">
+        <div className="flex items-center gap-2 text-base text-muted-foreground mb-5">
           <Link
             href={backHref}
             className="hover:text-primary transition-colors font-medium flex items-center gap-1"
@@ -119,7 +112,7 @@ export function TransportDetailPage({
             <h1 className="text-2xl md:text-3xl font-display font-black tracking-tight text-foreground mb-1.5">
               {route.from} <span className="text-muted-foreground/30 font-light">→</span> {route.to}
             </h1>
-            <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-3 text-base text-muted-foreground">
               {reviews.length > 0 && (
                 <span className="flex items-center gap-1">
                   <Star className="h-4 w-4 fill-accent text-accent" />
@@ -188,19 +181,19 @@ export function TransportDetailPage({
           <div className="space-y-10">
             {/* Quick Stats */}
             <div className="flex flex-wrap gap-5 py-5 border-y border-border/40">
-              <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+              <div className="flex items-center gap-2 text-base font-medium text-muted-foreground">
                 <Clock className="h-4.5 w-4.5 text-primary/70" />
                 <span>
                   Duration: <strong>{route.duration}</strong>
                 </span>
               </div>
-              <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+              <div className="flex items-center gap-2 text-base font-medium text-muted-foreground">
                 <Compass className="h-4.5 w-4.5 text-primary/70" />
                 <span>
                   Frequency: <strong>{route.departures}</strong>
                 </span>
               </div>
-              <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+              <div className="flex items-center gap-2 text-base font-medium text-muted-foreground">
                 <Users className="h-4.5 w-4.5 text-primary/70" />
                 <span>
                   Capacity: <strong>Up to 50 Passengers</strong>
@@ -232,10 +225,10 @@ export function TransportDetailPage({
                   <div className="absolute -left-[31px] top-0 h-4.5 w-4.5 rounded-full border-2 border-primary bg-white flex items-center justify-center">
                     <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                   </div>
-                  <h3 className="font-bold text-sm text-foreground">
+                  <h3 className="font-bold text-base text-foreground">
                     Departure: {route.from} Terminal
                   </h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  <p className="text-sm text-muted-foreground mt-0.5">
                     Please check in 45 minutes before departure time.
                   </p>
                 </div>
@@ -243,8 +236,8 @@ export function TransportDetailPage({
                   <div className="absolute -left-[31px] top-0 h-4.5 w-4.5 rounded-full border-2 border-muted-foreground/30 bg-white flex items-center justify-center">
                     <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50" />
                   </div>
-                  <h3 className="font-bold text-sm text-foreground">Transit Pitstop</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  <h3 className="font-bold text-base text-foreground">Transit Pitstop</h3>
+                  <p className="text-sm text-muted-foreground mt-0.5">
                     15-minute rest, refreshment, and stretch stop midway.
                   </p>
                 </div>
@@ -252,10 +245,10 @@ export function TransportDetailPage({
                   <div className="absolute -left-[31px] top-0 h-4.5 w-4.5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                   </div>
-                  <h3 className="font-bold text-sm text-foreground">
+                  <h3 className="font-bold text-base text-foreground">
                     Arrival: {route.to} Terminal
                   </h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  <p className="text-sm text-muted-foreground mt-0.5">
                     Estimated transit duration is {route.duration} subject to traffic conditions.
                   </p>
                 </div>
@@ -278,7 +271,7 @@ export function TransportDetailPage({
                 ].map(({ name, icon: Icon }) => (
                   <div
                     key={name}
-                    className="flex items-center gap-2.5 p-3 rounded-xl bg-muted/50 text-sm font-medium text-foreground"
+                    className="flex items-center gap-2.5 p-3 rounded-xl bg-muted/50 text-base font-medium text-foreground"
                   >
                     <Icon className="h-4 w-4 text-primary/70 shrink-0" />
                     <span>{name}</span>
@@ -289,10 +282,10 @@ export function TransportDetailPage({
 
             {/* Policies and Baggage */}
             <section className="p-5 rounded-2xl border border-amber-500/10 bg-amber-500/5 space-y-4">
-              <h3 className="font-bold text-base text-amber-800 flex items-center gap-2">
+              <h3 className="font-bold text-lg text-amber-800 flex items-center gap-2">
                 <Info className="h-5 w-5 text-amber-600" /> Baggage & Cancellation Policy
               </h3>
-              <ul className="space-y-2.5 text-sm text-amber-800/80">
+              <ul className="space-y-2.5 text-base text-amber-800/80">
                 <li className="flex items-start gap-2">
                   <Info className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
                   <span>
@@ -331,14 +324,14 @@ export function TransportDetailPage({
                         />
                       ))}
                     </div>
-                    <span className="text-xs text-muted-foreground mt-1 font-medium">
+                    <span className="text-sm text-muted-foreground mt-1 font-medium">
                       {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
                     </span>
                   </div>
                   <div className="flex-1 space-y-1.5">
                     {ratingDist.reverse().map(({ star, count, percentage }) => (
-                      <div key={star} className="flex items-center gap-2 text-sm">
-                        <span className="w-3 text-right text-muted-foreground font-medium text-xs">
+                      <div key={star} className="flex items-center gap-2 text-base">
+                        <span className="w-3 text-right text-muted-foreground font-medium text-sm">
                           {star}
                         </span>
                         <Star className="h-3 w-3 fill-accent text-accent" />
@@ -348,7 +341,7 @@ export function TransportDetailPage({
                             style={{ width: `${percentage}%` }}
                           />
                         </div>
-                        <span className="w-6 text-right text-xs text-muted-foreground">
+                        <span className="w-6 text-right text-sm text-muted-foreground">
                           {count}
                         </span>
                       </div>
@@ -369,23 +362,23 @@ export function TransportDetailPage({
           <aside className="hidden lg:block lg:sticky lg:top-24">
             <div className="bg-card rounded-2xl card-shadow-lg overflow-hidden">
               <div className="bg-primary px-6 py-5 text-white">
-                <p className="text-primary-foreground/80 text-xs font-bold uppercase tracking-widest mb-1">
+                <p className="text-primary-foreground/80 text-sm font-bold uppercase tracking-widest mb-1">
                   Ticket Rate Starting at
                 </p>
                 <div className="flex items-baseline gap-1">
                   <span className="text-3xl font-black text-primary-foreground">
                     K{route.price}
                   </span>
-                  <span className="text-primary-foreground/75 text-sm">/seat</span>
+                  <span className="text-primary-foreground/75 text-base">/seat</span>
                 </div>
-                <div className="flex items-center gap-1 mt-1 text-primary-foreground/90 text-xs">
+                <div className="flex items-center gap-1 mt-1 text-primary-foreground/90 text-sm">
                   <Clock className="h-3.5 w-3.5" />
                   <span>Instant SMS Ticket confirmation upon booking approval</span>
                 </div>
               </div>
 
               <div className="p-6 space-y-5">
-                <h3 className="font-black text-lg text-foreground tracking-tight font-display">
+                <h3 className="font-black text-xl text-foreground tracking-tight font-display">
                   Invoice Summary
                 </h3>
 
@@ -393,7 +386,7 @@ export function TransportDetailPage({
                   <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                     What&apos;s Included
                   </p>
-                  <div className="space-y-2 text-sm">
+                  <div className="space-y-2 text-base">
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <Clock className="h-4 w-4 text-primary/70" />
                       <span>Duration: {route.duration}</span>
@@ -423,7 +416,7 @@ export function TransportDetailPage({
                     {["Air Conditioning", "Reclining Seats", "WiFi", "USB Charging"].map((a) => (
                       <span
                         key={a}
-                        className="text-xs bg-muted px-2.5 py-1 rounded-full text-muted-foreground"
+                        className="text-sm bg-muted px-2.5 py-1 rounded-full text-muted-foreground"
                       >
                         {a}
                       </span>
@@ -437,7 +430,7 @@ export function TransportDetailPage({
                   <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                     Price Breakdown
                   </p>
-                  <div className="space-y-1.5 text-sm">
+                  <div className="space-y-1.5 text-base">
                     <div className="flex justify-between text-muted-foreground">
                       <span>Ticket rate</span>
                       <span className="font-semibold text-foreground">K{route.price}/seat</span>
@@ -454,13 +447,13 @@ export function TransportDetailPage({
 
                 <Link
                   href={`/checkout/book?type=transport&id=${route.id}`}
-                  className="w-full h-12 rounded-xl bg-primary font-black uppercase tracking-widest text-sm text-primary-foreground shadow-md shadow-primary/20 hover:shadow-primary/30 transition-all hover:scale-[1.01] flex items-center justify-center gap-2"
+                  className="w-full h-12 rounded-xl bg-primary font-black uppercase tracking-widest text-base text-primary-foreground shadow-md shadow-primary/20 hover:shadow-primary/30 transition-all hover:scale-[1.01] flex items-center justify-center gap-2"
                 >
                   Proceed to Booking
                   <ChevronRight className="h-4 w-4" />
                 </Link>
 
-                <p className="text-center text-xs text-muted-foreground">
+                <p className="text-center text-sm text-muted-foreground">
                   Free cancellation 24h before departure · Secure seat
                 </p>
               </div>
@@ -474,11 +467,11 @@ export function TransportDetailPage({
         <div className="flex items-center justify-between px-4 py-3">
           <div>
             <div className="flex items-baseline gap-1">
-              <span className="text-lg font-black text-foreground">K{route.price}</span>
-              <span className="text-xs text-muted-foreground">/seat</span>
+              <span className="text-xl font-black text-foreground">K{route.price}</span>
+              <span className="text-sm text-muted-foreground">/seat</span>
             </div>
             {reviews.length > 0 && (
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1 text-sm text-muted-foreground">
                 <Star className="h-3 w-3 fill-accent text-accent" />
                 <span>
                   {avgRating.toFixed(1)} · {reviews.length} reviews
@@ -500,7 +493,7 @@ export function TransportDetailPage({
             </button>
             <Link
               href={`/checkout/book?type=transport&id=${route.id}`}
-              className="h-10 px-5 rounded-xl bg-primary font-bold text-sm text-primary-foreground shadow-sm shadow-primary/20 flex items-center justify-center gap-1.5"
+              className="h-10 px-5 rounded-xl bg-primary font-bold text-base text-primary-foreground shadow-sm shadow-primary/20 flex items-center justify-center gap-1.5"
             >
               Book Now
               <ChevronRight className="h-4 w-4" />

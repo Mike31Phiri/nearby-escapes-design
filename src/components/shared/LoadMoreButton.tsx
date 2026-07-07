@@ -16,7 +16,7 @@ export function LoadMoreButton({
 }: LoadMoreButtonProps) {
   if (!hasMore) {
     return (
-      <div className="text-center py-8 text-sm text-muted-foreground">
+      <div className="text-center py-8 text-base text-muted-foreground">
         You&apos;ve reached the end of the {itemName}.
       </div>
     );

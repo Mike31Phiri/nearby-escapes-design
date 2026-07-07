@@ -155,11 +155,11 @@ function BookingCard({
               <div className="min-w-0">
                 <Link
                   href={listingHref}
-                  className="text-sm font-bold text-gray-900 hover:text-[#1f1433] transition-colors line-clamp-1"
+                  className="text-base font-bold text-gray-900 hover:text-[#1f1433] transition-colors line-clamp-1"
                 >
                   {booking.listingName}
                 </Link>
-                <p className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
+                <p className="text-sm text-gray-500 flex items-center gap-1 mt-0.5">
                   <MapPin className="h-3 w-3 shrink-0" />
                   {booking.location}
                 </p>
@@ -173,7 +173,7 @@ function BookingCard({
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-gray-500">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-gray-500">
             <span className="flex items-center gap-1">
               <CalendarDays className="h-3.5 w-3.5 text-gray-400" />
               {booking.details.checkIn
@@ -239,7 +239,7 @@ function BookingCard({
                       <AlertDialogTitle className="font-bold tracking-tight">
                         Cancel this booking?
                       </AlertDialogTitle>
-                      <AlertDialogDescription className="text-sm">
+                      <AlertDialogDescription className="text-base">
                         This will cancel your booking at{" "}
                         <span className="font-semibold text-foreground">{booking.listingName}</span>{" "}
                         (ref: {booking.bookingRef}). Cancellation policies may apply and refunds are
@@ -247,11 +247,11 @@ function BookingCard({
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel className="rounded-xl font-semibold text-xs">
+                      <AlertDialogCancel className="rounded-xl font-semibold text-sm">
                         Keep Booking
                       </AlertDialogCancel>
                       <AlertDialogAction
-                        className="rounded-xl bg-destructive text-destructive-foreground hover:bg-destructive/90 font-semibold text-xs"
+                        className="rounded-xl bg-destructive text-destructive-foreground hover:bg-destructive/90 font-semibold text-sm"
                         onClick={() => onCancel(booking.bookingRef)}
                       >
                         Yes, Cancel Booking
@@ -323,8 +323,8 @@ function BookingSection({
           <div className="h-12 w-12 rounded-full bg-white flex items-center justify-center mb-3">
             <EmptyIcon className="h-6 w-6 text-gray-300" />
           </div>
-          <h4 className="text-sm font-bold text-gray-900">{emptyTitle}</h4>
-          <p className="text-xs text-gray-500 mt-1 max-w-xs">{emptyDescription}</p>
+          <h4 className="text-base font-bold text-gray-900">{emptyTitle}</h4>
+          <p className="text-sm text-gray-500 mt-1 max-w-xs">{emptyDescription}</p>
           {emptyAction && <div className="mt-4">{emptyAction}</div>}
         </div>
       ) : (
@@ -410,7 +410,7 @@ export function TripsPage() {
           <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-sm tracking-tight">
             My Trips
           </h1>
-          <p className="text-sm text-white/60 mt-1">All your bookings in one place</p>
+          <p className="text-base text-white/60 mt-1">All your bookings in one place</p>
         </div>
       </div>
 
@@ -466,10 +466,10 @@ export function TripsPage() {
                 emptyAction={
                   <Button
                     size="sm"
-                    className="rounded-xl bg-[#f2ba0d] hover:bg-[#2E154A] text-white font-bold text-xs tracking-wider px-5 shadow-lg shadow-[#1f1433]/20"
+                    className="rounded-xl bg-[#f2ba0d] hover:bg-[#2E154A] text-white font-bold text-sm tracking-wider px-5 shadow-lg shadow-[#1f1433]/20"
                     asChild
                   >
-                    <Link href="/search">
+                    <Link href="/explore">
                       Explore destinations <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
                     </Link>
                   </Button>
@@ -512,16 +512,16 @@ export function TripsPage() {
                 <Compass className="h-10 w-10 text-[#1f1433]/40" strokeWidth={1.5} />
               </div>
               <h2 className="text-xl font-bold tracking-tight text-gray-900 mb-2">No trips yet</h2>
-              <p className="text-sm text-gray-500 max-w-md mb-8 leading-relaxed">
+              <p className="text-base text-gray-500 max-w-md mb-8 leading-relaxed">
                 Your booking history will appear here once you book your first stay, experience, or
                 transport. Start exploring Zambia!
               </p>
               <Button
                 size="lg"
-                className="rounded-xl bg-[#f2ba0d] hover:bg-[#2E154A] text-white font-bold text-xs tracking-wider px-8 shadow-lg shadow-[#1f1433]/20"
+                className="rounded-xl bg-[#f2ba0d] hover:bg-[#2E154A] text-white font-bold text-sm tracking-wider px-8 shadow-lg shadow-[#1f1433]/20"
                 asChild
               >
-                <Link href="/search">
+                <Link href="/explore">
                   Start exploring <ArrowRight className="h-4 w-4 ml-2" />
                 </Link>
               </Button>
@@ -545,4 +545,3 @@ export function TripsPage() {
     </div>
   );
 }
-

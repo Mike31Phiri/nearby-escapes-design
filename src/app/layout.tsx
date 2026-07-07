@@ -85,6 +85,7 @@ export default async function RootLayout({
         <meta name="theme-color" content="#1f1433" />
       </head>
       <body
+        suppressHydrationWarning
         className={`${fontSans.variable} ${fontScript.variable} font-sans antialiased`}
       >
         <AuthProvider initialIsAuthenticated={hasToken}>
@@ -99,4 +100,3 @@ export default async function RootLayout({
     </html>
   );
 }
-

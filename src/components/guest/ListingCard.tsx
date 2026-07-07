@@ -4,9 +4,7 @@ import Link from "next/link";
 import { Heart, Star } from "lucide-react";
 import type { Stay } from "@/types/stay";
 import { cn } from "@/lib/utils";
-import { memo, useState } from "react";
-import { useAuth } from "@/lib/store/authStore";
-import { AuthGuardDialog } from "@/components/guest/auth/AuthGuardDialog";
+import { memo } from "react";
 import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
 import { useWishlistStore } from "@/store/wishlistStore";
@@ -18,20 +16,13 @@ interface ListingCardProps {
 }
 
 export const ListingCard = memo(function ListingCard({ listing, className }: ListingCardProps) {
-  const { isAuthenticated } = useAuth();
   const searchParams = useSearchParams();
-  const [showAuthDialog, setShowAuthDialog] = useState(false);
   const { isSaved, addItem, removeItem } = useWishlistStore();
   const isFavorited = isSaved(listing.id);
 
   const toggleFavorite = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-
-    if (!isAuthenticated) {
-      setShowAuthDialog(true);
-      return;
-    }
 
     if (isFavorited) {
       removeItem(listing.id);
@@ -55,7 +46,7 @@ export const ListingCard = memo(function ListingCard({ listing, className }: Lis
       aria-label={`View details for ${listing.name} in ${listing.location}, priced at ZMW ${listing.price} per night`}
     >
       {/* Image */}
-      <div className="relative aspect-[16/10] bg-[#F0EAE0] rounded-xl overflow-hidden transition-shadow duration-300 group-hover:shadow-sm">
+      <div className="relative aspect-[16/10] bg-white-bone rounded-xl overflow-hidden transition-shadow duration-300 group-hover:shadow-sm">
         <img
           src={listing.image}
           alt={listing.name}
@@ -83,29 +74,21 @@ export const ListingCard = memo(function ListingCard({ listing, className }: Lis
       {/* Info — Title, Price, Rating only */}
       <div className="pt-2.5 px-0.5">
         <div className="flex items-start justify-between gap-3">
-          <h3 className="text-[14px] font-semibold text-[#334155] leading-snug line-clamp-1 flex-1">
+          <h3 className="text-[14px] font-semibold text-black-soft leading-snug line-clamp-1 flex-1">
             {listing.name}
           </h3>
           <div className="flex items-center gap-1 shrink-0">
-            <Star className="h-3 w-3 fill-[#1f1433] text-[#1f1433]" strokeWidth={1.5} />
-            <span className="text-[12px] font-semibold text-[#6B6258]">
+            <Star className="h-3 w-3 fill-purple text-purple" strokeWidth={1.5} />
+            <span className="text-[12px] font-semibold text-black-muted">
               {listing.rating.toFixed(1)}
             </span>
           </div>
         </div>
         <div className="flex items-baseline gap-0.5 mt-1.5">
-          <span className="text-[14px] font-bold text-[#1f1433]">ZMW {listing.price}</span>
-          <span className="text-[11px] text-[#64748B]">/ night</span>
+          <span className="text-[14px] font-bold text-purple">ZMW {listing.price}</span>
+          <span className="text-[11px] text-black-muted">/ night</span>
         </div>
       </div>
-
-      <AuthGuardDialog
-        isOpen={showAuthDialog}
-        onClose={() => setShowAuthDialog(false)}
-        title="Save to your collections"
-        description="Sign in to save this property and access it from any device."
-      />
     </Link>
   );
 });
-

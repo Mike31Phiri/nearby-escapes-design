@@ -22,7 +22,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
         <span className="sr-only">Previous page</span>
       </Button>
 
-      <div className="flex items-center gap-1 text-sm font-medium">
+      <div className="flex items-center gap-1 text-base font-medium">
         Page {currentPage} of {totalPages}
       </div>
 

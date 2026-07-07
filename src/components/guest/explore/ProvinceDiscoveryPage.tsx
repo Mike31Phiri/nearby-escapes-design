@@ -6,17 +6,15 @@ import {
   getCitiesByProvince,
   getAttractionsByProvince,
 } from "@/lib/mock-explore-data";
-import {
-  mockStays,
-  mockExperiences,
-  mockTransport,
-  mockPackages,
-} from "@/lib/mock-data";
+import { mockStays, mockExperiences, mockTransport, mockPackages } from "@/lib/mock-data";
 import { DiscoveryHero } from "@/components/guest/explore/DiscoveryHero";
 import { DiscoverySection } from "@/components/guest/explore/DiscoverySection";
 import { AttractionCard } from "@/components/guest/explore/AttractionCard";
 import { MiniCard, TransportMiniCard, PackageMiniCard } from "@/components/guest/explore/MiniCard";
-import { ExploreFilterBar, type ExploreFilterType } from "@/components/guest/explore/ExploreFilterBar";
+import {
+  ExploreFilterBar,
+  type ExploreFilterType,
+} from "@/components/guest/explore/ExploreFilterBar";
 import { useState } from "react";
 
 interface ProvinceDiscoveryPageProps {
@@ -36,53 +34,51 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
     cityNames.some((cn) => str.toLowerCase().includes(cn)) ||
     str.toLowerCase().includes(provinceName);
 
-  let filteredStays       = mockStays.filter((s) => inProvince(s.location));
+  let filteredStays = mockStays.filter((s) => inProvince(s.location));
   let filteredExperiences = mockExperiences.filter((e) => inProvince(e.location));
-  let filteredTransport   = mockTransport.filter((t) => inProvince(t.from) || inProvince(t.to));
-  let filteredPackages    = mockPackages.filter((p) => inProvince(p.location));
+  const filteredTransport = mockTransport.filter((t) => inProvince(t.from) || inProvince(t.to));
+  const filteredPackages = mockPackages.filter((p) => inProvince(p.location));
 
   // Apply global filter logic
   if (globalFilter === "popular") {
-    filteredStays       = filteredStays.filter((s) => s.rating >= 4.7);
+    filteredStays = filteredStays.filter((s) => s.rating >= 4.7);
     filteredExperiences = filteredExperiences.filter((e) => e.rating >= 4.7);
   } else if (globalFilter === "hidden-gems") {
-    filteredStays       = filteredStays.filter((s) =>
-      ["farm", "eco-camp", "lodge"].some((t) => s.type.toLowerCase().includes(t))
+    filteredStays = filteredStays.filter((s) =>
+      ["farm", "eco-camp", "lodge"].some((t) => s.type.toLowerCase().includes(t)),
     );
     filteredExperiences = filteredExperiences.filter((e) =>
-      ["farm", "general"].includes(e.category)
+      ["farm", "general"].includes(e.category),
     );
     filteredAttractions = filteredAttractions.filter((a) =>
-      ["other", "natural-landmark"].includes(a.category)
+      ["other", "natural-landmark"].includes(a.category),
     );
   } else if (globalFilter === "adventure") {
     filteredExperiences = filteredExperiences.filter((e) =>
-      ["adventure", "wildlife"].includes(e.category)
+      ["adventure", "wildlife"].includes(e.category),
     );
     filteredAttractions = filteredAttractions.filter((a) =>
-      ["game-reserve", "waterfall"].includes(a.category)
+      ["game-reserve", "waterfall"].includes(a.category),
     );
   } else if (globalFilter === "history") {
     filteredExperiences = filteredExperiences.filter((e) =>
-      ["cultural", "industrial"].includes(e.category)
+      ["cultural", "industrial"].includes(e.category),
     );
     filteredAttractions = filteredAttractions.filter((a) => a.category === "heritage-site");
   } else if (globalFilter === "family") {
-    filteredStays       = filteredStays.filter((s) =>
-      s.amenities.some((a) => a.toLowerCase().includes("pool"))
+    filteredStays = filteredStays.filter((s) =>
+      s.amenities.some((a) => a.toLowerCase().includes("pool")),
     );
     filteredExperiences = filteredExperiences.filter((e) => e.category !== "adventure");
   } else if (globalFilter === "relaxation") {
-    filteredStays       = filteredStays.filter((s) =>
-      s.amenities.some((a) =>
-        a.toLowerCase().includes("spa") || a.toLowerCase().includes("pool")
-      )
+    filteredStays = filteredStays.filter((s) =>
+      s.amenities.some((a) => a.toLowerCase().includes("spa") || a.toLowerCase().includes("pool")),
     );
     filteredExperiences = filteredExperiences.filter((e) =>
-      ["water", "cultural"].includes(e.category)
+      ["water", "cultural"].includes(e.category),
     );
     filteredAttractions = filteredAttractions.filter((a) =>
-      ["lake", "waterfall", "viewpoint"].includes(a.category)
+      ["lake", "waterfall", "viewpoint"].includes(a.category),
     );
   }
 
@@ -93,10 +89,7 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
         title={province.name}
         tagline={province.tagline}
         coverImage={province.coverImage}
-        breadcrumbs={[
-          { label: "Zambia", href: "/explore" },
-          { label: province.name },
-        ]}
+        breadcrumbs={[{ label: "Zambia", href: "/explore" }, { label: province.name }]}
       />
 
       {/* City pills */}

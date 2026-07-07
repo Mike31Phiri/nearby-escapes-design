@@ -63,7 +63,7 @@ function StatCard({
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-2xl font-bold tracking-tight text-foreground">{value}</p>
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+        <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
           {label}
         </p>
         {sub && <p className="text-[11px] text-muted-foreground/70 mt-0.5">{sub}</p>}
@@ -104,7 +104,7 @@ function ActivityItem({ log }: { log: ActivityLog }) {
     <div className="flex items-start gap-3 py-3 first:pt-0 last:pb-0">
       <div
         className={cn(
-          "h-8 w-8 shrink-0 rounded-lg flex items-center justify-center text-xs font-bold",
+          "h-8 w-8 shrink-0 rounded-lg flex items-center justify-center text-sm font-bold",
           typeColors[log.type],
         )}
       >
@@ -121,7 +121,7 @@ function ActivityItem({ log }: { log: ActivityLog }) {
                   : "S"}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-foreground">
+        <p className="text-base font-medium text-foreground">
           <span className="font-semibold">{log.user}</span>{" "}
           <span className="text-muted-foreground">{log.action.toLowerCase()}</span>
           {log.target && (
@@ -132,7 +132,7 @@ function ActivityItem({ log }: { log: ActivityLog }) {
             </>
           )}
         </p>
-        <p className="text-xs text-muted-foreground mt-0.5">
+        <p className="text-sm text-muted-foreground mt-0.5">
           {new Date(log.timestamp).toLocaleDateString("en-ZM", {
             month: "short",
             day: "numeric",
@@ -163,7 +163,7 @@ export function AdminDashboard() {
             <Button
               variant="outline"
               size="sm"
-              className="rounded-xl text-xs font-semibold border-white/20 bg-white/10 text-white hover:bg-white/20 transition-all shadow-sm h-10 px-4"
+              className="rounded-xl text-sm font-semibold border-white/20 bg-white/10 text-white hover:bg-white/20 transition-all shadow-sm h-10 px-4"
             >
               <CalendarDays className="h-4 w-4 mr-2" />
               {new Date().toLocaleDateString("en-ZM", {
@@ -178,7 +178,7 @@ export function AdminDashboard() {
         {/* Quick Actions & Alerts */}
         {/* Stats Row */}
         <div className="mx-auto max-w-7xl px-4 md:px-6 mt-8 relative z-10">
-          <h3 className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-3">
+          <h3 className="text-[10px] sm:text-sm font-bold text-[#1f1433] uppercase tracking-widest mb-3">
             Analysis
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
@@ -230,14 +230,14 @@ export function AdminDashboard() {
               <div className="rounded-xl border border-border/50 bg-card p-6 shadow-sm card-shadow">
                 <div className="flex items-center justify-between mb-6">
                   <div>
-                    <h3 className="text-sm font-black uppercase tracking-widest text-foreground">
+                    <h3 className="text-base font-black uppercase tracking-widest text-foreground">
                       Monthly Revenue
                     </h3>
-                    <p className="text-xs text-muted-foreground mt-0.5">
+                    <p className="text-sm text-muted-foreground mt-0.5">
                       Platform earnings over the last 12 months
                     </p>
                   </div>
-                  <div className="flex items-center gap-4 text-xs">
+                  <div className="flex items-center gap-4 text-sm">
                     <span className="flex items-center gap-1.5">
                       <span className="h-2.5 w-2.5 rounded-sm bg-primary/60" /> Revenue
                     </span>
@@ -282,36 +282,36 @@ export function AdminDashboard() {
               {/* Secondary Stats */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
                 <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                  <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                     Avg. Rating
                   </p>
                   <div className="flex items-baseline gap-1.5">
                     <p className="text-3xl font-bold text-foreground">{stats.avgRating}</p>
-                    <span className="text-sm text-muted-foreground">/ 5</span>
+                    <span className="text-base text-muted-foreground">/ 5</span>
                   </div>
-                  <p className="text-xs text-muted-foreground font-medium mt-1">
+                  <p className="text-sm text-muted-foreground font-medium mt-1">
                     Across all listings
                   </p>
                 </div>
                 <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                  <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                     Monthly Growth
                   </p>
                   <div className="flex items-baseline gap-1.5">
                     <p className="text-3xl font-bold text-emerald-600">+{stats.growthRate}%</p>
                   </div>
-                  <p className="text-xs text-emerald-600 font-medium mt-1 flex items-center gap-0.5">
+                  <p className="text-sm text-emerald-600 font-medium mt-1 flex items-center gap-0.5">
                     <TrendingUp className="h-3 w-3" /> New user registrations
                   </p>
                 </div>
                 <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                  <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                     Commission Rate
                   </p>
                   <p className="text-3xl font-bold text-foreground">
                     {((stats.platformCommission / stats.totalRevenue) * 100).toFixed(0)}%
                   </p>
-                  <p className="text-xs text-muted-foreground font-medium mt-1">
+                  <p className="text-sm text-muted-foreground font-medium mt-1">
                     Effective platform fee
                   </p>
                 </div>
@@ -323,7 +323,7 @@ export function AdminDashboard() {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <Activity className="h-4 w-4 text-primary" />
-                  <h3 className="text-sm font-black uppercase tracking-widest text-foreground">
+                  <h3 className="text-base font-black uppercase tracking-widest text-foreground">
                     Recent Activity
                   </h3>
                 </div>
@@ -336,7 +336,7 @@ export function AdminDashboard() {
               <div className="mt-4 pt-3 border-t border-border/30">
                 <Link
                   href="/admin"
-                  className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
+                  className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
                 >
                   View all activity <ArrowRight className="h-3 w-3" />
                 </Link>
@@ -346,7 +346,7 @@ export function AdminDashboard() {
 
           {/* Quick Access — All Admin Tools */}
           <div className="mt-8">
-            <h3 className="text-sm font-black uppercase tracking-widest text-foreground mb-5">
+            <h3 className="text-base font-black uppercase tracking-widest text-foreground mb-5">
               All Admin Tools
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -419,8 +419,8 @@ export function AdminDashboard() {
                   >
                     <Icon className="h-5 w-5" />
                   </div>
-                  <p className="text-sm font-bold text-foreground">{label}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">{desc}</p>
+                  <p className="text-base font-bold text-foreground">{label}</p>
+                  <p className="text-sm text-muted-foreground mt-0.5">{desc}</p>
                 </Link>
               ))}
             </div>
@@ -430,4 +430,3 @@ export function AdminDashboard() {
     </div>
   );
 }
-

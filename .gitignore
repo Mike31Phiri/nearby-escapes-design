@@ -39,8 +39,9 @@ Thumbs.db
 .vercel/
 .netlify/
 
-# Requirements & internal planning docs
+# Requirements, internal planning docs & agent rules
 requirements/
+.agents/
 
 # Junk / temp files
 nul

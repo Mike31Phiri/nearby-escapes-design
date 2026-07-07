@@ -103,7 +103,7 @@ function ListingCard({ listing }: { listing: HostListing }) {
         </div>
         {/* View details overlay */}
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/10">
-          <div className="rounded-full bg-white/90 px-4 py-2 text-xs font-bold shadow-lg flex items-center gap-1.5 text-[#111111]">
+          <div className="rounded-full bg-white/90 px-4 py-2 text-sm font-bold shadow-lg flex items-center gap-1.5 text-[#111111]">
             <Eye className="h-3.5 w-3.5" />
             View Details
           </div>
@@ -113,10 +113,10 @@ function ListingCard({ listing }: { listing: HostListing }) {
       {/* Info */}
       <div className="p-4">
         <div className="mb-2">
-          <h3 className="text-sm font-bold text-[#111111] truncate group-hover:text-primary transition-colors">
+          <h3 className="text-base font-bold text-[#111111] truncate group-hover:text-primary transition-colors">
             {listing.name}
           </h3>
-          <p className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
+          <p className="text-sm text-gray-500 flex items-center gap-1 mt-0.5">
             <MapPin className="h-3 w-3 shrink-0" />
             {listing.location}
           </p>
@@ -125,7 +125,7 @@ function ListingCard({ listing }: { listing: HostListing }) {
         <div className="flex items-center justify-between pt-2 border-t border-gray-100">
           <div className="flex items-center gap-1.5">
             {listing.rating > 0 && (
-              <div className="flex items-center gap-0.5 text-xs font-semibold text-[#111111]">
+              <div className="flex items-center gap-0.5 text-sm font-semibold text-[#111111]">
                 <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
                 {listing.rating.toFixed(1)}
               </div>
@@ -135,7 +135,7 @@ function ListingCard({ listing }: { listing: HostListing }) {
             </span>
           </div>
           <div className="text-right">
-            <p className="text-sm font-bold text-[#111111]">K{listing.price}</p>
+            <p className="text-base font-bold text-[#111111]">K{listing.price}</p>
             <p className="text-[9px] text-gray-400 font-medium uppercase tracking-wider">
               /{" "}
               {listing.type === "stay" ? "night" : listing.type === "transport" ? "seat" : "person"}
@@ -238,7 +238,7 @@ export function HostListingsPage() {
         description="Manage and monitor all your properties and services"
         actions={
           <Button
-            className="h-10 px-5 rounded-xl text-sm font-bold bg-gradient-to-r from-[#1f1433] to-[#150d22] text-[#1f1433] hover:from-[#150d22] hover:to-[#967825] shadow-sm border-none"
+            className="h-10 px-5 rounded-xl text-base font-bold bg-gradient-to-r from-[#1f1433] to-[#150d22] text-[#1f1433] hover:from-[#150d22] hover:to-[#967825] shadow-sm border-none"
             asChild
           >
             <Link href="/host/create">
@@ -282,7 +282,7 @@ export function HostListingsPage() {
                 key={id}
                 onClick={() => setActiveFilter(id)}
                 className={cn(
-                  "flex items-center gap-2 pb-3 px-4 text-xs font-black uppercase tracking-wider border-b-2 transition-all duration-200 whitespace-nowrap",
+                  "flex items-center gap-2 pb-3 px-4 text-sm font-black uppercase tracking-wider border-b-2 transition-all duration-200 whitespace-nowrap",
                   isActive
                     ? "border-primary text-primary"
                     : "border-transparent text-gray-500 hover:text-[#111111] hover:border-gray-300",
@@ -308,7 +308,7 @@ export function HostListingsPage() {
             placeholder="Search listings..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="h-10 pl-9 rounded-xl border-gray-200 text-sm"
+            className="h-10 pl-9 rounded-xl border-gray-200 text-base"
           />
         </div>
       </div>
@@ -319,7 +319,7 @@ export function HostListingsPage() {
           <div className="h-20 w-20 rounded-2xl bg-gray-100 flex items-center justify-center mb-6">
             <Building2 className="h-10 w-10 text-gray-300" />
           </div>
-          <h3 className="text-lg font-bold text-[#111111] mb-2">
+          <h3 className="text-xl font-bold text-[#111111] mb-2">
             {searchQuery
               ? "No results found"
               : activeFilter === "active"
@@ -330,7 +330,7 @@ export function HostListingsPage() {
                     ? "No draft listings"
                     : "No listings yet"}
           </h3>
-          <p className="text-sm text-gray-500 max-w-sm mb-8">
+          <p className="text-base text-gray-500 max-w-sm mb-8">
             {searchQuery
               ? "Try adjusting your search terms."
               : activeFilter !== "all"
@@ -342,12 +342,12 @@ export function HostListingsPage() {
               variant="outline"
               size="sm"
               onClick={() => setSearchQuery("")}
-              className="rounded-lg text-xs font-semibold border-gray-200"
+              className="rounded-lg text-sm font-semibold border-gray-200"
             >
               Clear Search
             </Button>
           ) : (
-            <Button className="rounded-lg text-xs font-bold" asChild>
+            <Button className="rounded-lg text-sm font-bold" asChild>
               <Link href="/host/create">
                 <Plus className="h-4 w-4 mr-1" />
                 Create Listing
@@ -365,4 +365,3 @@ export function HostListingsPage() {
     </div>
   );
 }
-

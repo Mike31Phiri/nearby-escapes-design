@@ -47,7 +47,7 @@ function MetricCard({
         <div className="h-9 w-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
           <Icon className="h-4.5 w-4.5" />
         </div>
-        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+        <span className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
           {label}
         </span>
       </div>
@@ -55,7 +55,7 @@ function MetricCard({
       {change && (
         <p
           className={cn(
-            "text-xs font-semibold mt-1 flex items-center gap-0.5",
+            "text-sm font-semibold mt-1 flex items-center gap-0.5",
             positive ? "text-emerald-600" : "text-destructive",
           )}
         >
@@ -126,7 +126,7 @@ export function AdminReports() {
         actions={
           <div className="flex items-center gap-2">
             <Select value={period} onValueChange={(v) => setPeriod(v as typeof period)}>
-              <SelectTrigger className="w-[130px] h-9 rounded-lg border-white/20 bg-white/10 text-white text-xs">
+              <SelectTrigger className="w-[130px] h-9 rounded-lg border-white/20 bg-white/10 text-white text-sm">
                 <SelectValue placeholder="Period" />
               </SelectTrigger>
               <SelectContent className="rounded-xl">
@@ -138,7 +138,7 @@ export function AdminReports() {
             <Button
               variant="outline"
               size="sm"
-              className="h-9 rounded-lg text-xs font-semibold bg-transparent border-white/20 text-white hover:bg-white/10 hover:text-white"
+              className="h-9 rounded-lg text-sm font-semibold bg-transparent border-white/20 text-white hover:bg-white/10 hover:text-white"
               onClick={() =>
                 withLoading(
                   setLoading,
@@ -196,12 +196,12 @@ export function AdminReports() {
         <div className="rounded-xl border border-border/50 bg-card p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-sm font-black uppercase tracking-widest text-foreground">
+              <h3 className="text-base font-black uppercase tracking-widest text-foreground">
                 Revenue & Bookings Trend
               </h3>
-              <p className="text-xs text-muted-foreground mt-0.5">Month-over-month performance</p>
+              <p className="text-sm text-muted-foreground mt-0.5">Month-over-month performance</p>
             </div>
-            <div className="flex items-center gap-4 text-xs">
+            <div className="flex items-center gap-4 text-sm">
               <span className="flex items-center gap-1.5">
                 <span className="h-2.5 w-2.5 rounded-sm bg-primary/60" /> Revenue
               </span>
@@ -248,12 +248,12 @@ export function AdminReports() {
           {/* Monthly Breakdown */}
           <div className="rounded-xl border border-border/50 bg-card shadow-sm">
             <div className="p-5 border-b border-border/30">
-              <h3 className="text-sm font-black uppercase tracking-widest text-foreground">
+              <h3 className="text-base font-black uppercase tracking-widest text-foreground">
                 Monthly Breakdown
               </h3>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full text-base">
                 <thead>
                   <tr className="border-b border-border/20">
                     <th className="text-left px-5 py-3 text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
@@ -293,7 +293,7 @@ export function AdminReports() {
                 </tbody>
                 <tfoot>
                   <tr className="border-t border-border/30 bg-muted/20">
-                    <td className="px-5 py-3 text-xs font-bold text-foreground">Total</td>
+                    <td className="px-5 py-3 text-sm font-bold text-foreground">Total</td>
                     <td className="px-5 py-3 text-right font-bold">
                       K{(totalRevenue / 1000).toFixed(0)}k
                     </td>
@@ -311,15 +311,15 @@ export function AdminReports() {
           {/* Key Insights */}
           <div className="space-y-4">
             <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm">
-              <h3 className="text-sm font-black uppercase tracking-widest text-foreground mb-4">
+              <h3 className="text-base font-black uppercase tracking-widest text-foreground mb-4">
                 Key Insights
               </h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3 p-3 rounded-lg bg-emerald-50/50 border border-emerald-100">
                   <TrendingUp className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-bold text-emerald-800">Revenue Growing</p>
-                    <p className="text-xs text-emerald-600 mt-0.5">
+                    <p className="text-base font-bold text-emerald-800">Revenue Growing</p>
+                    <p className="text-sm text-emerald-600 mt-0.5">
                       Revenue has grown {revenueGrowth}% in the last{" "}
                       {period === "12m" ? "12" : period === "6m" ? "6" : "3"} months. Peak revenue
                       was in July with K
@@ -333,8 +333,8 @@ export function AdminReports() {
                 <div className="flex items-start gap-3 p-3 rounded-lg bg-blue-50/50 border border-blue-100">
                   <Users className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-bold text-blue-800">User Base Expanding</p>
-                    <p className="text-xs text-blue-600 mt-0.5">
+                    <p className="text-base font-bold text-blue-800">User Base Expanding</p>
+                    <p className="text-sm text-blue-600 mt-0.5">
                       {stats.totalGuests} guests and {stats.totalHosts} hosts on the platform.
                       Monthly growth rate of {stats.growthRate}%.
                     </p>
@@ -343,8 +343,8 @@ export function AdminReports() {
                 <div className="flex items-start gap-3 p-3 rounded-lg bg-amber-50/50 border border-amber-100">
                   <BarChart3 className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-bold text-amber-800">Booking Conversion</p>
-                    <p className="text-xs text-amber-600 mt-0.5">
+                    <p className="text-base font-bold text-amber-800">Booking Conversion</p>
+                    <p className="text-sm text-amber-600 mt-0.5">
                       {((stats.completedBookings / stats.totalBookings) * 100).toFixed(0)}%
                       completion rate with {stats.totalBookings.toLocaleString()} total bookings
                       processed.
@@ -357,7 +357,7 @@ export function AdminReports() {
             {/* Quick Stats */}
             <div className="grid grid-cols-2 gap-4">
               <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm text-center">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                   Avg Revenue/Month
                 </p>
                 <p className="text-xl font-bold text-foreground">
@@ -365,7 +365,7 @@ export function AdminReports() {
                 </p>
               </div>
               <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm text-center">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                   Avg Bookings/Month
                 </p>
                 <p className="text-xl font-bold text-foreground">
@@ -373,7 +373,7 @@ export function AdminReports() {
                 </p>
               </div>
               <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm text-center">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                   Avg Commission
                 </p>
                 <p className="text-xl font-bold text-foreground">
@@ -381,7 +381,7 @@ export function AdminReports() {
                 </p>
               </div>
               <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm text-center">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                   Avg Rating
                 </p>
                 <p className="text-xl font-bold text-foreground">{stats.avgRating}</p>

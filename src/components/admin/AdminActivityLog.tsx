@@ -44,7 +44,7 @@ function ActivityItem({ log }: { log: ActivityLog }) {
     <div className="flex items-start gap-4 py-4 first:pt-0 last:pb-0 border-b border-border/10 last:border-0">
       <div
         className={cn(
-          "h-9 w-9 shrink-0 rounded-xl flex items-center justify-center text-xs font-bold",
+          "h-9 w-9 shrink-0 rounded-xl flex items-center justify-center text-sm font-bold",
           badgeColor,
         )}
       >
@@ -62,7 +62,7 @@ function ActivityItem({ log }: { log: ActivityLog }) {
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-sm font-bold text-foreground">{log.user}</span>
+          <span className="text-base font-bold text-foreground">{log.user}</span>
           <span
             className={cn(
               "text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full border",
@@ -77,7 +77,7 @@ function ActivityItem({ log }: { log: ActivityLog }) {
             </span>
           )}
         </div>
-        <p className="text-sm text-muted-foreground mt-0.5">
+        <p className="text-base text-muted-foreground mt-0.5">
           <span className="font-medium text-foreground/80">{log.action.toLowerCase()}</span>
           {log.target && (
             <>
@@ -86,7 +86,7 @@ function ActivityItem({ log }: { log: ActivityLog }) {
             </>
           )}
         </p>
-        <p className="text-xs text-muted-foreground/60 mt-1 flex items-center gap-1.5">
+        <p className="text-sm text-muted-foreground/60 mt-1 flex items-center gap-1.5">
           <CalendarDays className="h-3 w-3" />
           {new Date(log.timestamp).toLocaleDateString("en-ZM", {
             weekday: "short",
@@ -173,7 +173,7 @@ export function AdminActivityLog() {
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
               Audit Log
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-base text-muted-foreground mt-1">
               {stats.total} total events — showing {stats.filtered}
             </p>
           </div>
@@ -189,7 +189,7 @@ export function AdminActivityLog() {
               placeholder="Search actions, users, or targets..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 h-10 rounded-xl border-border/60 text-sm"
+              className="pl-9 h-10 rounded-xl border-border/60 text-base"
             />
           </div>
           <Select value={typeFilter} onValueChange={setTypeFilter}>
@@ -221,7 +221,7 @@ export function AdminActivityLog() {
           </Select>
           <button
             onClick={() => setSortOrder(sortOrder === "newest" ? "oldest" : "newest")}
-            className="h-10 px-3 rounded-xl border border-border/60 text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors flex items-center gap-1.5"
+            className="h-10 px-3 rounded-xl border border-border/60 text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors flex items-center gap-1.5"
           >
             <ArrowUpDown className="h-3.5 w-3.5" />
             {sortOrder === "newest" ? "Newest" : "Oldest"}
@@ -265,14 +265,14 @@ export function AdminActivityLog() {
               <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
                 <Activity className="h-7 w-7 text-muted-foreground/40" />
               </div>
-              <h3 className="text-lg font-bold text-foreground">No events found</h3>
-              <p className="text-sm text-muted-foreground mt-1">
+              <h3 className="text-xl font-bold text-foreground">No events found</h3>
+              <p className="text-base text-muted-foreground mt-1">
                 Try adjusting your search or filters.
               </p>
               <Button
                 variant="outline"
                 size="sm"
-                className="mt-6 rounded-full text-xs font-semibold"
+                className="mt-6 rounded-full text-sm font-semibold"
                 onClick={() => {
                   setSearch("");
                   setTypeFilter("all");

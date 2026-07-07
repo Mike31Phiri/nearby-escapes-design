@@ -123,7 +123,7 @@ export function SafetyTrustPage() {
         <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-8">
           <Link
             href="/"
-            className="inline-flex items-center gap-1 text-sm text-white/50 hover:text-white/80 transition-colors mb-8"
+            className="inline-flex items-center gap-1 text-base text-white/50 hover:text-white/80 transition-colors mb-8"
           >
             <ChevronLeft className="h-4 w-4" />
             Home
@@ -137,7 +137,7 @@ export function SafetyTrustPage() {
             </p>
             <h1 className="font-display text-3xl md:text-4xl lg:text-[3.25rem] font-black text-white leading-[1.1] mb-4">
               Your safety is our{" "}
-              <span className="font-script text-[1.2em] font-normal text-[#1f1433] lowercase">
+              <span className="font-script text-[1.2em] font-normal text-gold lowercase">
                 promise
               </span>
             </h1>
@@ -169,11 +169,11 @@ export function SafetyTrustPage() {
                   <Icon className="h-5 w-5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-base text-[#334155] mb-1">{title}</h3>
-                  <p className="text-sm text-[#64748B] leading-relaxed mb-4">{desc}</p>
+                  <h3 className="font-bold text-lg text-[#334155] mb-1">{title}</h3>
+                  <p className="text-base text-[#64748B] leading-relaxed mb-4">{desc}</p>
                   <div className="grid sm:grid-cols-2 gap-x-6 gap-y-2">
                     {items.map((item) => (
-                      <div key={item} className="flex items-start gap-2 text-sm text-[#64748B]">
+                      <div key={item} className="flex items-start gap-2 text-base text-[#64748B]">
                         <CheckCircle2 className="h-4 w-4 text-[#1f1433] mt-0.5 shrink-0" />
                         <span>{item}</span>
                       </div>
@@ -193,7 +193,7 @@ export function SafetyTrustPage() {
           <h2 className="font-display text-2xl md:text-3xl font-bold text-[#334155] text-center mb-3">
             Community guidelines
           </h2>
-          <p className="text-sm text-[#64748B] text-center max-w-lg mx-auto mb-8">
+          <p className="text-base text-[#64748B] text-center max-w-lg mx-auto mb-8">
             A few simple principles that help keep Nearby Escapes welcoming, safe, and fair for
             everyone.
           </p>
@@ -206,8 +206,8 @@ export function SafetyTrustPage() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f2ba0d]/5 text-[#1f1433] mx-auto mb-3">
                   <Icon className="h-5 w-5" />
                 </div>
-                <h3 className="font-bold text-sm text-[#334155] mb-1">{title}</h3>
-                <p className="text-xs text-[#64748B] leading-relaxed">{desc}</p>
+                <h3 className="font-bold text-base text-[#334155] mb-1">{title}</h3>
+                <p className="text-sm text-[#64748B] leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
@@ -222,18 +222,18 @@ export function SafetyTrustPage() {
             <h2 className="font-display text-xl md:text-2xl font-bold text-[#334155] mb-1">
               Stay safe while travelling
             </h2>
-            <p className="text-sm text-[#64748B] mb-6 max-w-lg">
+            <p className="text-base text-[#64748B] mb-6 max-w-lg">
               A few practical tips to help you have a smooth and safe experience.
             </p>
             <div className="grid sm:grid-cols-2 gap-5">
               {safetyTips.map(({ title, desc }) => (
                 <div key={title} className="flex gap-3">
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#f2ba0d]/10 text-[#1f1433] text-xs font-black">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#f2ba0d]/10 text-[#1f1433] text-sm font-black">
                     <CheckCircle2 className="h-4 w-4" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-sm text-[#334155]">{title}</h3>
-                    <p className="text-xs text-[#64748B] mt-0.5">{desc}</p>
+                    <h3 className="font-bold text-base text-[#334155]">{title}</h3>
+                    <p className="text-sm text-[#64748B] mt-0.5">{desc}</p>
                   </div>
                 </div>
               ))}
@@ -247,20 +247,20 @@ export function SafetyTrustPage() {
           <h2 className="font-display text-xl md:text-2xl font-bold text-white mb-2">
             Report a concern
           </h2>
-          <p className="text-[#9B95A8] text-sm max-w-md mx-auto mb-6">
+          <p className="text-[#9B95A8] text-base max-w-md mx-auto mb-6">
             If you encounter an issue that needs our attention — whether it&apos;s a safety concern,
             a dispute, or a policy violation — our team is ready to help.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/help"
-              className="inline-flex items-center gap-2 h-11 px-6 rounded-xl bg-[#f2ba0d] text-[#334155] font-bold text-sm hover:bg-[#d4b065] transition-colors"
+              className="inline-flex items-center gap-2 h-11 px-6 rounded-xl bg-[#f2ba0d] text-[#334155] font-bold text-base hover:bg-[#d4b065] transition-colors"
             >
               <MessageSquare className="h-4 w-4" /> Contact support
             </Link>
             <a
               href="mailto:safety@nearbyescapes.com"
-              className="inline-flex items-center gap-2 h-11 px-6 rounded-xl border border-white/20 text-white font-bold text-sm hover:bg-white/5 transition-colors"
+              className="inline-flex items-center gap-2 h-11 px-6 rounded-xl border border-white/20 text-white font-bold text-base hover:bg-white/5 transition-colors"
             >
               <Mail className="h-4 w-4" /> Email safety team
             </a>
@@ -269,7 +269,7 @@ export function SafetyTrustPage() {
 
         {/*  Contact Strip  */}
         <div className="mt-10 rounded-2xl border border-[#E0DBD0] bg-white p-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-base">
             <div className="flex items-center gap-3 text-[#64748B]">
               <Phone className="h-4 w-4 text-[#1f1433]" />
               <span>
@@ -296,7 +296,7 @@ export function SafetyTrustPage() {
             </div>
             <Link
               href="/legal/privacy"
-              className="text-sm font-semibold text-[#334155] hover:text-[#1f1433] transition-colors flex items-center gap-1"
+              className="text-base font-semibold text-[#334155] hover:text-[#1f1433] transition-colors flex items-center gap-1"
             >
               Privacy Policy <ArrowRight className="h-3.5 w-3.5" />
             </Link>
@@ -306,4 +306,3 @@ export function SafetyTrustPage() {
     </div>
   );
 }
-

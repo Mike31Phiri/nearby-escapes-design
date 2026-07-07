@@ -27,9 +27,9 @@ export function ReviewSection({
     <section className="space-y-5">
       <div className="flex items-center gap-2">
         <MessageSquare className="h-4 w-4 text-primary" />
-        <h2 className="text-lg font-bold tracking-tight text-foreground">Reviews</h2>
+        <h2 className="text-xl font-bold tracking-tight text-foreground">Reviews</h2>
         {reviews.length > 0 && (
-          <span className="text-xs text-muted-foreground font-medium">({reviews.length})</span>
+          <span className="text-sm text-muted-foreground font-medium">({reviews.length})</span>
         )}
       </div>
 
@@ -38,8 +38,8 @@ export function ReviewSection({
           <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mb-3">
             <MessageSquare className="h-6 w-6 text-muted-foreground/40" />
           </div>
-          <h4 className="text-sm font-bold text-foreground">No reviews yet</h4>
-          <p className="text-xs text-muted-foreground mt-1 max-w-xs">
+          <h4 className="text-base font-bold text-foreground">No reviews yet</h4>
+          <p className="text-sm text-muted-foreground mt-1 max-w-xs">
             Be the first to leave a review for this listing!
           </p>
         </div>
@@ -70,11 +70,11 @@ export function ReviewSection({
                 {/* Author & Date */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2.5">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-sm">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-base">
                       {review.author.charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-foreground leading-tight">
+                      <p className="text-base font-semibold text-foreground leading-tight">
                         {review.author}
                       </p>
                       <p className="text-[10px] text-muted-foreground font-medium">{review.date}</p>
@@ -82,7 +82,7 @@ export function ReviewSection({
                   </div>
                   <div className="flex items-center gap-0.5">
                     <Star className="h-3.5 w-3.5 fill-accent text-accent" />
-                    <span className="text-xs font-bold text-foreground">{review.rating}</span>
+                    <span className="text-sm font-bold text-foreground">{review.rating}</span>
                   </div>
                 </div>
 
@@ -91,7 +91,7 @@ export function ReviewSection({
                   {Array.from({ length: 5 }).map((_, i) => (
                     <span
                       key={i}
-                      className={`text-xs ${
+                      className={`text-sm ${
                         i < review.rating ? "text-accent" : "text-gray-200 dark:text-gray-700"
                       }`}
                     >
@@ -101,7 +101,7 @@ export function ReviewSection({
                 </div>
 
                 {/* Content */}
-                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-4">
+                <p className="text-base text-muted-foreground leading-relaxed line-clamp-4">
                   {review.content}
                 </p>
               </div>

@@ -140,7 +140,7 @@ export function TransportWizard() {
                     <Label>Make</Label>
                     <Input {...field} placeholder="Toyota" />
                     {errors.make && (
-                      <p className="text-destructive text-xs mt-1">{errors.make.message}</p>
+                      <p className="text-destructive text-sm mt-1">{errors.make.message}</p>
                     )}
                   </div>
                 )}
@@ -153,7 +153,7 @@ export function TransportWizard() {
                     <Label>Model</Label>
                     <Input {...field} placeholder="Camry" />
                     {errors.model && (
-                      <p className="text-destructive text-xs mt-1">{errors.model.message}</p>
+                      <p className="text-destructive text-sm mt-1">{errors.model.message}</p>
                     )}
                   </div>
                 )}
@@ -172,7 +172,7 @@ export function TransportWizard() {
                     onChange={(e) => field.onChange(parseInt(e.target.value))}
                   />
                   {errors.year && (
-                    <p className="text-destructive text-xs mt-1">{errors.year.message}</p>
+                    <p className="text-destructive text-sm mt-1">{errors.year.message}</p>
                   )}
                 </div>
               )}
@@ -379,7 +379,7 @@ export function TransportWizard() {
                   <Label>License Plate Number</Label>
                   <Input {...field} />
                   {errors.licensePlate && (
-                    <p className="text-destructive text-xs mt-1">{errors.licensePlate.message}</p>
+                    <p className="text-destructive text-sm mt-1">{errors.licensePlate.message}</p>
                   )}
                 </div>
               )}
@@ -393,7 +393,7 @@ export function TransportWizard() {
               >
                 <div>
                   <p className="font-semibold">{docName}</p>
-                  <p className="text-xs text-muted-foreground">Upload required document</p>
+                  <p className="text-sm text-muted-foreground">Upload required document</p>
                 </div>
                 <Button type="button" variant="outline" onClick={() => mockUpload(docName as any)}>
                   <UploadCloud className="h-4 w-4 mr-2" /> Upload
@@ -428,4 +428,3 @@ export function TransportWizard() {
     </FormProvider>
   );
 }
-

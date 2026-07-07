@@ -31,7 +31,7 @@ export default async function TransportPage({ params, searchParams }: Props) {
   // Reconstruct backHref from search params if present
   const backParams = new URLSearchParams({ category: "transport", ...sp });
   backParams.delete("_next");
-  const backHref = `/search?${backParams.toString()}`;
+  const backHref = `/transport`;
 
   return <TransportDetailPage route={route} backHref={backHref} />;
 }

@@ -31,7 +31,7 @@ export function SearchBar({ className, onSearch }: SearchBarProps) {
     const dates = serializeDates(dateRange);
     if (dates) params.set("dates", dates);
     params.set("guests", String(guests));
-    router.push(`/search?${params.toString()}`);
+    router.push(`/explore?${params.toString()}`);
   };
 
   return (
@@ -79,7 +79,7 @@ export function SearchBar({ className, onSearch }: SearchBarProps) {
 
         <button
           type="submit"
-          className="group w-full bg-gradient-to-br from-[#D4AF37] to-[#B89430] hover:from-[#D4B45A] hover:to-[#D4AF37] text-[#334155] rounded-xl py-3.5 text-[15px] font-bold flex items-center justify-center gap-2 transition-all duration-200 shadow-[0_4px_16px_rgba(197,160,89,0.35)]"
+          className="group w-full bg-[#D4AF37] hover:bg-[#d5b069] text-[#334155] rounded-xl py-3.5 text-[15px] font-bold flex items-center justify-center gap-2 transition-all duration-200 shadow-[0_4px_16px_rgba(197,160,89,0.35)]"
         >
           <Search className="h-[18px] w-[18px]" strokeWidth={2.5} />
           Find My Escape
@@ -113,11 +113,7 @@ export function SearchBar({ className, onSearch }: SearchBarProps) {
           {/* Date */}
           <div className="flex-1 px-4 py-2">
             <p className="text-[11px] font-semibold text-[#334155] leading-tight mb-0.5">Date</p>
-            <DateRangePicker
-              value={dateRange}
-              onChange={setDateRange}
-              variant="compact"
-            />
+            <DateRangePicker value={dateRange} onChange={setDateRange} variant="compact" />
           </div>
 
           <div className="h-10 w-px bg-[#E0DBD0]" />

@@ -6,12 +6,7 @@ import {
   getCitiesByProvince,
   getAttractionsByProvince,
 } from "@/lib/mock-explore-data";
-import {
-  mockStays,
-  mockExperiences,
-  mockTransport,
-  mockPackages,
-} from "@/lib/mock-data";
+import { mockStays, mockExperiences, mockTransport, mockPackages } from "@/lib/mock-data";
 import { DiscoveryHero } from "@/components/explore/DiscoveryHero";
 import { DiscoverySection } from "@/components/explore/DiscoverySection";
 import { AttractionCard } from "@/components/explore/AttractionCard";
@@ -34,45 +29,73 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
   const provinceName = province.name.toLowerCase();
 
   let filteredStays = mockStays.filter(
-    (s) => cityNames.some((cn) => s.location.toLowerCase().includes(cn)) || s.location.toLowerCase().includes(provinceName)
+    (s) =>
+      cityNames.some((cn) => s.location.toLowerCase().includes(cn)) ||
+      s.location.toLowerCase().includes(provinceName),
   );
 
   let filteredExperiences = mockExperiences.filter(
-    (e) => cityNames.some((cn) => e.location.toLowerCase().includes(cn)) || e.location.toLowerCase().includes(provinceName)
+    (e) =>
+      cityNames.some((cn) => e.location.toLowerCase().includes(cn)) ||
+      e.location.toLowerCase().includes(provinceName),
   );
 
-  let filteredTransport = mockTransport.filter(
+  const filteredTransport = mockTransport.filter(
     (t) =>
-      cityNames.some((cn) => t.from.toLowerCase().includes(cn) || t.to.toLowerCase().includes(cn)) ||
+      cityNames.some(
+        (cn) => t.from.toLowerCase().includes(cn) || t.to.toLowerCase().includes(cn),
+      ) ||
       t.from.toLowerCase().includes(provinceName) ||
-      t.to.toLowerCase().includes(provinceName)
+      t.to.toLowerCase().includes(provinceName),
   );
 
-  let filteredPackages = mockPackages.filter(
-    (p) => cityNames.some((cn) => p.location.toLowerCase().includes(cn)) || p.location.toLowerCase().includes(provinceName)
+  const filteredPackages = mockPackages.filter(
+    (p) =>
+      cityNames.some((cn) => p.location.toLowerCase().includes(cn)) ||
+      p.location.toLowerCase().includes(provinceName),
   );
 
   // Apply Global Filter Logic
   if (globalFilter === "popular") {
-    filteredStays = filteredStays.filter(s => s.rating >= 4.7);
-    filteredExperiences = filteredExperiences.filter(e => e.rating >= 4.7);
+    filteredStays = filteredStays.filter((s) => s.rating >= 4.7);
+    filteredExperiences = filteredExperiences.filter((e) => e.rating >= 4.7);
   } else if (globalFilter === "hidden-gems") {
-    filteredStays = filteredStays.filter(s => ["farm", "eco-camp", "lodge"].some(t => s.type.toLowerCase().includes(t)));
-    filteredExperiences = filteredExperiences.filter(e => ["farm", "general"].includes(e.category));
-    filteredAttractions = filteredAttractions.filter(a => ["other", "natural-landmark"].includes(a.category));
+    filteredStays = filteredStays.filter((s) =>
+      ["farm", "eco-camp", "lodge"].some((t) => s.type.toLowerCase().includes(t)),
+    );
+    filteredExperiences = filteredExperiences.filter((e) =>
+      ["farm", "general"].includes(e.category),
+    );
+    filteredAttractions = filteredAttractions.filter((a) =>
+      ["other", "natural-landmark"].includes(a.category),
+    );
   } else if (globalFilter === "adventure") {
-    filteredExperiences = filteredExperiences.filter(e => ["adventure", "wildlife"].includes(e.category));
-    filteredAttractions = filteredAttractions.filter(a => ["game-reserve", "waterfall"].includes(a.category));
+    filteredExperiences = filteredExperiences.filter((e) =>
+      ["adventure", "wildlife"].includes(e.category),
+    );
+    filteredAttractions = filteredAttractions.filter((a) =>
+      ["game-reserve", "waterfall"].includes(a.category),
+    );
   } else if (globalFilter === "history") {
-    filteredExperiences = filteredExperiences.filter(e => ["cultural", "industrial"].includes(e.category));
-    filteredAttractions = filteredAttractions.filter(a => a.category === "heritage-site");
+    filteredExperiences = filteredExperiences.filter((e) =>
+      ["cultural", "industrial"].includes(e.category),
+    );
+    filteredAttractions = filteredAttractions.filter((a) => a.category === "heritage-site");
   } else if (globalFilter === "family") {
-    filteredStays = filteredStays.filter(s => s.amenities.some(a => a.toLowerCase().includes("pool")));
-    filteredExperiences = filteredExperiences.filter(e => e.category !== "adventure");
+    filteredStays = filteredStays.filter((s) =>
+      s.amenities.some((a) => a.toLowerCase().includes("pool")),
+    );
+    filteredExperiences = filteredExperiences.filter((e) => e.category !== "adventure");
   } else if (globalFilter === "relaxation") {
-    filteredStays = filteredStays.filter(s => s.amenities.some(a => a.toLowerCase().includes("spa") || a.toLowerCase().includes("pool")));
-    filteredExperiences = filteredExperiences.filter(e => ["water", "cultural"].includes(e.category));
-    filteredAttractions = filteredAttractions.filter(a => ["lake", "waterfall", "viewpoint"].includes(a.category));
+    filteredStays = filteredStays.filter((s) =>
+      s.amenities.some((a) => a.toLowerCase().includes("spa") || a.toLowerCase().includes("pool")),
+    );
+    filteredExperiences = filteredExperiences.filter((e) =>
+      ["water", "cultural"].includes(e.category),
+    );
+    filteredAttractions = filteredAttractions.filter((a) =>
+      ["lake", "waterfall", "viewpoint"].includes(a.category),
+    );
   }
 
   return (
@@ -82,16 +105,13 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
         title={province.name}
         tagline={province.tagline}
         coverImage={province.coverImage}
-        breadcrumbs={[
-          { label: "Zambia", href: "/explore" },
-          { label: province.name },
-        ]}
+        breadcrumbs={[{ label: "Zambia", href: "/explore" }, { label: province.name }]}
       />
 
       {/* ── City Pills ──────────────────────────────────────────── */}
       {cities.length > 0 && (
         <div className="px-4 md:px-8 max-w-7xl mx-auto py-5">
-          <p className="text-xs font-bold uppercase tracking-widest text-[#94A3B8] mb-3">
+          <p className="text-sm font-bold uppercase tracking-widest text-[#94A3B8] mb-3">
             Cities in {province.name}
           </p>
           <div className="flex flex-wrap gap-2">
@@ -99,7 +119,7 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
               <Link
                 key={city.id}
                 href={`/explore/${province.id}/${city.id}`}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-[#1A0B2E]/20 text-sm font-semibold text-[#1A0B2E] hover:bg-[#1A0B2E] hover:text-white hover:border-[#1A0B2E] transition-all duration-200"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-[#1A0B2E]/20 text-base font-semibold text-[#1A0B2E] hover:bg-[#1A0B2E] hover:text-white hover:border-[#1A0B2E] transition-all duration-200"
               >
                 {city.name}
                 <span className="text-[10px] font-normal text-[#94A3B8] group-hover:text-white/60">

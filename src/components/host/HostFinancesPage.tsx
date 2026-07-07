@@ -107,7 +107,7 @@ export function HostFinancesPage() {
           expectedPayouts > 0 ? (
             <button
               onClick={simulateAutoPayout}
-              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#1f1433] to-[#150d22] hover:from-[#150d22] hover:to-[#967825] text-[#1f1433] text-xs font-black uppercase tracking-wider h-10 px-4 rounded-xl shadow-sm transition-all duration-200 border-none"
+              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#1f1433] to-[#150d22] hover:from-[#150d22] hover:to-[#967825] text-[#1f1433] text-sm font-black uppercase tracking-wider h-10 px-4 rounded-xl shadow-sm transition-all duration-200 border-none"
               title="Test the background bulk payment worker"
             >
               <RefreshCw className="h-3.5 w-3.5" /> Simulate Auto-Payout
@@ -122,7 +122,7 @@ export function HostFinancesPage() {
             <CheckCircle2 className="h-5 w-5" />
           </div>
           <div className="flex-1">
-            <div className="text-xs font-bold text-emerald-800">
+            <div className="text-sm font-bold text-emerald-800">
               Automatic Weekly Bulk Payouts Active
             </div>
             <div className="text-[11px] text-emerald-700/95 mt-1 leading-relaxed">
@@ -152,7 +152,7 @@ export function HostFinancesPage() {
           {/* Card 1: Total YTD */}
           <div className="bg-white border border-[#E0DBD0]/70 rounded-2xl p-5 shadow-sm">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              <span className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
                 Total Settled
               </span>
               <div className="h-8 w-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
@@ -162,13 +162,13 @@ export function HostFinancesPage() {
             <div className="text-2xl font-bold text-foreground">
               K{totalEarnedYTD.toLocaleString()}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">Paid out to your accounts YTD</p>
+            <p className="text-sm text-muted-foreground mt-1">Paid out to your accounts YTD</p>
           </div>
 
           {/* Card 2: Expected/Pending */}
           <div className="bg-white border border-[#E0DBD0]/70 rounded-2xl p-5 shadow-sm">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              <span className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
                 Pending Balance
               </span>
               <div className="h-8 w-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
@@ -178,7 +178,7 @@ export function HostFinancesPage() {
             <div className="text-2xl font-bold text-foreground">
               K{expectedPayouts.toLocaleString()}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               {expectedPayouts > 0 ? "Settles automatically on Jun 30" : "Settled"}
             </p>
           </div>
@@ -186,7 +186,7 @@ export function HostFinancesPage() {
           {/* Card 3: Platform Fees */}
           <div className="bg-white border border-[#E0DBD0]/70 rounded-2xl p-5 shadow-sm">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              <span className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
                 Platform Fees (YTD)
               </span>
               <div className="h-8 w-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
@@ -196,7 +196,7 @@ export function HostFinancesPage() {
             <div className="text-2xl font-bold text-foreground">
               K{mockFinances.platformFeesYTD.toLocaleString()}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">Flat 5% system commission applied</p>
+            <p className="text-sm text-muted-foreground mt-1">Flat 5% system commission applied</p>
           </div>
         </div>
 
@@ -206,19 +206,19 @@ export function HostFinancesPage() {
           <div className="lg:col-span-2 space-y-6">
             {/* Monthly breakdown */}
             <div className="bg-white border border-[#E0DBD0]/70 rounded-2xl p-5 shadow-sm">
-              <h2 className="text-sm font-bold text-foreground mb-4">
+              <h2 className="text-base font-bold text-foreground mb-4">
                 Monthly Performance — June 2025
               </h2>
               <div className="divide-y divide-[#E0DBD0]/40">
                 <div className="flex justify-between items-center py-3">
-                  <span className="text-xs text-muted-foreground">Gross Booking Revenue</span>
-                  <span className="text-sm font-bold text-foreground">
+                  <span className="text-sm text-muted-foreground">Gross Booking Revenue</span>
+                  <span className="text-base font-bold text-foreground">
                     K{monthlyData[monthlyData.length - 1]?.earnings.toLocaleString() || "0"}
                   </span>
                 </div>
                 <div className="flex justify-between items-center py-3">
-                  <span className="text-xs text-muted-foreground">Platform Commission (5%)</span>
-                  <span className="text-sm font-bold text-rose-600">
+                  <span className="text-sm text-muted-foreground">Platform Commission (5%)</span>
+                  <span className="text-base font-bold text-rose-600">
                     − K
                     {Math.round(
                       (monthlyData[monthlyData.length - 1]?.earnings || 0) * 0.05,
@@ -226,12 +226,12 @@ export function HostFinancesPage() {
                   </span>
                 </div>
                 <div className="flex justify-between items-center py-3">
-                  <span className="text-xs text-muted-foreground">Experience Add-ons</span>
-                  <span className="text-sm font-bold text-emerald-600">+ K900</span>
+                  <span className="text-sm text-muted-foreground">Experience Add-ons</span>
+                  <span className="text-base font-bold text-emerald-600">+ K900</span>
                 </div>
                 <div className="flex justify-between items-center pt-3 font-semibold">
-                  <span className="text-xs text-foreground font-bold">Net Monthly Earnings</span>
-                  <span className="text-base font-bold text-[#3D2463]">
+                  <span className="text-sm text-foreground font-bold">Net Monthly Earnings</span>
+                  <span className="text-lg font-bold text-[#3D2463]">
                     K
                     {(
                       Math.round((monthlyData[monthlyData.length - 1]?.earnings || 0) * 0.95) + 900
@@ -244,7 +244,7 @@ export function HostFinancesPage() {
             {/* Transaction Log */}
             <div className="bg-white border border-[#E0DBD0]/70 rounded-2xl p-5 shadow-sm">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                <h2 className="text-sm font-bold text-foreground">Recent Transactions</h2>
+                <h2 className="text-base font-bold text-foreground">Recent Transactions</h2>
                 {/* Search Bar */}
                 <div className="relative w-full sm:w-60">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground/60" />
@@ -253,7 +253,7 @@ export function HostFinancesPage() {
                     placeholder="Search transactions..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-9 pr-4 py-1.5 h-8 bg-background border border-[#E0DBD0]/60 rounded-xl text-xs focus:outline-none focus:border-[#2a1b47]"
+                    className="w-full pl-9 pr-4 py-1.5 h-8 bg-background border border-[#E0DBD0]/60 rounded-xl text-sm focus:outline-none focus:border-[#2a1b47]"
                   />
                 </div>
               </div>
@@ -264,7 +264,7 @@ export function HostFinancesPage() {
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`pb-2.5 text-xs font-bold uppercase tracking-wider border-b-2 transition-all outline-none whitespace-nowrap ${
+                    className={`pb-2.5 text-sm font-bold uppercase tracking-wider border-b-2 transition-all outline-none whitespace-nowrap ${
                       activeTab === tab
                         ? "border-[#3D2463] text-[#3D2463]"
                         : "border-transparent text-muted-foreground hover:text-foreground"
@@ -279,7 +279,7 @@ export function HostFinancesPage() {
               <div className="divide-y divide-[#E0DBD0]/40">
                 {filteredTransactions.length === 0 ? (
                   <div className="text-center py-10">
-                    <p className="text-xs text-muted-foreground">No matching transactions found</p>
+                    <p className="text-sm text-muted-foreground">No matching transactions found</p>
                   </div>
                 ) : (
                   filteredTransactions.map((tx) => {
@@ -303,7 +303,7 @@ export function HostFinancesPage() {
                             )}
                           </div>
                           <div className="min-w-0">
-                            <div className="text-xs font-bold text-foreground truncate">
+                            <div className="text-sm font-bold text-foreground truncate">
                               {tx.description}
                             </div>
                             <div className="text-[10px] text-muted-foreground mt-0.5">
@@ -313,7 +313,7 @@ export function HostFinancesPage() {
                         </div>
                         <div className="text-right">
                           <div
-                            className={`text-xs font-bold ${
+                            className={`text-sm font-bold ${
                               isPositive ? "text-emerald-600" : "text-rose-600"
                             }`}
                           >
@@ -344,7 +344,7 @@ export function HostFinancesPage() {
             {/* Payout method panel */}
             <div className="bg-white border border-[#E0DBD0]/70 rounded-2xl p-5 shadow-sm">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-sm font-bold text-foreground">Payout Destination</h2>
+                <h2 className="text-base font-bold text-foreground">Payout Destination</h2>
                 {!isEditingMethod && (
                   <button
                     onClick={() => {
@@ -352,7 +352,7 @@ export function HostFinancesPage() {
                       setTempAccount(payoutMethod.account);
                       setIsEditingMethod(true);
                     }}
-                    className="text-xs font-bold text-[#2a1b47] hover:text-[#B08D3A] transition-colors"
+                    className="text-sm font-bold text-[#2a1b47] hover:text-[#B08D3A] transition-colors"
                   >
                     Edit
                   </button>
@@ -368,7 +368,7 @@ export function HostFinancesPage() {
                     <select
                       value={tempMethod}
                       onChange={(e) => setTempMethod(e.target.value)}
-                      className="w-full h-9 rounded-lg border border-[#E0DBD0] px-3 text-xs bg-white text-foreground focus:outline-none focus:border-[#2a1b47]"
+                      className="w-full h-9 rounded-lg border border-[#E0DBD0] px-3 text-sm bg-white text-foreground focus:outline-none focus:border-[#2a1b47]"
                     >
                       <option value="Airtel Money">Airtel Mobile Money</option>
                       <option value="MTN Mobile Money">MTN Mobile Money</option>
@@ -383,7 +383,7 @@ export function HostFinancesPage() {
                       type="text"
                       value={tempAccount}
                       onChange={(e) => setTempAccount(e.target.value)}
-                      className="w-full h-9 rounded-lg border border-[#E0DBD0] px-3 text-xs text-foreground bg-white focus:outline-none focus:border-[#2a1b47]"
+                      className="w-full h-9 rounded-lg border border-[#E0DBD0] px-3 text-sm text-foreground bg-white focus:outline-none focus:border-[#2a1b47]"
                     />
                   </div>
                   <div className="flex items-center gap-2 pt-2">
@@ -404,7 +404,7 @@ export function HostFinancesPage() {
               ) : (
                 <div className="divide-y divide-[#E0DBD0]/40">
                   <div className="flex justify-between items-center py-2.5">
-                    <span className="text-xs text-muted-foreground flex items-center gap-1.5">
+                    <span className="text-sm text-muted-foreground flex items-center gap-1.5">
                       {payoutMethod.type === "Bank Transfer" ? (
                         <Building2 className="h-4 w-4 text-indigo-500" />
                       ) : (
@@ -412,17 +412,17 @@ export function HostFinancesPage() {
                       )}
                       Type
                     </span>
-                    <span className="text-xs font-bold text-foreground">{payoutMethod.type}</span>
+                    <span className="text-sm font-bold text-foreground">{payoutMethod.type}</span>
                   </div>
                   <div className="flex justify-between items-center py-2.5">
-                    <span className="text-xs text-muted-foreground">Destination</span>
-                    <span className="text-xs font-bold text-foreground">
+                    <span className="text-sm text-muted-foreground">Destination</span>
+                    <span className="text-sm font-bold text-foreground">
                       {payoutMethod.account}
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-2.5">
-                    <span className="text-xs text-muted-foreground">Payout Schedule</span>
-                    <span className="text-xs font-bold text-[#3D2463] pl-2 max-w-[140px]">
+                    <span className="text-sm text-muted-foreground">Payout Schedule</span>
+                    <span className="text-sm font-bold text-[#3D2463] pl-2 max-w-[140px]">
                       {payoutMethod.schedule}
                     </span>
                   </div>
@@ -432,7 +432,7 @@ export function HostFinancesPage() {
 
             {/* Payout History Snapshot */}
             <div className="bg-white border border-[#E0DBD0]/70 rounded-2xl p-5 shadow-sm">
-              <h2 className="text-sm font-bold text-foreground mb-4">Payout History</h2>
+              <h2 className="text-base font-bold text-foreground mb-4">Payout History</h2>
               <div className="space-y-3.5">
                 {monthlyData
                   .slice(-4)
@@ -440,14 +440,14 @@ export function HostFinancesPage() {
                   .map((d) => (
                     <div key={d.month} className="flex justify-between items-center">
                       <div>
-                        <div className="text-xs font-bold text-foreground">
+                        <div className="text-sm font-bold text-foreground">
                           {d.month} 2025 payout
                         </div>
                         <div className="text-[10px] text-muted-foreground mt-0.5">
                           Sent to {payoutMethod.type} · 5th {d.month}
                         </div>
                       </div>
-                      <span className="text-xs font-bold text-emerald-600">
+                      <span className="text-sm font-bold text-emerald-600">
                         K{d.earnings.toLocaleString()}
                       </span>
                     </div>
@@ -466,4 +466,3 @@ export function HostFinancesPage() {
     </div>
   );
 }
-

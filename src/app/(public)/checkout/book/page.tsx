@@ -76,7 +76,7 @@ export default async function BookPage({ searchParams }: Props) {
   if (!listing) notFound();
 
   // Reconstruct backHref
-  const backHref = `/search?category=${type === "stay" ? "stays" : type === "experience" ? "attractions" : "transport"}`;
+  const backHref = `/${type === "stay" ? "stays" : type === "experience" ? "experiences" : "transport"}`;
 
   return (
     <BookingFormPage

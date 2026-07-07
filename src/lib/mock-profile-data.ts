@@ -435,4 +435,3 @@ export const mockReviews: UserReview[] = [
     text: "Walking with experienced rangers through the bush was a life-changing experience. Got up close (but safe!) with giraffes, zebras, and even a pride of lions. This is a must-do!",
   },
 ];
-

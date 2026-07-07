@@ -25,8 +25,8 @@ export function HostProfilePage() {
               <div className="font-display text-xl md:text-2xl font-bold tracking-tight text-white">
                 {host.name}
               </div>
-              <div className="text-sm text-[#64748B] mt-0.5">{host.location}</div>
-              <div className="flex items-center gap-1.5 mt-1 text-xs font-medium text-[#1f1433]">
+              <div className="text-base text-[#64748B] mt-0.5">{host.location}</div>
+              <div className="flex items-center gap-1.5 mt-1 text-sm font-medium text-[#1f1433]">
                 <svg
                   className="h-4 w-4"
                   viewBox="0 0 24 24"
@@ -49,7 +49,7 @@ export function HostProfilePage() {
           {/* Body */}
           <div className="px-4 py-3.5 space-y-4">
             {/* Stats row */}
-            <div className="flex items-center gap-4 text-sm text-[#64748B]">
+            <div className="flex items-center gap-4 text-base text-[#64748B]">
               <div className="flex items-center gap-1">
                 <Star className="h-4 w-4 text-[#1f1433] fill-[#1f1433]" />
                 <span className="font-semibold text-[#1f1433]">{avgRating.toFixed(1)}</span>
@@ -66,22 +66,22 @@ export function HostProfilePage() {
 
             {/* Bio */}
             <div>
-              <div className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-1.5">
+              <div className="text-[10px] sm:text-sm font-bold text-[#1f1433] uppercase tracking-widest mb-1.5">
                 About
               </div>
-              <p className="text-sm text-[#1f1433] leading-relaxed">{host.bio}</p>
+              <p className="text-base text-[#1f1433] leading-relaxed">{host.bio}</p>
             </div>
 
             {/* Verified badges */}
             <div>
-              <div className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-1.5">
+              <div className="text-[10px] sm:text-sm font-bold text-[#1f1433] uppercase tracking-widest mb-1.5">
                 Verifications
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {host.verifiedBadges.map((b) => (
                   <span
                     key={b}
-                    className="text-xs text-[#1f1433] bg-muted px-2.5 py-1 rounded-full font-medium"
+                    className="text-sm text-[#1f1433] bg-muted px-2.5 py-1 rounded-full font-medium"
                   >
                     {b}
                   </span>
@@ -91,7 +91,7 @@ export function HostProfilePage() {
 
             {/* Listings */}
             <div>
-              <div className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-1.5">
+              <div className="text-[10px] sm:text-sm font-bold text-[#1f1433] uppercase tracking-widest mb-1.5">
                 Listings ({host.listings.length})
               </div>
               <div className="space-y-2">
@@ -106,14 +106,14 @@ export function HostProfilePage() {
                       className="w-10 h-10 rounded-lg object-cover shrink-0"
                     />
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-bold text-[#1f1433] truncate">{l.name}</div>
-                      <div className="flex items-center gap-1 text-xs text-[#64748B] mt-0.5">
+                      <div className="text-base font-bold text-[#1f1433] truncate">{l.name}</div>
+                      <div className="flex items-center gap-1 text-sm text-[#64748B] mt-0.5">
                         <MapPin className="h-3.5 w-3.5" />
                         {l.location}
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-sm font-bold text-[#1f1433]">K{l.price}</div>
+                      <div className="text-base font-bold text-[#1f1433]">K{l.price}</div>
                       <div className="text-[10px] text-[#64748B] uppercase tracking-wider">
                         / night
                       </div>
@@ -125,26 +125,26 @@ export function HostProfilePage() {
 
             {/* Contact */}
             <div className="bg-[#faf9f5] border border-[#E0DBD0] rounded-xl p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-[#f2ba0d] flex items-center justify-center text-[#1f1433] text-lg font-bold shrink-0">
+              <div className="w-12 h-12 rounded-full bg-[#f2ba0d] flex items-center justify-center text-[#1f1433] text-xl font-bold shrink-0">
                 {host.name
                   .split(" ")
                   .map((n) => n[0])
                   .join("")}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="font-display text-base font-bold text-[#1f1433]">{host.name}</div>
-                <div className="text-xs text-[#64748B] mt-0.5">
+                <div className="font-display text-lg font-bold text-[#1f1433]">{host.name}</div>
+                <div className="text-sm text-[#64748B] mt-0.5">
                   Hosting since {host.joined} · Responds {host.responseTime}
                 </div>
               </div>
-              <button className="px-4 py-2 text-sm font-bold text-[#1f1433] bg-white border border-[#E0DBD0] rounded-lg hover:border-[#1f1433] hover:text-[#1f1433] transition-colors flex items-center gap-1.5 shadow-sm">
+              <button className="px-4 py-2 text-base font-bold text-[#1f1433] bg-white border border-[#E0DBD0] rounded-lg hover:border-[#1f1433] hover:text-[#1f1433] transition-colors flex items-center gap-1.5 shadow-sm">
                 <MessageSquare className="h-4 w-4" /> Message
               </button>
             </div>
 
             {/* Reviews */}
             <div>
-              <div className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-1.5">
+              <div className="text-[10px] sm:text-sm font-bold text-[#1f1433] uppercase tracking-widest mb-1.5">
                 Guest reviews
               </div>
               <div className="space-y-3">
@@ -165,7 +165,7 @@ export function HostProfilePage() {
                       {r.initials}
                     </div>
                     <div>
-                      <div className="text-sm font-bold text-[#1f1433]">{r.name}</div>
+                      <div className="text-base font-bold text-[#1f1433]">{r.name}</div>
                       <div className="flex gap-0.5 my-1">
                         {Array(5)
                           .fill(0)
@@ -180,7 +180,7 @@ export function HostProfilePage() {
                             </svg>
                           ))}
                       </div>
-                      <div className="text-sm text-[#1f1433] italic leading-relaxed">
+                      <div className="text-base text-[#1f1433] italic leading-relaxed">
                         &ldquo;{r.text}&rdquo;
                       </div>
                     </div>
@@ -194,4 +194,3 @@ export function HostProfilePage() {
     </div>
   );
 }
-

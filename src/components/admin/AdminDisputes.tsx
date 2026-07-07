@@ -182,7 +182,7 @@ function DisputeCard({
                   {statCfg.label}
                 </Badge>
               </div>
-              <p className="text-xs text-muted-foreground flex items-center gap-2 mt-0.5">
+              <p className="text-sm text-muted-foreground flex items-center gap-2 mt-0.5">
                 <span className="font-semibold text-foreground">{dispute.reason}</span>
                 <span className="text-muted-foreground/40">·</span>
                 <span>Ref: {dispute.bookingRef}</span>
@@ -200,7 +200,7 @@ function DisputeCard({
         </div>
 
         {/* Quick Info */}
-        <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs text-muted-foreground">
+        <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm text-muted-foreground">
           <span className="flex items-center gap-1.5">
             <TypeIcon className="h-3 w-3" />
             {typeLabels[dispute.listingType]}
@@ -219,18 +219,18 @@ function DisputeCard({
         {expanded && (
           <div className="mt-4 pt-4 border-t border-border/30 space-y-4">
             <div className="rounded-lg bg-muted/40 p-4">
-              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+              <p className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
                 Description
               </p>
-              <p className="text-sm text-foreground leading-relaxed">{dispute.description}</p>
+              <p className="text-base text-foreground leading-relaxed">{dispute.description}</p>
             </div>
 
             {dispute.resolution && (
               <div className="rounded-lg bg-blue-50/50 border border-blue-100 p-4">
-                <p className="text-xs font-bold uppercase tracking-wider text-blue-700 mb-1.5">
+                <p className="text-sm font-bold uppercase tracking-wider text-blue-700 mb-1.5">
                   Resolution
                 </p>
-                <p className="text-sm text-blue-800">{dispute.resolution}</p>
+                <p className="text-base text-blue-800">{dispute.resolution}</p>
               </div>
             )}
 
@@ -239,7 +239,7 @@ function DisputeCard({
               <div className="flex flex-wrap items-center gap-2 pt-2">
                 <Button
                   size="sm"
-                  className="h-8 rounded-lg text-xs font-semibold"
+                  className="h-8 rounded-lg text-sm font-semibold"
                   onClick={() => setResolveDialog("guest")}
                 >
                   <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
@@ -248,7 +248,7 @@ function DisputeCard({
                 <Button
                   size="sm"
                   variant="outline"
-                  className="h-8 rounded-lg text-xs font-semibold border-blue-200 text-blue-700 hover:bg-blue-50"
+                  className="h-8 rounded-lg text-sm font-semibold border-blue-200 text-blue-700 hover:bg-blue-50"
                   onClick={() => setResolveDialog("host")}
                 >
                   <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
@@ -257,7 +257,7 @@ function DisputeCard({
                 <Button
                   size="sm"
                   variant="outline"
-                  className="h-8 rounded-lg text-xs font-semibold"
+                  className="h-8 rounded-lg text-sm font-semibold"
                   onClick={() => {
                     withLoading(
                       setLoading,
@@ -283,7 +283,7 @@ function DisputeCard({
               <div className="flex gap-2">
                 <Button
                   size="sm"
-                  className="h-8 rounded-lg text-xs font-semibold"
+                  className="h-8 rounded-lg text-sm font-semibold"
                   onClick={() => {
                     withLoading(
                       setLoading,
@@ -306,7 +306,7 @@ function DisputeCard({
                 <Button
                   size="sm"
                   variant="outline"
-                  className="h-8 rounded-lg text-xs font-semibold"
+                  className="h-8 rounded-lg text-sm font-semibold"
                   onClick={() => {
                     withLoading(
                       setLoading,
@@ -333,10 +333,10 @@ function DisputeCard({
       <AlertDialog open={resolveDialog !== null} onOpenChange={() => setResolveDialog(null)}>
         <AlertDialogContent className="rounded-2xl max-w-md">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-lg font-bold">
+            <AlertDialogTitle className="text-xl font-bold">
               Resolve in {resolveDialog === "guest" ? "Guest's" : "Host's"} Favor?
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-sm text-muted-foreground">
+            <AlertDialogDescription className="text-base text-muted-foreground">
               {resolveDialog === "guest"
                 ? `This will mark the dispute in favor of ${dispute.guestName}. You'll be able to process a refund after resolution.`
                 : `This will mark the dispute in favor of ${dispute.hostName}. No refund will be issued.`}
@@ -442,7 +442,7 @@ export function AdminDisputes() {
           title="Disputes &amp; Resolution"
           description={`${stats.total} cases — K${stats.disputedAmount.toLocaleString()} total disputed`}
           actions={
-            <div className="flex items-center gap-2 text-xs">
+            <div className="flex items-center gap-2 text-sm">
               {stats.critical > 0 && (
                 <Badge
                   variant="outline"
@@ -469,7 +469,7 @@ export function AdminDisputes() {
                 placeholder="Search by listing, guest, host, or reference..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 h-10 rounded-xl border-border/60 text-sm"
+                className="pl-9 h-10 rounded-xl border-border/60 text-base"
               />
             </div>
             <Select value={priorityFilter} onValueChange={setPriorityFilter}>
@@ -508,14 +508,14 @@ export function AdminDisputes() {
               <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
                 <Scale className="h-7 w-7 text-muted-foreground/40" />
               </div>
-              <h3 className="text-lg font-bold text-foreground">No disputes found</h3>
-              <p className="text-sm text-muted-foreground mt-1 max-w-sm">
+              <h3 className="text-xl font-bold text-foreground">No disputes found</h3>
+              <p className="text-base text-muted-foreground mt-1 max-w-sm">
                 Try adjusting your search or filter criteria.
               </p>
               <Button
                 variant="outline"
                 size="sm"
-                className="mt-6 rounded-full text-xs font-semibold"
+                className="mt-6 rounded-full text-sm font-semibold"
                 onClick={() => {
                   setSearch("");
                   setStatusFilter("all");
@@ -540,7 +540,7 @@ export function AdminDisputes() {
 
         {/* Stats Row */}
         <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 pb-16">
-          <h3 className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-3">
+          <h3 className="text-[10px] sm:text-sm font-bold text-[#1f1433] uppercase tracking-widest mb-3">
             Analysis
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -576,4 +576,3 @@ export function AdminDisputes() {
     </div>
   );
 }
-

@@ -55,8 +55,8 @@ function SettingField({
     return (
       <div className="flex items-center justify-between py-3">
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-foreground">{setting.label}</p>
-          <p className="text-xs text-muted-foreground mt-0.5">{setting.description}</p>
+          <p className="text-base font-semibold text-foreground">{setting.label}</p>
+          <p className="text-sm text-muted-foreground mt-0.5">{setting.description}</p>
         </div>
         <button
           type="button"
@@ -82,8 +82,8 @@ function SettingField({
   if (setting.type === "select" && setting.options) {
     return (
       <div className="py-3">
-        <p className="text-sm font-semibold text-foreground mb-1">{setting.label}</p>
-        <p className="text-xs text-muted-foreground mb-2">{setting.description}</p>
+        <p className="text-base font-semibold text-foreground mb-1">{setting.label}</p>
+        <p className="text-sm text-muted-foreground mb-2">{setting.description}</p>
         <Select value={value} onValueChange={(v) => onChange(setting.key, v)}>
           <SelectTrigger className="w-full max-w-xs h-10 rounded-xl border-border/60">
             <SelectValue />
@@ -102,8 +102,8 @@ function SettingField({
 
   return (
     <div className="py-3">
-      <p className="text-sm font-semibold text-foreground mb-1">{setting.label}</p>
-      <p className="text-xs text-muted-foreground mb-2">{setting.description}</p>
+      <p className="text-base font-semibold text-foreground mb-1">{setting.label}</p>
+      <p className="text-sm text-muted-foreground mb-2">{setting.description}</p>
       <Input
         type={setting.type === "number" ? "number" : "text"}
         value={value}
@@ -156,14 +156,14 @@ export function AdminSettings() {
             <Button
               variant="outline"
               size="sm"
-              className="h-9 rounded-lg text-xs font-semibold bg-transparent border-white/20 text-white hover:bg-white/10 hover:text-white"
+              className="h-9 rounded-lg text-sm font-semibold bg-transparent border-white/20 text-white hover:bg-white/10 hover:text-white"
               onClick={handleReset}
             >
               Reset
             </Button>
             <Button
               size="sm"
-              className="h-9 rounded-lg text-xs font-semibold bg-[#f2ba0d] hover:bg-[#B89430] text-[#1f1433]"
+              className="h-9 rounded-lg text-sm font-semibold bg-[#f2ba0d] hover:bg-[#B89430] text-[#1f1433]"
               onClick={handleSave}
               disabled={saving}
             >
@@ -203,8 +203,8 @@ export function AdminSettings() {
                     <Icon className="h-4 w-4" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-foreground">{cfg.label}</h3>
-                    <p className="text-xs text-muted-foreground">
+                    <h3 className="text-base font-bold text-foreground">{cfg.label}</h3>
+                    <p className="text-sm text-muted-foreground">
                       {categorySettings.length} settings
                     </p>
                   </div>
@@ -226,12 +226,12 @@ export function AdminSettings() {
 
         {/* Save Bar (sticky on mobile) */}
         <div className="mt-8 flex items-center justify-between rounded-xl border border-border/50 bg-card p-4 shadow-sm">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2 text-base text-muted-foreground">
             <CheckCircle2 className="h-4 w-4 text-emerald-500" />
             All settings are saved locally. Click &quot;Save Changes&quot; to apply.
           </div>
           <Button
-            className="rounded-lg text-xs font-semibold"
+            className="rounded-lg text-sm font-semibold"
             onClick={handleSave}
             disabled={saving}
           >
@@ -250,4 +250,3 @@ export function AdminSettings() {
     </div>
   );
 }
-

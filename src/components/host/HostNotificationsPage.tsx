@@ -116,14 +116,14 @@ export function HostNotificationsPage() {
         actions={
           <div className="flex items-center gap-3">
             {unreadCount > 0 && (
-              <span className="bg-[#f2ba0d] text-[#1f1433] text-xs font-black px-3 py-1 rounded-full shadow-sm">
+              <span className="bg-[#f2ba0d] text-[#1f1433] text-sm font-black px-3 py-1 rounded-full shadow-sm">
                 {unreadCount} new
               </span>
             )}
             {notifications.length > 0 && unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
-                className="text-sm font-bold text-white/80 hover:text-white transition-colors outline-none"
+                className="text-base font-bold text-white/80 hover:text-white transition-colors outline-none"
               >
                 Mark all as read
               </button>
@@ -139,7 +139,7 @@ export function HostNotificationsPage() {
                 <Bell className="h-6 w-6 text-muted-foreground/35" />
               </div>
               <h3 className="text-[15px] font-bold text-gray-800">All caught up!</h3>
-              <p className="text-xs text-muted-foreground mt-1 max-w-xs leading-relaxed">
+              <p className="text-sm text-muted-foreground mt-1 max-w-xs leading-relaxed">
                 You have no new notifications. We&apos;ll let you know when something requires your
                 attention.
               </p>
@@ -200,4 +200,3 @@ export function HostNotificationsPage() {
     </div>
   );
 }
-

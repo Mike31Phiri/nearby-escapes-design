@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Link from "next/link";
 import { SearchBar } from "@/components/shared/SearchBar";
@@ -67,12 +67,13 @@ export default function ExploreCountryPage() {
       {/* 1. Hero Cover */}
       <section className="relative pt-16 pb-24 text-center bg-[#1A0B2E]">
         <div className="max-w-3xl mx-auto px-4">
-          <p className="font-script text-2xl text-[#D4AF37] mb-3">Zambia Travel Guide</p>
+          <p className="font-script text-2xl text-gold mb-3">Zambia Travel Guide</p>
           <h1 className="font-display text-3xl md:text-5xl font-bold tracking-tight text-white leading-[1.15]">
             Where would you like to venture?
           </h1>
-          <p className="mt-4 text-sm text-white/60 leading-relaxed max-w-md mx-auto">
-            Select a specific province loop below, or alter the global toggle to filter localized spaces contextually.
+          <p className="mt-4 text-base text-white/60 leading-relaxed max-w-md mx-auto">
+            Select a specific province loop below, or alter the global toggle to filter localized
+            spaces contextually.
           </p>
         </div>
       </section>
@@ -84,13 +85,14 @@ export default function ExploreCountryPage() {
 
       {/* 3. Main Curation Content */}
       <main className="max-w-7xl mx-auto px-4 md:px-8 py-16 space-y-20">
-        
         {/* Regional Structural Pillars */}
         <section>
           <div className="mb-8">
-            <p className="font-script text-xl text-[#D4AF37] mb-1">Regional Routes</p>
+            <p className="font-script text-xl text-gold mb-1">Regional Routes</p>
             <h2 className="font-display text-2xl font-bold text-[#1A0B2E]">Explore by Province</h2>
-            <p className="text-[#6B7280] text-sm mt-1">Uncover distinct landscapes, localized cities, and verified landmarks.</p>
+            <p className="text-[#6B7280] text-base mt-1">
+              Uncover distinct landscapes, localized cities, and verified landmarks.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -108,7 +110,7 @@ export default function ExploreCountryPage() {
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-                  
+
                   <div className="absolute top-4 left-4 flex h-8 w-8 items-center justify-center rounded-full bg-[#D4AF37]/20 backdrop-blur-sm border border-[#D4AF37]/30">
                     <IconComponent className="h-4 w-4 text-[#D4AF37]" />
                   </div>
@@ -117,8 +119,9 @@ export default function ExploreCountryPage() {
                     <p className="text-[#D4AF37] text-[10px] font-bold uppercase tracking-widest mb-1">
                       {prov.eyebrow}
                     </p>
-                    <h3 className="font-display text-white font-bold text-lg flex items-center gap-2">
-                      {prov.name} <ArrowRight className="h-4 w-4 opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0" />
+                    <h3 className="font-display text-white font-bold text-xl flex items-center gap-2">
+                      {prov.name}{" "}
+                      <ArrowRight className="h-4 w-4 opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0" />
                     </h3>
                   </div>
                 </Link>
@@ -130,9 +133,11 @@ export default function ExploreCountryPage() {
         {/* Thematic Browsing Vectors */}
         <section className="border-t border-[#E0DBD0] pt-14">
           <div className="mb-8">
-            <p className="font-script text-xl text-[#D4AF37] mb-1">Curated Visions</p>
+            <p className="font-script text-xl text-gold mb-1">Curated Visions</p>
             <h2 className="font-display text-2xl font-bold text-[#1A0B2E]">Explore by Theme</h2>
-            <p className="text-[#6B7280] text-sm mt-1">Hand-picked collections mapped across boundaries and districts.</p>
+            <p className="text-[#6B7280] text-base mt-1">
+              Hand-picked collections mapped across boundaries and districts.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -158,14 +163,13 @@ export default function ExploreCountryPage() {
                   </span>
                 </div>
                 <div className="absolute bottom-0 left-0 p-5 w-full text-white">
-                  <h3 className="font-display font-bold text-lg mb-1">{col.title}</h3>
-                  <p className="text-white/70 text-xs leading-relaxed line-clamp-2">{col.desc}</p>
+                  <h3 className="font-display font-bold text-xl mb-1">{col.title}</h3>
+                  <p className="text-white/70 text-sm leading-relaxed line-clamp-2">{col.desc}</p>
                 </div>
               </div>
             ))}
           </div>
         </section>
-
       </main>
     </div>
   );

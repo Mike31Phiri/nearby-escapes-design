@@ -109,11 +109,11 @@ function UserCard({
                 {roleCfg.label}
               </Badge>
             </div>
-            <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">
+            <p className="text-sm text-muted-foreground flex items-center gap-1.5 mt-0.5">
               <Mail className="h-3 w-3 shrink-0" />
               {user.email}
             </p>
-            <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">
+            <p className="text-sm text-muted-foreground flex items-center gap-1.5 mt-0.5">
               <MapPin className="h-3 w-3 shrink-0" />
               {user.location}
             </p>
@@ -125,7 +125,7 @@ function UserCard({
           {user.status === "pending verification" && (
             <Button
               size="sm"
-              className="h-8 rounded-lg text-xs font-semibold"
+              className="h-8 rounded-lg text-sm font-semibold"
               onClick={() => onVerify(user.id)}
             >
               <ShieldCheck className="h-3.5 w-3.5 mr-1" />
@@ -136,7 +136,7 @@ function UserCard({
             <Button
               variant="outline"
               size="sm"
-              className="h-8 rounded-lg text-xs font-semibold border-rose-200 text-rose-600 hover:bg-rose-50"
+              className="h-8 rounded-lg text-sm font-semibold border-rose-200 text-rose-600 hover:bg-rose-50"
               onClick={() => onSuspend(user.id)}
             >
               <Ban className="h-3.5 w-3.5 mr-1" />
@@ -146,7 +146,7 @@ function UserCard({
           {user.status === "suspended" && (
             <Button
               size="sm"
-              className="h-8 rounded-lg text-xs font-semibold"
+              className="h-8 rounded-lg text-sm font-semibold"
               onClick={() =>
                 withLoading(
                   setLoading,
@@ -170,7 +170,7 @@ function UserCard({
       </div>
 
       {/* Details Row */}
-      <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs text-muted-foreground">
+      <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm text-muted-foreground">
         <span className="flex items-center gap-1.5">
           <CalendarDays className="h-3 w-3" />
           Joined{" "}
@@ -206,7 +206,7 @@ function UserCard({
         {user.status === "pending verification" && (
           <Button
             size="sm"
-            className="h-8 rounded-lg text-xs font-semibold flex-1"
+            className="h-8 rounded-lg text-sm font-semibold flex-1"
             onClick={() => onVerify(user.id)}
           >
             <ShieldCheck className="h-3.5 w-3.5 mr-1" /> Verify
@@ -216,7 +216,7 @@ function UserCard({
           <Button
             variant="outline"
             size="sm"
-            className="h-8 rounded-lg text-xs font-semibold flex-1 border-rose-200 text-rose-600"
+            className="h-8 rounded-lg text-sm font-semibold flex-1 border-rose-200 text-rose-600"
             onClick={() => onSuspend(user.id)}
           >
             <Ban className="h-3.5 w-3.5 mr-1" /> Suspend
@@ -225,7 +225,7 @@ function UserCard({
         {user.status === "suspended" && (
           <Button
             size="sm"
-            className="h-8 rounded-lg text-xs font-semibold flex-1"
+            className="h-8 rounded-lg text-sm font-semibold flex-1"
             onClick={() =>
               withLoading(
                 setLoading,
@@ -317,7 +317,7 @@ export function AdminUsers() {
           description={`${userStats.total} users — ${userStats.guests} guests, ${userStats.hosts} hosts, ${userStats.admins} admins`}
           actions={
             <div className="flex items-center gap-3">
-              <span className="text-xs text-white/80">
+              <span className="text-sm text-white/80">
                 <span className="font-semibold text-white">{userStats.active}</span> active
               </span>
               {userStats.pendingVerification > 0 && (
@@ -341,7 +341,7 @@ export function AdminUsers() {
                 placeholder="Search by name, email, or location..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 h-10 rounded-xl border-border/60 text-sm"
+                className="pl-9 h-10 rounded-xl border-border/60 text-base"
               />
             </div>
             <Select value={roleFilter} onValueChange={(v) => setRoleFilter(v as typeof roleFilter)}>
@@ -379,14 +379,14 @@ export function AdminUsers() {
               <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
                 <Users className="h-7 w-7 text-muted-foreground/40" />
               </div>
-              <h3 className="text-lg font-bold text-foreground">No users found</h3>
-              <p className="text-sm text-muted-foreground mt-1 max-w-sm">
+              <h3 className="text-xl font-bold text-foreground">No users found</h3>
+              <p className="text-base text-muted-foreground mt-1 max-w-sm">
                 Try adjusting your search or filter criteria.
               </p>
               <Button
                 variant="outline"
                 size="sm"
-                className="mt-6 rounded-full text-xs font-semibold"
+                className="mt-6 rounded-full text-sm font-semibold"
                 onClick={() => {
                   setSearch("");
                   setRoleFilter("all");
@@ -412,7 +412,7 @@ export function AdminUsers() {
 
         {/* Stats Row */}
         <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 pb-16">
-          <h3 className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-3">
+          <h3 className="text-[10px] sm:text-sm font-bold text-[#1f1433] uppercase tracking-widest mb-3">
             Analysis
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -446,4 +446,3 @@ export function AdminUsers() {
     </div>
   );
 }
-

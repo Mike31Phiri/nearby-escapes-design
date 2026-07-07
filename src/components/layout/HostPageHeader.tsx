@@ -16,14 +16,14 @@ export function HostPageHeader({ title, description, eyebrow, actions }: HostPag
       <div className="mx-auto max-w-7xl px-4 md:px-6 py-6 md:py-10">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <p className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-1.5 drop-shadow-sm">
+            <p className="text-[10px] sm:text-sm font-bold text-[#1f1433] uppercase tracking-widest mb-1.5 drop-shadow-sm">
               {eyebrow || "Overview"}
             </p>
             <h1 className="font-display text-3xl md:text-4xl font-bold tracking-tight text-white leading-[1.15]">
               {title}
             </h1>
             {description && (
-              <p className="text-[#64748B] mt-1.5 text-sm max-w-lg leading-relaxed">
+              <p className="text-[#64748B] mt-1.5 text-base max-w-lg leading-relaxed">
                 {description}
               </p>
             )}
@@ -34,4 +34,3 @@ export function HostPageHeader({ title, description, eyebrow, actions }: HostPag
     </div>
   );
 }
-

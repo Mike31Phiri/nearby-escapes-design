@@ -89,7 +89,7 @@ function getRatingDistribution(reviews: { rating: number }[]) {
   }));
 }
 
-export function StayDetailPage({ stay, backHref = "/search?category=stays" }: StayDetailPageProps) {
+export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProps) {
   const images = stay.images && stay.images.length > 0 ? stay.images : [stay.image];
   const host: StayHost | undefined = mockStayHosts[stay.id] || mockStayHosts["1"];
   const hostName = host?.name || "Beatrice Mwansa";
@@ -117,10 +117,6 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
   const ratingDist = getRatingDistribution(reviews);
 
   const handleToggleFavorite = () => {
-    if (!isAuthenticated) {
-      setShowAuthDialog(true);
-      return;
-    }
     if (isFavorited) {
       removeItem(stay.id);
       toast.success(`Removed from collections`);
@@ -153,7 +149,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
     <div className="min-h-screen flex flex-col bg-background font-sans pb-20 md:pb-0">
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8">
         {/* Breadcrumbs row */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-5">
+        <div className="flex items-center gap-2 text-base text-muted-foreground mb-5">
           <Link
             href={backHref}
             className="hover:text-primary transition-colors font-medium flex items-center gap-1"
@@ -178,7 +174,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
             <h1 className="text-2xl md:text-3xl font-display font-black tracking-tight text-foreground mb-1.5">
               {title}
             </h1>
-            <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-3 text-base text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Star className="h-4 w-4 fill-accent text-accent" />
                 <strong className="text-foreground">{avgRating.toFixed(1)}</strong>
@@ -191,7 +187,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                 {locationString}
               </span>
               {stay.closestAttraction && (
-                <span className="flex items-center gap-1 text-xs">
+                <span className="flex items-center gap-1 text-sm">
                   <Compass className="h-3.5 w-3.5 text-muted-foreground/40" />
                   Near {stay.closestAttraction}
                 </span>
@@ -263,7 +259,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
                 {idx === 3 && images.length > 5 && (
                   <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">
+                    <span className="text-white font-bold text-base">
                       +{images.length - 5} photos
                     </span>
                   </div>
@@ -328,7 +324,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
             onClick={() => setShowAllPhotos(false)}
           >
             <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
-              <span className="text-white/60 text-sm font-medium">
+              <span className="text-white/60 text-base font-medium">
                 {activeImg + 1} / {images.length}
               </span>
               <button
@@ -398,7 +394,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                   <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">
                     Property type
                   </div>
-                  <div className="text-xs font-bold text-foreground">{type}</div>
+                  <div className="text-sm font-bold text-foreground">{type}</div>
                 </div>
               </div>
               <div className="bg-card border border-border/60 rounded-xl p-3.5 flex items-center gap-3">
@@ -407,7 +403,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                   <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">
                     Sleeps
                   </div>
-                  <div className="text-xs font-bold text-foreground">Up to {guests} guests</div>
+                  <div className="text-sm font-bold text-foreground">Up to {guests} guests</div>
                 </div>
               </div>
               <div className="bg-card border border-border/60 rounded-xl p-3.5 flex items-center gap-3">
@@ -416,7 +412,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                   <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">
                     Bedrooms
                   </div>
-                  <div className="text-xs font-bold text-foreground">{bedrooms} bedrooms</div>
+                  <div className="text-sm font-bold text-foreground">{bedrooms} bedrooms</div>
                 </div>
               </div>
               <div className="bg-card border border-border/60 rounded-xl p-3.5 flex items-center gap-3">
@@ -425,7 +421,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                   <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">
                     Cancellation
                   </div>
-                  <div className="text-xs font-bold text-foreground">Free · 48 hrs</div>
+                  <div className="text-sm font-bold text-foreground">Free · 48 hrs</div>
                 </div>
               </div>
             </div>
@@ -433,7 +429,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
             {/* Overview / About this escape */}
             {stay.description && (
               <section>
-                <h2 className="text-lg font-display font-bold tracking-tight text-foreground mb-3">
+                <h2 className="text-xl font-display font-bold tracking-tight text-foreground mb-3">
                   About this escape
                 </h2>
                 <p
@@ -447,7 +443,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                 {stay.description.length > 150 && (
                   <button
                     onClick={() => setShowReadMore(!showReadMore)}
-                    className="text-xs font-bold text-primary mt-2 flex items-center hover:underline focus:outline-none"
+                    className="text-sm font-bold text-primary mt-2 flex items-center hover:underline focus:outline-none"
                   >
                     {showReadMore ? "Show less" : "Read more"}
                   </button>
@@ -464,7 +460,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                 {stay.amenities.map((amenity: any) => (
                   <div
                     key={amenity}
-                    className="flex items-center gap-2.5 p-3 rounded-xl bg-muted/50 text-sm font-medium text-foreground"
+                    className="flex items-center gap-2.5 p-3 rounded-xl bg-muted/50 text-base font-medium text-foreground"
                   >
                     <span className="text-primary/70">
                       {amenityIconMap[amenity] ?? <CheckCircle2 className="h-4 w-4" />}
@@ -484,14 +480,14 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {stay.checkInRules && (
                     <div className="p-5 rounded-2xl bg-muted/30">
-                      <h3 className="font-bold text-sm uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
+                      <h3 className="font-bold text-base uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
                         <CalendarDays className="h-4 w-4" /> Check In
                       </h3>
                       <ul className="space-y-2">
                         {stay.checkInRules.map((rule: any, i: number) => (
                           <li
                             key={i}
-                            className="flex items-start gap-2 text-sm text-muted-foreground"
+                            className="flex items-start gap-2 text-base text-muted-foreground"
                           >
                             <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 shrink-0" />
                             {rule}
@@ -502,14 +498,14 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                   )}
                   {stay.checkOutRules && (
                     <div className="p-5 rounded-2xl bg-muted/30">
-                      <h3 className="font-bold text-sm uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
+                      <h3 className="font-bold text-base uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
                         <CalendarDays className="h-4 w-4" /> Check Out
                       </h3>
                       <ul className="space-y-2">
                         {stay.checkOutRules.map((rule: any, i: number) => (
                           <li
                             key={i}
-                            className="flex items-start gap-2 text-sm text-muted-foreground"
+                            className="flex items-start gap-2 text-base text-muted-foreground"
                           >
                             <CheckCircle2 className="h-4 w-4 text-amber-500 mt-0.5 shrink-0" />
                             {rule}
@@ -524,14 +520,14 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
 
             {/* Meet the Host — Full profile card */}
             <section className="pt-2">
-              <h2 className="text-lg font-display font-bold tracking-tight text-foreground mb-4">
+              <h2 className="text-xl font-display font-bold tracking-tight text-foreground mb-4">
                 Meet your host
               </h2>
               <div className="bg-card border border-border/50 rounded-2xl shadow-sm overflow-hidden">
                 {/* Host header — avatar + name + superhost badge */}
                 <div className="flex items-start gap-4 p-5 pb-4">
                   <div
-                    className="w-14 h-14 rounded-full flex items-center justify-center font-bold text-white text-lg shrink-0 shadow-sm"
+                    className="w-14 h-14 rounded-full flex items-center justify-center font-bold text-white text-xl shrink-0 shadow-sm"
                     style={{ backgroundColor: host?.avatarColor || "#1f1433" }}
                   >
                     {host?.avatarInitials || "NE"}
@@ -546,7 +542,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-muted-foreground mt-0.5">
+                    <p className="text-sm text-muted-foreground mt-0.5">
                       Host since {host?.joined || "2023"} · {locationString}
                     </p>
                     {/* Verified badges inline */}
@@ -610,7 +606,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                 {/* Response stats + Languages */}
                 <div className="px-5 pb-5 flex flex-wrap items-center gap-x-6 gap-y-2">
                   <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
                       <MessageSquare className="h-3.5 w-3.5 text-emerald-500" />
                       <span className="font-semibold text-foreground">
                         {host?.responseRate || 98}%
@@ -618,13 +614,13 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                       <span>response rate</span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
                     <CheckCircle2 className="h-3.5 w-3.5 text-primary/60" />
                     <span className="font-semibold text-foreground">
                       {host?.responseTime || "within 1 hour"}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
                     <span>Speaks</span>
                     <span className="font-semibold text-foreground">
                       {host?.languages?.join(" · ") || "English"}
@@ -638,14 +634,14 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                     onClick={() =>
                       toast.success(`Chat with ${hostName.split(" ")[0]} coming soon!`)
                     }
-                    className="flex-1 h-9 rounded-xl bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-primary/90 transition-colors"
+                    className="flex-1 h-9 rounded-xl bg-primary text-primary-foreground text-sm font-bold flex items-center justify-center gap-1.5 hover:bg-primary/90 transition-colors"
                   >
                     <MessageSquare className="h-3.5 w-3.5" />
                     Message {hostName.split(" ")[0]}
                   </button>
                   <button
                     onClick={() => toast.success("Full host profile coming soon!")}
-                    className="flex-1 h-9 rounded-xl border border-border/60 text-foreground text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-muted/50 transition-colors"
+                    className="flex-1 h-9 rounded-xl border border-border/60 text-foreground text-sm font-bold flex items-center justify-center gap-1.5 hover:bg-muted/50 transition-colors"
                   >
                     View full profile
                   </button>
@@ -655,7 +651,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
 
             {/* Location map embed */}
             <section>
-              <h2 className="text-lg font-display font-bold tracking-tight text-foreground mb-3">
+              <h2 className="text-xl font-display font-bold tracking-tight text-foreground mb-3">
                 Location
               </h2>
               <div className="rounded-2xl overflow-hidden border border-border/40 shadow-sm relative h-40 bg-muted">
@@ -670,14 +666,14 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                 />
                 <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/20 to-transparent" />
               </div>
-              <p className="text-xs text-muted-foreground mt-2 text-center">
+              <p className="text-sm text-muted-foreground mt-2 text-center">
                 {locationString} · Exact location shared after booking
               </p>
             </section>
 
             {/* Experiences Nearby */}
             <section>
-              <h2 className="text-lg font-display font-bold tracking-tight text-foreground mb-3">
+              <h2 className="text-xl font-display font-bold tracking-tight text-foreground mb-3">
                 Add experiences nearby
               </h2>
               <div className="flex gap-3.5 overflow-x-auto pb-3 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
@@ -686,7 +682,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                     <Compass className="h-8 w-8" />
                   </div>
                   <div className="p-3">
-                    <div className="text-xs font-bold text-foreground line-clamp-1">
+                    <div className="text-sm font-bold text-foreground line-clamp-1">
                       Farm tour & milking
                     </div>
                     <div className="text-[11px] text-[#1f1433] font-semibold mt-1">
@@ -699,7 +695,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                     <Sparkles className="h-8 w-8" />
                   </div>
                   <div className="p-3">
-                    <div className="text-xs font-bold text-foreground line-clamp-1">
+                    <div className="text-sm font-bold text-foreground line-clamp-1">
                       Bush braai evening
                     </div>
                     <div className="text-[11px] text-[#1f1433] font-semibold mt-1">
@@ -712,7 +708,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                     <Waves className="h-8 w-8" />
                   </div>
                   <div className="p-3">
-                    <div className="text-xs font-bold text-foreground line-clamp-1">
+                    <div className="text-sm font-bold text-foreground line-clamp-1">
                       Kafue river fishing
                     </div>
                     <div className="text-[11px] text-[#1f1433] font-semibold mt-1">
@@ -746,7 +742,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                         />
                       ))}
                     </div>
-                    <span className="text-xs text-muted-foreground mt-1 font-medium">
+                    <span className="text-sm text-muted-foreground mt-1 font-medium">
                       {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
                     </span>
                   </div>
@@ -754,8 +750,8 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                   {/* Right: Distribution bars */}
                   <div className="flex-1 space-y-1.5">
                     {ratingDist.reverse().map(({ star, count, percentage }) => (
-                      <div key={star} className="flex items-center gap-2 text-sm">
-                        <span className="w-3 text-right text-muted-foreground font-medium text-xs">
+                      <div key={star} className="flex items-center gap-2 text-base">
+                        <span className="w-3 text-right text-muted-foreground font-medium text-sm">
                           {star}
                         </span>
                         <Star className="h-3 w-3 fill-accent text-accent" />
@@ -765,7 +761,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                             style={{ width: `${percentage}%` }}
                           />
                         </div>
-                        <span className="w-6 text-right text-xs text-muted-foreground">
+                        <span className="w-6 text-right text-sm text-muted-foreground">
                           {count}
                         </span>
                       </div>
@@ -790,9 +786,9 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
             >
               <div className="flex justify-between items-baseline">
                 <div className="text-xl font-bold text-[#F9F7F2]">
-                  K{stay.price} <span className="text-xs font-normal text-[#9B95A8]">/ night</span>
+                  K{stay.price} <span className="text-sm font-normal text-[#9B95A8]">/ night</span>
                 </div>
-                <div className="flex items-center gap-1 text-xs text-[#9B95A8]">
+                <div className="flex items-center gap-1 text-sm text-[#9B95A8]">
                   <Star className="h-3.5 w-3.5 fill-[#1f1433] text-[#1f1433]" />
                   {avgRating.toFixed(1)} · {reviews.length || stay.reviews} reviews
                 </div>
@@ -804,13 +800,13 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                   <div className="text-[10px] text-[#9B95A8] font-bold uppercase tracking-wider mb-1">
                     Check-in
                   </div>
-                  <div className="text-xs font-semibold text-[#F9F7F2]">{checkIn}</div>
+                  <div className="text-sm font-semibold text-[#F9F7F2]">{checkIn}</div>
                 </div>
                 <div className="bg-white/5 border border-[#1f1433]/30 rounded-xl p-3">
                   <div className="text-[10px] text-[#9B95A8] font-bold uppercase tracking-wider mb-1">
                     Check-out
                   </div>
-                  <div className="text-xs font-semibold text-[#F9F7F2]">{checkOut}</div>
+                  <div className="text-sm font-semibold text-[#F9F7F2]">{checkOut}</div>
                 </div>
               </div>
 
@@ -822,16 +818,16 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => setGuestCount((g) => Math.max(1, g - 1))}
-                    className="w-7 h-7 rounded-full border border-[#1f1433]/50 flex items-center justify-center text-[#1f1433] hover:bg-[#f2ba0d]/10 transition-colors font-bold text-sm"
+                    className="w-7 h-7 rounded-full border border-[#1f1433]/50 flex items-center justify-center text-[#1f1433] hover:bg-[#f2ba0d]/10 transition-colors font-bold text-base"
                   >
                     −
                   </button>
-                  <span className="text-xs font-bold text-[#F9F7F2] min-w-4 text-center">
+                  <span className="text-sm font-bold text-[#F9F7F2] min-w-4 text-center">
                     {guestCount}
                   </span>
                   <button
                     onClick={() => setGuestCount((g) => Math.min(stay.guests || 8, g + 1))}
-                    className="w-7 h-7 rounded-full border border-[#1f1433]/50 flex items-center justify-center text-[#1f1433] hover:bg-[#f2ba0d]/10 transition-colors font-bold text-sm"
+                    className="w-7 h-7 rounded-full border border-[#1f1433]/50 flex items-center justify-center text-[#1f1433] hover:bg-[#f2ba0d]/10 transition-colors font-bold text-base"
                   >
                     +
                   </button>
@@ -841,7 +837,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
               {/* Transport Toggle */}
               <div className="flex items-center justify-between bg-white/5 border border-[#1f1433]/30 rounded-xl p-3">
                 <div>
-                  <div className="text-xs font-bold text-[#F9F7F2]">Add transport pickup</div>
+                  <div className="text-sm font-bold text-[#F9F7F2]">Add transport pickup</div>
                   <div className="text-[10px] text-[#9B95A8] mt-0.5">Lusaka CBD → Farm & back</div>
                 </div>
                 <button
@@ -862,21 +858,21 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
 
               {/* Price Breakdown */}
               <div className="border-t border-white/10 pt-3.5 space-y-2">
-                <div className="flex justify-between text-xs text-[#9B95A8]">
+                <div className="flex justify-between text-sm text-[#9B95A8]">
                   <span>K{stay.price} × 2 nights</span>
                   <span>K{(stay.price * 2).toLocaleString()}</span>
                 </div>
                 {addTransport && (
-                  <div className="flex justify-between text-xs text-[#9B95A8]">
+                  <div className="flex justify-between text-sm text-[#9B95A8]">
                     <span>Transport (return)</span>
                     <span>K280</span>
                   </div>
                 )}
-                <div className="flex justify-between text-xs text-[#9B95A8]">
+                <div className="flex justify-between text-sm text-[#9B95A8]">
                   <span>Service fee (5%)</span>
                   <span>K{Math.round(stay.price * 2 * 0.05)}</span>
                 </div>
-                <div className="flex justify-between text-xs text-[#F9F7F2] font-bold border-t border-white/10 pt-3">
+                <div className="flex justify-between text-sm text-[#F9F7F2] font-bold border-t border-white/10 pt-3">
                   <span>Total</span>
                   <span>
                     K
@@ -897,7 +893,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                     `/checkout/book?type=stay&id=${stay.id}&guests=${guestCount}&transport=${addTransport}`,
                   );
                 }}
-                className="w-full bg-[#f2ba0d] text-[#334155] hover:bg-[#f2ba0d]/90 rounded-xl py-3 text-xs font-bold transition-colors uppercase tracking-wider"
+                className="w-full bg-[#f2ba0d] text-[#334155] hover:bg-[#f2ba0d]/90 rounded-xl py-3 text-sm font-bold transition-colors uppercase tracking-wider"
               >
                 Reserve now — K
                 {(
@@ -914,23 +910,23 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
             <div className="bg-card rounded-2xl card-shadow-lg overflow-hidden">
               {/* Price header */}
               <div className="bg-primary px-6 py-5">
-                <p className="text-primary-foreground/80 text-xs font-bold uppercase tracking-widest mb-1">
+                <p className="text-primary-foreground/80 text-sm font-bold uppercase tracking-widest mb-1">
                   Starting from
                 </p>
                 <div className="flex items-baseline gap-1">
                   <span className="text-3xl font-black text-primary-foreground">{price}</span>
-                  <span className="text-primary-foreground/70 text-sm">/night</span>
+                  <span className="text-primary-foreground/70 text-base">/night</span>
                 </div>
                 <div className="flex items-center gap-1 mt-1">
                   <Star className="h-3.5 w-3.5 fill-primary-foreground/80 text-primary-foreground/80" />
-                  <span className="text-primary-foreground/90 text-xs font-semibold">
+                  <span className="text-primary-foreground/90 text-sm font-semibold">
                     {avgRating.toFixed(1)} · {reviews.length || stay.reviews} reviews
                   </span>
                 </div>
               </div>
 
               <div className="p-6 space-y-5">
-                <h3 className="font-black text-lg text-foreground tracking-tight font-display">
+                <h3 className="font-black text-xl text-foreground tracking-tight font-display">
                   Invoice Summary
                 </h3>
 
@@ -938,7 +934,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                   <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                     What&apos;s Included
                   </p>
-                  <div className="space-y-2 text-sm">
+                  <div className="space-y-2 text-base">
                     {stay.beds && (
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <BedDouble className="h-4 w-4 text-primary/70 shrink-0" />
@@ -971,13 +967,13 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                     {stay.amenities.slice(0, 4).map((a: any) => (
                       <span
                         key={a}
-                        className="text-xs bg-muted px-2.5 py-1 rounded-full text-muted-foreground"
+                        className="text-sm bg-muted px-2.5 py-1 rounded-full text-muted-foreground"
                       >
                         {a}
                       </span>
                     ))}
                     {stay.amenities.length > 4 && (
-                      <span className="text-xs bg-muted px-2.5 py-1 rounded-full text-muted-foreground">
+                      <span className="text-sm bg-muted px-2.5 py-1 rounded-full text-muted-foreground">
                         +{stay.amenities.length - 4} more
                       </span>
                     )}
@@ -990,7 +986,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                   <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                     Price Breakdown
                   </p>
-                  <div className="space-y-1.5 text-sm">
+                  <div className="space-y-1.5 text-base">
                     <div className="flex justify-between text-muted-foreground">
                       <span>Room rate</span>
                       <span className="font-semibold text-foreground">{price}/night</span>
@@ -1007,13 +1003,13 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
 
                 <Link
                   href={`/checkout/book?type=stay&id=${stay.id}`}
-                  className="w-full h-12 rounded-xl bg-primary font-black uppercase tracking-widest text-sm text-primary-foreground shadow-md shadow-primary/20 hover:shadow-primary/30 transition-all hover:scale-[1.01] flex items-center justify-center gap-2"
+                  className="w-full h-12 rounded-xl bg-primary font-black uppercase tracking-widest text-base text-primary-foreground shadow-md shadow-primary/20 hover:shadow-primary/30 transition-all hover:scale-[1.01] flex items-center justify-center gap-2"
                 >
                   Proceed to Booking
                   <ChevronRight className="h-4 w-4" />
                 </Link>
 
-                <p className="text-center text-xs text-muted-foreground">
+                <p className="text-center text-sm text-muted-foreground">
                   Free cancellation · No charge until confirmed
                 </p>
               </div>
@@ -1027,10 +1023,10 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
         <div className="flex items-center justify-between px-4 py-3">
           <div>
             <div className="flex items-baseline gap-1">
-              <span className="text-lg font-black text-foreground">{price}</span>
-              <span className="text-xs text-muted-foreground">/night</span>
+              <span className="text-xl font-black text-foreground">{price}</span>
+              <span className="text-sm text-muted-foreground">/night</span>
             </div>
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <Star className="h-3 w-3 fill-accent text-accent" />
               <span>
                 {avgRating.toFixed(1)} · {reviews.length || stay.reviews} reviews
@@ -1054,7 +1050,7 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
                 const el = document.getElementById("booking-calculator");
                 el?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="h-10 px-5 rounded-xl bg-primary font-bold text-sm text-primary-foreground shadow-sm shadow-primary/20 flex items-center justify-center gap-1.5"
+              className="h-10 px-5 rounded-xl bg-primary font-bold text-base text-primary-foreground shadow-sm shadow-primary/20 flex items-center justify-center gap-1.5"
             >
               Book Now
               <ChevronRight className="h-4 w-4" />
@@ -1072,4 +1068,3 @@ export function StayDetailPage({ stay, backHref = "/search?category=stays" }: St
     </div>
   );
 }
-

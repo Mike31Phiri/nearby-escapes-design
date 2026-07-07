@@ -40,13 +40,13 @@ export function HostDashboardPage() {
             href="/host/profile"
             className="hidden sm:inline-flex items-center gap-3 px-5 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/20 hover:shadow-md transition-all shadow-sm"
           >
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#1f1433] to-[#150d22] flex items-center justify-center text-sm font-bold text-[#1f1433] border border-[#1f1433]/20">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#1f1433] to-[#150d22] flex items-center justify-center text-base font-bold text-[#1f1433] border border-[#1f1433]/20">
               {host.name
                 .split(" ")
                 .map((n) => n[0])
                 .join("")}
             </div>
-            <span className="text-sm font-bold text-white tracking-wide">View Profile</span>
+            <span className="text-base font-bold text-white tracking-wide">View Profile</span>
           </Link>
         }
       />
@@ -60,8 +60,8 @@ export function HostDashboardPage() {
               <Zap className="h-5 w-5" />
             </div>
             <div>
-              <div className="text-sm font-semibold text-amber-900">New Booking Request</div>
-              <p className="text-sm text-amber-700 mt-0.5">
+              <div className="text-base font-semibold text-amber-900">New Booking Request</div>
+              <p className="text-base text-amber-700 mt-0.5">
                 Tendai K. requested a stay for <span className="font-semibold">18–20 Jul</span> at
                 your Luxury Safari Lodge.
               </p>
@@ -69,7 +69,7 @@ export function HostDashboardPage() {
           </div>
           <Link
             href="/host/bookings"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-medium bg-amber-600 text-white hover:bg-amber-700 transition-colors shrink-0"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md text-base font-medium bg-amber-600 text-white hover:bg-amber-700 transition-colors shrink-0"
           >
             Review Request <ArrowRight className="h-4 w-4" />
           </Link>
@@ -78,17 +78,17 @@ export function HostDashboardPage() {
         {/* Section Title */}
         <div className="flex items-end justify-between mb-7">
           <div>
-            <p className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-1.5">
+            <p className="text-[10px] sm:text-sm font-bold text-[#1f1433] uppercase tracking-widest mb-1.5">
               Insights
             </p>
             <h2 className="font-display text-2xl font-bold tracking-tight text-[#1f1433] leading-[1.15]">
               Performance Metrics
             </h2>
-            <p className="text-[#64748B] mt-1.5 text-sm max-w-lg leading-relaxed">
+            <p className="text-[#64748B] mt-1.5 text-base max-w-lg leading-relaxed">
               How your business is doing this month
             </p>
           </div>
-          <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-[#e0dbd0]/60 text-sm font-bold text-[#1f1433] shadow-sm">
+          <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-[#e0dbd0]/60 text-base font-bold text-[#1f1433] shadow-sm">
             <Calendar className="h-4 w-4 text-[#1f1433]" />
             July 2025
           </span>
@@ -100,7 +100,9 @@ export function HostDashboardPage() {
           <div className="bg-white rounded-xl p-5 shadow-sm border border-border flex flex-col justify-between">
             <div className="flex items-start justify-between">
               <div>
-                <span className="text-sm font-medium text-muted-foreground">Monthly Earnings</span>
+                <span className="text-base font-medium text-muted-foreground">
+                  Monthly Earnings
+                </span>
                 <h3 className="text-2xl font-bold text-foreground mt-1">
                   K{mockWeeklySnapshot.revenue.toLocaleString()}
                 </h3>
@@ -109,7 +111,7 @@ export function HostDashboardPage() {
                 <DollarSign className="h-5 w-5" />
               </div>
             </div>
-            <div className="flex items-center gap-1 mt-4 text-sm font-medium text-emerald-600">
+            <div className="flex items-center gap-1 mt-4 text-base font-medium text-emerald-600">
               <TrendingUp className="h-4 w-4" />
               <span>+{mockWeeklySnapshot.revenueChange}% vs last month</span>
             </div>
@@ -119,7 +121,7 @@ export function HostDashboardPage() {
           <div className="bg-white rounded-xl p-5 shadow-sm border border-border flex flex-col justify-between">
             <div className="flex items-start justify-between">
               <div>
-                <span className="text-sm font-medium text-muted-foreground">Active Bookings</span>
+                <span className="text-base font-medium text-muted-foreground">Active Bookings</span>
                 <h3 className="text-2xl font-bold text-foreground mt-1">
                   {mockWeeklySnapshot.bookings}
                 </h3>
@@ -128,7 +130,7 @@ export function HostDashboardPage() {
                 <CalendarDays className="h-5 w-5" />
               </div>
             </div>
-            <div className="flex items-center gap-1 mt-4 text-sm font-medium text-muted-foreground">
+            <div className="flex items-center gap-1 mt-4 text-base font-medium text-muted-foreground">
               <Clock className="h-4 w-4" />
               <span>3 upcoming · 3 completed</span>
             </div>
@@ -138,7 +140,7 @@ export function HostDashboardPage() {
           <div className="bg-white rounded-xl p-5 shadow-sm border border-border flex flex-col justify-between">
             <div className="flex items-start justify-between">
               <div>
-                <span className="text-sm font-medium text-muted-foreground">Occupancy Rate</span>
+                <span className="text-base font-medium text-muted-foreground">Occupancy Rate</span>
                 <h3 className="text-2xl font-bold text-foreground mt-1">
                   {mockWeeklySnapshot.occupancyRate}%
                 </h3>
@@ -147,7 +149,7 @@ export function HostDashboardPage() {
                 <Percent className="h-5 w-5" />
               </div>
             </div>
-            <div className="flex items-center gap-1.5 mt-4 text-sm font-medium text-emerald-600">
+            <div className="flex items-center gap-1.5 mt-4 text-base font-medium text-emerald-600">
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
               <span>Above region average</span>
             </div>
@@ -157,7 +159,7 @@ export function HostDashboardPage() {
           <div className="bg-white rounded-xl p-5 shadow-sm border border-border flex flex-col justify-between">
             <div className="flex items-start justify-between">
               <div>
-                <span className="text-sm font-medium text-muted-foreground">Average Rating</span>
+                <span className="text-base font-medium text-muted-foreground">Average Rating</span>
                 <h3 className="text-2xl font-bold text-foreground mt-1">
                   {mockWeeklySnapshot.avgRating?.toFixed(2) ?? "5.00"}
                 </h3>
@@ -166,7 +168,7 @@ export function HostDashboardPage() {
                 <Star className="h-5 w-5 fill-amber-400 text-amber-400" />
               </div>
             </div>
-            <div className="flex items-center gap-1.5 mt-4 text-sm font-medium text-muted-foreground">
+            <div className="flex items-center gap-1.5 mt-4 text-base font-medium text-muted-foreground">
               <MessageSquare className="h-4 w-4" />
               <span>{mockWeeklySnapshot.reviewCount} reviews total</span>
             </div>
@@ -181,19 +183,19 @@ export function HostDashboardPage() {
             <div className="space-y-5">
               <div className="flex items-end justify-between">
                 <div>
-                  <p className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-1">
+                  <p className="text-[10px] sm:text-sm font-bold text-[#1f1433] uppercase tracking-widest mb-1">
                     Schedule
                   </p>
                   <h3 className="font-display text-xl font-bold tracking-tight text-[#1f1433] leading-[1.15]">
                     Upcoming Check-ins
                   </h3>
-                  <p className="text-[#64748B] mt-1 text-sm">
+                  <p className="text-[#64748B] mt-1 text-base">
                     Guests arriving in the next few days
                   </p>
                 </div>
                 <Link
                   href="/host/bookings"
-                  className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-[#1f1433] hover:text-[#2A154A] transition-all duration-200 group"
+                  className="hidden sm:inline-flex items-center gap-1.5 text-base font-semibold text-[#1f1433] hover:text-[#2A154A] transition-all duration-200 group"
                 >
                   <span>Manage bookings</span>
                   <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -204,7 +206,7 @@ export function HostDashboardPage() {
                 {arriving.length === 0 ? (
                   <div className="p-8 text-center">
                     <AlertCircle className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-base text-muted-foreground">
                       No check-ins scheduled for today or tomorrow
                     </p>
                   </div>
@@ -224,10 +226,10 @@ export function HostDashboardPage() {
                         </div>
 
                         <div>
-                          <div className="text-sm font-semibold text-foreground">
+                          <div className="text-base font-semibold text-foreground">
                             {item.guestName}
                           </div>
-                          <div className="text-sm text-muted-foreground mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                          <div className="text-base text-muted-foreground mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
                             <span className="font-medium text-foreground">
                               {item.checkIn
                                 ? new Date(item.checkIn).toLocaleDateString("en-ZM", {
@@ -255,7 +257,7 @@ export function HostDashboardPage() {
 
                       <div className="flex items-center justify-between sm:justify-end gap-3 pt-3 sm:pt-0 border-t sm:border-t-0 border-border">
                         <span
-                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-medium border ${
                             item.status === "pending"
                               ? "bg-amber-50 text-amber-700 border-amber-200"
                               : "bg-emerald-50 text-emerald-700 border-emerald-200"
@@ -284,19 +286,19 @@ export function HostDashboardPage() {
             <div className="space-y-5">
               <div className="flex items-end justify-between">
                 <div>
-                  <p className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-1">
+                  <p className="text-[10px] sm:text-sm font-bold text-[#1f1433] uppercase tracking-widest mb-1">
                     Activity
                   </p>
                   <h3 className="font-display text-xl font-bold tracking-tight text-[#1f1433] leading-[1.15]">
                     Recent Transactions
                   </h3>
-                  <p className="text-[#64748B] mt-1 text-sm">
+                  <p className="text-[#64748B] mt-1 text-base">
                     Latest bookings and reservation updates
                   </p>
                 </div>
                 <Link
                   href="/host/bookings"
-                  className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-[#1f1433] hover:text-[#2A154A] transition-all duration-200 group"
+                  className="hidden sm:inline-flex items-center gap-1.5 text-base font-semibold text-[#1f1433] hover:text-[#2A154A] transition-all duration-200 group"
                 >
                   <span>All bookings</span>
                   <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -319,26 +321,26 @@ export function HostDashboardPage() {
 
                       <div className="min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-sm font-semibold text-foreground">
+                          <span className="text-base font-semibold text-foreground">
                             {booking.guestName}
                           </span>
                           <span className="text-muted-foreground">•</span>
-                          <span className="text-sm text-muted-foreground truncate max-w-[150px] sm:max-w-none">
+                          <span className="text-base text-muted-foreground truncate max-w-[150px] sm:max-w-none">
                             {booking.listingName}
                           </span>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">Ref: {booking.id}</p>
+                        <p className="text-sm text-muted-foreground mt-1">Ref: {booking.id}</p>
                       </div>
                     </div>
 
                     <div className="flex items-center justify-between sm:justify-end gap-5 pt-3 sm:pt-0 border-t sm:border-t-0 border-border shrink-0">
                       <div className="text-right">
-                        <div className="text-sm font-bold text-foreground">K{booking.amount}</div>
-                        <p className="text-xs text-muted-foreground">Payout pending</p>
+                        <div className="text-base font-bold text-foreground">K{booking.amount}</div>
+                        <p className="text-sm text-muted-foreground">Payout pending</p>
                       </div>
 
                       <span
-                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${
+                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm font-medium border ${
                           booking.status === "pending"
                             ? "bg-amber-50 text-amber-700 border-amber-200"
                             : booking.status === "confirmed"
@@ -360,7 +362,7 @@ export function HostDashboardPage() {
             {/* Quick Actions Grid */}
             <div className="space-y-5">
               <div>
-                <p className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-1">
+                <p className="text-[10px] sm:text-sm font-bold text-[#1f1433] uppercase tracking-widest mb-1">
                   Shortcuts
                 </p>
                 <h3 className="font-display text-xl font-bold tracking-tight text-[#1f1433] leading-[1.15]">
@@ -376,8 +378,8 @@ export function HostDashboardPage() {
                     <Calendar className="h-5 w-5" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-semibold text-foreground">Block Dates</h4>
-                    <p className="text-xs text-muted-foreground mt-0.5">Manage availability</p>
+                    <h4 className="text-base font-semibold text-foreground">Block Dates</h4>
+                    <p className="text-sm text-muted-foreground mt-0.5">Manage availability</p>
                   </div>
                 </Link>
 
@@ -389,8 +391,8 @@ export function HostDashboardPage() {
                     <DollarSign className="h-5 w-5" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-semibold text-foreground">Set Pricing</h4>
-                    <p className="text-xs text-muted-foreground mt-0.5">Adjust rates</p>
+                    <h4 className="text-base font-semibold text-foreground">Set Pricing</h4>
+                    <p className="text-sm text-muted-foreground mt-0.5">Adjust rates</p>
                   </div>
                 </Link>
 
@@ -402,8 +404,8 @@ export function HostDashboardPage() {
                     <Layers className="h-5 w-5" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-semibold text-foreground">My Listings</h4>
-                    <p className="text-xs text-muted-foreground mt-0.5">Edit photo & info</p>
+                    <h4 className="text-base font-semibold text-foreground">My Listings</h4>
+                    <p className="text-sm text-muted-foreground mt-0.5">Edit photo & info</p>
                   </div>
                 </Link>
 
@@ -415,8 +417,8 @@ export function HostDashboardPage() {
                     <Zap className="h-5 w-5" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-semibold text-foreground">Payouts</h4>
-                    <p className="text-xs text-muted-foreground mt-0.5">
+                    <h4 className="text-base font-semibold text-foreground">Payouts</h4>
+                    <p className="text-sm text-muted-foreground mt-0.5">
                       K{mockWeeklySnapshot.revenue.toLocaleString()} available
                     </p>
                   </div>
@@ -429,4 +431,3 @@ export function HostDashboardPage() {
     </div>
   );
 }
-

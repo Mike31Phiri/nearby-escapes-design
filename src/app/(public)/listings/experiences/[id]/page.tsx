@@ -48,7 +48,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
   // Reconstruct backHref from search params if present
   const backParams = new URLSearchParams({ category: defaultCategory, ...sp });
   backParams.delete("_next");
-  const backHref = `/search?${backParams.toString()}`;
+  const backHref = `/experiences`;
 
   return <ExperienceDetailPage item={item} backHref={backHref} />;
 }

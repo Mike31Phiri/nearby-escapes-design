@@ -21,7 +21,7 @@ export function GemsPage() {
                 <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
                   Hidden Gems
                 </h1>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-base text-muted-foreground">
                   Off-the-beaten-path treasures across Zambia, handpicked for the curious traveler
                 </p>
               </div>
@@ -57,28 +57,28 @@ export function GemsPage() {
                 {/* Info */}
                 <div className="flex-1 p-4 sm:p-5 flex flex-col justify-between">
                   <div>
-                    <h3 className="font-bold text-base text-foreground group-hover:text-primary transition-colors">
+                    <h3 className="font-bold text-lg text-foreground group-hover:text-primary transition-colors">
                       {gem.name}
                     </h3>
-                    <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+                    <p className="text-sm text-muted-foreground flex items-center gap-1 mt-0.5">
                       <MapPin className="h-3 w-3 shrink-0" />
                       {gem.location}
                     </p>
                     <div className="flex items-center gap-1 mt-2">
                       <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                      <span className="text-xs font-bold text-foreground">{gem.rating}</span>
-                      <span className="text-xs text-muted-foreground">({gem.reviews} reviews)</span>
+                      <span className="text-sm font-bold text-foreground">{gem.rating}</span>
+                      <span className="text-sm text-muted-foreground">({gem.reviews} reviews)</span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between mt-4 pt-3 border-t border-border/40">
                     <div>
-                      <span className="text-lg font-bold text-foreground">K{gem.price}</span>
-                      <span className="text-xs text-muted-foreground"> / person</span>
+                      <span className="text-xl font-bold text-foreground">K{gem.price}</span>
+                      <span className="text-sm text-muted-foreground"> / person</span>
                     </div>
                     <Button
                       size="sm"
                       variant="outline"
-                      className="rounded-full text-xs font-semibold h-8 border-border/60"
+                      className="rounded-full text-sm font-semibold h-8 border-border/60"
                       asChild
                     >
                       <Link href={`/listings/experiences/${gem.id}`}>
@@ -94,7 +94,7 @@ export function GemsPage() {
 
           {/* Bottom note */}
           <div className="mt-12 text-center">
-            <p className="text-sm text-muted-foreground max-w-lg mx-auto">
+            <p className="text-base text-muted-foreground max-w-lg mx-auto">
               These hidden gems are just the beginning. As our community grows, more
               off-the-beaten-path treasures will be uncovered. Know a hidden gem?{" "}
               <Link

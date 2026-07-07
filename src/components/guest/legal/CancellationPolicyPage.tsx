@@ -130,7 +130,7 @@ export function CancellationPolicyPage() {
 
         {/* Intro */}
         <section className="mb-8">
-          <p className="text-muted-foreground text-sm leading-relaxed">
+          <p className="text-muted-foreground text-base leading-relaxed">
             At Nearby Escapes, we understand that plans can change. Our cancellation policies are
             designed to be fair to both guests and hosts while providing clarity on what to expect.
             Each listing displays its cancellation policy before you book, so you can make an
@@ -140,8 +140,8 @@ export function CancellationPolicyPage() {
 
         {/* Accommodation Policies */}
         <section className="mb-10">
-          <h2 className="text-lg font-bold text-foreground mb-2">Accommodation Policies</h2>
-          <p className="text-sm text-muted-foreground mb-6">
+          <h2 className="text-xl font-bold text-foreground mb-2">Accommodation Policies</h2>
+          <p className="text-base text-muted-foreground mb-6">
             Hosts choose from three standard cancellation policies for their property. The policy is
             clearly displayed on each listing page before you book.
           </p>
@@ -162,18 +162,18 @@ export function CancellationPolicyPage() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="font-bold text-base text-foreground">{policy.label}</h3>
+                        <h3 className="font-bold text-lg text-foreground">{policy.label}</h3>
                         <span
-                          className={`text-xs font-bold px-2 py-0.5 rounded-full ${policy.bgColor} ${policy.color}`}
+                          className={`text-sm font-bold px-2 py-0.5 rounded-full ${policy.bgColor} ${policy.color}`}
                         >
                           {policy.refund}
                         </span>
                       </div>
-                      <p className="text-sm text-muted-foreground mt-1">Cancel {policy.window}</p>
+                      <p className="text-base text-muted-foreground mt-1">Cancel {policy.window}</p>
                     </div>
                   </div>
                   <div className="px-5 pb-3">
-                    <p className="text-sm text-muted-foreground leading-relaxed">
+                    <p className="text-base text-muted-foreground leading-relaxed">
                       {policy.description}
                     </p>
                   </div>
@@ -182,7 +182,7 @@ export function CancellationPolicyPage() {
                       {policy.details.map((detail, i) => (
                         <li
                           key={i}
-                          className="flex items-start gap-2 text-sm text-muted-foreground"
+                          className="flex items-start gap-2 text-base text-muted-foreground"
                         >
                           <CheckCircle2 className="h-4 w-4 text-muted-foreground/40 mt-0.5 shrink-0" />
                           {detail}
@@ -198,8 +198,8 @@ export function CancellationPolicyPage() {
 
         {/* Experience & Tour Policies */}
         <section className="mb-10">
-          <h2 className="text-lg font-bold text-foreground mb-2">Experience & Tour Policies</h2>
-          <p className="text-sm text-muted-foreground mb-6">
+          <h2 className="text-xl font-bold text-foreground mb-2">Experience & Tour Policies</h2>
+          <p className="text-base text-muted-foreground mb-6">
             For booked experiences, tours, and activities, the following cancellation terms apply:
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -210,9 +210,9 @@ export function CancellationPolicyPage() {
               >
                 <div className="flex items-center gap-2 mb-3">
                   <Icon className="h-5 w-5 text-primary/70" />
-                  <h3 className="font-bold text-sm text-foreground">{scenario}</h3>
+                  <h3 className="font-bold text-base text-foreground">{scenario}</h3>
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">{explanation}</p>
+                <p className="text-base text-muted-foreground leading-relaxed">{explanation}</p>
               </div>
             ))}
           </div>
@@ -220,28 +220,28 @@ export function CancellationPolicyPage() {
 
         {/* Transport Policies */}
         <section className="mb-10">
-          <h2 className="text-lg font-bold text-foreground mb-2">Transport Policies</h2>
-          <p className="text-sm text-muted-foreground mb-4">
+          <h2 className="text-xl font-bold text-foreground mb-2">Transport Policies</h2>
+          <p className="text-base text-muted-foreground mb-4">
             For bus, shuttle, and transfer bookings, cancellation policies are set by the transport
             operator and are displayed on the booking page. General guidelines:
           </p>
           <div className="rounded-2xl border border-border/50 bg-card p-5 shadow-sm">
             <ul className="space-y-3">
-              <li className="flex items-start gap-2 text-sm text-muted-foreground">
+              <li className="flex items-start gap-2 text-base text-muted-foreground">
                 <CheckCircle2 className="h-4 w-4 text-emerald-500 mt-0.5 shrink-0" />
                 <span>
                   <strong className="text-foreground">100% refund</strong> if cancelled at least 24
                   hours before departure
                 </span>
               </li>
-              <li className="flex items-start gap-2 text-sm text-muted-foreground">
+              <li className="flex items-start gap-2 text-base text-muted-foreground">
                 <CheckCircle2 className="h-4 w-4 text-amber-500 mt-0.5 shrink-0" />
                 <span>
                   <strong className="text-foreground">50% refund</strong> if cancelled between 24
                   hours and 2 hours before departure
                 </span>
               </li>
-              <li className="flex items-start gap-2 text-sm text-muted-foreground">
+              <li className="flex items-start gap-2 text-base text-muted-foreground">
                 <AlertTriangle className="h-4 w-4 text-rose-500 mt-0.5 shrink-0" />
                 <span>
                   <strong className="text-foreground">No refund</strong> within 2 hours of departure
@@ -254,24 +254,24 @@ export function CancellationPolicyPage() {
 
         {/* How to Cancel */}
         <section className="mb-10">
-          <h2 className="text-lg font-bold text-foreground mb-2">How to Cancel a Booking</h2>
-          <p className="text-sm text-muted-foreground mb-6">
+          <h2 className="text-xl font-bold text-foreground mb-2">How to Cancel a Booking</h2>
+          <p className="text-base text-muted-foreground mb-6">
             Cancelling a booking is simple and can be done directly from your account:
           </p>
           <div className="space-y-4">
             {steps.map(({ step, title, description }) => (
               <div key={step} className="flex gap-4 p-4 rounded-xl border border-border/50 bg-card">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-black text-sm">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-black text-base">
                   {step}
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm text-foreground">{title}</h3>
-                  <p className="text-sm text-muted-foreground mt-0.5">{description}</p>
+                  <h3 className="font-bold text-base text-foreground">{title}</h3>
+                  <p className="text-base text-muted-foreground mt-0.5">{description}</p>
                 </div>
               </div>
             ))}
           </div>
-          <p className="text-sm text-muted-foreground mt-4 leading-relaxed">
+          <p className="text-base text-muted-foreground mt-4 leading-relaxed">
             If you experience any issues cancelling, please contact our support team at{" "}
             <a
               href="mailto:support@nearbyescapes.com"
@@ -289,10 +289,10 @@ export function CancellationPolicyPage() {
 
         {/* Exceptions */}
         <section className="mb-6">
-          <h2 className="text-lg font-bold text-foreground mb-2">
+          <h2 className="text-xl font-bold text-foreground mb-2">
             Exceptions & Extenuating Circumstances
           </h2>
-          <p className="text-sm text-muted-foreground leading-relaxed">
+          <p className="text-base text-muted-foreground leading-relaxed">
             In certain situations beyond anyone&apos;s control, our Extenuating Circumstances policy
             may apply. This includes serious illness or injury, travel restrictions, natural
             disasters, or government-mandated closures. If you believe your situation qualifies,
@@ -302,7 +302,7 @@ export function CancellationPolicyPage() {
         </section>
 
         {/* Note at bottom */}
-        <div className="rounded-xl bg-muted/50 border border-border/40 p-4 text-sm text-muted-foreground">
+        <div className="rounded-xl bg-muted/50 border border-border/40 p-4 text-base text-muted-foreground">
           <p className="flex items-start gap-2">
             <HelpCircle className="h-4 w-4 text-primary shrink-0 mt-0.5" />
             <span>

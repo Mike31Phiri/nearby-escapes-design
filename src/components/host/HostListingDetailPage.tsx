@@ -237,7 +237,7 @@ function StatCard({
       </div>
       <div className="min-w-0">
         <p className="text-2xl font-bold tracking-tight text-foreground">{value}</p>
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+        <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
           {label}
         </p>
         {trend && (
@@ -273,12 +273,12 @@ function CompactBookingCard({ booking }: { booking: HostBooking }) {
 
   return (
     <div className="flex items-center gap-3 rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow transition-all duration-200 hover:shadow-md">
-      <div className="h-10 w-10 shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
+      <div className="h-10 w-10 shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-base">
         {booking.guestName.charAt(0)}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-foreground truncate">{booking.guestName}</p>
-        <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+        <p className="text-base font-semibold text-foreground truncate">{booking.guestName}</p>
+        <p className="text-sm text-muted-foreground flex items-center gap-1.5">
           <CalendarDays className="h-3 w-3" />
           {booking.checkIn
             ? `${formatDate(booking.checkIn)} — ${formatDate(booking.checkOut)}`
@@ -451,7 +451,7 @@ export function HostListingDetailPage({ listing }: Props) {
             <div className="flex items-center justify-between mb-6">
               <Link
                 href="/host"
-                className="text-xs font-semibold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
+                className="text-sm font-semibold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
               >
                 <ArrowLeft className="h-3 w-3" />
                 Back to Dashboard
@@ -460,7 +460,7 @@ export function HostListingDetailPage({ listing }: Props) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-8 rounded-lg text-xs font-semibold border-border/60"
+                  className="h-8 rounded-lg text-sm font-semibold border-border/60"
                   onClick={handleCopyLink}
                 >
                   <Copy className="h-3.5 w-3.5 mr-1" />
@@ -469,7 +469,7 @@ export function HostListingDetailPage({ listing }: Props) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-8 rounded-lg text-xs font-semibold border-border/60"
+                  className="h-8 rounded-lg text-sm font-semibold border-border/60"
                   asChild
                 >
                   <Link
@@ -518,7 +518,7 @@ export function HostListingDetailPage({ listing }: Props) {
                       {listing.rating > 0 && (
                         <div className="flex items-center gap-0.5">
                           <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                          <span className="text-sm font-bold text-foreground">
+                          <span className="text-base font-bold text-foreground">
                             {listing.rating.toFixed(1)}
                           </span>
                         </div>
@@ -527,7 +527,7 @@ export function HostListingDetailPage({ listing }: Props) {
                     <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
                       {listing.name}
                     </h1>
-                    <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
+                    <p className="text-base text-muted-foreground flex items-center gap-1 mt-1">
                       <MapPin className="h-3.5 w-3.5 shrink-0" />
                       {listing.location}
                     </p>
@@ -535,7 +535,7 @@ export function HostListingDetailPage({ listing }: Props) {
                 </div>
 
                 {/* Quick Info */}
-                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-4 text-sm">
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-4 text-base">
                   <span className="flex items-center gap-1.5 font-semibold text-foreground">
                     <DollarSign className="h-4 w-4 text-primary/70" />K{listing.price}
                     <span className="text-muted-foreground font-normal">
@@ -606,14 +606,14 @@ export function HostListingDetailPage({ listing }: Props) {
         {/* Management Actions Bar */}
         <div className="mx-auto max-w-5xl px-4 md:px-6 mt-6">
           <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border/40 bg-card p-3 shadow-sm card-shadow">
-            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground mr-2">
+            <span className="text-sm font-bold uppercase tracking-wider text-muted-foreground mr-2">
               Management
             </span>
 
             <Button
               variant="outline"
               size="sm"
-              className="h-8 rounded-lg text-xs font-semibold"
+              className="h-8 rounded-lg text-sm font-semibold"
               asChild
             >
               <Link href={`/host/availability`}>
@@ -625,7 +625,7 @@ export function HostListingDetailPage({ listing }: Props) {
             <Button
               variant="outline"
               size="sm"
-              className="h-8 rounded-lg text-xs font-semibold"
+              className="h-8 rounded-lg text-sm font-semibold"
               onClick={() => toast.success("Edit mode coming soon")}
             >
               <Edit3 className="h-3.5 w-3.5 mr-1" />
@@ -636,7 +636,7 @@ export function HostListingDetailPage({ listing }: Props) {
               <Button
                 variant="outline"
                 size="sm"
-                className="h-8 rounded-lg text-xs font-semibold"
+                className="h-8 rounded-lg text-sm font-semibold"
                 onClick={() => setStatusMenuOpen(!statusMenuOpen)}
               >
                 <RefreshCw className="h-3.5 w-3.5 mr-1" />
@@ -655,7 +655,7 @@ export function HostListingDetailPage({ listing }: Props) {
                           `Listing ${currentStatus === "active" ? "unpublished" : "published"} successfully`,
                         );
                       }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-foreground hover:bg-muted/50 transition-colors text-left"
+                      className="w-full flex items-center gap-3 px-4 py-3 text-base font-medium text-foreground hover:bg-muted/50 transition-colors text-left"
                     >
                       <div
                         className={cn(
@@ -672,7 +672,7 @@ export function HostListingDetailPage({ listing }: Props) {
                         )}
                       </div>
                       <div>
-                        <p className="font-semibold text-sm">
+                        <p className="font-semibold text-base">
                           {currentStatus === "active" ? "Unpublish" : "Publish"}
                         </p>
                         <p className="text-[10px] text-muted-foreground">
@@ -687,13 +687,13 @@ export function HostListingDetailPage({ listing }: Props) {
                         handleCopyLink();
                         setStatusMenuOpen(false);
                       }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-foreground hover:bg-muted/50 transition-colors text-left"
+                      className="w-full flex items-center gap-3 px-4 py-3 text-base font-medium text-foreground hover:bg-muted/50 transition-colors text-left"
                     >
                       <div className="h-7 w-7 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">
                         <ExternalLink className="h-3.5 w-3.5" />
                       </div>
                       <div>
-                        <p className="font-semibold text-sm">View Public Page</p>
+                        <p className="font-semibold text-base">View Public Page</p>
                         <p className="text-[10px] text-muted-foreground">
                           Open listing as guests see it
                         </p>
@@ -711,7 +711,7 @@ export function HostListingDetailPage({ listing }: Props) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-8 rounded-lg text-xs font-semibold text-destructive hover:text-destructive hover:bg-destructive/5"
+                  className="h-8 rounded-lg text-sm font-semibold text-destructive hover:text-destructive hover:bg-destructive/5"
                 >
                   <Trash2 className="h-3.5 w-3.5 mr-1" />
                   <span className="hidden sm:inline">Delete</span>
@@ -719,16 +719,16 @@ export function HostListingDetailPage({ listing }: Props) {
               </AlertDialogTrigger>
               <AlertDialogContent className="rounded-2xl max-w-md">
                 <AlertDialogHeader>
-                  <AlertDialogTitle className="text-lg font-bold">
+                  <AlertDialogTitle className="text-xl font-bold">
                     Delete &quot;{listing.name}&quot;?
                   </AlertDialogTitle>
-                  <AlertDialogDescription className="text-sm text-muted-foreground">
+                  <AlertDialogDescription className="text-base text-muted-foreground">
                     This action cannot be undone. All associated booking data will be permanently
                     removed from your dashboard and the listing will be immediately hidden from
                     search results.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
-                <div className="flex items-start gap-3 rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-800">
+                <div className="flex items-start gap-3 rounded-lg bg-amber-50 border border-amber-200 p-3 text-base text-amber-800">
                   <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
                   <p>
                     This listing has <strong>{stats.totalBookings}</strong> historical bookings and{" "}
@@ -770,7 +770,7 @@ export function HostListingDetailPage({ listing }: Props) {
                   key={id}
                   onClick={() => setActiveTab(id)}
                   className={cn(
-                    "flex items-center gap-2 pb-3.5 px-4 md:px-6 text-xs font-black uppercase tracking-wider border-b-2 transition-all duration-200 whitespace-nowrap",
+                    "flex items-center gap-2 pb-3.5 px-4 md:px-6 text-sm font-black uppercase tracking-wider border-b-2 transition-all duration-200 whitespace-nowrap",
                     isActive
                       ? "border-primary text-primary"
                       : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30",
@@ -793,10 +793,10 @@ export function HostListingDetailPage({ listing }: Props) {
                 {/* Performance Chart */}
                 <div>
                   <div className="flex items-center justify-between mb-5">
-                    <h3 className="text-sm font-black uppercase tracking-widest text-foreground">
+                    <h3 className="text-base font-black uppercase tracking-widest text-foreground">
                       Monthly Performance
                     </h3>
-                    <div className="flex items-center gap-4 text-xs">
+                    <div className="flex items-center gap-4 text-sm">
                       <span className="flex items-center gap-1.5">
                         <span className="h-2.5 w-2.5 rounded-sm bg-primary/60" />
                         Revenue
@@ -847,18 +847,18 @@ export function HostListingDetailPage({ listing }: Props) {
                 {/* Quick Overview Stats */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                    <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                       Current Month
                     </p>
                     <p className="text-3xl font-bold text-foreground">
                       {stats.currentMonthBookings}
                     </p>
-                    <p className="text-xs text-muted-foreground font-medium mt-1">
+                    <p className="text-sm text-muted-foreground font-medium mt-1">
                       bookings this month
                     </p>
                   </div>
                   <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                    <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                       Monthly Revenue
                     </p>
                     <p className="text-3xl font-bold text-foreground">
@@ -866,7 +866,7 @@ export function HostListingDetailPage({ listing }: Props) {
                     </p>
                     <p
                       className={cn(
-                        "text-xs font-semibold mt-1 flex items-center gap-0.5",
+                        "text-sm font-semibold mt-1 flex items-center gap-0.5",
                         Number(stats.revenueTrend) >= 0 ? "text-emerald-600" : "text-destructive",
                       )}
                     >
@@ -877,11 +877,11 @@ export function HostListingDetailPage({ listing }: Props) {
                     </p>
                   </div>
                   <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm card-shadow">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                    <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                       Pending Requests
                     </p>
                     <p className="text-3xl font-bold text-foreground">{pendingBookings.length}</p>
-                    <p className="text-xs text-muted-foreground font-medium mt-1">
+                    <p className="text-sm text-muted-foreground font-medium mt-1">
                       {pendingBookings.length > 0 ? `Awaiting your response` : "All clear"}
                     </p>
                   </div>
@@ -897,7 +897,7 @@ export function HostListingDetailPage({ listing }: Props) {
                   <div>
                     <div className="flex items-center gap-2 mb-4">
                       <CalendarDays className="h-4 w-4 text-primary" />
-                      <h3 className="text-sm font-black uppercase tracking-widest text-foreground">
+                      <h3 className="text-base font-black uppercase tracking-widest text-foreground">
                         Upcoming & Pending
                       </h3>
                     </div>
@@ -918,10 +918,10 @@ export function HostListingDetailPage({ listing }: Props) {
                   <div>
                     <div className="flex items-center gap-2 mb-4">
                       <Clock className="h-4 w-4 text-muted-foreground" />
-                      <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground">
+                      <h3 className="text-base font-black uppercase tracking-widest text-muted-foreground">
                         Past Bookings
                       </h3>
-                      <span className="text-xs text-muted-foreground">({pastBookings.length})</span>
+                      <span className="text-sm text-muted-foreground">({pastBookings.length})</span>
                     </div>
                     <div className="space-y-3">
                       {pastBookings.map((booking) => (
@@ -936,14 +936,14 @@ export function HostListingDetailPage({ listing }: Props) {
                     <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
                       <CalendarDays className="h-7 w-7 text-muted-foreground/40" />
                     </div>
-                    <h3 className="text-lg font-bold text-foreground">No bookings yet</h3>
-                    <p className="text-sm text-muted-foreground mt-1 max-w-sm">
+                    <h3 className="text-xl font-bold text-foreground">No bookings yet</h3>
+                    <p className="text-base text-muted-foreground mt-1 max-w-sm">
                       Guest bookings for this listing will appear here.
                     </p>
                     <Button
                       variant="outline"
                       size="sm"
-                      className="mt-6 rounded-full font-semibold text-xs border-border/60"
+                      className="mt-6 rounded-full font-semibold text-sm border-border/60"
                       asChild
                     >
                       <Link href={`/host/bookings`}>
@@ -959,7 +959,7 @@ export function HostListingDetailPage({ listing }: Props) {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="rounded-full font-semibold text-xs border-border/60"
+                      className="rounded-full font-semibold text-sm border-border/60"
                       asChild
                     >
                       <Link href={`/host/bookings`}>
@@ -980,8 +980,8 @@ export function HostListingDetailPage({ listing }: Props) {
                     <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
                       <MessageSquare className="h-7 w-7 text-muted-foreground/40" />
                     </div>
-                    <h3 className="text-lg font-bold text-foreground">No reviews yet</h3>
-                    <p className="text-sm text-muted-foreground mt-1 max-w-sm">
+                    <h3 className="text-xl font-bold text-foreground">No reviews yet</h3>
+                    <p className="text-base text-muted-foreground mt-1 max-w-sm">
                       Reviews from guests will appear here after their stays.
                     </p>
                   </div>
@@ -994,14 +994,14 @@ export function HostListingDetailPage({ listing }: Props) {
                       >
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex items-center gap-3">
-                            <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
+                            <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-base">
                               {review.guestName.charAt(0)}
                             </div>
                             <div>
-                              <p className="text-sm font-bold text-foreground">
+                              <p className="text-base font-bold text-foreground">
                                 {review.guestName}
                               </p>
-                              <p className="text-xs text-muted-foreground">
+                              <p className="text-sm text-muted-foreground">
                                 {new Date(review.date).toLocaleDateString("en-ZM", {
                                   month: "long",
                                   day: "numeric",
@@ -1024,7 +1024,7 @@ export function HostListingDetailPage({ listing }: Props) {
                             ))}
                           </div>
                         </div>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
+                        <p className="text-base text-muted-foreground leading-relaxed">
                           {review.text}
                         </p>
                       </div>
@@ -1038,7 +1038,7 @@ export function HostListingDetailPage({ listing }: Props) {
                         <p className="text-4xl font-black text-foreground">
                           {listing.rating.toFixed(1)}
                         </p>
-                        <p className="text-xs text-muted-foreground font-medium">out of 5</p>
+                        <p className="text-sm text-muted-foreground font-medium">out of 5</p>
                       </div>
                       <div className="flex-1 space-y-1.5">
                         {[5, 4, 3, 2, 1].map((star) => {
@@ -1046,7 +1046,7 @@ export function HostListingDetailPage({ listing }: Props) {
                           const pct =
                             listingReviews.length > 0 ? (count / listingReviews.length) * 100 : 0;
                           return (
-                            <div key={star} className="flex items-center gap-2 text-xs">
+                            <div key={star} className="flex items-center gap-2 text-sm">
                               <span className="w-3 text-muted-foreground font-semibold">
                                 {star}
                               </span>

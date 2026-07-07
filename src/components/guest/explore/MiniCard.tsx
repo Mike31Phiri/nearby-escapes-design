@@ -54,10 +54,7 @@ function CardImage({
   ratio?: "3/2" | "4/3";
 }) {
   return (
-    <div
-      className="relative overflow-hidden bg-[#E8E2D8]"
-      style={{ aspectRatio: ratio }}
-    >
+    <div className="relative overflow-hidden bg-[#E8E2D8]" style={{ aspectRatio: ratio }}>
       <img
         src={src}
         alt={alt}
@@ -97,9 +94,7 @@ function RatingPrice({
       {rating !== undefined ? (
         <div className="flex items-center gap-1">
           <Star className="h-3 w-3 fill-[#E8952E] text-[#E8952E]" strokeWidth={0} />
-          <span className="text-[12px] font-semibold text-[#5A7A6E]">
-            {rating.toFixed(1)}
-          </span>
+          <span className="text-[12px] font-semibold text-[#5A7A6E]">{rating.toFixed(1)}</span>
         </div>
       ) : (
         <span />
@@ -107,9 +102,7 @@ function RatingPrice({
       {price !== undefined && (
         <div className="flex items-baseline gap-0.5 ml-auto">
           <span className="text-[14px] font-bold text-[#1C3A2F]">ZMW {price}</span>
-          {priceUnit && (
-            <span className="text-[11px] text-[#9AB3A8] ml-0.5">{priceUnit}</span>
-          )}
+          {priceUnit && <span className="text-[11px] text-[#9AB3A8] ml-0.5">{priceUnit}</span>}
         </div>
       )}
     </div>
@@ -150,9 +143,7 @@ export function MiniCard({
         badgeVariant={badgeColor === "gold" ? "amber" : "forest"}
       />
       <div className="px-3.5 pt-3 pb-3.5">
-        <h3 className="text-[14px] font-bold text-[#1C3A2F] leading-snug line-clamp-1">
-          {name}
-        </h3>
+        <h3 className="text-[14px] font-bold text-[#1C3A2F] leading-snug line-clamp-1">{name}</h3>
         <p className="text-[12px] text-[#9AB3A8] mt-0.5 line-clamp-1">{location}</p>
         <RatingPrice rating={rating} price={price} priceUnit={priceUnit} />
       </div>
@@ -185,12 +176,7 @@ export function TransportMiniCard({
 }: TransportMiniCardProps) {
   return (
     <CardShell href={`/transport/${id}`} ariaLabel={`Transport from ${from} to ${to}`}>
-      <CardImage
-        src={image}
-        alt={`${from} to ${to}`}
-        badge="🚌 Transport"
-        badgeVariant="forest"
-      />
+      <CardImage src={image} alt={`${from} to ${to}`} badge="🚌 Transport" badgeVariant="forest" />
       <div className="px-3.5 pt-3 pb-3.5">
         <h3 className="text-[14px] font-bold text-[#1C3A2F] leading-snug line-clamp-1 flex items-center gap-1.5">
           {from}
@@ -232,16 +218,9 @@ export function PackageMiniCard({
 }: PackageMiniCardProps) {
   return (
     <CardShell href={`/packages/${id}`} ariaLabel={`View ${name} package`}>
-      <CardImage
-        src={image}
-        alt={name}
-        badge="📦 Package"
-        badgeVariant="amber"
-      />
+      <CardImage src={image} alt={name} badge="📦 Package" badgeVariant="amber" />
       <div className="px-3.5 pt-3 pb-3.5">
-        <h3 className="text-[14px] font-bold text-[#1C3A2F] leading-snug line-clamp-1">
-          {name}
-        </h3>
+        <h3 className="text-[14px] font-bold text-[#1C3A2F] leading-snug line-clamp-1">{name}</h3>
         <p className="text-[12px] text-[#9AB3A8] mt-0.5 line-clamp-1">
           {location} · {duration}
         </p>

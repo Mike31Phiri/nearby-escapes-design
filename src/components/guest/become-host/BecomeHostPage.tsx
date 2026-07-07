@@ -173,7 +173,7 @@ function StepIndicator({ currentStep, totalSteps }: { currentStep: number; total
             >
               <div
                 className={cn(
-                  "h-9 w-9 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300",
+                  "h-9 w-9 rounded-full flex items-center justify-center text-sm font-black transition-all duration-300",
                   isActive
                     ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-110"
                     : isCompleted
@@ -223,7 +223,7 @@ function SectionTitle({
       </div>
       <div>
         <h2 className="text-xl font-bold tracking-tight text-foreground">{title}</h2>
-        {subtitle && <p className="text-sm text-muted-foreground mt-0.5">{subtitle}</p>}
+        {subtitle && <p className="text-base text-muted-foreground mt-0.5">{subtitle}</p>}
       </div>
     </div>
   );
@@ -240,7 +240,7 @@ function FormField({
 }) {
   return (
     <div className="space-y-1.5">
-      <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+      <Label className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
         {label}
       </Label>
       {children}
@@ -260,12 +260,9 @@ export function BecomeHostPage() {
   const router = useRouter();
   const { user, setUser } = useAuth();
 
-  // Redirect unauthenticated users to login
-  // Redirect hosts/admins away from the onboarding flow
+  // Auth guard disabled — page is publicly accessible
   useEffect(() => {
-    if (!user) {
-      router.replace("/auth/login");
-    } else if (user.roles?.includes("host") || user.roles?.includes("admin")) {
+    if (user && (user.roles?.includes("host") || user.roles?.includes("admin"))) {
       router.replace("/host");
     }
   }, [user, router]);
@@ -382,7 +379,7 @@ export function BecomeHostPage() {
               <h1 className="text-3xl md:text-4xl font-black tracking-tight text-foreground mb-3">
                 Become a Host
               </h1>
-              <p className="text-base text-muted-foreground max-w-lg mx-auto leading-relaxed">
+              <p className="text-lg text-muted-foreground max-w-lg mx-auto leading-relaxed">
                 Turn your property, expertise, or transport into income. Join{" "}
                 <span className="font-bold text-foreground">Nearby Escapes</span> and start hosting
                 travelers from around the world.
@@ -399,8 +396,8 @@ export function BecomeHostPage() {
                     <benefit.icon className="h-5.5 w-5.5" />
                   </div>
                   <div className="min-w-0">
-                    <h3 className="text-sm font-bold text-foreground">{benefit.title}</h3>
-                    <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                    <h3 className="text-base font-bold text-foreground">{benefit.title}</h3>
+                    <p className="text-sm text-muted-foreground mt-0.5 leading-relaxed">
                       {benefit.desc}
                     </p>
                   </div>
@@ -408,12 +405,12 @@ export function BecomeHostPage() {
               ))}
             </div>
 
-            <div className="rounded-xl border border-primary/20 bg-primary/[0.02] p-5 text-sm text-muted-foreground">
+            <div className="rounded-xl border border-primary/20 bg-primary/[0.02] p-5 text-base text-muted-foreground">
               <div className="flex items-start gap-3">
                 <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                 <div>
                   <p className="font-bold text-foreground mb-1">Here&apos;s what happens next:</p>
-                  <ol className="list-decimal list-inside space-y-1 text-sm">
+                  <ol className="list-decimal list-inside space-y-1 text-base">
                     <li>Verify your identity and contact info</li>
                     <li>Tell us what you&apos;d like to host</li>
                     <li>Set up your payout method</li>
@@ -479,7 +476,7 @@ export function BecomeHostPage() {
                     <select
                       value={form.idType}
                       onChange={(e) => updateField("idType", e.target.value)}
-                      className="flex h-11 w-full rounded-xl border border-border/60 bg-transparent px-4 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary appearance-none"
+                      className="flex h-11 w-full rounded-xl border border-border/60 bg-transparent px-4 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary appearance-none"
                     >
                       {ID_TYPES.map((t) => (
                         <option key={t.value} value={t.value}>
@@ -511,10 +508,10 @@ export function BecomeHostPage() {
                 className="mt-0.5 h-4 w-4 rounded border-border text-primary focus:ring-primary"
               />
               <div>
-                <p className="text-sm font-semibold text-foreground">
+                <p className="text-base font-semibold text-foreground">
                   I agree to the Host Terms of Service
                 </p>
-                <p className="text-xs text-muted-foreground mt-0.5">
+                <p className="text-sm text-muted-foreground mt-0.5">
                   By becoming a host, you agree to our{" "}
                   <span className="text-primary underline underline-offset-2">
                     Host Terms & Conditions
@@ -580,7 +577,7 @@ export function BecomeHostPage() {
                       >
                         <card.icon className="h-6 w-6" />
                       </div>
-                      <h3 className="text-xs font-bold text-foreground mb-1">{card.label}</h3>
+                      <h3 className="text-sm font-bold text-foreground mb-1">{card.label}</h3>
                       <p className="text-[10px] text-muted-foreground/60">{card.examples}</p>
                     </button>
                   );
@@ -608,7 +605,7 @@ export function BecomeHostPage() {
                     type="button"
                     onClick={() => updateField("hostingExperience", opt.value)}
                     className={cn(
-                      "py-3 px-4 rounded-xl border text-xs font-semibold transition-all duration-200",
+                      "py-3 px-4 rounded-xl border text-sm font-semibold transition-all duration-200",
                       form.hostingExperience === opt.value
                         ? "border-primary bg-primary/5 text-primary shadow-sm"
                         : "border-border/50 bg-card text-muted-foreground hover:border-border hover:text-foreground",
@@ -635,7 +632,7 @@ export function BecomeHostPage() {
             <div className="rounded-xl border border-primary/20 bg-primary/[0.02] p-4 mb-2">
               <div className="flex items-start gap-3">
                 <ShieldCheck className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   Your payment information is encrypted and secure. Payouts are processed within 48
                   hours after a guest&apos;s stay begins.
                 </p>
@@ -689,7 +686,7 @@ export function BecomeHostPage() {
 
               <div className="flex items-center gap-2 rounded-xl border border-border/50 bg-card card-shadow p-4">
                 <CreditCard className="h-5 w-5 text-muted-foreground shrink-0" />
-                <p className="text-xs text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   <span className="font-semibold text-foreground">Mobile Money</span> also
                   supported. You can update your payout method anytime from your host settings.
                 </p>
@@ -713,25 +710,25 @@ export function BecomeHostPage() {
               <div className="rounded-xl border border-border/40 bg-card p-5 shadow-sm card-shadow">
                 <div className="flex items-center gap-2 mb-4">
                   <ShieldCheck className="h-4 w-4 text-primary" />
-                  <h3 className="text-xs font-black uppercase tracking-widest text-foreground">
+                  <h3 className="text-sm font-black uppercase tracking-widest text-foreground">
                     Identity & Contact
                   </h3>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-base">
                   <div>
-                    <span className="text-muted-foreground text-xs">Name</span>
+                    <span className="text-muted-foreground text-sm">Name</span>
                     <p className="font-semibold text-foreground">{form.fullName}</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground text-xs">Email</span>
+                    <span className="text-muted-foreground text-sm">Email</span>
                     <p className="font-semibold text-foreground">{form.email}</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground text-xs">Phone</span>
+                    <span className="text-muted-foreground text-sm">Phone</span>
                     <p className="font-semibold text-foreground">{form.phone}</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground text-xs">ID</span>
+                    <span className="text-muted-foreground text-sm">ID</span>
                     <p className="font-semibold text-foreground capitalize">
                       {ID_TYPES.find((t) => t.value === form.idType)?.label ?? form.idType} ·{" "}
                       {form.idNumber}
@@ -744,7 +741,7 @@ export function BecomeHostPage() {
               <div className="rounded-xl border border-border/40 bg-card p-5 shadow-sm card-shadow">
                 <div className="flex items-center gap-2 mb-4">
                   <Building2 className="h-4 w-4 text-primary" />
-                  <h3 className="text-xs font-black uppercase tracking-widest text-foreground">
+                  <h3 className="text-sm font-black uppercase tracking-widest text-foreground">
                     Hosting Interests
                   </h3>
                 </div>
@@ -763,7 +760,7 @@ export function BecomeHostPage() {
                   })}
                 </div>
                 {form.propertyLocation && (
-                  <p className="text-sm text-muted-foreground flex items-center gap-1.5">
+                  <p className="text-base text-muted-foreground flex items-center gap-1.5">
                     <MapPin className="h-3.5 w-3.5" />
                     Based in{" "}
                     <span className="font-semibold text-foreground">{form.propertyLocation}</span>
@@ -775,17 +772,17 @@ export function BecomeHostPage() {
               <div className="rounded-xl border border-border/40 bg-card p-5 shadow-sm card-shadow">
                 <div className="flex items-center gap-2 mb-4">
                   <Banknote className="h-4 w-4 text-primary" />
-                  <h3 className="text-xs font-black uppercase tracking-widest text-foreground">
+                  <h3 className="text-sm font-black uppercase tracking-widest text-foreground">
                     Payout Method
                   </h3>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-base">
                   <div>
-                    <span className="text-muted-foreground text-xs">Bank</span>
+                    <span className="text-muted-foreground text-sm">Bank</span>
                     <p className="font-semibold text-foreground">{form.bankName}</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground text-xs">Account</span>
+                    <span className="text-muted-foreground text-sm">Account</span>
                     <p className="font-semibold text-foreground">
                       {form.accountName} · {form.accountNumber}
                     </p>
@@ -795,7 +792,7 @@ export function BecomeHostPage() {
 
               {/* Submit CTA */}
               <div className="pt-4 border-t border-border/40">
-                <p className="text-xs text-muted-foreground mb-4">
+                <p className="text-sm text-muted-foreground mb-4">
                   By becoming a host, you agree to the{" "}
                   <span className="text-primary underline underline-offset-2 cursor-pointer">
                     Host Terms of Service
@@ -809,7 +806,7 @@ export function BecomeHostPage() {
                 <Button
                   onClick={handleSubmit}
                   disabled={submitting}
-                  className="w-full h-13 rounded-xl font-black uppercase tracking-widest text-sm shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
+                  className="w-full h-13 rounded-xl font-black uppercase tracking-widest text-base shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
                 >
                   {submitting ? (
                     <>
@@ -840,14 +837,14 @@ export function BecomeHostPage() {
           <div className="mx-auto max-w-3xl px-4 md:px-6 pt-8 md:pt-12">
             <div className="mb-8">
               <Link
-                href="/account/dashboard"
-                className="text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 mb-3"
+                href="/profile"
+                className="text-sm font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 mb-3"
               >
                 <ChevronLeft className="h-3.5 w-3.5" />
                 Back to Profile
               </Link>
               {step > 0 && (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-base text-muted-foreground">
                   Step {step + 1} of {totalSteps} — {STEPS[step].label}
                 </p>
               )}
@@ -875,7 +872,7 @@ export function BecomeHostPage() {
                   <Button
                     variant="outline"
                     onClick={goBack}
-                    className="rounded-xl font-semibold text-sm border-border/60"
+                    className="rounded-xl font-semibold text-base border-border/60"
                   >
                     <ChevronLeft className="h-4 w-4 mr-1" />
                     Back
@@ -884,8 +881,8 @@ export function BecomeHostPage() {
                 <Button
                   onClick={goNext}
                   className={cn(
-                    "rounded-xl font-black uppercase tracking-widest text-sm shadow-md shadow-primary/10",
-                    step === 0 ? "px-10 py-6 text-base" : "",
+                    "rounded-xl font-black uppercase tracking-widest text-base shadow-md shadow-primary/10",
+                    step === 0 ? "px-10 py-6 text-lg" : "",
                   )}
                 >
                   {step === 0 ? (

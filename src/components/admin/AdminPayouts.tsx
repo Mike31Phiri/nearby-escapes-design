@@ -75,7 +75,7 @@ function PayoutCard({
     <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm transition-all duration-200 hover:shadow-md">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0 flex-1">
-          <div className="h-10 w-10 shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
+          <div className="h-10 w-10 shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-base">
             {payout.hostName.charAt(0)}
           </div>
           <div className="min-w-0 flex-1">
@@ -92,7 +92,7 @@ function PayoutCard({
                 {cfg.label}
               </Badge>
             </div>
-            <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">
+            <p className="text-sm text-muted-foreground flex items-center gap-1.5 mt-0.5">
               <CalendarDays className="h-3 w-3 shrink-0" />
               {payout.period}
               <span className="text-muted-foreground/40">·</span>
@@ -103,7 +103,9 @@ function PayoutCard({
           </div>
         </div>
         <div className="text-right shrink-0">
-          <p className="text-sm font-bold text-foreground">K{payout.netAmount.toLocaleString()}</p>
+          <p className="text-base font-bold text-foreground">
+            K{payout.netAmount.toLocaleString()}
+          </p>
           <p className="text-[10px] text-muted-foreground">
             <span className="text-emerald-600 font-semibold">
               K{payout.amount.toLocaleString()}
@@ -114,7 +116,7 @@ function PayoutCard({
       </div>
 
       {/* Commission Detail */}
-      <div className="mt-3 flex items-center gap-3 text-xs text-muted-foreground">
+      <div className="mt-3 flex items-center gap-3 text-sm text-muted-foreground">
         <span className="font-medium">
           Commission:{" "}
           <span className="text-foreground font-semibold">
@@ -147,7 +149,7 @@ function PayoutCard({
         <div className="mt-3 pt-3 border-t border-border/30 flex items-center gap-2">
           <Button
             size="sm"
-            className="h-8 rounded-lg text-xs font-semibold"
+            className="h-8 rounded-lg text-sm font-semibold"
             onClick={() =>
               withLoading(
                 setLoading,
@@ -173,7 +175,7 @@ function PayoutCard({
         <div className="mt-3 pt-3 border-t border-border/30">
           <Button
             size="sm"
-            className="h-8 rounded-lg text-xs font-semibold"
+            className="h-8 rounded-lg text-sm font-semibold"
             onClick={() =>
               withLoading(
                 setLoading,
@@ -250,7 +252,7 @@ export function AdminPayouts() {
           title="Payout Management"
           description={`K${stats.totalGross.toLocaleString()} total payouts processed`}
           actions={
-            <div className="flex items-center gap-2 text-xs text-white/80">
+            <div className="flex items-center gap-2 text-sm text-white/80">
               <span className="text-[#1f1433] font-semibold">
                 K{(stats.pendingAmount / 1000).toFixed(0)}k
               </span>{" "}
@@ -268,7 +270,7 @@ export function AdminPayouts() {
                 placeholder="Search by host name or period..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 h-10 rounded-xl border-border/60 text-sm"
+                className="pl-9 h-10 rounded-xl border-border/60 text-base"
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -293,14 +295,14 @@ export function AdminPayouts() {
               <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
                 <DollarSign className="h-7 w-7 text-muted-foreground/40" />
               </div>
-              <h3 className="text-lg font-bold text-foreground">No payouts found</h3>
-              <p className="text-sm text-muted-foreground mt-1 max-w-sm">
+              <h3 className="text-xl font-bold text-foreground">No payouts found</h3>
+              <p className="text-base text-muted-foreground mt-1 max-w-sm">
                 Try adjusting your search or filter criteria.
               </p>
               <Button
                 variant="outline"
                 size="sm"
-                className="mt-6 rounded-full text-xs font-semibold"
+                className="mt-6 rounded-full text-sm font-semibold"
                 onClick={() => {
                   setSearch("");
                   setStatusFilter("all");
@@ -318,7 +320,7 @@ export function AdminPayouts() {
 
         {/* Stats Row */}
         <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 pb-16">
-          <h3 className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-3">
+          <h3 className="text-[10px] sm:text-sm font-bold text-[#1f1433] uppercase tracking-widest mb-3">
             Analysis
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -356,4 +358,3 @@ export function AdminPayouts() {
     </div>
   );
 }
-

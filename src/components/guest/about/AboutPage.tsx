@@ -79,7 +79,7 @@ export function AboutPage() {
         <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-8">
           <Link
             href="/"
-            className="inline-flex items-center gap-1 text-sm text-white/50 hover:text-white/80 transition-colors mb-8"
+            className="inline-flex items-center gap-1 text-base text-white/50 hover:text-white/80 transition-colors mb-8"
           >
             <ChevronLeft className="h-4 w-4" />
             Home
@@ -90,7 +90,7 @@ export function AboutPage() {
             </p>
             <h1 className="font-display text-3xl md:text-4xl lg:text-[3.25rem] font-black text-white leading-[1.1] mb-5">
               Connecting guests with the{" "}
-              <span className="font-script text-[1.2em] font-normal text-[#1f1433] lowercase">
+              <span className="font-script text-[1.2em] font-normal text-gold lowercase">
                 real
               </span>{" "}
               Zambia
@@ -109,7 +109,7 @@ export function AboutPage() {
           {stats.map(({ value, label, sub }) => (
             <div key={label} className="py-5 text-center">
               <p className="font-display text-2xl md:text-3xl font-black text-[#1f1433]">{value}</p>
-              <p className="text-xs text-[#64748B] mt-0.5 font-medium">{label}</p>
+              <p className="text-sm text-[#64748B] mt-0.5 font-medium">{label}</p>
               {sub && <p className="text-[10px] text-[#64748B]/60">{sub}</p>}
             </div>
           ))}
@@ -159,7 +159,7 @@ export function AboutPage() {
                 className="h-full w-full object-cover"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
-                <p className="text-white/80 text-xs font-semibold">
+                <p className="text-white/80 text-sm font-semibold">
                   &ldquo;Zambia is Africa&rsquo;s best-kept secret — and we&rsquo;re here to share
                   it with the world.&rdquo;
                 </p>
@@ -186,7 +186,7 @@ export function AboutPage() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f2ba0d]/15 text-[#1f1433] mb-4">
                     <Icon className="h-5 w-5" />
                   </div>
-                  <h3 className="text-white font-bold text-sm mb-2">{title}</h3>
+                  <h3 className="text-white font-bold text-base mb-2">{title}</h3>
                   <p className="text-[#9B95A8] text-[13px] leading-relaxed">{desc}</p>
                 </div>
               ))}
@@ -221,11 +221,11 @@ export function AboutPage() {
                       i % 2 === 0 ? "md:text-right md:pr-12" : "md:pl-12"
                     }`}
                   >
-                    <span className="inline-block text-[#1f1433] text-xs font-black tracking-widest mb-1">
+                    <span className="inline-block text-[#1f1433] text-sm font-black tracking-widest mb-1">
                       {year}
                     </span>
-                    <h3 className="font-display text-lg font-bold text-[#334155] mb-1">{title}</h3>
-                    <p className="text-sm text-[#64748B] leading-relaxed">{desc}</p>
+                    <h3 className="font-display text-xl font-bold text-[#334155] mb-1">{title}</h3>
+                    <p className="text-base text-[#64748B] leading-relaxed">{desc}</p>
                   </div>
                   {/* Dot */}
                   <div className="absolute left-4 md:left-1/2 top-1 w-3 h-3 rounded-full bg-[#f2ba0d] border-2 border-white -translate-x-1/2 z-10" />
@@ -251,11 +251,11 @@ export function AboutPage() {
             <div className="flex flex-wrap justify-center gap-8 md:gap-12">
               {team.map(({ name, role, initials }) => (
                 <div key={name} className="text-center">
-                  <div className="mx-auto h-16 w-16 rounded-full bg-[#f2ba0d] flex items-center justify-center text-white font-bold text-lg mb-3">
+                  <div className="mx-auto h-16 w-16 rounded-full bg-[#f2ba0d] flex items-center justify-center text-white font-bold text-xl mb-3">
                     {initials}
                   </div>
-                  <h3 className="font-bold text-sm text-[#334155]">{name}</h3>
-                  <p className="text-xs text-[#64748B]">{role}</p>
+                  <h3 className="font-bold text-base text-[#334155]">{name}</h3>
+                  <p className="text-sm text-[#64748B]">{role}</p>
                 </div>
               ))}
             </div>
@@ -270,20 +270,20 @@ export function AboutPage() {
                 <h2 className="font-display text-2xl md:text-3xl font-bold text-white mb-3">
                   Ready to explore Zambia?
                 </h2>
-                <p className="text-[#9B95A8] text-sm md:text-[15px] leading-relaxed mb-8">
+                <p className="text-[#9B95A8] text-base md:text-[15px] leading-relaxed mb-8">
                   Whether you&apos;re planning a weekend escape or a once-in-a-lifetime safari,
                   Nearby Escapes makes it easy to discover, book, and enjoy the best of Zambia.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <Link
-                    href="/search"
-                    className="inline-flex items-center gap-2 h-12 px-7 rounded-xl bg-[#f2ba0d] text-[#334155] font-bold text-sm hover:bg-[#d4b065] transition-colors"
+                    href="/explore"
+                    className="inline-flex items-center gap-2 h-12 px-7 rounded-xl bg-[#f2ba0d] text-[#334155] font-bold text-base hover:bg-[#d4b065] transition-colors"
                   >
                     Start exploring <ArrowRight className="h-4 w-4" />
                   </Link>
                   <Link
                     href="/become-host"
-                    className="inline-flex items-center gap-2 h-12 px-7 rounded-xl border border-white/20 text-white font-bold text-sm hover:bg-white/5 transition-colors"
+                    className="inline-flex items-center gap-2 h-12 px-7 rounded-xl border border-white/20 text-white font-bold text-base hover:bg-white/5 transition-colors"
                   >
                     Become a host
                   </Link>
@@ -296,4 +296,3 @@ export function AboutPage() {
     </div>
   );
 }
-

@@ -79,8 +79,8 @@ export function HostNav() {
             href="/host"
             className="flex items-center gap-2 shrink-0 group no-underline outline-none"
           >
-            <span className="text-lg font-semibold text-white tracking-tight">Nearby</span>
-            <span className="font-script text-[#2a1b47] text-[1.2em] leading-none">Escapes</span>
+            <span className="text-xl font-semibold text-white tracking-tight">Nearby</span>
+            <span className="font-script text-purple text-[1.2em] leading-none">Escapes</span>
           </Link>
 
           {/* Desktop Nav Links */}
@@ -94,7 +94,7 @@ export function HostNav() {
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 no-underline outline-none",
+                      "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-black uppercase tracking-wider transition-all duration-200 no-underline outline-none",
                       active
                         ? "bg-[#d4b065]/15 text-[#2a1b47]"
                         : "text-white/80 hover:bg-white/5 hover:text-white",
@@ -151,7 +151,7 @@ export function HostNav() {
                           <Link
                             href="/host/profile"
                             className={cn(
-                              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all",
+                              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-base font-semibold transition-all",
                               pathname === "/host/profile"
                                 ? "bg-[#d4b065]/15 text-[#2a1b47]"
                                 : "text-white/80 hover:bg-white/5 hover:text-white",
@@ -164,7 +164,7 @@ export function HostNav() {
                           <Link
                             href="/host/settings"
                             className={cn(
-                              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all",
+                              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-base font-semibold transition-all",
                               pathname === "/host/settings"
                                 ? "bg-[#d4b065]/15 text-[#2a1b47]"
                                 : "text-white/80 hover:bg-white/5 hover:text-white",
@@ -190,7 +190,7 @@ export function HostNav() {
                               <Link
                                 href={item.href}
                                 className={cn(
-                                  "flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-semibold transition-all",
+                                  "flex items-center justify-between rounded-xl px-3 py-2.5 text-base font-semibold transition-all",
                                   isActive(item.href)
                                     ? "bg-[#d4b065]/15 text-[#2a1b47]"
                                     : "text-white/80 hover:bg-white/5 hover:text-white",
@@ -215,7 +215,7 @@ export function HostNav() {
                     <div className="h-px bg-white/10" />
 
                     <SheetClose asChild>
-                      <button className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition-all w-full text-left">
+                      <button className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-base font-semibold text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition-all w-full text-left">
                         <LogOut className="h-4.5 w-4.5 shrink-0" /> Log Out
                       </button>
                     </SheetClose>

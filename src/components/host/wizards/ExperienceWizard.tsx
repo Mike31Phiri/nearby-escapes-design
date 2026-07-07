@@ -139,7 +139,7 @@ export function ExperienceWizard() {
                   <Label>Title</Label>
                   <Input {...field} placeholder="Sunset Safari Drive" />
                   {errors.title && (
-                    <p className="text-destructive text-xs mt-1">{errors.title.message}</p>
+                    <p className="text-destructive text-sm mt-1">{errors.title.message}</p>
                   )}
                 </div>
               )}
@@ -163,7 +163,7 @@ export function ExperienceWizard() {
                     </SelectContent>
                   </Select>
                   {errors.category && (
-                    <p className="text-destructive text-xs mt-1">{errors.category.message}</p>
+                    <p className="text-destructive text-sm mt-1">{errors.category.message}</p>
                   )}
                 </div>
               )}
@@ -177,7 +177,7 @@ export function ExperienceWizard() {
                   <Label>Description</Label>
                   <Textarea {...field} className="h-32" placeholder="Describe the experience..." />
                   {errors.description && (
-                    <p className="text-destructive text-xs mt-1">{errors.description.message}</p>
+                    <p className="text-destructive text-sm mt-1">{errors.description.message}</p>
                   )}
                 </div>
               )}
@@ -200,7 +200,7 @@ export function ExperienceWizard() {
                   <Label>Meeting Point</Label>
                   <Input {...field} />
                   {errors.meetingPoint && (
-                    <p className="text-destructive text-xs mt-1">{errors.meetingPoint.message}</p>
+                    <p className="text-destructive text-sm mt-1">{errors.meetingPoint.message}</p>
                   )}
                 </div>
               )}
@@ -315,7 +315,7 @@ export function ExperienceWizard() {
                       onChange={(e) => field.onChange(parseInt(e.target.value))}
                     />
                     {errors.maxGroup && (
-                      <p className="text-destructive text-xs mt-1">{errors.maxGroup.message}</p>
+                      <p className="text-destructive text-sm mt-1">{errors.maxGroup.message}</p>
                     )}
                   </div>
                 )}
@@ -516,10 +516,9 @@ export function ExperienceWizard() {
 function Badge({ children, className, variant }: any) {
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${className}`}
+      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-sm font-semibold ${className}`}
     >
       {children}
     </span>
   );
 }
-

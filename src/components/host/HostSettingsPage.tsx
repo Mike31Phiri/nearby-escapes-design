@@ -93,14 +93,14 @@ function PaymentMethodCard({
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <p className="text-sm font-bold text-[#111111]">{method.label}</p>
+          <p className="text-base font-bold text-[#111111]">{method.label}</p>
           {method.isDefault && (
             <span className="rounded-full bg-primary/10 text-primary text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5">
               Default
             </span>
           )}
         </div>
-        <p className="text-xs text-gray-500 mt-0.5">{method.details}</p>
+        <p className="text-sm text-gray-500 mt-0.5">{method.details}</p>
       </div>
       <div className="flex items-center gap-1 shrink-0">
         <button
@@ -147,8 +147,8 @@ function SectionHeader({
         <Icon className="h-4 w-4" />
       </div>
       <div>
-        <h2 className="text-base font-bold tracking-tight text-[#111111]">{title}</h2>
-        {description && <p className="text-xs text-gray-500 mt-0.5">{description}</p>}
+        <h2 className="text-lg font-bold tracking-tight text-[#111111]">{title}</h2>
+        {description && <p className="text-sm text-gray-500 mt-0.5">{description}</p>}
       </div>
     </div>
   );
@@ -263,7 +263,7 @@ export function HostSettingsPage() {
         actions={
           <button
             onClick={() => router.back()}
-            className="flex h-10 px-4 items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 transition-colors text-white font-bold text-sm shadow-sm"
+            className="flex h-10 px-4 items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 transition-colors text-white font-bold text-base shadow-sm"
           >
             <ChevronLeft className="h-4 w-4 mr-1.5" />
             Back
@@ -292,7 +292,7 @@ export function HostSettingsPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-8 rounded-lg text-xs font-semibold border-gray-200"
+                    className="h-8 rounded-lg text-sm font-semibold border-gray-200"
                   >
                     <Upload className="h-3.5 w-3.5 mr-1.5" />
                     Change Photo
@@ -309,7 +309,7 @@ export function HostSettingsPage() {
                   <Input
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="h-10 rounded-xl border-gray-200 text-sm focus:border-primary/30 focus:ring-primary/20"
+                    className="h-10 rounded-xl border-gray-200 text-base focus:border-primary/30 focus:ring-primary/20"
                   />
                 </div>
                 <div className="space-y-1.5">
@@ -320,7 +320,7 @@ export function HostSettingsPage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="h-10 rounded-xl border-gray-200 text-sm focus:border-primary/30 focus:ring-primary/20"
+                    className="h-10 rounded-xl border-gray-200 text-base focus:border-primary/30 focus:ring-primary/20"
                   />
                 </div>
               </div>
@@ -334,7 +334,7 @@ export function HostSettingsPage() {
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="h-10 rounded-xl border-gray-200 text-sm focus:border-primary/30 focus:ring-primary/20"
+                    className="h-10 rounded-xl border-gray-200 text-base focus:border-primary/30 focus:ring-primary/20"
                   />
                 </div>
                 <div className="space-y-1.5">
@@ -344,7 +344,7 @@ export function HostSettingsPage() {
                   <Input
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
-                    className="h-10 rounded-xl border-gray-200 text-sm focus:border-primary/30 focus:ring-primary/20"
+                    className="h-10 rounded-xl border-gray-200 text-base focus:border-primary/30 focus:ring-primary/20"
                   />
                 </div>
               </div>
@@ -357,7 +357,7 @@ export function HostSettingsPage() {
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
                   rows={3}
-                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm text-[#111111] placeholder:text-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all"
+                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-base text-[#111111] placeholder:text-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all"
                 />
               </div>
 
@@ -368,7 +368,7 @@ export function HostSettingsPage() {
                 <select
                   value={responseTime}
                   onChange={(e) => setResponseTime(e.target.value)}
-                  className="w-full h-10 rounded-xl border border-gray-200 px-4 text-sm text-[#111111] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all bg-white"
+                  className="w-full h-10 rounded-xl border border-gray-200 px-4 text-base text-[#111111] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all bg-white"
                 >
                   <option value="within 1 hour">Within 1 hour</option>
                   <option value="within 2 hours">Within 2 hours</option>
@@ -378,7 +378,7 @@ export function HostSettingsPage() {
               </div>
 
               <Button
-                className="rounded-xl text-xs font-bold h-10 px-6 shadow-sm"
+                className="rounded-xl text-sm font-bold h-10 px-6 shadow-sm"
                 onClick={handleSaveProfile}
               >
                 <CheckCircle2 className="h-4 w-4 mr-1.5" />
@@ -412,7 +412,7 @@ export function HostSettingsPage() {
             {/* Add Payment Method Form */}
             {showAddPayment ? (
               <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50/50 p-5 space-y-4">
-                <p className="text-sm font-bold text-[#111111]">Add Payment Method</p>
+                <p className="text-base font-bold text-[#111111]">Add Payment Method</p>
 
                 <div className="flex items-center gap-3">
                   {(
@@ -456,7 +456,7 @@ export function HostSettingsPage() {
                           ? "e.g. Airtel Money"
                           : "e.g. Visa ending in 1234"
                     }
-                    className="h-10 rounded-xl border-gray-200 text-sm"
+                    className="h-10 rounded-xl border-gray-200 text-base"
                   />
                 </div>
 
@@ -474,14 +474,14 @@ export function HostSettingsPage() {
                           ? "+260 97 765 4321"
                           : "**** 1234"
                     }
-                    className="h-10 rounded-xl border-gray-200 text-sm"
+                    className="h-10 rounded-xl border-gray-200 text-base"
                   />
                 </div>
 
                 <div className="flex items-center gap-2">
                   <Button
                     size="sm"
-                    className="rounded-xl text-xs font-bold h-9"
+                    className="rounded-xl text-sm font-bold h-9"
                     onClick={handleAddPayment}
                   >
                     <Plus className="h-3.5 w-3.5 mr-1" />
@@ -490,7 +490,7 @@ export function HostSettingsPage() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="rounded-xl text-xs h-9"
+                    className="rounded-xl text-sm h-9"
                     onClick={() => setShowAddPayment(false)}
                   >
                     Cancel
@@ -501,7 +501,7 @@ export function HostSettingsPage() {
               <Button
                 variant="outline"
                 size="sm"
-                className="mt-4 rounded-xl text-xs font-semibold border-gray-200 h-9"
+                className="mt-4 rounded-xl text-sm font-semibold border-gray-200 h-9"
                 onClick={() => setShowAddPayment(true)}
               >
                 <Plus className="h-3.5 w-3.5 mr-1" />
@@ -512,7 +512,7 @@ export function HostSettingsPage() {
             {/* Payout Info */}
             <div className="mt-4 rounded-xl bg-blue-50 border border-blue-200 p-4 flex items-start gap-3">
               <Banknote className="h-4 w-4 text-blue-500 shrink-0 mt-0.5" />
-              <div className="text-xs text-blue-800 leading-relaxed">
+              <div className="text-sm text-blue-800 leading-relaxed">
                 <p className="font-semibold mb-0.5">Payout Schedule</p>
                 <p>
                   Payouts are processed within 24 hours after a guest checks in. Funds are sent to
@@ -564,8 +564,8 @@ export function HostSettingsPage() {
                   className="flex items-center justify-between rounded-xl border border-gray-100 bg-white p-4 cursor-pointer hover:bg-gray-50 transition-colors"
                 >
                   <div>
-                    <p className="text-sm font-semibold text-[#111111]">{label}</p>
-                    <p className="text-xs text-gray-500 mt-0.5">{desc}</p>
+                    <p className="text-base font-semibold text-[#111111]">{label}</p>
+                    <p className="text-sm text-gray-500 mt-0.5">{desc}</p>
                   </div>
                   <Toggle enabled={state} onChange={setter} />
                 </label>
@@ -592,7 +592,7 @@ export function HostSettingsPage() {
                 <select
                   value={language}
                   onChange={(e) => setLanguage(e.target.value)}
-                  className="w-full h-10 rounded-xl border border-gray-200 px-4 text-sm text-[#111111] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all bg-white"
+                  className="w-full h-10 rounded-xl border border-gray-200 px-4 text-base text-[#111111] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all bg-white"
                 >
                   <option value="english">English</option>
                   <option value="french">French</option>
@@ -608,7 +608,7 @@ export function HostSettingsPage() {
                 <select
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value)}
-                  className="w-full h-10 rounded-xl border border-gray-200 px-4 text-sm text-[#111111] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all bg-white"
+                  className="w-full h-10 rounded-xl border border-gray-200 px-4 text-base text-[#111111] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all bg-white"
                 >
                   <option value="zmw">ZMW — Zambian Kwacha</option>
                   <option value="usd">USD — US Dollar</option>
@@ -636,7 +636,7 @@ export function HostSettingsPage() {
                       key={opt.value}
                       onClick={() => setTheme(opt.value)}
                       className={cn(
-                        "flex-1 flex items-center justify-center gap-1.5 h-10 rounded-xl border text-sm font-semibold transition-all",
+                        "flex-1 flex items-center justify-center gap-1.5 h-10 rounded-xl border text-base font-semibold transition-all",
                         isSelected
                           ? "border-primary bg-primary/5 text-primary"
                           : "border-gray-200 text-gray-500 hover:border-gray-300 hover:text-gray-700",
@@ -666,15 +666,15 @@ export function HostSettingsPage() {
               <div className="rounded-xl border border-gray-100 bg-white p-5">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-bold text-[#111111]">Sign Out</p>
-                    <p className="text-xs text-gray-500 mt-0.5">
+                    <p className="text-base font-bold text-[#111111]">Sign Out</p>
+                    <p className="text-sm text-gray-500 mt-0.5">
                       Sign out of your host account. Your listings will remain active.
                     </p>
                   </div>
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-9 rounded-xl text-xs font-semibold border-gray-200"
+                    className="h-9 rounded-xl text-sm font-semibold border-gray-200"
                     onClick={() => {
                       logout();
                       toast.success("Signed out successfully");
@@ -694,8 +694,8 @@ export function HostSettingsPage() {
                     <AlertTriangle className="h-4 w-4" />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-rose-900">Danger Zone</p>
-                    <p className="text-xs text-rose-700 mt-0.5">
+                    <p className="text-base font-bold text-rose-900">Danger Zone</p>
+                    <p className="text-sm text-rose-700 mt-0.5">
                       Irreversible actions that affect your account and data
                     </p>
                   </div>
@@ -703,10 +703,10 @@ export function HostSettingsPage() {
 
                 {showDeleteConfirm ? (
                   <div className="space-y-3 rounded-xl bg-white border border-rose-200 p-4">
-                    <p className="text-sm font-semibold text-[#111111]">
+                    <p className="text-base font-semibold text-[#111111]">
                       Are you sure you want to delete your account?
                     </p>
-                    <p className="text-xs text-gray-500 leading-relaxed">
+                    <p className="text-sm text-gray-500 leading-relaxed">
                       This will permanently delete your host profile, all listings, booking history,
                       and earnings data. This action cannot be undone. If you&apos;re sure, type
                       &quot;DELETE&quot; below to confirm.
@@ -715,12 +715,12 @@ export function HostSettingsPage() {
                       value={deleteConfirmText}
                       onChange={(e) => setDeleteConfirmText(e.target.value)}
                       placeholder='Type "DELETE" to confirm'
-                      className="h-10 rounded-xl border-rose-200 text-sm"
+                      className="h-10 rounded-xl border-rose-200 text-base"
                     />
                     <div className="flex items-center gap-2">
                       <Button
                         size="sm"
-                        className="rounded-xl text-xs font-bold h-9 bg-rose-600 hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="rounded-xl text-sm font-bold h-9 bg-rose-600 hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed"
                         onClick={handleDeleteAccount}
                         disabled={deleteConfirmText !== "DELETE"}
                       >
@@ -730,7 +730,7 @@ export function HostSettingsPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="rounded-xl text-xs h-9"
+                        className="rounded-xl text-sm h-9"
                         onClick={() => {
                           setShowDeleteConfirm(false);
                           setDeleteConfirmText("");
@@ -744,7 +744,7 @@ export function HostSettingsPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="rounded-xl text-xs font-bold h-9 border-rose-200 text-rose-600 hover:bg-rose-50 hover:border-rose-300"
+                    className="rounded-xl text-sm font-bold h-9 border-rose-200 text-rose-600 hover:bg-rose-50 hover:border-rose-300"
                     onClick={() => setShowDeleteConfirm(true)}
                   >
                     <Trash2 className="h-3.5 w-3.5 mr-1.5" />

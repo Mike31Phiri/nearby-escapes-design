@@ -94,7 +94,7 @@ function BookingCard({ booking }: { booking: HostBooking }) {
     <div className="rounded-xl border border-border/50 bg-card p-5 shadow-sm transition-all duration-200 hover:shadow-md">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0 flex-1">
-          <div className="h-10 w-10 shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
+          <div className="h-10 w-10 shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-base">
             {booking.guestName.charAt(0)}
           </div>
           <div className="min-w-0 flex-1">
@@ -111,7 +111,7 @@ function BookingCard({ booking }: { booking: HostBooking }) {
                 {cfg.label}
               </Badge>
             </div>
-            <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">
+            <p className="text-sm text-muted-foreground flex items-center gap-1.5 mt-0.5">
               <CalendarDays className="h-3 w-3 shrink-0" />
               {booking.checkIn && booking.checkOut
                 ? `${formatDate(booking.checkIn)} — ${formatDate(booking.checkOut)}`
@@ -120,7 +120,7 @@ function BookingCard({ booking }: { booking: HostBooking }) {
           </div>
         </div>
         <div className="text-right shrink-0">
-          <p className="text-sm font-bold text-foreground">K{booking.amount.toLocaleString()}</p>
+          <p className="text-base font-bold text-foreground">K{booking.amount.toLocaleString()}</p>
           <p className="text-[10px] text-muted-foreground font-medium">
             {booking.guests} guest{booking.guests !== 1 ? "s" : ""}
           </p>
@@ -128,7 +128,7 @@ function BookingCard({ booking }: { booking: HostBooking }) {
       </div>
 
       {/* Listing Info */}
-      <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
+      <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
         <TypeIcon className="h-3 w-3" />
         <span className="font-semibold">{booking.listingName}</span>
         <span>·</span>
@@ -138,7 +138,7 @@ function BookingCard({ booking }: { booking: HostBooking }) {
       </div>
 
       {/* Contact */}
-      <div className="mt-3 flex items-center gap-3 text-xs">
+      <div className="mt-3 flex items-center gap-3 text-sm">
         <span className="text-muted-foreground">{booking.guestEmail}</span>
         <span className="text-muted-foreground/50">·</span>
         <span className="text-muted-foreground">{booking.guestPhone}</span>
@@ -149,7 +149,7 @@ function BookingCard({ booking }: { booking: HostBooking }) {
         <div className="mt-3 pt-3 border-t border-border/30 flex items-center gap-2">
           <Button
             size="sm"
-            className="h-8 rounded-lg text-xs font-semibold"
+            className="h-8 rounded-lg text-sm font-semibold"
             onClick={() =>
               withLoading(
                 setLoading,
@@ -167,7 +167,7 @@ function BookingCard({ booking }: { booking: HostBooking }) {
           <Button
             variant="outline"
             size="sm"
-            className="h-8 rounded-lg text-xs font-semibold border-rose-200 text-rose-600"
+            className="h-8 rounded-lg text-sm font-semibold border-rose-200 text-rose-600"
             onClick={() =>
               withLoading(
                 setLoading,
@@ -232,7 +232,7 @@ export function AdminBookings() {
         title="Platform Bookings"
         description={`${bookingStats.total} bookings — K${bookingStats.totalRevenue.toLocaleString()} total value`}
         actions={
-          <div className="flex items-center gap-2 text-xs text-white/80">
+          <div className="flex items-center gap-2 text-sm text-white/80">
             <span>{bookingStats.pending} pending</span>
             <span className="text-white/30">·</span>
             <span className="text-emerald-400 font-semibold">
@@ -251,7 +251,7 @@ export function AdminBookings() {
               placeholder="Search by guest, listing, or reference..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 h-10 rounded-xl border-border/60 text-sm"
+              className="pl-9 h-10 rounded-xl border-border/60 text-base"
             />
           </div>
           <Select value={typeFilter} onValueChange={(v) => setTypeFilter(v as typeof typeFilter)}>
@@ -290,14 +290,14 @@ export function AdminBookings() {
             <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
               <CalendarDays className="h-7 w-7 text-muted-foreground/40" />
             </div>
-            <h3 className="text-lg font-bold text-foreground">No bookings found</h3>
-            <p className="text-sm text-muted-foreground mt-1 max-w-sm">
+            <h3 className="text-xl font-bold text-foreground">No bookings found</h3>
+            <p className="text-base text-muted-foreground mt-1 max-w-sm">
               Try adjusting your search or filter criteria.
             </p>
             <Button
               variant="outline"
               size="sm"
-              className="mt-6 rounded-full text-xs font-semibold"
+              className="mt-6 rounded-full text-sm font-semibold"
               onClick={() => {
                 setSearch("");
                 setStatusFilter("all");
@@ -314,7 +314,7 @@ export function AdminBookings() {
 
       {/* Stats Row */}
       <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 pb-16">
-        <h3 className="text-[10px] sm:text-xs font-bold text-[#1f1433] uppercase tracking-widest mb-3">
+        <h3 className="text-[10px] sm:text-sm font-bold text-[#1f1433] uppercase tracking-widest mb-3">
           Analysis
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -353,4 +353,3 @@ export function AdminBookings() {
     </div>
   );
 }
-

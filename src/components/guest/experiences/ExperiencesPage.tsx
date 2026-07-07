@@ -119,7 +119,7 @@ function ExperienceCard({ exp }: { exp: Experience }) {
           {label}
         </span>
         {/* Price */}
-        <span className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm text-[#1f1433] text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">
+        <span className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm text-[#1f1433] text-sm font-bold px-2.5 py-1 rounded-full shadow-sm">
           From K{exp.price}
           <span className="text-gray-500 font-normal">/person</span>
         </span>
@@ -130,17 +130,17 @@ function ExperienceCard({ exp }: { exp: Experience }) {
         {/* Rating */}
         <div className="flex items-center gap-1 mb-1.5">
           <Star className="h-3.5 w-3.5 fill-[#1f1433] text-[#1f1433]" />
-          <span className="text-xs font-bold text-gray-900">{exp.rating}</span>
-          <span className="text-xs text-gray-400">({exp.reviews} reviews)</span>
+          <span className="text-sm font-bold text-gray-900">{exp.rating}</span>
+          <span className="text-sm text-gray-400">({exp.reviews} reviews)</span>
         </div>
 
         {/* Name */}
-        <h3 className="font-bold text-sm text-[#1f1433] line-clamp-2 leading-snug group-hover:text-[#1f1433] transition-colors">
+        <h3 className="font-bold text-base text-[#1f1433] line-clamp-2 leading-snug group-hover:text-[#1f1433] transition-colors">
           {exp.name}
         </h3>
 
         {/* Location */}
-        <p className="flex items-center gap-1 text-xs text-gray-500 mt-1">
+        <p className="flex items-center gap-1 text-sm text-gray-500 mt-1">
           <MapPin className="h-3 w-3 shrink-0" />
           {exp.location}
         </p>
@@ -163,7 +163,7 @@ function ExperienceCard({ exp }: { exp: Experience }) {
 
         {/* CTA */}
         <div className="mt-3 pt-3 border-t border-gray-50">
-          <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#1f1433] group-hover:text-[#1f1433] transition-colors">
+          <span className="inline-flex items-center gap-1 text-sm font-semibold text-[#1f1433] group-hover:text-[#1f1433] transition-colors">
             Book Experience <ChevronRight className="h-3.5 w-3.5" />
           </span>
         </div>
@@ -324,7 +324,7 @@ export function ExperiencesPage() {
           {/* Breadcrumb */}
           <nav
             aria-label="Breadcrumb"
-            className="flex items-center gap-1.5 text-xs text-gray-500 mb-4"
+            className="flex items-center gap-1.5 text-sm text-gray-500 mb-4"
           >
             {breadcrumbParts.map((part, i) => (
               <span key={part} className="flex items-center gap-1.5">
@@ -355,7 +355,7 @@ export function ExperiencesPage() {
               <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1f1433] font-display">
                 {headline}
               </h1>
-              <p className="text-sm text-gray-500 mt-0.5">
+              <p className="text-base text-gray-500 mt-0.5">
                 Safaris, cultural tours, farm visits and more
               </p>
             </div>
@@ -390,8 +390,8 @@ export function ExperiencesPage() {
           {filteredExperiences.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-gray-100 mt-6">
               <Compass className="h-10 w-10 text-gray-200 mb-4" />
-              <h3 className="font-bold text-lg text-[#1f1433]">No experiences found</h3>
-              <p className="text-gray-500 text-sm max-w-sm text-center mt-2">
+              <h3 className="font-bold text-xl text-[#1f1433]">No experiences found</h3>
+              <p className="text-gray-500 text-base max-w-sm text-center mt-2">
                 Try adjusting your filters to discover more.
               </p>
               <Button
@@ -416,7 +416,7 @@ export function ExperiencesPage() {
       <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
         <button
           onClick={() => setMobileFiltersOpen(true)}
-          className="flex items-center gap-2 bg-[#f2ba0d] text-white text-sm font-bold px-5 py-3 rounded-full shadow-lg hover:bg-[#2d1a4a] transition-colors"
+          className="flex items-center gap-2 bg-[#f2ba0d] text-white text-base font-bold px-5 py-3 rounded-full shadow-lg hover:bg-[#2d1a4a] transition-colors"
         >
           <SlidersHorizontal className="h-4 w-4" />
           Filters
@@ -437,7 +437,7 @@ export function ExperiencesPage() {
           />
           <div className="fixed inset-x-0 bottom-0 z-50 bg-[#ffffff] rounded-t-2xl shadow-2xl max-h-[85vh] overflow-y-auto">
             <div className="sticky top-0 bg-[#ffffff] flex items-center justify-between px-5 py-4 border-b border-gray-100">
-              <span className="text-base font-bold text-[#1f1433]">Filters</span>
+              <span className="text-lg font-bold text-[#1f1433]">Filters</span>
               <button
                 onClick={() => setMobileFiltersOpen(false)}
                 className="h-8 w-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
@@ -468,4 +468,3 @@ export function ExperiencesPage() {
     </div>
   );
 }
-

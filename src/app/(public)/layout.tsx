@@ -8,20 +8,23 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
   const pathname = usePathname();
 
   const isCheckout = pathname?.startsWith("/checkout");
-  const shouldHideNavbar = pathname?.startsWith("/account");
+  const isProfile = pathname?.startsWith("/profile");
+  const shouldHideNavbar = pathname?.startsWith("/account") || isProfile;
+  const shouldHideFooter = isProfile;
 
   return (
     <>
       {!shouldHideNavbar && <Navbar />}
       <div>{children}</div>
 
-      {isCheckout ? (
-        <div className="hidden md:block">
+      {!shouldHideFooter &&
+        (isCheckout ? (
+          <div className="hidden md:block">
+            <Footer />
+          </div>
+        ) : (
           <Footer />
-        </div>
-      ) : (
-        <Footer />
-      )}
+        ))}
     </>
   );
 }

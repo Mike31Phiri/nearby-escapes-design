@@ -1,102 +1,31 @@
 "use client";
 
-import { useState, useRef } from "react";
 import Link from "next/link";
 import {
-  Heart,
+  ArrowLeft,
   MapPin,
-  CalendarDays,
   Star,
-  Settings,
-  Clock,
-  Trash2,
-  User,
-  ShieldCheck,
-  Compass,
   Edit3,
-  CheckCircle2,
-  XCircle,
-  Diamond,
-  Tent,
-  Waves,
-  School,
+  Camera,
   DollarSign,
-  Users,
   Bus,
   Bell,
-  Award,
-  ArrowRight,
-  Camera,
-  ChevronLeft,
-  ChevronRight,
+  HelpCircle,
+  ShieldCheck,
+  School,
+  CalendarDays,
+  Building2,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Users } from "@phosphor-icons/react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/store/authStore";
 import { useWishlistStore } from "@/store/wishlistStore";
-import { mockTrips, mockReviews } from "@/lib/mock-profile-data";
-import type { TripBooking } from "@/lib/mock-profile-data";
+import { mockReviews, mockTrips } from "@/lib/mock-profile-data";
 import { useReviewStore } from "@/store/reviewStore";
 import { toast } from "sonner";
+import { useState } from "react";
 
-type GuestTab = "saves" | "trips" | "reviews";
-
-function ScrollRow({ children, className }: { children: React.ReactNode; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const scroll = (dir: "left" | "right") => {
-    if (ref.current)
-      ref.current.scrollBy({ left: dir === "right" ? 340 : -340, behavior: "smooth" });
-  };
-  return (
-    <div className={cn("relative", className)}>
-      <button
-        onClick={() => scroll("left")}
-        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-9 w-9 flex items-center justify-center rounded-full bg-white border border-gray-200 shadow-lg hover:bg-gray-50 transition-all hover:scale-105"
-        aria-label="Scroll left"
-      >
-        <ChevronLeft className="h-4 w-4 text-gray-600" />
-      </button>
-      <div ref={ref} className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth px-6 py-1">
-        {children}
-      </div>
-      <button
-        onClick={() => scroll("right")}
-        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-9 w-9 flex items-center justify-center rounded-full bg-white border border-gray-200 shadow-lg hover:bg-gray-50 transition-all hover:scale-105"
-        aria-label="Scroll right"
-      >
-        <ChevronRight className="h-4 w-4 text-gray-600" />
-      </button>
-    </div>
-  );
-}
-
-const explorerBadges = [
-  {
-    label: "Hidden Gem Finder",
-    icon: Diamond,
-    className: "bg-amber-50 text-amber-800 border-amber-200",
-    desc: "Found 3 off-grid escapes",
-  },
-  {
-    label: "Camp Enthusiast",
-    icon: Tent,
-    className: "bg-emerald-50 text-emerald-800 border-emerald-200",
-    desc: "2 bush camp stays",
-  },
-  {
-    label: "Early Bird",
-    icon: Clock,
-    className: "bg-indigo-50 text-indigo-800 border-indigo-200",
-    desc: "Books 30+ days ahead",
-  },
-  {
-    label: "Riverside Lover",
-    icon: Waves,
-    className: "bg-sky-50 text-sky-800 border-sky-200",
-    desc: "5 lakeside getaways",
-  },
-];
-
+/* ── mock travel preferences (replace with API data later) ── */
 const preferences = [
   { icon: DollarSign, label: "Budget per night", value: "Under K1,000" },
   { icon: Users, label: "Usually travels", value: "Solo or 2 people" },
@@ -104,544 +33,318 @@ const preferences = [
   { icon: Bell, label: "Deal alerts", value: "On" },
 ];
 
-function TripCard({ trip }: { trip: TripBooking }) {
-  const isUpcoming = trip.status === "upcoming";
-  const isCompleted = trip.status === "completed";
-  const isCancelled = trip.status === "cancelled";
-
+/* ── Stat pill ─────────────────────────────────────────────── */
+function Stat({ value, label }: { value: string | number; label: string }) {
   return (
-    <Link
-      href={`/listings/${trip.type === "stay" ? "stays" : trip.type === "experience" ? "experiences" : "transport"}/${trip.id.replace("trip-", "")}`}
-      className="group block min-w-[300px] sm:min-w-[340px] md:min-w-[380px] shrink-0"
-    >
-      <div className="flex items-start gap-4 rounded-xl border border-gray-100 bg-white p-4 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-        <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-gray-100">
-          <img
-            src={trip.image}
-            alt={trip.name}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-          <div
-            className={cn(
-              "absolute bottom-1 left-1 rounded-md px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white",
-              isUpcoming ? "bg-blue-500/80" : isCompleted ? "bg-emerald-500/80" : "bg-gray-500/80",
-            )}
-          >
-            {isUpcoming ? "Upcoming" : isCompleted ? "Completed" : "Cancelled"}
-          </div>
-        </div>
-        <div className="flex-1 min-w-0 py-0.5">
-          <p className="text-sm font-bold text-gray-900 truncate leading-snug">{trip.name}</p>
-          <p className="text-xs text-gray-500 mt-0.5 flex items-center gap-1">
-            <MapPin className="h-3 w-3 shrink-0" />
-            {trip.location}
-          </p>
-          <p className="text-xs text-gray-400 mt-1">
-            {new Date(trip.date).toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })}
-          </p>
-        </div>
-        <div className="shrink-0 self-center text-gray-300 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-gray-500">
-          <ArrowRight className="h-4 w-4" />
-        </div>
-      </div>
-    </Link>
+    <div className="text-center">
+      <p className="text-2xl font-bold text-white">{value}</p>
+      <p className="text-[11px] font-semibold uppercase tracking-widest text-white/60 mt-0.5">{label}</p>
+    </div>
   );
 }
 
-export function GuestProfilePage() {
-  const { isAuthenticated, user } = useAuth();
-  const { items: savedItems, removeItem } = useWishlistStore();
-  const [activeTab, setActiveTab] = useState<GuestTab>("saves");
-  const getReviewsByGuest = useReviewStore((s) => s.getReviewsByGuest);
+/* ── Trip card ─────────────────────────────────────────────── */
+interface TripProps {
+  location: string;
+  date: string;
+  image: string;
+  status: "completed" | "upcoming" | "cancelled";
+}
 
-  if (!isAuthenticated) {
-    if (typeof window !== "undefined") {
-      window.location.href = "/auth/login";
-    }
-    return null;
-  }
-
-  const storeReviews = getReviewsByGuest(user?.name ?? "");
-  const completedTrips = mockTrips.filter((t) => t.status === "completed");
-  const upcomingTrips = mockTrips.filter((t) => t.status === "upcoming");
-  const cancelledTrips = mockTrips.filter((t) => t.status === "cancelled");
-
-  const tabs: { id: GuestTab; label: string; icon: React.ElementType; count?: number }[] = [
-    { id: "saves", label: "Saved", icon: Heart, count: savedItems.length },
-    { id: "trips", label: "Trips", icon: Compass, count: mockTrips.length },
-    {
-      id: "reviews",
-      label: "Reviews",
-      icon: Star,
-      count: storeReviews.length + mockReviews.length,
-    },
-  ];
+function TripCard({ location, date, image, status }: TripProps) {
+  const badge =
+    status === "completed"
+      ? "bg-purple-muted text-purple border-purple-border"
+      : status === "upcoming"
+        ? "bg-gold/10 text-gold border-gold/20"
+        : "bg-white-bone text-black-faint border-purple-border";
 
   return (
-    <div className="min-h-screen flex flex-col bg-background font-sans">
-      {/* PREMIUM PURPLE HERO */}
-      <div className="relative w-full overflow-hidden bg-[#f2ba0d] pt-6 pb-12 px-4 md:px-8 shadow-xl">
-        {/* Background Layers */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1f1433] via-[#2E154A] to-[#3A1A5A] opacity-90" />
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&q=60')] opacity-10 object-cover mix-blend-overlay" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1f1433] to-transparent opacity-80" />
+    <div className="flex items-center gap-4 p-4 rounded-2xl border border-purple-border bg-white hover:shadow-sm transition-shadow duration-200">
+      <img
+        src={image}
+        alt={location}
+        className="h-14 w-14 rounded-xl object-cover bg-white-bone shrink-0"
+      />
+      <div className="flex-1 min-w-0">
+        <p className="font-semibold text-black truncate">{location}</p>
+        <p className="text-sm text-black-faint mt-0.5 flex items-center gap-1">
+          <CalendarDays className="h-3.5 w-3.5" /> {date}
+        </p>
+      </div>
+      <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full border capitalize shrink-0 ${badge}`}>
+        {status}
+      </span>
+    </div>
+  );
+}
 
-        <div className="max-w-5xl mx-auto relative z-10 flex flex-col">
-          {/* Top Nav Row */}
-          <div className="flex items-center justify-between mb-8 md:mb-10">
-            <Link
-              href="/"
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/15 transition-all text-white/90 hover:text-white font-medium text-[13px] group shadow-sm"
-            >
-              <ChevronLeft
-                className="h-4 w-4 transition-transform group-hover:-translate-x-1"
-                strokeWidth={2}
-              />
-              <span className="tracking-wide">Back</span>
-            </Link>
-            <Link
-              href="/settings"
-              className="h-10 w-10 flex items-center justify-center rounded-full bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/15 transition-all text-white/90 hover:text-white hover:rotate-90 shadow-sm"
-              aria-label="Settings"
-            >
-              <Settings className="h-5 w-5" strokeWidth={1.5} />
-            </Link>
-          </div>
+/* ── Main page ─────────────────────────────────────────────── */
+export function GuestProfilePage() {
+  const router = useRouter();
+  const { user } = useAuth();
+  const { items: savedItems } = useWishlistStore();
+  const getReviewsByGuest = useReviewStore((s) => s.getReviewsByGuest);
+  const [activeTab, setActiveTab] = useState<"trips" | "reviews">("trips");
 
-          {/* Avatar + Info Row */}
-          <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-8">
+  const storeReviews = getReviewsByGuest(user?.name ?? "");
+  const allReviews = [...storeReviews, ...mockReviews];
+
+  const initials =
+    user?.name
+      ?.split(" ")
+      .map((n) => n[0])
+      .join("") ?? "G";
+
+  return (
+    <div className="min-h-screen bg-white-warm font-sans">
+      {/* ── Hero ──────────────────────────────────────────────── */}
+      <section className="bg-purple-deep text-white relative">
+        <div className="mx-auto max-w-7xl px-4 sm:px-8 pt-10 pb-14">
+          {/* Back button */}
+          <button
+            onClick={() => router.back()}
+            className="absolute left-4 top-4 sm:left-8 sm:top-8 flex items-center gap-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 px-3 py-1.5 text-sm font-medium text-white transition-all duration-200"
+            aria-label="Go back"
+          >
+            <ArrowLeft className="h-4 w-4" /> Back
+          </button>
+          <div className="flex flex-col items-center text-center gap-4">
+
             {/* Avatar */}
             <div
-              className="relative shrink-0 group cursor-pointer"
+              className="relative cursor-pointer group"
               onClick={() => toast.info("Change profile photo coming soon")}
             >
-              <div className="h-[100px] w-[100px] md:h-[130px] md:w-[130px] rounded-full bg-gradient-to-br from-[#1f1433] to-[#A38322] flex items-center justify-center text-[36px] md:text-[48px] font-bold text-[#1f1433] border-4 border-[#1f1433] shadow-2xl relative overflow-hidden transition-transform duration-300 group-hover:scale-[1.02]">
-                <span className="relative z-10 group-hover:opacity-0 transition-opacity duration-300">
-                  {user?.name
-                    ?.split(" ")
-                    .map((n) => n[0])
-                    .join("") || "G"}
-                </span>
-                <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
-                  <Camera className="h-8 w-8 text-white" />
+              <div className="h-24 w-24 rounded-full ring-4 ring-gold/60 overflow-hidden shadow-lg">
+                {user?.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt={user.name ?? ""}
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="h-full w-full bg-gradient-to-br from-purple to-purple-deep flex items-center justify-center text-2xl font-bold text-white">
+                    {initials}
+                  </div>
+                )}
+                {/* Camera overlay */}
+                <div className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <Camera className="h-6 w-6 text-white" />
                 </div>
               </div>
-              <div className="absolute bottom-1 right-1 md:bottom-2 md:right-2 w-8 h-8 rounded-full bg-emerald-500 border-[3px] border-[#1f1433] flex items-center justify-center shadow-lg z-30">
-                <ShieldCheck className="h-4 w-4 text-white" />
+              {/* Online dot */}
+              <span className="absolute bottom-0.5 right-0.5 h-3.5 w-3.5 rounded-full border-2 border-purple-deep bg-gold" />
+            </div>
+
+            {/* Name */}
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white">{user?.name ?? "Guest"}</h1>
+              <div className="mt-1.5 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm text-white/60">
+                <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" /> Lusaka, Zambia</span>
+                <span className="text-white/30">·</span>
+                <span className="flex items-center gap-1"><School className="h-3.5 w-3.5" /> UNZA student</span>
+                <span className="text-white/30">·</span>
+                <span>Member since Mar 2025</span>
               </div>
             </div>
 
-            {/* Info */}
-            <div className="flex-1 min-w-0 flex flex-col items-center md:items-start text-center md:text-left">
-              <h1 className="text-3xl md:text-4xl font-display font-bold text-white mb-3 tracking-tight drop-shadow-md">
-                {user?.name ?? "Guest"}
-              </h1>
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-4 gap-y-2 text-[13px] md:text-[14px] text-white/80">
-                <span className="inline-flex items-center gap-1.5 font-bold text-[#1f1433] bg-[#f2ba0d]/10 px-3 py-1 rounded-full border border-[#1f1433]/20 shadow-sm uppercase tracking-wider text-[11px]">
-                  <Award className="h-3.5 w-3.5" /> Explorer Level 4
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <MapPin className="h-4 w-4 text-[#1f1433]" /> Lusaka, Zambia
-                </span>
-                <span className="hidden sm:inline text-white/30">·</span>
-                <span className="flex items-center gap-1.5">
-                  <School className="h-4 w-4 text-[#1f1433]" /> UNZA student
-                </span>
-                <span className="hidden sm:inline text-white/30">·</span>
-                <span className="text-white/40">Member since Mar 2025</span>
-              </div>
+            {/* Stats */}
+            <div className="flex items-center gap-10 sm:gap-16 mt-2 py-4 border-t border-b border-white/10 w-full max-w-xs mx-auto">
+              <Stat value={allReviews.length} label="Reviews" />
+              <Stat value={mockTrips.length} label="Trips" />
+              <Stat value={savedItems.length || 8} label="Saves" />
             </div>
 
-            {/* Desktop Edit Button */}
+            {/* Edit button */}
             <button
               onClick={() => toast.info("Profile editing coming soon")}
-              className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-sm font-bold text-white hover:bg-white/20 transition-all shrink-0"
+              className="inline-flex items-center gap-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 px-5 py-2 text-sm font-semibold text-white transition-all duration-200"
             >
-              <Edit3 className="h-4 w-4" />
-              Edit Profile
+              <Edit3 className="h-3.5 w-3.5" /> Edit Profile
             </button>
           </div>
         </div>
-      </div>
+      </section>
 
-      <main className="flex-1 mx-auto w-full max-w-5xl px-4 md:px-8 py-8">
-        {/* STATS GRID */}
-        <div className="grid grid-cols-3 gap-3 md:gap-4 mb-8">
-          {[
-            {
-              value: mockTrips.length,
-              label: "Escapes Taken",
-              icon: Tent,
-              color: "text-[#1f1433] bg-[#f2ba0d]/10 border-[#1f1433]/20",
-            },
-            {
-              value: storeReviews.length + mockReviews.length,
-              label: "Reviews Left",
-              icon: Star,
-              color: "text-[#1f1433] bg-[#f2ba0d]/5 border-[#1f1433]/10",
-            },
-            {
-              value: savedItems.length || 8,
-              label: "Saves",
-              icon: Heart,
-              color: "text-[#64748B] bg-[#64748B]/10 border-[#64748B]/20",
-            },
-          ].map((s) => (
-            <div
-              key={s.label}
-              className="relative bg-white border border-gray-100 rounded-xl p-4 md:p-5 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 group"
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div
-                  className={cn(
-                    "h-10 w-10 rounded-lg flex items-center justify-center border",
-                    s.color,
-                  )}
-                >
-                  <s.icon className="h-5 w-5" strokeWidth={1.5} />
-                </div>
-              </div>
-              <p className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">
-                {s.value}
-              </p>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mt-1">
-                {s.label}
-              </p>
-            </div>
-          ))}
-        </div>
+      {/* ── Content ───────────────────────────────────────────── */}
+      <main className="mx-auto max-w-7xl px-4 sm:px-8 py-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_320px]">
 
-        {/* CONTENT ROW: Badges + Preferences + Edit (mobile) */}
-        <div className="grid md:grid-cols-5 gap-4 md:gap-6 mb-8">
-          {/* Explorer Badges */}
-          <div className="md:col-span-3 bg-white border border-gray-100 rounded-xl p-5 shadow-sm">
-            <div className="flex items-center justify-between mb-5">
-              <h3 className="text-lg font-display font-bold text-[#1f1433]">Explorer Badges</h3>
-              <span className="text-[10px] font-bold text-[#1f1433] bg-[#f2ba0d]/10 px-3 py-1 rounded-full border border-[#1f1433]/20 uppercase tracking-widest">
-                4 earned
-              </span>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              {explorerBadges.map((b) => {
-                const Icon = b.icon;
-                return (
-                  <div
-                    key={b.label}
-                    className={cn(
-                      "flex items-start gap-3 rounded-lg border p-3 transition-all duration-200 hover:shadow-sm",
-                      b.className,
-                    )}
-                  >
-                    <div className="h-9 w-9 rounded-lg bg-white/80 flex items-center justify-center shrink-0 shadow-sm border border-inherit">
-                      <Icon className="h-4 w-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-xs font-bold">{b.label}</p>
-                      <p className="text-[10px] text-inherit opacity-70 mt-0.5">{b.desc}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          {/* ── Left column ─────────────────────────────────── */}
+          <div className="flex flex-col gap-6">
 
-          {/* Travel Preferences */}
-          <div className="md:col-span-2 bg-white border border-gray-100 rounded-xl p-5 shadow-sm">
-            <h3 className="text-lg font-display font-bold text-[#1f1433] mb-5">
-              Travel Preferences
-            </h3>
-            <div className="space-y-3">
-              {preferences.map((p) => {
-                const Icon = p.icon;
-                return (
-                  <div key={p.label} className="flex items-center justify-between">
-                    <span className="text-xs text-gray-500 flex items-center gap-2">
-                      <Icon className="h-3.5 w-3.5 text-gray-400" />
-                      {p.label}
-                    </span>
-                    <span className="text-xs font-bold text-gray-900">{p.value}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* RECENT & UPCOMING TRIPS */}
-        <div className="mb-10">
-          <div className="flex items-center justify-between mb-5">
-            <h3 className="text-xl font-display font-bold text-[#1f1433] flex items-center gap-2">
-              <CalendarDays className="h-5 w-5 text-[#1f1433]" />
-              Recent &amp; Upcoming Trips
-            </h3>
-            <Link
-              href="/trips"
-              className="text-[12px] font-bold uppercase tracking-wider text-[#1f1433] hover:text-[#EAB308] transition-colors flex items-center gap-1"
-            >
-              View all <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-          <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 -mx-4 px-4 snap-x snap-mandatory">
-            {[...upcomingTrips.slice(0, 2), ...completedTrips.slice(0, 2)].map((trip) => (
-              <TripCard key={trip.id} trip={trip} />
-            ))}
-          </div>
-        </div>
-
-        {/* EDIT PROFILE — MOBILE */}
-        <button
-          onClick={() => toast.info("Profile editing coming soon")}
-          className="md:hidden w-full mb-8 py-3.5 border border-gray-200 rounded-xl text-sm font-bold text-gray-700 flex items-center justify-center gap-2 hover:bg-gray-50 transition-all shadow-sm"
-        >
-          <Edit3 className="h-4 w-4" />
-          Edit profile
-        </button>
-
-        {/* TABS: SAVES / TRIPS / REVIEWS */}
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden mb-12">
-          {/* Tab bar */}
-          <div className="flex border-b border-gray-100">
-            {tabs.map(({ id, label, icon: Icon, count }) => {
-              const isActive = activeTab === id;
-              return (
+            {/* Pill tabs */}
+            <div className="flex gap-2 p-1 bg-white rounded-full border border-purple-border w-fit shadow-sm">
+              {(["trips", "reviews"] as const).map((tab) => (
                 <button
-                  key={id}
-                  onClick={() => setActiveTab(id)}
-                  className={cn(
-                    "flex-1 flex items-center justify-center gap-1.5 py-4 text-[10px] font-bold uppercase tracking-wider border-b-2 transition-all duration-200",
-                    isActive
-                      ? "border-[#1f1433] text-[#1f1433]"
-                      : "border-transparent text-gray-400 hover:text-gray-600",
-                  )}
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-5 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 capitalize ${activeTab === tab
+                      ? "bg-purple text-white shadow-sm"
+                      : "text-black-muted hover:text-black"
+                    }`}
                 >
-                  <Icon
-                    className={cn("h-4 w-4", isActive ? "text-[#1f1433]" : "text-gray-400")}
-                    strokeWidth={1.5}
-                  />
-                  {label}
-                  {count !== undefined && count > 0 && (
-                    <span
-                      className={cn(
-                        "ml-0.5 rounded-full px-1.5 py-0.5 text-[8px] font-bold",
-                        isActive ? "bg-[#f2ba0d] text-white" : "bg-gray-100 text-gray-500",
-                      )}
-                    >
-                      {count}
-                    </span>
-                  )}
+                  {tab === "trips" ? "Recent Trips" : "Reviews"}
                 </button>
-              );
-            })}
-          </div>
-
-          {/* Tab content */}
-          <div className="p-5 md:p-6">
-            {/* Saved */}
-            {activeTab === "saves" &&
-              (savedItems.length === 0 ? (
-                <div className="text-center py-16">
-                  <div className="h-16 w-16 rounded-full bg-rose-50 flex items-center justify-center mx-auto mb-4 border border-rose-100">
-                    <Heart className="h-7 w-7 text-rose-300" strokeWidth={1.5} />
-                  </div>
-                  <p className="text-lg font-bold text-gray-900">No saved items yet</p>
-                  <p className="text-sm text-gray-500 mt-1.5 max-w-xs mx-auto">
-                    Start exploring and save your favorites to plan your next escape
-                  </p>
-                  <Button
-                    className="mt-6 rounded-xl bg-[#f2ba0d] hover:bg-[#2E154A] text-white font-bold text-xs uppercase tracking-wider px-6 py-5 shadow-lg shadow-[#1f1433]/20"
-                    asChild
-                  >
-                    <Link href="/search">
-                      Browse destinations <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
-                    </Link>
-                  </Button>
-                </div>
-              ) : (
-                <ScrollRow>
-                  {savedItems.map((item) => (
-                    <div
-                      key={item.id}
-                      className="shrink-0 w-[240px] rounded-xl border border-gray-100 bg-white overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
-                    >
-                      <Link href={`/listings/stays/${item.id}`} className="block group">
-                        <div className="relative aspect-[4/3] bg-gray-100">
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                          <div className="absolute bottom-2 left-2 right-2">
-                            <p className="text-white font-bold text-xs truncate drop-shadow-sm">
-                              {item.name}
-                            </p>
-                            <p className="text-white/80 text-[10px] flex items-center gap-1 mt-0.5">
-                              <MapPin className="h-2.5 w-2.5" />
-                              {item.location}
-                            </p>
-                          </div>
-                        </div>
-                      </Link>
-                      <div className="flex items-center justify-between px-3 py-2.5">
-                        <div>
-                          <p className="text-sm font-bold text-gray-900">K{item.price}</p>
-                          <p className="text-[9px] text-gray-400 font-medium">per night</p>
-                        </div>
-                        <button
-                          onClick={() => {
-                            removeItem(item.id);
-                            toast.success("Removed from saved");
-                          }}
-                          className="h-8 w-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </ScrollRow>
               ))}
+            </div>
 
-            {/* Trips */}
-            {activeTab === "trips" &&
-              (mockTrips.length === 0 ? (
-                <div className="text-center py-16">
-                  <div className="h-16 w-16 rounded-full bg-sky-50 flex items-center justify-center mx-auto mb-4 border border-sky-100">
-                    <Compass className="h-7 w-7 text-sky-300" strokeWidth={1.5} />
+            {/* Tab content */}
+            {activeTab === "trips" ? (
+              <div>
+                <div className="mb-4">
+                  <h2 className="text-lg font-bold text-black">Recent Trips</h2>
+                  <p className="text-sm text-black-muted mt-0.5">Places you have visited.</p>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {mockTrips.length === 0 ? (
+                    <p className="text-sm text-black-muted col-span-2 py-8 text-center">You have no recent trips yet.</p>
+                  ) : (
+                    mockTrips.slice(0, 4).map((trip, i) => (
+                      <TripCard key={i} {...trip} />
+                    ))
+                  )}
+                </div>
+                {mockTrips.length > 4 && (
+                  <button className="mt-4 w-full rounded-full border border-purple-border bg-white py-2.5 text-sm font-semibold text-purple hover:bg-purple-muted transition-colors">
+                    See all {mockTrips.length} trips
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div>
+                <div className="mb-4">
+                  <h2 className="text-lg font-bold text-black">Your Reviews</h2>
+                  <p className="text-sm text-black-muted mt-0.5">Reviews you&apos;ve left for places you&apos;ve visited.</p>
+                </div>
+
+                {allReviews.length === 0 ? (
+                  <div className="py-16 rounded-2xl border border-dashed border-purple-border text-center">
+                    <div className="h-14 w-14 rounded-full bg-gold/10 flex items-center justify-center mx-auto mb-4 border border-gold/20">
+                      <Star className="h-6 w-6 text-gold" strokeWidth={1.5} />
+                    </div>
+                    <p className="font-bold text-black">No reviews yet</p>
+                    <p className="text-sm text-black-muted mt-1 max-w-xs mx-auto">
+                      After your trips, share your experience to help fellow guests.
+                    </p>
                   </div>
-                  <p className="text-lg font-bold text-gray-900">No trips yet</p>
-                  <p className="text-sm text-gray-500 mt-1.5 max-w-xs mx-auto">
-                    Your booking history will appear here once you book your first escape
-                  </p>
-                  <Button
-                    className="mt-6 rounded-xl bg-[#f2ba0d] hover:bg-[#2E154A] text-white font-bold text-xs uppercase tracking-wider px-6 py-5 shadow-lg shadow-[#1f1433]/20"
-                    asChild
-                  >
-                    <Link href="/search">
-                      Start exploring <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
-                    </Link>
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-5">
-                  {upcomingTrips.length > 0 && (
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-3 flex items-center gap-1.5">
-                        <CalendarDays className="h-3.5 w-3.5 text-blue-400" />
-                        Upcoming ({upcomingTrips.length})
-                      </p>
-                      <div className="space-y-2.5">
-                        {upcomingTrips.map((t) => (
-                          <TripCard key={t.id} trip={t} />
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {completedTrips.length > 0 && (
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-3 flex items-center gap-1.5">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
-                        Completed ({completedTrips.length})
-                      </p>
-                      <div className="space-y-2.5">
-                        {completedTrips.map((t) => (
-                          <TripCard key={t.id} trip={t} />
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {cancelledTrips.length > 0 && (
-                    <div className="opacity-60">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-3 flex items-center gap-1.5">
-                        <XCircle className="h-3.5 w-3.5" />
-                        Cancelled ({cancelledTrips.length})
-                      </p>
-                      <div className="space-y-2.5">
-                        {cancelledTrips.map((t) => (
-                          <TripCard key={t.id} trip={t} />
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-
-            {/* Reviews */}
-            {activeTab === "reviews" &&
-              (() => {
-                const allReviews = [...storeReviews, ...mockReviews];
-                if (allReviews.length === 0) {
-                  return (
-                    <div className="text-center py-16">
-                      <div className="h-16 w-16 rounded-full bg-amber-50 flex items-center justify-center mx-auto mb-4 border border-amber-100">
-                        <Star className="h-7 w-7 text-amber-300" strokeWidth={1.5} />
-                      </div>
-                      <p className="text-lg font-bold text-gray-900">No reviews yet</p>
-                      <p className="text-sm text-gray-500 mt-1.5 max-w-xs mx-auto">
-                        After your trips, share your experience to help fellow guests
-                      </p>
-                    </div>
-                  );
-                }
-                return (
-                  <div className="space-y-0 divide-y divide-gray-100">
-                    {allReviews.map((review) => (
-                      <div key={review.id} className="py-5 first:pt-0 last:pb-0">
+                ) : (
+                  <div className="rounded-2xl border border-purple-border bg-white divide-y divide-purple-border overflow-hidden">
+                    {allReviews.slice(0, 3).map((review) => (
+                      <div key={review.id} className="p-5">
                         <div className="flex items-start justify-between mb-3">
                           <div>
-                            <p className="text-base font-bold text-gray-900 tracking-tight">
-                              {review.listingName}
-                            </p>
-                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">
+                            <p className="font-semibold text-black">{review.listingName}</p>
+                            <p className="text-[10px] text-black-faint font-bold uppercase tracking-wider mt-0.5">
                               {review.listingType}
                             </p>
                           </div>
-                          <div className="flex gap-0.5 shrink-0">
+                          <div className="flex gap-0.5 shrink-0 mt-0.5">
                             {Array.from({ length: 5 }).map((_, i) => (
                               <Star
                                 key={i}
-                                className={cn(
-                                  "h-3.5 w-3.5",
-                                  i < review.rating
-                                    ? "fill-amber-400 text-amber-400"
-                                    : "text-gray-200",
-                                )}
+                                className={"h-3.5 w-3.5 " + (i < review.rating ? "fill-gold text-gold" : "text-black-faint")}
                                 strokeWidth={i < review.rating ? 0 : 1.5}
                               />
                             ))}
                           </div>
                         </div>
-                        <div className="relative pl-4 border-l-2 border-amber-200">
-                          <p className="text-sm text-gray-600 leading-relaxed italic">
+                        <div className="pl-3 border-l-2 border-purple-border">
+                          <p className="text-sm text-black-muted leading-relaxed italic">
                             &ldquo;{review.text}&rdquo;
                           </p>
                         </div>
-                        <div className="flex items-center gap-3 mt-3 ml-4">
-                          <span className="text-[11px] font-semibold text-gray-400">
+                        <div className="flex items-center gap-3 mt-3 ml-3">
+                          <span className="text-[11px] text-black-faint">
                             {new Date(review.date).toLocaleDateString("en-US", {
-                              month: "long",
-                              day: "numeric",
-                              year: "numeric",
+                              month: "long", day: "numeric", year: "numeric",
                             })}
                           </span>
-                          <span className="text-[8px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-200">
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-purple bg-purple-muted px-2 py-0.5 rounded-full border border-purple-border">
                             Verified
                           </span>
                         </div>
                       </div>
                     ))}
+                    {allReviews.length > 3 && (
+                      <button className="w-full py-3.5 text-sm font-bold text-purple hover:bg-purple-muted transition-colors">
+                        Show all {allReviews.length} reviews
+                      </button>
+                    )}
                   </div>
-                );
-              })()}
+                )}
+              </div>
+            )}
           </div>
+
+          {/* ── Sidebar ─────────────────────────────────────── */}
+          <aside className="flex flex-col gap-5">
+
+            {/* Travel Preferences */}
+            <div className="rounded-2xl border border-purple-border bg-white p-5">
+              <h3 className="text-sm font-bold text-black mb-4">Travel Preferences</h3>
+              <ul className="space-y-3">
+                {preferences.map((p) => {
+                  const Icon = p.icon;
+                  return (
+                    <li key={p.label} className="flex items-center justify-between gap-3">
+                      <span className="text-sm text-black-muted flex items-center gap-2">
+                        <Icon className="h-3.5 w-3.5 text-black-faint shrink-0" />
+                        {p.label}
+                      </span>
+                      <span className="text-sm font-semibold text-black text-right">{p.value}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            {/* Become a Host CTA */}
+            <div className="relative overflow-hidden rounded-2xl bg-purple-deep p-5 text-white">
+              <Building2
+                className="pointer-events-none absolute -right-3 -bottom-3 h-24 w-24 text-white opacity-5"
+                strokeWidth={1}
+              />
+              <h3 className="text-base font-bold">Become a Host</h3>
+              <p className="mt-1.5 text-sm text-white/70 leading-relaxed">
+                List your property, experience or vehicle and start earning with Nearby Escapes.
+              </p>
+              <Link
+                href="/become-host"
+                className="mt-4 block w-full rounded-full bg-gold hover:bg-gold-hover text-black py-2.5 text-center text-sm font-bold transition-colors"
+              >
+                Switch to Hosting
+              </Link>
+            </div>
+
+            {/* Need Help */}
+            <div className="rounded-2xl bg-purple-muted border border-purple-border p-5">
+              <h3 className="flex items-center gap-2 text-sm font-bold text-black">
+                <HelpCircle className="h-4 w-4 text-purple" />
+                Need Help?
+              </h3>
+              <p className="mt-2 text-sm text-black-muted leading-relaxed">
+                Our support team is here to help with any questions or issues.
+              </p>
+              <Link
+                href="/help"
+                className="mt-4 block w-full rounded-full border border-purple-border bg-white py-2.5 text-center text-sm font-semibold text-purple hover:bg-white-soft transition-colors"
+              >
+                Contact Support
+              </Link>
+            </div>
+
+            {/* Privacy note */}
+            <div className="flex items-center gap-2 px-1">
+              <ShieldCheck className="h-4 w-4 text-gold shrink-0" />
+              <p className="text-xs leading-relaxed text-black-faint">
+                Your data is protected with industry-standard encryption.
+              </p>
+            </div>
+          </aside>
         </div>
       </main>
     </div>
   );
 }
-

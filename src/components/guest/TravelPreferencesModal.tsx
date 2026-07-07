@@ -17,7 +17,7 @@ export function TravelPreferencesModal({ open, onClose }: TravelPreferencesModal
         </p>
         <button
           onClick={onClose}
-          className="bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium"
+          className="bg-primary text-primary-foreground px-4 py-2 rounded-md text-base font-medium"
         >
           Continue
         </button>

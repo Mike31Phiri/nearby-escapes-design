@@ -548,7 +548,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
     <div className="min-h-screen flex flex-col bg-[#F9F7F2] font-sans pb-24 lg:pb-8">
       <main className="flex-1 w-full max-w-5xl mx-auto px-4 md:px-6 py-6 md:py-8">
         {/* Breadcrumb - ALWAYS added & visible on both mobile and desktop */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+        <div className="flex items-center gap-2 text-base text-muted-foreground mb-6">
           <Link
             href={backHref}
             className="hover:text-primary transition-colors font-medium flex items-center gap-1"
@@ -563,59 +563,59 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
         {/* Desktop Stepper */}
         <div className="hidden lg:flex items-center justify-between bg-card border border-border/40 rounded-2xl p-5 mb-8 shadow-sm">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-[#f2ba0d] text-[#F9F7F2] text-xs font-bold flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-[#f2ba0d] text-[#F9F7F2] text-sm font-bold flex items-center justify-center">
               <Check className="h-3.5 w-3.5" />
             </div>
-            <span className="text-xs font-semibold text-[#1f1433]">Choose your escape</span>
+            <span className="text-sm font-semibold text-[#1f1433]">Choose your escape</span>
           </div>
           <div className="flex-1 h-0.5 bg-[#f2ba0d] mx-6" />
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-[#f2ba0d] text-[#334155] text-xs font-bold flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-[#f2ba0d] text-[#334155] text-sm font-bold flex items-center justify-center">
               2
             </div>
-            <span className="text-xs font-bold text-[#1f1433]">Review booking</span>
+            <span className="text-sm font-bold text-[#1f1433]">Review booking</span>
           </div>
           <div className="flex-1 h-0.5 bg-border/40 mx-6" />
           <div className="flex items-center gap-2 opacity-65">
-            <div className="w-6 h-6 rounded-full bg-[#E8E3DC] text-[#64748B] text-xs font-bold flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-[#E8E3DC] text-[#64748B] text-sm font-bold flex items-center justify-center">
               3
             </div>
-            <span className="text-xs font-medium text-[#64748B]">Payment</span>
+            <span className="text-sm font-medium text-[#64748B]">Payment</span>
           </div>
           <div className="flex-1 h-0.5 bg-border/40 mx-6" />
           <div className="flex items-center gap-2 opacity-65">
-            <div className="w-6 h-6 rounded-full bg-[#E8E3DC] text-[#64748B] text-xs font-bold flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-[#E8E3DC] text-[#64748B] text-sm font-bold flex items-center justify-center">
               4
             </div>
-            <span className="text-xs font-medium text-[#64748B]">Confirmation</span>
+            <span className="text-sm font-medium text-[#64748B]">Confirmation</span>
           </div>
         </div>
 
         {/* Mobile Stepper */}
         <div className="lg:hidden flex items-center justify-between bg-card border border-border/40 rounded-2xl p-4 mb-6 shadow-sm">
           <div className="flex flex-col items-center gap-1.5 flex-1">
-            <div className="w-6 h-6 rounded-full bg-[#f2ba0d] text-[#F9F7F2] text-xs font-bold flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-[#f2ba0d] text-[#F9F7F2] text-sm font-bold flex items-center justify-center">
               <Check className="h-3 w-3" />
             </div>
             <span className="text-[10px] font-bold text-[#1f1433]">Choose</span>
           </div>
           <div className="w-6 h-0.5 bg-[#f2ba0d] mb-4 shrink-0" />
           <div className="flex flex-col items-center gap-1.5 flex-1">
-            <div className="w-6 h-6 rounded-full bg-[#f2ba0d] text-[#334155] text-xs font-bold flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-[#f2ba0d] text-[#334155] text-sm font-bold flex items-center justify-center">
               2
             </div>
             <span className="text-[10px] font-bold text-[#1f1433]">Review</span>
           </div>
           <div className="w-6 h-0.5 bg-[#E8E3DC] mb-4 shrink-0" />
           <div className="flex flex-col items-center gap-1.5 flex-1">
-            <div className="w-6 h-6 rounded-full bg-[#E8E3DC] text-[#64748B] text-xs font-bold flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-[#E8E3DC] text-[#64748B] text-sm font-bold flex items-center justify-center">
               3
             </div>
             <span className="text-[10px] font-medium text-[#64748B]">Pay</span>
           </div>
           <div className="w-6 h-0.5 bg-[#E8E3DC] mb-4 shrink-0" />
           <div className="flex flex-col items-center gap-1.5 flex-1">
-            <div className="w-6 h-6 rounded-full bg-[#E8E3DC] text-[#64748B] text-xs font-bold flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-[#E8E3DC] text-[#64748B] text-sm font-bold flex items-center justify-center">
               4
             </div>
             <span className="text-[10px] font-medium text-[#64748B]">Confirm</span>
@@ -636,9 +636,9 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   <div className="w-7 h-7 rounded-lg bg-[#EDE8F5] flex items-center justify-center">
                     <Home className="h-4 w-4 text-[#1f1433]" />
                   </div>
-                  <span className="font-bold text-xs text-[#334155]">Your escape</span>
+                  <span className="font-bold text-sm text-[#334155]">Your escape</span>
                 </div>
-                <Link href={backHref} className="text-xs text-[#1f1433] font-bold hover:underline">
+                <Link href={backHref} className="text-sm text-[#1f1433] font-bold hover:underline">
                   Change
                 </Link>
               </div>
@@ -652,7 +652,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   <span className="text-[10px] font-bold text-[#1f1433] uppercase tracking-wider">
                     {listing.type === "stay" ? "Farm stay" : listing.type}
                   </span>
-                  <h4 className="font-bold text-xs text-[#334155] truncate">{listing.name}</h4>
+                  <h4 className="font-bold text-sm text-[#334155] truncate">{listing.name}</h4>
                   <div className="flex items-center gap-1 text-[11px] text-muted-foreground mt-0.5">
                     <MapPin className="h-3 w-3 text-[#1f1433]" />
                     <span className="truncate">{listing.location}</span>
@@ -675,9 +675,9 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   <div className="w-8 h-8 rounded-lg bg-[#EDE8F5] flex items-center justify-center">
                     <Home className="h-4.5 w-4.5 text-[#1f1433]" />
                   </div>
-                  <span className="font-bold text-sm text-[#334155]">Your escape</span>
+                  <span className="font-bold text-base text-[#334155]">Your escape</span>
                 </div>
-                <Link href={backHref} className="text-xs text-[#1f1433] font-bold hover:underline">
+                <Link href={backHref} className="text-sm text-[#1f1433] font-bold hover:underline">
                   Change
                 </Link>
               </div>
@@ -688,11 +688,11 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   className="w-20 h-16 rounded-xl object-cover shrink-0"
                 />
                 <div className="min-w-0">
-                  <span className="text-xs font-bold text-[#1f1433] uppercase tracking-wider">
+                  <span className="text-sm font-bold text-[#1f1433] uppercase tracking-wider">
                     {listing.type === "stay" ? "Farm stay" : listing.type}
                   </span>
-                  <h3 className="font-bold text-base text-[#334155] truncate">{listing.name}</h3>
-                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
+                  <h3 className="font-bold text-lg text-[#334155] truncate">{listing.name}</h3>
+                  <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-0.5">
                     <MapPin className="h-3.5 w-3.5 text-[#1f1433]" />
                     <span className="truncate">{listing.location} · 1.5 hrs from Lusaka</span>
                   </div>
@@ -713,7 +713,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                 <div className="w-7 h-7 rounded-lg bg-[#FFF4DC] flex items-center justify-center">
                   <CalendarDays className="h-4 w-4 text-[#1f1433]" />
                 </div>
-                <h2 className="font-bold text-sm text-[#334155]">Dates & guests</h2>
+                <h2 className="font-bold text-base text-[#334155]">Dates & guests</h2>
               </div>
 
               {isStay && (
@@ -728,7 +728,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                         value={stayForm.checkIn}
                         min={minDate}
                         onChange={(e) => setStayForm((f) => ({ ...f, checkIn: e.target.value }))}
-                        className="h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-xs font-semibold"
+                        className="h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-sm font-semibold"
                         required
                       />
                     </div>
@@ -741,7 +741,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                         value={stayForm.checkOut}
                         min={stayForm.checkIn || minDate}
                         onChange={(e) => setStayForm((f) => ({ ...f, checkOut: e.target.value }))}
-                        className="h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-xs font-semibold"
+                        className="h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-sm font-semibold"
                         required
                       />
                     </div>
@@ -752,7 +752,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                       <div className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
                         Duration
                       </div>
-                      <div className="text-xs font-bold text-foreground mt-0.5">
+                      <div className="text-sm font-bold text-foreground mt-0.5">
                         {priceBreakdown.nights} night{priceBreakdown.nights !== 1 ? "s" : ""}
                       </div>
                     </div>
@@ -764,7 +764,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                         <select
                           value={stayForm.adults}
                           onChange={(e) => setStayForm((f) => ({ ...f, adults: e.target.value }))}
-                          className="bg-transparent text-xs font-bold text-foreground focus:outline-none"
+                          className="bg-transparent text-sm font-bold text-foreground focus:outline-none"
                         >
                           {[1, 2, 3, 4, 5, 6].map((n) => (
                             <option key={n} value={String(n)}>
@@ -782,7 +782,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                         <select
                           value={stayForm.children}
                           onChange={(e) => setStayForm((f) => ({ ...f, children: e.target.value }))}
-                          className="bg-transparent text-xs font-bold text-foreground focus:outline-none"
+                          className="bg-transparent text-sm font-bold text-foreground focus:outline-none"
                         >
                           {[0, 1, 2, 3, 4].map((n) => (
                             <option key={n} value={String(n)}>
@@ -807,7 +807,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                       value={expForm.date}
                       min={minDate}
                       onChange={(e) => setExpForm((f) => ({ ...f, date: e.target.value }))}
-                      className="h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-xs font-semibold"
+                      className="h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-sm font-semibold"
                       required
                     />
                   </div>
@@ -820,7 +820,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                         value={expForm.adults}
                         onValueChange={(v) => setExpForm((f) => ({ ...f, adults: v }))}
                       >
-                        <SelectTrigger className="h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-xs">
+                        <SelectTrigger className="h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-sm">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -840,7 +840,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                         value={expForm.children}
                         onValueChange={(v) => setExpForm((f) => ({ ...f, children: v }))}
                       >
-                        <SelectTrigger className="h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-xs">
+                        <SelectTrigger className="h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-sm">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -869,7 +869,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                       onChange={(e) =>
                         setTransportForm((f) => ({ ...f, travelDate: e.target.value }))
                       }
-                      className="h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-xs font-semibold"
+                      className="h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-sm font-semibold"
                       required
                     />
                   </div>
@@ -882,7 +882,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                         value={transportForm.passengers}
                         onValueChange={(v) => setTransportForm((f) => ({ ...f, passengers: v }))}
                       >
-                        <SelectTrigger className="h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-xs">
+                        <SelectTrigger className="h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-sm">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -902,7 +902,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                         value={transportForm.travelClass}
                         onValueChange={(v) => setTransportForm((f) => ({ ...f, travelClass: v }))}
                       >
-                        <SelectTrigger className="h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-xs">
+                        <SelectTrigger className="h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-sm">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -923,7 +923,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                 <div className="w-7 h-7 rounded-lg bg-[#EDE8F5] flex items-center justify-center">
                   <User className="h-4 w-4 text-[#1f1433]" />
                 </div>
-                <h2 className="font-bold text-sm text-[#334155]">Your Details</h2>
+                <h2 className="font-bold text-base text-[#334155]">Your Details</h2>
               </div>
 
               <div className="space-y-4">
@@ -937,7 +937,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                       placeholder="e.g. Mike Phiri"
                       value={getFormValue("name")}
                       onChange={(e) => setFormValue("name", e.target.value)}
-                      className="pl-9 h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-xs"
+                      className="pl-9 h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-sm"
                       required
                     />
                   </div>
@@ -955,7 +955,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                         placeholder="+260 97 XXX XXXX"
                         value={getFormValue("phone")}
                         onChange={(e) => setFormValue("phone", e.target.value)}
-                        className="pl-9 h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-xs"
+                        className="pl-9 h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-sm"
                         required
                       />
                     </div>
@@ -971,7 +971,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                         placeholder="guest@example.com"
                         value={getFormValue("email")}
                         onChange={(e) => setFormValue("email", e.target.value)}
-                        className="pl-9 h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-xs"
+                        className="pl-9 h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-sm"
                         required
                       />
                     </div>
@@ -987,7 +987,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                       placeholder="e.g. Lusaka"
                       value={getFormValue("homeCity")}
                       onChange={(e) => setFormValue("homeCity", e.target.value)}
-                      className="pl-9 h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-xs"
+                      className="pl-9 h-10 rounded-xl border-border/60 bg-[#F9F7F2] text-sm"
                     />
                   </div>
                 </div>
@@ -1001,7 +1001,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   <div className="w-7 h-7 rounded-lg bg-[#E6F4EE] flex items-center justify-center">
                     <Plus className="h-4 w-4 text-[#2A5C3F]" />
                   </div>
-                  <h2 className="font-bold text-sm text-[#334155]">Add-ons selected</h2>
+                  <h2 className="font-bold text-base text-[#334155]">Add-ons selected</h2>
                 </div>
 
                 <div className="space-y-3">
@@ -1012,7 +1012,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                         <Truck className="h-4.5 w-4.5 text-[#1f1433]" />
                       </div>
                       <div>
-                        <div className="text-xs font-bold text-[#1f1433]">
+                        <div className="text-sm font-bold text-[#1f1433]">
                           Return transport pickup
                         </div>
                         <div className="text-[10px] text-[#6A5A8A] mt-0.5">
@@ -1021,7 +1021,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                       </div>
                     </div>
                     <div className="flex items-center gap-3 shrink-0">
-                      <span className="text-xs font-bold text-[#1f1433]">K280</span>
+                      <span className="text-sm font-bold text-[#1f1433]">K280</span>
                       <input
                         type="checkbox"
                         checked={addTransport}
@@ -1038,7 +1038,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                         <Check className="h-4.5 w-4.5 text-[#5A8A40]" />
                       </div>
                       <div>
-                        <div className="text-xs font-bold text-foreground">Farm tour & milking</div>
+                        <div className="text-sm font-bold text-foreground">Farm tour & milking</div>
                         <div className="text-[10px] text-muted-foreground mt-0.5">
                           Sat 19 Jul · {stayForm.adults} adult
                           {(parseInt(stayForm.adults) || 2) > 1 ? "s" : ""}
@@ -1046,7 +1046,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                       </div>
                     </div>
                     <div className="flex items-center gap-3 shrink-0">
-                      <span className="text-xs font-bold text-foreground">
+                      <span className="text-sm font-bold text-foreground">
                         K{150 * (parseInt(stayForm.adults) || 2)}
                       </span>
                       <input
@@ -1065,7 +1065,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                         <Check className="h-4.5 w-4.5 text-[#C9703A]" />
                       </div>
                       <div>
-                        <div className="text-xs font-bold text-foreground">Bush braai evening</div>
+                        <div className="text-sm font-bold text-foreground">Bush braai evening</div>
                         <div className="text-[10px] text-muted-foreground mt-0.5">
                           Sat 19 Jul · {parseInt(stayForm.adults) + parseInt(stayForm.children)}{" "}
                           guests
@@ -1073,7 +1073,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                       </div>
                     </div>
                     <div className="flex items-center gap-3 shrink-0">
-                      <span className="text-xs font-bold text-foreground">
+                      <span className="text-sm font-bold text-foreground">
                         K
                         {200 *
                           ((parseInt(stayForm.adults) || 2) + (parseInt(stayForm.children) || 0))}
@@ -1096,10 +1096,10 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                 <div className="w-7 h-7 rounded-lg bg-[#FFF4DC] flex items-center justify-center">
                   <Receipt className="h-4 w-4 text-[#1f1433]" />
                 </div>
-                <h3 className="font-bold text-sm text-[#334155]">Price breakdown</h3>
+                <h3 className="font-bold text-base text-[#334155]">Price breakdown</h3>
               </div>
 
-              <div className="space-y-2 text-xs">
+              <div className="space-y-2 text-sm">
                 {isStay && (
                   <>
                     <div className="flex justify-between text-muted-foreground">
@@ -1207,9 +1207,9 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   </span>
                 </div>
 
-                <div className="border-t border-border/40 pt-2 flex justify-between font-black text-sm text-foreground">
+                <div className="border-t border-border/40 pt-2 flex justify-between font-black text-base text-foreground">
                   <span>Total</span>
-                  <span className="text-[#1f1433] text-base">
+                  <span className="text-[#1f1433] text-lg">
                     K{priceBreakdown.total.toLocaleString()}
                   </span>
                 </div>
@@ -1222,12 +1222,12 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   placeholder="Promo code"
                   value={promoCode}
                   onChange={(e) => setPromoCode(e.target.value)}
-                  className="flex-1 bg-[#F9F7F2] border border-border/60 rounded-xl px-3 py-2 text-xs focus:outline-none"
+                  className="flex-1 bg-[#F9F7F2] border border-border/60 rounded-xl px-3 py-2 text-sm focus:outline-none"
                 />
                 <button
                   type="button"
                   onClick={handleApplyPromo}
-                  className="bg-[#f2ba0d] text-white rounded-xl px-4 py-2 text-xs font-bold hover:bg-[#f2ba0d]/90 transition-colors"
+                  className="bg-[#f2ba0d] text-white rounded-xl px-4 py-2 text-sm font-bold hover:bg-[#f2ba0d]/90 transition-colors"
                 >
                   Apply
                 </button>
@@ -1240,14 +1240,14 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                 <div className="w-7 h-7 rounded-lg bg-[#EDE8F5] flex items-center justify-center">
                   <ShieldCheck className="h-4 w-4 text-[#1f1433]" />
                 </div>
-                <h2 className="font-bold text-sm text-[#334155]">Booking policies</h2>
+                <h2 className="font-bold text-base text-[#334155]">Booking policies</h2>
               </div>
 
               <div className="space-y-3.5">
                 <div className="flex gap-3 items-start">
                   <Clock className="h-4 w-4 text-[#1f1433] mt-0.5 shrink-0" />
                   <div>
-                    <h4 className="text-xs font-bold text-[#334155]">Free cancellation</h4>
+                    <h4 className="text-sm font-bold text-[#334155]">Free cancellation</h4>
                     <p className="text-[11px] text-muted-foreground leading-relaxed mt-0.5">
                       Cancel before 16 Jul 2026 for a full refund
                     </p>
@@ -1256,7 +1256,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                 <div className="flex gap-3 items-start border-t border-border/40 pt-3">
                   <CheckCircle2 className="h-4 w-4 text-[#1f1433] mt-0.5 shrink-0" />
                   <div>
-                    <h4 className="text-xs font-bold text-[#334155]">Instant confirmation</h4>
+                    <h4 className="text-sm font-bold text-[#334155]">Instant confirmation</h4>
                     <p className="text-[11px] text-muted-foreground leading-relaxed mt-0.5">
                       You will get a booking confirmation immediately after payment
                     </p>
@@ -1265,7 +1265,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                 <div className="flex gap-3 items-start border-t border-border/40 pt-3">
                   <Lock className="h-4 w-4 text-[#1f1433] mt-0.5 shrink-0" />
                   <div>
-                    <h4 className="text-xs font-bold text-[#334155]">Secure payment</h4>
+                    <h4 className="text-sm font-bold text-[#334155]">Secure payment</h4>
                     <p className="text-[11px] text-muted-foreground leading-relaxed mt-0.5">
                       Mobile Money, Visa, Mastercard, and Airtel Money accepted
                     </p>
@@ -1295,7 +1295,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
               />
               <Label
                 htmlFor="terms"
-                className="text-xs text-muted-foreground font-normal leading-relaxed"
+                className="text-sm text-muted-foreground font-normal leading-relaxed"
               >
                 I agree to the{" "}
                 <Link href="#" className="text-primary underline underline-offset-2">
@@ -1328,13 +1328,13 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   <span className="text-[10px] font-bold uppercase tracking-widest text-[#1f1433]">
                     {isStay ? "Farm stay" : isExperience ? "Experience" : "Transport"}
                   </span>
-                  <h3 className="font-bold text-sm truncate mt-0.5">{listing.name}</h3>
+                  <h3 className="font-bold text-base truncate mt-0.5">{listing.name}</h3>
                 </div>
               </div>
 
               <div className="p-5 space-y-4">
                 {/* Stay Quick summary */}
-                <div className="space-y-2 text-xs">
+                <div className="space-y-2 text-sm">
                   <div className="flex justify-between text-muted-foreground">
                     <span>Location</span>
                     <span className="font-bold text-foreground truncate max-w-[150px]">
@@ -1359,7 +1359,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                     Price Breakdown
                   </p>
 
-                  <div className="space-y-1.5 text-xs">
+                  <div className="space-y-1.5 text-sm">
                     {isStay && (
                       <>
                         <div className="flex justify-between text-muted-foreground">
@@ -1469,9 +1469,9 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                       </span>
                     </div>
 
-                    <div className="border-t border-border/40 pt-2.5 flex justify-between font-black text-sm text-foreground">
+                    <div className="border-t border-border/40 pt-2.5 flex justify-between font-black text-base text-foreground">
                       <span>Total</span>
-                      <span className="text-[#1f1433] text-base">
+                      <span className="text-[#1f1433] text-lg">
                         K{priceBreakdown.total.toLocaleString()}
                       </span>
                     </div>
@@ -1485,12 +1485,12 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                     placeholder="Promo code"
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value)}
-                    className="flex-1 bg-[#F9F7F2] border border-border/60 rounded-xl px-3 py-1.5 text-xs focus:outline-none"
+                    className="flex-1 bg-[#F9F7F2] border border-border/60 rounded-xl px-3 py-1.5 text-sm focus:outline-none"
                   />
                   <button
                     type="button"
                     onClick={handleApplyPromo}
-                    className="bg-[#f2ba0d] text-white rounded-xl px-3 py-1.5 text-xs font-bold hover:bg-[#f2ba0d]/90 transition-colors"
+                    className="bg-[#f2ba0d] text-white rounded-xl px-3 py-1.5 text-sm font-bold hover:bg-[#f2ba0d]/90 transition-colors"
                   >
                     Apply
                   </button>
@@ -1511,7 +1511,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   <Button
                     type="submit"
                     disabled={isSubmitting || !agreedToTerms}
-                    className="w-full h-12 rounded-xl bg-[#f2ba0d] hover:bg-[#f2ba0d]/90 text-[#334155] font-black uppercase tracking-widest text-xs shadow-md shadow-[#1f1433]/10 transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2"
+                    className="w-full h-12 rounded-xl bg-[#f2ba0d] hover:bg-[#f2ba0d]/90 text-[#334155] font-black uppercase tracking-widest text-sm shadow-md shadow-[#1f1433]/10 transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2"
                   >
                     {isSubmitting ? (
                       <>
@@ -1542,7 +1542,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                 <div className="text-[10px] text-[#9B95A8] uppercase tracking-wider font-semibold">
                   Total to pay
                 </div>
-                <div className="text-lg font-black text-[#F9F7F2] mt-0.5">
+                <div className="text-xl font-black text-[#F9F7F2] mt-0.5">
                   K{priceBreakdown.total.toLocaleString()}
                 </div>
               </div>
@@ -1550,7 +1550,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                 <Button
                   type="submit"
                   disabled={isSubmitting || !agreedToTerms}
-                  className="w-full h-11 rounded-xl bg-[#f2ba0d] hover:bg-[#f2ba0d]/90 text-[#334155] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 disabled:opacity-50"
+                  className="w-full h-11 rounded-xl bg-[#f2ba0d] hover:bg-[#f2ba0d]/90 text-[#334155] font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-1.5 disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <>
@@ -1572,4 +1572,3 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
     </div>
   );
 }
-

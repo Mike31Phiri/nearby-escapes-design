@@ -1,5 +1,5 @@
-import { BecomeHostPage } from "@/components/guest/become-host/BecomeHostPage";
+import { BecomeHostLandingPage } from "@/components/guest/become-host/BecomeHostLandingPage";
 
 export default function BecomeHostRoute() {
-  return <BecomeHostPage />;
+  return <BecomeHostLandingPage />;
 }

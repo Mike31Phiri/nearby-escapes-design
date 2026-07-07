@@ -112,7 +112,7 @@ interface ExperienceDetailPageProps {
 
 export function ExperienceDetailPage({
   item,
-  backHref = "/search?category=attractions",
+  backHref = "/experiences",
 }: ExperienceDetailPageProps) {
   const isPackage = item.id.startsWith("p");
   const isGem = item.id.startsWith("g");
@@ -135,10 +135,6 @@ export function ExperienceDetailPage({
   const ratingDist = getRatingDistribution(reviews);
 
   const handleToggleFavorite = () => {
-    if (!isAuthenticated) {
-      setShowAuthDialog(true);
-      return;
-    }
     if (isFavorited) {
       removeItem(item.id);
       toast.success(`Removed from collections`);
@@ -154,7 +150,7 @@ export function ExperienceDetailPage({
     <div className="min-h-screen flex flex-col bg-background font-sans pb-20 md:pb-0">
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8">
         {/* Breadcrumbs row */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-5">
+        <div className="flex items-center gap-2 text-base text-muted-foreground mb-5">
           <Link
             href={backHref}
             className="hover:text-primary transition-colors font-medium flex items-center gap-1"
@@ -192,7 +188,7 @@ export function ExperienceDetailPage({
             <h1 className="text-2xl md:text-3xl font-display font-black tracking-tight text-foreground mb-1.5">
               {item.name}
             </h1>
-            <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-3 text-base text-muted-foreground">
               {"rating" in item && (
                 <span className="flex items-center gap-1">
                   <Star className="h-4 w-4 fill-accent text-accent" />
@@ -253,19 +249,19 @@ export function ExperienceDetailPage({
           <div className="space-y-10">
             {/* Quick stats */}
             <div className="flex flex-wrap gap-5 py-5 border-y border-border/40">
-              <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+              <div className="flex items-center gap-2 text-base font-medium text-muted-foreground">
                 <Clock className="h-4.5 w-4.5 text-primary/70" />
                 <span>
                   Duration: <strong>{"duration" in item ? item.duration : "Approx 4 Hours"}</strong>
                 </span>
               </div>
-              <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+              <div className="flex items-center gap-2 text-base font-medium text-muted-foreground">
                 <Users className="h-4.5 w-4.5 text-primary/70" />
                 <span>
                   Group Size: <strong>Small groups (1-10 people)</strong>
                 </span>
               </div>
-              <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+              <div className="flex items-center gap-2 text-base font-medium text-muted-foreground">
                 <ShieldCheck className="h-4.5 w-4.5 text-primary/70" />
                 <span>Verified Local Guide Included</span>
               </div>
@@ -288,12 +284,14 @@ export function ExperienceDetailPage({
                 <div className="space-y-4">
                   {packageItineraries[item.id].map((day, idx) => (
                     <div key={idx} className="flex gap-4 p-5 rounded-2xl bg-muted/30">
-                      <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-black text-sm shrink-0">
+                      <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-black text-base shrink-0">
                         {idx + 1}
                       </div>
                       <div className="space-y-1">
-                        <h3 className="font-bold text-base text-foreground">{day.title}</h3>
-                        <p className="text-sm text-muted-foreground leading-relaxed">{day.desc}</p>
+                        <h3 className="font-bold text-lg text-foreground">{day.title}</h3>
+                        <p className="text-base text-muted-foreground leading-relaxed">
+                          {day.desc}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -304,7 +302,7 @@ export function ExperienceDetailPage({
             {/* Highlights / What is Included */}
             <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="p-5 rounded-2xl bg-muted/30">
-                <h3 className="font-bold text-sm uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-2">
+                <h3 className="font-bold text-base uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-2">
                   <Sparkles className="h-4 w-4" /> Highlights
                 </h3>
                 <ul className="space-y-2.5">
@@ -314,7 +312,7 @@ export function ExperienceDetailPage({
                     "Off-the-beaten-track routes",
                     "Safe and secure setups",
                   ].map((hi, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <li key={i} className="flex items-start gap-2 text-base text-muted-foreground">
                       <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 shrink-0" />
                       <span>{hi}</span>
                     </li>
@@ -322,7 +320,7 @@ export function ExperienceDetailPage({
                 </ul>
               </div>
               <div className="p-5 rounded-2xl bg-muted/30">
-                <h3 className="font-bold text-sm uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-2">
+                <h3 className="font-bold text-base uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-emerald-500" /> What&apos;s Included
                 </h3>
                 <ul className="space-y-2.5">
@@ -332,7 +330,7 @@ export function ExperienceDetailPage({
                     "All local taxes and charges",
                     "First-aid safety setup",
                   ].map((inc, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <li key={i} className="flex items-start gap-2 text-base text-muted-foreground">
                       <CheckCircle2 className="h-4 w-4 text-emerald-500 mt-0.5 shrink-0" />
                       <span>{inc}</span>
                     </li>
@@ -362,14 +360,14 @@ export function ExperienceDetailPage({
                         />
                       ))}
                     </div>
-                    <span className="text-xs text-muted-foreground mt-1 font-medium">
+                    <span className="text-sm text-muted-foreground mt-1 font-medium">
                       {reviews.length || reviewCount} {reviews.length === 1 ? "review" : "reviews"}
                     </span>
                   </div>
                   <div className="flex-1 space-y-1.5">
                     {ratingDist.reverse().map(({ star, count, percentage }) => (
-                      <div key={star} className="flex items-center gap-2 text-sm">
-                        <span className="w-3 text-right text-muted-foreground font-medium text-xs">
+                      <div key={star} className="flex items-center gap-2 text-base">
+                        <span className="w-3 text-right text-muted-foreground font-medium text-sm">
                           {star}
                         </span>
                         <Star className="h-3 w-3 fill-accent text-accent" />
@@ -379,7 +377,7 @@ export function ExperienceDetailPage({
                             style={{ width: `${percentage}%` }}
                           />
                         </div>
-                        <span className="w-6 text-right text-xs text-muted-foreground">
+                        <span className="w-6 text-right text-sm text-muted-foreground">
                           {count}
                         </span>
                       </div>
@@ -400,17 +398,17 @@ export function ExperienceDetailPage({
           <aside className="hidden lg:block lg:sticky lg:top-24">
             <div className="bg-card rounded-2xl card-shadow-lg overflow-hidden">
               <div className="bg-primary px-6 py-5 text-white">
-                <p className="text-primary-foreground/80 text-xs font-bold uppercase tracking-widest mb-1">
+                <p className="text-primary-foreground/80 text-sm font-bold uppercase tracking-widest mb-1">
                   {isPackage ? "All-Inclusive Rate" : "Rate starting at"}
                 </p>
                 <div className="flex items-baseline gap-1">
                   <span className="text-3xl font-black text-primary-foreground">K{item.price}</span>
-                  <span className="text-primary-foreground/75 text-sm">
+                  <span className="text-primary-foreground/75 text-base">
                     {isPackage ? "/package" : "/person"}
                   </span>
                 </div>
                 {"rating" in item && (
-                  <div className="flex items-center gap-1 mt-1 text-primary-foreground/90 text-xs">
+                  <div className="flex items-center gap-1 mt-1 text-primary-foreground/90 text-sm">
                     <Star className="h-3.5 w-3.5 fill-primary-foreground text-primary-foreground" />
                     <span>{avgRating.toFixed(1)} rating</span>
                   </div>
@@ -418,7 +416,7 @@ export function ExperienceDetailPage({
               </div>
 
               <div className="p-6 space-y-5">
-                <h3 className="font-black text-lg text-foreground tracking-tight font-display">
+                <h3 className="font-black text-xl text-foreground tracking-tight font-display">
                   Invoice Summary
                 </h3>
 
@@ -426,7 +424,7 @@ export function ExperienceDetailPage({
                   <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                     What&apos;s Included
                   </p>
-                  <div className="space-y-2 text-sm">
+                  <div className="space-y-2 text-base">
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <Clock className="h-4 w-4 text-primary/70" />
                       <span>Duration: {"duration" in item ? item.duration : "Approx 4 Hours"}</span>
@@ -458,7 +456,10 @@ export function ExperienceDetailPage({
                       "All local taxes & charges included",
                       "Water & refreshments provided",
                     ].map((h, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <li
+                        key={i}
+                        className="flex items-start gap-2 text-base text-muted-foreground"
+                      >
                         <CheckCircle2 className="h-3.5 w-3.5 text-primary mt-0.5 shrink-0" />
                         {h}
                       </li>
@@ -472,7 +473,7 @@ export function ExperienceDetailPage({
                   <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                     Price Breakdown
                   </p>
-                  <div className="space-y-1.5 text-sm">
+                  <div className="space-y-1.5 text-base">
                     <div className="flex justify-between text-muted-foreground">
                       <span>{isPackage ? "Package rate" : "Per person"}</span>
                       <span className="font-semibold text-foreground">K{item.price}</span>
@@ -489,13 +490,13 @@ export function ExperienceDetailPage({
 
                 <Link
                   href={`/checkout/book?type=experience&id=${item.id}`}
-                  className="w-full h-12 rounded-xl bg-primary font-black uppercase tracking-widest text-sm text-primary-foreground shadow-md shadow-primary/20 hover:shadow-primary/30 transition-all hover:scale-[1.01] flex items-center justify-center gap-2"
+                  className="w-full h-12 rounded-xl bg-primary font-black uppercase tracking-widest text-base text-primary-foreground shadow-md shadow-primary/20 hover:shadow-primary/30 transition-all hover:scale-[1.01] flex items-center justify-center gap-2"
                 >
                   Proceed to Booking
                   <ChevronRight className="h-4 w-4" />
                 </Link>
 
-                <p className="text-center text-xs text-muted-foreground">
+                <p className="text-center text-sm text-muted-foreground">
                   Free cancellation · No charge until confirmed
                 </p>
               </div>
@@ -509,13 +510,13 @@ export function ExperienceDetailPage({
         <div className="flex items-center justify-between px-4 py-3">
           <div>
             <div className="flex items-baseline gap-1">
-              <span className="text-lg font-black text-foreground">K{item.price}</span>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xl font-black text-foreground">K{item.price}</span>
+              <span className="text-sm text-muted-foreground">
                 {isPackage ? "/package" : "/person"}
               </span>
             </div>
             {"rating" in item && (
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1 text-sm text-muted-foreground">
                 <Star className="h-3 w-3 fill-accent text-accent" />
                 <span>
                   {avgRating.toFixed(1)} · {reviews.length || reviewCount} reviews
@@ -537,7 +538,7 @@ export function ExperienceDetailPage({
             </button>
             <Link
               href={`/checkout/book?type=experience&id=${item.id}`}
-              className="h-10 px-5 rounded-xl bg-primary font-bold text-sm text-primary-foreground shadow-sm shadow-primary/20 flex items-center justify-center gap-1.5"
+              className="h-10 px-5 rounded-xl bg-primary font-bold text-base text-primary-foreground shadow-sm shadow-primary/20 flex items-center justify-center gap-1.5"
             >
               Book Now
               <ChevronRight className="h-4 w-4" />

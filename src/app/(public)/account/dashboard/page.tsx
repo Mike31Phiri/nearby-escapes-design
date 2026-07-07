@@ -1,5 +1,5 @@
-import { GuestProfilePage } from "@/components/guest/profile/GuestProfilePage";
+import { redirect } from "next/navigation";
 
-export default function ProfilePage() {
-  return <GuestProfilePage />;
+export default function DashboardRedirectPage() {
+  redirect("/profile");
 }

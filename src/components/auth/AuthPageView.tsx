@@ -29,7 +29,7 @@ interface AuthPageViewProps {
   defaultTab?: "login" | "register" | "otp" | "reset";
 }
 
-//Shared hero section 
+//Shared hero section
 
 function AuthHero({
   eyebrow,
@@ -46,8 +46,8 @@ function AuthHero({
         href="/"
         className="absolute top-4 left-4 md:top-6 md:left-6 flex items-center gap-1.5 no-underline z-10"
       >
-        <span className="text-lg font-semibold text-white tracking-tight">Nearby</span>
-        <span className="font-script text-[#D4AF37] text-[1.3em] leading-none">Escapes</span>
+        <span className="text-xl font-semibold text-white tracking-tight">Nearby</span>
+        <span className="font-script text-purple text-[1.3em] leading-none">Escapes</span>
       </Link>
       <div className="max-w-lg">
         <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#D4AF37] mb-2">
@@ -56,9 +56,7 @@ function AuthHero({
         <h1 className="font-display text-[1.75rem] md:text-[2.75rem] lg:text-[3rem] font-bold text-white leading-[1.15] tracking-tight">
           {headline}
         </h1>
-        {sub && (
-          <p className="text-sm text-white/60 mt-1.5 leading-relaxed max-w-md">{sub}</p>
-        )}
+        {sub && <p className="text-base text-white/60 mt-1.5 leading-relaxed max-w-md">{sub}</p>}
       </div>
     </div>
   );
@@ -68,10 +66,14 @@ function AuthHero({
 
 function PasswordStrength({ password }: { password: string }) {
   const getStrength = (val: string) => {
-    if (!val) return { score: 0, label: "Enter a password", color: "text-gray-400", bar: "bg-gray-200" };
-    if (val.length < 6) return { score: 1, label: "Too short", color: "text-rose-500", bar: "bg-rose-500" };
-    if (val.length < 8) return { score: 2, label: "Weak", color: "text-amber-500", bar: "bg-amber-500" };
-    if (val.length < 12) return { score: 3, label: "Good", color: "text-emerald-600", bar: "bg-emerald-600" };
+    if (!val)
+      return { score: 0, label: "Enter a password", color: "text-gray-400", bar: "bg-gray-200" };
+    if (val.length < 6)
+      return { score: 1, label: "Too short", color: "text-rose-500", bar: "bg-rose-500" };
+    if (val.length < 8)
+      return { score: 2, label: "Weak", color: "text-amber-500", bar: "bg-amber-500" };
+    if (val.length < 12)
+      return { score: 3, label: "Good", color: "text-emerald-600", bar: "bg-emerald-600" };
     return { score: 4, label: "Strong ✓", color: "text-emerald-600", bar: "bg-emerald-600" };
   };
   const strength = getStrength(password);
@@ -93,7 +95,7 @@ function PasswordStrength({ password }: { password: string }) {
   );
 }
 
-//  OTP inputs 
+//  OTP inputs
 
 function OtpInputs({
   value,
@@ -142,7 +144,7 @@ function SubmitButton({ loading, children }: { loading: boolean; children: React
     <button
       type="submit"
       disabled={loading}
-      className="w-full py-3.5 bg-[#1A0B2E] hover:bg-[#2E154A] disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-bold uppercase tracking-wider rounded-xl transition-all duration-200 shadow-lg shadow-[#1A0B2E]/20 active:scale-[0.98] flex items-center justify-center gap-2"
+      className="w-full py-3.5 bg-[#1A0B2E] hover:bg-[#2E154A] disabled:opacity-60 disabled:cursor-not-allowed text-white text-base font-bold uppercase tracking-wider rounded-xl transition-all duration-200 shadow-lg shadow-[#1A0B2E]/20 active:scale-[0.98] flex items-center justify-center gap-2"
     >
       {loading && <Loader2 className="h-4 w-4 animate-spin" />}
       {children}
@@ -224,7 +226,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
     }
   };
 
-  //  Login 
+  //  Login
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -238,11 +240,14 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
       setUser(user);
       toast.success(`Welcome back, ${user.name.split(" ")[0]}!`);
       // Route based on role
-      const dest = user.role === "host"
-        ? "/host"
-        : user.role === "admin"
-          ? "/admin/dashboard"
-          : redirectTarget === "/" ? "/account/dashboard" : redirectTarget;
+      const dest =
+        user.role === "host"
+          ? "/host"
+          : user.role === "admin"
+            ? "/admin/dashboard"
+            : redirectTarget === "/"
+              ? "/profile"
+              : redirectTarget;
       setTimeout(() => router.push(dest), 600);
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Invalid email or password.");
@@ -287,7 +292,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
       });
       setUser(user);
       toast.success("Account created! Welcome to Nearby Escapes.");
-      const dest = role === "host" ? "/host" : "/account/dashboard";
+      const dest = role === "host" ? "/host" : "/profile";
       setTimeout(() => router.push(dest), 600);
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Registration failed. Please try again.");
@@ -301,7 +306,10 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
   const handleResetSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (resetStep === 1) {
-      if (!resetEmail) { toast.error("Please enter your email."); return; }
+      if (!resetEmail) {
+        toast.error("Please enter your email.");
+        return;
+      }
       setLoading(true);
       try {
         await authApi.forgotPassword(resetEmail);
@@ -313,36 +321,61 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
         setLoading(false);
       }
     } else if (resetStep === 2) {
-      if (resetOtp.join("").length < 6) { toast.error("Please enter the 6-digit code."); return; }
+      if (resetOtp.join("").length < 6) {
+        toast.error("Please enter the 6-digit code.");
+        return;
+      }
       toast.success("Code verified! Set your new password.");
       setResetStep(3);
     } else {
-      if (!newPassword || newPassword.length < 6) { toast.error("Password must be at least 6 characters."); return; }
-      if (newPassword !== confirmPassword) { toast.error("Passwords do not match."); return; }
+      if (!newPassword || newPassword.length < 6) {
+        toast.error("Password must be at least 6 characters.");
+        return;
+      }
+      if (newPassword !== confirmPassword) {
+        toast.error("Passwords do not match.");
+        return;
+      }
       toast.success("Password reset! Please sign in.");
       setTimeout(() => router.push("/auth/login"), 800);
     }
   };
 
-  //  Hero content 
+  //  Hero content
 
   const heroContent = {
     login: {
       eyebrow: "Welcome back",
-      headline: <>Your next <em className="text-[#D4AF37] not-italic">escape</em> is waiting</>,
+      headline: (
+        <>
+          Your next <em className="text-[#D4AF37] not-italic">escape</em> is waiting
+        </>
+      ),
       sub: "Sign in to manage your bookings, saved lodges, and upcoming trips.",
     },
     register: {
       eyebrow: "Join free today",
-      headline: <>Find your <em className="text-[#D4AF37] not-italic">hidden gem</em></>,
+      headline: (
+        <>
+          Find your <em className="text-[#D4AF37] not-italic">hidden gem</em>
+        </>
+      ),
     },
     otp: {
       eyebrow: "Almost there",
-      headline: <>Verify your <em className="text-[#D4AF37] not-italic">number</em></>,
+      headline: (
+        <>
+          Verify your <em className="text-[#D4AF37] not-italic">number</em>
+        </>
+      ),
     },
     reset: {
       eyebrow: "Account recovery",
-      headline: <>Reset your <em className="text-[#D4AF37] not-italic">password</em></>,
+      headline: (
+        <>
+          Reset your <em className="text-[#D4AF37] not-italic">password</em>
+        </>
+      ),
     },
   };
 
@@ -358,13 +391,14 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
       <div className="flex-1 flex flex-col bg-[#FDFBF7]">
         <div className="flex-1 px-5 md:px-8 py-6 md:py-8">
           <div className="w-full max-w-lg mx-auto">
-
             {/* ── LOGIN ─────────────────────────────────────────────────── */}
             {activeTab === "login" && (
               <form onSubmit={handleLoginSubmit} className="space-y-5">
                 <div className="mb-8">
-                  <h2 className="text-xl font-bold text-[#1A0B2E] font-display tracking-tight">Sign in</h2>
-                  <p className="text-sm text-[#64748B] mt-1">Welcome back to Nearby Escapes</p>
+                  <h2 className="text-xl font-bold text-[#1A0B2E] font-display tracking-tight">
+                    Sign in
+                  </h2>
+                  <p className="text-base text-[#64748B] mt-1">Welcome back to Nearby Escapes</p>
                 </div>
 
                 <div className="space-y-1.5">
@@ -374,7 +408,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                   <div className="relative">
                     <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <input
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 bg-white text-base font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
                       type="email"
                       placeholder="you@example.com"
                       value={email}
@@ -392,7 +426,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                   <div className="relative">
                     <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <input
-                      className="w-full pl-10 pr-11 py-3 rounded-xl border border-gray-200 bg-white text-sm font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
+                      className="w-full pl-10 pr-11 py-3 rounded-xl border border-gray-200 bg-white text-base font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
                       value={password}
@@ -424,14 +458,17 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                     id="remember-me"
                     className="rounded border-gray-300 data-[state=checked]:bg-[#1A0B2E] data-[state=checked]:border-[#1A0B2E]"
                   />
-                  <Label htmlFor="remember-me" className="text-xs text-gray-600 cursor-pointer select-none">
+                  <Label
+                    htmlFor="remember-me"
+                    className="text-sm text-gray-600 cursor-pointer select-none"
+                  >
                     Keep me signed in on this device
                   </Label>
                 </div>
 
                 <SubmitButton loading={loading}>Sign in</SubmitButton>
 
-                <p className="text-center text-sm text-[#64748B]">
+                <p className="text-center text-base text-[#64748B]">
                   New to Nearby Escapes?{" "}
                   <button
                     type="button"
@@ -448,8 +485,10 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
             {activeTab === "register" && (
               <form onSubmit={handleRegisterSubmit} className="space-y-5">
                 <div className="mb-6">
-                  <h2 className="text-xl font-bold text-[#1A0B2E] font-display tracking-tight">Create your account</h2>
-                  <p className="text-sm text-[#64748B] mt-1">Join the community of explorers</p>
+                  <h2 className="text-xl font-bold text-[#1A0B2E] font-display tracking-tight">
+                    Create your account
+                  </h2>
+                  <p className="text-base text-[#64748B] mt-1">Join the community of explorers</p>
                 </div>
 
                 {/* Role selector */}
@@ -468,8 +507,13 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                           : "border-gray-200 bg-white hover:border-gray-300",
                       )}
                     >
-                      <Backpack className={cn("h-5 w-5", role === "guest" ? "text-[#D4AF37]" : "text-gray-400")} />
-                      <span className="text-xs font-bold text-[#1A0B2E] font-display">Guest</span>
+                      <Backpack
+                        className={cn(
+                          "h-5 w-5",
+                          role === "guest" ? "text-[#D4AF37]" : "text-gray-400",
+                        )}
+                      />
+                      <span className="text-sm font-bold text-[#1A0B2E] font-display">Guest</span>
                       <span className="text-[9px] text-[#64748B]">Find &amp; book escapes</span>
                     </button>
                     <button
@@ -482,8 +526,15 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                           : "border-gray-200 bg-white hover:border-gray-300",
                       )}
                     >
-                      <Home className={cn("h-5 w-5", role === "host" ? "text-[#D4AF37]" : "text-gray-400")} />
-                      <span className="text-xs font-bold text-[#1A0B2E] font-display">Local host</span>
+                      <Home
+                        className={cn(
+                          "h-5 w-5",
+                          role === "host" ? "text-[#D4AF37]" : "text-gray-400",
+                        )}
+                      />
+                      <span className="text-sm font-bold text-[#1A0B2E] font-display">
+                        Local host
+                      </span>
                       <span className="text-[9px] text-[#64748B]">List your property</span>
                     </button>
                   </div>
@@ -492,9 +543,11 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                 {/* Name */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">First name</Label>
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                      First name
+                    </Label>
                     <input
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-base font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
                       type="text"
                       placeholder="Thandeka"
                       value={firstName}
@@ -504,9 +557,11 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">Last name</Label>
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                      Last name
+                    </Label>
                     <input
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-base font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
                       type="text"
                       placeholder="Mwale"
                       value={lastName}
@@ -519,11 +574,13 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
 
                 {/* Email */}
                 <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">Email address</Label>
+                  <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                    Email address
+                  </Label>
                   <div className="relative">
                     <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <input
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 bg-white text-base font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
                       type="email"
                       placeholder="you@example.com"
                       value={email}
@@ -536,16 +593,18 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
 
                 {/* Phone */}
                 <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">Phone number</Label>
+                  <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                    Phone number
+                  </Label>
                   <div className="flex gap-2">
-                    <div className="flex items-center gap-1.5 px-3.5 py-3 rounded-xl border border-gray-200 bg-white text-sm font-semibold text-gray-700 shrink-0">
+                    <div className="flex items-center gap-1.5 px-3.5 py-3 rounded-xl border border-gray-200 bg-white text-base font-semibold text-gray-700 shrink-0">
                       🇿🇲 +260
                       <ChevronDown className="h-3 w-3 text-gray-400" />
                     </div>
                     <div className="relative flex-1">
                       <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                       <input
-                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 bg-white text-base font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
                         type="tel"
                         placeholder="97 123 4567"
                         value={phone}
@@ -555,16 +614,20 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                       />
                     </div>
                   </div>
-                  <p className="text-xs text-gray-400 mt-1">We&apos;ll send booking confirmations here</p>
+                  <p className="text-sm text-gray-400 mt-1">
+                    We&apos;ll send booking confirmations here
+                  </p>
                 </div>
 
                 {/* Password */}
                 <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">Password</Label>
+                  <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                    Password
+                  </Label>
                   <div className="relative">
                     <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <input
-                      className="w-full pl-10 pr-11 py-3 rounded-xl border border-gray-200 bg-white text-sm font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
+                      className="w-full pl-10 pr-11 py-3 rounded-xl border border-gray-200 bg-white text-base font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
                       type={showPassword ? "text" : "password"}
                       placeholder="Create a strong password"
                       value={password}
@@ -591,11 +654,24 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                     onCheckedChange={(c) => setAgreeTerms(!!c)}
                     className="rounded border-gray-300 data-[state=checked]:bg-[#1A0B2E] data-[state=checked]:border-[#1A0B2E] mt-0.5"
                   />
-                  <Label htmlFor="agree-terms" className="text-xs text-gray-600 cursor-pointer select-none leading-relaxed">
+                  <Label
+                    htmlFor="agree-terms"
+                    className="text-sm text-gray-600 cursor-pointer select-none leading-relaxed"
+                  >
                     I agree to the{" "}
-                    <Link href="/terms" className="font-bold text-[#1A0B2E] hover:text-[#D4AF37] transition-colors">Terms of Service</Link>{" "}
+                    <Link
+                      href="/terms"
+                      className="font-bold text-[#1A0B2E] hover:text-[#D4AF37] transition-colors"
+                    >
+                      Terms of Service
+                    </Link>{" "}
                     and{" "}
-                    <Link href="/privacy" className="font-bold text-[#1A0B2E] hover:text-[#D4AF37] transition-colors">Privacy Policy</Link>
+                    <Link
+                      href="/privacy"
+                      className="font-bold text-[#1A0B2E] hover:text-[#D4AF37] transition-colors"
+                    >
+                      Privacy Policy
+                    </Link>
                   </Label>
                 </div>
 
@@ -606,14 +682,17 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                     onCheckedChange={(c) => setDealsAlerts(!!c)}
                     className="rounded border-gray-300 data-[state=checked]:bg-[#1A0B2E] data-[state=checked]:border-[#1A0B2E] mt-0.5"
                   />
-                  <Label htmlFor="deals-alerts" className="text-xs text-gray-600 cursor-pointer select-none leading-relaxed">
+                  <Label
+                    htmlFor="deals-alerts"
+                    className="text-sm text-gray-600 cursor-pointer select-none leading-relaxed"
+                  >
                     Send me deals and hidden gem alerts for my area
                   </Label>
                 </div>
 
                 <SubmitButton loading={loading}>Create my account</SubmitButton>
 
-                <p className="text-center text-sm text-[#64748B]">
+                <p className="text-center text-base text-[#64748B]">
                   Already have an account?{" "}
                   <button
                     type="button"
@@ -628,12 +707,18 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
 
             {/* ── OTP ───────────────────────────────────────────────────── */}
             {activeTab === "otp" && (
-              <form onSubmit={(e) => {
-                e.preventDefault();
-                if (otp.join("").length < 6) { toast.error("Please enter the complete 6-digit code."); return; }
-                toast.success("Verification successful! Logging you in...");
-                setTimeout(() => router.push(role === "host" ? "/host" : "/account/dashboard"), 800);
-              }} className="space-y-6 text-center">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (otp.join("").length < 6) {
+                    toast.error("Please enter the complete 6-digit code.");
+                    return;
+                  }
+                  toast.success("Verification successful! Logging you in...");
+                  setTimeout(() => router.push(role === "host" ? "/host" : "/profile"), 800);
+                }}
+                className="space-y-6 text-center"
+              >
                 <div>
                   <div className="h-16 w-16 rounded-full bg-[#D4AF37]/10 flex items-center justify-center mx-auto mb-5">
                     <MessageSquare className="h-7 w-7 text-[#D4AF37]" weight="regular" />
@@ -641,9 +726,12 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                   <h2 className="text-xl md:text-2xl font-bold text-[#1A0B2E] font-display tracking-tight">
                     Check your messages
                   </h2>
-                  <p className="text-sm text-[#64748B] mt-2 leading-relaxed">
+                  <p className="text-base text-[#64748B] mt-2 leading-relaxed">
                     We sent a 6-digit code to{" "}
-                    <strong className="text-[#1A0B2E] font-display">+260 {phone || "97 ••• ••34"}</strong>.
+                    <strong className="text-[#1A0B2E] font-display">
+                      +260 {phone || "97 ••• ••34"}
+                    </strong>
+                    .
                     <br />
                     It expires in 10 minutes.
                   </p>
@@ -656,7 +744,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                   fieldId="otp"
                 />
 
-                <div className="text-sm text-[#64748B]">
+                <div className="text-base text-[#64748B]">
                   Didn&apos;t get it?{" "}
                   <button
                     type="button"
@@ -673,7 +761,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                 <button
                   type="button"
                   onClick={() => router.push("/auth/register")}
-                  className="text-xs text-[#64748B] hover:text-gray-700 font-semibold flex items-center justify-center gap-1.5 transition-colors mx-auto"
+                  className="text-sm text-[#64748B] hover:text-gray-700 font-semibold flex items-center justify-center gap-1.5 transition-colors mx-auto"
                 >
                   <ArrowLeft className="h-3.5 w-3.5" /> Change number
                 </button>
@@ -684,8 +772,10 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
             {activeTab === "reset" && (
               <form onSubmit={handleResetSubmit} className="space-y-6">
                 <div className="mb-2">
-                  <h2 className="text-xl font-bold text-[#1A0B2E] font-display tracking-tight">Reset password</h2>
-                  <p className="text-sm text-[#64748B] mt-1">We&apos;ll help you regain access</p>
+                  <h2 className="text-xl font-bold text-[#1A0B2E] font-display tracking-tight">
+                    Reset password
+                  </h2>
+                  <p className="text-base text-[#64748B] mt-1">We&apos;ll help you regain access</p>
                 </div>
 
                 {/* Step indicator */}
@@ -696,27 +786,37 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                     { num: 3, label: "New password", done: false, active: resetStep === 3 },
                   ].map((step, i) => (
                     <Fragment key={step.num}>
-                      <div className={cn(
-                        "flex items-center gap-1.5 text-xs font-semibold transition-colors",
-                        step.done ? "text-[#D4AF37]" : step.active ? "text-[#1A0B2E]" : "text-gray-400",
-                      )}>
-                        <div className={cn(
-                          "w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold border-2 transition-all",
+                      <div
+                        className={cn(
+                          "flex items-center gap-1.5 text-sm font-semibold transition-colors",
                           step.done
-                            ? "bg-[#D4AF37] border-[#D4AF37] text-white"
+                            ? "text-[#D4AF37]"
                             : step.active
-                              ? "bg-[#1A0B2E] border-[#1A0B2E] text-white"
-                              : "bg-white border-gray-300 text-gray-400",
-                        )}>
+                              ? "text-[#1A0B2E]"
+                              : "text-gray-400",
+                        )}
+                      >
+                        <div
+                          className={cn(
+                            "w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold border-2 transition-all",
+                            step.done
+                              ? "bg-[#D4AF37] border-[#D4AF37] text-white"
+                              : step.active
+                                ? "bg-[#1A0B2E] border-[#1A0B2E] text-white"
+                                : "bg-white border-gray-300 text-gray-400",
+                          )}
+                        >
                           {step.done ? <Check className="h-3 w-3" /> : step.num}
                         </div>
                         <span className="hidden sm:inline">{step.label}</span>
                       </div>
                       {i < 2 && (
-                        <div className={cn(
-                          "flex-1 h-0.5 rounded transition-colors",
-                          step.done ? "bg-[#D4AF37]" : "bg-gray-200",
-                        )} />
+                        <div
+                          className={cn(
+                            "flex-1 h-0.5 rounded transition-colors",
+                            step.done ? "bg-[#D4AF37]" : "bg-gray-200",
+                          )}
+                        />
                       )}
                     </Fragment>
                   ))}
@@ -724,11 +824,13 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
 
                 {resetStep === 1 && (
                   <div className="space-y-1.5">
-                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">Enter your email</Label>
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                      Enter your email
+                    </Label>
                     <div className="relative">
                       <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                       <input
-                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 bg-white text-base font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
                         type="email"
                         placeholder="you@example.com"
                         value={resetEmail}
@@ -741,8 +843,13 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
 
                 {resetStep === 2 && (
                   <div className="space-y-3">
-                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">Verification code</Label>
-                    <p className="text-xs text-[#64748B]">We sent a code to <strong className="text-[#1A0B2E] font-display">{resetEmail}</strong></p>
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                      Verification code
+                    </Label>
+                    <p className="text-sm text-[#64748B]">
+                      We sent a code to{" "}
+                      <strong className="text-[#1A0B2E] font-display">{resetEmail}</strong>
+                    </p>
                     <OtpInputs
                       value={resetOtp}
                       onChange={(i, v) => handleOtpChange(i, v, "resetOtp")}
@@ -755,11 +862,13 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                 {resetStep === 3 && (
                   <>
                     <div className="space-y-1.5">
-                      <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">New password</Label>
+                      <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                        New password
+                      </Label>
                       <div className="relative">
                         <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                         <input
-                          className="w-full pl-10 pr-11 py-3 rounded-xl border border-gray-200 bg-white text-sm font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
+                          className="w-full pl-10 pr-11 py-3 rounded-xl border border-gray-200 bg-white text-base font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
                           type={showNewPassword ? "text" : "password"}
                           placeholder="Create new password"
                           value={newPassword}
@@ -772,16 +881,22 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                           onClick={() => setShowNewPassword(!showNewPassword)}
                           className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                         >
-                          {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          {showNewPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
                         </button>
                       </div>
                       {newPassword && <PasswordStrength password={newPassword} />}
                     </div>
 
                     <div className="space-y-1.5">
-                      <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">Confirm new password</Label>
+                      <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                        Confirm new password
+                      </Label>
                       <input
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-base font-medium text-[#1A0B2E] font-display outline-none transition-all focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/10 placeholder:text-gray-400"
                         type="password"
                         placeholder="Repeat new password"
                         value={confirmPassword}
@@ -794,10 +909,14 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                 )}
 
                 <SubmitButton loading={loading}>
-                  {resetStep === 1 ? "Send Reset Link" : resetStep === 2 ? "Verify Code" : "Set new password"}
+                  {resetStep === 1
+                    ? "Send Reset Link"
+                    : resetStep === 2
+                      ? "Verify Code"
+                      : "Set new password"}
                 </SubmitButton>
 
-                <p className="text-center text-sm text-[#64748B]">
+                <p className="text-center text-base text-[#64748B]">
                   Remembered it?{" "}
                   <button
                     type="button"
@@ -809,7 +928,6 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                 </p>
               </form>
             )}
-
           </div>
         </div>
 

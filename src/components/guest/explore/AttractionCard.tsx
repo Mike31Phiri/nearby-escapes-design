@@ -4,14 +4,14 @@ import Link from "next/link";
 import type { AttractionData } from "@/lib/mock-explore-data";
 
 const CATEGORY_LABELS: Record<AttractionData["category"], string> = {
-  waterfall:         "Waterfall",
-  "game-reserve":    "Game Reserve",
-  "heritage-site":   "Heritage Site",
-  viewpoint:         "Viewpoint",
-  "natural-landmark":"Natural Landmark",
-  lake:              "Lake",
-  dam:               "Dam",
-  other:             "Attraction",
+  waterfall: "Waterfall",
+  "game-reserve": "Game Reserve",
+  "heritage-site": "Heritage Site",
+  viewpoint: "Viewpoint",
+  "natural-landmark": "Natural Landmark",
+  lake: "Lake",
+  dam: "Dam",
+  other: "Attraction",
 };
 
 interface AttractionCardProps {
@@ -62,9 +62,7 @@ export function AttractionCard({ attraction, href, distanceLabel }: AttractionCa
           {attraction.description}
         </p>
         {distanceLabel && (
-          <p className="mt-2 text-[12px] font-semibold text-[#E8952E]">
-            📍 {distanceLabel}
-          </p>
+          <p className="mt-2 text-[12px] font-semibold text-[#E8952E]">📍 {distanceLabel}</p>
         )}
       </div>
     </Link>

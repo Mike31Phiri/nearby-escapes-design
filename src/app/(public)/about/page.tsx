@@ -22,4 +22,3 @@ export async function generateMetadata() {
       "Nearby Escapes is a Zambian-built marketplace connecting guests with authentic local stays, experiences, and transport across Zambia. Learn our story.",
   };
 }
-

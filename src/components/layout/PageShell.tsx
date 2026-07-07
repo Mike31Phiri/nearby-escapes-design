@@ -51,7 +51,7 @@ export function PageShellHeader({
     <div className={cn("mb-8", className)}>
       {/* Breadcrumbs */}
       {breadcrumbs && breadcrumbs.length > 0 && (
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+        <nav className="flex items-center gap-2 text-base text-muted-foreground mb-4">
           {breadcrumbs.map((item, i) => (
             <span key={i} className="flex items-center gap-2">
               {i === 0 && <ChevronLeft className="h-4 w-4 shrink-0" />}
@@ -75,7 +75,7 @@ export function PageShellHeader({
             {title}
           </h1>
           {description && (
-            <p className="text-muted-foreground mt-1.5 max-w-2xl text-sm md:text-base leading-relaxed">
+            <p className="text-muted-foreground mt-1.5 max-w-2xl text-base md:text-lg leading-relaxed">
               {description}
             </p>
           )}

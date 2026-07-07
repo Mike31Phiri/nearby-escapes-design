@@ -169,7 +169,7 @@ export function StayWizard() {
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
             <div>
               <h2 className="text-xl font-bold">What type of place will guests have?</h2>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground text-base">
                 Select the category that best describes your property.
               </p>
             </div>
@@ -197,7 +197,7 @@ export function StayWizard() {
                 ))}
               </div>
               {errors.propertyType && (
-                <p className="text-destructive text-sm">{errors.propertyType.message}</p>
+                <p className="text-destructive text-base">{errors.propertyType.message}</p>
               )}
             </div>
 
@@ -209,7 +209,7 @@ export function StayWizard() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-semibold">Is this a multi-unit building?</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-sm text-muted-foreground">
                         Like an apartment complex or boutique hotel.
                       </p>
                     </div>
@@ -224,7 +224,7 @@ export function StayWizard() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-semibold">Is this set up entirely for guests?</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-sm text-muted-foreground">
                         Or do you keep personal belongings here?
                       </p>
                     </div>
@@ -241,7 +241,7 @@ export function StayWizard() {
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
             <div>
               <h2 className="text-xl font-bold">Where is your place located?</h2>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground text-base">
                 Guests will only get your exact address once they&apos;ve booked.
               </p>
             </div>
@@ -255,7 +255,7 @@ export function StayWizard() {
                     <Label>Street Address</Label>
                     <Input {...field} placeholder="123 Main St" />
                     {errors.address && (
-                      <p className="text-destructive text-xs mt-1">{errors.address.message}</p>
+                      <p className="text-destructive text-sm mt-1">{errors.address.message}</p>
                     )}
                   </div>
                 )}
@@ -269,7 +269,7 @@ export function StayWizard() {
                       <Label>City</Label>
                       <Input {...field} placeholder="Cape Town" />
                       {errors.city && (
-                        <p className="text-destructive text-xs mt-1">{errors.city.message}</p>
+                        <p className="text-destructive text-sm mt-1">{errors.city.message}</p>
                       )}
                     </div>
                   )}
@@ -282,7 +282,7 @@ export function StayWizard() {
                       <Label>Country</Label>
                       <Input {...field} placeholder="South Africa" />
                       {errors.country && (
-                        <p className="text-destructive text-xs mt-1">{errors.country.message}</p>
+                        <p className="text-destructive text-sm mt-1">{errors.country.message}</p>
                       )}
                     </div>
                   )}
@@ -302,7 +302,7 @@ export function StayWizard() {
                         onChange={(e) => field.onChange(parseFloat(e.target.value))}
                       />
                       {errors.latitude && (
-                        <p className="text-destructive text-xs mt-1">{errors.latitude.message}</p>
+                        <p className="text-destructive text-sm mt-1">{errors.latitude.message}</p>
                       )}
                     </div>
                   )}
@@ -320,7 +320,7 @@ export function StayWizard() {
                         onChange={(e) => field.onChange(parseFloat(e.target.value))}
                       />
                       {errors.longitude && (
-                        <p className="text-destructive text-xs mt-1">{errors.longitude.message}</p>
+                        <p className="text-destructive text-sm mt-1">{errors.longitude.message}</p>
                       )}
                     </div>
                   )}
@@ -345,7 +345,7 @@ export function StayWizard() {
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
             <div>
               <h2 className="text-xl font-bold">Share some basics about your place</h2>
-              <p className="text-muted-foreground text-sm">How many guests can stay here?</p>
+              <p className="text-muted-foreground text-base">How many guests can stay here?</p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -361,7 +361,7 @@ export function StayWizard() {
                       onChange={(e) => field.onChange(parseInt(e.target.value))}
                     />
                     {errors.maxGuests && (
-                      <p className="text-destructive text-xs mt-1">{errors.maxGuests.message}</p>
+                      <p className="text-destructive text-sm mt-1">{errors.maxGuests.message}</p>
                     )}
                   </div>
                 )}
@@ -378,7 +378,7 @@ export function StayWizard() {
                       onChange={(e) => field.onChange(parseInt(e.target.value))}
                     />
                     {errors.bedrooms && (
-                      <p className="text-destructive text-xs mt-1">{errors.bedrooms.message}</p>
+                      <p className="text-destructive text-sm mt-1">{errors.bedrooms.message}</p>
                     )}
                   </div>
                 )}
@@ -433,7 +433,7 @@ export function StayWizard() {
                 )}
               />
               {errors.beds && (
-                <p className="text-destructive text-xs mt-1">{errors.beds.message}</p>
+                <p className="text-destructive text-sm mt-1">{errors.beds.message}</p>
               )}
             </div>
           </div>
@@ -444,7 +444,7 @@ export function StayWizard() {
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
             <div>
               <h2 className="text-xl font-bold">Tell guests what your place has to offer</h2>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground text-base">
                 You can add more amenities after you publish.
               </p>
             </div>
@@ -471,7 +471,7 @@ export function StayWizard() {
                         />
                         <label
                           htmlFor={item.value}
-                          className="text-sm cursor-pointer flex items-center gap-2"
+                          className="text-base cursor-pointer flex items-center gap-2"
                         >
                           <item.icon className="w-4 h-4" /> {item.label}
                         </label>
@@ -490,7 +490,7 @@ export function StayWizard() {
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
             <div>
               <h2 className="text-xl font-bold">Add some photos of your place</h2>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground text-base">
                 You&apos;ll need 3 photos to get started.
               </p>
             </div>
@@ -506,7 +506,7 @@ export function StayWizard() {
                   >
                     <UploadCloud className="h-10 w-10 mx-auto text-muted-foreground mb-4" />
                     <p className="font-semibold">Click to mock upload photos</p>
-                    <p className="text-xs text-muted-foreground mt-1">Requires at least 3 images</p>
+                    <p className="text-sm text-muted-foreground mt-1">Requires at least 3 images</p>
                   </div>
                   <div className="grid grid-cols-3 gap-2 mt-4">
                     {field.value.map((url, i) => (
@@ -519,7 +519,7 @@ export function StayWizard() {
                     ))}
                   </div>
                   {errors.images && (
-                    <p className="text-destructive text-xs mt-1">{errors.images.message}</p>
+                    <p className="text-destructive text-sm mt-1">{errors.images.message}</p>
                   )}
                 </div>
               )}
@@ -533,7 +533,7 @@ export function StayWizard() {
                   <Label>Title</Label>
                   <Input {...field} placeholder="Cozy Mountain Cabin" />
                   {errors.title && (
-                    <p className="text-destructive text-xs mt-1">{errors.title.message}</p>
+                    <p className="text-destructive text-sm mt-1">{errors.title.message}</p>
                   )}
                 </div>
               )}
@@ -560,7 +560,7 @@ export function StayWizard() {
                     onChange={(e) => field.onChange(parseFloat(e.target.value))}
                   />
                   {errors.baseRate && (
-                    <p className="text-destructive text-xs mt-1">{errors.baseRate.message}</p>
+                    <p className="text-destructive text-sm mt-1">{errors.baseRate.message}</p>
                   )}
                 </div>
               )}
@@ -587,7 +587,7 @@ export function StayWizard() {
                     </SelectContent>
                   </Select>
                   {errors.cancelPolicy && (
-                    <p className="text-destructive text-xs mt-1">{errors.cancelPolicy.message}</p>
+                    <p className="text-destructive text-sm mt-1">{errors.cancelPolicy.message}</p>
                   )}
                 </div>
               )}
@@ -620,4 +620,3 @@ export function StayWizard() {
     </FormProvider>
   );
 }
-

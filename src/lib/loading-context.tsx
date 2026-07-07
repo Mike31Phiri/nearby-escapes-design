@@ -58,7 +58,7 @@ function LoadingOverlay({ isLoading, message }: { isLoading: boolean; message: s
           <Loader2 className="absolute inset-0 m-auto h-6 w-6 text-primary animate-pulse" />
         </div>
         {message && (
-          <p className="text-sm font-semibold text-foreground text-center max-w-[200px]">
+          <p className="text-base font-semibold text-foreground text-center max-w-[200px]">
             {message}
           </p>
         )}

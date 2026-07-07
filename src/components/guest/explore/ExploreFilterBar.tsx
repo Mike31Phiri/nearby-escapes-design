@@ -18,12 +18,12 @@ interface ExploreFilterBarProps {
 
 export function ExploreFilterBar({ active, onChange }: ExploreFilterBarProps) {
   const filters = [
-    { id: "popular",      label: "Popular",          icon: Fire      },
-    { id: "hidden-gems",  label: "Hidden Gems",      icon: Sparkle   },
-    { id: "adventure",    label: "Adventure",        icon: Mountains },
-    { id: "history",      label: "History & Culture",icon: BookOpen  },
-    { id: "family",       label: "Family Friendly",  icon: Baby      },
-    { id: "relaxation",   label: "Relaxation",       icon: Coffee    },
+    { id: "popular", label: "Popular", icon: Fire },
+    { id: "hidden-gems", label: "Hidden Gems", icon: Sparkle },
+    { id: "adventure", label: "Adventure", icon: Mountains },
+    { id: "history", label: "History & Culture", icon: BookOpen },
+    { id: "family", label: "Family Friendly", icon: Baby },
+    { id: "relaxation", label: "Relaxation", icon: Coffee },
   ] as const;
 
   return (
@@ -42,7 +42,7 @@ export function ExploreFilterBar({ active, onChange }: ExploreFilterBarProps) {
                 "snap-start flex items-center gap-2 px-4 py-2 rounded-full border-[1.5px] text-[13px] font-semibold whitespace-nowrap transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1C3A2F]/40",
                 isActive
                   ? "border-[#1C3A2F] bg-[#1C3A2F] text-white shadow-sm"
-                  : "border-[#1C3A2F]/15 bg-white text-[#6B8A7E] hover:border-[#1C3A2F]/40 hover:text-[#1C3A2F]"
+                  : "border-[#1C3A2F]/15 bg-white text-[#6B8A7E] hover:border-[#1C3A2F]/40 hover:text-[#1C3A2F]",
               )}
             >
               <f.icon

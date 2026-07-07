@@ -22,4 +22,3 @@ export async function generateMetadata() {
       "Learn how Nearby Escapes keeps guests and hosts safe. Verified profiles, secure payments, guest protections, community guidelines, and 24/7 support.",
   };
 }
-
