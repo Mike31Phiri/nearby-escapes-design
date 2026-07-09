@@ -11,6 +11,7 @@ import {
   ArrowRight,
   CalendarDays,
   ChevronRight,
+  Users,
 } from "lucide-react";
 import { mockTransport, type Transport } from "@/lib/mock-data";
 import {
@@ -21,153 +22,167 @@ import { FilterChips } from "@/components/shared/FilterChips";
 import { SortBar } from "@/components/shared/SortBar";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 // ─── Filter configuration ───────────────────────────────────────────────────
 
 const FILTER_CONFIG: FilterConfig[] = [
   {
-    id: "serviceType",
-    label: "Service Type",
-    type: "radio-group",
-    options: [
-      { value: "all", label: "All" },
-      { value: "Self-drive", label: "Self-drive" },
-      { value: "Chauffeured", label: "Chauffeured" },
-      { value: "Shuttle", label: "Shuttle" },
-      { value: "Charter", label: "Charter" },
-    ],
-  },
-  {
     id: "priceRange",
-    label: "Price",
+    label: "Price per person",
     type: "price-range",
     min: 0,
-    max: 2000,
-    step: 50,
+    max: 1000,
+    step: 25,
     unit: "K",
   },
   {
-    id: "departure",
-    label: "Departure City",
+    id: "vehicleType",
+    label: "Vehicle type",
     type: "checkbox-group",
     options: [
-      { value: "Lusaka", label: "Lusaka" },
-      { value: "Livingstone", label: "Livingstone" },
-      { value: "Ndola", label: "Ndola" },
-      { value: "Kitwe", label: "Kitwe" },
-      { value: "Chipata", label: "Chipata" },
-      { value: "Mfuwe", label: "Mfuwe" },
+      { value: "bus", label: "Bus (Shared)" },
+      { value: "private", label: "Private Car" },
+      { value: "minivan", label: "Minivan (Group)" },
     ],
   },
   {
-    id: "destination",
-    label: "Destination City",
+    id: "capacity",
+    label: "Capacity",
     type: "checkbox-group",
     options: [
-      { value: "Lusaka", label: "Lusaka" },
-      { value: "Livingstone", label: "Livingstone" },
-      { value: "Ndola", label: "Ndola" },
-      { value: "Kitwe", label: "Kitwe" },
-      { value: "Chipata", label: "Chipata" },
-      { value: "Mfuwe", label: "Mfuwe" },
+      { value: "small", label: "1 - 4 seats" },
+      { value: "medium", label: "5 - 10 seats" },
+      { value: "large", label: "10+ seats" },
+    ],
+  },
+  {
+    id: "departureTime",
+    label: "Departure time",
+    type: "checkbox-group",
+    options: [
+      { value: "morning", label: "Morning (6AM - 12PM)" },
+      { value: "afternoon", label: "Afternoon (12PM - 6PM)" },
+      { value: "evening", label: "Evening (6PM - 10PM)" },
     ],
   },
 ];
 
 const DEFAULT_FILTERS: Record<string, any> = {
-  serviceType: "all",
-  priceRange: { min: 0, max: 2000 },
-  departure: [],
-  destination: [],
+  priceRange: { min: 0, max: 1000 },
+  vehicleType: [],
+  capacity: [],
+  departureTime: [],
 };
+
+// ─── Quick-filter chip definitions ──────────────────────────────────────────
+
+interface QuickChip {
+  label: string;
+  isActive: (f: Record<string, any>) => boolean;
+  apply: (f: Record<string, any>) => Record<string, any>;
+  remove: (f: Record<string, any>) => Record<string, any>;
+}
+
+const QUICK_CHIPS: QuickChip[] = [
+  {
+    label: "Bus (Shared)",
+    isActive: (f) => (f.vehicleType as string[]).includes("bus"),
+    apply: (f) => ({ ...f, vehicleType: [...(f.vehicleType as string[]), "bus"] }),
+    remove: (f) => ({ ...f, vehicleType: (f.vehicleType as string[]).filter((c) => c !== "bus") }),
+  },
+  {
+    label: "Private Car",
+    isActive: (f) => (f.vehicleType as string[]).includes("private"),
+    apply: (f) => ({ ...f, vehicleType: [...(f.vehicleType as string[]), "private"] }),
+    remove: (f) => ({ ...f, vehicleType: (f.vehicleType as string[]).filter((c) => c !== "private") }),
+  },
+  {
+    label: "Morning Departures",
+    isActive: (f) => (f.departureTime as string[]).includes("morning"),
+    apply: (f) => ({ ...f, departureTime: [...(f.departureTime as string[]), "morning"] }),
+    remove: (f) => ({ ...f, departureTime: (f.departureTime as string[]).filter((c) => c !== "morning") }),
+  },
+];
 
 // ─── Transport Card ──────────────────────────────────────────────────────────
 
 function TransportCard({ route }: { route: Transport }) {
+  // Inferring mockup labels from mock data to match the design roughly
+  const isPrivate = route.operator.toLowerCase().includes("tour") || route.operator.toLowerCase().includes("transfer");
+  const isMinivan = route.id === "t3";
+  
+  const vehicleLabel = isPrivate ? "🚗 Private Car" : isMinivan ? "🚐 Minivan" : "🚌 Bus";
+  const capacityLabel = isPrivate ? "Up to 4 passengers" : isMinivan ? "8 seats" : "40 seats";
+  const departureTimeLabel = "8:00 AM departure"; // Default fallback since mock data uses "Daily"
+
   return (
-    <div className="group bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md hover:border-[#1f1433]">
-      {/* Route header */}
-      <div className="bg-gradient-to-r from-[#1f1433] to-[#2d1a4a] p-5 text-white">
-        <div className="flex items-center gap-3">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 text-xl font-bold tracking-tight font-display">
-              <span className="truncate">{route.from}</span>
-              <ArrowRight className="h-5 w-5 text-[#1f1433] shrink-0" />
-              <span className="truncate">{route.to}</span>
-            </div>
-            <p className="text-white/60 text-sm mt-1 font-medium">{route.operator}</p>
-          </div>
-          <div className="text-right shrink-0">
-            <p className="text-2xl font-bold text-[#1f1433]">K{route.price}</p>
-            <p className="text-white/50 text-[10px] font-medium">per seat</p>
-          </div>
-        </div>
+    <div className="group bg-white border border-gray-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer flex flex-col md:flex-row gap-4">
+      {/* Image */}
+      <div className="w-full md:w-48 h-40 flex-shrink-0 bg-gray-200 rounded-xl overflow-hidden relative">
+        <img
+          src={route.image}
+          alt={vehicleLabel}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          loading="lazy"
+        />
+        <span className="absolute bottom-2 left-2 bg-purple/90 text-white text-[10px] px-2 py-0.5 rounded-full font-medium backdrop-blur-sm">
+          {vehicleLabel}
+        </span>
       </div>
-
-      {/* Details */}
-      <div className="p-4">
-        <div className="flex items-center gap-5 text-sm text-gray-500">
-          <span className="flex items-center gap-1.5">
-            <Clock className="h-3.5 w-3.5 text-gray-400 shrink-0" />
-            {route.duration}
-          </span>
-          <span className="flex items-center gap-1.5">
-            <CalendarDays className="h-3.5 w-3.5 text-gray-400 shrink-0" />
-            {route.departures}
-          </span>
-          <span className="flex items-center gap-1.5">
-            <MapPin className="h-3.5 w-3.5 text-gray-400 shrink-0" />
-            {route.from}
-          </span>
+      
+      {/* Info */}
+      <div className="flex-1 flex flex-col justify-between min-w-0">
+        <div>
+          <div className="flex justify-between items-start gap-2">
+            <h3 className="font-semibold text-lg text-black tracking-tight leading-snug line-clamp-2">
+              {route.from} to {route.to}
+            </h3>
+            <span className="flex-none text-[10px] bg-gold/10 text-gold-hover px-2 py-0.5 rounded-full font-bold border border-gold/30">
+              Local host
+            </span>
+          </div>
+          
+          <p className="text-sm text-black-muted mt-0.5">
+            Hosted by <span className="font-semibold text-purple">{route.operator}</span>
+          </p>
+          
+          <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-black-muted font-medium">
+            <span className="inline-flex items-center gap-1">
+               🕒 {departureTimeLabel}
+            </span>
+            <span className="inline-flex items-center gap-1">
+              ⏱️ {route.duration}
+            </span>
+            <span className="inline-flex items-center gap-1">
+               👥 {capacityLabel}
+            </span>
+          </div>
+          {!isPrivate && (
+            <p className="text-xs text-purple font-medium mt-1">
+              🌟 Daily service, air-conditioned
+            </p>
+          )}
+          {isPrivate && (
+            <p className="text-xs text-purple font-medium mt-1">
+              🌟 Door-to-door service
+            </p>
+          )}
         </div>
-
-        <div className="mt-4 flex items-center justify-between gap-3">
-          <span className="inline-flex items-center gap-1.5 bg-[#f2ba0d]/5 text-[#1f1433] text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
-            <Bus className="h-3 w-3" />
-            Transport
-          </span>
+        
+        {/* Price + CTA */}
+        <div className="mt-3 pt-3 border-t border-white-soft flex items-end justify-between">
+          <div>
+            <span className="text-xs text-black-faint">per person</span>
+            <p className="text-2xl font-bold text-black leading-tight">K{route.price}</p>
+          </div>
           <Link href={`/transport/${route.id}`}>
-            <Button
-              size="sm"
-              className="bg-[#f2ba0d] hover:bg-[#2d1a4a] text-white font-bold rounded-lg h-8 px-4 text-sm transition-colors"
-            >
-              Book Route
-              <ChevronRight className="h-3.5 w-3.5 ml-1" />
-            </Button>
+            <button className="bg-purple hover:bg-purple-hover text-white px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors">
+              Book seat
+            </button>
           </Link>
         </div>
       </div>
-    </div>
-  );
-}
-
-// ─── Sort bar label override (uses "routes" instead of "stays") ──────────────
-
-function TransportSortBar({
-  total,
-  sortValue,
-  onSortChange,
-}: {
-  total: number;
-  sortValue: string;
-  onSortChange: (v: string) => void;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-4">
-      <p className="text-base text-gray-500 font-medium">
-        <span className="text-[#1f1433] font-bold">{total}</span> routes available
-      </p>
-      <select
-        value={sortValue}
-        onChange={(e) => onSortChange(e.target.value)}
-        className="text-base border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#1f1433]/20 focus:border-[#1f1433] transition-colors cursor-pointer"
-        aria-label="Sort results"
-      >
-        <option value="recommended">Recommended</option>
-        <option value="price_asc">Price: Low to High</option>
-        <option value="price_desc">Price: High to Low</option>
-        <option value="duration_asc">Duration: Shortest First</option>
-      </select>
     </div>
   );
 }
@@ -210,14 +225,6 @@ export function TransportPage() {
     const pr = activeFilters.priceRange;
     if (pr) result = result.filter((r) => r.price >= pr.min && r.price <= pr.max);
 
-    // Departure cities
-    const deps: string[] = activeFilters.departure ?? [];
-    if (deps.length > 0) result = result.filter((r) => deps.includes(r.from));
-
-    // Destination cities
-    const dests: string[] = activeFilters.destination ?? [];
-    if (dests.length > 0) result = result.filter((r) => dests.includes(r.to));
-
     // Sort
     if (sortValue === "price_asc") result.sort((a, b) => a.price - b.price);
     else if (sortValue === "price_desc") result.sort((a, b) => b.price - a.price);
@@ -238,142 +245,196 @@ export function TransportPage() {
   const chips = useMemo(() => {
     const c: { label: string; onRemove: () => void }[] = [];
 
-    if (activeFilters.serviceType && activeFilters.serviceType !== "all")
+    const vTypes: string[] = activeFilters.vehicleType ?? [];
+    vTypes.forEach((v) =>
       c.push({
-        label: activeFilters.serviceType,
-        onRemove: () => handleFilterChange("serviceType", "all"),
-      });
-
-    const deps: string[] = activeFilters.departure ?? [];
-    deps.forEach((v) =>
-      c.push({
-        label: `From: ${v}`,
-        onRemove: () =>
-          handleFilterChange(
-            "departure",
-            deps.filter((x) => x !== v),
-          ),
+        label: v === "bus" ? "Bus" : v === "private" ? "Private Car" : "Minivan",
+        onRemove: () => handleFilterChange("vehicleType", vTypes.filter((x) => x !== v)),
       }),
     );
-
-    const dests: string[] = activeFilters.destination ?? [];
-    dests.forEach((v) =>
+    
+    const capacities: string[] = activeFilters.capacity ?? [];
+    capacities.forEach((v) =>
       c.push({
-        label: `To: ${v}`,
-        onRemove: () =>
-          handleFilterChange(
-            "destination",
-            dests.filter((x) => x !== v),
-          ),
+        label: v === "small" ? "1-4 seats" : v === "medium" ? "5-10 seats" : "10+ seats",
+        onRemove: () => handleFilterChange("capacity", capacities.filter((x) => x !== v)),
+      }),
+    );
+    
+    const depTimes: string[] = activeFilters.departureTime ?? [];
+    depTimes.forEach((v) =>
+      c.push({
+        label: v === "morning" ? "Morning" : v === "afternoon" ? "Afternoon" : "Evening",
+        onRemove: () => handleFilterChange("departureTime", depTimes.filter((x) => x !== v)),
       }),
     );
 
     const pr = activeFilters.priceRange;
-    if (pr && (pr.min > 0 || pr.max < 2000))
+    if (pr && (pr.min > 0 || pr.max < 1000))
       c.push({
         label: `K${pr.min}–K${pr.max}`,
-        onRemove: () => handleFilterChange("priceRange", { min: 0, max: 2000 }),
+        onRemove: () => handleFilterChange("priceRange", { min: 0, max: 1000 }),
       });
 
     return c;
   }, [activeFilters]);
 
-  const headline =
-    fromParam && toParam
-      ? `${fromParam} → ${toParam}`
-      : fromParam
-        ? `From ${fromParam}`
-        : "Transport Routes";
+  const breadcrumbParts = ["Zambia"];
 
   return (
-    <div className="min-h-screen bg-[#ffffff] font-sans">
-      {/* Header */}
-      <div className="bg-gradient-to-b from-blue-600/[0.04] via-blue-600/[0.02] to-transparent pt-8 pb-10">
-        <div className="max-w-7xl mx-auto px-4 md:px-6">
-          {/* Breadcrumb */}
-          <nav
-            aria-label="Breadcrumb"
-            className="flex items-center gap-1.5 text-sm text-gray-500 mb-4"
-          >
-            <span>Zambia</span>
-            <ChevronRight className="h-3 w-3 text-gray-300" />
-            <span className="text-[#1f1433] font-semibold">Transport</span>
-          </nav>
+    <div className="h-screen overflow-hidden bg-white-warm font-sans flex flex-col">
+      <div className="max-w-[1100px] w-full mx-auto px-4 md:px-6 pt-4 flex flex-col flex-1 overflow-hidden">
+        
+        {/* Breadcrumb */}
+        <nav aria-label="Breadcrumb" className="hidden lg:flex items-center gap-1 text-xs text-black-faint mb-2">
+          <Link href="/" className="hover:text-purple transition-colors">Home</Link>
+          <ChevronRight className="h-3 w-3 text-black-faint/50" />
+          <Link href="/explore" className="hover:text-purple transition-colors">Explore</Link>
+          <ChevronRight className="h-3 w-3 text-black-faint/50" />
+          <Link href="/zambia" className="hover:text-purple transition-colors">Zambia</Link>
+          <ChevronRight className="h-3 w-3 text-black-faint/50" />
+          <span className="text-black font-semibold">Local Transport</span>
+        </nav>
 
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f2ba0d]/10 text-[#1f1433]">
-              <Bus className="h-5 w-5" />
-            </div>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1f1433] font-display">
-                {headline}
-              </h1>
-              <p className="text-base text-gray-500 mt-0.5">
-                Shuttles, charters and private transfers across Zambia
-              </p>
-            </div>
+        {/* Desktop title */}
+        <div className="hidden lg:block mb-4">
+          <h1 className="text-3xl font-bold tracking-tight text-black">Get around Zambia with ease</h1>
+          <p className="text-black-muted mt-0.5 font-script text-xl text-purple/80">
+            Travel like a local, hosted by locals.
+          </p>
+        </div>
+
+        {/* Search bar */}
+        <div className="bg-white rounded-2xl md:rounded-full border border-gray-200 shadow-sm p-1.5 flex flex-col md:flex-row md:items-center gap-2 md:gap-0 divide-y md:divide-y-0 md:divide-x divide-gray-100 mb-5 hover:shadow-md transition-shadow">
+          
+          {/* From & To (Inline on mobile) */}
+          <div className="flex flex-row flex-1 divide-x divide-gray-100">
+            <input
+              type="text"
+              placeholder="From"
+              defaultValue={fromParam || ""}
+              className="flex-1 px-4 py-3 md:py-2.5 bg-transparent text-sm focus:outline-none min-w-0 font-medium text-black-soft placeholder:text-black-faint"
+            />
+            <input
+              type="text"
+              placeholder="To"
+              defaultValue={toParam || ""}
+              className="flex-1 px-4 py-3 md:py-2.5 bg-transparent text-sm focus:outline-none min-w-0 font-medium text-black-soft placeholder:text-black-faint"
+            />
           </div>
+          
+          {/* Date & Button (Inline on mobile) */}
+          <div className="flex flex-row items-center justify-between md:justify-end gap-3 pt-2 pb-1 md:py-0 w-full md:w-auto px-3 md:px-0">
+            <div className="relative flex items-center justify-center h-10 w-10 shrink-0 md:ml-2 group">
+              <CalendarDays className="h-5 w-5 text-black-faint group-hover:text-purple transition-colors pointer-events-none" />
+              <input 
+                type="date" 
+                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                title="Select Date"
+              />
+            </div>
+            
+            <button className="bg-purple hover:bg-purple-hover text-white rounded-xl md:rounded-full px-6 py-3 md:py-2.5 text-sm font-semibold flex-1 md:flex-none transition-colors">
+              Find rides
+            </button>
+          </div>
+        </div>
+
+        {/* Quick-filter chips */}
+        <div className="flex gap-2 overflow-x-auto pb-1 mb-5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          {QUICK_CHIPS.map((chip) => {
+            const active = chip.isActive(activeFilters);
+            return (
+              <button
+                key={chip.label}
+                onClick={() => setActiveFilters((prev) => (active ? chip.remove(prev) : chip.apply(prev)))}
+                className={cn(
+                  "flex-none whitespace-nowrap px-4 py-1.5 rounded-full border text-xs font-semibold transition-all duration-200",
+                  active
+                    ? "bg-purple text-white border-purple shadow-sm"
+                    : "bg-white border-gray-200 text-black-soft hover:border-purple hover:text-purple shadow-sm",
+                )}
+              >
+                {chip.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Main layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 flex-1 overflow-hidden">
+          
+          {/* Sidebar */}
+          <aside className="hidden lg:flex flex-col overflow-y-auto h-full pb-6 pr-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <VerticalFilterSidebar
+              filters={FILTER_CONFIG}
+              activeFilters={activeFilters}
+              onChange={handleFilterChange}
+              onReset={handleReset}
+            />
+          </aside>
+
+          {/* Results */}
+          <main className="min-w-0 overflow-y-auto h-full pb-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <div className="space-y-4">
+              <div className="flex justify-end items-center gap-2">
+                <span className="text-sm text-black-muted font-medium">Sort by:</span>
+                <select
+                  value={sortValue}
+                  onChange={(e) => setSortValue(e.target.value)}
+                  className="bg-white border border-gray-200 rounded-full px-4 py-1.5 text-sm font-medium shadow-sm focus:outline-none focus:ring-1 focus:ring-purple text-black-soft"
+                >
+                  <option value="recommended">Recommended for you</option>
+                  <option value="price_asc">Price (Lowest first)</option>
+                  <option value="departure_asc">Earliest departure</option>
+                  <option value="duration_asc">Shortest duration</option>
+                </select>
+              </div>
+
+              {/* Map Placeholder */}
+              <div className="hidden lg:flex w-full h-44 bg-white-soft rounded-xl border border-gray-200 items-center justify-center text-black-muted text-sm cursor-pointer hover:bg-gray-100 transition-colors">
+                📍 View available routes on a map
+              </div>
+              
+              <FilterChips chips={chips} onClearAll={handleReset} />
+            </div>
+
+            {filteredRoutes.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-gray-100 mt-6">
+                <Bus className="h-10 w-10 text-gray-200 mb-4" />
+                <h3 className="font-bold text-xl text-black">No routes found</h3>
+                <p className="text-black-muted text-base max-w-sm text-center mt-2">
+                  Try adjusting your filters to see more routes.
+                </p>
+                <Button
+                  onClick={handleReset}
+                  variant="outline"
+                  className="mt-6 border-purple text-purple hover:bg-gold hover:text-white hover:border-gold"
+                >
+                  Clear all filters
+                </Button>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4 mt-6">
+                {filteredRoutes.map((route) => (
+                  <TransportCard key={route.id} route={route} />
+                ))}
+              </div>
+            )}
+          </main>
         </div>
       </div>
 
-      {/* Main layout */}
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
-        {/* Sidebar — desktop only */}
-        <aside className="hidden lg:block">
-          <VerticalFilterSidebar
-            filters={FILTER_CONFIG}
-            activeFilters={activeFilters}
-            onChange={handleFilterChange}
-            onReset={handleReset}
-          />
-        </aside>
-
-        {/* Results */}
-        <main>
-          <div className="space-y-4">
-            <TransportSortBar
-              total={filteredRoutes.length}
-              sortValue={sortValue}
-              onSortChange={setSortValue}
-            />
-            <FilterChips chips={chips} onClearAll={handleReset} />
-          </div>
-
-          {filteredRoutes.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-gray-100 mt-6">
-              <Bus className="h-10 w-10 text-gray-200 mb-4" />
-              <h3 className="font-bold text-xl text-[#1f1433]">No routes found</h3>
-              <p className="text-gray-500 text-base max-w-sm text-center mt-2">
-                Try adjusting your filters to see more routes.
-              </p>
-              <Button
-                onClick={handleReset}
-                variant="outline"
-                className="mt-6 border-[#1f1433] text-[#1f1433] hover:bg-[#f2ba0d] hover:text-white"
-              >
-                Clear all filters
-              </Button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 mt-6">
-              {filteredRoutes.map((route) => (
-                <TransportCard key={route.id} route={route} />
-              ))}
-            </div>
-          )}
-        </main>
-      </div>
-
-      {/* Mobile filter button */}
+      {/* Mobile filter FAB */}
       <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
         <button
           onClick={() => setMobileFiltersOpen(true)}
-          className="flex items-center gap-2 bg-[#f2ba0d] text-white text-base font-bold px-5 py-3 rounded-full shadow-lg hover:bg-[#2d1a4a] transition-colors"
+          className="flex items-center gap-2 bg-gold text-white text-base font-bold px-5 py-3 rounded-full shadow-lg hover:bg-gold-hover transition-colors"
         >
           <SlidersHorizontal className="h-4 w-4" />
           Filters
           {chips.length > 0 && (
-            <span className="bg-[#f2ba0d] text-[#1f1433] text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
+            <span className="bg-white text-purple text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
               {chips.length}
             </span>
           )}
@@ -387,9 +448,9 @@ export function TransportPage() {
             className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
             onClick={() => setMobileFiltersOpen(false)}
           />
-          <div className="fixed inset-x-0 bottom-0 z-50 bg-[#ffffff] rounded-t-2xl shadow-2xl max-h-[85vh] overflow-y-auto">
-            <div className="sticky top-0 bg-[#ffffff] flex items-center justify-between px-5 py-4 border-b border-gray-100">
-              <span className="text-lg font-bold text-[#1f1433]">Filters</span>
+          <div className="fixed inset-x-0 bottom-0 z-50 bg-white rounded-t-2xl shadow-2xl max-h-[85vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <div className="sticky top-0 bg-white flex items-center justify-between px-5 py-4 border-b border-gray-100">
+              <span className="text-lg font-bold text-black">Filters</span>
               <button
                 onClick={() => setMobileFiltersOpen(false)}
                 className="h-8 w-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
@@ -406,10 +467,10 @@ export function TransportPage() {
                 onReset={handleReset}
               />
             </div>
-            <div className="sticky bottom-0 bg-[#ffffff] px-5 py-4 border-t border-gray-100">
+            <div className="sticky bottom-0 bg-white px-5 py-4 border-t border-gray-100">
               <Button
                 onClick={() => setMobileFiltersOpen(false)}
-                className="w-full bg-[#f2ba0d] hover:bg-[#2d1a4a] text-white font-bold"
+                className="w-full bg-gold hover:bg-gold-hover text-white font-bold"
               >
                 Show {filteredRoutes.length} routes
               </Button>

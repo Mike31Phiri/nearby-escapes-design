@@ -158,7 +158,7 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
       <DiscoverySection
         title="Places to Stay"
         emoji="🏡"
-        seeAllHref={`/stays?province=${province.id}`}
+        seeAllHref={`/${province.id}/stays`}
         seeAllLabel="See all stays"
         isEmpty={filteredStays.length === 0}
         emptyMessage="No stays found for this filter."

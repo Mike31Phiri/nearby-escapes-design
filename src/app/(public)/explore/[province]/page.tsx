@@ -72,7 +72,7 @@ export default function ProvincePage({ params }: { params: { province: string } 
                 <Bed className="h-4 w-4 text-[#f2ba0d]" /> Featured Stays
               </h3>
               <Link
-                href={`/stays`}
+                href={`/${province}/stays`}
                 className="text-sm font-semibold text-[#f2ba0d] hover:underline"
               >
                 See All

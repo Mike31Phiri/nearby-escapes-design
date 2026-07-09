@@ -164,9 +164,8 @@ export function HomePage() {
                 <br />near a gem you&apos;ve never seen
               </span>
             </h1>
-            <p className="mt-4 text-[14px] md:text-[15px] text-black-muted leading-relaxed max-w-lg mx-auto">
-              Lodges, camps, and guesthouses within reach — curated around Zambia&apos;s secret spots.
-            </p>
+
+
           </div>
         </div>
       </section>

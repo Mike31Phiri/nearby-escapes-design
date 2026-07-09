@@ -10,11 +10,13 @@ export const ROUTES = {
 
   // ─── Public verticals ────────────────────────────────────────────────────
   stays: {
-    index: "/stays",
-    search: "/stays",
+    index: "/zambia/stays",
+    byLocation: (slug: string) => `/${slug}/stays`,
     detail: (slug: string) => `/stays/${slug}`,
+    // Legacy — kept for back-compat, both redirect to /zambia/stays
+    search: "/stays",
     category: (cat: string) => `/stays/category/${cat}`,
-    province: (prov: string) => `/stays/province/${prov}`,
+    province: (prov: string) => `/${prov}/stays`,
   },
 
   experiences: {

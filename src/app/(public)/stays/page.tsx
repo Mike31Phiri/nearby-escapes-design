@@ -1,5 +1,5 @@
-import { StaysPage } from "@/components/guest/stays/StaysPage";
+import { redirect } from "next/navigation";
 
 export default function StaysRoute() {
-  return <StaysPage />;
+  redirect("/zambia/stays");
 }

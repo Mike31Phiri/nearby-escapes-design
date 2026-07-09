@@ -17,7 +17,7 @@ import {
   Building2,
 } from "lucide-react";
 import { Users } from "@phosphor-icons/react";
-import { useRouter } from "next/navigation";
+import { useBackNavigation } from "@/hooks/useBackNavigation";
 import { useAuth } from "@/lib/store/authStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { mockReviews, mockTrips } from "@/lib/mock-profile-data";
@@ -81,7 +81,7 @@ function TripCard({ location, date, image, status }: TripProps) {
 
 /* ── Main page ─────────────────────────────────────────────── */
 export function GuestProfilePage() {
-  const router = useRouter();
+  const goBack = useBackNavigation();
   const { user } = useAuth();
   const { items: savedItems } = useWishlistStore();
   const getReviewsByGuest = useReviewStore((s) => s.getReviewsByGuest);
@@ -103,7 +103,7 @@ export function GuestProfilePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-8 pt-10 pb-14">
           {/* Back button */}
           <button
-            onClick={() => router.back()}
+            onClick={goBack}
             className="absolute left-4 top-4 sm:left-8 sm:top-8 flex items-center gap-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 px-3 py-1.5 text-sm font-medium text-white transition-all duration-200"
             aria-label="Go back"
           >

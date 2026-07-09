@@ -116,7 +116,7 @@ export default function CityPage({ params }: { params: { province: string; city:
                 </p>
               </div>
               <Link
-                href={`/stays`}
+                href={`/${city}/stays`}
                 className="text-sm font-semibold text-[#1f1433] hover:underline shrink-0"
               >
                 See All Stays

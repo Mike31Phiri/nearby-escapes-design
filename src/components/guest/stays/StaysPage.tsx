@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useMemo } from "react";
 import {
   Bed,
   Star,
@@ -16,6 +15,7 @@ import {
   Dumbbell,
   Car,
   ChevronRight,
+  ArrowLeft,
 } from "lucide-react";
 import { mockStays, type Stay } from "@/lib/mock-data";
 import {
@@ -26,8 +26,15 @@ import { FilterChips } from "@/components/shared/FilterChips";
 import { SortBar } from "@/components/shared/SortBar";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import {
+  type ResolvedLocation,
+  buildStaysBreadcrumbs,
+  buildStaysHeadline,
+} from "@/lib/utils/locationSlug";
+import { useBackNavigation } from "@/hooks/useBackNavigation";
 
-// ─── Filter configuration ───────────────────────────────────────────────────
+// ─── Filter configuration ────────────────────────────────────────────────────
 
 const FILTER_CONFIG: FilterConfig[] = [
   {
@@ -95,6 +102,63 @@ const DEFAULT_FILTERS: Record<string, any> = {
   instantBook: false,
 };
 
+// ─── Quick-filter chip definitions ──────────────────────────────────────────
+
+interface QuickChip {
+  label: string;
+  isActive: (f: Record<string, any>) => boolean;
+  apply: (f: Record<string, any>) => Record<string, any>;
+  remove: (f: Record<string, any>) => Record<string, any>;
+}
+
+const QUICK_CHIPS: QuickChip[] = [
+  {
+    label: "Rating 4.5+",
+    isActive: (f) => f.rating === "4.5",
+    apply: (f) => ({ ...f, rating: "4.5" }),
+    remove: (f) => ({ ...f, rating: "any" }),
+  },
+  {
+    label: "Pool",
+    isActive: (f) => (f.amenities as string[]).includes("Pool"),
+    apply: (f) => ({ ...f, amenities: [...(f.amenities as string[]), "Pool"] }),
+    remove: (f) => ({
+      ...f,
+      amenities: (f.amenities as string[]).filter((a) => a !== "Pool"),
+    }),
+  },
+  {
+    label: "Breakfast",
+    isActive: (f) => (f.amenities as string[]).includes("Breakfast"),
+    apply: (f) => ({
+      ...f,
+      amenities: [...(f.amenities as string[]), "Breakfast"],
+    }),
+    remove: (f) => ({
+      ...f,
+      amenities: (f.amenities as string[]).filter((a) => a !== "Breakfast"),
+    }),
+  },
+  {
+    label: "WiFi",
+    isActive: (f) => (f.amenities as string[]).includes("WiFi"),
+    apply: (f) => ({ ...f, amenities: [...(f.amenities as string[]), "WiFi"] }),
+    remove: (f) => ({
+      ...f,
+      amenities: (f.amenities as string[]).filter((a) => a !== "WiFi"),
+    }),
+  },
+  {
+    label: "Spa",
+    isActive: (f) => (f.amenities as string[]).includes("Spa"),
+    apply: (f) => ({ ...f, amenities: [...(f.amenities as string[]), "Spa"] }),
+    remove: (f) => ({
+      ...f,
+      amenities: (f.amenities as string[]).filter((a) => a !== "Spa"),
+    }),
+  },
+];
+
 // ─── Amenity icon map ────────────────────────────────────────────────────────
 
 const AMENITY_ICONS: Record<string, React.ReactNode> = {
@@ -117,7 +181,7 @@ function StayCard({ stay }: { stay: Stay }) {
   return (
     <Link
       href={`/stays/${stay.id}`}
-      className="group block bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md hover:border-[#1f1433] hover:scale-[1.01]"
+      className="group block bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md hover:border-purple hover:scale-[1.01]"
     >
       {/* Image */}
       <div className="relative aspect-[3/2] overflow-hidden">
@@ -129,13 +193,13 @@ function StayCard({ stay }: { stay: Stay }) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
         {/* Type badge */}
-        <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-[#1f1433] text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm">
+        <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-black text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm">
           {stay.type}
         </span>
         {/* Price badge */}
-        <span className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm text-[#1f1433] text-sm font-bold px-2.5 py-1 rounded-full shadow-sm">
+        <span className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm text-black text-sm font-bold px-2.5 py-1 rounded-full shadow-sm">
           K{stay.price}
-          <span className="text-gray-500 font-normal">/night</span>
+          <span className="text-black-faint font-normal">/night</span>
         </span>
       </div>
 
@@ -143,18 +207,18 @@ function StayCard({ stay }: { stay: Stay }) {
       <div className="p-4">
         {/* Rating */}
         <div className="flex items-center gap-1 mb-1.5">
-          <Star className="h-3.5 w-3.5 fill-[#1f1433] text-[#1f1433]" />
-          <span className="text-sm font-bold text-gray-900">{stay.rating}</span>
-          <span className="text-sm text-gray-400">({stay.reviews} reviews)</span>
+          <Star className="h-3.5 w-3.5 fill-black text-black" />
+          <span className="text-sm font-bold text-black">{stay.rating}</span>
+          <span className="text-sm text-black-faint">({stay.reviews} reviews)</span>
         </div>
 
         {/* Name */}
-        <h3 className="font-bold text-base text-[#1f1433] line-clamp-1 group-hover:text-[#1f1433] transition-colors">
+        <h3 className="font-bold text-base text-black line-clamp-1 group-hover:text-purple transition-colors">
           {stay.name}
         </h3>
 
         {/* Location */}
-        <p className="flex items-center gap-1 text-sm text-gray-500 mt-1">
+        <p className="flex items-center gap-1 text-sm text-black-muted mt-1">
           <MapPin className="h-3 w-3 shrink-0" />
           {stay.location}
         </p>
@@ -164,18 +228,20 @@ function StayCard({ stay }: { stay: Stay }) {
           {visibleAmenities.map((a) => (
             <span
               key={a}
-              className="inline-flex items-center gap-1 text-[10px] text-gray-500 bg-gray-50 rounded-full px-2 py-0.5"
+              className="inline-flex items-center gap-1 text-[10px] text-black-muted bg-white-soft rounded-full px-2 py-0.5"
             >
               {AMENITY_ICONS[a] ?? <Sparkles className="h-3 w-3" />}
               {a}
             </span>
           ))}
-          {extraCount > 0 && <span className="text-[10px] text-gray-400">+{extraCount} more</span>}
+          {extraCount > 0 && (
+            <span className="text-[10px] text-black-faint">+{extraCount} more</span>
+          )}
         </div>
 
         {/* CTA */}
-        <div className="mt-3 pt-3 border-t border-gray-50">
-          <span className="inline-flex items-center gap-1 text-sm font-semibold text-[#1f1433] group-hover:text-[#1f1433] transition-colors">
+        <div className="mt-3 pt-3 border-t border-white-soft">
+          <span className="inline-flex items-center gap-1 text-sm font-semibold text-purple group-hover:text-purple-hover transition-colors">
             View Stay <ChevronRight className="h-3.5 w-3.5" />
           </span>
         </div>
@@ -184,14 +250,17 @@ function StayCard({ stay }: { stay: Stay }) {
   );
 }
 
+// ─── Props ───────────────────────────────────────────────────────────────────
+
+interface StaysPageProps {
+  /** Resolved location context from the [location] route param. */
+  location?: ResolvedLocation;
+}
+
 // ─── Main Page ───────────────────────────────────────────────────────────────
 
-export function StaysPage() {
-  const searchParams = useSearchParams();
-  const province = searchParams.get("province") ?? "";
-  const city = searchParams.get("city") ?? "";
-  const attraction = searchParams.get("attraction") ?? "";
-  const q = searchParams.get("q") ?? "";
+export function StaysPage({ location }: StaysPageProps) {
+  const goBack = useBackNavigation("/explore");
 
   const [activeFilters, setActiveFilters] = useState<Record<string, any>>(DEFAULT_FILTERS);
   const [sortValue, setSortValue] = useState("recommended");
@@ -208,39 +277,49 @@ export function StaysPage() {
   const filteredStays = useMemo(() => {
     let result = [...mockStays];
 
-    // Location context from URL
-    const locationCtx = [attraction, city, province, q].filter(Boolean);
-    if (locationCtx.length > 0) {
-      result = result.filter((s) =>
-        locationCtx.some((ctx) => s.location.toLowerCase().includes(ctx.toLowerCase())),
-      );
-      // If nothing matches the location filter, show all (graceful fallback)
-      if (result.length === 0) result = [...mockStays];
+    // Location filtering based on resolved slug context
+    if (location) {
+      if (location.type === "attraction" && location.attraction) {
+        // For attractions, use the specific nearbyStayIds list
+        const ids = new Set(location.attraction.nearbyStayIds);
+        const nearby = result.filter((s) => ids.has(s.id));
+        // Fall back to city-level filtering if nearbyStayIds is empty
+        if (nearby.length > 0) {
+          result = nearby;
+        } else if (location.city) {
+          result = result.filter((s) =>
+            s.location.toLowerCase().includes(location.city!.name.toLowerCase()),
+          );
+        }
+      } else if (location.type === "city" && location.city) {
+        result = result.filter((s) =>
+          s.location.toLowerCase().includes(location.city!.name.toLowerCase()),
+        );
+        if (result.length === 0) result = [...mockStays];
+      } else if (location.type === "province" && location.province) {
+        const provinceName = location.province.name.toLowerCase().replace(" province", "");
+        result = result.filter((s) => s.location.toLowerCase().includes(provinceName));
+        if (result.length === 0) result = [...mockStays];
+      }
+      // country → show all
     }
 
     // Price range
     const pr = activeFilters.priceRange;
-    if (pr) {
-      result = result.filter((s) => s.price >= pr.min && s.price <= pr.max);
-    }
+    if (pr) result = result.filter((s) => s.price >= pr.min && s.price <= pr.max);
 
     // Property type
     const pt: string[] = activeFilters.propertyType ?? [];
-    if (pt.length > 0) {
-      result = result.filter((s) => pt.includes(s.type));
-    }
+    if (pt.length > 0) result = result.filter((s) => pt.includes(s.type));
 
-    // Amenities (AND logic — must have all selected)
+    // Amenities (AND logic)
     const am: string[] = activeFilters.amenities ?? [];
-    if (am.length > 0) {
-      result = result.filter((s) => am.every((a) => s.amenities.includes(a)));
-    }
+    if (am.length > 0) result = result.filter((s) => am.every((a) => s.amenities.includes(a)));
 
     // Rating
     const ratingFilter = activeFilters.rating;
     if (ratingFilter && ratingFilter !== "any") {
-      const minRating = parseFloat(ratingFilter);
-      result = result.filter((s) => s.rating >= minRating);
+      result = result.filter((s) => s.rating >= parseFloat(ratingFilter));
     }
 
     // Sort
@@ -249,7 +328,7 @@ export function StaysPage() {
     else if (sortValue === "rating") result.sort((a, b) => b.rating - a.rating);
 
     return result;
-  }, [activeFilters, sortValue, province, city, attraction, q]);
+  }, [activeFilters, sortValue, location]);
 
   // ── Active filter chips
   const chips = useMemo(() => {
@@ -257,33 +336,16 @@ export function StaysPage() {
 
     const pt: string[] = activeFilters.propertyType ?? [];
     pt.forEach((v) =>
-      c.push({
-        label: v,
-        onRemove: () =>
-          handleFilterChange(
-            "propertyType",
-            pt.filter((x) => x !== v),
-          ),
-      }),
+      c.push({ label: v, onRemove: () => handleFilterChange("propertyType", pt.filter((x) => x !== v)) }),
     );
 
     const am: string[] = activeFilters.amenities ?? [];
     am.forEach((v) =>
-      c.push({
-        label: v,
-        onRemove: () =>
-          handleFilterChange(
-            "amenities",
-            am.filter((x) => x !== v),
-          ),
-      }),
+      c.push({ label: v, onRemove: () => handleFilterChange("amenities", am.filter((x) => x !== v)) }),
     );
 
     if (activeFilters.rating && activeFilters.rating !== "any") {
-      c.push({
-        label: `${activeFilters.rating}+ stars`,
-        onRemove: () => handleFilterChange("rating", "any"),
-      });
+      c.push({ label: `${activeFilters.rating}+ stars`, onRemove: () => handleFilterChange("rating", "any") });
     }
 
     if (activeFilters.instantBook) {
@@ -292,140 +354,155 @@ export function StaysPage() {
 
     const pr = activeFilters.priceRange;
     if (pr && (pr.min > 0 || pr.max < 5000)) {
-      c.push({
-        label: `K${pr.min}–K${pr.max}`,
-        onRemove: () => handleFilterChange("priceRange", { min: 0, max: 5000 }),
-      });
+      c.push({ label: `K${pr.min}–K${pr.max}`, onRemove: () => handleFilterChange("priceRange", { min: 0, max: 5000 }) });
     }
 
     return c;
   }, [activeFilters]);
 
-  // ── Breadcrumb parts
-  const breadcrumbParts = ["Zambia", province, city].filter(Boolean);
-
-  // ── Location label for SortBar
-  const locationLabel = city || province || undefined;
-
-  // ── Headline
-  const headline = q
-    ? `Stays for "${q}"`
-    : city
-      ? `Stays in ${city}`
-      : province
-        ? `Stays in ${province}`
-        : "Stays in Zambia";
+  // ── Derived display values
+  const headline = location ? buildStaysHeadline(location) : "Stays in Zambia";
+  const breadcrumbs = location ? buildStaysBreadcrumbs(location) : [];
+  const locationLabel = location?.city?.name ?? location?.province?.name ?? undefined;
 
   return (
-    <div className="min-h-screen bg-[#ffffff] font-sans">
-      {/* Page header */}
-      <div className="bg-gradient-to-b from-[#1f1433]/[0.04] via-[#1f1433]/[0.02] to-transparent pt-8 pb-10">
-        <div className="max-w-7xl mx-auto px-4 md:px-6">
-          {/* Breadcrumb */}
-          <nav
-            aria-label="Breadcrumb"
-            className="flex items-center gap-1.5 text-sm text-gray-500 mb-4"
+    <div className="h-screen overflow-hidden bg-white-warm font-sans flex flex-col">
+      <div className="max-w-[960px] w-full mx-auto px-4 md:px-6 pt-4 flex flex-col flex-1 overflow-hidden">
+
+        {/* ── MOBILE: Back arrow + title ────────────────────────────────── */}
+        <div className="flex lg:hidden items-center gap-2 mb-5">
+          <button
+            onClick={goBack}
+            aria-label="Go back"
+            className="p-1.5 -ml-1 rounded-full hover:bg-white-soft text-black-muted transition-colors"
           >
-            {breadcrumbParts.map((part, i) => (
-              <span key={part} className="flex items-center gap-1.5">
-                {i > 0 && <ChevronRight className="h-3 w-3 text-gray-300" />}
-                <span
-                  className={i === breadcrumbParts.length - 1 ? "text-[#1f1433] font-semibold" : ""}
-                >
-                  {part}
-                </span>
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+          <h1 className="text-lg font-bold text-black truncate">{headline}</h1>
+        </div>
+
+        {/* ── DESKTOP: Breadcrumb trail ─────────────────────────────────── */}
+        {breadcrumbs.length > 0 && (
+          <nav aria-label="Breadcrumb" className="hidden lg:flex items-center gap-1 text-xs text-black-faint mb-2">
+            {breadcrumbs.map((crumb, i) => (
+              <span key={i} className="flex items-center gap-1">
+                {i > 0 && <ChevronRight className="h-3 w-3 text-black-faint/50" />}
+                {crumb.href ? (
+                  <Link
+                    href={crumb.href}
+                    className="hover:text-purple transition-colors"
+                  >
+                    {crumb.label}
+                  </Link>
+                ) : (
+                  <span className="text-black font-semibold">{crumb.label}</span>
+                )}
               </span>
             ))}
-            {breadcrumbParts.length > 0 && (
-              <>
-                <ChevronRight className="h-3 w-3 text-gray-300" />
-                <span className="text-[#1f1433] font-semibold">Stays</span>
-              </>
-            )}
-            {breadcrumbParts.length === 0 && (
-              <span className="text-[#1f1433] font-semibold">Stays in Zambia</span>
-            )}
           </nav>
+        )}
 
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f2ba0d]/10 text-[#1f1433]">
-              <Bed className="h-5 w-5" />
+        {/* ── DESKTOP: Title + subtitle ─────────────────────────────────── */}
+        <div className="hidden lg:block mb-6">
+          <h1 className="text-3xl font-bold tracking-tight text-black">{headline}</h1>
+          <p className="text-sm text-black-muted mt-1">
+            Find lodges, camps, and guesthouses — handpicked across Zambia.
+          </p>
+        </div>
+
+        {/* ── Quick-filter chip row ─────────────────────────────────────── */}
+        <div
+          className="flex gap-2 overflow-x-auto pb-1 mb-5"
+          style={{ scrollbarWidth: "none" }}
+        >
+          {QUICK_CHIPS.map((chip) => {
+            const active = chip.isActive(activeFilters);
+            return (
+              <button
+                key={chip.label}
+                onClick={() =>
+                  setActiveFilters((prev) =>
+                    active ? chip.remove(prev) : chip.apply(prev),
+                  )
+                }
+                className={cn(
+                  "flex-none whitespace-nowrap px-4 py-1.5 rounded-full border text-xs font-semibold transition-all duration-200",
+                  active
+                    ? "bg-purple text-white border-purple shadow-sm"
+                    : "bg-white border-gray-200 text-black-soft hover:border-purple hover:text-purple shadow-sm",
+                )}
+              >
+                {chip.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* ── Main layout: sidebar + results ───────────────────────────── */}
+        <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8 flex-1 overflow-hidden">
+
+          {/* Sidebar — desktop only, independently scrollable */}
+          <aside className="hidden lg:flex flex-col overflow-y-auto h-full pb-6 pr-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <VerticalFilterSidebar
+              filters={FILTER_CONFIG}
+              activeFilters={activeFilters}
+              onChange={handleFilterChange}
+              onReset={handleReset}
+            />
+          </aside>
+
+          {/* Results column — independently scrollable */}
+          <main className="min-w-0 overflow-y-auto h-full pb-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <div className="space-y-4">
+              {/* Sort bar */}
+              <SortBar
+                total={filteredStays.length}
+                sortValue={sortValue}
+                onSortChange={setSortValue}
+                locationLabel={locationLabel}
+              />
+
+              {/* Active filter chips */}
+              <FilterChips chips={chips} onClearAll={handleReset} />
             </div>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1f1433] font-display">
-                {headline}
-              </h1>
-              <p className="text-base text-gray-500 mt-0.5">
-                From luxury lodges to boutique city stays
-              </p>
-            </div>
-          </div>
+
+            {/* Grid */}
+            {filteredStays.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-gray-100 mt-6">
+                <Bed className="h-10 w-10 text-gray-200 mb-4" />
+                <h3 className="font-bold text-xl text-black">No stays found</h3>
+                <p className="text-black-muted text-base max-w-sm text-center mt-2">
+                  Try adjusting your filters to see more results.
+                </p>
+                <Button
+                  onClick={handleReset}
+                  variant="outline"
+                  className="mt-6 border-purple text-purple hover:bg-gold hover:text-white hover:border-gold"
+                >
+                  Clear all filters
+                </Button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 mt-6">
+                {filteredStays.map((stay) => (
+                  <StayCard key={stay.id} stay={stay} />
+                ))}
+              </div>
+            )}
+          </main>
         </div>
       </div>
 
-      {/* Main layout */}
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
-        {/* Sidebar — desktop only */}
-        <aside className="hidden lg:block">
-          <VerticalFilterSidebar
-            filters={FILTER_CONFIG}
-            activeFilters={activeFilters}
-            onChange={handleFilterChange}
-            onReset={handleReset}
-          />
-        </aside>
-
-        {/* Results */}
-        <main>
-          <div className="space-y-4">
-            {/* Sort bar */}
-            <SortBar
-              total={filteredStays.length}
-              sortValue={sortValue}
-              onSortChange={setSortValue}
-              locationLabel={locationLabel}
-            />
-
-            {/* Active filter chips */}
-            <FilterChips chips={chips} onClearAll={handleReset} />
-          </div>
-
-          {/* Grid */}
-          {filteredStays.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-gray-100 mt-6">
-              <Bed className="h-10 w-10 text-gray-200 mb-4" />
-              <h3 className="font-bold text-xl text-[#1f1433]">No stays found</h3>
-              <p className="text-gray-500 text-base max-w-sm text-center mt-2">
-                Try adjusting your filters to see more results.
-              </p>
-              <Button
-                onClick={handleReset}
-                variant="outline"
-                className="mt-6 border-[#1f1433] text-[#1f1433] hover:bg-[#f2ba0d] hover:text-white"
-              >
-                Clear all filters
-              </Button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 mt-6">
-              {filteredStays.map((stay) => (
-                <StayCard key={stay.id} stay={stay} />
-              ))}
-            </div>
-          )}
-        </main>
-      </div>
-
-      {/* Mobile filter button */}
+      {/* Mobile filter FAB */}
       <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
         <button
           onClick={() => setMobileFiltersOpen(true)}
-          className="flex items-center gap-2 bg-[#f2ba0d] text-white text-base font-bold px-5 py-3 rounded-full shadow-lg hover:bg-[#2d1a4a] transition-colors"
+          className="flex items-center gap-2 bg-gold text-white text-base font-bold px-5 py-3 rounded-full shadow-lg hover:bg-gold-hover transition-colors"
         >
           <SlidersHorizontal className="h-4 w-4" />
           Filters
           {chips.length > 0 && (
-            <span className="bg-[#f2ba0d] text-[#1f1433] text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
+            <span className="bg-white text-purple text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
               {chips.length}
             </span>
           )}
@@ -435,15 +512,13 @@ export function StaysPage() {
       {/* Mobile filter drawer */}
       {mobileFiltersOpen && (
         <>
-          {/* Backdrop */}
           <div
             className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
             onClick={() => setMobileFiltersOpen(false)}
           />
-          {/* Sliding panel */}
-          <div className="fixed inset-x-0 bottom-0 z-50 bg-[#ffffff] rounded-t-2xl shadow-2xl max-h-[85vh] overflow-y-auto">
-            <div className="sticky top-0 bg-[#ffffff] flex items-center justify-between px-5 py-4 border-b border-gray-100">
-              <span className="text-lg font-bold text-[#1f1433]">Filters</span>
+          <div className="fixed inset-x-0 bottom-0 z-50 bg-white rounded-t-2xl shadow-2xl max-h-[85vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white flex items-center justify-between px-5 py-4 border-b border-gray-100">
+              <span className="text-lg font-bold text-black">Filters</span>
               <button
                 onClick={() => setMobileFiltersOpen(false)}
                 className="h-8 w-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
@@ -460,10 +535,10 @@ export function StaysPage() {
                 onReset={handleReset}
               />
             </div>
-            <div className="sticky bottom-0 bg-[#ffffff] px-5 py-4 border-t border-gray-100">
+            <div className="sticky bottom-0 bg-white px-5 py-4 border-t border-gray-100">
               <Button
                 onClick={() => setMobileFiltersOpen(false)}
-                className="w-full bg-[#f2ba0d] hover:bg-[#2d1a4a] text-white font-bold"
+                className="w-full bg-gold hover:bg-gold-hover text-white font-bold"
               >
                 Show {filteredStays.length} stays
               </Button>

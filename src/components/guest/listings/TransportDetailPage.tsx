@@ -2,45 +2,31 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
+  Heart,
   ChevronLeft,
   ChevronRight,
   Clock,
-  Compass,
-  ShieldCheck,
-  Star,
-  Users,
-  Briefcase,
-  Info,
-  Coffee,
+  Timer,
   Wifi,
-  Sparkles,
-  Zap,
-  Heart,
-  Share2,
+  MapPin,
+  Snowflake,
+  Plug,
+  Briefcase,
+  MonitorPlay,
+  HeartPulse,
+  Lightbulb,
+  RefreshCcw,
+  Bus,
 } from "lucide-react";
-import { ReviewSection } from "@/components/guest/reviews/ReviewSection";
+import { useWishlistStore } from "@/store/wishlistStore";
+import { useAuth } from "@/lib/store/authStore";
+import { AuthGuardDialog } from "@/components/guest/auth/AuthGuardDialog";
 import { cn } from "@/lib/utils";
 import type { Transport } from "@/lib/mock-data";
 import { mockListingReviews } from "@/lib/mock-listing-reviews";
-import { toast } from "sonner";
-import { useAuth } from "@/lib/store/authStore";
-import { useWishlistStore } from "@/store/wishlistStore";
-import { AuthGuardDialog } from "@/components/guest/auth/AuthGuardDialog";
-
-function getRatingDistribution(reviews: { rating: number }[]) {
-  const dist = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
-  reviews.forEach((r) => {
-    const key = Math.round(r.rating) as 1 | 2 | 3 | 4 | 5;
-    if (key >= 1 && key <= 5) dist[key]++;
-  });
-  const total = reviews.length || 1;
-  return Object.entries(dist).map(([star, count]) => ({
-    star: Number(star),
-    count,
-    percentage: (count / total) * 100,
-  }));
-}
 
 interface TransportDetailPageProps {
   route: Transport;
@@ -48,15 +34,30 @@ interface TransportDetailPageProps {
 }
 
 export function TransportDetailPage({ route, backHref = "/transport" }: TransportDetailPageProps) {
+  const router = useRouter();
+  
+  const [activeImg, setActiveImg] = useState(0);
   const [showAuthDialog, setShowAuthDialog] = useState(false);
+
   const { isAuthenticated } = useAuth();
   const { isSaved, addItem, removeItem } = useWishlistStore();
   const isFavorited = isSaved(route.id);
 
   const reviews = mockListingReviews[route.id] || [];
-  const avgRating =
-    reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : 4.5;
-  const ratingDist = getRatingDistribution(reviews);
+  const avgRating = reviews.length > 0
+    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+    : 4.8;
+  const reviewCount = reviews.length || 98;
+
+  // Set up mock gallery images for transport
+  const images = [
+    route.image || "https://images.unsplash.com/photo-1570125909232-eb2be79ff63d?auto=format&fit=crop&w=1100&q=80",
+    "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1100&q=80",
+    "https://images.unsplash.com/photo-1464219789935-c2d9d9aba644?auto=format&fit=crop&w=1100&q=80"
+  ];
+
+  const prevImg = () => setActiveImg((i) => (i === 0 ? images.length - 1 : i - 1));
+  const nextImg = () => setActiveImg((i) => (i === images.length - 1 ? 0 : i + 1));
 
   const handleToggleFavorite = () => {
     if (isFavorited) {
@@ -69,444 +70,370 @@ export function TransportDetailPage({ route, backHref = "/transport" }: Transpor
         image: route.image,
         price: route.price,
         location: route.from,
-        rating: 4.5,
-        reviews: 0,
+        rating: avgRating,
+        reviews: reviewCount,
         type: "Transport",
       });
       toast.success(`Saved to collections`, {
-        icon: <Heart className="h-4 w-4 fill-primary text-primary" />,
+        icon: <Heart className="h-4 w-4 fill-purple text-purple" />,
       });
     }
   };
 
+  const title = `${route.from} to ${route.to} Express`;
+  const hostName = route.operator || "Chisanga Transport";
+  const priceDisplay = `K${route.price || 180}`;
+
   return (
-    <div className="min-h-screen flex flex-col bg-background font-sans pb-20 md:pb-0">
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8">
-        {/* Breadcrumbs row */}
-        <div className="flex items-center gap-2 text-base text-muted-foreground mb-5">
-          <Link
-            href={backHref}
-            className="hover:text-primary transition-colors font-medium flex items-center gap-1"
-          >
-            <ChevronLeft className="h-4 w-4" /> Back
-          </Link>
-          <span className="text-muted-foreground/30">/</span>
-          <span className="text-muted-foreground">Transport</span>
-          <span className="text-muted-foreground/30">/</span>
-          <span className="text-foreground font-semibold truncate max-w-[200px]">
-            {route.from} to {route.to}
-          </span>
-        </div>
+    <div className="bg-white-warm text-black font-sans min-h-screen">
+      <main className="max-w-[1100px] mx-auto px-4 pt-4 pb-28 lg:pb-8">
+        
+        {/* Breadcrumb */}
+        <nav className="flex flex-wrap items-center text-xs text-black-faint mb-4">
+          <Link href="/" className="hover:text-purple transition-colors">Home</Link> <span className="mx-1.5 text-black-muted/50">›</span>
+          <Link href="/explore" className="hover:text-purple transition-colors">Explore</Link> <span className="mx-1.5 text-black-muted/50">›</span>
+          <Link href="/zambia" className="hover:text-purple transition-colors">Zambia</Link> <span className="mx-1.5 text-black-muted/50">›</span>
+          <Link href={backHref} className="hover:text-purple transition-colors">Local Transport</Link> <span className="mx-1.5 text-black-muted/50">›</span>
+          <span className="text-black font-medium">{title}</span>
+        </nav>
 
-        {/* Header Title Row */}
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-5">
-          <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="text-[10px] font-bold uppercase tracking-widest bg-primary/10 text-primary px-2.5 py-0.5 rounded-full">
-                Transport
-              </span>
-              <span className="text-[10px] font-bold uppercase tracking-widest bg-emerald-500/10 text-emerald-600 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                <ShieldCheck className="h-3 w-3" /> Verified Route
-              </span>
-            </div>
-            <h1 className="text-2xl md:text-3xl font-display font-black tracking-tight text-foreground mb-1.5">
-              {route.from} <span className="text-muted-foreground/30 font-light">→</span> {route.to}
-            </h1>
-            <div className="flex flex-wrap items-center gap-3 text-base text-muted-foreground">
-              {reviews.length > 0 && (
-                <span className="flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-accent text-accent" />
-                  <strong className="text-foreground">{avgRating.toFixed(1)}</strong>
-                  <span>
-                    ({reviews.length} {reviews.length === 1 ? "review" : "reviews"})
-                  </span>
-                </span>
-              )}
-              <span>
-                Operated by <strong className="text-foreground">{route.operator}</strong>
-              </span>
-              <span className="flex items-center gap-1">
-                <Clock className="h-4 w-4 text-muted-foreground/60" />
-                {route.duration}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              onClick={() => {
-                navigator.clipboard?.writeText(window.location.href);
-                toast.success("Link copied!");
-              }}
-              className="h-9 w-9 rounded-xl border border-border/60 bg-card flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-border transition-all shadow-sm"
-              aria-label="Share"
-            >
-              <Share2 className="h-4 w-4" />
-            </button>
-            <button
-              onClick={handleToggleFavorite}
-              className={cn(
-                "h-9 w-9 rounded-xl border bg-card flex items-center justify-center transition-all shadow-sm",
-                isFavorited
-                  ? "border-primary/30 text-primary bg-primary/5"
-                  : "border-border/60 text-muted-foreground hover:text-primary hover:border-primary/30",
-              )}
-            >
-              <Heart className={cn("h-4 w-4", isFavorited && "fill-primary")} />
-            </button>
-          </div>
-        </div>
-
-        {/* Photo Banner */}
-        <div className="relative rounded-2xl overflow-hidden aspect-[21/9] mb-7 bg-muted shadow-sm max-h-[360px]">
-          <img
-            src={route.image}
-            alt={`${route.from} to ${route.to}`}
-            className="h-full w-full object-cover"
+        {/* Hero Gallery */}
+        <div className="relative w-full h-56 md:h-72 rounded-2xl overflow-hidden mb-6 group">
+          <img 
+            src={images[activeImg]} 
+            className="w-full h-full object-cover" 
+            alt="Bus on the road" 
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-          <div className="absolute bottom-6 left-6 text-white space-y-1">
-            <span className="text-[10px] font-black uppercase tracking-widest bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 inline-block">
-              Inter-City Highway Express
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none"></div>
+          
+          <button
+            onClick={(e) => { e.stopPropagation(); prevImg(); }}
+            className="absolute left-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/70 backdrop-blur-sm text-black flex items-center justify-center hover:bg-white transition-all shadow-sm opacity-100 md:opacity-0 md:group-hover:opacity-100 z-10"
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); nextImg(); }}
+            className="absolute right-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/70 backdrop-blur-sm text-black flex items-center justify-center hover:bg-white transition-all shadow-sm opacity-100 md:opacity-0 md:group-hover:opacity-100 z-10"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+
+          <div className="absolute bottom-4 left-4 flex flex-col gap-2">
+            <span className="bg-purple/90 text-white text-xs px-3 py-1 rounded-full font-medium backdrop-blur-sm flex items-center gap-1.5">
+              <Bus className="w-3.5 h-3.5" /> Bus • 40 seats
             </span>
-            <h2 className="text-xl md:text-2xl font-black tracking-tight drop-shadow-md">
-              Comfortable travel across Zambia&apos;s finest highways
-            </h2>
+          </div>
+
+          <div className="absolute bottom-4 right-4 flex gap-2">
+            <button 
+              onClick={handleToggleFavorite}
+              className="bg-white/90 backdrop-blur-sm h-9 w-9 rounded-lg shadow-lg flex items-center justify-center hover:bg-white transition-colors text-black"
+            >
+              <Heart className={cn("h-4 w-4", isFavorited ? "fill-purple text-purple" : "text-black")} />
+            </button>
           </div>
         </div>
 
-        {/* Content Section & Sidebar Form */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10 items-start">
-          {/* Left Side: Route and Service details */}
-          <div className="space-y-10">
-            {/* Quick Stats */}
-            <div className="flex flex-wrap gap-5 py-5 border-y border-border/40">
-              <div className="flex items-center gap-2 text-base font-medium text-muted-foreground">
-                <Clock className="h-4.5 w-4.5 text-primary/70" />
-                <span>
-                  Duration: <strong>{route.duration}</strong>
-                </span>
+        {/* Main Info + Booking Sidebar Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8">
+          {/* LEFT COLUMN: Trust & Logistics */}
+          <div className="space-y-6 divide-y divide-white-soft">
+            {/* Title & Host */}
+            <div className="pt-2">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h1 className="text-3xl font-bold tracking-tight text-black">{title}</h1>
+                  <div className="mt-1 text-sm text-black-soft font-medium flex flex-wrap items-center gap-y-2 gap-x-4">
+                    <span className="flex items-center gap-1">
+                      <span className="bg-gold text-white px-2 py-0.5 rounded text-xs font-bold">{avgRating.toFixed(1)}</span>
+                      ({reviewCount} traveler reviews)
+                    </span>
+                    <span className="text-purple font-semibold">Hosted by {hostName}</span>
+                  </div>
+                  <p className="text-xs text-purple mt-2 font-script text-lg">Premium comfort, budget-friendly fares. Daily service for the curious explorer.</p>
+                </div>
               </div>
-              <div className="flex items-center gap-2 text-base font-medium text-muted-foreground">
-                <Compass className="h-4.5 w-4.5 text-primary/70" />
-                <span>
-                  Frequency: <strong>{route.departures}</strong>
+              
+              {/* Quick Facts */}
+              <div className="flex flex-wrap gap-4 mt-4 text-sm text-black-soft bg-white-soft p-3 rounded-xl border border-white-soft">
+                <span className="flex items-center gap-1.5">
+                  <Clock className="w-4 h-4 text-purple" />
+                  <span className="font-medium">{route.departureTime || "6:00 AM"} departure</span>
                 </span>
-              </div>
-              <div className="flex items-center gap-2 text-base font-medium text-muted-foreground">
-                <Users className="h-4.5 w-4.5 text-primary/70" />
-                <span>
-                  Capacity: <strong>Up to 50 Passengers</strong>
+                <span className="flex items-center gap-1.5">
+                  <Timer className="w-4 h-4 text-purple" />
+                  <span className="font-medium">{route.duration || "8 hours"} duration</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Wifi className="w-4 h-4 text-purple" />
+                  <span className="font-medium">Free Wi-Fi onboard</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <MapPin className="w-4 h-4 text-purple" />
+                  <span className="font-medium">Intercity Terminal</span>
                 </span>
               </div>
             </div>
 
-            {/* Route Overview */}
-            <section>
-              <h2 className="text-xl font-display font-bold tracking-tight text-foreground mb-3">
-                Route Overview
-              </h2>
-              <p className="text-muted-foreground leading-relaxed text-[15px]">
-                Travel safely and comfortably on this highly popular route from {route.from} to{" "}
-                {route.to}. Enjoy fully air-conditioned interiors, reclining luxury seats, charging
-                outlets, and onboard entertainment. Perfect for business travelers, tourists, or
-                visiting family, this service guarantees smooth transit with experienced, verified
-                local operators.
+            {/* The Overview */}
+            <div className="pt-6">
+              <h2 className="font-semibold text-lg text-black">About this ride</h2>
+              <p className="text-sm text-black-soft leading-relaxed mt-2 whitespace-pre-wrap">
+                Operating daily for over 7 years, {hostName} is a locally-owned family business providing reliable and comfortable road travel between Zambia's two biggest cities. Our coaches are equipped with modern AC, free high-speed Wi-Fi, and USB charging ports at every seat. We make two scheduled rest stops for food and restroom breaks.
               </p>
-            </section>
+            </div>
 
-            {/* Travel Path Visualization */}
-            <section>
-              <h2 className="text-xl font-display font-bold tracking-tight text-foreground mb-5">
-                Journey Timeline & Stops
-              </h2>
-              <div className="relative pl-6 border-l border-primary/20 space-y-8 ml-3">
-                <div className="relative">
-                  <div className="absolute -left-[31px] top-0 h-4.5 w-4.5 rounded-full border-2 border-primary bg-white flex items-center justify-center">
-                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                  </div>
-                  <h3 className="font-bold text-base text-foreground">
-                    Departure: {route.from} Terminal
-                  </h3>
-                  <p className="text-sm text-muted-foreground mt-0.5">
-                    Please check in 45 minutes before departure time.
-                  </p>
+            {/* Route & Schedule Timeline */}
+            <div className="pt-6">
+              <h2 className="font-semibold text-lg text-black">Route & schedule</h2>
+              <div className="relative mt-4 pl-6 space-y-6 border-l-2 border-purple/30">
+                <div>
+                  <div className="absolute -left-[5px] top-1 w-2.5 h-2.5 bg-purple rounded-full ring-4 ring-purple/10"></div>
+                  <p className="font-semibold text-sm text-black">{route.departureTime || "6:00 AM"} — Depart {route.from}</p>
+                  <p className="text-xs text-black-muted mt-1">Intercity Bus Terminal (Gate 4)</p>
                 </div>
-                <div className="relative">
-                  <div className="absolute -left-[31px] top-0 h-4.5 w-4.5 rounded-full border-2 border-muted-foreground/30 bg-white flex items-center justify-center">
-                    <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50" />
-                  </div>
-                  <h3 className="font-bold text-base text-foreground">Transit Pitstop</h3>
-                  <p className="text-sm text-muted-foreground mt-0.5">
-                    15-minute rest, refreshment, and stretch stop midway.
-                  </p>
+                <div>
+                  <div className="absolute -left-[5px] top-1 w-2.5 h-2.5 bg-purple rounded-full ring-4 ring-purple/10"></div>
+                  <p className="font-semibold text-sm text-black">7:45 AM — Rest Stop: Kafue Town</p>
+                  <p className="text-xs text-black-muted mt-1">30-minute break for food, restrooms, and stretching.</p>
                 </div>
-                <div className="relative">
-                  <div className="absolute -left-[31px] top-0 h-4.5 w-4.5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                  </div>
-                  <h3 className="font-bold text-base text-foreground">
-                    Arrival: {route.to} Terminal
-                  </h3>
-                  <p className="text-sm text-muted-foreground mt-0.5">
-                    Estimated transit duration is {route.duration} subject to traffic conditions.
-                  </p>
+                <div>
+                  <div className="absolute -left-[5px] top-1 w-2.5 h-2.5 bg-purple rounded-full ring-4 ring-purple/10"></div>
+                  <p className="font-semibold text-sm text-black">{route.arrivalTime || "2:00 PM"} — Arrival in {route.to}</p>
+                  <p className="text-xs text-black-muted mt-1">Main Bus Station. Transfer to your lodge is available upon request.</p>
                 </div>
-              </div>
-            </section>
-
-            {/* Transit Amenities */}
-            <section>
-              <h2 className="text-xl font-display font-bold tracking-tight text-foreground mb-4">
-                Boarding Amenities
-              </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {[
-                  { name: "Air Conditioning", icon: Sparkles },
-                  { name: "Reclining Seats", icon: Coffee },
-                  { name: "USB Charging Ports", icon: Zap },
-                  { name: "On-Board WiFi", icon: Wifi },
-                  { name: "Luggage Storage", icon: Briefcase },
-                  { name: "Verified Operator", icon: ShieldCheck },
-                ].map(({ name, icon: Icon }) => (
-                  <div
-                    key={name}
-                    className="flex items-center gap-2.5 p-3 rounded-xl bg-muted/50 text-base font-medium text-foreground"
-                  >
-                    <Icon className="h-4 w-4 text-primary/70 shrink-0" />
-                    <span>{name}</span>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* Policies and Baggage */}
-            <section className="p-5 rounded-2xl border border-amber-500/10 bg-amber-500/5 space-y-4">
-              <h3 className="font-bold text-lg text-amber-800 flex items-center gap-2">
-                <Info className="h-5 w-5 text-amber-600" /> Baggage & Cancellation Policy
-              </h3>
-              <ul className="space-y-2.5 text-base text-amber-800/80">
-                <li className="flex items-start gap-2">
-                  <Info className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
-                  <span>
-                    <strong>Free Baggage Allowance:</strong> Up to 2 standard bags (max 20kg total)
-                    in the undercarriage storage, plus 1 small carry-on.
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Info className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
-                  <span>
-                    <strong>Cancellation:</strong> 100% refund for cancellations requested up to 24
-                    hours prior to travel date. Non-refundable within 24 hours.
-                  </span>
-                </li>
-              </ul>
-            </section>
-
-            {/* Guest Reviews */}
-            <section className="space-y-6">
-              {reviews.length > 0 && (
-                <div className="flex flex-col sm:flex-row gap-6 p-6 rounded-2xl bg-muted/30">
-                  <div className="flex flex-col items-center justify-center shrink-0">
-                    <span className="text-4xl font-black text-foreground">
-                      {avgRating.toFixed(1)}
-                    </span>
-                    <div className="flex items-center gap-0.5 mt-1">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star
-                          key={star}
-                          className={cn(
-                            "h-4 w-4",
-                            star <= Math.round(avgRating)
-                              ? "fill-accent text-accent"
-                              : "fill-muted-foreground/20 text-muted-foreground/20",
-                          )}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-sm text-muted-foreground mt-1 font-medium">
-                      {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
-                    </span>
-                  </div>
-                  <div className="flex-1 space-y-1.5">
-                    {ratingDist.reverse().map(({ star, count, percentage }) => (
-                      <div key={star} className="flex items-center gap-2 text-base">
-                        <span className="w-3 text-right text-muted-foreground font-medium text-sm">
-                          {star}
-                        </span>
-                        <Star className="h-3 w-3 fill-accent text-accent" />
-                        <div className="flex-1 h-2 bg-muted-foreground/10 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-accent rounded-full transition-all duration-500"
-                            style={{ width: `${percentage}%` }}
-                          />
-                        </div>
-                        <span className="w-6 text-right text-sm text-muted-foreground">
-                          {count}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              <ReviewSection
-                listingId={route.id}
-                listingName={`${route.from} to ${route.to}`}
-                listingType="transport"
-                reviews={reviews}
-              />
-            </section>
-          </div>
-
-          {/* Right Side: Interactive Booking Card */}
-          <aside className="hidden lg:block lg:sticky lg:top-24">
-            <div className="bg-card rounded-2xl card-shadow-lg overflow-hidden">
-              <div className="bg-primary px-6 py-5 text-white">
-                <p className="text-primary-foreground/80 text-sm font-bold uppercase tracking-widest mb-1">
-                  Ticket Rate Starting at
-                </p>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-black text-primary-foreground">
-                    K{route.price}
-                  </span>
-                  <span className="text-primary-foreground/75 text-base">/seat</span>
-                </div>
-                <div className="flex items-center gap-1 mt-1 text-primary-foreground/90 text-sm">
-                  <Clock className="h-3.5 w-3.5" />
-                  <span>Instant SMS Ticket confirmation upon booking approval</span>
-                </div>
-              </div>
-
-              <div className="p-6 space-y-5">
-                <h3 className="font-black text-xl text-foreground tracking-tight font-display">
-                  Invoice Summary
-                </h3>
-
-                <div className="space-y-3">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                    What&apos;s Included
-                  </p>
-                  <div className="space-y-2 text-base">
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Clock className="h-4 w-4 text-primary/70" />
-                      <span>Duration: {route.duration}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Compass className="h-4 w-4 text-primary/70" />
-                      <span>{route.departures} departures</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <ShieldCheck className="h-4 w-4 text-primary/70" />
-                      <span>Verified operator: {route.operator}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Briefcase className="h-4 w-4 text-primary/70" />
-                      <span>Up to 20kg baggage included</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="h-px bg-border/40" />
-
-                <div className="space-y-2">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                    Boarding Amenities
-                  </p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {["Air Conditioning", "Reclining Seats", "WiFi", "USB Charging"].map((a) => (
-                      <span
-                        key={a}
-                        className="text-sm bg-muted px-2.5 py-1 rounded-full text-muted-foreground"
-                      >
-                        {a}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="h-px bg-border/40" />
-
-                <div className="space-y-2">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                    Price Breakdown
-                  </p>
-                  <div className="space-y-1.5 text-base">
-                    <div className="flex justify-between text-muted-foreground">
-                      <span>Ticket rate</span>
-                      <span className="font-semibold text-foreground">K{route.price}/seat</span>
-                    </div>
-                    <div className="flex justify-between text-muted-foreground">
-                      <span>Booking fee (est.)</span>
-                      <span className="font-semibold text-foreground">5%</span>
-                    </div>
-                  </div>
-                  <p className="text-[11px] text-muted-foreground italic">
-                    Final total calculated after selecting passengers & class
-                  </p>
-                </div>
-
-                <Link
-                  href={`/checkout/book?type=transport&id=${route.id}`}
-                  className="w-full h-12 rounded-xl bg-primary font-black uppercase tracking-widest text-base text-primary-foreground shadow-md shadow-primary/20 hover:shadow-primary/30 transition-all hover:scale-[1.01] flex items-center justify-center gap-2"
-                >
-                  Proceed to Booking
-                  <ChevronRight className="h-4 w-4" />
-                </Link>
-
-                <p className="text-center text-sm text-muted-foreground">
-                  Free cancellation 24h before departure · Secure seat
-                </p>
               </div>
             </div>
-          </aside>
+
+            {/* Onboard Amenities */}
+            <div className="pt-6">
+              <h2 className="font-semibold text-lg text-black">Onboard amenities</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6 mt-4 text-sm text-black-soft">
+                <div className="flex items-center gap-3">
+                  <Wifi className="w-5 h-5 text-purple shrink-0" /> Complimentary Wi-Fi
+                </div>
+                <div className="flex items-center gap-3">
+                  <Snowflake className="w-5 h-5 text-purple shrink-0" /> Air Conditioning
+                </div>
+                <div className="flex items-center gap-3">
+                  <Plug className="w-5 h-5 text-purple shrink-0" /> USB Charging Ports (Every seat)
+                </div>
+                <div className="flex items-center gap-3">
+                  <Briefcase className="w-5 h-5 text-purple shrink-0" /> Under-bus & overhead luggage
+                </div>
+                <div className="flex items-center gap-3">
+                  <MonitorPlay className="w-5 h-5 text-purple shrink-0" /> In-bus Entertainment screens
+                </div>
+                <div className="flex items-center gap-3">
+                  <HeartPulse className="w-5 h-5 text-purple shrink-0" /> Sanitizer & emergency first aid
+                </div>
+              </div>
+            </div>
+
+            {/* Meeting Point & Logistics */}
+            <div className="pt-6">
+              <h2 className="font-semibold text-lg text-black">Meeting point & logistics</h2>
+              <p className="text-sm text-black-soft leading-relaxed mt-2">
+                <strong>Departure point:</strong> {route.from} Intercity Bus Terminal, Gate 4 (Look for the purple booth).
+              </p>
+              <div className="mt-3 p-3 bg-purple-muted rounded-xl flex gap-3 text-sm text-black-soft">
+                <Lightbulb className="w-5 h-5 text-purple shrink-0 mt-0.5" />
+                <p>
+                  <strong className="text-purple">Student tip:</strong> Arrive 30 minutes early to secure your preferred seat and store your luggage. Buses depart exactly on time.
+                </p>
+              </div>
+              <div className="w-full h-40 bg-white-soft rounded-xl mt-4 flex items-center justify-center border border-white-soft relative overflow-hidden">
+                <iframe
+                  title="Bus Terminal Map"
+                  width="100%"
+                  height="100%"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  src={`https://www.openstreetmap.org/export/embed.html?bbox=28.2,-15.4,28.3,-15.3&layer=mapnik`}
+                  style={{ border: 0, filter: "contrast(0.9) brightness(0.95)" }}
+                />
+              </div>
+            </div>
+
+            {/* Reviews */}
+            <div className="pt-6">
+              <div className="flex items-center justify-between">
+                <h2 className="font-semibold text-lg flex items-center gap-2 text-black">
+                  <span className="bg-gold text-white px-2 py-0.5 rounded text-sm">{avgRating.toFixed(1)}</span> · {reviewCount} reviews
+                </h2>
+                <button className="text-purple text-xs font-semibold hover:underline">Read all reviews</button>
+              </div>
+              <div className="mt-4 space-y-4">
+                <div className="bg-white p-4 rounded-xl border border-white-soft">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-sm text-black">Mutale (Student, 22)</span>
+                    <span className="text-xs text-black-faint">Dec 2025</span>
+                  </div>
+                  <p className="text-sm text-black-soft mt-2">"Super reliable! The bus left exactly on time, the Wi-Fi worked the whole trip, and the AC was ice-cold. Best value for money on this route."</p>
+                </div>
+                <div className="bg-white p-4 rounded-xl border border-white-soft">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-sm text-black">The Journey Crew</span>
+                    <span className="text-xs text-black-faint">Nov 2025</span>
+                  </div>
+                  <p className="text-sm text-black-soft mt-2">"We took this bus for our group trip. The drivers were super friendly, they helped us load our gear, and we made it to Livingstone right on time. Highly recommend!"</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Meet the Host */}
+            <div className="pt-6">
+              <h2 className="font-semibold text-lg text-black">Meet the hosts</h2>
+              <div className="flex items-center gap-4 mt-3">
+                <div className="w-12 h-12 rounded-full bg-purple text-white flex items-center justify-center font-bold text-lg shrink-0 shadow-sm">
+                  CT
+                </div>
+                <div>
+                  <p className="font-semibold text-sm text-black">The Chisanga Family</p>
+                  <p className="text-xs text-black-muted flex items-center gap-1">
+                    <span className="bg-green-500 w-2 h-2 rounded-full inline-block"></span> Responds within 15 minutes
+                  </p>
+                  <p className="text-xs text-black-muted">Family-owned transport since 2018.</p>
+                </div>
+              </div>
+              <p className="text-sm text-black-soft mt-3 italic">
+                "We are proud to offer the youth of Zambia reliable, comfortable travel at a price their pockets can handle. We reinvest everything we make to keep our buses in top condition and our drivers well-paid."
+              </p>
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN: The Booking Card */}
+          <div className="relative">
+            <div className="bg-white border border-white-soft rounded-2xl p-6 shadow-lg sticky top-24">
+              
+              <div className="flex items-center justify-between border-b border-white-soft pb-4">
+                <div>
+                  <span className="text-2xl font-bold text-black">{priceDisplay}</span> <span className="text-xs text-black-muted font-medium">/ per seat</span>
+                </div>
+                <div className="text-sm text-black-soft font-medium flex items-center gap-1">
+                  <span className="bg-gold text-white px-1.5 py-0.5 rounded text-xs font-bold">{avgRating.toFixed(1)}</span> Highly rated
+                </div>
+              </div>
+              
+              {/* FOMO / Seat Scarcity */}
+              <div className="mt-4 p-3 bg-purple-muted border border-purple-border rounded-lg flex items-center gap-2 text-purple text-xs font-semibold">
+                <span className="w-2 h-2 bg-purple rounded-full inline-block animate-pulse shrink-0"></span>
+                Only 12 seats left for this departure!
+              </div>
+              
+              <div className="py-5 space-y-3">
+                {/* Date Picker */}
+                <div className="bg-white-warm rounded-lg p-3 border border-white-soft flex justify-between items-center cursor-pointer hover:border-purple transition-colors">
+                  <div>
+                    <span className="text-[10px] text-black-faint block font-medium">SELECT DATE</span>
+                    <span className="text-sm font-semibold text-black">Aug 15, 2026</span>
+                  </div>
+                  <span className="text-xs text-purple font-semibold">Change</span>
+                </div>
+                
+                {/* Seat Selector */}
+                <div className="bg-white-warm rounded-lg p-3 border border-white-soft flex justify-between items-center cursor-pointer hover:border-purple transition-colors">
+                  <div>
+                    <span className="text-[10px] text-black-faint block font-medium">SEATS</span>
+                    <span className="text-sm font-semibold text-black">1 seat</span>
+                  </div>
+                  <span className="text-xs text-purple font-semibold">Edit</span>
+                </div>
+
+                {/* All-Inclusive Price Breakdown */}
+                <div className="pt-4 space-y-2 text-sm">
+                  <div className="flex justify-between text-black-soft">
+                    <span>1 seat x {priceDisplay}</span>
+                    <span>{priceDisplay}</span>
+                  </div>
+                  <div className="flex justify-between text-black-soft">
+                    <span>Luggage allowance</span>
+                    <span className="text-green-600 font-medium">Included</span>
+                  </div>
+                  <div className="flex justify-between text-black font-bold border-t border-white-soft pt-3 mt-2">
+                    <span>Total (ZMW)</span>
+                    <span>{priceDisplay}</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Cancellation policy */}
+              <div className="mb-5 text-center">
+                <span className="text-[10px] text-black-muted bg-white-warm px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 font-medium">
+                  <RefreshCcw className="w-3 h-3" /> Free cancellation up to 2 hours before
+                </span>
+              </div>
+
+              <button 
+                onClick={() => router.push(`/checkout/book?type=transport&id=${route.id}`)}
+                className="w-full bg-purple text-white rounded-xl py-3.5 font-semibold hover:bg-purple-hover transition-colors text-base shadow-md shadow-purple/20"
+              >
+                Book your seat
+              </button>
+            </div>
+          </div>
         </div>
+
+        {/* Similar Routes Section */}
+        <section className="mt-16 pt-8 border-t border-white-soft">
+          <h2 className="text-xl font-bold text-black mb-6">More transport routes you might like</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { id: "sim-t1", name: "Lusaka to Ndola Express", type: "Bus", price: "K150", rating: 4.7, img: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80" },
+              { id: "sim-t2", name: "Livingstone to Sesheke Shuttle", type: "Minibus", price: "K120", rating: 4.5, img: "https://images.unsplash.com/photo-1464219789935-c2d9d9aba644?auto=format&fit=crop&w=600&q=80" },
+              { id: "sim-t3", name: "Lusaka to Chipata VIP Coach", type: "Luxury Bus", price: "K220", rating: 4.9, img: "https://images.unsplash.com/photo-1570125909232-eb2be79ff63d?auto=format&fit=crop&w=600&q=80" },
+            ].map((simItem) => (
+              <Link href={`/transport/${simItem.id}`} key={simItem.id} className="group block">
+                <div className="w-full h-48 rounded-xl bg-white-soft overflow-hidden mb-3 relative">
+                  <img src={simItem.img} alt={simItem.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <button className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center hover:scale-110 transition-transform shadow-sm">
+                    <Heart className="h-4 w-4 text-black hover:text-purple transition-colors" />
+                  </button>
+                  <div className="absolute bottom-2 left-2">
+                    <span className="bg-purple/90 text-white text-[10px] px-2 py-0.5 rounded-full font-medium backdrop-blur-sm">
+                      {simItem.type}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="font-semibold text-black group-hover:text-purple transition-colors truncate">{simItem.name}</h3>
+                  </div>
+                  <div className="flex items-center gap-1 text-sm font-semibold text-black shrink-0">
+                    <span className="bg-gold text-white px-1.5 py-0.5 rounded text-[10px]">{simItem.rating}</span>
+                  </div>
+                </div>
+                <p className="text-sm text-black font-semibold mt-1">{simItem.price} <span className="font-normal text-black-faint">/ seat</span></p>
+              </Link>
+            ))}
+          </div>
+        </section>
       </main>
 
-      {/* Mobile sticky booking bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-border/60 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] lg:hidden">
-        <div className="flex items-center justify-between px-4 py-3">
-          <div>
-            <div className="flex items-baseline gap-1">
-              <span className="text-xl font-black text-foreground">K{route.price}</span>
-              <span className="text-sm text-muted-foreground">/seat</span>
-            </div>
-            {reviews.length > 0 && (
-              <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                <Star className="h-3 w-3 fill-accent text-accent" />
-                <span>
-                  {avgRating.toFixed(1)} · {reviews.length} reviews
-                </span>
-              </div>
-            )}
-          </div>
+      {/* MOBILE STICKY BOTTOM BAR */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-white-soft p-4 flex items-center justify-between shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50">
+        <div>
           <div className="flex items-center gap-2">
-            <button
-              onClick={handleToggleFavorite}
-              className={cn(
-                "h-10 w-10 rounded-xl border flex items-center justify-center transition-all",
-                isFavorited
-                  ? "border-primary/30 text-primary bg-primary/5"
-                  : "border-border/60 text-muted-foreground hover:text-primary",
-              )}
-            >
-              <Heart className={cn("h-4 w-4", isFavorited && "fill-primary")} />
-            </button>
-            <Link
-              href={`/checkout/book?type=transport&id=${route.id}`}
-              className="h-10 px-5 rounded-xl bg-primary font-bold text-base text-primary-foreground shadow-sm shadow-primary/20 flex items-center justify-center gap-1.5"
-            >
-              Book Now
-              <ChevronRight className="h-4 w-4" />
-            </Link>
+            <span className="text-xl font-bold text-black">{priceDisplay}</span> <span className="text-xs text-black-muted">/ seat</span>
+          </div>
+          <div className="text-xs text-black-muted flex items-center gap-1">
+            <span className="text-red-700 font-bold">12 seats left!</span> · <span className="bg-gold text-white px-1 py-0.5 rounded text-[10px] font-bold">{avgRating.toFixed(1)}</span>
           </div>
         </div>
+        <button 
+          onClick={() => router.push(`/checkout/book?type=transport&id=${route.id}`)}
+          className="bg-purple text-white px-6 py-3 rounded-full font-semibold shadow-md hover:bg-purple-hover transition-colors text-sm flex-1 ml-4 max-w-[140px]"
+        >
+          Book now
+        </button>
       </div>
 
       <AuthGuardDialog
         isOpen={showAuthDialog}
         onClose={() => setShowAuthDialog(false)}
         title="Save to your collections"
-        description="Sign in to save this route and access it from any device."
+        description="Sign in to save this transport route and access it from any device."
       />
     </div>
   );

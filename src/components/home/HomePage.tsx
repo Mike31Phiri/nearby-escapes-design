@@ -242,10 +242,7 @@ export function HomePage() {
             </span>
           </h1>
 
-          {/* Subtext — desktop only */}
-          <p className="hidden md:block text-[17px] text-white/60 leading-relaxed max-w-md mx-auto mb-8">
-            Lodges, camps, and guesthouses within reach — curated around Zambia&apos;s secret spots.
-          </p>
+
 
           {/* ── Search Bar ── */}
           <div className="mx-auto max-w-4xl relative z-20 mt-2">
