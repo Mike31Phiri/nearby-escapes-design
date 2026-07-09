@@ -192,7 +192,7 @@
 
   /* Card hover lift */
   .card-hover-effect {
-    @apply transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5;
+    @apply transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)];
     &:hover { box-shadow: var(--shadow-card, 0 4px 16px rgba(31,20,51,.10)); }
   }
 

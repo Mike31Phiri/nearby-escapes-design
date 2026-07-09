@@ -1,14 +1,15 @@
-import { Work_Sans, Dancing_Script } from "next/font/google";
+import { Dancing_Script, Poppins } from "next/font/google";
 import { AuthProvider } from "@/components/guest/auth/AuthProvider";
-
-const fontSans = Work_Sans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
 
 const fontScript = Dancing_Script({
   subsets: ["latin"],
   variable: "--font-script",
+});
+
+const fontPoppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-poppins",
 });
 
 import type { Metadata } from "next";
@@ -86,7 +87,7 @@ export default async function RootLayout({
       </head>
       <body
         suppressHydrationWarning
-        className={`${fontSans.variable} ${fontScript.variable} font-sans antialiased`}
+        className={`${fontScript.variable} ${fontPoppins.variable} font-sans antialiased bg-white-warm text-black`}
       >
         <AuthProvider initialIsAuthenticated={hasToken}>
           <Suspense fallback={null}>

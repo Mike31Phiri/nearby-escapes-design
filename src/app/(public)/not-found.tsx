@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Compass } from "lucide-react";
 
 export default function NotFound() {
   return (
@@ -8,11 +7,6 @@ export default function NotFound() {
       <div className="max-w-md w-full space-y-8 animate-in fade-in zoom-in duration-700">
         <div className="relative">
           <h1 className="text-[150px] leading-none font-black text-primary/10 select-none">404</h1>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="h-24 w-24 bg-primary/10 rounded-[40px] flex items-center justify-center rotate-12">
-              <Compass className="h-12 w-12 text-primary" />
-            </div>
-          </div>
         </div>
 
         <div className="space-y-4">

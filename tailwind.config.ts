@@ -94,9 +94,10 @@ const config: Config = {
       },
 
       fontFamily: {
-        sans:    ["var(--font-sans)",    "ui-sans-serif", "system-ui", "sans-serif"],
-        display: ["var(--font-sans)",    "ui-sans-serif", "system-ui", "sans-serif"],
+        sans:    ["var(--font-poppins)", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["var(--font-poppins)", "ui-sans-serif", "system-ui", "sans-serif"],
         script:  ["var(--font-script)",  "cursive"],
+        poppins: ["var(--font-poppins)", "sans-serif"],
       },
 
       boxShadow: {
