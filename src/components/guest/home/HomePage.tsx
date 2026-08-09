@@ -51,12 +51,11 @@ const hiddenGems = [
 ];
 
 const categories = [
-    { id: "destinations", label: "Destinations", icon: GlobeHemisphereWest },
-    { id: "stays", label: "Stays", icon: Bed },
-    { id: "experiences", label: "Experiences", icon: Binoculars },
-    { id: "transport", label: "Transport", icon: CarProfile },
-    { id: "packages", label: "Packages", icon: MapTrifold },
-    { id: "local-tours", label: "Local Tours", icon: Factory },
+    { id: "destinations", label: "Destinations" },
+    { id: "stays", label: "Stays" },
+    { id: "experiences", label: "Experiences" },
+    { id: "transport", label: "Transport" },
+    { id: "packages", label: "Packages" },
 ];
 
 const valueProps = [
@@ -77,7 +76,6 @@ const flashDeals = [
 // ── Sub-components ─────────────────────────────────────────────────────────────
 
 function SectionHeader({
-    eyebrow,
     title,
     desc,
     href,
@@ -85,7 +83,6 @@ function SectionHeader({
     as: Heading = "h2",
     hideDescOnMobile = false,
 }: {
-    eyebrow: string;
     title: string;
     desc: string;
     href?: string;
@@ -96,7 +93,6 @@ function SectionHeader({
     return (
         <div className="flex items-end justify-between mb-6 md:mb-7">
             <div>
-                <p className="font-script text-xl md:text-2xl text-gold mb-1">{eyebrow}</p>
                 <Heading className="font-display text-xl md:text-2xl font-bold tracking-tight text-black leading-[1.15]">
                     {title}
                 </Heading>
@@ -147,67 +143,61 @@ export function HomePage() {
     return (
         <div className="min-h-screen flex flex-col bg-white-warm overflow-x-hidden">
 
-            {/* ── HERO ─────────────────────────────────────────────────────── */}
-            <section className="relative pt-14 pb-20 md:pt-20 md:pb-28 overflow-hidden bg-white-warm">
+            {/* ── HERO ───────────*/}
+            <section className="relative pt-10 pb-8 md:pt-20 md:pb-28 overflow-hidden bg-white-warm">
                 <div className="relative mx-auto max-w-7xl px-4 md:px-8">
                     <div className="max-w-3xl mx-auto text-center">
-                        <p className="font-script text-2xl text-gold mb-4">Discover your backyard</p>
                         <h1 className="font-display text-[1.75rem] md:text-[2.75rem] lg:text-[3rem] font-bold tracking-tight text-black leading-[1.15]">
                             <span className="md:hidden">
                                 Find your next{" "}
-                                <span className="font-script text-[1.3em] font-normal text-gold lowercase relative -top-0.5">escape</span>{""}
-                                nearby
+                                <span className="font-script text-[1.3em] font-normal text-black lowercase relative -top-0.5">escape</span>{""}
                             </span>
                             <span className="hidden md:inline">
-                                Find your hidden{" "}
-                                <span className="font-script text-[1.3em] font-normal text-gold lowercase relative -top-0.5">escape</span>
-                                <br />near a gem you&apos;ve never seen
+                                Find an{" "}
+                                <span className="font-script text-[1.3em] font-normal text-black lowercase relative -top-0.5">escape</span>
+                                <br />that suits you
                             </span>
                         </h1>
-
-
                     </div>
                 </div>
             </section>
 
-            {/* ── SEARCH BAR ───────────────────────────────────────────────── */}
-            <div className="relative z-20 -mt-12 md:-mt-14 mx-auto max-w-2xl px-4">
-                <SearchBar onSearch={handleSearch} activeCategory={activeCategory} />
-            </div>
+            {/* ── CATEGORY TABS & SEARCH BAR ─────*/}
+            <div className="relative z-20 mt-2 md:-mt-20 mx-auto max-w-2xl px-3 md:px-4 w-full">
+                {/* ── CATEGORY TABS ──*/}
+                <div className="flex items-center justify-between sm:justify-center gap-2 sm:gap-6 mb-3 px-1 w-full">
+                    {categories.map(({ id, label }) => (
+                        <button
+                            key={id}
+                            type="button"
+                            onClick={() => setActiveCategory(id)}
+                            className={cn(
+                                "py-1 text-xs sm:text-base font-bold transition-all border-b-2 cursor-pointer text-center",
+                                activeCategory === id
+                                    ? "border-purple text-purple scale-105"
+                                    : "border-transparent text-black-muted hover:text-purple"
+                            )}
+                        >
+                            {label}
+                        </button>
+                    ))}
+                </div>
 
-            {/* ── CATEGORY TABS ────────────────────────────────────────────── */}
-            <div className="border-b border-purple-border">
-                <div className="mx-auto w-full max-w-7xl px-4 md:px-8 py-5">
-                    <div className="flex items-start gap-5 overflow-x-auto scrollbar-hide">
-                        {categories.map(({ id, label, icon: Icon }) => (
-                            <span
-                                key={id}
-                                onClick={() => setActiveCategory(id)}
-                                className={cn(
-                                    "flex flex-col items-center gap-1.5 py-4 px-6 border-b-2 text-base font-semibold whitespace-nowrap shrink-0 cursor-pointer transition-all",
-                                    activeCategory === id
-                                        ? "border-purple text-purple"
-                                        : "border-transparent text-black-muted hover:text-purple hover:border-purple",
-                                )}
-                            >
-                                <Icon className="h-5 w-5" weight="duotone" />
-                                {label}
-                            </span>
-                        ))}
-                    </div>
+                {/* ── SEARCH BAR CONTAINER (Responsive Scaling for Mobile) ─────*/}
+                <div className="relative z-30 mx-auto max-w-md sm:max-w-2xl px-3 md:px-4 w-full">
+                    <SearchBar onSearch={handleSearch} activeCategory={activeCategory} />
                 </div>
             </div>
 
-            {/* ── MAIN CONTENT ─────────────────────────────────────────────── */}
+            {/* ── MAIN CONTENT ───*/}
             <main className="flex-1">
-                <section className="pt-5 pb-12">
+                <section className="pt-6 md:pt-10 pb-12">
                     <div className="mx-auto w-full max-w-7xl px-4 md:px-8">
 
                         {/* DESTINATIONS */}
                         {activeCategory === "destinations" && (
                             <>
                                 <SectionHeader
-                                    eyebrow="Explore Zambia"
                                     title="Popular Destinations"
                                     desc="Not sure where to go? Discover top-rated stays, local tours, and seamless transport options around Zambia's most sought-after locations."
                                     href="/explore"
@@ -229,7 +219,6 @@ export function HomePage() {
                                                     <Icon className="h-3.5 w-3.5 text-purple" />
                                                 </div>
                                                 <div className="absolute bottom-0 left-0 p-4 w-full">
-                                                    <p className="text-gold text-[9px] font-bold uppercase tracking-widest mb-1">{destination.region}</p>
                                                     <h3 className="font-display text-white font-bold text-base leading-tight mb-1">{destination.name}</h3>
                                                     {destination.stayCount && (
                                                         <p className="text-white/50 text-[10px] font-medium flex items-center gap-1">
@@ -245,7 +234,6 @@ export function HomePage() {
                                 {/* Popular Cities */}
                                 <div className="mt-14 md:mt-16">
                                     <SectionHeader
-                                        eyebrow="Urban & Gateway"
                                         title="Popular Cities"
                                         desc="Explore Zambia's vibrant cities and gateway towns — from the capital to the adventure hubs."
                                         href="/explore"
@@ -273,14 +261,13 @@ export function HomePage() {
                                 {/* Hidden Gems */}
                                 <div className="mt-14 md:mt-16">
                                     <SectionHeader
-                                        eyebrow="Hidden Zambia"
                                         title="Discover Hidden Gems"
                                         desc="Off-the-beaten-path spots, farm stays, and local secrets only insiders know about."
                                         href="/explore"
                                         seeAllLabel="Explore all"
                                     />
                                     <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 -mx-4 md:-mx-8 px-4 md:px-8 snap-x snap-mandatory">
-                                        {hiddenGems.map(({ tag, title, meta, image, href }) => (
+                                        {hiddenGems.map(({ title, meta, image, href }) => (
                                             <Link
                                                 key={title}
                                                 href={href}
@@ -289,7 +276,6 @@ export function HomePage() {
                                                 <img src={image} alt={title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
                                                 <div className="absolute bottom-0 left-0 p-4 w-full">
-                                                    <p className="text-gold text-[9px] font-bold uppercase tracking-[1.2px] mb-1">{tag}</p>
                                                     <h3 className="font-display text-white font-bold text-base leading-snug mb-1.5">{title}</h3>
                                                     <p className="text-white/50 text-[11px]">{meta}</p>
                                                 </div>
@@ -305,7 +291,6 @@ export function HomePage() {
                         {activeCategory === "stays" && (
                             <>
                                 <SectionHeader
-                                    eyebrow="Accommodation"
                                     title="Popular Stays"
                                     desc="Explore highly-rated safari lodges, city guesthouses, and farm retreats that our guests love returning to."
                                     href="/stays"
@@ -325,7 +310,6 @@ export function HomePage() {
                                 {/* Recommended Stays */}
                                 <div className="mt-14 md:mt-16">
                                     <SectionHeader
-                                        eyebrow="Curated for you"
                                         title="Recommended Stays"
                                         desc="Based on your recent searches and preferences."
                                         href="/stays"
@@ -346,7 +330,6 @@ export function HomePage() {
                                 {/* Flash Deals */}
                                 <div className="mt-14 md:mt-16">
                                     <SectionHeader
-                                        eyebrow="Weekend Escapes"
                                         title="Flash Deals"
                                         desc="Limited-time discounts on hand-picked stays. Book now before they're gone."
                                         href="/stays"
@@ -373,7 +356,6 @@ export function HomePage() {
                                                     </span>
                                                 </div>
                                                 <div className="absolute bottom-0 left-0 p-4 w-full">
-                                                    <p className="text-gold text-[9px] font-bold uppercase tracking-widest mb-1">{deal.location}</p>
                                                     <h3 className="font-display text-white font-bold text-base leading-tight mb-1.5">{deal.name}</h3>
                                                     <div className="flex items-center gap-2">
                                                         <span className="text-white font-bold text-base">ZMW {deal.dealPrice}</span>
@@ -392,7 +374,6 @@ export function HomePage() {
                         {activeCategory === "experiences" && (
                             <div>
                                 <SectionHeader
-                                    eyebrow="Things to Do"
                                     title="Popular Experiences"
                                     desc="Top-rated safaris, cultural tours, adventures and activities hand-picked for you."
                                     href="/experiences"
@@ -432,7 +413,6 @@ export function HomePage() {
                         {activeCategory === "transport" && (
                             <div>
                                 <SectionHeader
-                                    eyebrow="Getting Around"
                                     title="Popular Transport Routes"
                                     desc="Reliable bus and shuttle connections between Zambia's major hubs and gateway towns."
                                     href="/transport"
@@ -445,25 +425,24 @@ export function HomePage() {
                                         <Link key={t.id} href="/transport" className="group w-[280px] sm:w-[300px] shrink-0 snap-start bg-white rounded-xl border border-purple-border overflow-hidden transition-all hover:shadow-[0_4px_16px_rgba(31,20,51,0.10)]">
                                             <div className="relative aspect-[16/9] bg-white-bone">
                                                 <img src={t.image} alt={`${t.from} to ${t.to}`} loading="lazy" className="h-full w-full object-cover" />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                                                <div className="absolute bottom-2 left-3 right-3">
-                                                    <div className="flex items-center justify-between text-white text-sm font-bold">
+                                            </div>
+                                            <div className="p-3.5 flex flex-col gap-2">
+                                                <div className="flex items-center justify-between gap-2">
+                                                    <div className="flex items-center gap-1.5 text-black font-bold text-sm sm:text-base">
                                                         <span>{t.from}</span>
-                                                        <span className="text-[10px] mx-1">→</span>
+                                                        <span className="text-purple text-xs">→</span>
                                                         <span>{t.to}</span>
                                                     </div>
+                                                    <span className="text-[14px] font-bold text-purple shrink-0">ZMW {t.price}</span>
                                                 </div>
-                                            </div>
-                                            <div className="p-3.5 flex items-center justify-between">
-                                                <div>
-                                                    <p className="text-[13px] font-semibold text-black-soft">{t.operator}</p>
-                                                    <div className="flex items-center gap-2 mt-0.5">
-                                                        <span className="text-[11px] text-black-muted">{t.duration}</span>
-                                                        <span className="text-[10px] text-black-faint">·</span>
-                                                        <span className="text-[11px] text-black-muted">{t.departures}</span>
+                                                <div className="flex items-center justify-between text-xs">
+                                                    <p className="font-semibold text-black-soft">{t.operator}</p>
+                                                    <div className="flex items-center gap-1.5 text-black-muted text-[11px]">
+                                                        <span>{t.duration}</span>
+                                                        <span>·</span>
+                                                        <span>{t.departures}</span>
                                                     </div>
                                                 </div>
-                                                <span className="text-[14px] font-bold text-purple">ZMW {t.price}</span>
                                             </div>
                                         </Link>
                                     ))}
@@ -476,7 +455,6 @@ export function HomePage() {
                         {activeCategory === "packages" && (
                             <div>
                                 <SectionHeader
-                                    eyebrow="Bundle & Save"
                                     title="Popular Packages"
                                     desc="Curated weekend escapes and multi-day adventures bundled for the best value."
                                     href="/packages"
@@ -512,7 +490,6 @@ export function HomePage() {
                         {/* LOCAL TOURS */}
                         {activeCategory === "local-tours" && (
                             <div className="text-center py-16">
-                                <p className="font-script text-2xl text-gold mb-2">Coming Soon</p>
                                 <h3 className="font-display text-xl font-bold text-black">Popular Local Tours</h3>
                                 <p className="text-black-muted text-sm mt-3 max-w-md mx-auto leading-relaxed">
                                     Guided tours by local experts are on their way. Check back soon for walking tours,
@@ -539,11 +516,10 @@ export function HomePage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-r from-purple/80 via-purple/50 to-transparent" />
                     <div className="relative h-full flex flex-col justify-center px-6 md:px-10 py-10 md:py-14">
-                        <p className="text-gold text-[10px] font-bold uppercase tracking-[1.5px] mb-2">Discover Zambia</p>
                         <h2 className="font-display text-2xl md:text-3xl font-bold text-white leading-[1.15] mb-3 max-w-xl">
                             There&apos;s more than one way to escape
                         </h2>
-                        <p className="text-white/60 text-sm md:text-base max-w-lg leading-relaxed mb-6">
+                        <p className="text-white text-sm md:text-base max-w-lg leading-relaxed mb-6">
                             Browse provinces, cities, and hidden gems across Zambia. Explore curated stays,
                             authentic experiences, and reliable transport around every corner of the country.
                         </p>
@@ -562,7 +538,6 @@ export function HomePage() {
                         <div className="absolute inset-0 bg-gradient-to-r from-black/10 to-transparent" />
                     </div>
                     <div className="px-6 md:px-0 md:pr-10 py-8">
-                        <p className="text-[10px] font-bold text-purple tracking-[1px] uppercase mb-2">Become a host</p>
                         <h2 className="font-display text-xl md:text-2xl font-bold text-black leading-snug mb-3">
                             Turn your passion into profit
                         </h2>
@@ -577,7 +552,7 @@ export function HomePage() {
                 </div>
             </section>
 
-            {/* ── WHY BOOK WITH US ──────────────────────────────────────────── */}
+            {/* ── WHY BOOK WITH US */}
             <section className="pt-14 pb-8 md:pt-[56px] md:pb-8 bg-white">
                 <div className="mx-auto w-full max-w-7xl px-4 md:px-8">
                     <h2 className="text-xl md:text-2xl font-bold text-black mb-8 md:mb-[32px] text-center md:text-left">
