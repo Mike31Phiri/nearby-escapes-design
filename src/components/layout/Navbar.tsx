@@ -11,6 +11,7 @@ import {
   CalendarDays,
   Settings,
   Bell,
+  Home,
 } from "lucide-react";
 import { EnvelopeSimple as MessageSquare } from "@phosphor-icons/react";
 import { useAuth } from "@/lib/store/authStore";
@@ -21,7 +22,6 @@ export function Navbar() {
   const { isAuthenticated, isHydrating, user, logout } = useAuth();
   const notifications = useNotificationStore((state) => state.notifications);
   const unreadCount = notifications.filter((n) => !n.read).length;
-
 
   return (
     <header className="sticky top-0 z-50 bg-white" style={{ height: 64 }}>
@@ -42,15 +42,6 @@ export function Navbar() {
 
         {/* Right side */}
         <div className="flex items-center gap-3">
-
-          {/* Become a host — hidden on mobile */}
-          <Link
-            href="/become-host"
-            className="hidden md:inline-flex items-center text-[13px] font-medium text-black hover:text-purple hover:bg-black/10 px-4 py-2 rounded-full transition-colors"
-          >
-            Become a host
-          </Link>
-
           {isHydrating ? (
             <div className="flex items-center gap-2 ml-1 border-l border-black/10 pl-3">
               <div className="w-16 h-8 rounded-full bg-white/10 animate-pulse hidden md:block" />
@@ -260,26 +251,9 @@ export function Navbar() {
                             Log in
                           </Link>
                         </SheetClose>
-                        <SheetClose asChild>
-                          <Link
-                            href="/explore"
-                            className="flex items-center gap-3 rounded-full px-3 py-2 text-base font-medium hover:bg-black/10 text-black transition-all duration-200"
-                          >
-                            <Compass className="h-4 w-4 text-black-faint" /> Explore
-                          </Link>
-                        </SheetClose>
-                        <SheetClose asChild>
-                          <Link
-                            href="/become-host"
-                            className="flex items-center gap-3 rounded-full px-3 py-2 text-base font-medium hover:bg-black/10 text-black transition-all duration-200"
-                          >
-                            <Building2 className="h-4 w-4 text-black-faint" /> Become a host
-                          </Link>
-                        </SheetClose>
                       </div>
                     )}
                   </div>
-
                 </SheetContent>
               </Sheet>
             </>
