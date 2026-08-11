@@ -216,12 +216,12 @@ export function HomePage() {
                                                 <img src={destination.image} alt={destination.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
                                                 <div className="absolute top-3 left-3 flex h-7 w-7 items-center justify-center rounded-full bg-gold-muted backdrop-blur-sm border border-purple-border">
-                                                    <Icon className="h-3.5 w-3.5 text-purple" />
+                                                    <Icon className="h-3.5 w-3.5 text-white" />
                                                 </div>
                                                 <div className="absolute bottom-0 left-0 p-4 w-full">
                                                     <h3 className="font-display text-white font-bold text-base leading-tight mb-1">{destination.name}</h3>
                                                     {destination.stayCount && (
-                                                        <p className="text-white/50 text-[10px] font-medium flex items-center gap-1">
+                                                        <p className="text-white text-[10px] font-medium flex items-center gap-1">
                                                             <Home className="h-3 w-3" /> {destination.stayCount} stays
                                                         </p>
                                                     )}
@@ -250,7 +250,7 @@ export function HomePage() {
                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
                                                 <div className="absolute bottom-0 left-0 p-3.5 w-full">
                                                     <h3 className="font-display text-white font-bold text-sm leading-tight mb-0.5">{city.name}</h3>
-                                                    <p className="text-white/50 text-[10px] font-medium">{city.region}</p>
+                                                    <p className="text-white text-[10px] font-medium">{city.region}</p>
                                                 </div>
                                             </Link>
                                         ))}
@@ -274,10 +274,10 @@ export function HomePage() {
                                                 className="group relative block overflow-hidden rounded-2xl w-[260px] sm:w-[300px] md:w-[340px] shrink-0 aspect-[4/3] bg-white-bone shadow-[0_2px_12px_rgba(31,20,51,0.10)] transition-all hover:shadow-[0_12px_32px_rgba(31,20,51,0.18)] snap-start"
                                             >
                                                 <img src={image} alt={title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                                                 <div className="absolute bottom-0 left-0 p-4 w-full">
                                                     <h3 className="font-display text-white font-bold text-base leading-snug mb-1.5">{title}</h3>
-                                                    <p className="text-white/50 text-[11px]">{meta}</p>
+                                                    <p className="text-white text-[11px] font-medium drop-shadow">{meta}</p>
                                                 </div>
                                             </Link>
                                         ))}
@@ -359,7 +359,7 @@ export function HomePage() {
                                                     <h3 className="font-display text-white font-bold text-base leading-tight mb-1.5">{deal.name}</h3>
                                                     <div className="flex items-center gap-2">
                                                         <span className="text-white font-bold text-base">ZMW {deal.dealPrice}</span>
-                                                        <span className="text-white/40 text-[11px] line-through">ZMW {deal.originalPrice}</span>
+                                                        <span className="text-white/70 text-[11px] line-through">ZMW {deal.originalPrice}</span>
                                                     </div>
                                                 </div>
                                             </Link>
@@ -392,13 +392,13 @@ export function HomePage() {
                                                 <div className="flex items-start justify-between gap-3">
                                                     <h3 className="text-[14px] font-semibold text-black-soft leading-snug line-clamp-1 flex-1">{exp.name}</h3>
                                                     <div className="flex items-center gap-1 shrink-0">
-                                                        <Star className="h-3 w-3 fill-purple text-purple" strokeWidth={1.5} />
+                                                        <Star className="h-3 w-3 fill-white text-white" strokeWidth={1.5} />
                                                         <span className="text-[12px] font-semibold text-black-muted">{exp.rating.toFixed(1)}</span>
                                                     </div>
                                                 </div>
                                                 <p className="text-[11px] text-black-muted mt-1">{exp.location}</p>
                                                 <div className="flex items-baseline gap-0.5 mt-1.5">
-                                                    <span className="text-[14px] font-bold text-purple">ZMW {exp.price}</span>
+                                                    <span className="text-[14px] font-bold text-white">ZMW {exp.price}</span>
                                                     <span className="text-[11px] text-black-muted">/ person</span>
                                                 </div>
                                             </div>
@@ -430,10 +430,10 @@ export function HomePage() {
                                                 <div className="flex items-center justify-between gap-2">
                                                     <div className="flex items-center gap-1.5 text-black font-bold text-sm sm:text-base">
                                                         <span>{t.from}</span>
-                                                        <span className="text-purple text-xs">→</span>
+                                                        <span className="text-white text-xs">→</span>
                                                         <span>{t.to}</span>
                                                     </div>
-                                                    <span className="text-[14px] font-bold text-purple shrink-0">ZMW {t.price}</span>
+                                                    <span className="text-[14px] font-bold text-white shrink-0">ZMW {t.price}</span>
                                                 </div>
                                                 <div className="flex items-center justify-between text-xs">
                                                     <p className="font-semibold text-black-soft">{t.operator}</p>
@@ -474,10 +474,10 @@ export function HomePage() {
                                                 <p className="text-[11px] text-black-muted mt-0.5">{pkg.location} · {pkg.duration}</p>
                                                 <div className="flex items-center justify-between mt-1.5">
                                                     <div className="flex items-center gap-1">
-                                                        <Star className="h-3 w-3 fill-purple text-purple" strokeWidth={1.5} />
+                                                        <Star className="h-3 w-3 fill-white text-white" strokeWidth={1.5} />
                                                         <span className="text-[12px] font-semibold text-black-muted">{pkg.rating.toFixed(1)}</span>
                                                     </div>
-                                                    <span className="text-[14px] font-bold text-purple">ZMW {pkg.price}</span>
+                                                    <span className="text-[14px] font-bold text-white">ZMW {pkg.price}</span>
                                                 </div>
                                             </div>
                                         </Link>
@@ -486,18 +486,6 @@ export function HomePage() {
                                 <MobileSeeAll href="/packages" label="See all packages" />
                             </div>
                         )}
-
-                        {/* LOCAL TOURS */}
-                        {activeCategory === "local-tours" && (
-                            <div className="text-center py-16">
-                                <h3 className="font-display text-xl font-bold text-black">Popular Local Tours</h3>
-                                <p className="text-black-muted text-sm mt-3 max-w-md mx-auto leading-relaxed">
-                                    Guided tours by local experts are on their way. Check back soon for walking tours,
-                                    cultural immersions, and day trips led by Zambian insiders.
-                                </p>
-                            </div>
-                        )}
-
                     </div>
                 </section>
             </main>
