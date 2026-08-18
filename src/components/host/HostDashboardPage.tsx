@@ -1,433 +1,353 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
-  CurrencyDollar as DollarSign,
-  CalendarBlank as CalendarDays,
-  Percent,
-  Star,
   ArrowRight,
-  Briefcase,
-  Stack as Layers,
-  Lightning as Zap,
-  ChatTeardropText as MessageSquare,
-  CaretRight as ChevronRight,
+  Bed,
+  CalendarCheck,
+  CalendarDays,
+  ChevronRight,
   Clock,
-  Medal as Award,
-  Calendar,
-  WarningCircle as AlertCircle,
-  ChatCircle as MessageCircle,
-  TrendUp as TrendingUp,
-} from "@phosphor-icons/react";
-import { mockWeeklySnapshot, mockOperationalQueue } from "@/lib/mock-host-dashboard";
-import { mockHostProfile } from "@/lib/mock-profile-data";
-import { mockHostBookings } from "@/lib/mock-host-bookings";
-import { mockHostReviews } from "@/lib/mock-host-inbox";
-
+  Eye,
+  Pencil,
+  Ticket,
+  UserCheck,
+  UserMinus,
+  Users,
+} from "lucide-react";
 import { HostPageHeader } from "@/components/layout/HostPageHeader";
+import { ROUTES } from "@/lib/constants/routes";
+import { mockHostProfile } from "@/lib/mock-profile-data";
+import { mockOperationalQueue } from "@/lib/mock-host-dashboard";
+import { mockHostBookings } from "@/lib/mock-host-bookings";
+import { useNotificationStore } from "@/store/notificationStore";
+import { cn } from "@/lib/utils";
+import { BookingDetailsDialog } from "./BookingDetailsDialog";
+import type { BookingDetailsData } from "./BookingDetailsDialog";
+
+function greeting() {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 18) return "Good afternoon";
+  return "Good evening";
+}
 
 export function HostDashboardPage() {
   const host = mockHostProfile;
-  const arriving = mockOperationalQueue.filter((q) => q.type === "arriving");
+  const [mounted, setMounted] = useState(false);
+  const { getUnreadCount } = useNotificationStore();
+  const unread = getUnreadCount();
+
+  // The unread count comes from a persisted store that rehydrates from
+  // localStorage on the client, and the greeting depends on the local clock.
+  // Defer both until after hydration so the server HTML always matches the
+  // client's first render.
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Upcoming activities — check-ins/outs + upcoming bookings, sorted by date
+  const upcomingActivities = [
+    ...mockOperationalQueue
+      .filter((q) => q.type !== "hosting")
+      .map((q) => ({
+        id: q.id,
+        kind: q.type === "arriving" ? ("checkin" as const) : ("checkout" as const),
+        guest: q.guestName,
+        listing: q.listingName,
+        listingImage: q.listingImage,
+        date: q.checkIn ?? q.checkOut ?? "",
+        meta: q.type === "arriving" ? "Arriving" : "Checking out",
+        guests: q.guests,
+        status: q.status,
+      })),
+    ...mockHostBookings
+      .filter((b) => b.status === "confirmed" || b.status === "pending")
+      .map((b) => ({
+        id: b.id,
+        kind: b.listingType === "stay" ? ("stay" as const) : ("activity" as const),
+        listingType: b.listingType as BookingDetailsData["listingType"],
+        guest: b.guestName,
+        listing: b.listingName,
+        listingImage: b.listingImage,
+        date: b.checkIn ?? b.date ?? "",
+        meta:
+          b.listingType === "stay"
+            ? "Stay"
+            : b.listingType === "experience"
+              ? "Experience"
+              : "Transfer",
+        guests: b.guests,
+        status: b.status,
+        amount: b.amount,
+        currency: b.currency,
+      })),
+  ]
+    .filter((a) => a.date)
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .slice(0, 6);
+
+  // Map an upcoming activity to the shared booking-details shape
+  const activityToDetails = (a: (typeof upcomingActivities)[number]): BookingDetailsData => ({
+    id: a.id,
+    listingName: a.listing,
+    listingImage: a.listingImage,
+    listingType: "listingType" in a ? a.listingType : "stay",
+    status: a.status,
+    guestName: a.guest,
+    guests: a.guests,
+    date: a.date,
+    amount: "amount" in a ? a.amount : undefined,
+    currency: "currency" in a ? a.currency : undefined,
+  });
+
+  const [selectedActivity, setSelectedActivity] = useState<
+    (typeof upcomingActivities)[number] | null
+  >(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+
+  // Quick actions — the most frequent host tasks: block tour slots, then
+  // check guests in and out from today's operations.
+
+  const quickActions = [
+    {
+      href: ROUTES.host.availability,
+      icon: CalendarDays,
+      label: "Block dates",
+      desc: "Close dates on your availability calendar",
+    },
+    {
+      href: ROUTES.host.bookings,
+      icon: UserCheck,
+      label: "Check in guest",
+      desc: "Check guests into today's tours",
+    },
+    {
+      href: ROUTES.host.bookings,
+      icon: UserMinus,
+      label: "Check out guest",
+      desc: "Mark guests as checked out",
+    },
+    {
+      href: ROUTES.host.listings,
+      icon: Pencil,
+      label: "Update listings",
+      desc: "Update photos, prices and details",
+    },
+  ];
+
+  const formatDate = (d: string) =>
+    new Date(d).toLocaleDateString("en-ZM", { weekday: "short", month: "short", day: "numeric" });
 
   return (
-    <div className="min-h-screen bg-[#faf9f5]">
+    <div className="min-h-screen bg-neutral-50">
       <HostPageHeader
-        eyebrow="Host Dashboard"
-        title={`Welcome back, ${host.name.split(" ")[0]}`}
-        actions={
-          <Link
-            href="/host/profile"
-            className="hidden sm:inline-flex items-center gap-3 px-5 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/20 hover:shadow-md transition-all shadow-sm"
-          >
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#1f1433] to-[#150d22] flex items-center justify-center text-base font-bold text-[#1f1433] border border-[#1f1433]/20">
+        title={`${mounted ? greeting() : "Hello"}, ${host.name.split(" ")[0]}`}
+        description="Here's what needs your attention today."
+      />
+
+      {/* Content */}
+      <div className="mx-auto max-w-7xl px-4 md:px-6 py-8 space-y-10">
+        {/* Host summary */}
+        <section className="bg-white border border-neutral-200 rounded-xl p-5 shadow-sm">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center text-lg font-bold text-neutral-600">
               {host.name
                 .split(" ")
                 .map((n) => n[0])
                 .join("")}
             </div>
-            <span className="text-base font-bold text-white tracking-wide">View Profile</span>
-          </Link>
-        }
-      />
-
-      {/*  Content Container  */}
-      <div className="mx-auto max-w-7xl px-4 md:px-6 py-8">
-        {/* Alert Banner */}
-        <div className="bg-amber-50 border-l-4 border-amber-500 rounded-lg p-4 flex items-center justify-between gap-4 mb-8 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 shrink-0">
-              <Zap className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="text-base font-semibold text-amber-900">New Booking Request</div>
-              <p className="text-base text-amber-700 mt-0.5">
-                Tendai K. requested a stay for <span className="font-semibold">18–20 Jul</span> at
-                your Luxury Safari Lodge.
+            <div className="min-w-0">
+              <h3 className="text-sm font-bold text-neutral-900 truncate">{host.name}</h3>
+              <p className="text-xs text-neutral-500 mt-0.5">
+                {host.rating.toFixed(2)} rating · {host.responseRate}% response
               </p>
             </div>
           </div>
-          <Link
-            href="/host/bookings"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md text-base font-medium bg-amber-600 text-white hover:bg-amber-700 transition-colors shrink-0"
-          >
-            Review Request <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-
-        {/* Section Title */}
-        <div className="flex items-end justify-between mb-7">
-          <div>
-            <p className="text-[10px] sm:text-sm font-bold text-[#1f1433] uppercase tracking-widest mb-1.5">
-              Insights
-            </p>
-            <h2 className="font-display text-2xl font-bold tracking-tight text-[#1f1433] leading-[1.15]">
-              Performance Metrics
-            </h2>
-            <p className="text-[#64748B] mt-1.5 text-base max-w-lg leading-relaxed">
-              How your business is doing this month
-            </p>
-          </div>
-          <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-[#e0dbd0]/60 text-base font-bold text-[#1f1433] shadow-sm">
-            <Calendar className="h-4 w-4 text-[#1f1433]" />
-            July 2025
-          </span>
-        </div>
-
-        {/*  Metrics Grid  */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {/* Earnings Card */}
-          <div className="bg-white rounded-xl p-5 shadow-sm border border-border flex flex-col justify-between">
-            <div className="flex items-start justify-between">
-              <div>
-                <span className="text-base font-medium text-muted-foreground">
-                  Monthly Earnings
-                </span>
-                <h3 className="text-2xl font-bold text-foreground mt-1">
-                  K{mockWeeklySnapshot.revenue.toLocaleString()}
-                </h3>
-              </div>
-              <div className="h-10 w-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                <DollarSign className="h-5 w-5" />
-              </div>
+          <div className="grid grid-cols-3 gap-2 text-center border-t border-neutral-100 pt-4">
+            <div>
+              <p className="text-base font-black text-purple">
+                K{host.totalRevenue.toLocaleString()}
+              </p>
+              <p className="text-[10px] text-neutral-400 uppercase tracking-wider mt-0.5">
+                Earned
+              </p>
             </div>
-            <div className="flex items-center gap-1 mt-4 text-base font-medium text-emerald-600">
-              <TrendingUp className="h-4 w-4" />
-              <span>+{mockWeeklySnapshot.revenueChange}% vs last month</span>
+            <div>
+              <p className="text-base font-black text-purple">{host.totalBookings}</p>
+              <p className="text-[10px] text-neutral-400 uppercase tracking-wider mt-0.5">
+                Bookings
+              </p>
+            </div>
+            <div>
+              <p className="text-base font-black text-purple">{host.listings.length}</p>
+              <p className="text-[10px] text-neutral-400 uppercase tracking-wider mt-0.5">
+                Listings
+              </p>
             </div>
           </div>
+        </section>
 
-          {/* Bookings Card */}
-          <div className="bg-white rounded-xl p-5 shadow-sm border border-border flex flex-col justify-between">
-            <div className="flex items-start justify-between">
-              <div>
-                <span className="text-base font-medium text-muted-foreground">Active Bookings</span>
-                <h3 className="text-2xl font-bold text-foreground mt-1">
-                  {mockWeeklySnapshot.bookings}
-                </h3>
-              </div>
-              <div className="h-10 w-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
-                <CalendarDays className="h-5 w-5" />
-              </div>
+        {/* Quick actions */}
+        <section className="space-y-5">
+          <div className="flex items-end justify-between">
+            <div>
+              <h2 className="font-display text-lg md:text-xl font-bold tracking-tight text-neutral-900 leading-[1.15]">
+                Quick Actions
+              </h2>
             </div>
-            <div className="flex items-center gap-1 mt-4 text-base font-medium text-muted-foreground">
-              <Clock className="h-4 w-4" />
-              <span>3 upcoming · 3 completed</span>
-            </div>
+            {mounted && unread > 0 && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-purple/10 text-purple text-xs font-semibold">
+                <span className="h-1.5 w-1.5 rounded-full bg-purple" />
+                {unread} unread notification{unread > 1 ? "s" : ""}
+              </span>
+            )}
           </div>
 
-          {/* Occupancy Card */}
-          <div className="bg-white rounded-xl p-5 shadow-sm border border-border flex flex-col justify-between">
-            <div className="flex items-start justify-between">
-              <div>
-                <span className="text-base font-medium text-muted-foreground">Occupancy Rate</span>
-                <h3 className="text-2xl font-bold text-foreground mt-1">
-                  {mockWeeklySnapshot.occupancyRate}%
-                </h3>
-              </div>
-              <div className="h-10 w-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                <Percent className="h-5 w-5" />
-              </div>
-            </div>
-            <div className="flex items-center gap-1.5 mt-4 text-base font-medium text-emerald-600">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              <span>Above region average</span>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {quickActions.map(({ href, icon: Icon, label, desc }) => (
+              <Link
+                key={label}
+                href={href}
+                className="group flex items-center gap-3 bg-white border border-neutral-200 rounded-xl px-4 py-3.5 shadow-sm hover:border-purple/40 hover:shadow-md transition-all"
+              >
+                <div className="h-10 w-10 shrink-0 rounded-lg bg-purple/10 text-purple flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-sm font-bold text-neutral-900 truncate">{label}</h3>
+                  <p className="text-xs text-neutral-500 mt-0.5 truncate">{desc}</p>
+                </div>
+                <ArrowRight className="h-4 w-4 text-neutral-300 shrink-0 transition-all duration-200 group-hover:text-purple group-hover:translate-x-0.5" />
+              </Link>
+            ))}
           </div>
+        </section>
 
-          {/* Rating Card */}
-          <div className="bg-white rounded-xl p-5 shadow-sm border border-border flex flex-col justify-between">
-            <div className="flex items-start justify-between">
-              <div>
-                <span className="text-base font-medium text-muted-foreground">Average Rating</span>
-                <h3 className="text-2xl font-bold text-foreground mt-1">
-                  {mockWeeklySnapshot.avgRating?.toFixed(2) ?? "5.00"}
-                </h3>
-              </div>
-              <div className="h-10 w-10 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center">
-                <Star className="h-5 w-5 fill-amber-400 text-amber-400" />
-              </div>
-            </div>
-            <div className="flex items-center gap-1.5 mt-4 text-base font-medium text-muted-foreground">
-              <MessageSquare className="h-4 w-4" />
-              <span>{mockWeeklySnapshot.reviewCount} reviews total</span>
-            </div>
-          </div>
-        </div>
-
-        {/*  Main Content Grid  */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* LEFT 2 COLUMNS - SCHEDULE & LOGS */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Upcoming Check-ins */}
-            <div className="space-y-5">
+        <div className="space-y-8">
+            {/* Upcoming activities */}
+            <section className="space-y-5">
               <div className="flex items-end justify-between">
                 <div>
-                  <p className="text-[10px] sm:text-sm font-bold text-[#1f1433] uppercase tracking-widest mb-1">
-                    Schedule
-                  </p>
-                  <h3 className="font-display text-xl font-bold tracking-tight text-[#1f1433] leading-[1.15]">
-                    Upcoming Check-ins
-                  </h3>
-                  <p className="text-[#64748B] mt-1 text-base">
-                    Guests arriving in the next few days
+                  <h2 className="font-display text-lg md:text-xl font-bold tracking-tight text-neutral-900 leading-[1.15]">
+                    Upcoming Activities
+                  </h2>
+                  <p className="text-neutral-500 mt-1 text-sm">
+                    Check-ins, check-outs and confirmed experiences
                   </p>
                 </div>
                 <Link
                   href="/host/bookings"
-                  className="hidden sm:inline-flex items-center gap-1.5 text-base font-semibold text-[#1f1433] hover:text-[#2A154A] transition-all duration-200 group"
-                >
-                  <span>Manage bookings</span>
-                  <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-                </Link>
-              </div>
-
-              <div className="bg-white border border-border rounded-xl shadow-sm overflow-hidden divide-y divide-border">
-                {arriving.length === 0 ? (
-                  <div className="p-8 text-center">
-                    <AlertCircle className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                    <p className="text-base text-muted-foreground">
-                      No check-ins scheduled for today or tomorrow
-                    </p>
-                  </div>
-                ) : (
-                  arriving.map((item, idx) => (
-                    <div
-                      key={item.id}
-                      className="p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 hover:bg-muted/50 transition-colors"
-                    >
-                      <div className="flex items-center gap-3.5">
-                        {/* Avatar */}
-                        <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold shrink-0">
-                          {item.guestName
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </div>
-
-                        <div>
-                          <div className="text-base font-semibold text-foreground">
-                            {item.guestName}
-                          </div>
-                          <div className="text-base text-muted-foreground mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                            <span className="font-medium text-foreground">
-                              {item.checkIn
-                                ? new Date(item.checkIn).toLocaleDateString("en-ZM", {
-                                    month: "short",
-                                    day: "numeric",
-                                    weekday: "short",
-                                  })
-                                : ""}
-                            </span>
-                            <span className="text-muted-foreground">→</span>
-                            <span>
-                              {item.checkOut
-                                ? new Date(item.checkOut).toLocaleDateString("en-ZM", {
-                                    month: "short",
-                                    day: "numeric",
-                                    weekday: "short",
-                                  })
-                                : ""}
-                            </span>
-                            <span className="text-muted-foreground">•</span>
-                            <span>{item.guests} guests</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between sm:justify-end gap-3 pt-3 sm:pt-0 border-t sm:border-t-0 border-border">
-                        <span
-                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-medium border ${
-                            item.status === "pending"
-                              ? "bg-amber-50 text-amber-700 border-amber-200"
-                              : "bg-emerald-50 text-emerald-700 border-emerald-200"
-                          }`}
-                        >
-                          <span
-                            className={`h-1.5 w-1.5 rounded-full ${item.status === "pending" ? "bg-amber-500" : "bg-emerald-500"}`}
-                          />
-                          {item.status}
-                        </span>
-
-                        <Link
-                          href="/host/inbox"
-                          className="h-8 w-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center text-foreground transition-colors"
-                        >
-                          <MessageCircle className="h-4 w-4" />
-                        </Link>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-
-            {/* Recent Bookings */}
-            <div className="space-y-5">
-              <div className="flex items-end justify-between">
-                <div>
-                  <p className="text-[10px] sm:text-sm font-bold text-[#1f1433] uppercase tracking-widest mb-1">
-                    Activity
-                  </p>
-                  <h3 className="font-display text-xl font-bold tracking-tight text-[#1f1433] leading-[1.15]">
-                    Recent Transactions
-                  </h3>
-                  <p className="text-[#64748B] mt-1 text-base">
-                    Latest bookings and reservation updates
-                  </p>
-                </div>
-                <Link
-                  href="/host/bookings"
-                  className="hidden sm:inline-flex items-center gap-1.5 text-base font-semibold text-[#1f1433] hover:text-[#2A154A] transition-all duration-200 group"
+                  className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-neutral-700 hover:text-purple transition-colors group"
                 >
                   <span>All bookings</span>
                   <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
                 </Link>
               </div>
 
-              <div className="bg-white border border-border rounded-xl shadow-sm overflow-hidden divide-y divide-border">
-                {mockHostBookings.slice(0, 3).map((booking) => (
-                  <div
-                    key={booking.id}
-                    className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-muted/50 transition-colors"
-                  >
-                    <div className="flex items-center gap-3.5">
-                      <div className="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold shrink-0">
-                        {booking.guestName
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </div>
-
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-base font-semibold text-foreground">
-                            {booking.guestName}
-                          </span>
-                          <span className="text-muted-foreground">•</span>
-                          <span className="text-base text-muted-foreground truncate max-w-[150px] sm:max-w-none">
-                            {booking.listingName}
-                          </span>
-                        </div>
-                        <p className="text-sm text-muted-foreground mt-1">Ref: {booking.id}</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between sm:justify-end gap-5 pt-3 sm:pt-0 border-t sm:border-t-0 border-border shrink-0">
-                      <div className="text-right">
-                        <div className="text-base font-bold text-foreground">K{booking.amount}</div>
-                        <p className="text-sm text-muted-foreground">Payout pending</p>
-                      </div>
-
-                      <span
-                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm font-medium border ${
-                          booking.status === "pending"
-                            ? "bg-amber-50 text-amber-700 border-amber-200"
-                            : booking.status === "confirmed"
-                              ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                              : "bg-muted text-muted-foreground border-border"
-                        }`}
+              <div className="bg-white border border-neutral-200 rounded-xl shadow-sm overflow-hidden divide-y divide-neutral-100">
+                {upcomingActivities.length === 0 ? (
+                  <div className="p-8 text-center">
+                    <Clock className="h-8 w-8 text-neutral-300 mx-auto mb-2" />
+                    <p className="text-sm text-neutral-500">Nothing scheduled in the coming days</p>
+                  </div>
+                ) : (
+                  upcomingActivities.map((a) => {
+                    const Icon =
+                      a.kind === "checkin"
+                        ? CalendarCheck
+                        : a.kind === "checkout"
+                          ? CalendarDays
+                          : a.kind === "stay"
+                            ? Bed
+                            : Ticket;
+                    return (
+                      <div
+                        key={a.id}
+                        className="p-4 flex flex-col sm:flex-row sm:items-center gap-3 hover:bg-neutral-50 transition-colors"
                       >
-                        {booking.status}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                        <button
+                          onClick={() => {
+                            setSelectedActivity(a);
+                            setDetailsOpen(true);
+                          }}
+                          aria-label={`View details for ${a.guest}`}
+                          className="flex items-center gap-3.5 flex-1 min-w-0 text-left outline-none"
+                        >
+                          <div className="w-10 h-10 rounded-full bg-neutral-100 text-neutral-600 flex items-center justify-center text-sm font-bold shrink-0">
+                            {a.guest
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")}
+                          </div>
+                          <div className="min-w-0">
+                            <div className="text-sm font-semibold text-neutral-900 truncate">
+                              {a.guest}
+                            </div>
+                            <div className="text-xs text-neutral-500 mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                              <span className="font-medium text-neutral-900">
+                                {formatDate(a.date)}
+                              </span>
+                              <span className="text-neutral-300">·</span>
+                              <span>{a.listing}</span>
+                              <span className="text-neutral-300">·</span>
+                              <span className="flex items-center gap-1">
+                                <Users className="h-3 w-3" />
+                                {a.guests}
+                              </span>
+                            </div>
+                          </div>
+                        </button>
+                        <div className="flex items-center gap-3 shrink-0">
+                          <span
+                            className={cn(
+                              "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border",
+                              a.kind === "checkin"
+                                ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                : a.kind === "checkout"
+                                  ? "bg-neutral-100 text-neutral-600 border-neutral-200"
+                                  : a.status === "pending"
+                                    ? "bg-purple/10 text-purple border-purple/20"
+                                    : "bg-neutral-100 text-neutral-600 border-neutral-200",
+                            )}
+                          >
+                            <Icon className="h-3 w-3" />
+                            {a.meta}
+                          </span>
+                          {"amount" in a && a.amount != null && (
+                            <span className="text-sm font-bold text-neutral-900">
+                              K{a.amount.toLocaleString()}
+                            </span>
+                          )}
+                          <button
+                            onClick={() => {
+                              setSelectedActivity(a);
+                              setDetailsOpen(true);
+                            }}
+                            aria-label={`View details for ${a.guest}`}
+                            className="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-[11px] font-bold text-purple hover:border-purple/40 hover:bg-purple/5 transition-colors outline-none"
+                          >
+                            <Eye className="h-3.5 w-3.5" />
+                            View details
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
               </div>
-            </div>
+            </section>
           </div>
 
-          {/* RIGHT COLUMN - ACTIONS & REVIEWS */}
-          <div className="space-y-8">
-            {/* Quick Actions Grid */}
-            <div className="space-y-5">
-              <div>
-                <p className="text-[10px] sm:text-sm font-bold text-[#1f1433] uppercase tracking-widest mb-1">
-                  Shortcuts
-                </p>
-                <h3 className="font-display text-xl font-bold tracking-tight text-[#1f1433] leading-[1.15]">
-                  Quick Management
-                </h3>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <Link
-                  href="/host/availability"
-                  className="bg-white border border-border rounded-xl p-4 flex flex-col justify-between gap-4 hover:border-primary/40 hover:shadow-sm transition-all group"
-                >
-                  <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
-                    <Calendar className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-base font-semibold text-foreground">Block Dates</h4>
-                    <p className="text-sm text-muted-foreground mt-0.5">Manage availability</p>
-                  </div>
-                </Link>
-
-                <Link
-                  href="/host/finances"
-                  className="bg-white border border-border rounded-xl p-4 flex flex-col justify-between gap-4 hover:border-primary/40 hover:shadow-sm transition-all group"
-                >
-                  <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
-                    <DollarSign className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-base font-semibold text-foreground">Set Pricing</h4>
-                    <p className="text-sm text-muted-foreground mt-0.5">Adjust rates</p>
-                  </div>
-                </Link>
-
-                <Link
-                  href="/host/listings"
-                  className="bg-white border border-border rounded-xl p-4 flex flex-col justify-between gap-4 hover:border-primary/40 hover:shadow-sm transition-all group"
-                >
-                  <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
-                    <Layers className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-base font-semibold text-foreground">My Listings</h4>
-                    <p className="text-sm text-muted-foreground mt-0.5">Edit photo & info</p>
-                  </div>
-                </Link>
-
-                <Link
-                  href="/host/finances"
-                  className="bg-white border border-border rounded-xl p-4 flex flex-col justify-between gap-4 hover:border-primary/40 hover:shadow-sm transition-all group"
-                >
-                  <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
-                    <Zap className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-base font-semibold text-foreground">Payouts</h4>
-                    <p className="text-sm text-muted-foreground mt-0.5">
-                      K{mockWeeklySnapshot.revenue.toLocaleString()} available
-                    </p>
-                  </div>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
+
+      {/* Activity details dialog */}
+      <BookingDetailsDialog
+        booking={selectedActivity ? activityToDetails(selectedActivity) : null}
+        open={detailsOpen}
+        onOpenChange={setDetailsOpen}
+      />
     </div>
   );
 }

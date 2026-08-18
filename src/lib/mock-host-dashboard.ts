@@ -51,7 +51,7 @@ export interface ContextualTip {
   actionHref?: string;
 }
 
-//Mock Data ─────────────────────────────────────────────────────────────
+// Mock Data
 
 export const mockDashboardAlerts: DashboardAlert[] = [
   {
@@ -70,7 +70,7 @@ export const mockDashboardAlerts: DashboardAlert[] = [
     description:
       "James has a follow-up question about the Victoria Falls Helicopter Tour. Quick replies help maintain your 98% response rate.",
     actionLabel: "Open Chat",
-    actionHref: "/host/notifications",
+    actionHref: "/host",
   },
 ];
 

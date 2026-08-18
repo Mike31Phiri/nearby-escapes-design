@@ -1,761 +1,530 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import {
-  User,
-  Bell,
-  CreditCard,
+  Landmark,
+  Workflow,
   ShieldCheck,
-  LogOut,
-  ChevronLeft,
-  Building2,
+  KeyRound,
+  Smartphone,
   CheckCircle2,
-  Globe,
-  Palette,
-  Trash2,
   AlertTriangle,
   Banknote,
-  Plus,
-  Pencil,
-  Smartphone,
-  Languages,
-  Moon,
-  Sun,
-  Upload,
+  UserCog,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { HostPageHeader } from "@/components/layout/HostPageHeader";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
-import { useAuth } from "@/lib/store/authStore";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { AccountSettingsSection } from "@/components/host/AccountSettingsSection";
+import { mockHostProfile } from "@/lib/mock-profile-data";
+import {
+  maskIban,
+  isValidIban,
+  isValidSwift,
+  usePayoutSettingsStore,
+  type BankDetails,
+} from "@/store/payoutSettingsStore";
 
-//Toggle Switch ────────────────────────────────────────────────────────
+export function HostSettingsPage() {
+  const { bank, verificationStatus, updatedAt, setBankDetails } = usePayoutSettingsStore();
 
-function Toggle({ enabled, onChange }: { enabled: boolean; onChange: (v: boolean) => void }) {
-  return (
-    <div
-      onClick={() => onChange(!enabled)}
-      className={cn(
-        "relative h-6 w-11 shrink-0 rounded-full transition-colors cursor-pointer",
-        enabled ? "bg-primary" : "bg-gray-200",
-      )}
-    >
-      <div
-        className={cn(
-          "absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform",
-          enabled ? "translate-x-5" : "translate-x-0",
-        )}
-      />
-    </div>
-  );
-}
+  // Security gate state
+  const [gateOpen, setGateOpen] = useState(false);
+  const [gateMode, setGateMode] = useState<"password" | "2fa">("password");
+  const [gateInput, setGateInput] = useState("");
+  const [gateError, setGateError] = useState("");
 
-//Saved Payment Method Card ────────────────────────────────────────────
+  // Bank edit form state
+  const [showBankForm, setShowBankForm] = useState(false);
+  const [bankForm, setBankForm] = useState<BankDetails>({
+    bankName: bank?.bankName ?? "",
+    iban: bank?.iban ?? "",
+    swift: bank?.swift ?? "",
+  });
+  const [bankErrors, setBankErrors] = useState<{
+    bankName?: string;
+    iban?: string;
+    swift?: string;
+  }>({});
 
-interface SavedPaymentMethod {
-  id: string;
-  type: "bank" | "mobile-money" | "card";
-  label: string;
-  details: string;
-  isDefault: boolean;
-}
-
-function PaymentMethodCard({
-  method,
-  onSetDefault,
-  onEdit,
-  onRemove,
-}: {
-  method: SavedPaymentMethod;
-  onSetDefault: (id: string) => void;
-  onEdit: (id: string) => void;
-  onRemove: (id: string) => void;
-}) {
-  const icons = {
-    bank: Building2,
-    "mobile-money": Smartphone,
-    card: CreditCard,
+  const openGate = () => {
+    setGateMode("password");
+    setGateInput("");
+    setGateError("");
+    setGateOpen(true);
   };
-  const Icon = icons[method.type];
+
+  const handleVerify = () => {
+    if (!gateInput.trim()) {
+      setGateError("Enter your password or verification code to continue.");
+      return;
+    }
+    setGateOpen(false);
+    setBankForm({
+      bankName: bank?.bankName ?? "",
+      iban: bank?.iban ?? "",
+      swift: bank?.swift ?? "",
+    });
+    setBankErrors({});
+    setShowBankForm(true);
+  };
+
+  const handleSaveBank = () => {
+    const errors: typeof bankErrors = {};
+    if (!bankForm.bankName.trim()) errors.bankName = "Bank name is required.";
+    if (!isValidIban(bankForm.iban)) {
+      errors.iban = "IBAN must be 15–34 alphanumeric characters.";
+    }
+    if (!isValidSwift(bankForm.swift)) {
+      errors.swift = "SWIFT/BIC must be 8 or 11 characters (e.g. ZNBKZMLX).";
+    }
+    setBankErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      toast.error("Please fix the highlighted fields");
+      return;
+    }
+
+    setBankDetails({
+      bankName: bankForm.bankName.trim(),
+      iban: bankForm.iban.trim().toUpperCase(),
+      swift: bankForm.swift.trim().toUpperCase(),
+    });
+    setShowBankForm(false);
+    toast.success("Bank details saved — pending verification");
+  };
+
+  return (
+    <div className="min-h-screen bg-neutral-50 pb-12 font-sans">
+      <HostPageHeader title="Settings" description="Account, business and payout configuration" />
+      <div className="mx-auto max-w-3xl px-4 md:px-6 mt-8 space-y-12">
+        <SettingsSection
+          icon={UserCog}
+          title="Account Settings"
+          description="Security, notifications and preferences"
+        >
+          <AccountSettingsSection />
+        </SettingsSection>
+
+        <SettingsSection
+          icon={Landmark}
+          title="Payout Methods"
+          description="Where your monthly payout earnings are sent."
+          action={
+            !showBankForm ? (
+              <button
+                onClick={openGate}
+                className="inline-flex items-center gap-1.5 h-9 px-4 rounded-xl border border-neutral-200 text-sm font-bold text-neutral-700 hover:border-purple/40 hover:text-purple transition-all"
+              >
+                Add
+              </button>
+            ) : undefined
+          }
+        >
+          <PayoutMethodsSection
+            bank={bank}
+            verificationStatus={verificationStatus}
+            updatedAt={updatedAt}
+            onEdit={openGate}
+            showBankForm={showBankForm}
+            bankForm={bankForm}
+            setBankForm={setBankForm}
+            bankErrors={bankErrors}
+            onCancelBankForm={() => setShowBankForm(false)}
+            onSaveBank={handleSaveBank}
+          />
+        </SettingsSection>
+
+        <SettingsSection
+          icon={Workflow}
+          title="Automations"
+          description="Automate repetitive host tasks"
+        >
+          <PlaceholderSection />
+        </SettingsSection>
+      </div>
+
+      {/* Security gate modal */}
+      {gateOpen && (
+        <SecurityGateModal
+          gateMode={gateMode}
+          gateInput={gateInput}
+          setGateInput={setGateInput}
+          gateError={gateError}
+          onToggleMode={() => {
+            setGateMode(gateMode === "password" ? "2fa" : "password");
+            setGateInput("");
+            setGateError("");
+          }}
+          onVerify={handleVerify}
+          onClose={() => setGateOpen(false)}
+        />
+      )}
+    </div>
+  );
+}
+
+/* ---------------------------------- */
+/* Security gate modal               */
+/* ---------------------------------- */
+
+interface SecurityGateModalProps {
+  gateMode: "password" | "2fa";
+  gateInput: string;
+  setGateInput: (v: string) => void;
+  gateError: string;
+  onToggleMode: () => void;
+  onVerify: () => void;
+  onClose: () => void;
+}
+
+function SecurityGateModal({
+  gateMode,
+  gateInput,
+  setGateInput,
+  gateError,
+  onToggleMode,
+  onVerify,
+  onClose,
+}: SecurityGateModalProps) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
 
   return (
     <div
-      className={cn(
-        "flex items-center gap-4 rounded-xl border p-4 transition-all hover:shadow-sm",
-        method.isDefault ? "border-primary/30 bg-primary/[0.02]" : "border-gray-200 bg-white",
-      )}
+      className="fixed inset-0 z-[80] flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Security verification"
     >
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/8 text-primary">
-        <Icon className="h-5 w-5" />
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <p className="text-base font-bold text-[#111111]">{method.label}</p>
-          {method.isDefault && (
-            <span className="rounded-full bg-primary/10 text-primary text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5">
-              Default
-            </span>
-          )}
+      <div className="absolute inset-0 bg-neutral-900/50 backdrop-blur-[2px]" onClick={onClose} />
+      <div className="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div className="px-5 pt-5 pb-3 border-b border-neutral-100">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-purple/10 text-purple flex items-center justify-center">
+              <ShieldCheck className="h-4.5 w-4.5" />
+            </div>
+            <div>
+              <h2 className="text-sm font-bold text-neutral-900">Verify to continue</h2>
+              <p className="text-[11px] text-neutral-500 mt-0.5">
+                Re-enter your credentials before editing payout details.
+              </p>
+            </div>
+          </div>
         </div>
-        <p className="text-sm text-gray-500 mt-0.5">{method.details}</p>
-      </div>
-      <div className="flex items-center gap-1 shrink-0">
-        <button
-          onClick={() => onEdit(method.id)}
-          className="h-8 w-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-primary transition-colors"
-          aria-label={`Edit ${method.label}`}
-        >
-          <Pencil className="h-3.5 w-3.5" />
-        </button>
-        {!method.isDefault && (
+
+        <div className="p-5">
+          <div className="relative mb-4">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400">
+              {gateMode === "password" ? (
+                <KeyRound className="h-4 w-4" />
+              ) : (
+                <Smartphone className="h-4 w-4" />
+              )}
+            </div>
+            <input
+              type={gateMode === "password" ? "password" : "text"}
+              autoFocus
+              value={gateInput}
+              onChange={(e) => setGateInput(e.target.value)}
+              placeholder={gateMode === "password" ? "Enter your password" : "Enter 6-digit code"}
+              className={`w-full pl-10 pr-4 h-11 rounded-xl border text-sm bg-neutral-50 focus:outline-none focus:bg-white ${
+                gateError
+                  ? "border-rose-300 focus:border-rose-400"
+                  : "border-neutral-200 focus:border-purple"
+              }`}
+            />
+          </div>
+
+          {gateError && (
+            <p className="flex items-center gap-1.5 text-[11px] font-semibold text-rose-600 mb-3">
+              <AlertTriangle className="h-3.5 w-3.5" /> {gateError}
+            </p>
+          )}
+
           <button
-            onClick={() => onSetDefault(method.id)}
-            className="h-8 rounded-lg px-2 hover:bg-gray-100 text-[9px] font-bold uppercase tracking-wider text-gray-400 hover:text-primary transition-colors"
+            onClick={onToggleMode}
+            className="text-xs font-bold text-purple hover:underline mb-4"
           >
-            Set Default
+            {gateMode === "password" ? "Use 2FA code instead" : "Use password instead"}
           </button>
-        )}
-        <button
-          onClick={() => onRemove(method.id)}
-          className="h-8 w-8 rounded-lg hover:bg-rose-50 flex items-center justify-center text-gray-400 hover:text-rose-500 transition-colors"
-          aria-label={`Remove ${method.label}`}
-        >
-          <Trash2 className="h-3.5 w-3.5" />
-        </button>
+
+          <div className="flex items-center gap-2.5">
+            <button
+              onClick={onVerify}
+              className="flex-1 h-10 rounded-xl bg-purple hover:bg-purple-hover text-white text-xs font-black uppercase tracking-wider transition-all"
+            >
+              Verify
+            </button>
+            <button
+              onClick={onClose}
+              className="h-10 px-4 rounded-xl border border-neutral-200 text-neutral-700 hover:bg-neutral-50 text-xs font-bold transition-all"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-//Section Header ───────────────────────────────────────────────────────
+/* ---------------------------------- */
+/* Payout Methods section             */
+/* ---------------------------------- */
 
-function SectionHeader({
+interface PayoutMethodsSectionProps {
+  bank: BankDetails | null;
+  verificationStatus: "verified" | "pending";
+  updatedAt: string | null;
+  onEdit: () => void;
+  showBankForm: boolean;
+  bankForm: BankDetails;
+  setBankForm: (d: BankDetails) => void;
+  bankErrors: { bankName?: string; iban?: string; swift?: string };
+  onCancelBankForm: () => void;
+  onSaveBank: () => void;
+}
+
+function PayoutMethodsSection({
+  bank,
+  verificationStatus,
+  updatedAt,
+  onEdit,
+  showBankForm,
+  bankForm,
+  setBankForm,
+  bankErrors,
+  onCancelBankForm,
+  onSaveBank,
+}: PayoutMethodsSectionProps) {
+  const pending = verificationStatus === "pending";
+
+  return (
+    <>
+      {/* Confirmation banner shown after saving pending details */}
+      {pending && updatedAt && (
+        <div className="flex items-start gap-3 bg-amber-50 border border-amber-200/70 rounded-2xl p-4">
+          <div className="h-9 w-9 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+            <AlertTriangle className="h-4.5 w-4.5" />
+          </div>
+          <div className="flex-1">
+            <div className="text-sm font-bold text-amber-800">
+              Bank details change pending verification
+            </div>
+            <p className="text-[11px] text-amber-700/95 mt-1 leading-relaxed">
+              We&apos;ve sent an alert to{" "}
+              <strong className="font-bold">{mockHostProfile.email}</strong> noting this change.
+              Verification can take up to 24 hours.
+            </p>
+          </div>
+        </div>
+      )}
+
+      <div className="bg-white border border-neutral-200 rounded-2xl p-5 shadow-sm">
+        {showBankForm ? (
+          <div className="space-y-4">
+            <div>
+              <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block mb-1.5">
+                Bank Name
+              </label>
+              <input
+                type="text"
+                value={bankForm.bankName}
+                onChange={(e) => setBankForm({ ...bankForm, bankName: e.target.value })}
+                placeholder="e.g. Zambia National Bank"
+                className={`w-full h-11 rounded-xl border px-3.5 text-sm bg-white text-neutral-900 focus:outline-none ${
+                  bankErrors.bankName
+                    ? "border-rose-300 focus:border-rose-400"
+                    : "border-neutral-200 focus:border-purple"
+                }`}
+              />
+              {bankErrors.bankName && (
+                <p className="text-[10px] font-semibold text-rose-600 mt-1">
+                  {bankErrors.bankName}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block mb-1.5">
+                IBAN
+              </label>
+              <input
+                type="text"
+                value={bankForm.iban}
+                onChange={(e) => setBankForm({ ...bankForm, iban: e.target.value })}
+                placeholder="ZM48 0100 0000 0000 0000 4821"
+                className={`w-full h-11 rounded-xl border px-3.5 font-mono text-sm bg-white text-neutral-900 focus:outline-none ${
+                  bankErrors.iban
+                    ? "border-rose-300 focus:border-rose-400"
+                    : "border-neutral-200 focus:border-purple"
+                }`}
+              />
+              {bankErrors.iban ? (
+                <p className="text-[10px] font-semibold text-rose-600 mt-1">{bankErrors.iban}</p>
+              ) : (
+                <p className="text-[10px] text-neutral-400 mt-1">15–34 alphanumeric characters.</p>
+              )}
+            </div>
+
+            <div>
+              <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block mb-1.5">
+                SWIFT / BIC Code
+              </label>
+              <input
+                type="text"
+                value={bankForm.swift}
+                onChange={(e) => setBankForm({ ...bankForm, swift: e.target.value })}
+                placeholder="ZNBKZMLX"
+                className={`w-full h-11 rounded-xl border px-3.5 font-mono uppercase text-sm bg-white text-neutral-900 focus:outline-none ${
+                  bankErrors.swift
+                    ? "border-rose-300 focus:border-rose-400"
+                    : "border-neutral-200 focus:border-purple"
+                }`}
+              />
+              {bankErrors.swift ? (
+                <p className="text-[10px] font-semibold text-rose-600 mt-1">{bankErrors.swift}</p>
+              ) : (
+                <p className="text-[10px] text-neutral-400 mt-1">
+                  8 or 11 characters, e.g. ZNBKZMLX.
+                </p>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2.5 pt-2">
+              <button
+                onClick={onSaveBank}
+                className="flex-1 h-10 rounded-xl bg-purple hover:bg-purple-hover text-white text-xs font-black uppercase tracking-wider transition-all"
+              >
+                Save
+              </button>
+              <button
+                onClick={onCancelBankForm}
+                className="h-10 px-4 rounded-xl border border-neutral-200 text-neutral-700 hover:bg-neutral-50 text-xs font-bold transition-all"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {/* Mobile Money — default */}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-xl bg-neutral-50 border border-neutral-200/70">
+              <div className="h-11 w-11 rounded-xl bg-purple/10 text-purple flex items-center justify-center shrink-0">
+                <Smartphone className="h-5 w-5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-sm font-bold text-neutral-900">Mobile Money</span>
+                  <span className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-purple bg-purple/10 border border-purple/20 rounded-full px-2 py-0.5">
+                    Default
+                  </span>
+                </div>
+                <p className="text-xs text-neutral-600 mt-1">+260 97 765 4321 · Airtel Money</p>
+              </div>
+              <button
+                onClick={() => toast.info("Edit payment method — feature coming soon")}
+                className="inline-flex items-center gap-1.5 h-9 px-4 rounded-xl border border-neutral-200 text-sm font-bold text-neutral-700 hover:border-purple/40 hover:text-purple transition-all shrink-0"
+              >
+                Edit
+              </button>
+            </div>
+
+            {/* Bank */}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-xl bg-neutral-50 border border-neutral-200/70">
+              <div className="h-11 w-11 rounded-xl bg-purple/10 text-purple flex items-center justify-center shrink-0">
+                <Banknote className="h-5 w-5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-sm font-bold text-neutral-900">
+                    {bank?.bankName ?? "No bank set"}
+                  </span>
+                  {pending ? (
+                    <span className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5">
+                      <AlertTriangle className="h-3 w-3" /> Pending Verification
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full px-2 py-0.5">
+                      <CheckCircle2 className="h-3 w-3" /> Verified
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-neutral-600 mt-1 font-mono">
+                  {bank ? maskIban(bank.iban) : "—"}
+                  <span className="text-neutral-400 font-sans ml-2">
+                    SWIFT {bank?.swift ? bank.swift.toUpperCase() : "—"}
+                  </span>
+                </p>
+              </div>
+              <button
+                onClick={onEdit}
+                className="inline-flex items-center gap-1.5 h-9 px-4 rounded-xl border border-neutral-200 text-sm font-bold text-neutral-700 hover:border-purple/40 hover:text-purple transition-all shrink-0"
+              >
+                Edit
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
+
+/* ---------------------------------- */
+/* Section wrapper (heading + content) */
+/* ---------------------------------- */
+
+function SettingsSection({
   icon: Icon,
   title,
   description,
+  action,
+  children,
 }: {
   icon: React.ElementType;
   title: string;
   description?: string;
+  action?: React.ReactNode;
+  children: React.ReactNode;
 }) {
   return (
-    <div className="flex items-start gap-3 mb-6">
-      <div className="h-9 w-9 shrink-0 rounded-xl bg-primary/8 flex items-center justify-center text-primary">
-        <Icon className="h-4 w-4" />
+    <section>
+      <div className="flex items-center justify-between gap-3 mb-5">
+        <div className="flex items-center gap-3">
+          <div className="h-9 w-9 shrink-0 rounded-xl bg-purple/10 text-purple flex items-center justify-center">
+            <Icon className="h-4 w-4" />
+          </div>
+          <div>
+            <h2 className="text-lg font-bold tracking-tight text-neutral-900">{title}</h2>
+            {description && <p className="text-sm text-gray-500 mt-0.5">{description}</p>}
+          </div>
+        </div>
+        {action}
       </div>
-      <div>
-        <h2 className="text-lg font-bold tracking-tight text-[#111111]">{title}</h2>
-        {description && <p className="text-sm text-gray-500 mt-0.5">{description}</p>}
-      </div>
-    </div>
+      {children}
+    </section>
   );
 }
 
-// MAIN SETTINGS PAGE
+/* ---------------------------------- */
+/* Placeholder for other sections     */
+/* ---------------------------------- */
 
-export function HostSettingsPage() {
-  const router = useRouter();
-  const { user, logout } = useAuth();
-
-  //Profile State ──
-  const [name, setName] = useState(user?.name ?? "Chanda Bwalya");
-  const [email, setEmail] = useState(user?.email ?? "chanda.bwalya@nearbyescapes.com");
-  const [phone, setPhone] = useState("+260 97 765 4321");
-  const [location, setLocation] = useState("Lusaka, Zambia");
-  const [bio, setBio] = useState(
-    "Zambian-born travel enthusiast and hospitality curator. I handpick the finest lodges, camps, and experiences across Zambia.",
-  );
-  const [responseTime, setResponseTime] = useState("within 1 hour");
-
-  //Notification State ──
-  const [notifyBookings, setNotifyBookings] = useState(true);
-  const [notifyMessages, setNotifyMessages] = useState(true);
-  const [notifyReviews, setNotifyReviews] = useState(true);
-  const [notifyPromotions, setNotifyPromotions] = useState(false);
-
-  //Preferences State ──
-  const [language, setLanguage] = useState("english");
-  const [currency, setCurrency] = useState("zmw");
-  const [theme, setTheme] = useState<"light" | "dark" | "system">("light");
-
-  //Payment Methods ──
-  const [paymentMethods, setPaymentMethods] = useState<SavedPaymentMethod[]>([
-    {
-      id: "pm-1",
-      type: "bank",
-      label: "Zambia National Bank",
-      details: "Account **** 4832 · Branch: Lusaka",
-      isDefault: true,
-    },
-    {
-      id: "pm-2",
-      type: "mobile-money",
-      label: "Mobile Money",
-      details: "+260 97 765 4321 · Airtel Money",
-      isDefault: false,
-    },
-  ]);
-
-  const [showAddPayment, setShowAddPayment] = useState(false);
-  const [newPaymentType, setNewPaymentType] = useState<"bank" | "mobile-money" | "card">("bank");
-  const [newPaymentLabel, setNewPaymentLabel] = useState("");
-  const [newPaymentDetails, setNewPaymentDetails] = useState("");
-
-  //Delete Account Confirmation ──
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [deleteConfirmText, setDeleteConfirmText] = useState("");
-
-  //Handlers ─────────────────────────────────────────────────────────────
-
-  const handleSaveProfile = () => {
-    // Simulate saving
-    toast.success("Host profile updated successfully!");
-  };
-
-  const handleSetDefaultPayment = (id: string) => {
-    setPaymentMethods((prev) => prev.map((p) => ({ ...p, isDefault: p.id === id })));
-    toast.success("Default payment method updated");
-  };
-
-  const handleEditPayment = (id: string) => {
-    toast.info("Edit payment method — feature coming soon");
-  };
-
-  const handleRemovePayment = (id: string) => {
-    setPaymentMethods((prev) => prev.filter((p) => p.id !== id));
-    toast.success("Payment method removed");
-  };
-
-  const handleAddPayment = () => {
-    if (!newPaymentLabel.trim() || !newPaymentDetails.trim()) {
-      toast.error("Please fill in all fields");
-      return;
-    }
-    const newMethod: SavedPaymentMethod = {
-      id: `pm-${Date.now()}`,
-      type: newPaymentType,
-      label: newPaymentLabel,
-      details: newPaymentDetails,
-      isDefault: paymentMethods.length === 0,
-    };
-    setPaymentMethods((prev) => [...prev, newMethod]);
-    setNewPaymentLabel("");
-    setNewPaymentDetails("");
-    setShowAddPayment(false);
-    toast.success("Payment method added");
-  };
-
-  const handleDeleteAccount = () => {
-    // Simulate deletion
-    toast.error("Account deletion requested. This action cannot be undone.");
-    setShowDeleteConfirm(false);
-  };
-
+function PlaceholderSection() {
   return (
-    <div className="min-h-screen bg-[#faf9f5] pb-16">
-      <HostPageHeader
-        eyebrow="Preferences"
-        title="Host Settings"
-        description="Manage your profile, payments, and account preferences"
-        actions={
-          <button
-            onClick={() => router.back()}
-            className="flex h-10 px-4 items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 transition-colors text-white font-bold text-base shadow-sm"
-          >
-            <ChevronLeft className="h-4 w-4 mr-1.5" />
-            Back
-          </button>
-        }
-      />
-      <div className="mx-auto px-4 md:px-6 max-w-3xl mt-8">
-        <div className="space-y-10">
-          {/* 
-              PROFILE SECTION
-           */}
-          <section>
-            <SectionHeader
-              icon={User}
-              title="Host Profile"
-              description="Your public host profile information"
-            />
-
-            <div className="space-y-5">
-              {/* Avatar Upload */}
-              <div className="flex items-center gap-4">
-                <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
-                  <span className="font-display text-2xl font-bold text-primary">CB</span>
-                </div>
-                <div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-8 rounded-lg text-sm font-semibold border-gray-200"
-                  >
-                    <Upload className="h-3.5 w-3.5 mr-1.5" />
-                    Change Photo
-                  </Button>
-                  <p className="text-[10px] text-gray-400 mt-1">JPG or PNG. 1MB max.</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
-                    Display Name
-                  </Label>
-                  <Input
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="h-10 rounded-xl border-gray-200 text-base focus:border-primary/30 focus:ring-primary/20"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
-                    Email
-                  </Label>
-                  <Input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="h-10 rounded-xl border-gray-200 text-base focus:border-primary/30 focus:ring-primary/20"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
-                    Phone Number
-                  </Label>
-                  <Input
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="h-10 rounded-xl border-gray-200 text-base focus:border-primary/30 focus:ring-primary/20"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
-                    Location
-                  </Label>
-                  <Input
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    className="h-10 rounded-xl border-gray-200 text-base focus:border-primary/30 focus:ring-primary/20"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
-                  Bio
-                </Label>
-                <textarea
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  rows={3}
-                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-base text-[#111111] placeholder:text-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
-                  Response Time Goal
-                </Label>
-                <select
-                  value={responseTime}
-                  onChange={(e) => setResponseTime(e.target.value)}
-                  className="w-full h-10 rounded-xl border border-gray-200 px-4 text-base text-[#111111] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all bg-white"
-                >
-                  <option value="within 1 hour">Within 1 hour</option>
-                  <option value="within 2 hours">Within 2 hours</option>
-                  <option value="within 6 hours">Within 6 hours</option>
-                  <option value="within 24 hours">Within 24 hours</option>
-                </select>
-              </div>
-
-              <Button
-                className="rounded-xl text-sm font-bold h-10 px-6 shadow-sm"
-                onClick={handleSaveProfile}
-              >
-                <CheckCircle2 className="h-4 w-4 mr-1.5" />
-                Save Changes
-              </Button>
-            </div>
-          </section>
-
-          {/* 
-              PAYMENT METHODS SECTION
-           */}
-          <section className="border-t border-gray-100 pt-10">
-            <SectionHeader
-              icon={CreditCard}
-              title="Payment Methods"
-              description="Manage how you receive payouts from bookings"
-            />
-
-            <div className="space-y-3">
-              {paymentMethods.map((method) => (
-                <PaymentMethodCard
-                  key={method.id}
-                  method={method}
-                  onSetDefault={handleSetDefaultPayment}
-                  onEdit={handleEditPayment}
-                  onRemove={handleRemovePayment}
-                />
-              ))}
-            </div>
-
-            {/* Add Payment Method Form */}
-            {showAddPayment ? (
-              <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50/50 p-5 space-y-4">
-                <p className="text-base font-bold text-[#111111]">Add Payment Method</p>
-
-                <div className="flex items-center gap-3">
-                  {(
-                    [
-                      { value: "bank", label: "Bank Transfer", icon: Building2 },
-                      { value: "mobile-money", label: "Mobile Money", icon: Smartphone },
-                      { value: "card", label: "Credit/Debit Card", icon: CreditCard },
-                    ] as const
-                  ).map((opt) => {
-                    const Icon = opt.icon;
-                    const isSelected = newPaymentType === opt.value;
-                    return (
-                      <button
-                        key={opt.value}
-                        onClick={() => setNewPaymentType(opt.value as typeof newPaymentType)}
-                        className={cn(
-                          "flex-1 flex flex-col items-center gap-1.5 rounded-xl border p-3 transition-all",
-                          isSelected
-                            ? "border-primary bg-primary/5 text-primary"
-                            : "border-gray-200 text-gray-500 hover:border-gray-300 hover:text-gray-700",
-                        )}
-                      >
-                        <Icon className="h-5 w-5" />
-                        <span className="text-[10px] font-semibold">{opt.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
-                    Account Name / Label
-                  </Label>
-                  <Input
-                    value={newPaymentLabel}
-                    onChange={(e) => setNewPaymentLabel(e.target.value)}
-                    placeholder={
-                      newPaymentType === "bank"
-                        ? "e.g. Zambia National Bank"
-                        : newPaymentType === "mobile-money"
-                          ? "e.g. Airtel Money"
-                          : "e.g. Visa ending in 1234"
-                    }
-                    className="h-10 rounded-xl border-gray-200 text-base"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
-                    Account Details
-                  </Label>
-                  <Input
-                    value={newPaymentDetails}
-                    onChange={(e) => setNewPaymentDetails(e.target.value)}
-                    placeholder={
-                      newPaymentType === "bank"
-                        ? "Account **** 4832"
-                        : newPaymentType === "mobile-money"
-                          ? "+260 97 765 4321"
-                          : "**** 1234"
-                    }
-                    className="h-10 rounded-xl border-gray-200 text-base"
-                  />
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <Button
-                    size="sm"
-                    className="rounded-xl text-sm font-bold h-9"
-                    onClick={handleAddPayment}
-                  >
-                    <Plus className="h-3.5 w-3.5 mr-1" />
-                    Add Method
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="rounded-xl text-sm h-9"
-                    onClick={() => setShowAddPayment(false)}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-4 rounded-xl text-sm font-semibold border-gray-200 h-9"
-                onClick={() => setShowAddPayment(true)}
-              >
-                <Plus className="h-3.5 w-3.5 mr-1" />
-                Add Payment Method
-              </Button>
-            )}
-
-            {/* Payout Info */}
-            <div className="mt-4 rounded-xl bg-blue-50 border border-blue-200 p-4 flex items-start gap-3">
-              <Banknote className="h-4 w-4 text-blue-500 shrink-0 mt-0.5" />
-              <div className="text-sm text-blue-800 leading-relaxed">
-                <p className="font-semibold mb-0.5">Payout Schedule</p>
-                <p>
-                  Payouts are processed within 24 hours after a guest checks in. Funds are sent to
-                  your default payment method. Minimum payout threshold: ZMW 100.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* 
-              NOTIFICATIONS SECTION
-           */}
-          <section className="border-t border-gray-100 pt-10">
-            <SectionHeader
-              icon={Bell}
-              title="Notifications"
-              description="Choose what updates you receive"
-            />
-
-            <div className="space-y-2">
-              {[
-                {
-                  label: "New Bookings",
-                  desc: "Get notified when guests book your listings",
-                  state: notifyBookings,
-                  setter: setNotifyBookings,
-                },
-                {
-                  label: "Messages",
-                  desc: "Receive guest inquiries and messages",
-                  state: notifyMessages,
-                  setter: setNotifyMessages,
-                },
-                {
-                  label: "New Reviews",
-                  desc: "Be notified when guests leave reviews",
-                  state: notifyReviews,
-                  setter: setNotifyReviews,
-                },
-                {
-                  label: "Promotions & Tips",
-                  desc: "Get hosting tips and promotion opportunities",
-                  state: notifyPromotions,
-                  setter: setNotifyPromotions,
-                },
-              ].map(({ label, desc, state, setter }) => (
-                <label
-                  key={label}
-                  className="flex items-center justify-between rounded-xl border border-gray-100 bg-white p-4 cursor-pointer hover:bg-gray-50 transition-colors"
-                >
-                  <div>
-                    <p className="text-base font-semibold text-[#111111]">{label}</p>
-                    <p className="text-sm text-gray-500 mt-0.5">{desc}</p>
-                  </div>
-                  <Toggle enabled={state} onChange={setter} />
-                </label>
-              ))}
-            </div>
-          </section>
-
-          {/* 
-              PREFERENCES SECTION
-           */}
-          <section className="border-t border-gray-100 pt-10">
-            <SectionHeader
-              icon={Globe}
-              title="Preferences"
-              description="Language, currency, and display settings"
-            />
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
-                  <Languages className="h-3 w-3 inline mr-1" />
-                  Language
-                </Label>
-                <select
-                  value={language}
-                  onChange={(e) => setLanguage(e.target.value)}
-                  className="w-full h-10 rounded-xl border border-gray-200 px-4 text-base text-[#111111] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all bg-white"
-                >
-                  <option value="english">English</option>
-                  <option value="french">French</option>
-                  <option value="portuguese">Portuguese</option>
-                </select>
-              </div>
-
-              <div className="space-y-1.5">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
-                  <Banknote className="h-3 w-3 inline mr-1" />
-                  Currency
-                </Label>
-                <select
-                  value={currency}
-                  onChange={(e) => setCurrency(e.target.value)}
-                  className="w-full h-10 rounded-xl border border-gray-200 px-4 text-base text-[#111111] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all bg-white"
-                >
-                  <option value="zmw">ZMW — Zambian Kwacha</option>
-                  <option value="usd">USD — US Dollar</option>
-                  <option value="eur">EUR — Euro</option>
-                  <option value="gbp">GBP — British Pound</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="mt-4 space-y-1.5">
-              <Label className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
-                <Palette className="h-3 w-3 inline mr-1" />
-                Theme
-              </Label>
-              <div className="flex items-center gap-2">
-                {[
-                  { value: "light" as const, label: "Light", icon: Sun },
-                  { value: "dark" as const, label: "Dark", icon: Moon },
-                  { value: "system" as const, label: "System", icon: Globe },
-                ].map((opt) => {
-                  const Icon = opt.icon;
-                  const isSelected = theme === opt.value;
-                  return (
-                    <button
-                      key={opt.value}
-                      onClick={() => setTheme(opt.value)}
-                      className={cn(
-                        "flex-1 flex items-center justify-center gap-1.5 h-10 rounded-xl border text-base font-semibold transition-all",
-                        isSelected
-                          ? "border-primary bg-primary/5 text-primary"
-                          : "border-gray-200 text-gray-500 hover:border-gray-300 hover:text-gray-700",
-                      )}
-                    >
-                      <Icon className="h-4 w-4" />
-                      {opt.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </section>
-
-          {/* 
-              ACCOUNT & DANGER ZONE SECTION
-           */}
-          <section className="border-t border-gray-100 pt-10">
-            <SectionHeader
-              icon={ShieldCheck}
-              title="Account"
-              description="Manage your account settings and data"
-            />
-
-            <div className="space-y-4">
-              {/* Sign Out */}
-              <div className="rounded-xl border border-gray-100 bg-white p-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-base font-bold text-[#111111]">Sign Out</p>
-                    <p className="text-sm text-gray-500 mt-0.5">
-                      Sign out of your host account. Your listings will remain active.
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-9 rounded-xl text-sm font-semibold border-gray-200"
-                    onClick={() => {
-                      logout();
-                      toast.success("Signed out successfully");
-                      router.push("/");
-                    }}
-                  >
-                    <LogOut className="h-3.5 w-3.5 mr-1.5" />
-                    Sign Out
-                  </Button>
-                </div>
-              </div>
-
-              {/* Delete Account — Danger Zone */}
-              <div className="rounded-xl border border-rose-200 bg-rose-50/50 p-5">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="h-8 w-8 rounded-xl bg-rose-100 flex items-center justify-center text-rose-500">
-                    <AlertTriangle className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <p className="text-base font-bold text-rose-900">Danger Zone</p>
-                    <p className="text-sm text-rose-700 mt-0.5">
-                      Irreversible actions that affect your account and data
-                    </p>
-                  </div>
-                </div>
-
-                {showDeleteConfirm ? (
-                  <div className="space-y-3 rounded-xl bg-white border border-rose-200 p-4">
-                    <p className="text-base font-semibold text-[#111111]">
-                      Are you sure you want to delete your account?
-                    </p>
-                    <p className="text-sm text-gray-500 leading-relaxed">
-                      This will permanently delete your host profile, all listings, booking history,
-                      and earnings data. This action cannot be undone. If you&apos;re sure, type
-                      &quot;DELETE&quot; below to confirm.
-                    </p>
-                    <Input
-                      value={deleteConfirmText}
-                      onChange={(e) => setDeleteConfirmText(e.target.value)}
-                      placeholder='Type "DELETE" to confirm'
-                      className="h-10 rounded-xl border-rose-200 text-base"
-                    />
-                    <div className="flex items-center gap-2">
-                      <Button
-                        size="sm"
-                        className="rounded-xl text-sm font-bold h-9 bg-rose-600 hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                        onClick={handleDeleteAccount}
-                        disabled={deleteConfirmText !== "DELETE"}
-                      >
-                        <Trash2 className="h-3.5 w-3.5 mr-1" />
-                        Delete My Account
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="rounded-xl text-sm h-9"
-                        onClick={() => {
-                          setShowDeleteConfirm(false);
-                          setDeleteConfirmText("");
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="rounded-xl text-sm font-bold h-9 border-rose-200 text-rose-600 hover:bg-rose-50 hover:border-rose-300"
-                    onClick={() => setShowDeleteConfirm(true)}
-                  >
-                    <Trash2 className="h-3.5 w-3.5 mr-1.5" />
-                    Delete Account
-                  </Button>
-                )}
-              </div>
-            </div>
-          </section>
-        </div>
+    <div className="bg-white border border-neutral-200 rounded-2xl p-10 shadow-sm flex flex-col items-center text-center">
+      <div className="h-12 w-12 rounded-2xl bg-purple/10 text-purple flex items-center justify-center mb-4">
+        <ShieldCheck className="h-6 w-6" />
       </div>
+      <p className="text-sm text-neutral-500 mt-1.5 max-w-sm">
+        This section is coming soon. Check back shortly — we&apos;re rolling out new host tools
+        every week.
+      </p>
     </div>
   );
 }

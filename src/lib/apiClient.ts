@@ -18,7 +18,7 @@
  *   const newBooking = await api.post<Booking>("/bookings", body);
  */
 
-//Types ────────────────────────────────────────────────────────────────
+// Types
 
 export interface ApiError {
   status: number;
@@ -50,12 +50,12 @@ interface RequestConfig {
   quiet?: boolean;
 }
 
-//Configuration ────────────────────────────────────────────────────────
+// Configuration
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
-//Internal State (non-reactive, for coordination) ──────────────────────
+// Internal State (non-reactive, for coordination)
 
 let isLoggingOut = false;
 let logoutCallbacks: Array<() => void> = [];
@@ -88,7 +88,7 @@ export function onSessionExpired(callback: () => void) {
   };
 }
 
-//CSRF Token ───────────────────────────────────────────────────────────
+// CSRF Token
 
 let csrfToken: string | null = null;
 
@@ -97,7 +97,7 @@ function extractCsrfFromResponse(response: Response) {
   if (token) csrfToken = token;
 }
 
-//Core Request Function ────────────────────────────────────────────────
+// Core Request Function
 
 async function request<T>(
   method: HttpMethod,
@@ -226,7 +226,7 @@ function sanitizeMessage(message: string): string {
     : cleaned.trim() || "An unexpected error occurred.";
 }
 
-//Public API ───────────────────────────────────────────────────────────
+// Public API
 
 export const api = {
   get<T>(path: string, config?: Omit<RequestConfig, "body">) {
@@ -270,7 +270,7 @@ export const api = {
   },
 };
 
-//SSR-safe helpers ─────────────────────────────────────────────────────
+// SSR-safe helpers
 
 /**
  * Server-side API call (in Next.js Server Components / Route Handlers).
@@ -299,6 +299,6 @@ export async function serverFetch<T>(
   return { data, error: null, ok: true as const };
 }
 
-//Export default for convenience ───────────────────────────────────────
+// Export default for convenience
 
 export default api;

@@ -1,6 +1,4 @@
 /**
- * locationSlug.ts
- * ─────────────────────────────────────────────────────────────────────────────
  * Maps any known location slug to structured context used by the stays page
  * for breadcrumbs, page titles, and filtering.
  *
@@ -47,12 +45,12 @@ export interface BreadcrumbItem {
  * Returns `null` for completely unknown slugs (triggers 404 in route).
  */
 export function resolveLocationSlug(slug: string): ResolvedLocation | null {
-  // ── Country fallback ──────────────────────────────────────────────────────
+  // Country fallback
   if (slug === "zambia") {
     return { type: "country", slug: "zambia", displayName: "Zambia" };
   }
 
-  // ── Attraction (most specific) ────────────────────────────────────────────
+  // Attraction (most specific)
   const attraction = getAttraction(slug);
   if (attraction) {
     const city = getCity(attraction.city);
@@ -67,7 +65,7 @@ export function resolveLocationSlug(slug: string): ResolvedLocation | null {
     };
   }
 
-  // ── City ──────────────────────────────────────────────────────────────────
+  // City
   const city = getCity(slug);
   if (city) {
     const province = getProvince(city.province);
@@ -80,7 +78,7 @@ export function resolveLocationSlug(slug: string): ResolvedLocation | null {
     };
   }
 
-  // ── Province ──────────────────────────────────────────────────────────────
+  // Province
   const province = getProvince(slug);
   if (province) {
     return { type: "province", slug, displayName: province.name, province };

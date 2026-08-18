@@ -12,29 +12,29 @@ export function AccountSettingsMenu() {
       icon: UserCircle,
       title: "Your info",
       description: "Update your email, phone, and payment",
-      href: "/settings/info"
+      href: "/settings/info",
     },
     {
       id: "history",
       icon: History,
       title: "Trip history",
       description: "View all past stays and experiences",
-      href: "/settings/history"
+      href: "/settings/history",
     },
     {
       id: "payments",
       icon: CreditCard,
       title: "Payment methods",
       description: "Manage mobile money, cards, and cash",
-      href: "/settings/payments"
+      href: "/settings/payments",
     },
     {
       id: "support",
       icon: ShieldQuestion,
       title: "Support & safety",
       description: "Get help, report an issue, or contact us",
-      href: "/settings/support"
-    }
+      href: "/settings/support",
+    },
   ];
 
   return (
@@ -42,7 +42,7 @@ export function AccountSettingsMenu() {
       {settingsItems.map((item) => {
         const Icon = item.icon;
         return (
-          <div 
+          <div
             key={item.id}
             onClick={() => router.push(item.href)}
             className="flex items-center justify-between py-4 border-b border-white-soft cursor-pointer hover:bg-white-warm transition px-3 -mx-3 rounded-xl last:border-0"

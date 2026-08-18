@@ -15,7 +15,7 @@ import type { ConfirmedBooking } from "@/store/bookingStore";
 import type { AppNotification, NotificationType } from "@/store/notificationStore";
 import type { Review } from "@/store/reviewStore";
 
-//Generic API Envelope ─────────────────────────────────────────────────
+// Generic API Envelope
 
 export interface PaginatedResponse<T> {
   data: T[];
@@ -35,7 +35,7 @@ export interface ApiErrorResponse {
   path?: string;
 }
 
-//Auth ─────────────────────────────────────────────────────────────────
+// Auth
 
 export type ResAuthUser = AuthUser;
 
@@ -71,7 +71,7 @@ export interface ReqResetPassword {
   password: string;
 }
 
-//Listings ─────────────────────────────────────────────────────────────
+// Listings
 
 export type ListingType = "stay" | "experience" | "transport";
 
@@ -190,7 +190,7 @@ export interface ReqListingSearch {
   sort?: "price_asc" | "price_desc" | "rating" | "newest";
 }
 
-//Bookings ─────────────────────────────────────────────────────────────
+// Bookings
 
 export interface BookingDTO extends Omit<ConfirmedBooking, "status"> {
   status: "pending" | "confirmed" | "cancelled" | "completed";
@@ -220,7 +220,7 @@ export interface ReqCancelBooking {
   reason?: string;
 }
 
-//Payments ─────────────────────────────────────────────────────────────
+// Payments
 
 export interface ReqCreatePaymentToken {
   bookingRef: string;
@@ -252,7 +252,7 @@ export interface ResCreatePaymentToken {
   message: string;
 }
 
-//Reviews ──────────────────────────────────────────────────────────────
+// Reviews
 
 export interface ReviewDTO extends Review {
   id: string;
@@ -272,7 +272,7 @@ export interface ReqCreateReview {
   text: string;
 }
 
-//Notifications ────────────────────────────────────────────────────────
+// Notifications
 
 export interface NotificationDTO extends Omit<AppNotification, "read"> {
   id: string;
@@ -289,7 +289,7 @@ export interface ResNotificationList {
   unreadCount: number;
 }
 
-//User Profile ─────────────────────────────────────────────────────────
+// User Profile
 
 export interface UserProfileDTO {
   id: string;
@@ -316,7 +316,7 @@ export interface ReqUpdateProfile {
   bio?: string;
 }
 
-//Host Dashboard ───────────────────────────────────────────────────────
+// Host Dashboard
 
 export interface HostDashboardDTO {
   stats: {
@@ -337,7 +337,7 @@ export interface HostDashboardDTO {
   }>;
 }
 
-//Admin ────────────────────────────────────────────────────────────────
+// Admin
 
 export interface AdminDashboardDTO {
   stats: {
@@ -363,7 +363,7 @@ export interface AdminDashboardDTO {
   }>;
 }
 
-//Availability ─────────────────────────────────────────────────────────
+// Availability
 
 export interface AvailabilityDTO {
   listingId: string;
@@ -378,7 +378,7 @@ export interface ReqBlockDates {
   dateTo: string;
 }
 
-//Messages ─────────────────────────────────────────────────────────────
+// Messages
 
 export interface MessageDTO {
   id: string;
@@ -403,7 +403,7 @@ export interface ConversationDTO {
   listingName?: string;
 }
 
-//Wishlist ─────────────────────────────────────────────────────────────
+// Wishlist
 
 export interface WishlistDTO {
   id: string;

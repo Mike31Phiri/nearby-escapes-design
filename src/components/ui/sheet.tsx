@@ -52,12 +52,15 @@ const sheetVariants = cva(
 interface SheetContentProps
   extends
     React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
-    VariantProps<typeof sheetVariants> {}
+    VariantProps<typeof sheetVariants> {
+  /** Extra classes for the overlay that sits behind the sheet content. */
+  overlayClassName?: string;
+}
 
 const SheetContent = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Content>,
   SheetContentProps
->(({ side = "right", className, children, ...props }, ref) => {
+>(({ side = "right", overlayClassName, className, children, ...props }, ref) => {
   const innerRef = React.useRef<HTMLDivElement | null>(null);
 
   // Every time the sheet mounts/updates, reset its own scroll to top
@@ -70,7 +73,7 @@ const SheetContent = React.forwardRef<
   return (
     // Portal always renders into document.body — never inside the page scroll container
     <SheetPortal container={typeof window !== "undefined" ? document.body : undefined}>
-      <SheetOverlay />
+      <SheetOverlay className={overlayClassName} />
       <SheetPrimitive.Content
         ref={(node) => {
           innerRef.current = node;

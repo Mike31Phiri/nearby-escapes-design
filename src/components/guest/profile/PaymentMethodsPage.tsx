@@ -11,7 +11,6 @@ export function PaymentMethodsPage() {
       <ProfileSubpageHeader title="Payment methods" />
 
       <div className="max-w-4xl mx-auto w-full px-4 py-8 space-y-8">
-        
         {/* Mobile Money */}
         <div>
           <h3 className="text-sm font-semibold text-black mb-3">Mobile Money</h3>
@@ -26,7 +25,9 @@ export function PaymentMethodsPage() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-xs text-green-700 font-medium bg-green-100 px-2 py-1 rounded-full">Default</span>
+              <span className="text-xs text-green-700 font-medium bg-green-100 px-2 py-1 rounded-full">
+                Default
+              </span>
               <button className="text-purple text-xs font-semibold hover:underline">Edit</button>
             </div>
           </div>

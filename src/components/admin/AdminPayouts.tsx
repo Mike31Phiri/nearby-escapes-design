@@ -28,7 +28,7 @@ import type { PayoutRecord } from "@/lib/mock-admin-data";
 import { useLoading, withLoading } from "@/lib/loading-context";
 import { showSuccess, showWarning } from "@/lib/admin-toast";
 
-//Status Config ──────────────────────────────────────────────────────
+// Status Config
 
 const payoutStatusConfig: Record<
   string,
@@ -58,7 +58,7 @@ const methodLabels: Record<string, string> = {
   paypal: "PayPal",
 };
 
-//Payout Card ────────────────────────────────────────────────────────
+// Payout Card
 
 function PayoutCard({
   payout,
@@ -200,7 +200,7 @@ function PayoutCard({
   );
 }
 
-//Main Component ─────────────────────────────────────────────────────
+// Main Component
 
 export function AdminPayouts() {
   const [payouts, setPayouts] = useState<PayoutRecord[]>(mockPayouts);

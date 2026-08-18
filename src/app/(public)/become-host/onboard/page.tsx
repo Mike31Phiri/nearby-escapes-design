@@ -1,5 +1,5 @@
-import { BecomeHostPage } from "@/components/guest/become-host/BecomeHostPage";
+import { redirect } from "next/navigation";
 
 export default function BecomeHostOnboardRoute() {
-  return <BecomeHostPage />;
+  redirect("/become-host");
 }

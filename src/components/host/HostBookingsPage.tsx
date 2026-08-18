@@ -1,137 +1,127 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
-import { Loader2 } from "lucide-react";
-import { mockHostBookings } from "@/lib/mock-host-bookings";
-import { HostPageHeader } from "@/components/layout/HostPageHeader";
-import type { HostBooking } from "@/lib/mock-host-bookings";
+import { useCallback, useState } from "react";
+import { Eye } from "lucide-react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+import { mockHostBookings } from "@/lib/mock-host-bookings";
+import type { HostBooking } from "@/lib/mock-host-bookings";
+import { HostPageHeader } from "@/components/layout/HostPageHeader";
+import { BookingDetailsDialog, STATUS_BADGE, formatDay, initials } from "./BookingDetailsDialog";
+
+const bookingDates = (booking: HostBooking) =>
+  booking.checkIn
+    ? `${formatDay(booking.checkIn)} – ${formatDay(booking.checkOut!)}`
+    : booking.date
+      ? formatDay(booking.date)
+      : "";
+
+/* ------------------------- Request row ------------------------- */
 
 function BookingRow({
   booking,
-  onAccept,
-  onDecline,
-  processing,
+  onOpen,
 }: {
   booking: HostBooking;
-  onAccept: (id: string) => void;
-  onDecline: (id: string) => void;
-  processing: string | null;
+  onOpen: (booking: HostBooking) => void;
 }) {
-  const dates = booking.checkIn
-    ? `${new Date(booking.checkIn).toLocaleDateString("en-ZM", { weekday: "short", month: "short", day: "numeric" })} – ${new Date(booking.checkOut!).toLocaleDateString("en-ZM", { weekday: "short", month: "short", day: "numeric" })}`
-    : booking.date
-      ? new Date(booking.date).toLocaleDateString("en-ZM", {
-          weekday: "short",
-          month: "short",
-          day: "numeric",
-        })
-      : "";
+  const badge = STATUS_BADGE[booking.status];
 
   return (
-    <div className="border-b border-[#E0DBD0] last:border-b-0">
-      <div className="flex items-center gap-2.5 px-3 py-2.5">
-        <div
-          className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-medium shrink-0"
-          style={{ background: "#2A3A4A", color: "#7AAAD4" }}
-        >
-          {booking.guestName
-            .split(" ")
-            .map((n) => n[0])
-            .join("")}
+    <div className="flex items-center gap-2.5 px-3 py-3 transition-colors hover:bg-neutral-50">
+      <button
+        onClick={() => onOpen(booking)}
+        aria-label={`View details for ${booking.guestName}`}
+        className="flex items-center gap-2.5 flex-1 min-w-0 text-left outline-none"
+      >
+        <div className="h-9 w-9 shrink-0 rounded-full bg-neutral-100 text-neutral-600 flex items-center justify-center text-[11px] font-bold">
+          {initials(booking.guestName)}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-[12px] font-medium text-[#1C1030]">
-            {booking.guestName} · {booking.guests} guests
+          <div className="text-[12px] font-semibold text-neutral-900 truncate">
+            {booking.guestName}{" "}
+            <span className="text-neutral-400 font-medium">
+              · {booking.guests} {booking.guests === 1 ? "guest" : "guests"}
+            </span>
           </div>
-          <div className="text-[10px] text-[#64748B]">
-            {dates} · K{booking.amount.toLocaleString()}
+          <div className="text-[10px] text-neutral-500 truncate">{booking.listingName}</div>
+          <div className="text-[10px] text-neutral-400 truncate">
+            {bookingDates(booking)} · K{booking.amount.toLocaleString()}
           </div>
         </div>
-        <div
-          className="text-[10px] font-medium px-2 py-0.5 rounded-full whitespace-nowrap"
-          style={{
-            background:
-              booking.status === "pending"
-                ? "#FFF4DC"
-                : booking.status === "confirmed"
-                  ? "#E6F4EE"
-                  : booking.status === "completed"
-                    ? "#EDE8F5"
-                    : "#FCEBEB",
-            color:
-              booking.status === "pending"
-                ? "#8A5C0A"
-                : booking.status === "confirmed"
-                  ? "#2A5C3F"
-                  : booking.status === "completed"
-                    ? "#3D2463"
-                    : "#A32D2D",
-          }}
-        >
-          {booking.status === "pending"
-            ? "Pending"
-            : booking.status === "confirmed"
-              ? "Confirmed"
-              : booking.status === "completed"
-                ? "Done"
-                : "Cancelled"}
-        </div>
-      </div>
-      {booking.status === "pending" && (
-        <div className="grid grid-cols-2 gap-2 px-3 pb-3">
-          <button
-            onClick={() => onDecline(booking.id)}
-            disabled={processing === booking.id}
-            className="py-2 rounded-lg border border-[#A32D2D] bg-[#FCEBEB] text-center text-[12px] font-medium text-[#A32D2D] hover:bg-[#F8D5D5] transition-colors disabled:opacity-50"
-          >
-            {processing === booking.id ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin mx-auto" />
-            ) : (
-              "Decline"
-            )}
-          </button>
-          <button
-            onClick={() => onAccept(booking.id)}
-            disabled={processing === booking.id}
-            className="py-2 rounded-lg border border-[#2A5C3F] bg-[#E6F4EE] text-center text-[12px] font-medium text-[#2A5C3F] hover:bg-[#D4EDD8] transition-colors disabled:opacity-50"
-          >
-            {processing === booking.id ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin mx-auto" />
-            ) : (
-              "Accept"
-            )}
-          </button>
-        </div>
-      )}
+      </button>
+      <span
+        className="text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap shrink-0"
+        style={{ background: badge.bg, color: badge.fg }}
+      >
+        {badge.label}
+      </span>
+      <button
+        onClick={() => onOpen(booking)}
+        aria-label={`View details for booking ${booking.bookingRef}`}
+        className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-[11px] font-bold text-purple hover:border-purple/40 hover:bg-purple/5 transition-colors outline-none"
+      >
+        <Eye className="h-3.5 w-3.5" />
+        View details
+      </button>
     </div>
   );
 }
 
+function GroupSection({
+  title,
+  count,
+  tone,
+  children,
+}: {
+  title: string;
+  count: number;
+  tone: "purple" | "emerald";
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="mb-4 last:mb-0">
+      <div className="flex items-center gap-2 mb-2">
+        <div
+          className={cn(
+            "w-[26px] h-[26px] rounded-lg flex items-center justify-center",
+            tone === "purple" ? "bg-[#f3eafb]" : "bg-emerald-50",
+          )}
+        >
+          <span
+            className={cn(
+              "h-2 w-2 rounded-full",
+              tone === "purple" ? "bg-purple" : "bg-emerald-600",
+            )}
+          />
+        </div>
+        <span className="text-[12px] font-medium text-neutral-900">
+          {title} ({count})
+        </span>
+      </div>
+      <div className="bg-white border border-neutral-200 rounded-xl overflow-hidden">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------ Main page ------------------------------- */
+
 export function HostBookingsPage() {
-  const [activeFilter, setActiveFilter] = useState("all");
   const [processing, setProcessing] = useState<string | null>(null);
   const [bookings, setBookings] = useState<HostBooking[]>(mockHostBookings);
+  const [selected, setSelected] = useState<HostBooking | null>(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
-  const filters = [
-    { key: "all", label: `All (${bookings.length})` },
-    {
-      key: "upcoming",
-      label: `Upcoming (${bookings.filter((b) => b.status === "confirmed").length})`,
-    },
-    { key: "pending", label: `Pending (${bookings.filter((b) => b.status === "pending").length})` },
-    {
-      key: "completed",
-      label: `Completed (${bookings.filter((b) => b.status === "completed").length})`,
-    },
-  ];
+  const pending = bookings.filter((b) => b.status === "pending");
+  const confirmed = bookings.filter((b) => b.status === "confirmed");
+  const completed = bookings.filter((b) => b.status === "completed");
 
-  const filtered = useMemo(() => {
-    if (activeFilter === "all") return bookings;
-    if (activeFilter === "upcoming") return bookings.filter((b) => b.status === "confirmed");
-    if (activeFilter === "pending") return bookings.filter((b) => b.status === "pending");
-    return bookings.filter((b) => b.status === "completed");
-  }, [bookings, activeFilter]);
+  const openDetails = useCallback((booking: HostBooking) => {
+    setSelected(booking);
+    setDetailsOpen(true);
+  }, []);
 
   const handleAccept = useCallback(
     (id: string) => {
@@ -164,153 +154,61 @@ export function HostBookingsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#faf9f5]">
+    <div className="min-h-screen bg-neutral-50">
       <HostPageHeader
-        eyebrow="Reservations"
-        title="My Bookings"
+        title="Bookings"
         description="View and manage all your upcoming and past guest stays."
       />
       <div className="mx-auto max-w-7xl px-4 md:px-6 py-6">
-        {/* Filter pills */}
-        <div className="flex gap-1.5 pb-3 overflow-x-auto scrollbar-none mt-2">
-          {filters.map((f) => (
-            <button
-              key={f.key}
-              onClick={() => setActiveFilter(f.key)}
-              className={`shrink-0 px-3.5 py-1.5 rounded-full text-[11px] font-medium transition-colors ${
-                activeFilter === f.key
-                  ? "bg-[#3D2463] text-[#FAF7F2]"
-                  : "bg-white border border-[#E0DBD0] text-[#3D2463] hover:border-[#2a1b47]/40"
-              }`}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Pending approval section */}
-        {filtered.filter((b) => b.status === "pending").length > 0 && (
-          <div className="mx-4 mb-4 md:mx-0">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-[26px] h-[26px] rounded-lg bg-[#FFF4DC] flex items-center justify-center">
-                <svg
-                  className="h-3.5 w-3.5 text-[#2a1b47]"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <span className="text-[12px] font-medium text-[#1C1030]">Pending approval</span>
-            </div>
-            <div className="bg-white border border-[#E0DBD0] rounded-xl overflow-hidden">
-              {filtered
-                .filter((b) => b.status === "pending")
-                .map((b) => (
-                  <BookingRow
-                    key={b.id}
-                    booking={b}
-                    onAccept={handleAccept}
-                    onDecline={handleDecline}
-                    processing={processing}
-                  />
-                ))}
-            </div>
+        {/* Pending approval */}
+        {pending.length > 0 && (
+          <div className="mb-6">
+            <GroupSection title="Pending approval" count={pending.length} tone="purple">
+              {pending.map((b) => (
+                <BookingRow key={b.id} booking={b} onOpen={openDetails} />
+              ))}
+            </GroupSection>
           </div>
         )}
 
-        {/* Confirmed upcoming section */}
-        {filtered.filter((b) => b.status === "confirmed").length > 0 && (
-          <div className="mx-4 mb-4 md:mx-0">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-[26px] h-[26px] rounded-lg bg-[#EDE8F5] flex items-center justify-center">
-                <svg
-                  className="h-3.5 w-3.5 text-[#3D2463]"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <span className="text-[12px] font-medium text-[#1C1030]">Confirmed upcoming</span>
-            </div>
-            <div className="bg-white border border-[#E0DBD0] rounded-xl overflow-hidden">
-              {filtered
-                .filter((b) => b.status === "confirmed")
-                .map((b) => (
-                  <BookingRow
-                    key={b.id}
-                    booking={b}
-                    onAccept={handleAccept}
-                    onDecline={handleDecline}
-                    processing={processing}
-                  />
-                ))}
-            </div>
+        {/* Confirmed upcoming */}
+        {confirmed.length > 0 && (
+          <div className="mb-6">
+            <GroupSection title="Confirmed upcoming" count={confirmed.length} tone="emerald">
+              {confirmed.map((b) => (
+                <BookingRow key={b.id} booking={b} onOpen={openDetails} />
+              ))}
+            </GroupSection>
           </div>
         )}
 
-        {/* Completed section */}
-        {filtered.filter((b) => b.status === "completed").length > 0 && (
-          <div className="mx-4 pb-4 md:mx-0 md:pb-0">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <div className="w-[26px] h-[26px] rounded-lg bg-[#E6F4EE] flex items-center justify-center">
-                  <svg
-                    className="h-3.5 w-3.5 text-[#2A5C3F]"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <span className="text-[12px] font-medium text-[#1C1030]">Completed</span>
-              </div>
-              <span className="text-[11px] text-[#2a1b47] font-medium cursor-pointer">
-                View all
-              </span>
-            </div>
-            <div className="bg-white border border-[#E0DBD0] rounded-xl overflow-hidden">
-              {filtered
-                .filter((b) => b.status === "completed")
-                .map((b) => (
-                  <div
-                    key={b.id}
-                    className="border-b border-[#E0DBD0] last:border-b-0 px-3 py-2.5 flex items-center gap-2.5"
-                  >
-                    <div className="w-8 h-8 rounded-full bg-[#3A2A10] text-[#2a1b47] flex items-center justify-center text-[11px] font-medium shrink-0">
-                      {b.guestName
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-[12px] font-medium text-[#1C1030]">
-                        {b.guestName} · {b.guests} guests
-                      </div>
-                      <div className="text-[10px] text-[#64748B]">
-                        K{b.amount.toLocaleString()} paid out
-                      </div>
-                    </div>
-                    <div className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-[#E6F4EE] text-[#2A5C3F]">
-                      Done
-                    </div>
-                  </div>
-                ))}
-            </div>
+        {/* Completed */}
+        {completed.length > 0 && (
+          <div className="mb-6">
+            <GroupSection title="Completed" count={completed.length} tone="emerald">
+              {completed.map((b) => (
+                <BookingRow key={b.id} booking={b} onOpen={openDetails} />
+              ))}
+            </GroupSection>
           </div>
         )}
 
-        {filtered.length === 0 && (
-          <div className="px-4 py-10 text-center text-[12px] text-[#64748B]">No bookings found</div>
+        {pending.length + confirmed.length + completed.length === 0 && (
+          <div className="bg-white border border-dashed border-neutral-200 rounded-2xl py-10 text-center">
+            <p className="text-[12px] text-neutral-400 font-medium">No bookings found</p>
+          </div>
         )}
       </div>
+
+      {/* Booking details dialog */}
+      <BookingDetailsDialog
+        booking={selected}
+        open={detailsOpen}
+        onOpenChange={setDetailsOpen}
+        onAccept={handleAccept}
+        onDecline={handleDecline}
+        processing={processing}
+      />
     </div>
   );
 }

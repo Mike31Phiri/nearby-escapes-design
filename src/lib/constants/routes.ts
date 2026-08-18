@@ -8,7 +8,7 @@
 export const ROUTES = {
   home: "/",
 
-  // ─── Public verticals ────────────────────────────────────────────────────
+  // Public verticals
   stays: {
     index: "/zambia/stays",
     byLocation: (slug: string) => `/${slug}/stays`,
@@ -40,7 +40,7 @@ export const ROUTES = {
     category: (cat: string) => `/packages/category/${cat}`,
   },
 
-  // ─── Public pages ────────────────────────────────────────────────────────
+  // Public pages
   about: "/about",
   howItWorks: "/how-it-works",
   safety: "/safety",
@@ -50,7 +50,7 @@ export const ROUTES = {
   privacy: "/privacy",
   listProperty: "/list-property",
 
-  // ─── Auth ────────────────────────────────────────────────────────────────
+  // Auth
   login: "/login",
   register: "/register",
   registerGuest: "/register/guest",
@@ -58,13 +58,13 @@ export const ROUTES = {
   verify: "/verify",
   forgotPassword: "/forgot-password",
 
-  // ─── Booking flow ────────────────────────────────────────────────────────
+  // Booking flow
   bookReview: (id: string) => `/book/${id}/review`,
   bookPayment: (id: string) => `/book/${id}/payment`,
   bookConfirmation: (id: string) => `/book/${id}/confirmation`,
   tripAddOns: (tripId: string) => `/book/trip/${tripId}/add-ons`,
 
-  // ─── Guest account ───────────────────────────────────────────────────────
+  // Guest account
   account: {
     profile: "/profile",
     trips: "/account/trips",
@@ -77,27 +77,33 @@ export const ROUTES = {
     settings: "/account/settings",
   },
 
-  // ─── Host portal ─────────────────────────────────────────────────────────
+  // Host listing creation drafts — spec: /listings/create/[id]?step=N
+  listingDrafts: {
+    /** Entry point: capability check → type select → auto-create draft */
+    create: "/host/create",
+    /** The wizard editor, one step per URL query param */
+    editor: (id: string, step = 1) => `/listings/create/${id}?step=${step}`,
+    base: "/listings/create",
+  },
+
+  // Host portal
   host: {
     dashboard: "/host/dashboard",
     listings: "/host/listings",
-    newListing: "/host/listings/new",
     listing: (id: string) => `/host/listings/${id}`,
     editListing: (id: string) => `/host/listings/${id}/edit`,
-    listingCalendar: (id: string) => `/host/listings/${id}/calendar`,
-    listingPerformance: (id: string) => `/host/listings/${id}/performance`,
-    onboarding: "/host/onboarding",
     bookings: "/host/bookings",
     booking: (id: string) => `/host/bookings/${id}`,
-    calendar: "/host/calendar",
-    inbox: "/host/inbox",
-    thread: (id: string) => `/host/inbox/${id}`,
+    inventory: "/host/inventory",
     earnings: "/host/earnings",
+    financeLedger: (id: string) => `/host/finances/ledger/${id}`,
     reviews: "/host/reviews",
+    account: "/host/account",
     settings: "/host/settings",
+    availability: "/host/availability",
   },
 
-  // ─── Admin portal ────────────────────────────────────────────────────────
+  // Admin portal
   admin: {
     dashboard: "/admin/dashboard",
     bookings: "/admin/bookings",

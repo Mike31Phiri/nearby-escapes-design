@@ -1,3 +1,5 @@
+import type { RoomType } from "@/types/listing";
+
 export interface Stay {
   id: string;
   name: string;
@@ -20,6 +22,9 @@ export interface Stay {
   lng?: number;
   closestAttraction?: string;
   distance?: string;
+  roomTypes?: RoomType[];
+  customPolicies?: string;
+  customCancellationPolicy?: string;
 }
 
 export interface Transport {
@@ -31,6 +36,9 @@ export interface Transport {
   departures: string;
   price: number;
   image: string;
+  /** Display times used on the transport detail page (falls back to defaults when absent). */
+  departureTime?: string;
+  arrivalTime?: string;
 }
 
 export type ExperienceCategory =
@@ -129,6 +137,45 @@ export const mockStays: Stay[] = [
     lng: 29.1,
     closestAttraction: "Lower Zambezi National Park",
     distance: "Inside Park",
+    roomTypes: [
+      {
+        id: "rt-1",
+        name: "River View Suite",
+        count: 6,
+        maxGuests: 2,
+        bedrooms: 1,
+        beds: [{ type: "Queen", count: 1 }],
+        pricePerNightNgwee: 45000,
+      },
+      {
+        id: "rt-2",
+        name: "3-Bedroom Family Chalet",
+        count: 3,
+        maxGuests: 6,
+        bedrooms: 3,
+        beds: [
+          { type: "Queen", count: 1 },
+          { type: "Twin", count: 2 },
+        ],
+        pricePerNightNgwee: 95000,
+      },
+      {
+        id: "rt-3",
+        name: "4-Bedroom Villa",
+        count: 2,
+        maxGuests: 8,
+        bedrooms: 4,
+        beds: [
+          { type: "Queen", count: 2 },
+          { type: "Twin", count: 2 },
+        ],
+        pricePerNightNgwee: 125000,
+      },
+    ],
+    customCancellationPolicy:
+      "Full refund if cancelled at least 7 days before check-in. 50% refund up to 3 days before. No refunds for bookings over Christmas and New Year.",
+    customPolicies:
+      "A 50% deposit is required to confirm 3-bedroom and larger units. Check-in closes at 20:00 — please arrange late arrivals with reception. A community levy of K25 per guest per night applies to all bookings.",
   },
   {
     id: "2",
@@ -162,6 +209,29 @@ export const mockStays: Stay[] = [
     lng: 25.8572,
     closestAttraction: "Victoria Falls",
     distance: "0.5km",
+    roomTypes: [
+      {
+        id: "rt-1",
+        name: "Standard Room",
+        count: 12,
+        maxGuests: 2,
+        bedrooms: 1,
+        beds: [{ type: "Queen", count: 1 }],
+        pricePerNightNgwee: 32000,
+      },
+      {
+        id: "rt-2",
+        name: "Executive Suite",
+        count: 4,
+        maxGuests: 3,
+        bedrooms: 1,
+        beds: [
+          { type: "King", count: 1 },
+          { type: "Single", count: 1 },
+        ],
+        pricePerNightNgwee: 58000,
+      },
+    ],
   },
   {
     id: "3",
@@ -345,6 +415,8 @@ export const mockTransport: Transport[] = [
     operator: "Zambia Bus Lines",
     duration: "6h 30m",
     departures: "Daily",
+    departureTime: "7:00 AM",
+    arrivalTime: "1:30 PM",
     price: 250,
     image: "https://images.unsplash.com/photo-1544620347-f4fd8749f24e?w=800&q=80",
   },
@@ -355,6 +427,8 @@ export const mockTransport: Transport[] = [
     operator: "Power Tools",
     duration: "5h 15m",
     departures: "Daily",
+    departureTime: "6:30 AM",
+    arrivalTime: "11:45 AM",
     price: 180,
     image: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=800&q=80",
   },
@@ -365,13 +439,15 @@ export const mockTransport: Transport[] = [
     operator: "Eastern Express",
     duration: "8h 45m",
     departures: "Mon, Wed, Fri",
+    departureTime: "5:00 AM",
+    arrivalTime: "1:45 PM",
     price: 320,
     image: "https://images.unsplash.com/photo-1591696205602-2f950c417cb9?w=800&q=80",
   },
 ];
 
 export const mockExperiences: Experience[] = [
-  //Wildlife & Nature ──
+  // Wildlife & Nature
   {
     id: "e1",
     name: "Victoria Falls Helicopter Tour",
@@ -429,7 +505,7 @@ export const mockExperiences: Experience[] = [
       "Explore Zambia's oldest and largest national park on a full-day game drive. Track lions, leopards, wild dogs and elephants across diverse habitats with expert guides.",
   },
 
-  //Farm Visits & Agri-Tourism ──
+  // Farm Visits & Agri-Tourism
   {
     id: "e5",
     name: "Chisamba Farm Stay & Milking Experience",
@@ -473,7 +549,7 @@ export const mockExperiences: Experience[] = [
       "Visit the historic Shiwa Ngandu estate and soak in the natural Kapishya Hot Springs. Tour the grand manor, explore working farmlands, and relax in geothermal springs nestled in the northern hills.",
   },
 
-  //Cultural & Community ──
+  // Cultural & Community
   {
     id: "e8",
     name: "Livingstone Village Tour & Craft Market",
@@ -517,7 +593,7 @@ export const mockExperiences: Experience[] = [
       "Visit the historic Mukuni Village, home of the Leya people. Tour the Chief's palace, watch traditional dancing and drumming performances, and learn about the deep cultural heritage of the region.",
   },
 
-  //Industrial Heritage ──
+  // Industrial Heritage
   {
     id: "e11",
     name: "Copperbelt Mining Heritage Tour",
@@ -547,7 +623,7 @@ export const mockExperiences: Experience[] = [
       "Stand at the foot of the massive Kariba Dam — one of Africa's largest hydroelectric projects. Tour the visitor centre, learn about the dam's construction and the legendary Nyami Nyami river god.",
   },
 
-  //Adventure & Tours ──
+  // Adventure & Tours
   {
     id: "e13",
     name: "Zambezi White Water Rafting",
@@ -577,7 +653,7 @@ export const mockExperiences: Experience[] = [
       "Trek through lush miombo woodlands to the spectacular Kundalila Falls. The Kaombe River plunges 70m into a deep basalt pool — perfect for a refreshing swim after the hike.",
   },
 
-  //Water Sports & Lakes ──
+  // Water Sports & Lakes
   {
     id: "e15",
     name: "Lake Kariba Sunset Cruise",

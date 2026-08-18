@@ -7,11 +7,11 @@ import {
   getAttractionsByProvince,
 } from "@/lib/mock-explore-data";
 import { mockStays, mockExperiences, mockTransport, mockPackages } from "@/lib/mock-data";
-import { DiscoveryHero } from "@/components/explore/DiscoveryHero";
-import { DiscoverySection } from "@/components/explore/DiscoverySection";
-import { AttractionCard } from "@/components/explore/AttractionCard";
-import { MiniCard, TransportMiniCard, PackageMiniCard } from "@/components/explore/MiniCard";
-import { ExploreFilterBar, type ExploreFilterType } from "@/components/explore/ExploreFilterBar";
+import { DiscoveryHero } from "@/components/guest/explore/DiscoveryHero";
+import { DiscoverySection } from "@/components/guest/explore/DiscoverySection";
+import { AttractionCard } from "@/components/guest/explore/AttractionCard";
+import { MiniCard, TransportMiniCard, PackageMiniCard } from "@/components/guest/explore/MiniCard";
+import { ExploreFilterBar, type ExploreFilterType } from "@/components/guest/explore/ExploreFilterBar";
 import { useState } from "react";
 
 interface ProvinceDiscoveryPageProps {
@@ -108,7 +108,7 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
         breadcrumbs={[{ label: "Zambia", href: "/explore" }, { label: province.name }]}
       />
 
-      {/* ── City Pills ──────────────────────────────────────────── */}
+      {/* City Pills */}
       {cities.length > 0 && (
         <div className="px-4 md:px-8 max-w-7xl mx-auto py-5">
           <p className="text-sm font-bold uppercase tracking-widest text-[#94A3B8] mb-3">
@@ -131,12 +131,12 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
         </div>
       )}
 
-      {/* ── Global Filter Bar ─────────────────────────────────── */}
+      {/* Global Filter Bar */}
       <div className="sticky top-[72px] md:top-[80px] z-30 bg-[#FDFBF7]/90 backdrop-blur-md border-b border-[#E0DBD0]/50 shadow-sm">
         <ExploreFilterBar active={globalFilter} onChange={setGlobalFilter} />
       </div>
 
-      {/* ── Attractions ─────────────────────────────────────────── */}
+      {/* Attractions */}
       <DiscoverySection
         title="Attractions"
         emoji="🏛️"
@@ -154,7 +154,7 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
         ))}
       </DiscoverySection>
 
-      {/* ── Stays ───────────────────────────────────────────────── */}
+      {/* Stays */}
       <DiscoverySection
         title="Places to Stay"
         emoji="🏡"
@@ -178,7 +178,7 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
         ))}
       </DiscoverySection>
 
-      {/* ── Experiences ─────────────────────────────────────────── */}
+      {/* Experiences */}
       <DiscoverySection
         title="Experiences"
         emoji="🎭"
@@ -201,7 +201,7 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
         ))}
       </DiscoverySection>
 
-      {/* ── Transport ───────────────────────────────────────────── */}
+      {/* Transport */}
       <DiscoverySection
         title="Getting There"
         emoji="🚌"
@@ -215,7 +215,7 @@ export function ProvinceDiscoveryPage({ province }: ProvinceDiscoveryPageProps) 
         ))}
       </DiscoverySection>
 
-      {/* ── Packages ────────────────────────────────────────────── */}
+      {/* Packages */}
       <DiscoverySection
         title="Packages"
         emoji="📦"

@@ -12,7 +12,7 @@
  * In mock/dev mode, the flow is simulated end-to-end without real credentials.
  */
 
-//Types ────────────────────────────────────────────────────────────────
+// Types
 
 export interface DPOTransaction {
   /** Internal booking reference */
@@ -61,7 +61,7 @@ export interface DPOVerificationResult {
   transToken: string;
 }
 
-//Configuration ───────────────────────────────────────────────────────
+// Configuration
 
 interface DPOConfig {
   /** Company token from DPO dashboard */
@@ -82,7 +82,7 @@ const config: DPOConfig = {
   paymentBaseUrl: "https://secure.directpay.online",
 };
 
-//Generate Booking Reference ──────────────────────────────────────────
+// Generate Booking Reference
 
 export function generateBookingRef(): string {
   const year = new Date().getFullYear();
@@ -90,7 +90,7 @@ export function generateBookingRef(): string {
   return `NE-${year}-${seq}`;
 }
 
-//Generate Unique Token (for mock) ────────────────────────────────────
+// Generate Unique Token (for mock)
 
 function generateToken(): string {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -101,7 +101,7 @@ function generateToken(): string {
   return token;
 }
 
-//Create Payment Token ────────────────────────────────────────────────
+// Create Payment Token
 
 export async function createPaymentToken(
   transaction: DPOTransaction,
@@ -127,7 +127,7 @@ export async function createPaymentToken(
     };
   }
 
-  //Live DPO API Integration ────────────────────────────────────────────
+  // Live DPO API Integration
   try {
     const response = await fetch("https://secure.directpay.online/directtrade/TPG/createToken", {
       method: "POST",
@@ -180,7 +180,7 @@ export async function createPaymentToken(
   }
 }
 
-//Verify Payment ──────────────────────────────────────────────────────
+// Verify Payment
 
 export async function verifyPayment(transToken: string): Promise<DPOVerificationResult> {
   if (config.mockMode) {
@@ -195,7 +195,7 @@ export async function verifyPayment(transToken: string): Promise<DPOVerification
     };
   }
 
-  //Live DPO API Integration ────────────────────────────────────────────
+  // Live DPO API Integration
   try {
     const response = await fetch("https://secure.directpay.online/directtrade/TPG/verifyToken", {
       method: "POST",

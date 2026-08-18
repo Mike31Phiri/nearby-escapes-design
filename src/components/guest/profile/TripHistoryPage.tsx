@@ -20,9 +20,13 @@ export function TripHistoryPage() {
               </span>
             </div>
             <p className="font-semibold text-black mt-1">Chisanga's Lakeside Lodge</p>
-            <p className="text-xs text-black-muted mt-0.5">Livingstone, Zambia · Aug 12 - Aug 15, 2025</p>
+            <p className="text-xs text-black-muted mt-0.5">
+              Livingstone, Zambia · Aug 12 - Aug 15, 2025
+            </p>
           </div>
-          <span className="text-xs font-bold text-green-700 bg-green-100 px-3 py-1 rounded-full w-fit">Completed</span>
+          <span className="text-xs font-bold text-green-700 bg-green-100 px-3 py-1 rounded-full w-fit">
+            Completed
+          </span>
         </div>
 
         {/* Trip 2: Experience */}
@@ -36,7 +40,9 @@ export function TripHistoryPage() {
             <p className="font-semibold text-black mt-1">Mosi-oa-Tunya Safari & River Cruise</p>
             <p className="text-xs text-black-muted mt-0.5">Livingstone, Zambia · Jan 18, 2026</p>
           </div>
-          <span className="text-xs font-bold text-blue-600 bg-blue-100 px-3 py-1 rounded-full w-fit">Upcoming</span>
+          <span className="text-xs font-bold text-blue-600 bg-blue-100 px-3 py-1 rounded-full w-fit">
+            Upcoming
+          </span>
         </div>
 
         {/* Trip 3: Transport */}
@@ -50,7 +56,9 @@ export function TripHistoryPage() {
             <p className="font-semibold text-black mt-1">Lusaka to Livingstone Express</p>
             <p className="text-xs text-black-muted mt-0.5">Lusaka, Zambia · Dec 28, 2025</p>
           </div>
-          <span className="text-xs font-bold text-green-700 bg-green-100 px-3 py-1 rounded-full w-fit">Completed</span>
+          <span className="text-xs font-bold text-green-700 bg-green-100 px-3 py-1 rounded-full w-fit">
+            Completed
+          </span>
         </div>
       </div>
     </div>

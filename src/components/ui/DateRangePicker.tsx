@@ -14,6 +14,8 @@ interface Props {
   className?: string;
   /** compact = icon + short label, used inside the desktop search bar */
   variant?: "default" | "compact";
+  /** Optional custom label content — replaces the default compact label when provided */
+  children?: React.ReactNode;
 }
 
 const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -158,6 +160,7 @@ export function DateRangePicker({
   placeholder = "Any weekend",
   className,
   variant = "default",
+  children,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [hovered, setHovered] = useState<Date | null>(null);
@@ -216,11 +219,13 @@ export function DateRangePicker({
           className="flex items-center gap-1.5 w-full focus:outline-none"
         >
           <CalendarDays className="h-4 w-4 text-[#1f1433] shrink-0" strokeWidth={1.5} />
-          <span
-            className={cn("text-[13px] truncate", hasValue ? "text-[#334155]" : "text-[#64748B]")}
-          >
-            {label}
-          </span>
+          {children ?? (
+            <span
+              className={cn("text-[13px] truncate", hasValue ? "text-[#334155]" : "text-[#64748B]")}
+            >
+              {label}
+            </span>
+          )}
           {hasValue && (
             <span onClick={clear} className="ml-auto text-[#64748B] hover:text-[#1f1433]">
               <X className="h-3 w-3" strokeWidth={2.5} />

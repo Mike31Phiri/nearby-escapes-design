@@ -34,6 +34,18 @@ export interface StaySearchResult {
   };
 }
 
+export interface CreateStayRoomType {
+  id: string;
+  name: string;
+  /** How many identical units of this room type exist */
+  count: number;
+  maxGuests: number;
+  bedrooms: number;
+  beds: { type: string; count: number }[];
+  /** Nightly rate per unit in Ngwee (integer). Never float. */
+  pricePerNightNgwee: number;
+}
+
 export interface CreateStayPayload {
   title: string;
   description: string;
@@ -53,6 +65,12 @@ export interface CreateStayPayload {
   /** Base nightly rate in Ngwee (integer). Never float. */
   baseRateNgwee: number;
   cancellationPolicy: string;
+  /** Room types + inventory captured by the host. */
+  roomTypes: CreateStayRoomType[];
+  /** Free-text policies the host wants to put across. */
+  customPolicies?: string;
+  /** Host-written cancellation policy (overrides dropdown when set). */
+  customCancellationPolicy?: string;
 }
 
 /** Search / list stays with optional filters. */
@@ -85,6 +103,9 @@ export const createStay = async (payload: CreateStayPayload): Promise<StayListin
     images: payload.images,
     pricePerNight: payload.baseRateNgwee,
     cancellationPolicy: payload.cancellationPolicy.toUpperCase(),
+    roomTypes: payload.roomTypes,
+    customPolicies: payload.customPolicies,
+    customCancellationPolicy: payload.customCancellationPolicy,
   };
 
   const { data } = await apiClient.post<StayListing>("/listings/stays", dto);

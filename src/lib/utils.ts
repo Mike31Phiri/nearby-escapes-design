@@ -5,6 +5,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/**
+ * Shared backdrop treatment for full-screen overlays (dialogs, popovers,
+ * sheets): dims, blurs and tones down the page behind the surface in front
+ * so the foreground card clearly pops. Keep every overlay consistent by
+ * reusing this constant instead of repeating the classes.
+ */
+export const BACKDROP_CLASS = "bg-black/80 backdrop-blur-sm backdrop-brightness-75";
+
 export function timeAgo(timestamp: string): string {
   const now = new Date();
   const then = new Date(timestamp);

@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import type React from "react";
 
-//Icon Toast Helpers ─────────────────────────────────────────────────
+// Icon Toast Helpers
 
 function ToastContent({
   icon: Icon,
@@ -40,7 +40,7 @@ function ToastContent({
   );
 }
 
-//Toast Variants ─────────────────────────────────────────────────────
+// Toast Variants
 
 export function showSuccess(title: string, description?: string) {
   toast.custom(
@@ -91,7 +91,7 @@ export function showInfo(title: string, description?: string) {
   );
 }
 
-//Loading Toast ──────────────────────────────────────────────────────
+// Loading Toast
 // Returns a dismiss function. Call it with the success/error result.
 
 export function showLoadingToast(
@@ -123,7 +123,7 @@ export function showLoadingToast(
   };
 }
 
-//Admin-Specific Action Toasts ───────────────────────────────────────
+// Admin-Specific Action Toasts
 
 export function toastUserVerified(userName: string) {
   showSuccess(`${userName} verified`, "User account has been marked as verified.");

@@ -1,99 +1,152 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "./availability-calendar.css";
+import { cn } from "@/lib/utils";
 import { mockHostProfile } from "@/lib/mock-profile-data";
 import { HostPageHeader } from "@/components/layout/HostPageHeader";
 import { useAvailabilityStore } from "@/store/availabilityStore";
 import { toast } from "sonner";
 
-const DAY_NAMES = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-const MONTH_NAMES = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
-function getDaysInMonth(year: number, month: number): number {
-  return new Date(year, month, 0).getDate();
+function toKey(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+    d.getDate(),
+  ).padStart(2, "0")}`;
 }
-function getFirstDayOfMonth(year: number, month: number): number {
-  return new Date(year, month - 1, 1).getDay();
-}
-function formatDate(y: number, m: number, d: number): string {
-  return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-}
-function isToday(d: string): boolean {
-  return d === new Date().toISOString().split("T")[0];
-}
-function isPast(d: string): boolean {
-  return d < new Date().toISOString().split("T")[0];
-}
-
-function adjustDay(d: number): number {
-  return d === 0 ? 6 : d - 1;
-} // Sun=0→6, Mon=1→0, etc.
 
 export function HostAvailabilityPage() {
-  const now = new Date();
-  const [year, setYear] = useState(now.getFullYear());
-  const [month, setMonth] = useState(now.getMonth() + 1);
+  /* ── Responsive detection ─────────────────────────────────────────────── */
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    setIsDesktop(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  /* ── Calendar state ───────────────────────────────────────────────────── */
+  // firstMonth = leftmost month shown.  Desktop: [first, first+1, first+2].  Mobile: [first].
+  const [firstMonth, setFirstMonth] = useState(() => {
+    const n = new Date();
+    return { month: n.getMonth(), year: n.getFullYear() };
+  });
+
+  // When layout changes, DatePicker remounts to current month — keep firstMonth in sync.
+  useEffect(() => {
+    const n = new Date();
+    setFirstMonth({ month: n.getMonth(), year: n.getFullYear() });
+  }, [isDesktop]);
+
   const [rangeFrom, setRangeFrom] = useState("");
   const [rangeTo, setRangeTo] = useState("");
 
   const hostListings = mockHostProfile.listings;
   const [selectedId, setSelectedId] = useState(hostListings[0]?.id || "");
-  const { toggleDateBlock, blockDateRange, getAvailabilityForMonth, getSeasonalPricingForListing } =
-    useAvailabilityStore();
 
-  const daysInMonth = getDaysInMonth(year, month);
-  const firstDay = adjustDay(getFirstDayOfMonth(year, month));
-
-  const entries = useMemo(
-    () => (selectedId ? getAvailabilityForMonth(selectedId, year, month) : []),
-    [selectedId, year, month, getAvailabilityForMonth],
+  /* ── Store ────────────────────────────────────────────────────────────── */
+  const availability = useAvailabilityStore((s) => s.availability);
+  const toggleDateBlock = useAvailabilityStore((s) => s.toggleDateBlock);
+  const blockDateRange = useAvailabilityStore((s) => s.blockDateRange);
+  const getSeasonalPricingForListing = useAvailabilityStore(
+    (s) => s.getSeasonalPricingForListing,
   );
+
   const pricing = useMemo(
     () => getSeasonalPricingForListing(selectedId),
     [selectedId, getSeasonalPricingForListing],
   );
 
+  const todayStr = useMemo(() => toKey(new Date()), []);
+
   const statusMap = useMemo(() => {
     const m: Record<string, "available" | "blocked" | "booked"> = {};
-    for (const e of entries) m[e.date] = e.status;
+    for (const e of availability[selectedId] ?? []) m[e.date] = e.status;
     return m;
-  }, [entries]);
+  }, [availability, selectedId]);
 
-  const goBack = useCallback(() => {
-    if (month === 1) {
-      setYear((y) => y - 1);
-      setMonth(12);
-    } else setMonth((m) => m - 1);
-  }, [month]);
-  const goNext = useCallback(() => {
-    if (month === 12) {
-      setYear((y) => y + 1);
-      setMonth(1);
-    } else setMonth((m) => m + 1);
-  }, [month]);
-
-  const toggleDate = useCallback(
-    (date: string) => {
-      toggleDateBlock(selectedId, date);
-      toast.success(statusMap[date] === "blocked" ? "Date unblocked" : "Date blocked");
+  /* ── Helpers: is a date in the currently displayed months? ─────────────── */
+  const isDateInDisplayedRange = useCallback(
+    (date: Date) => {
+      if (!isDesktop) {
+        // Single month: date must match firstMonth exactly
+        return date.getMonth() === firstMonth.month && date.getFullYear() === firstMonth.year;
+      }
+      // Desktop 2-month: check first, first+1
+      for (let offset = 0; offset < 2; offset++) {
+        const m = (firstMonth.month + offset) % 12;
+        const y = firstMonth.month + offset >= 12 ? firstMonth.year + 1 : firstMonth.year;
+        if (date.getMonth() === m && date.getFullYear() === y) return true;
+      }
+      return false;
     },
-    [selectedId, toggleDateBlock, statusMap],
+    [isDesktop, firstMonth],
   );
 
+  /* ── Day class (status-based styling) ─────────────────────────────────── */
+  const dayClass = useCallback(
+    (date: Date) => {
+      const key = toKey(date);
+      const status = statusMap[key];
+      const isToday = key === todayStr;
+      let cls = "";
+      if (key < todayStr) cls = "rdp-past";
+      else if (status === "booked") cls = "rdp-booked";
+      else if (status === "blocked") cls = "rdp-blocked";
+      else cls = "rdp-open";
+      if (isToday) cls = cn(cls, "rdp-today");
+      return cls;
+    },
+    [todayStr, statusMap],
+  );
+
+  /* ── Day render (number + status dot) ─────────────────────────────────── */
+  const renderDay = useCallback(
+    (day: number, date: Date) => {
+      const status = statusMap[toKey(date)];
+      return (
+        <span className="rdp-cell">
+          <span className={cn(status === "blocked" && "rdp-num-blocked")}>{day}</span>
+          {status === "booked" && <span className="rdp-dot rdp-dot-booked" />}
+          {status === "blocked" && <span className="rdp-dot rdp-dot-blocked" />}
+        </span>
+      );
+    },
+    [statusMap],
+  );
+
+  /* ── Selectable filter ────────────────────────────────────────────────── */
+  const isDaySelectable = useCallback(
+    (date: Date) => {
+      const key = toKey(date);
+      if (key < todayStr) return false;
+      if (statusMap[key] === "booked") return false;
+      if (!isDateInDisplayedRange(date)) return false;
+      return true;
+    },
+    [todayStr, statusMap, isDateInDisplayedRange],
+  );
+
+  /* ── Month navigation tracking ────────────────────────────────────────── */
+  const handleMonthChange = useCallback((d: Date) => {
+    setFirstMonth({ month: d.getMonth(), year: d.getFullYear() });
+  }, []);
+
+  /* ── Day click → toggle ───────────────────────────────────────────────── */
+  const handleDayChange = useCallback(
+    (date: Date | null) => {
+      if (!date) return;
+      const key = toKey(date);
+      if (!isDaySelectable(date)) return;
+      toggleDateBlock(selectedId, key);
+      toast.success(statusMap[key] === "blocked" ? "Date unblocked" : "Date blocked");
+    },
+    [isDaySelectable, selectedId, statusMap, toggleDateBlock],
+  );
+
+  /* ── Block range ──────────────────────────────────────────────────────── */
   const handleBlockRange = useCallback(() => {
     if (!rangeFrom || !rangeTo) {
       toast.error("Select both dates");
@@ -105,37 +158,15 @@ export function HostAvailabilityPage() {
     setRangeTo("");
   }, [rangeFrom, rangeTo, selectedId, blockDateRange]);
 
-  // Build calendar cells
-  const cells = useMemo(() => {
-    const c: { day: number; dateStr: string; isCurrent: boolean }[] = [];
-    const prevM = month === 1 ? 12 : month - 1;
-    const prevY = month === 1 ? year - 1 : year;
-    const prevDays = getDaysInMonth(prevY, prevM);
-    for (let i = firstDay - 1; i >= 0; i--)
-      c.push({
-        day: prevDays - i,
-        dateStr: formatDate(prevY, prevM, prevDays - i),
-        isCurrent: false,
-      });
-    for (let d = 1; d <= daysInMonth; d++)
-      c.push({ day: d, dateStr: formatDate(year, month, d), isCurrent: true });
-    const rem = 7 - (c.length % 7 === 0 ? 7 : c.length % 7);
-    const nextM = month === 12 ? 1 : month + 1;
-    const nextY = month === 12 ? year + 1 : year;
-    for (let d = 1; d < (rem === 7 ? 0 : rem); d++)
-      c.push({ day: d, dateStr: formatDate(nextY, nextM, d), isCurrent: false });
-    while (c.length < 42) {
-      const last = new Date(c[c.length - 1].dateStr);
-      last.setDate(last.getDate() + 1);
-      c.push({ day: last.getDate(), dateStr: last.toISOString().split("T")[0], isCurrent: false });
-    }
-    return c;
-  }, [year, month, daysInMonth, firstDay]);
+  /* ── openToDate: first month of the displayed range ───────────────────── */
+  const openToDate = useMemo(
+    () => new Date(firstMonth.year, firstMonth.month, 1),
+    [firstMonth],
+  );
 
   return (
     <div className="min-h-screen bg-[#faf9f5] pb-12">
       <HostPageHeader
-        eyebrow="Calendar"
         title="Availability Calendar"
         description="Manage the availability of your properties across all dates."
       />
@@ -154,75 +185,46 @@ export function HostAvailabilityPage() {
             ))}
           </select>
 
-          {/* Month header */}
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-[13px] font-medium text-[#1C1030]">
-              {MONTH_NAMES[month - 1]} {year}
-            </span>
-            <span className="flex items-center gap-1.5 text-[#2a1b47]">
-              <ChevronLeft className="h-3.5 w-3.5 cursor-pointer" onClick={goBack} />
-              <ChevronRight className="h-3.5 w-3.5 cursor-pointer" onClick={goNext} />
-            </span>
-          </div>
-
-          {/* Calendar grid */}
+          {/* Calendar */}
           <div className="bg-white border border-[#E0DBD0] rounded-xl overflow-hidden p-3 mb-4">
-            <div className="grid grid-cols-7 gap-1 mb-1">
-              {DAY_NAMES.map((n) => (
-                <div key={n} className="text-[9px] text-[#64748B] text-center py-1 font-medium">
-                  {n}
-                </div>
-              ))}
-            </div>
-            <div className="grid grid-cols-7 gap-1">
-              {cells.map((cell) => {
-                const status = statusMap[cell.dateStr];
-                const today = isToday(cell.dateStr);
-                const past = isPast(cell.dateStr);
-                let className =
-                  "h-8 rounded-md flex items-center justify-center text-[11px] text-[#1C1030] relative";
-                if (!cell.isCurrent) className += " opacity-20";
-                else if (past) className += " opacity-40 cursor-default";
-                else if (status === "booked")
-                  className += " bg-[#3D2463] text-[#EDE8F5] font-medium cursor-default";
-                else if (status === "blocked")
-                  className += " bg-[#E8E3DC] text-[#64748B] cursor-pointer hover:opacity-80";
-                else className += " bg-transparent cursor-pointer hover:bg-[#FAF7F2]";
-                if (today) className += " border-[1.5px] border-[#2a1b47]";
-                return (
-                  <button
-                    key={cell.dateStr}
-                    onClick={() =>
-                      cell.isCurrent && !past && status !== "booked" && toggleDate(cell.dateStr)
-                    }
-                    disabled={!cell.isCurrent || past || status === "booked" || !selectedId}
-                    className={className}
-                  >
-                    {cell.day}
-                    {status === "booked" && (
-                      <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-3 h-[3px] rounded-full bg-[#3D2463]" />
-                    )}
-                    {status === "blocked" && (
-                      <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-3 h-[3px] rounded-full bg-[#64748B]" />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
+            <DatePicker
+              key={`dp-${isDesktop ? "desk" : "mob"}-${firstMonth.year}-${firstMonth.month}`}
+              inline
+              calendarClassName="availability-calendar"
+              calendarStartDay={1}
+              fixedHeight
+              monthsShown={isDesktop ? 2 : 1}
+              openToDate={openToDate}
+              onChange={handleDayChange}
+              filterDate={isDaySelectable}
+              dayClassName={dayClass}
+              renderDayContents={renderDay}
+              onMonthChange={handleMonthChange}
+              previousMonthButtonLabel="Previous month"
+              nextMonthButtonLabel="Next month"
+            />
             {/* Legend */}
-            <div className="flex gap-2.5 mt-2 pt-2 border-t border-[#E0DBD0]">
+            <div
+              className={cn(
+                "flex gap-2.5 mt-3 pt-2 border-t border-[#E0DBD0]",
+                isDesktop && "justify-center",
+              )}
+            >
               <div className="flex items-center gap-1 text-[10px] text-[#64748B]">
-                <div className="w-2.5 h-2.5 rounded-[3px] bg-[#3D2463]"></div>Booked
+                <div className="w-2.5 h-2.5 rounded-[3px] bg-[#DCFCE7] border border-[#86EFAC]"></div>Open
               </div>
               <div className="flex items-center gap-1 text-[10px] text-[#64748B]">
-                <div className="w-2.5 h-2.5 rounded-[3px] bg-[#E8E3DC]"></div>Blocked
+                <div className="w-2.5 h-2.5 rounded-[3px] bg-[#FBBF24]"></div>Booked
               </div>
               <div className="flex items-center gap-1 text-[10px] text-[#64748B]">
-                <div className="w-2.5 h-2.5 rounded-[3px] bg-[#E6F4EE] border border-[#2A5C3F]"></div>
+                <div className="w-2.5 h-2.5 rounded-[3px] bg-[#EF4444]"></div>Blocked
+              </div>
+              <div className="flex items-center gap-1 text-[10px] text-[#64748B]">
+                <div className="w-2.5 h-2.5 rounded-[3px] bg-[#CCFBF1] border border-[#2DD4BF]"></div>
                 Check-out
               </div>
               <div className="flex items-center gap-1 text-[10px] text-[#64748B]">
-                <div className="w-2.5 h-2.5 rounded-[3px] bg-[#d4b065]"></div>Check-in
+                <div className="w-2.5 h-2.5 rounded-[3px] bg-[#FEF3C7] border border-[#FBBF24]"></div>Check-in
               </div>
             </div>
           </div>

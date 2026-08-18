@@ -45,7 +45,7 @@ import type { PromoCode, FeaturedListing } from "@/lib/mock-admin-data";
 import { useLoading, withLoading } from "@/lib/loading-context";
 import { showSuccess, showWarning } from "@/lib/admin-toast";
 
-//Helpers ────────────────────────────────────────────────────────────
+// Helpers
 
 const typeIcons: Record<string, React.ElementType> = {
   stay: Bed,
@@ -60,7 +60,7 @@ const placementConfig: Record<string, { label: string; icon: React.ElementType; 
   search_boost: { label: "Search Boost", icon: ArrowUpRight, color: "#3b82f6" },
 };
 
-//Promo Code Card ────────────────────────────────────────────────────
+// Promo Code Card
 
 function PromoCodeCard({
   promo,
@@ -223,7 +223,7 @@ function PromoCodeCard({
   );
 }
 
-//Featured Listing Card ─────────────────────────────────────────────
+// Featured Listing Card
 
 function FeaturedCard({
   featured,
@@ -302,7 +302,7 @@ function FeaturedCard({
   );
 }
 
-//Main Component ─────────────────────────────────────────────────────
+// Main Component
 
 export function AdminPromotions() {
   const [promoCodes, setPromoCodes] = useState<PromoCode[]>(mockPromoCodes);

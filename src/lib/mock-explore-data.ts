@@ -44,8 +44,7 @@ export interface AttractionData {
   isFeatured?: boolean;
 }
 
-// ─── ATTRACTIONS ────────────────────────────────────────────────────────────
-
+// ATTRACTIONS
 export const ATTRACTIONS: AttractionData[] = [
   {
     id: "victoria-falls",
@@ -209,8 +208,7 @@ export const ATTRACTIONS: AttractionData[] = [
   },
 ];
 
-// ─── CITIES ──────────────────────────────────────────────────────────────────
-
+// CITIES
 export const CITIES: CityData[] = [
   {
     id: "livingstone",
@@ -280,8 +278,7 @@ export const CITIES: CityData[] = [
   },
 ];
 
-// ─── PROVINCES ───────────────────────────────────────────────────────────────
-
+// PROVINCES
 export const PROVINCES: ProvinceData[] = [
   {
     id: "southern",
@@ -339,8 +336,7 @@ export const PROVINCES: ProvinceData[] = [
   },
 ];
 
-// ─── HELPER FUNCTIONS ─────────────────────────────────────────────────────────
-
+// HELPER FUNCTIONS
 export function getProvince(id: string): ProvinceData | undefined {
   return PROVINCES.find((p) => p.id === id);
 }

@@ -13,8 +13,8 @@ export function ProfileSubpageHeader({ title, rightAction }: ProfileSubpageHeade
 
   return (
     <div className="w-full bg-white border-b border-white-soft px-4 py-4 sticky top-0 z-10 flex justify-between items-center">
-      <button 
-        onClick={() => router.back()} 
+      <button
+        onClick={() => router.back()}
         className="p-1 hover:bg-white-soft rounded-full transition text-black"
         aria-label="Go back"
       >

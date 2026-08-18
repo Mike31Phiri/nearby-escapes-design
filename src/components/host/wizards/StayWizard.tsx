@@ -69,6 +69,8 @@ const STEPS = [
   },
 ];
 
+export const STAY_STEPS = STEPS;
+
 export function StayWizard() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);

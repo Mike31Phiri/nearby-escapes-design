@@ -54,7 +54,7 @@ const reviewTemplates = [
 ];
 
 export const mockListingReviews: Record<string, ListingReview[]> = {
-  //Stays ──
+  // Stays
   "1": [
     { id: "lr-1", ...guestProfiles[0], rating: 5, content: reviewTemplates[0], date: "Mar 2025" },
     { id: "lr-2", ...guestProfiles[1], rating: 5, content: reviewTemplates[4], date: "Feb 2025" },
@@ -114,7 +114,7 @@ export const mockListingReviews: Record<string, ListingReview[]> = {
     { id: "lr-30", ...guestProfiles[18], rating: 4, content: reviewTemplates[3], date: "Jan 2025" },
   ],
 
-  //Experiences ──
+  // Experiences
   e1: [
     {
       id: "lr-e1",
@@ -220,7 +220,7 @@ export const mockListingReviews: Record<string, ListingReview[]> = {
     },
   ],
 
-  //Hidden Gems ──
+  // Hidden Gems
   g1: [
     {
       id: "lr-g1",
@@ -286,7 +286,7 @@ export const mockListingReviews: Record<string, ListingReview[]> = {
     },
   ],
 
-  //Packages ──
+  // Packages
   p1: [
     {
       id: "lr-p1",
@@ -350,7 +350,7 @@ export const mockListingReviews: Record<string, ListingReview[]> = {
     },
   ],
 
-  //Transport ──
+  // Transport
   t1: [
     {
       id: "lr-t1",

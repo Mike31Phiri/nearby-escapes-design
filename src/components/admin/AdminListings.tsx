@@ -42,7 +42,7 @@ import { mockPendingListings, statsFromListings } from "@/lib/mock-admin-data";
 import type { PendingListing } from "@/lib/mock-admin-data";
 import { showSuccess, showWarning } from "@/lib/admin-toast";
 
-//Type Helpers ───────────────────────────────────────────────────────
+// Type Helpers
 
 const typeIcons: Record<string, React.ElementType> = {
   stay: Bed,
@@ -64,7 +64,7 @@ const listingStatusStyles: Record<string, string> = {
   rejected: "bg-rose-50 text-rose-700 border-rose-200",
 };
 
-//Listing Card ───────────────────────────────────────────────────────
+// Listing Card
 
 function ListingCard({
   listing,
@@ -243,7 +243,7 @@ function ListingCard({
   );
 }
 
-//Main Component ─────────────────────────────────────────────────────
+// Main Component
 
 export function AdminListings() {
   const [listings, setListings] = useState<PendingListing[]>(mockPendingListings);

@@ -4,235 +4,371 @@
 
 /* ═══════════════════════════════════════════════════════════════════════════
    NEARBY ESCAPES — DESIGN TOKEN SYSTEM
-   ───────────────────────────────────────────────────────────────────────────
-   Single source of truth for every color value in the project.
-   Components must only use Tailwind token classes (bg-purple, text-gold, etc.)
-   or these CSS variables directly — never raw hex values.
-
-   BRAND PALETTE: Purple · Gold · White · Black
-   FONTS:         Work Sans (body/UI) · Dancing Script (script wordmark)
+   Purple (brand) · Yellow (CTA only) · Warm neutrals (text / surfaces)
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* 1. FONTS ──────────────────────────────────────────────────────────────── */
 :root {
-  --font-sans:   "Work Sans", system-ui, -apple-system, sans-serif;
+  /* Fonts */
+  --font-sans: "Work Sans", system-ui, -apple-system, sans-serif;
   --font-script: "Dancing Script", cursive;
+
+  /* Type Scale — Major Second (×1.125) · base 16px */
+  --font-base: 16px; /* 1rem = 16px */
+
+  --text-2xs: 0.625rem; /* 10px */
+  --text-xs: 0.6875rem; /* 11px */
+  --text-sm: 0.8125rem; /* 13px */
+  --text-md: 0.875rem; /* 14px */
+  --text-base: 1rem; /* 16px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-2xl: 1.4375rem; /* 23px */
+  --text-3xl: 1.625rem; /* 26px */
+  --text-4xl: 1.8125rem; /* 29px */
+  --text-5xl: 2rem; /* 32px */
+  --text-6xl: 2.25rem; /* 36px */
+  --text-7xl: 2.5625rem; /* 41px */
+  --text-8xl: 2.875rem; /* 46px */
+  --text-9xl: 3.25rem; /* 52px */
+
+  /* Background */
+  --color-bg: #faf8f4; /* warm page canvas */
+
+  /* Purple Scale (brand / attention) */
+  --purple-50: #f3eafb;
+  --purple-100: #e4d4f5;
+  --purple-200: #c9a9eb;
+  --purple-300: #a878db;
+  --purple-400: #8b4fcc;
+  --purple-500: #6b2bb8; /* main brand */
+  --purple-600: #5a1f9e;
+  --purple-700: #4a1a84;
+  --purple-800: #3a146a;
+  --purple-900: #2a0f50;
+
+  --color-purple: var(--purple-500);
+  --color-purple-hover: var(--purple-600);
+  --color-purple-deep: var(--purple-900);
+  --color-purple-muted: var(--purple-100);
+  --color-purple-border: rgba(107, 43, 184, 0.2);
+
+  /* Yellow (CTA only — leave this, nothing else) */
+  --color-yellow: #f2ba0d;
+  --color-yellow-hover: #d4b065;
+  --color-yellow-muted: rgba(242, 186, 13, 0.15);
+
+  /* Warm Neutral Scale (text + surfaces) */
+  --neutral-0: #ffffff; /* pure white — cards, navbar */
+  --neutral-50: #f7f7f8;
+  --neutral-100: #efeff1;
+  --neutral-200: #e0e0e4;
+  --neutral-300: #c8c8cf;
+  --neutral-400: #a0a0aa;
+  --neutral-500: #787884;
+  --neutral-600: #5a5a66;
+  --neutral-700: #3e3e48;
+  --neutral-800: #2a2a32;
+  --neutral-900: #1a1a1f; /* near-black */  /* Semantic text */
+  --color-black:           var(--neutral-900);
+  --color-black-soft:      var(--neutral-800);
+  --color-black-subtle:    var(--neutral-700);
+  --color-black-muted:     var(--neutral-600);
+  --color-black-faint:     var(--neutral-500);
+
+  /* Surfaces */
+  --color-white: var(--neutral-0);
+  --color-white-warm: var(--color-bg);
+  --color-white-soft: #f9f7f2;
+  --color-white-bone: #f0eae0;
+
+  /* Utility aliases */
+  --background: var(--color-bg);
+  --foreground: var(--color-black);
+  --border: var(--neutral-200);
+
+  /* ─── Shadcn/ui component tokens ──────────────────────────────
+     Used by dropdowns, menus, dialogs, cards, inputs and buttons.
+     Without these, surfaces like dropdown panels render transparent
+     and blend into the page content underneath. */
+  --input: var(--neutral-200);
+  --ring: var(--purple-400);
+  --primary: var(--color-purple);
+  --primary-foreground: #ffffff;
+  --secondary: var(--neutral-100);
+  --secondary-foreground: var(--color-black);
+  --muted: var(--neutral-100);
+  --muted-foreground: var(--neutral-500);
+  --accent: var(--purple-50);
+  --accent-foreground: var(--purple-700);
+  --popover: var(--neutral-0);
+  --popover-foreground: var(--color-black);
+  --card: var(--neutral-0);
+  --card-foreground: var(--color-black);
+
+  /* Error / destructive (errors only) */
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
 }
 
-/* 2. BRAND COLOR TOKENS ─────────────────────────────────────────────────── */
-:root {
-  /* PURPLE — the brand's primary identity color
-     Inspired by the deep hues of the Zambian night sky.
-     Used for: nav active, headings, icons, borders, CTAs on light bg */
-  --color-purple:        #1f1433;           /* primary brand purple */
-  --color-purple-hover:  #2A154A;           /* hover / pressed state */
-  --color-purple-deep:   #150d25;           /* dark overlays, hero bg */
-  --color-purple-muted:  rgba(31,20,51,.10);/* tinted icon containers */
-  --color-purple-border: rgba(31,20,51,.20);/* bordered containers */
-
-  /* GOLD — the CTA and highlight color
-     Warmth, quality, value — the "sun over the Zambezi" accent.
-     Used for: primary buttons, highlights, wordmark accent on dark bg */
-  --color-gold:          #f2ba0d;           /* primary CTA background */
-  --color-gold-hover:    #d4b065;           /* CTA hover/pressed */
-  --color-gold-muted:    rgba(242,186,13,.15); /* tinted panels */
-
-  /* WHITE — backgrounds and surface layers
-     Two tiers: warm canvas (page) and pure surface (cards/bars) */
-  --color-white:         #ffffff;           /* pure white — cards, navbar, footer */
-  --color-white-warm:    #FDFBF7;           /* warm page canvas background */
-  --color-white-soft:    #F9F7F2;           /* section panels, host CTA bg */
-  --color-white-bone:    #F0EAE0;           /* image skeleton / placeholder fill */
-
-  /* TEXT HIERARCHY
-     black       = brand purple  → headings, section titles (text-black)
-     black-soft  = near-black    → card titles, strong body copy (text-black-soft)
-     black-muted = dark neutral  → descriptions, supporting paragraphs (text-black-muted)
-     black-faint = mid gray      → captions, meta, placeholders (text-black-faint) */
-  --color-black:         #1f1433;  /* headings = brand purple */
-  --color-black-soft:    #1a1a1a;  /* card titles, strong body = near-black */
-  --color-black-muted:   #444444;  /* description paragraphs = dark neutral */
-  --color-black-faint:   #888888;  /* captions, meta = mid gray */
-
-  /* UTILITY ALIASES — consumed by Tailwind's bg-background / text-foreground */
-  --background:          var(--color-white-warm);
-  --foreground:          var(--color-black-soft);   /* default text = near-black */
-  --border:              rgba(31,20,51,.12); /* purple-tinted dividers */
-}
-
-/* Dark mode — reserved for future use */
-.dark {
-  --background:  var(--color-purple-deep);
-  --foreground:  var(--color-white-warm);
-  --border:      rgba(255,255,255,.10);
-}
-
-/* 3. BASE LAYER ─────────────────────────────────────────────────────────── */
+/* Base */
 @layer base {
   * {
     border-color: var(--border);
   }
 
-  /* Smooth transitions on all interactive elements */
-  a, button, input, select, textarea, [role="button"] {
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  [role="button"] {
     transition:
-      color            0.2s ease,
+      color 0.2s ease,
       background-color 0.2s ease,
-      border-color     0.2s ease,
-      box-shadow       0.2s ease,
-      opacity          0.2s ease,
-      transform        0.2s ease;
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      opacity 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  html {
+    /* Major Second base — 16px root so every rem is predictable */
+    font-size: var(--font-base);
   }
 
   body {
-    background-color:        var(--color-white-warm);
-    color:                   var(--color-black-soft);  /* base paragraph text = near-black */
-    font-family:             var(--font-sans);
-    -webkit-font-smoothing:  antialiased;
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Typography */
-  h1, h2, h3, h4, h5, h6 {
-    font-family:     var(--font-sans);
-    color:           var(--color-purple); /* all headings = brand purple */
-    letter-spacing:  -0.02em;
-    line-height:     1.2;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-sans);
+    color: var(--color-black);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
   }
 
-  h1 { font-size: var(--text-4xl); font-weight: 700; }
-  h2 { font-size: var(--text-3xl); font-weight: 600; }
-  h3 { font-size: var(--text-2xl); font-weight: 600; }
-  h4 { font-size: var(--text-xl);  font-weight: 600; }
-  h5 { font-size: var(--text-xl);  font-weight: 600; }
-  h6 { font-size: var(--text-lg);  font-weight: 600; }
+  /* Major Second heading scale (×1.125) */
+  h1 {
+    font-size: var(--text-6xl);
+    font-weight: 700;
+  } /* 36px */
+  h2 {
+    font-size: var(--text-5xl);
+    font-weight: 600;
+  } /* 32px */
+  h3 {
+    font-size: var(--text-4xl);
+    font-weight: 600;
+  } /* 29px */
+  h4 {
+    font-size: var(--text-3xl);
+    font-weight: 600;
+  } /* 26px */
+  h5 {
+    font-size: var(--text-2xl);
+    font-weight: 600;
+  } /* 23px */
+  h6 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+  } /* 20px */
 
-  /* Semantic text helpers */
   .text-lead {
-    font-size:   var(--text-xl);
+    font-size: var(--text-xl);
     line-height: 1.6;
-    color:       var(--color-black-muted);
+    color: var(--color-black-muted);
   }
+
   .text-caption {
-    font-size:   var(--text-sm);
+    font-size: var(--text-sm);
     line-height: 1.4;
-    color:       var(--color-black-muted);
+    color: var(--color-black-faint);
   }
+
   .text-overline {
-    font-size:      var(--text-sm);
-    font-weight:    600;
+    font-size: var(--text-sm);
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color:          var(--color-black-muted);
+    color: var(--color-black-muted);
   }
 
-  /* Focus ring uses brand purple */
   :focus-visible {
-    outline:        2px solid var(--color-purple);
+    outline: 2px solid var(--color-purple);
     outline-offset: 2px;
   }
 
-  /* Skip link */
   .skip-link {
-    position:   absolute;
-    top:        -40px;
-    left:       0;
+    position: absolute;
+    top: -40px;
+    left: 0;
     background: var(--color-purple);
-    color:      var(--color-white);
-    padding:    8px 16px;
-    z-index:    100;
+    color: var(--color-white);
+    padding: 8px 16px;
+    z-index: 100;
     transition: top 0.2s;
   }
-  .skip-link:focus { top: 0; }
+  .skip-link:focus {
+    top: 0;
+  }
 
-  /* Screen-reader only */
   .sr-only {
-    position:   absolute;
-    width:      1px;
-    height:     1px;
-    padding:    0;
-    margin:     -1px;
-    overflow:   hidden;
-    clip:       rect(0, 0, 0, 0);
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border-width: 0;
   }
 }
 
-/* 4. COMPONENT LAYER ────────────────────────────────────────────────────── */
+/* Components */
 @layer components {
-  /* Gold CTA — the app's primary call-to-action button style */
+  /* Primary CTA — yellow only */
   .btn-cta {
     @apply inline-flex items-center justify-center gap-2 font-bold rounded-xl transition-all duration-200;
-    background-color: var(--color-gold);
-    color:            var(--color-black);
+    background-color: var(--color-yellow);
+    color: var(--color-black);
   }
-  .btn-cta:hover { background-color: var(--color-gold-hover); }
+  .btn-cta:hover {
+    background-color: var(--color-yellow-hover);
+  }
 
-  /* Purple CTA — secondary action on white backgrounds */
+  /* Secondary / brand — purple */
   .btn-brand {
     @apply inline-flex items-center justify-center gap-2 font-bold rounded-xl transition-all duration-200;
     background-color: var(--color-purple);
-    color:            var(--color-white);
+    color: var(--color-white);
   }
-  .btn-brand:hover { background-color: var(--color-purple-hover); }
+  .btn-brand:hover {
+    background-color: var(--color-purple-hover);
+  }
 
-  /* Card shadows */
-  .card-shadow {
-    box-shadow: var(--shadow-card-sm, 0 1px 3px rgba(31,20,51,.06)) !important;
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  /* Soft purple button */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 font-bold rounded-xl transition-all duration-200;
+    background-color: var(--color-purple-muted);
+    color: var(--color-purple);
   }
-  .card-shadow:hover { box-shadow: var(--shadow-card, 0 4px 16px rgba(31,20,51,.10)); }
+  .btn-secondary:hover {
+    background-color: var(--purple-200);
+  }
+
+  .card-shadow {
+    box-shadow: 0 1px 3px rgba(31, 20, 51, 0.06);
+    transition:
+      box-shadow 0.2s ease,
+      transform 0.2s ease;
+  }
+  .card-shadow:hover {
+    box-shadow: 0 4px 16px rgba(31, 20, 51, 0.1);
+  }
 
   .card-shadow-lg {
-    box-shadow: var(--shadow-card, 0 4px 16px rgba(31,20,51,.10)) !important;
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 4px 16px rgba(31, 20, 51, 0.1);
+    transition:
+      box-shadow 0.2s ease,
+      transform 0.2s ease;
   }
-  .card-shadow-lg:hover { box-shadow: var(--shadow-card-hover, 0 12px 32px rgba(31,20,51,.18)); }
+  .card-shadow-lg:hover {
+    box-shadow: 0 12px 32px rgba(31, 20, 51, 0.18);
+  }
 
-  /* Card hover lift */
   .card-hover-effect {
     @apply transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)];
-    &:hover { box-shadow: var(--shadow-card, 0 4px 16px rgba(31,20,51,.10)); }
+  }
+  .card-hover-effect:hover {
+    box-shadow: 0 4px 16px rgba(31, 20, 51, 0.1);
   }
 
-  /* Image lazy loading placeholder */
-  .image-loading { @apply animate-pulse; background-color: var(--color-white-bone); }
+  .image-loading {
+    @apply animate-pulse;
+    background-color: var(--color-white-bone);
+  }
 
-  /* Smooth image zoom on card hover */
-  .card-img-zoom img { transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
-  .card-img-zoom:hover img { transform: scale(1.05); }
+  .card-img-zoom img {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card-img-zoom:hover img {
+    transform: scale(1.05);
+  }
 
-  /* Section fade-up */
-  .section-enter { animation: section-fade-up 0.5s cubic-bezier(0.4, 0, 0.2, 1) both; }
+  .section-enter {
+    animation: section-fade-up 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
 
   @keyframes section-fade-up {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
-  /* Staggered children */
-  .stagger-children > * { animation: section-fade-up 0.4s cubic-bezier(0.4, 0, 0.2, 1) both; }
-  .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
-  .stagger-children > *:nth-child(2) { animation-delay: 60ms; }
-  .stagger-children > *:nth-child(3) { animation-delay: 120ms; }
-  .stagger-children > *:nth-child(4) { animation-delay: 180ms; }
-  .stagger-children > *:nth-child(5) { animation-delay: 240ms; }
-  .stagger-children > *:nth-child(6) { animation-delay: 300ms; }
-  .stagger-children > *:nth-child(7) { animation-delay: 360ms; }
-  .stagger-children > *:nth-child(8) { animation-delay: 420ms; }
+  .stagger-children > * {
+    animation: section-fade-up 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+  .stagger-children > *:nth-child(1) {
+    animation-delay: 0ms;
+  }
+  .stagger-children > *:nth-child(2) {
+    animation-delay: 60ms;
+  }
+  .stagger-children > *:nth-child(3) {
+    animation-delay: 120ms;
+  }
+  .stagger-children > *:nth-child(4) {
+    animation-delay: 180ms;
+  }
+  .stagger-children > *:nth-child(5) {
+    animation-delay: 240ms;
+  }
+  .stagger-children > *:nth-child(6) {
+    animation-delay: 300ms;
+  }
+  .stagger-children > *:nth-child(7) {
+    animation-delay: 360ms;
+  }
+  .stagger-children > *:nth-child(8) {
+    animation-delay: 420ms;
+  }
 }
 
-/* 5. UTILITIES LAYER ────────────────────────────────────────────────────── */
+/* Utilities */
 @layer utilities {
-  /* Hide scrollbar */
-  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 
-  /* Responsive typography */
   @media (max-width: 768px) {
-    h1 { font-size: var(--text-3xl); }
-    h2 { font-size: var(--text-2xl); }
-    h3 { font-size: var(--text-xl); }
+    h1 {
+      font-size: var(--text-5xl);
+    } /* 32px */
+    h2 {
+      font-size: var(--text-4xl);
+    } /* 29px */
+    h3 {
+      font-size: var(--text-3xl);
+    } /* 26px */
   }
 }

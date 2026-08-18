@@ -8,7 +8,7 @@ const dashboardRoutes = [
   "/host",
   "/host/bookings",
   "/host/availability",
-  "/host/notifications",
+  "/host/inventory",
   "/host/finances",
 ];
 

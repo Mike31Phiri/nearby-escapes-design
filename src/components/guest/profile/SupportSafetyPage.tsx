@@ -11,7 +11,6 @@ export function SupportSafetyPage() {
       <ProfileSubpageHeader title="Support & safety" />
 
       <div className="max-w-4xl mx-auto w-full px-4 py-8 space-y-8">
-        
         {/* Immediate Help */}
         <div>
           <h3 className="text-sm font-semibold text-black mb-3">Need immediate help?</h3>
@@ -42,16 +41,24 @@ export function SupportSafetyPage() {
           <h3 className="text-sm font-semibold text-black mb-3">Common questions</h3>
           <div className="space-y-3">
             <div className="bg-white border border-white-soft rounded-xl p-4 hover:bg-white-warm transition cursor-pointer shadow-sm">
-              <p className="text-sm font-semibold text-black">How do I book a stay or experience?</p>
-              <p className="text-xs text-black-muted mt-1">Search, choose a listing, and click "Reserve". Payments are secure.</p>
+              <p className="text-sm font-semibold text-black">
+                How do I book a stay or experience?
+              </p>
+              <p className="text-xs text-black-muted mt-1">
+                Search, choose a listing, and click "Reserve". Payments are secure.
+              </p>
             </div>
             <div className="bg-white border border-white-soft rounded-xl p-4 hover:bg-white-warm transition cursor-pointer shadow-sm">
               <p className="text-sm font-semibold text-black">What is your cancellation policy?</p>
-              <p className="text-xs text-black-muted mt-1">Stays allow free cancellation up to 48 hours before check-in.</p>
+              <p className="text-xs text-black-muted mt-1">
+                Stays allow free cancellation up to 48 hours before check-in.
+              </p>
             </div>
             <div className="bg-white border border-white-soft rounded-xl p-4 hover:bg-white-warm transition cursor-pointer shadow-sm">
               <p className="text-sm font-semibold text-black">Is my community host verified?</p>
-              <p className="text-xs text-black-muted mt-1">Yes! Every local host is vetted before they can list.</p>
+              <p className="text-xs text-black-muted mt-1">
+                Yes! Every local host is vetted before they can list.
+              </p>
             </div>
           </div>
         </div>
@@ -59,12 +66,13 @@ export function SupportSafetyPage() {
         {/* Report an Issue */}
         <div className="bg-red-50 border border-red-100 rounded-xl p-4">
           <h3 className="text-sm font-bold text-red-800 mb-1">Report an issue</h3>
-          <p className="text-xs text-red-600 mb-3">If something went wrong with your booking, we're here to help.</p>
+          <p className="text-xs text-red-600 mb-3">
+            If something went wrong with your booking, we're here to help.
+          </p>
           <button className="bg-red-600 text-white px-4 py-2 rounded-full text-xs font-semibold hover:bg-red-700 transition">
             Submit a report
           </button>
         </div>
-
       </div>
     </div>
   );

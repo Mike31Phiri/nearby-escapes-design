@@ -90,9 +90,7 @@ export function AboutPage() {
             </p>
             <h1 className="font-display text-3xl md:text-4xl lg:text-[3.25rem] font-black text-white leading-[1.1] mb-5">
               Connecting guests with the{" "}
-              <span className="font-script text-[1.2em] font-normal text-gold lowercase">
-                real
-              </span>{" "}
+              <span className="font-script text-[1.2em] font-normal text-gold lowercase">real</span>{" "}
               Zambia
             </h1>
             <p className="text-white/60 text-[15px] leading-relaxed max-w-xl">

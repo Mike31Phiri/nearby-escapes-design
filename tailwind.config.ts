@@ -64,9 +64,9 @@ const config: Config = {
 
         // GOLD — CTA, highlights, wordmark accent
         gold: {
-          DEFAULT: "var(--color-gold)",          // #f2ba0d — primary CTA bg
-          hover:   "var(--color-gold-hover)",    // #d4b065 — CTA hover
-          muted:   "var(--color-gold-muted)",    // rgba(242,186,13,0.15) — tinted panels
+          DEFAULT: "var(--color-yellow)",          // #f2ba0d — primary CTA bg
+          hover:   "var(--color-yellow-hover)",    // #d4b065 — CTA hover
+          muted:   "var(--color-yellow-muted)",    // rgba(242,186,13,0.15) — tinted panels
         },
 
         // WHITE — backgrounds and surfaces
@@ -75,14 +75,13 @@ const config: Config = {
           warm:    "var(--color-white-warm)",    // #FDFBF7 — page canvas
           soft:    "var(--color-white-soft)",    // #F9F7F2 — section panels
           bone:    "var(--color-white-bone)",    // #F0EAE0 — image placeholders
-        },
-
-        // BLACK — text and high-contrast elements
+        },        // BLACK — text and high-contrast elements
         black: {
-          DEFAULT: "var(--color-black)",         // #111111 — headings, max contrast
-          soft:    "var(--color-black-soft)",    // #333333 — body copy
-          muted:   "var(--color-black-muted)",   // #666666 — supporting/muted text
-          faint:   "var(--color-black-faint)",   // #999999 — captions, placeholders
+          DEFAULT: "var(--color-black)",       // neutral-900 — headings, max contrast
+          soft:    "var(--color-black-soft)",  // neutral-800 — body copy / secondary
+          subtle:  "var(--color-black-subtle)", // neutral-700 — faint / quiet text
+          muted:   "var(--color-black-muted)",  // neutral-600 — supporting/muted text
+          faint:   "var(--color-black-faint)",  // neutral-500 — captions, placeholders
         },
       },
 

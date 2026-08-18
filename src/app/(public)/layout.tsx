@@ -9,7 +9,8 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
 
   const isCheckout = pathname?.startsWith("/checkout");
   const isProfile = pathname?.startsWith("/profile");
-  const shouldHideNavbar = pathname?.startsWith("/account") || isProfile;
+  const isBecomeHost = pathname?.startsWith("/become-host");
+  const shouldHideNavbar = pathname?.startsWith("/account") || isProfile || isBecomeHost;
   const shouldHideFooter = isProfile;
 
   return (

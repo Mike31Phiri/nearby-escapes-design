@@ -1,1 +1,81 @@
 @import "../styles.css";
+
+/* Tour availability — flash highlight on freshly updated calendar cells */
+@keyframes availability-highlight {
+  0% {
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.45);
+    background-color: #d1fae5;
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    background-color: transparent;
+  }
+}
+
+.animate-availability-highlight {
+  animation: availability-highlight 1.8s ease-out;
+}
+
+/* Host bookings — check-in & QR scan motion */
+@keyframes checkin-pop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-checkin-pop {
+  animation: checkin-pop 0.35s ease-out;
+}
+
+@keyframes manifest-row-in {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+    background-color: #e7f6ee;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-manifest-row-in {
+  animation: manifest-row-in 0.45s ease-out;
+}
+
+@keyframes scan-line {
+  0%,
+  100% {
+    top: 14%;
+  }
+  50% {
+    top: 82%;
+  }
+}
+
+.animate-scan-line {
+  animation: scan-line 1.6s ease-in-out infinite;
+}
+
+@keyframes celebrate-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-celebrate-pop {
+  animation: celebrate-pop 0.4s ease-out;
+}
