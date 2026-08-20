@@ -218,7 +218,7 @@ export function DateRangePicker({
           onClick={() => setOpen((o) => !o)}
           className="flex items-center gap-1.5 w-full focus:outline-none"
         >
-          <CalendarDays className="h-4 w-4 text-[#1f1433] shrink-0" strokeWidth={1.5} />
+          {!children && <CalendarDays className="h-4 w-4 text-[#1f1433] shrink-0" strokeWidth={1.5} />}
           {children ?? (
             <span
               className={cn("text-[13px] truncate", hasValue ? "text-[#334155]" : "text-[#64748B]")}

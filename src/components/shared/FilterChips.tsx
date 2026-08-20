@@ -18,7 +18,7 @@ export function FilterChips({ chips, onClearAll }: FilterChipsProps) {
       {chips.map((chip, i) => (
         <span
           key={i}
-          className="inline-flex items-center gap-1.5 bg-[#f2ba0d] text-white text-sm px-3 py-1 rounded-full whitespace-nowrap flex-shrink-0"
+          className="inline-flex items-center gap-1.5 bg-[#f2ba0d] text-white text-sm font-semibold px-4.5 py-1.5 rounded-full whitespace-nowrap flex-shrink-0 shadow-xs"
         >
           {chip.label}
           <button

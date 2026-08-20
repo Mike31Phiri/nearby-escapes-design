@@ -4,18 +4,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { DateRange } from "@/components/ui/DateRangePicker";
-import { Home, ArrowRight, Star, Trees, Waves, Sun, Mountain, Navigation } from "lucide-react";
+import { Home, ArrowRight, Star } from "lucide-react";
 import {
-    GlobeHemisphereWest,
-    Bed,
-    Binoculars,
-    CarProfile,
-    MapTrifold,
     Tent,
     Buildings,
     SealCheck,
     MapPin,
-    Factory,
 } from "@phosphor-icons/react";
 import { SearchBar } from "@/components/shared/SearchBar";
 import { ListingCard } from "@/components/guest/ListingCard";
@@ -24,34 +18,8 @@ import { cn } from "@/lib/utils";
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
-const destinations = [
-    { id: "victoria-falls", name: "Victoria Falls", region: "Southern Province", stayCount: 24, icon: Waves, href: "/explore/southern/livingstone/victoria-falls", image: "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800&q=80" },
-    { id: "south-luangwa", name: "South Luangwa", region: "Eastern Province", stayCount: 18, icon: Trees, href: "/explore/eastern/mfuwe/south-luangwa-national-park", image: "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=800&q=80" },
-    { id: "lower-zambezi", name: "Lower Zambezi", region: "Lusaka Province", stayCount: 15, icon: Sun, href: "/explore/lusaka", image: "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800&q=80" },
-    { id: "lusaka", name: "Lusaka", region: "Capital City", stayCount: 42, icon: Navigation, href: "/explore/lusaka/lusaka", image: "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=800&q=80" },
-    { id: "lake-kariba", name: "Lake Kariba", region: "Southern Province", stayCount: 11, icon: Waves, href: "/explore/southern/kariba/lake-kariba", image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=800&q=80" },
-    { id: "kafue", name: "Kafue National Park", region: "Western Province", stayCount: 9, icon: Mountain, href: "/explore/central/kafue/kafue-national-park", image: "https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=800&q=80" },
-];
-
-const cities = [
-    { name: "Lusaka", province: "lusaka", region: "Capital Region", slug: "lusaka", image: "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=600&q=80" },
-    { name: "Livingstone", province: "southern", region: "Southern Province", slug: "livingstone", image: "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=600&q=80" },
-    { name: "Ndola", province: "copperbelt", region: "Copperbelt Province", slug: "ndola", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=80" },
-    { name: "Kabwe", province: "central", region: "Central Province", slug: "kabwe", image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&q=80" },
-    { name: "Chipata", province: "eastern", region: "Eastern Province", slug: "chipata", image: "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=600&q=80" },
-    { name: "Kasama", province: "northern", region: "Northern Province", slug: "kasama", image: "https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=600&q=80" },
-    { name: "Solwezi", province: "north-western", region: "North-Western", slug: "solwezi", image: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=600&q=80" },
-    { name: "Mongu", province: "western", region: "Western Province", slug: "mongu", image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&q=80" },
-];
-
-const hiddenGems = [
-    { tag: "Farm life", title: "We spent a weekend milking cows in Chisamba", meta: "5 min read · Real guest story", href: "/gems", image: "https://images.unsplash.com/photo-1500076656116-558758c991c1?w=600&q=70" },
-    { tag: "Industrial", title: "Inside Zambia's copper mining heritage", meta: "8 min read · Hidden gem guide", href: "/gems", image: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=600&q=70" },
-    { tag: "Wildlife", title: "The Kafue day trip nobody talks about", meta: "6 min read · Local insider", href: "/gems", image: "https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=600&q=70" },
-];
-
 const categories = [
-    { id: "destinations", label: "Destinations" },
+    { id: "explore", label: "Explore" },
     { id: "stays", label: "Stays" },
     { id: "experiences", label: "Experiences" },
     { id: "transport", label: "Transport" },
@@ -134,7 +102,7 @@ export function HomePage() {
     const [activeCategory, setActiveCategory] = useState("stays");
 
     const handleSearch = (term: string, _dates: DateRange, _guests: number) => {
-        const targetRoute = activeCategory === "destinations" ? "explore" : activeCategory;
+        const targetRoute = activeCategory === "explore" ? "stays" : activeCategory;
         const params = new URLSearchParams();
         if (term) params.set("q", term);
         router.push(`/${targetRoute}?${params.toString()}`);
@@ -165,7 +133,7 @@ export function HomePage() {
             {/* ── CATEGORY TABS & SEARCH BAR ─────*/}
             <div className="relative z-20 mt-2 md:-mt-20 mx-auto max-w-2xl px-3 md:px-4 w-full">
                 {/* ── CATEGORY TABS ──*/}
-                <div className="flex items-center justify-between sm:justify-center gap-2 sm:gap-6 mb-3 px-1 w-full">
+                <div className="flex items-center justify-between sm:justify-center gap-1 sm:gap-4 mb-3 px-1 w-full">
                     {categories.map(({ id, label }) => (
                         <button
                             key={id}
@@ -194,98 +162,7 @@ export function HomePage() {
                 <section className="pt-6 md:pt-10 pb-12">
                     <div className="mx-auto w-full max-w-7xl px-4 md:px-8">
 
-                        {/* DESTINATIONS */}
-                        {activeCategory === "destinations" && (
-                            <>
-                                <SectionHeader
-                                    title="Popular Destinations"
-                                    desc="Not sure where to go? Discover top-rated stays, local tours, and seamless transport options around Zambia's most sought-after locations."
-                                    href="/explore"
-                                />
 
-                                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1 -mx-4 md:-mx-8 px-4 md:px-8 snap-x snap-mandatory">
-                                    {destinations.map((destination) => {
-                                        const Icon = destination.icon;
-                                        return (
-                                            <Link
-                                                key={destination.id}
-                                                href={destination.href || "/explore"}
-                                                className="group relative block overflow-hidden rounded-2xl bg-white-bone w-[200px] sm:w-[220px] md:w-[240px] shrink-0 aspect-[16/10] shadow-[0_2px_12px_rgba(31,20,51,0.10)] transition-all hover:shadow-[0_12px_32px_rgba(31,20,51,0.18)] snap-start"
-                                                style={{ WebkitMaskImage: "-webkit-radial-gradient(white, black)" }}
-                                            >
-                                                <img src={destination.image} alt={destination.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                                                <div className="absolute top-3 left-3 flex h-7 w-7 items-center justify-center rounded-full bg-gold-muted backdrop-blur-sm border border-purple-border">
-                                                    <Icon className="h-3.5 w-3.5 text-white" />
-                                                </div>
-                                                <div className="absolute bottom-0 left-0 p-4 w-full">
-                                                    <h3 className="font-display text-white font-bold text-base leading-tight mb-1">{destination.name}</h3>
-                                                    {destination.stayCount && (
-                                                        <p className="text-white text-[10px] font-medium flex items-center gap-1">
-                                                            <Home className="h-3 w-3" /> {destination.stayCount} stays
-                                                        </p>
-                                                    )}
-                                                </div>
-                                            </Link>
-                                        );
-                                    })}
-                                </div>
-
-                                {/* Popular Cities */}
-                                <div className="mt-14 md:mt-16">
-                                    <SectionHeader
-                                        title="Popular Cities"
-                                        desc="Explore Zambia's vibrant cities and gateway towns — from the capital to the adventure hubs."
-                                        href="/explore"
-                                        seeAllLabel="All cities"
-                                    />
-                                    <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1 -mx-4 md:-mx-8 px-4 md:px-8 snap-x snap-mandatory">
-                                        {cities.map((city) => (
-                                            <Link
-                                                key={city.name}
-                                                href={`/explore/${city.province}/${city.slug}`}
-                                                className="group relative block overflow-hidden rounded-2xl w-[180px] sm:w-[200px] shrink-0 aspect-[4/5] bg-white-bone shadow-[0_2px_8px_rgba(31,20,51,0.08)] transition-all hover:shadow-[0_8px_24px_rgba(31,20,51,0.15)] snap-start"
-                                            >
-                                                <img src={city.image} alt={city.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-                                                <div className="absolute bottom-0 left-0 p-3.5 w-full">
-                                                    <h3 className="font-display text-white font-bold text-sm leading-tight mb-0.5">{city.name}</h3>
-                                                    <p className="text-white text-[10px] font-medium">{city.region}</p>
-                                                </div>
-                                            </Link>
-                                        ))}
-                                    </div>
-                                    <MobileSeeAll href="/explore" label="All cities" />
-                                </div>
-
-                                {/* Hidden Gems */}
-                                <div className="mt-14 md:mt-16">
-                                    <SectionHeader
-                                        title="Discover Hidden Gems"
-                                        desc="Off-the-beaten-path spots, farm stays, and local secrets only insiders know about."
-                                        href="/explore"
-                                        seeAllLabel="Explore all"
-                                    />
-                                    <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 -mx-4 md:-mx-8 px-4 md:px-8 snap-x snap-mandatory">
-                                        {hiddenGems.map(({ title, meta, image, href }) => (
-                                            <Link
-                                                key={title}
-                                                href={href}
-                                                className="group relative block overflow-hidden rounded-2xl w-[260px] sm:w-[300px] md:w-[340px] shrink-0 aspect-[4/3] bg-white-bone shadow-[0_2px_12px_rgba(31,20,51,0.10)] transition-all hover:shadow-[0_12px_32px_rgba(31,20,51,0.18)] snap-start"
-                                            >
-                                                <img src={image} alt={title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-                                                <div className="absolute bottom-0 left-0 p-4 w-full">
-                                                    <h3 className="font-display text-white font-bold text-base leading-snug mb-1.5">{title}</h3>
-                                                    <p className="text-white text-[11px] font-medium drop-shadow">{meta}</p>
-                                                </div>
-                                            </Link>
-                                        ))}
-                                    </div>
-                                    <MobileSeeAll href="/explore" label="Explore all gems" />
-                                </div>
-                            </>
-                        )}
 
                         {/* STAYS */}
                         {activeCategory === "stays" && (
@@ -490,33 +367,7 @@ export function HomePage() {
                 </section>
             </main>
 
-            {/* ── EXPLORE ZAMBIA BANNER ─────────────────────────────────────── */}
-            <section className="mx-auto w-full max-w-7xl px-4 md:px-8 mb-16">
-                <Link
-                    href="/explore"
-                    className="group relative block overflow-hidden rounded-2xl min-h-[280px] md:min-h-[320px] bg-purple shadow-[0_4px_24px_rgba(31,20,51,0.12)] transition-all hover:shadow-[0_8px_40px_rgba(31,20,51,0.20)]"
-                >
-                    <img
-                        src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1200&q=80"
-                        alt="Zambian landscape"
-                        loading="lazy"
-                        className="absolute inset-0 h-full w-full object-cover brightness-50"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple/80 via-purple/50 to-transparent" />
-                    <div className="relative h-full flex flex-col justify-center px-6 md:px-10 py-10 md:py-14">
-                        <h2 className="font-display text-2xl md:text-3xl font-bold text-white leading-[1.15] mb-3 max-w-xl">
-                            There&apos;s more than one way to escape
-                        </h2>
-                        <p className="text-white text-sm md:text-base max-w-lg leading-relaxed mb-6">
-                            Browse provinces, cities, and hidden gems across Zambia. Explore curated stays,
-                            authentic experiences, and reliable transport around every corner of the country.
-                        </p>
-                        <span className="btn-cta px-6 py-3 text-sm w-fit group-hover:gap-3">
-                            Explore Zambia <ArrowRight className="h-4 w-4" />
-                        </span>
-                    </div>
-                </Link>
-            </section>
+
 
             {/* ── BECOME A HOST CTA ─────────────────────────────────────────── */}
             <section className="mx-auto w-full max-w-7xl px-4 md:px-8 mb-16">

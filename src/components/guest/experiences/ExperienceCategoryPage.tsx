@@ -132,7 +132,7 @@ export function ExperienceCategoryPage({ category, experiences }: ExperienceCate
       </section>
 
       {/* Category Filter Tabs */}
-      <div className="border-b border-[#E0DBD0] bg-white sticky top-0 z-20">
+      <div className="border-b border-[#E0DBD0] bg-white sticky top-[64px] z-20">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide py-3">
             {allCategorySlugs.map((slug) => (

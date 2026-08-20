@@ -11,7 +11,10 @@ import {
   ArrowRight,
   CalendarDays,
   ChevronRight,
+  ChevronDown,
   Users,
+  Car,
+  Search,
 } from "lucide-react";
 import { mockTransport, type Transport } from "@/lib/mock-data";
 import {
@@ -19,13 +22,12 @@ import {
   type FilterConfig,
 } from "@/components/shared/VerticalFilterSidebar";
 import { FilterChips } from "@/components/shared/FilterChips";
-import { SortBar } from "@/components/shared/SortBar";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-// Filter configuration
-const FILTER_CONFIG: FilterConfig[] = [
+// Drawer Filter Config
+const DRAWER_FILTER_CONFIG: FilterConfig[] = [
   {
     id: "priceRange",
     label: "Price per person",
@@ -34,16 +36,6 @@ const FILTER_CONFIG: FilterConfig[] = [
     max: 1000,
     step: 25,
     unit: "K",
-  },
-  {
-    id: "vehicleType",
-    label: "Vehicle type",
-    type: "checkbox-group",
-    options: [
-      { value: "bus", label: "Bus (Shared)" },
-      { value: "private", label: "Private Car" },
-      { value: "minivan", label: "Minivan (Group)" },
-    ],
   },
   {
     id: "capacity",
@@ -67,120 +59,91 @@ const FILTER_CONFIG: FilterConfig[] = [
   },
 ];
 
-const DEFAULT_FILTERS: Record<string, any> = {
+const DEFAULT_DRAWER_FILTERS: Record<string, any> = {
   priceRange: { min: 0, max: 1000 },
-  vehicleType: [],
   capacity: [],
   departureTime: [],
 };
 
-// Quick-filter chip definitions
-interface QuickChip {
-  label: string;
-  isActive: (f: Record<string, any>) => boolean;
-  apply: (f: Record<string, any>) => Record<string, any>;
-  remove: (f: Record<string, any>) => Record<string, any>;
-}
+// Independent Vehicle Type Pills (Clean text only)
+const VEHICLE_TYPE_PILLS = [
+  { label: "Popular", type: "popular" },
+  { label: "Unique", type: "unique" },
+  { label: "Bus (Shared)", type: "bus" },
+  { label: "Private Car", type: "private" },
+  { label: "Minivan (Group)", type: "minivan" },
+];
 
-const QUICK_CHIPS: QuickChip[] = [
-  {
-    label: "Bus (Shared)",
-    isActive: (f) => (f.vehicleType as string[]).includes("bus"),
-    apply: (f) => ({ ...f, vehicleType: [...(f.vehicleType as string[]), "bus"] }),
-    remove: (f) => ({ ...f, vehicleType: (f.vehicleType as string[]).filter((c) => c !== "bus") }),
-  },
-  {
-    label: "Private Car",
-    isActive: (f) => (f.vehicleType as string[]).includes("private"),
-    apply: (f) => ({ ...f, vehicleType: [...(f.vehicleType as string[]), "private"] }),
-    remove: (f) => ({
-      ...f,
-      vehicleType: (f.vehicleType as string[]).filter((c) => c !== "private"),
-    }),
-  },
-  {
-    label: "Morning Departures",
-    isActive: (f) => (f.departureTime as string[]).includes("morning"),
-    apply: (f) => ({ ...f, departureTime: [...(f.departureTime as string[]), "morning"] }),
-    remove: (f) => ({
-      ...f,
-      departureTime: (f.departureTime as string[]).filter((c) => c !== "morning"),
-    }),
-  },
+const SORT_OPTIONS = [
+  { value: "recommended", label: "Recommended" },
+  { value: "price_asc", label: "Price: Low to High" },
+  { value: "price_desc", label: "Price: High to Low" },
 ];
 
 // Transport Card
 function TransportCard({ route }: { route: Transport }) {
-  // Inferring mockup labels from mock data to match the design roughly
   const isPrivate =
     route.operator.toLowerCase().includes("tour") ||
     route.operator.toLowerCase().includes("transfer");
   const isMinivan = route.id === "t3";
 
-  const vehicleLabel = isPrivate ? "🚗 Private Car" : isMinivan ? "🚐 Minivan" : "🚌 Bus";
-  const capacityLabel = isPrivate ? "Up to 4 passengers" : isMinivan ? "8 seats" : "40 seats";
-  const departureTimeLabel = "8:00 AM departure"; // Default fallback since mock data uses"Daily"
+  const vehicleLabel = isPrivate ? "Private Car" : isMinivan ? "Minivan" : "Bus";
+  const capacityLabel = isPrivate ? "Up to 4 seats" : isMinivan ? "8 seats" : "40 seats";
 
   return (
-    <div className="group bg-white border border-gray-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col md:flex-row gap-4">
-      {/* Image */}
-      <div className="w-full md:w-48 h-40 flex-shrink-0 bg-gray-200 rounded-xl overflow-hidden relative">
+    <Link
+      href={`/transport/${route.id}`}
+      className="group block bg-white rounded-2xl shadow-sm border border-neutral-100 overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+    >
+      <div className="relative aspect-[16/10] overflow-hidden bg-neutral-100">
         <img
           src={route.image}
-          alt={vehicleLabel}
-          className="w-full h-full object-cover"
+          alt={route.from + " to " + route.to}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
         />
-        <span className="absolute bottom-2 left-2 bg-purple/90 text-white text-[10px] px-2 py-0.5 rounded-full font-medium backdrop-blur-sm">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        <span className="absolute bottom-3 left-3 bg-black/60 text-white text-[10px] px-2.5 py-1 rounded-full font-bold backdrop-blur-sm inline-flex items-center gap-1">
+          {isPrivate ? <Car className="h-3 w-3 text-[#f2ba0d]" /> : <Bus className="h-3 w-3 text-[#f2ba0d]" />}
           {vehicleLabel}
         </span>
       </div>
 
-      {/* Info */}
-      <div className="flex-1 flex flex-col justify-between min-w-0">
-        <div>
-          <div className="flex justify-between items-start gap-2">
-            <h3 className="font-semibold text-lg text-black tracking-tight leading-snug line-clamp-2">
-              {route.from} to {route.to}
-            </h3>
-            <span className="flex-none text-[10px] bg-gold/10 text-gold-hover px-2 py-0.5 rounded-full font-bold border border-gold/30">
-              Local host
-            </span>
-          </div>
-
-          <p className="text-sm text-black-muted mt-0.5">
-            Hosted by <span className="font-semibold text-purple">{route.operator}</span>
-          </p>
-
-          <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-black-muted font-medium">
-            <span className="inline-flex items-center gap-1">🕒 {departureTimeLabel}</span>
-            <span className="inline-flex items-center gap-1">⏱️ {route.duration}</span>
-            <span className="inline-flex items-center gap-1">👥 {capacityLabel}</span>
-          </div>
-          {!isPrivate && (
-            <p className="text-xs text-purple font-medium mt-1">
-              🌟 Daily service, air-conditioned
-            </p>
-          )}
-          {isPrivate && (
-            <p className="text-xs text-purple font-medium mt-1">🌟 Door-to-door service</p>
-          )}
+      <div className="p-4">
+        <div className="flex items-center justify-between gap-1 mb-1.5">
+          <h3 className="font-bold text-sm md:text-base text-neutral-900 flex items-center gap-2 group-hover:text-purple transition-colors leading-tight">
+            <span>{route.from}</span>
+            <ArrowRight className="h-3.5 w-3.5 text-purple shrink-0" />
+            <span>{route.to}</span>
+          </h3>
         </div>
 
-        {/* Price + CTA */}
-        <div className="mt-3 pt-3 border-t border-white-soft flex items-end justify-between">
+        <p className="text-xs text-neutral-500">
+          By <span className="font-semibold text-neutral-700">{route.operator}</span>
+        </p>
+
+        <div className="mt-3 flex items-center gap-1.5 flex-wrap">
+          <span className="inline-flex items-center gap-1 text-[10px] text-neutral-600 bg-neutral-50 border border-neutral-100 rounded-full px-2 py-0.5 font-medium">
+            <Clock className="h-3 w-3 text-neutral-400" />
+            {route.duration}
+          </span>
+          <span className="inline-flex items-center gap-1 text-[10px] text-neutral-600 bg-neutral-50 border border-neutral-100 rounded-full px-2 py-0.5 font-medium">
+            <Users className="h-3 w-3 text-neutral-400" />
+            {capacityLabel}
+          </span>
+        </div>
+
+        <div className="mt-3 pt-3 border-t border-neutral-100 flex items-center justify-between">
           <div>
-            <span className="text-xs text-black-faint">per person</span>
-            <p className="text-2xl font-bold text-black leading-tight">K{route.price}</p>
+            <span className="text-sm md:text-base font-black text-neutral-900">K{route.price}</span>
+            <span className="text-xs text-neutral-500 font-normal"> / person</span>
           </div>
-          <Link href={`/transport/${route.id}`}>
-            <button className="bg-purple hover:bg-purple-hover text-white px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors">
-              Book seat
-            </button>
-          </Link>
+          <span className="inline-flex items-center gap-1 text-xs font-bold text-purple group-hover:text-purple-hover transition-colors">
+            Book seat <ChevronRight className="h-3.5 w-3.5" />
+          </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -191,306 +154,354 @@ export function TransportPage() {
   const toParam = searchParams.get("to") ?? "";
   const qParam = searchParams.get("q") ?? "";
 
-  const [activeFilters, setActiveFilters] = useState<Record<string, any>>(DEFAULT_FILTERS);
-  const [sortValue, setSortValue] = useState("recommended");
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [selectedVehicleTypes, setSelectedVehicleTypes] = useState<string[]>([]);
+  const [drawerFilters, setDrawerFilters] = useState<Record<string, any>>(DEFAULT_DRAWER_FILTERS);
 
-  const handleFilterChange = (filterId: string, value: any) => {
-    setActiveFilters((prev) => ({ ...prev, [filterId]: value }));
+  const [sortValue, setSortValue] = useState("recommended");
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  
+  // Harmonized Search Inputs: Where, When, Passengers
+  const initialWhere = fromParam && toParam ? `${fromParam} to ${toParam}` : fromParam || toParam || qParam || "";
+  const [whereInput, setWhereInput] = useState(initialWhere);
+  const [whenInput, setWhenInput] = useState("");
+  const [passengers, setPassengers] = useState(1);
+
+  const toggleVehicleType = (type: string) => {
+    setSelectedVehicleTypes((prev) => (prev.includes(type) ? [] : [type]));
   };
 
-  const handleReset = () => setActiveFilters(DEFAULT_FILTERS);
+  const handleDrawerFilterChange = (filterId: string, value: any) => {
+    setDrawerFilters((prev) => ({ ...prev, [filterId]: value }));
+  };
 
-  // Filtered + sorted results
-  const filteredRoutes = useMemo(() => {
+  const handleResetAll = () => {
+    setSelectedVehicleTypes([]);
+    setDrawerFilters(DEFAULT_DRAWER_FILTERS);
+  };
+
+  const filteredTransport = useMemo(() => {
     let result = [...mockTransport];
 
-    // URL param context
-    if (fromParam)
-      result = result.filter((r) => r.from.toLowerCase().includes(fromParam.toLowerCase()));
-    if (toParam) result = result.filter((r) => r.to.toLowerCase().includes(toParam.toLowerCase()));
-    if (qParam) {
-      result = result.filter(
-        (r) =>
-          r.from.toLowerCase().includes(qParam.toLowerCase()) ||
-          r.to.toLowerCase().includes(qParam.toLowerCase()),
+    if (whereInput.trim()) {
+      const q = whereInput.toLowerCase();
+      result = result.filter((t) =>
+        t.from.toLowerCase().includes(q) ||
+        t.to.toLowerCase().includes(q) ||
+        t.operator.toLowerCase().includes(q)
       );
+      if (result.length === 0) result = [...mockTransport];
+    } else if (fromParam || toParam || qParam) {
+      result = result.filter((t) => {
+        const text = `${t.from} ${t.to} ${t.operator}`.toLowerCase();
+        return (
+          (!fromParam || t.from.toLowerCase().includes(fromParam.toLowerCase())) &&
+          (!toParam || t.to.toLowerCase().includes(toParam.toLowerCase())) &&
+          (!qParam || text.includes(qParam.toLowerCase()))
+        );
+      });
+      if (result.length === 0) result = [...mockTransport];
     }
 
-    // Price
-    const pr = activeFilters.priceRange;
-    if (pr) result = result.filter((r) => r.price >= pr.min && r.price <= pr.max);
+    if (selectedVehicleTypes.length > 0) {
+      result = result.filter((t) => {
+        const isPrivate = t.operator.toLowerCase().includes("tour") || t.operator.toLowerCase().includes("transfer");
+        const isMinivan = t.id === "t3";
+        const vType = isPrivate ? "private" : isMinivan ? "minivan" : "bus";
+        return selectedVehicleTypes.some((type) => {
+          if (type === "popular") return t.seats <= 14;
+          if (type === "unique") return isPrivate || isMinivan;
+          return type === vType;
+        });
+      });
+    }
 
-    // Sort
+    const pr = drawerFilters.priceRange;
+    if (pr) result = result.filter((t) => t.price >= pr.min && t.price <= pr.max);
+
     if (sortValue === "price_asc") result.sort((a, b) => a.price - b.price);
     else if (sortValue === "price_desc") result.sort((a, b) => b.price - a.price);
-    else if (sortValue === "duration_asc") {
-      // Parse duration string to minutes for sorting
-      const toMinutes = (d: string) => {
-        const h = parseInt(d.match(/(\d+)h/)?.[1] ?? "0");
-        const m = parseInt(d.match(/(\d+)m/)?.[1] ?? "0");
-        return h * 60 + m;
-      };
-      result.sort((a, b) => toMinutes(a.duration) - toMinutes(b.duration));
-    }
 
     return result;
-  }, [activeFilters, sortValue, fromParam, toParam, qParam]);
+  }, [whereInput, selectedVehicleTypes, drawerFilters, sortValue, fromParam, toParam, qParam]);
 
-  // Active chips
   const chips = useMemo(() => {
     const c: { label: string; onRemove: () => void }[] = [];
 
-    const vTypes: string[] = activeFilters.vehicleType ?? [];
-    vTypes.forEach((v) =>
-      c.push({
-        label: v === "bus" ? "Bus" : v === "private" ? "Private Car" : "Minivan",
-        onRemove: () =>
-          handleFilterChange(
-            "vehicleType",
-            vTypes.filter((x) => x !== v),
-          ),
-      }),
-    );
-
-    const capacities: string[] = activeFilters.capacity ?? [];
-    capacities.forEach((v) =>
-      c.push({
-        label: v === "small" ? "1-4 seats" : v === "medium" ? "5-10 seats" : "10+ seats",
-        onRemove: () =>
-          handleFilterChange(
-            "capacity",
-            capacities.filter((x) => x !== v),
-          ),
-      }),
-    );
-
-    const depTimes: string[] = activeFilters.departureTime ?? [];
-    depTimes.forEach((v) =>
-      c.push({
-        label: v === "morning" ? "Morning" : v === "afternoon" ? "Afternoon" : "Evening",
-        onRemove: () =>
-          handleFilterChange(
-            "departureTime",
-            depTimes.filter((x) => x !== v),
-          ),
-      }),
-    );
-
-    const pr = activeFilters.priceRange;
+    const pr = drawerFilters.priceRange;
     if (pr && (pr.min > 0 || pr.max < 1000))
       c.push({
         label: `K${pr.min}–K${pr.max}`,
-        onRemove: () => handleFilterChange("priceRange", { min: 0, max: 1000 }),
+        onRemove: () => handleDrawerFilterChange("priceRange", { min: 0, max: 1000 }),
       });
 
     return c;
-  }, [activeFilters]);
+  }, [selectedVehicleTypes, drawerFilters]);
 
-  const breadcrumbParts = ["Zambia"];
+  const dynamicTitle = useMemo(() => {
+    if (fromParam && toParam) {
+      return `Transport & Rides from ${fromParam} to ${toParam}`;
+    }
+    const raw = qParam || fromParam || toParam || "Zambia";
+    const area = raw.charAt(0).toUpperCase() + raw.slice(1);
+    return `Transport & Rides in ${area}`;
+  }, [qParam, fromParam, toParam]);
 
   return (
-    <div className="h-screen overflow-hidden bg-white-warm font-sans flex flex-col">
-      <div className="max-w-[1100px] w-full mx-auto px-4 md:px-6 pt-4 flex flex-col flex-1 overflow-hidden">
-        {/* Breadcrumb */}
-        <nav
-          aria-label="Breadcrumb"
-          className="hidden lg:flex items-center gap-1 text-xs text-black-faint mb-2"
-        >
-          <Link href="/" className="hover:text-purple transition-colors">
-            Home
-          </Link>
-          <ChevronRight className="h-3 w-3 text-black-faint/50" />
-          <Link href="/explore" className="hover:text-purple transition-colors">
-            Explore
-          </Link>
-          <ChevronRight className="h-3 w-3 text-black-faint/50" />
-          <Link href="/zambia" className="hover:text-purple transition-colors">
-            Zambia
-          </Link>
-          <ChevronRight className="h-3 w-3 text-black-faint/50" />
-          <span className="text-black font-semibold">Local Transport</span>
-        </nav>
+    <div className="min-h-screen bg-[#faf8f4] font-sans">
 
-        {/* Desktop title */}
-        <div className="hidden lg:block mb-4">
-          <h1 className="text-3xl font-bold tracking-tight text-black">
-            Get around Zambia with ease
+      {/* ── HERO TITLE SECTION ─────────────────────────────────── */}
+      <div className="bg-white border-b border-neutral-100 py-3.5">
+        <div className="max-w-[1400px] mx-auto px-3 md:px-6">
+
+          {/* Title */}
+          <h1 className="text-lg md:text-xl font-extrabold text-neutral-900 text-center tracking-tight leading-snug">
+            {dynamicTitle}
           </h1>
-          <p className="text-black-muted mt-0.5 font-script text-xl text-purple/80">
-            Travel like a local, hosted by locals.
-          </p>
-        </div>
 
-        {/* Search bar */}
-        <div className="bg-white rounded-2xl md:rounded-full border border-gray-200 shadow-sm p-1.5 flex flex-col md:flex-row md:items-center gap-2 md:gap-0 divide-y md:divide-y-0 md:divide-x divide-gray-100 mb-5 hover:shadow-md transition-shadow">
-          {/* From & To (Inline on mobile) */}
-          <div className="flex flex-row flex-1 divide-x divide-gray-100">
-            <input
-              type="text"
-              placeholder="From"
-              defaultValue={fromParam || ""}
-              className="flex-1 px-4 py-3 md:py-2.5 bg-transparent text-sm focus:outline-none min-w-0 font-medium text-black-soft placeholder:text-black-faint"
-            />
-            <input
-              type="text"
-              placeholder="To"
-              defaultValue={toParam || ""}
-              className="flex-1 px-4 py-3 md:py-2.5 bg-transparent text-sm focus:outline-none min-w-0 font-medium text-black-soft placeholder:text-black-faint"
-            />
-          </div>
+          {/* Search Bar — compact inline row on mobile, full grid on desktop */}
+          <div className="mt-3 max-w-4xl mx-auto">
 
-          {/* Date & Button (Inline on mobile) */}
-          <div className="flex flex-row items-center justify-between md:justify-end gap-3 pt-2 pb-1 md:py-0 w-full md:w-auto px-3 md:px-0">
-            <div className="relative flex items-center justify-center h-10 w-10 shrink-0 md:ml-2 group">
-              <CalendarDays className="h-5 w-5 text-black-faint group-hover:text-purple transition-colors pointer-events-none" />
-              <input
-                type="date"
-                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                title="Select Date"
-              />
-            </div>
+            {/* ── MOBILE (< md): single pill-row ── */}
+            <div className="grid md:hidden grid-cols-[1fr_auto_1fr_auto] items-center bg-white border border-neutral-200 shadow-[0_4px_20px_rgba(31,20,51,0.08)] rounded-full pl-3.5 pr-1.5 py-1.5 min-h-[48px] gap-1.5">
+              {/* Where (1fr equal column) */}
+              <div className="flex items-center gap-1.5 min-w-0 px-1">
+                <MapPin className="h-4 w-4 text-neutral-400 shrink-0" strokeWidth={1.8} />
+                <input
+                  type="text"
+                  value={whereInput}
+                  onChange={(e) => setWhereInput(e.target.value)}
+                  placeholder="Where to?"
+                  className="w-full bg-transparent text-xs font-medium text-neutral-700 focus:outline-none placeholder:text-neutral-400 truncate"
+                />
+              </div>
 
-            <button className="bg-purple hover:bg-purple-hover text-white rounded-xl md:rounded-full px-6 py-3 md:py-2.5 text-sm font-semibold flex-1 md:flex-none transition-colors">
-              Find rides
-            </button>
-          </div>
-        </div>
+              {/* Middle Divider (Centered at exact midpoint) */}
+              <div className="h-5 w-px bg-neutral-200 shrink-0" />
 
-        {/* Quick-filter chips */}
-        <div className="flex gap-2 overflow-x-auto pb-1 mb-5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          {QUICK_CHIPS.map((chip) => {
-            const active = chip.isActive(activeFilters);
-            return (
+              {/* When (1fr equal column) */}
+              <div className="flex items-center gap-1.5 min-w-0 px-1">
+                <CalendarDays className="h-4 w-4 text-neutral-400 shrink-0" strokeWidth={1.8} />
+                <input
+                  type="date"
+                  value={whenInput}
+                  onChange={(e) => setWhenInput(e.target.value)}
+                  className="w-full bg-transparent text-xs font-medium text-neutral-700 focus:outline-none cursor-pointer placeholder:text-neutral-400"
+                />
+              </div>
+
+              {/* Search button (unshrinked) */}
               <button
-                key={chip.label}
-                onClick={() =>
-                  setActiveFilters((prev) => (active ? chip.remove(prev) : chip.apply(prev)))
-                }
-                className={cn(
-                  "flex-none whitespace-nowrap px-4 py-1.5 rounded-full border text-xs font-semibold transition-all",
-                  active
-                    ? "bg-purple text-white border-purple shadow-sm"
-                    : "bg-white border-gray-200 text-black-soft hover:border-purple hover:text-purple shadow-sm",
-                )}
+                type="button"
+                className="bg-purple text-white rounded-full h-9 w-9 hover:bg-purple-hover transition-colors shrink-0 flex items-center justify-center shadow-xs active:scale-95 cursor-pointer ml-0.5"
+                aria-label="Search"
               >
-                {chip.label}
+                <Search className="h-4 w-4" strokeWidth={2.5} />
               </button>
-            );
-          })}
-        </div>
-
-        {/* Main layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 flex-1 overflow-hidden">
-          {/* Sidebar */}
-          <aside className="hidden lg:flex flex-col overflow-y-auto h-full pb-6 pr-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            <VerticalFilterSidebar
-              filters={FILTER_CONFIG}
-              activeFilters={activeFilters}
-              onChange={handleFilterChange}
-              onReset={handleReset}
-            />
-          </aside>
-
-          {/* Results */}
-          <main className="min-w-0 overflow-y-auto h-full pb-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            <div className="space-y-4">
-              <div className="flex justify-end items-center gap-2">
-                <span className="text-sm text-black-muted font-medium">Sort by:</span>
-                <select
-                  value={sortValue}
-                  onChange={(e) => setSortValue(e.target.value)}
-                  className="bg-white border border-gray-200 rounded-full px-4 py-1.5 text-sm font-medium shadow-sm focus:outline-none focus:ring-1 focus:ring-purple text-black-soft"
-                >
-                  <option value="recommended">Recommended for you</option>
-                  <option value="price_asc">Price (Lowest first)</option>
-                  <option value="departure_asc">Earliest departure</option>
-                  <option value="duration_asc">Shortest duration</option>
-                </select>
-              </div>
-
-              {/* Map Placeholder */}
-              <div className="hidden lg:flex w-full h-44 bg-white-soft rounded-xl border border-gray-200 items-center justify-center text-black-muted text-sm cursor-pointer hover:bg-gray-100 transition-colors">
-                📍 View available routes on a map
-              </div>
-
-              <FilterChips chips={chips} onClearAll={handleReset} />
             </div>
 
-            {filteredRoutes.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-gray-100 mt-6">
-                <Bus className="h-10 w-10 text-gray-200 mb-4" />
-                <h3 className="font-bold text-xl text-black">No routes found</h3>
-                <p className="text-black-muted text-base max-w-sm text-center mt-2">
-                  Try adjusting your filters to see more routes.
-                </p>
+            {/* ── DESKTOP (md+): full grid ── */}
+            <div className="hidden md:grid md:grid-cols-12 bg-white border border-neutral-200 shadow-sm rounded-2xl p-1.5 gap-1.5">
+
+              {/* WHERE */}
+              <div className="md:col-span-4 bg-neutral-50/80 hover:bg-neutral-50 border border-neutral-100 rounded-xl px-3 py-1.5 transition-colors flex flex-col justify-center">
+                <p className="text-[8px] font-extrabold uppercase tracking-wider text-purple leading-none mb-0.5">Where</p>
+                <div className="flex items-center gap-1.5">
+                  <MapPin className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
+                  <input
+                    type="text"
+                    value={whereInput}
+                    onChange={(e) => setWhereInput(e.target.value)}
+                    placeholder="Origin or destination city"
+                    className="w-full bg-transparent text-xs font-semibold text-neutral-800 focus:outline-none placeholder:text-neutral-400 truncate"
+                  />
+                </div>
+              </div>
+
+              {/* WHEN */}
+              <div className="md:col-span-3 bg-neutral-50/80 hover:bg-neutral-50 border border-neutral-100 rounded-xl px-3 py-1.5 transition-colors flex flex-col justify-center">
+                <p className="text-[8px] font-extrabold uppercase tracking-wider text-purple leading-none mb-0.5">When</p>
+                <div className="flex items-center gap-1.5">
+                  <CalendarDays className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
+                  <input
+                    type="date"
+                    value={whenInput}
+                    onChange={(e) => setWhenInput(e.target.value)}
+                    className="w-full bg-transparent text-xs font-semibold text-neutral-800 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* PASSENGERS */}
+              <div className="md:col-span-3 bg-neutral-50/80 hover:bg-neutral-50 border border-neutral-100 rounded-xl px-3 py-1.5 transition-colors flex flex-col justify-center">
+                <p className="text-[8px] font-extrabold uppercase tracking-wider text-purple leading-none mb-0.5">Passengers</p>
+                <div className="flex items-center justify-between gap-1">
+                  <div className="flex items-center gap-1 shrink-0">
+                    <Users className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
+                    <span className="text-xs font-semibold text-neutral-800">
+                      {passengers} {passengers === 1 ? "Passenger" : "Passengers"}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <button type="button" onClick={() => setPassengers((p) => Math.max(1, p - 1))} className="h-4 w-4 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 hover:border-purple hover:text-purple text-[10px] font-bold">−</button>
+                    <button type="button" onClick={() => setPassengers((p) => p + 1)} className="h-4 w-4 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 hover:border-purple hover:text-purple text-[10px] font-bold">+</button>
+                  </div>
+                </div>
+              </div>
+
+              {/* SEARCH BUTTON */}
+              <div className="md:col-span-2 flex items-center">
                 <Button
-                  onClick={handleReset}
-                  variant="outline"
-                  className="mt-6 border-purple text-purple hover:bg-gold hover:text-white hover:border-gold"
+                  type="button"
+                  className="w-full h-full min-h-[38px] bg-purple hover:bg-purple-hover text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center gap-1.5 transition-colors"
                 >
-                  Clear all filters
+                  <Search className="h-3.5 w-3.5" />
+                  Search
                 </Button>
               </div>
-            ) : (
-              <div className="flex flex-col gap-4 mt-6">
-                {filteredRoutes.map((route) => (
-                  <TransportCard key={route.id} route={route} />
-                ))}
-              </div>
-            )}
-          </main>
+
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Mobile filter FAB */}
-      <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
-        <button
-          onClick={() => setMobileFiltersOpen(true)}
-          className="flex items-center gap-2 bg-gold text-white text-base font-bold px-5 py-3 rounded-full shadow-lg hover:bg-gold-hover transition-colors"
-        >
-          <SlidersHorizontal className="h-4 w-4" />
-          Filters
-          {chips.length > 0 && (
-            <span className="bg-white text-purple text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
-              {chips.length}
-            </span>
-          )}
-        </button>
+
+      {/* ── STICKY FILTER BAR (Filters button + Vehicle Type pills) ── */}
+      <div className="sticky top-[64px] z-20 bg-white border-b border-neutral-200 shadow-xs">
+        <div className="max-w-[1400px] mx-auto px-3 md:px-6">
+          <div className="flex items-center gap-2.5 py-2.5 overflow-x-auto scrollbar-none" style={{ scrollbarWidth: "none" }}>
+            
+            {/* Filters Button */}
+            <button
+              onClick={() => setFiltersOpen(true)}
+              className={cn(
+                "flex-none flex items-center gap-2 border rounded-full px-6 py-2 text-sm font-bold transition-all duration-150 active:scale-95 whitespace-nowrap shadow-xs",
+                chips.length > 0
+                  ? "bg-purple/10 border-purple text-purple hover:bg-purple/15"
+                  : "bg-white border-neutral-300 text-neutral-800 hover:border-purple/60 hover:text-purple hover:bg-purple/[0.03]",
+              )}
+            >
+              <SlidersHorizontal className="h-4 w-4 shrink-0" />
+              <span>Filters</span>
+              {chips.length > 0 && (
+                <span className="flex items-center justify-center bg-purple text-white text-[11px] font-extrabold h-4.5 min-w-[18px] px-1 rounded-full leading-none">
+                  {chips.length}
+                </span>
+              )}
+            </button>
+
+            <div className="h-5 w-px bg-neutral-200 flex-none" />
+
+            {/* Vehicle Type Pills (Clean Text Only) */}
+            {VEHICLE_TYPE_PILLS.map((cat) => {
+              const active = selectedVehicleTypes.includes(cat.type);
+              return (
+                <button
+                  key={cat.type}
+                  onClick={() => toggleVehicleType(cat.type)}
+                  className={cn(
+                    "flex-none whitespace-nowrap px-6 py-2 rounded-full border text-sm transition-all duration-150 active:scale-95 select-none",
+                    active
+                      ? "bg-purple text-white border-purple shadow-sm font-bold scale-[1.02]"
+                      : "bg-white border-neutral-200 text-neutral-700 font-semibold hover:border-purple/50 hover:text-purple hover:bg-purple/[0.03] hover:shadow-xs",
+                  )}
+                >
+                  {cat.label}
+                </button>
+              );
+            })}
+
+          </div>
+        </div>
       </div>
 
-      {/* Mobile filter drawer */}
-      {mobileFiltersOpen && (
+      {/* ── MAIN CONTENT (3 Cards Per Row) ─────────────── */}
+      <main className="max-w-[1400px] mx-auto px-3 md:px-6 py-4">
+
+        {/* Title bar + sort */}
+        <div className="flex items-center justify-between mb-3.5 gap-4">
+          <div>
+            <h2 className="text-base font-bold text-neutral-900">{dynamicTitle}</h2>
+            <p className="text-xs text-neutral-500 mt-0.5">
+              <span className="font-semibold text-neutral-700">{filteredTransport.length}</span> routes found
+            </p>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-xs text-neutral-500 hidden sm:block">Sort:</span>
+            <div className="relative">
+              <select
+                value={sortValue}
+                onChange={(e) => setSortValue(e.target.value)}
+                className="appearance-none bg-white border border-neutral-200 rounded-lg pl-3 pr-8 py-1.5 text-xs font-semibold text-neutral-700 focus:outline-none focus:ring-2 focus:ring-purple/20 focus:border-purple transition-colors cursor-pointer"
+              >
+                {SORT_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-neutral-400 pointer-events-none" />
+            </div>
+          </div>
+        </div>
+
+        {/* Active filter chips */}
+        <FilterChips chips={chips} onClearAll={handleResetAll} />
+
+        {/* Cards grid: 3 larger columns */}
+        {filteredTransport.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 bg-white rounded-2xl border border-neutral-100 mt-3">
+            <Bus className="h-10 w-10 text-neutral-200 mb-2" />
+            <h3 className="font-bold text-base text-neutral-800">No transport routes found</h3>
+            <p className="text-neutral-400 text-xs max-w-sm text-center mt-1">
+              Try adjusting your search criteria or filters.
+            </p>
+            <Button
+              onClick={handleResetAll}
+              variant="outline"
+              className="mt-4 border-purple text-purple hover:bg-purple hover:text-white text-xs h-8 px-4"
+            >
+              Clear all filters
+            </Button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-3">
+            {filteredTransport.map((route) => (
+              <TransportCard key={route.id} route={route} />
+            ))}
+          </div>
+        )}
+      </main>
+
+      {/* ── FILTERS DRAWER ── */}
+      {filtersOpen && (
         <>
           <div
             className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
-            onClick={() => setMobileFiltersOpen(false)}
+            onClick={() => setFiltersOpen(false)}
           />
-          <div className="fixed inset-x-0 bottom-0 z-50 bg-white rounded-t-2xl shadow-2xl max-h-[85vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            <div className="sticky top-0 bg-white flex items-center justify-between px-5 py-4 border-b border-gray-100">
-              <span className="text-lg font-bold text-black">Filters</span>
+          <div className="fixed inset-x-0 bottom-0 z-50 bg-white rounded-t-2xl shadow-2xl max-h-[85vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white flex items-center justify-between px-5 py-3 border-b border-neutral-100">
+              <span className="text-base font-bold text-neutral-900">Filters</span>
               <button
-                onClick={() => setMobileFiltersOpen(false)}
-                className="h-8 w-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                onClick={() => setFiltersOpen(false)}
+                className="h-7 w-7 flex items-center justify-center rounded-full bg-neutral-100 hover:bg-neutral-200 transition-colors"
                 aria-label="Close filters"
               >
-                <X className="h-4 w-4 text-gray-600" />
+                <X className="h-3.5 w-3.5 text-neutral-600" />
               </button>
             </div>
             <div className="px-5 pb-8">
               <VerticalFilterSidebar
-                filters={FILTER_CONFIG}
-                activeFilters={activeFilters}
-                onChange={handleFilterChange}
-                onReset={handleReset}
+                filters={DRAWER_FILTER_CONFIG}
+                activeFilters={drawerFilters}
+                onChange={handleDrawerFilterChange}
+                onReset={() => setDrawerFilters(DEFAULT_DRAWER_FILTERS)}
               />
             </div>
-            <div className="sticky bottom-0 bg-white px-5 py-4 border-t border-gray-100">
+            <div className="sticky bottom-0 bg-white px-5 py-4 border-t border-neutral-100">
               <Button
-                onClick={() => setMobileFiltersOpen(false)}
-                className="w-full bg-gold hover:bg-gold-hover text-white font-bold"
+                onClick={() => setFiltersOpen(false)}
+                className="w-full bg-purple hover:bg-purple-hover text-white font-bold"
               >
-                Show {filteredRoutes.length} routes
+                Show {filteredTransport.length} routes
               </Button>
             </div>
           </div>
