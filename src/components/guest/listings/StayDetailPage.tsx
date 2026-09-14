@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -28,6 +28,16 @@ import {
   Building2,
   ShowerHead,
   Car,
+  Search,
+  AlertCircle,
+  Loader2,
+  MessageSquare,
+  Check,
+  ArrowRight,
+  Bed,
+  Users,
+  Navigation,
+  Star,
 } from "lucide-react";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useAuth } from "@/lib/store/authStore";
@@ -37,6 +47,8 @@ import { cn } from "@/lib/utils";
 import type { StayListing, RoomType } from "@/types/listing";
 import { mockListingReviews } from "@/lib/mock-listing-reviews";
 import { mockStayHosts, type StayHost } from "@/lib/mock-profile-data";
+import { useAvailabilityStore } from "@/store/availabilityStore";
+import { mockStays } from "@/lib/mock-data";
 
 const amenityIconMap: Record<string, React.ReactNode> = {
   WiFi: <Wifi className="h-5 w-5 text-purple" />,
@@ -74,6 +86,153 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
   const [activeImg, setActiveImg] = useState(0);
   const [showAllPhotos, setShowAllPhotos] = useState(false);
   const [showAuthDialog, setShowAuthDialog] = useState(false);
+  const [showReviewsModal, setShowReviewsModal] = useState(false);
+  const [showAmenitiesModal, setShowAmenitiesModal] = useState(false);
+  const [showHostContactModal, setShowHostContactModal] = useState(false);
+  const [hostQuestion, setHostQuestion] = useState("");
+  const [hostQuestionSent, setHostQuestionSent] = useState(false);
+
+  const handleShare = () => {
+    if (typeof window !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href);
+      toast.success("Stay link copied to clipboard!");
+    } else {
+      toast.success("Link copied!");
+    }
+  };
+
+  // Availability state
+  const today = new Date().toISOString().split("T")[0];
+  const tomorrow = new Date(Date.now() + 86400000).toISOString().split("T")[0];
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
+  const [adults, setAdults] = useState(2);
+  const [children, setChildren] = useState(0);
+  const [checkingAvailability, setCheckingAvailability] = useState(false);
+  const [availabilityResult, setAvailabilityResult] = useState<
+    "idle" | "available" | "unavailable" | "partial"
+  >("idle");
+
+  const { isDateBlocked } = useAvailabilityStore();
+
+  const nights = useMemo(() => {
+    if (!checkIn || !checkOut) return 0;
+    const diff = Math.round(
+      (new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24),
+    );
+    return Math.max(0, diff);
+  }, [checkIn, checkOut]);
+
+  const totalGuests = adults + children;
+
+  const handleCheckAvailability = () => {
+    if (!checkIn || !checkOut) {
+      toast.error("Please select check-in and check-out dates");
+      return;
+    }
+    if (nights <= 0) {
+      toast.error("Check-out must be after check-in");
+      return;
+    }
+    setCheckingAvailability(true);
+    // Simulate API delay
+    setTimeout(() => {
+      const stayId = stay.id;
+      let hasBlocked = false;
+      const start = new Date(checkIn);
+      const end = new Date(checkOut);
+      for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
+        const dateStr = d.toISOString().split("T")[0];
+        if (isDateBlocked(stayId, dateStr)) {
+          hasBlocked = true;
+          break;
+        }
+      }
+      setAvailabilityResult(hasBlocked ? "unavailable" : "available");
+      setCheckingAvailability(false);
+    }, 800);
+  };
+
+  const baseNightZMW = stay.price || (stay.baseRateNgwee ? stay.baseRateNgwee / 100 : 450);
+
+  const availableRoomTypes: RoomType[] = useMemo(() => {
+    if (stay.roomTypes && stay.roomTypes.length > 0) {
+      return stay.roomTypes;
+    }
+    return [
+      {
+        id: "rt-std",
+        name: "Standard Double Room",
+        count: 4,
+        maxGuests: 2,
+        bedrooms: 1,
+        beds: [{ type: "Queen", count: 1 }],
+        pricePerNightNgwee: baseNightZMW * 100,
+      },
+      {
+        id: "rt-deluxe",
+        name: "Deluxe Safari Chalet",
+        count: 2,
+        maxGuests: 3,
+        bedrooms: 1,
+        beds: [
+          { type: "King", count: 1 },
+          { type: "Daybed", count: 1 },
+        ],
+        pricePerNightNgwee: Math.round(baseNightZMW * 1.35) * 100,
+      },
+      {
+        id: "rt-family",
+        name: "Executive Family Cottage",
+        count: 1,
+        maxGuests: 5,
+        bedrooms: 2,
+        beds: [
+          { type: "King", count: 1 },
+          { type: "Twin", count: 2 },
+        ],
+        pricePerNightNgwee: Math.round(baseNightZMW * 1.8) * 100,
+      },
+    ];
+  }, [stay.roomTypes, baseNightZMW]);
+
+  const [selectedRoomId, setSelectedRoomId] = useState<string>(
+    availableRoomTypes[0]?.id || "rt-std",
+  );
+
+  const selectedRoom = useMemo(() => {
+    return availableRoomTypes.find((r) => r.id === selectedRoomId) || availableRoomTypes[0];
+  }, [availableRoomTypes, selectedRoomId]);
+
+  const currentRoomRate = selectedRoom ? selectedRoom.pricePerNightNgwee / 100 : baseNightZMW;
+  const price = `K${currentRoomRate.toLocaleString()}`;
+
+  const handleSelectRoom = (rt: RoomType) => {
+    setSelectedRoomId(rt.id);
+    if (!checkIn) {
+      setCheckIn(tomorrow);
+      setCheckOut(new Date(Date.now() + 86400000 * 3).toISOString().split("T")[0]);
+    }
+    setAvailabilityResult("available");
+    toast.success(
+      `Selected: ${rt.name} (K${(rt.pricePerNightNgwee / 100).toLocaleString()}/night)`,
+    );
+  };
+
+  const handleProceedToBook = () => {
+    const params = new URLSearchParams({ type: "stay", id: stay.id });
+    const effIn = checkIn || tomorrow;
+    const effOut = checkOut || new Date(Date.now() + 86400000 * 3).toISOString().split("T")[0];
+    params.set("checkIn", effIn);
+    params.set("checkOut", effOut);
+    params.set("guests", String(totalGuests));
+    if (selectedRoom) {
+      params.set("roomType", selectedRoom.name);
+      params.set("roomId", selectedRoom.id);
+      params.set("price", String(currentRoomRate));
+    }
+    router.push(`/checkout/book?${params.toString()}`);
+  };
 
   const { isAuthenticated } = useAuth();
   const { isSaved, addItem, removeItem } = useWishlistStore();
@@ -89,10 +248,10 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
   const handleToggleFavorite = () => {
     if (isFavorited) {
       removeItem(stay.id);
-      toast.success(`Removed from collections`);
+      toast.success("Removed from collections");
     } else {
       addItem(stay);
-      toast.success(`Saved to collections`, {
+      toast.success("Saved to collections", {
         icon: <Heart className="h-4 w-4 fill-purple text-purple" />,
       });
     }
@@ -100,14 +259,6 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
 
   const prevImg = () => setActiveImg((i) => (i === 0 ? images.length - 1 : i - 1));
   const nextImg = () => setActiveImg((i) => (i === images.length - 1 ? 0 : i + 1));
-
-  const roomTypes: RoomType[] = stay.roomTypes || [];
-  const priceDisplay =
-    roomTypes.length > 0
-      ? Math.min(...roomTypes.map((rt) => rt.pricePerNightNgwee)) / 100
-      : (stay.baseRateNgwee || stay.pricePerNight || (stay.price ? stay.price * 100 : 55000)) / 100;
-  const price = `K${priceDisplay}`;
-  const totalDisplay = `K${priceDisplay * 3}`; // 3 nights mock
 
   const title = stay.title || stay.name || "Chisanga's Lakeside Lodge";
   const locationString =
@@ -129,7 +280,7 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
             Explore
           </Link>{" "}
           <span className="mx-1.5 text-black-muted/50">›</span>
-          <Link href="/zambia" className="hover:text-purple transition-colors">
+          <Link href="/" className="hover:text-purple transition-colors">
             Zambia
           </Link>{" "}
           <span className="mx-1.5 text-black-muted/50">›</span>
@@ -208,156 +359,288 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
             {images.length} photos
           </button>
 
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleToggleFavorite();
-            }}
-            className="absolute top-4 right-4 md:right-auto md:left-4 h-9 w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-md"
-          >
-            <Heart
-              className={cn("h-4 w-4", isFavorited ? "fill-purple text-purple" : "text-black")}
-            />
-          </button>
+          <div className="absolute top-4 right-4 md:right-auto md:left-4 flex gap-2">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleToggleFavorite();
+              }}
+              className="h-9 w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-md hover:bg-white transition-colors"
+              title="Save stay"
+            >
+              <Heart
+                className={cn("h-4 w-4", isFavorited ? "fill-purple text-purple" : "text-black")}
+              />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleShare();
+              }}
+              className="h-9 w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-md hover:bg-white text-black transition-colors"
+              title="Share stay"
+            >
+              <Share2 className="h-4 w-4" />
+            </button>
+          </div>
         </div>
 
         {/* Main Info + Booking Sidebar Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8">
           {/* LEFT COLUMN: Trust & Information */}
-          <div className="space-y-6 divide-y divide-white-soft">
+          <div className="space-y-8 divide-y divide-neutral-200">
             {/* Title & Host Business */}
             <div className="pt-2">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h1 className="text-3xl font-bold tracking-tight text-black">{title}</h1>
-                  <p className="text-black-muted text-sm mt-1">{locationString}</p>
-                  <div className="mt-1 text-sm text-black-soft font-medium flex flex-wrap items-center gap-y-2 gap-x-4">
-                    <span className="flex items-center gap-1">
-                      <span className="bg-gold text-white px-2 py-0.5 rounded text-xs font-bold">
-                        {avgRating.toFixed(1)}
-                      </span>
-                      ({reviewCount} guest reviews)
-                    </span>
-                    <span className="text-purple font-semibold">Hosted by {hostName}</span>
-                  </div>
-                  <p className="text-xs text-purple mt-2 font-script text-lg">
-                    Premium feel. Budget-friendly price. A hidden gem for the curious explorer.
-                  </p>
-                </div>
-                <span className="text-[10px] bg-purple-muted text-purple px-3 py-1 rounded-full font-bold border border-purple-border hidden sm:block whitespace-nowrap">
-                  Locally Owned
+              <h1 className="text-2xl sm:text-[28px] font-semibold tracking-tight text-neutral-900 leading-tight">
+                {title}
+              </h1>
+              <p className="text-sm font-normal text-neutral-500 mt-1">{locationString}</p>
+
+              <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs sm:text-sm text-neutral-600">
+                <span className="flex items-center gap-1 font-semibold text-neutral-900">
+                  <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                  {avgRating.toFixed(1)}
+                </span>
+                <span className="text-neutral-300">·</span>
+                <button
+                  onClick={() => setShowReviewsModal(true)}
+                  className="font-normal text-neutral-500 hover:text-neutral-900 underline transition-colors"
+                >
+                  {reviewCount} reviews
+                </button>
+                <span className="text-neutral-300">·</span>
+                <span className="font-normal text-neutral-500">
+                  Hosted by <span className="font-medium text-neutral-800">{hostName}</span>
                 </span>
               </div>
             </div>
 
             {/* The Details */}
-            <div className="pt-6">
-              <h2 className="font-semibold text-lg text-black">About the {type.toLowerCase()}</h2>
-              <p className="text-sm text-black-soft leading-relaxed mt-2 whitespace-pre-wrap">
+            <div className="pt-8">
+              <h2 className="text-lg font-semibold text-neutral-900">
+                About the {type.toLowerCase()}
+              </h2>
+              <p className="text-sm font-normal text-neutral-600 leading-relaxed mt-2.5 whitespace-pre-wrap">
                 {stay.description ||
-                  "Located just a 5-minute walk from the local market and 15 minutes from the falls, this lodge offers comfortable, clean rooms for the next generation of travelers. Enjoy warm Zambian hospitality, a homemade local breakfast every morning, and a relaxed communal garden perfect for making new friends after a day of exploring."}
+                  "Located just a short walk from local spots and attractions, this property offers clean, comfortable rooms and warm Zambian hospitality. Enjoy complimentary breakfast every morning and tranquil surroundings perfect for relaxing after exploring."}
               </p>
             </div>
 
             {/* Amenities */}
-            <div className="pt-6">
-              <h2 className="font-semibold text-lg text-black">What we offer our guests</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6 mt-3 text-sm text-black-soft">
+            <div className="pt-8">
+              <h2 className="text-lg font-semibold text-neutral-900">What this place offers</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3.5 gap-x-6 mt-3.5 text-sm font-normal text-neutral-700">
                 {stay.amenities?.map((amenity: string) => (
                   <div key={amenity} className="flex items-center gap-3">
-                    <span className="text-xl">
-                      {amenityIconMap[amenity] || <Sparkles className="h-5 w-5 text-purple" />}
-                    </span>{" "}
-                    {amenity}
+                    <span className="text-neutral-500">
+                      {amenityIconMap[amenity] || <Sparkles className="h-4 w-4 text-purple" />}
+                    </span>
+                    <span>{amenity}</span>
                   </div>
                 ))}
                 {!stay.amenities && (
                   <>
                     <div className="flex items-center gap-3">
-                      <Coffee className="h-5 w-5 text-purple shrink-0" /> Daily Complimentary
-                      Breakfast
+                      <Coffee className="h-4 w-4 text-purple shrink-0" />
+                      <span>Complimentary Breakfast</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Wifi className="h-5 w-5 text-purple shrink-0" /> Free High-Speed Wi-Fi
+                      <Wifi className="h-4 w-4 text-purple shrink-0" />
+                      <span>High-Speed Wi-Fi</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <ShowerHead className="h-5 w-5 text-purple shrink-0" /> Hot Water & Private
-                      Bathrooms
+                      <ShowerHead className="h-4 w-4 text-purple shrink-0" />
+                      <span>Hot Water & Private Bathroom</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Car className="h-5 w-5 text-purple shrink-0" /> Free Parking for Buses/Cars
+                      <Car className="h-4 w-4 text-purple shrink-0" />
+                      <span>Free Secure Parking</span>
                     </div>
                   </>
                 )}
               </div>
+              <button
+                onClick={() => setShowAmenitiesModal(true)}
+                className="mt-5 px-4 py-2 border border-neutral-300 hover:border-neutral-400 rounded-lg text-xs font-medium text-neutral-700 transition-colors inline-flex items-center gap-1.5"
+              >
+                Show all {stay.amenities?.length || 12} amenities
+              </button>
             </div>
 
             {/* Rooms & Rates */}
-            {roomTypes.length > 0 && (
-              <div className="pt-6">
-                <h2 className="font-semibold text-lg text-black">Rooms & rates</h2>
-                <div className="mt-3 space-y-3">
-                  {roomTypes.map((rt) => (
-                    <div key={rt.id} className="bg-white rounded-xl border border-white-soft p-4">
-                      <div className="flex items-center justify-between gap-3">
-                        <div>
-                          <p className="font-semibold text-black">{rt.name}</p>
-                          <p className="text-xs text-black-muted mt-0.5">
-                            {rt.count} available · sleeps {rt.maxGuests} · {rt.bedrooms} bedroom
-                            {rt.bedrooms !== 1 ? "s" : ""}
-                            {rt.beds && rt.beds.length > 0
-                              ? ` · ${rt.beds.map((b) => `${b.count} ${b.type}`).join(", ")}`
-                              : ""}
-                          </p>
+            <div id="rooms-section" className="pt-8">
+              <div className="flex items-baseline justify-between mb-1">
+                <h2 className="text-lg font-semibold text-neutral-900 flex items-center gap-2">
+                  <Bed className="h-4 w-4 text-purple" />
+                  Select your room
+                </h2>
+                <span className="text-xs font-normal text-neutral-500">
+                  {availableRoomTypes.length} spaces available
+                </span>
+              </div>
+              <p className="text-xs font-normal text-neutral-500 mb-4">
+                Prices include daily breakfast, Wi-Fi, and all taxes.
+              </p>
+
+              <div className="space-y-3">
+                {availableRoomTypes.map((rt, idx) => {
+                  const isSelected = selectedRoomId === rt.id;
+                  const roomPriceZMW = rt.pricePerNightNgwee / 100;
+                  const isSoldOut = rt.count === 0;
+
+                  return (
+                    <div
+                      key={rt.id}
+                      className={cn(
+                        "rounded-xl border p-4 sm:p-5 transition-all duration-200 bg-white",
+                        isSelected
+                          ? "border-purple ring-1 ring-purple/30 shadow-sm"
+                          : "border-neutral-200 hover:border-neutral-300",
+                      )}
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div className="space-y-1 flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h3 className="font-semibold text-sm sm:text-base text-neutral-900">
+                              {rt.name}
+                            </h3>
+                            {idx === 0 && (
+                              <span className="text-[11px] font-medium bg-purple/10 text-purple px-2 py-0.5 rounded-full">
+                                Popular
+                              </span>
+                            )}
+                            {idx === 1 && (
+                              <span className="text-[11px] font-medium bg-neutral-100 text-neutral-700 px-2 py-0.5 rounded-full">
+                                Best Value
+                              </span>
+                            )}
+                            {isSelected && (
+                              <span className="text-[11px] font-medium bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                                <Check className="h-3 w-3" /> Selected
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-x-2.5 text-xs font-normal text-neutral-500">
+                            <span className="inline-flex items-center gap-1">
+                              <Users className="h-3.5 w-3.5 text-neutral-400" />
+                              Sleeps {rt.maxGuests}
+                            </span>
+                            <span className="text-neutral-300">·</span>
+                            <span>
+                              {rt.bedrooms} Bedroom{rt.bedrooms !== 1 ? "s" : ""}
+                              {rt.beds && rt.beds.length > 0
+                                ? ` (${rt.beds.map((b) => `${b.count} ${b.type}`).join(", ")})`
+                                : ""}
+                            </span>
+                            <span className="text-neutral-300">·</span>
+                            <span className="text-neutral-600">Ensuite bathroom</span>
+                          </div>
+
+                          <div className="pt-1 flex items-center gap-2">
+                            {isSoldOut ? (
+                              <span className="text-[11px] font-medium text-red-600 bg-red-50 px-2 py-0.5 rounded">
+                                Sold Out
+                              </span>
+                            ) : rt.count <= 2 ? (
+                              <span className="text-[11px] font-medium text-amber-800 bg-amber-50 px-2 py-0.5 rounded">
+                                Only {rt.count} left
+                              </span>
+                            ) : (
+                              <span className="text-[11px] font-medium text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded">
+                                {rt.count} available
+                              </span>
+                            )}
+                            <span className="text-[11px] font-normal text-neutral-400">
+                              · Free cancellation
+                            </span>
+                          </div>
                         </div>
-                        <p className="font-bold text-black whitespace-nowrap">
-                          K{(rt.pricePerNightNgwee / 100).toLocaleString()}
-                          <span className="text-xs text-black-faint font-medium"> / night</span>
-                        </p>
+
+                        <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 pt-3 sm:pt-0 border-neutral-100 gap-2 shrink-0">
+                          <div className="text-left sm:text-right">
+                            <div className="text-base font-semibold text-neutral-900">
+                              K{roomPriceZMW.toLocaleString()}
+                              <span className="text-xs font-normal text-neutral-500"> / night</span>
+                            </div>
+                            {nights > 0 && (
+                              <p className="text-[11px] font-normal text-neutral-400">
+                                K{(roomPriceZMW * nights).toLocaleString()} for {nights} nights
+                              </p>
+                            )}
+                          </div>
+
+                          {isSelected ? (
+                            <button
+                              disabled
+                              className="px-3.5 py-1.5 rounded-lg bg-purple text-white text-xs font-medium inline-flex items-center gap-1 cursor-default"
+                            >
+                              <Check className="h-3.5 w-3.5" />
+                              Selected
+                            </button>
+                          ) : isSoldOut ? (
+                            <button
+                              disabled
+                              className="px-3.5 py-1.5 rounded-lg bg-neutral-100 text-neutral-400 text-xs font-medium cursor-not-allowed"
+                            >
+                              Sold Out
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => handleSelectRoom(rt)}
+                              className="px-3.5 py-1.5 rounded-lg bg-white border border-neutral-300 hover:border-purple hover:text-purple text-neutral-800 transition-colors text-xs font-medium inline-flex items-center gap-1"
+                            >
+                              Choose room
+                              <ArrowRight className="h-3 w-3" />
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
-            )}
+            </div>
 
             {/* House Rules */}
-            <div className="pt-6">
-              <h2 className="font-semibold text-lg text-black">Things to know</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-3 text-sm">
+            <div className="pt-8">
+              <h2 className="text-lg font-semibold text-neutral-900">Things to know</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-3 text-xs">
                 <div>
-                  <p className="font-semibold text-black">Check-in</p>
-                  <p className="text-black-muted">
+                  <p className="font-medium text-neutral-800">Check-in</p>
+                  <p className="text-neutral-500 font-normal mt-0.5">
                     {stay.checkInRules?.[0] || "2:00 PM - 10:00 PM"}
                   </p>
                 </div>
                 <div>
-                  <p className="font-semibold text-black">Check-out</p>
-                  <p className="text-black-muted">{stay.checkOutRules?.[0] || "10:30 AM"}</p>
+                  <p className="font-medium text-neutral-800">Check-out</p>
+                  <p className="text-neutral-500 font-normal mt-0.5">
+                    {stay.checkOutRules?.[0] || "10:30 AM"}
+                  </p>
                 </div>
                 <div>
-                  <p className="font-semibold text-black">Quiet hours</p>
-                  <p className="text-black-muted">10:00 PM - 6:00 AM</p>
+                  <p className="font-medium text-neutral-800">Quiet hours</p>
+                  <p className="text-neutral-500 font-normal mt-0.5">10:00 PM - 6:00 AM</p>
                 </div>
               </div>
             </div>
 
             {/* Host's own policies */}
             {(stay.customPolicies || stay.customCancellationPolicy) && (
-              <div className="pt-6">
-                <h2 className="font-semibold text-lg text-black">Host policies</h2>
+              <div className="pt-8">
+                <h2 className="text-lg font-semibold text-neutral-900">Host policies</h2>
                 {stay.customCancellationPolicy && (
                   <div className="mt-3">
-                    <p className="font-semibold text-sm text-black">Cancellation</p>
-                    <p className="text-sm text-black-soft leading-relaxed mt-1 whitespace-pre-wrap">
+                    <p className="font-medium text-xs text-neutral-800">Cancellation</p>
+                    <p className="text-xs font-normal text-neutral-600 leading-relaxed mt-0.5 whitespace-pre-wrap">
                       {stay.customCancellationPolicy}
                     </p>
                   </div>
                 )}
                 {stay.customPolicies && (
-                  <div className={stay.customCancellationPolicy ? "mt-4" : "mt-3"}>
-                    <p className="font-semibold text-sm text-black">Good to know</p>
-                    <p className="text-sm text-black-soft leading-relaxed mt-1 whitespace-pre-wrap">
+                  <div className={stay.customCancellationPolicy ? "mt-3.5" : "mt-3"}>
+                    <p className="font-medium text-xs text-neutral-800">Good to know</p>
+                    <p className="text-xs font-normal text-neutral-600 leading-relaxed mt-0.5 whitespace-pre-wrap">
                       {stay.customPolicies}
                     </p>
                   </div>
@@ -366,14 +649,13 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
             )}
 
             {/* Location */}
-            <div className="pt-6">
-              <h2 className="font-semibold text-lg text-black">Where you'll be</h2>
-              <p className="text-sm text-black-soft leading-relaxed mt-2">
-                Nestled in a quiet, safe residential neighborhood in {locationString.split(",")[0]}.
-                You're a short walk from the town center and local spots. Exact location shared
-                after booking.
+            <div className="pt-8">
+              <h2 className="text-lg font-semibold text-neutral-900">Where you&apos;ll be</h2>
+              <p className="text-xs font-normal text-neutral-500 leading-relaxed mt-1.5">
+                Nestled in a safe neighborhood in {locationString.split(",")[0]}. Short walk from
+                local spots. Exact location shared after reservation.
               </p>
-              <div className="w-full h-40 bg-white-soft rounded-xl mt-3 flex items-center justify-center border border-white-soft relative overflow-hidden">
+              <div className="w-full h-44 bg-neutral-100 rounded-xl mt-3 flex items-center justify-center border border-neutral-200 relative overflow-hidden">
                 <iframe
                   title={`Map for ${title}`}
                   width="100%"
@@ -384,156 +666,256 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                   style={{ border: 0, filter: "contrast(0.9) brightness(0.95)" }}
                 />
               </div>
+              <div className="mt-2 flex items-center justify-between text-xs">
+                <span className="text-neutral-400 font-normal">
+                  Coordinates: {stay.lat ?? -15.5}° S, {stay.lng ?? 29.1}° E
+                </span>
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(title + " " + locationString)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-purple hover:underline inline-flex items-center gap-1"
+                >
+                  <Navigation className="h-3.5 w-3.5" />
+                  Get directions
+                </a>
+              </div>
             </div>
 
-            {/* Reviews */}
-            <div className="pt-6">
-              <div className="flex items-center justify-between">
-                <h2 className="font-semibold text-lg flex items-center gap-2 text-black">
-                  <span className="bg-gold text-white px-2 py-0.5 rounded text-sm">
-                    {avgRating.toFixed(1)}
-                  </span>{" "}
-                  · {reviewCount} reviews
-                </h2>
-                <button className="text-purple text-xs font-semibold hover:underline">
-                  Read all reviews
-                </button>
-              </div>
-              <div className="mt-3 space-y-4">
-                {reviews.slice(0, 2).map((rev: any, i: number) => (
-                  <div key={i} className="bg-white p-4 rounded-xl border border-white-soft">
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold text-sm text-black">{rev.userName}</span>
-                      <span className="text-xs text-black-faint">{rev.date}</span>
-                    </div>
-                    <p className="text-sm text-black-soft mt-1">"{rev.comment}"</p>
-                  </div>
-                ))}
-                {reviews.length === 0 && (
-                  <div className="bg-white p-4 rounded-xl border border-white-soft">
-                    <p className="text-sm text-black-soft mt-1">
-                      "Absolutely incredible value for money. The rooms were spotless and the hosts
-                      made us feel right at home."
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
+            {/* Reviews Component */}
+            <ReviewSection
+              listingId={stay.id}
+              listingName={title}
+              listingType="Stay"
+              reviews={reviews.map((r: any) => ({
+                id: r.id,
+                author: r.author || r.userName || "Guest",
+                rating: r.rating || 5,
+                content: r.content || r.comment || "",
+                date: r.date || "Recent",
+                authorLocation: r.authorLocation || "Verified Guest",
+                avatar: r.avatar,
+              }))}
+              avgRating={avgRating}
+              reviewCount={reviewCount}
+              onViewAllReviews={() => setShowReviewsModal(true)}
+            />
 
             {/* Meet the Host */}
-            <div className="pt-6">
-              <h2 className="font-semibold text-lg text-black">Meet the hosts</h2>
-              <div className="flex items-center gap-4 mt-3">
+            <div className="pt-8">
+              <h2 className="text-lg font-semibold text-neutral-900">Meet the host</h2>
+              <div className="flex items-center gap-3.5 mt-3.5">
                 <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-white text-lg shrink-0 shadow-sm"
+                  className="w-11 h-11 rounded-full flex items-center justify-center font-medium text-white text-base shrink-0 shadow-sm"
                   style={{ backgroundColor: host?.avatarColor || "#7C3AED" }}
                 >
                   {host?.avatarInitials || "HC"}
                 </div>
                 <div>
-                  <p className="font-semibold text-sm text-black">{hostName}</p>
-                  <p className="text-xs text-black-muted flex items-center gap-1">
-                    <span className="bg-green-500 w-2 h-2 rounded-full inline-block"></span>{" "}
+                  <p className="font-semibold text-sm text-neutral-900">{hostName}</p>
+                  <p className="text-xs font-normal text-neutral-500 flex items-center gap-1.5 mt-0.5">
+                    <span className="bg-emerald-500 w-1.5 h-1.5 rounded-full inline-block"></span>
                     Responds within {host?.responseTime || "20 minutes"}
-                  </p>
-                  <p className="text-xs text-black-muted">
-                    Pioneers of local guest house hospitality.
                   </p>
                 </div>
               </div>
-              <p className="text-sm text-black-soft mt-3 italic">
-                "
+              <p className="text-xs font-normal text-neutral-600 leading-relaxed mt-3 italic">
+                &quot;
                 {host?.bio ||
-                  "Our goal is to show young travelers that you don't need a foreign platform to have a great escape. We keep our prices fair to welcome everyone, and reinvest everything back into our local community."}
-                "
+                  "Our goal is to show travelers that you don't need an overseas platform to have a great escape. We keep our prices honest and reinvest into our local community."}
+                &quot;
               </p>
+              <div className="mt-3.5">
+                <button
+                  onClick={() => {
+                    setHostQuestionSent(false);
+                    setShowHostContactModal(true);
+                  }}
+                  className="px-3.5 py-1.5 border border-neutral-300 hover:border-neutral-400 rounded-lg text-xs font-medium text-neutral-700 hover:bg-neutral-50 transition-colors inline-flex items-center gap-1.5"
+                >
+                  <MessageSquare className="h-3.5 w-3.5 text-neutral-400" />
+                  Contact host
+                </button>
+              </div>
             </div>
           </div>
 
           {/* RIGHT COLUMN: The Booking Card */}
           <div className="relative">
-            <div className="bg-white border border-white-soft rounded-2xl p-6 shadow-lg sticky top-24">
+            <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm sticky top-24 space-y-4">
               {/* Clear, Honest Pricing */}
-              <div className="flex items-center justify-between border-b border-white-soft pb-4">
+              <div className="flex items-baseline justify-between border-b border-neutral-100 pb-4">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-2xl font-semibold text-neutral-900">{price}</span>
+                  <span className="text-xs font-normal text-neutral-500">/ night</span>
+                </div>
+                <div className="text-xs font-medium text-neutral-700 flex items-center gap-1">
+                  <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                  <span>{avgRating.toFixed(1)}</span>
+                  <span className="text-neutral-400 font-normal">({reviewCount})</span>
+                </div>
+              </div>
+
+              {/* Selected Room Indicator */}
+              <div className="p-3 bg-neutral-50 border border-neutral-200 rounded-xl flex items-center justify-between">
                 <div>
-                  <span className="text-2xl font-bold text-black">{price}</span>{" "}
-                  <span className="text-xs text-black-muted font-medium">/ night</span>
+                  <span className="text-[10px] font-medium uppercase tracking-wider text-purple">
+                    Selected Space
+                  </span>
+                  <p className="text-xs font-semibold text-neutral-900 leading-tight mt-0.5">
+                    {selectedRoom?.name}
+                  </p>
+                  <p className="text-[11px] font-normal text-neutral-500">
+                    Up to {selectedRoom?.maxGuests} guests · {selectedRoom?.count} available
+                  </p>
                 </div>
-                <div className="text-sm text-black-soft font-medium flex items-center gap-1">
-                  <span className="bg-gold text-white px-1.5 py-0.5 rounded text-xs font-bold">
-                    {avgRating.toFixed(1)}
-                  </span>{" "}
-                  Exceptional
-                </div>
+                <a
+                  href="#rooms-section"
+                  className="text-xs font-medium text-purple hover:underline"
+                >
+                  Change
+                </a>
               </div>
 
-              {/* Scarcity Trigger */}
-              <div className="mt-3 p-2 bg-purple-muted border border-purple-border rounded-lg flex items-center gap-2 text-purple text-xs font-semibold">
-                <span className="w-1.5 h-1.5 bg-purple rounded-full inline-block animate-pulse shrink-0"></span>
-                Room availability is limited this week. Book early to secure your spot.
-              </div>
+              {/* Guest Capacity Warning */}
+              {totalGuests > (selectedRoom?.maxGuests || 2) && (
+                <div className="p-2.5 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-1.5 text-amber-800 text-[11px] font-normal leading-tight">
+                  <AlertCircle className="h-3.5 w-3.5 shrink-0 text-amber-600 mt-0.5" />
+                  <span>
+                    {totalGuests} guests exceeds {selectedRoom?.name}&apos;s limit (
+                    {selectedRoom?.maxGuests}). Choose a larger room below.
+                  </span>
+                </div>
+              )}
 
-              <div className="py-4 space-y-3">
-                {/* Date Picker Simulation */}
-                <div className="grid grid-cols-2 gap-2 bg-white-warm rounded-lg p-2 border border-white-soft">
-                  <div className="bg-white rounded-md p-2 shadow-sm border border-white-soft cursor-pointer hover:border-purple transition-colors">
-                    <span className="text-[10px] text-black-faint block font-medium">CHECK-IN</span>
-                    <span className="text-sm font-semibold text-black">Aug 15</span>
-                  </div>
-                  <div className="bg-white rounded-md p-2 shadow-sm border border-white-soft cursor-pointer hover:border-purple transition-colors">
-                    <span className="text-[10px] text-black-faint block font-medium">
-                      CHECK-OUT
-                    </span>
-                    <span className="text-sm font-semibold text-black">Aug 18</span>
-                  </div>
+              <div className="space-y-3">
+                {/* Check-In Date */}
+                <div>
+                  <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
+                    Check-in
+                  </label>
+                  <input
+                    type="date"
+                    value={checkIn}
+                    min={today}
+                    onChange={(e) => {
+                      setCheckIn(e.target.value);
+                      setAvailabilityResult("available");
+                      if (checkOut && e.target.value >= checkOut) setCheckOut("");
+                    }}
+                    className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50"
+                  />
+                </div>
+
+                {/* Check-Out Date */}
+                <div>
+                  <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
+                    Check-out
+                  </label>
+                  <input
+                    type="date"
+                    value={checkOut}
+                    min={checkIn || today}
+                    onChange={(e) => {
+                      setCheckOut(e.target.value);
+                      setAvailabilityResult("available");
+                    }}
+                    className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50"
+                  />
                 </div>
 
                 {/* Guest Selector */}
-                <div className="bg-white-warm rounded-lg p-3 border border-white-soft flex justify-between items-center cursor-pointer hover:border-purple transition-colors">
+                <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <span className="text-[10px] text-black-faint block font-medium">GUESTS</span>
-                    <span className="text-sm font-semibold text-black">2 adults</span>
+                    <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
+                      Adults
+                    </label>
+                    <select
+                      value={adults}
+                      onChange={(e) => setAdults(Number(e.target.value))}
+                      className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50"
+                    >
+                      {[1, 2, 3, 4, 5, 6].map((n) => (
+                        <option key={n} value={n}>
+                          {n} adult{n !== 1 ? "s" : ""}
+                        </option>
+                      ))}
+                    </select>
                   </div>
-                  <button className="text-xs border border-white-soft rounded px-2 py-1 bg-white hover:bg-white-warm transition-colors text-black-soft">
-                    Edit
-                  </button>
+                  <div>
+                    <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
+                      Children
+                    </label>
+                    <select
+                      value={children}
+                      onChange={(e) => setChildren(Number(e.target.value))}
+                      className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50"
+                    >
+                      {[0, 1, 2, 3, 4].map((n) => (
+                        <option key={n} value={n}>
+                          {n} child{n !== 1 ? "ren" : ""}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
+
+                {/* Live Availability Status */}
+                {availabilityResult === "available" && (
+                  <div className="p-2 bg-emerald-50 border border-emerald-200/60 rounded-lg flex items-center gap-1.5 text-emerald-800 text-[11px] font-normal">
+                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
+                    <span>
+                      {selectedRoom?.name} available ·{" "}
+                      {nights > 0 ? `${nights} night${nights !== 1 ? "s" : ""}` : "Select dates"}
+                    </span>
+                  </div>
+                )}
 
                 {/* Price Breakdown */}
-                <div className="pt-3 border-t border-white-soft space-y-1.5 text-sm">
-                  <div className="flex justify-between text-black-soft">
-                    <span>3 nights x {price}</span>
-                    <span>{totalDisplay}</span>
+                {nights > 0 ? (
+                  <div className="pt-3 border-t border-neutral-100 space-y-1.5 text-xs">
+                    <div className="flex justify-between text-neutral-500 font-normal">
+                      <span>
+                        {nights} night{nights !== 1 ? "s" : ""} x K
+                        {currentRoomRate.toLocaleString()}
+                      </span>
+                      <span className="text-neutral-900">
+                        K{(currentRoomRate * nights).toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-neutral-500 font-normal">
+                      <span>Breakfast & Wi-Fi</span>
+                      <span className="text-emerald-700 font-medium">Included</span>
+                    </div>
+                    <div className="flex justify-between text-neutral-900 font-semibold border-t border-neutral-100 pt-2 text-sm">
+                      <span>Total</span>
+                      <span>K{(currentRoomRate * nights).toLocaleString()}</span>
+                    </div>
+                    <p className="text-[11px] text-neutral-400 font-normal text-center mt-1">
+                      No surprise fees · Taxes included
+                    </p>
                   </div>
-                  <div className="flex justify-between text-black-soft">
-                    <span>Daily breakfast included</span>
-                    <span className="text-green-600 font-medium">Free</span>
+                ) : (
+                  <div className="pt-1 text-xs font-normal text-neutral-400 text-center">
+                    Select dates to see total
                   </div>
-                  <div className="flex justify-between text-black font-bold border-t border-white-soft pt-2 mt-1">
-                    <span>Total (ZMW)</span>
-                    <span>{totalDisplay}</span>
-                  </div>
-                  <p className="text-[10px] text-purple font-semibold text-center mt-1">
-                    No platform fees. 100% goes to the host!
-                  </p>
-                </div>
+                )}
               </div>
 
+              {/* Main Booking Action Button */}
               <button
-                onClick={() => router.push(`/checkout/book?type=stay&id=${stay.id}`)}
-                className="w-full bg-purple text-white rounded-xl py-3.5 font-semibold hover:bg-purple-hover transition-colors text-base shadow-md"
+                onClick={handleProceedToBook}
+                className="w-full bg-neutral-900 text-white hover:bg-neutral-800 rounded-xl py-3 font-medium text-sm transition-colors shadow-sm flex items-center justify-center gap-2"
               >
-                Book your room
+                <span>Reserve {selectedRoom?.name || "Room"}</span>
+                <ArrowRight className="h-4 w-4" />
               </button>
 
-              {/* Cross-sell for local experiences */}
-              <div className="mt-4 pt-4 border-t border-white-soft flex items-center justify-between">
-                <span className="text-xs text-black-muted">Looking for adventure?</span>
-                <Link
-                  href="/experiences"
-                  className="text-purple text-xs font-semibold hover:underline"
-                >
-                  Add a guided safari
+              {/* Cross-sell */}
+              <div className="pt-3 border-t border-neutral-100 flex items-center justify-between text-xs">
+                <span className="text-neutral-500 font-normal">Need transport or safari?</span>
+                <Link href="/experiences" className="text-purple font-medium hover:underline">
+                  Explore tours →
                 </Link>
               </div>
             </div>
@@ -541,60 +923,53 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
         </div>
 
         {/* Similar Places Section */}
-        <section className="mt-16 pt-8 border-t border-white-soft">
-          <h2 className="text-xl font-bold text-black mb-6">Similar places you might like</h2>
+        <section className="mt-16 pt-8 border-t border-neutral-200">
+          <div className="flex items-baseline justify-between mb-5">
+            <div>
+              <h2 className="text-lg font-semibold text-neutral-900">
+                Similar stays you might like
+              </h2>
+              <p className="text-xs font-normal text-neutral-500 mt-0.5">
+                Explore more authentic Zambian lodges and guest houses
+              </p>
+            </div>
+            <Link href="/stays" className="text-xs font-medium text-purple hover:underline">
+              View all stays →
+            </Link>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                id: "sim-1",
-                name: "Riverside Retreat",
-                location: locationString.split(",")[0],
-                price: "K450",
-                rating: 4.9,
-                img: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=600&q=80",
-              },
-              {
-                id: "sim-2",
-                name: "Sunset Safari Lodge",
-                location: locationString.split(",")[0],
-                price: "K600",
-                rating: 4.7,
-                img: "https://images.unsplash.com/photo-1518602164578-cd0074062767?auto=format&fit=crop&w=600&q=80",
-              },
-              {
-                id: "sim-3",
-                name: "Zambezi Guest House",
-                location: locationString.split(",")[0],
-                price: "K350",
-                rating: 4.5,
-                img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80",
-              },
-            ].map((item) => (
-              <Link href={`/stays/${item.id}`} key={item.id} className="group block">
-                <div className="w-full h-48 rounded-xl bg-white-soft overflow-hidden mb-3 relative">
-                  <img src={item.img} alt={item.name} className="w-full h-full object-cover" />
-                  <button className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm">
-                    <Heart className="h-4 w-4 text-black hover:text-purple transition-colors" />
-                  </button>
-                </div>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-semibold text-black group-hover:text-purple transition-colors truncate">
+            {mockStays
+              .filter((s) => s.id !== stay.id)
+              .slice(0, 3)
+              .map((item) => (
+                <Link href={`/stays/${item.id}`} key={item.id} className="group block">
+                  <div className="w-full h-48 rounded-xl bg-neutral-100 overflow-hidden mb-2.5 relative">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm">
+                      <Heart className="h-4 w-4 text-neutral-700 group-hover:text-purple transition-colors" />
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-baseline gap-2">
+                    <h3 className="font-medium text-sm text-neutral-900 group-hover:text-purple transition-colors truncate">
                       {item.name}
                     </h3>
-                    <p className="text-sm text-black-muted">{item.location}</p>
+                    <div className="flex items-center gap-0.5 text-xs font-medium text-neutral-700 shrink-0">
+                      <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                      <span>{item.rating}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1 text-sm font-semibold text-black shrink-0">
-                    <span className="bg-gold text-white px-1.5 py-0.5 rounded text-[10px]">
-                      {item.rating}
-                    </span>
-                  </div>
-                </div>
-                <p className="text-sm text-black font-semibold mt-1">
-                  {item.price} <span className="font-normal text-black-faint">/ night</span>
-                </p>
-              </Link>
-            ))}
+                  <p className="text-xs font-normal text-neutral-500 mt-0.5">{item.location}</p>
+                  <p className="text-sm font-semibold text-neutral-900 mt-1">
+                    K{item.price}{" "}
+                    <span className="font-normal text-xs text-neutral-500">/ night</span>
+                  </p>
+                </Link>
+              ))}
           </div>
         </section>
       </main>
@@ -607,14 +982,20 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
             <span className="text-xs text-black-muted">/ night</span>
           </div>
           <div className="text-xs text-black-muted flex items-center gap-1">
-            <span className="text-purple font-bold">All-inclusive</span> ·{" "}
-            <span className="bg-gold text-white px-1 py-0.5 rounded text-[10px] font-bold">
-              {avgRating.toFixed(1)}
-            </span>
+            <span className="text-purple font-bold">{selectedRoom?.name || "Available"}</span>
+            {nights > 0 && (
+              <>
+                {" "}
+                ·{" "}
+                <span>
+                  {nights} night{nights !== 1 ? "s" : ""}
+                </span>
+              </>
+            )}
           </div>
         </div>
         <button
-          onClick={() => router.push(`/checkout/book?type=stay&id=${stay.id}`)}
+          onClick={handleProceedToBook}
           className="bg-purple text-white px-6 py-3 rounded-full font-semibold shadow-md hover:bg-purple-hover transition-colors text-sm flex-1 ml-4 max-w-[140px]"
         >
           Book now
@@ -671,6 +1052,257 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
             >
               <ChevronRight className="h-8 w-8" />
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* All Reviews Modal */}
+      {showReviewsModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in"
+          onClick={() => setShowReviewsModal(false)}
+        >
+          <div
+            className="bg-white rounded-3xl max-w-xl w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl animate-in zoom-in-95"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6 border-b border-black/[0.08] flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold text-neutral-900">
+                  {avgRating.toFixed(1)} ★ ({reviewCount} reviews)
+                </h3>
+                <p className="text-xs text-neutral-500">Verified guest reviews for {title}</p>
+              </div>
+              <button
+                onClick={() => setShowReviewsModal(false)}
+                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto space-y-4">
+              <div className="grid grid-cols-2 gap-2 p-3.5 bg-neutral-50 rounded-2xl text-xs">
+                <div className="flex justify-between text-neutral-600">
+                  <span>Cleanliness</span>
+                  <span className="font-bold text-neutral-900">4.9 ★</span>
+                </div>
+                <div className="flex justify-between text-neutral-600">
+                  <span>Accuracy</span>
+                  <span className="font-bold text-neutral-900">4.8 ★</span>
+                </div>
+                <div className="flex justify-between text-neutral-600">
+                  <span>Communication</span>
+                  <span className="font-bold text-neutral-900">5.0 ★</span>
+                </div>
+                <div className="flex justify-between text-neutral-600">
+                  <span>Location</span>
+                  <span className="font-bold text-neutral-900">4.9 ★</span>
+                </div>
+              </div>
+
+              {reviews.map((r: any, idx: number) => (
+                <div
+                  key={idx}
+                  className="p-4 rounded-2xl bg-neutral-50 border border-black/[0.05] space-y-1.5"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-xs text-neutral-900">
+                      {r.userName || r.author}
+                    </span>
+                    <span className="text-[10px] text-neutral-400">{r.date}</span>
+                  </div>
+                  <div className="text-[10px] text-amber-500 font-bold">★★★★★ 5.0</div>
+                  <p className="text-xs text-neutral-700 leading-relaxed">
+                    &quot;{r.comment}&quot;
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* All Amenities Modal */}
+      {showAmenitiesModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in"
+          onClick={() => setShowAmenitiesModal(false)}
+        >
+          <div
+            className="bg-white rounded-3xl max-w-lg w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl animate-in zoom-in-95"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6 border-b border-black/[0.08] flex items-center justify-between">
+              <h3 className="text-xl font-bold text-neutral-900">What this stay offers</h3>
+              <button
+                onClick={() => setShowAmenitiesModal(false)}
+                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto space-y-6 text-sm text-neutral-800">
+              <div>
+                <h4 className="font-bold text-xs uppercase tracking-wider text-neutral-400 mb-3">
+                  Bathroom &amp; Bedroom
+                </h4>
+                <div className="space-y-2.5">
+                  <div className="flex items-center gap-3">
+                    <ShowerHead className="h-4 w-4 text-purple" />
+                    <span>Private bathroom with continuous hot water</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle2 className="h-4 w-4 text-purple" />
+                    <span>Clean bed linens &amp; extra pillows</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle2 className="h-4 w-4 text-purple" />
+                    <span>Towels, soap &amp; toilet paper provided</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-bold text-xs uppercase tracking-wider text-neutral-400 mb-3">
+                  Internet &amp; Office
+                </h4>
+                <div className="space-y-2.5">
+                  <div className="flex items-center gap-3">
+                    <Wifi className="h-4 w-4 text-purple" />
+                    <span>High-speed Wi-Fi available throughout property</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle2 className="h-4 w-4 text-purple" />
+                    <span>Dedicated workspace in room</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-bold text-xs uppercase tracking-wider text-neutral-400 mb-3">
+                  Food &amp; Dining
+                </h4>
+                <div className="space-y-2.5">
+                  <div className="flex items-center gap-3">
+                    <Coffee className="h-4 w-4 text-purple" />
+                    <span>Complimentary daily hot breakfast</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <UtensilsCrossed className="h-4 w-4 text-purple" />
+                    <span>On-site restaurant &amp; bar serving Zambian dishes</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-bold text-xs uppercase tracking-wider text-neutral-400 mb-3">
+                  Parking &amp; Facilities
+                </h4>
+                <div className="space-y-2.5">
+                  <div className="flex items-center gap-3">
+                    <Car className="h-4 w-4 text-purple" />
+                    <span>Free secure parking on premises</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Waves className="h-4 w-4 text-purple" />
+                    <span>Communal swimming pool &amp; gardens</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Contact Host Modal */}
+      {showHostContactModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in"
+          onClick={() => setShowHostContactModal(false)}
+        >
+          <div
+            className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl animate-in zoom-in-95"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-4 border-b border-black/[0.08]">
+              <div>
+                <h3 className="text-lg font-bold text-neutral-900">Message {hostName}</h3>
+                <p className="text-xs text-neutral-500">Typical response time: within 20 mins</p>
+              </div>
+              <button
+                onClick={() => setShowHostContactModal(false)}
+                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {hostQuestionSent ? (
+              <div className="py-8 text-center space-y-2">
+                <div className="h-12 w-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+                  <CheckCircle2 className="h-6 w-6" />
+                </div>
+                <h4 className="text-base font-bold text-neutral-900">Message Sent!</h4>
+                <p className="text-xs text-neutral-500 max-w-xs mx-auto">
+                  {hostName} has received your inquiry and will reply to your registered
+                  email/phone.
+                </p>
+                <button
+                  onClick={() => setShowHostContactModal(false)}
+                  className="mt-4 px-6 py-2.5 rounded-xl bg-purple text-white text-xs font-bold"
+                >
+                  Done
+                </button>
+              </div>
+            ) : (
+              <div className="py-4 space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-neutral-700">Quick question</label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {[
+                      "Is early check-in possible?",
+                      "Can you arrange airport pickup?",
+                      "Do you have vegan meal options?",
+                    ].map((q) => (
+                      <button
+                        key={q}
+                        type="button"
+                        onClick={() => setHostQuestion(q)}
+                        className="text-[11px] bg-neutral-100 hover:bg-neutral-200 text-neutral-800 px-2.5 py-1 rounded-full font-medium transition-colors"
+                      >
+                        {q}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-neutral-700">Your message</label>
+                  <textarea
+                    rows={4}
+                    value={hostQuestion}
+                    onChange={(e) => setHostQuestion(e.target.value)}
+                    placeholder="Hi! I have a question about booking this stay..."
+                    className="w-full rounded-xl border border-neutral-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple/20 focus:border-purple"
+                  />
+                </div>
+
+                <button
+                  onClick={() => {
+                    if (!hostQuestion.trim()) {
+                      toast.error("Please type a message first");
+                      return;
+                    }
+                    setHostQuestionSent(true);
+                  }}
+                  className="w-full py-3 bg-purple hover:bg-purple-hover text-white rounded-xl font-bold text-xs transition-colors"
+                >
+                  Send Message
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

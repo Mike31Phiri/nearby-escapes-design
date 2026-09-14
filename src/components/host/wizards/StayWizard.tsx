@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 
+import { MapLocationPicker } from "../MapLocationPicker";
 import { staySchema, type StayFormValues } from "@/lib/validations/onboarding";
 
 // Using mock options from the original page
@@ -71,8 +72,24 @@ const STEPS = [
 
 export const STAY_STEPS = STEPS;
 
-export function StayWizard() {
-  const [currentStep, setCurrentStep] = useState(0);
+export interface StayWizardProps {
+  draftId?: string;
+  initialStep?: number;
+  initialValues?: Record<string, unknown>;
+  onStepChange?: (step: number) => void;
+  onAutoSave?: (values: Record<string, unknown>, step: number) => void;
+  onPublish?: (values: Record<string, unknown>) => void;
+}
+
+export function StayWizard({
+  draftId,
+  initialStep = 0,
+  initialValues,
+  onStepChange,
+  onAutoSave,
+  onPublish,
+}: StayWizardProps = {}) {
+  const [currentStep, setCurrentStep] = useState(initialStep);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
@@ -82,7 +99,7 @@ export function StayWizard() {
     defaultValues: {
       isMultiUnit: false,
       isDedicated: true,
-      maxGuests: 1,
+      maxGuests: 2,
       bedrooms: 1,
       beds: [{ room: "Bedroom 1", beds: ["Queen"] }],
       coreAmenities: [],
@@ -91,6 +108,11 @@ export function StayWizard() {
       outdoorAmenities: [],
       images: [],
       houseRules: [],
+      country: "Zambia",
+      city: "Lusaka",
+      latitude: -15.3875,
+      longitude: 28.3228,
+      ...(initialValues as any),
     },
   });
 
@@ -107,24 +129,49 @@ export function StayWizard() {
     const fieldsToValidate = STEPS[currentStep].fields;
     const isValid = await trigger(fieldsToValidate as any);
     if (isValid) {
-      setCurrentStep((prev) => Math.min(prev + 1, STEPS.length - 1));
+      const next = Math.min(currentStep + 1, STEPS.length - 1);
+      setCurrentStep(next);
+      onStepChange?.(next);
+      onAutoSave?.(methods.getValues() as any, next);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   const prevStep = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 0));
+    const prev = Math.max(currentStep - 1, 0);
+    setCurrentStep(prev);
+    onStepChange?.(prev);
+    onAutoSave?.(methods.getValues() as any, prev);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const onSubmit = async (data: StayFormValues) => {
     setIsSubmitting(true);
     try {
+      if (onPublish) {
+        await onPublish(data as any);
+        return;
+      }
+
+      // Synthesize a single "entire property" room type from the flat
+      // capacity + rate fields the wizard collects.
+      const roomTypeBeds = Array.from(
+        data.beds
+          .flatMap((r) => r.beds)
+          .reduce(
+            (counts, type) => counts.set(type, (counts.get(type) ?? 0) + 1),
+            new Map<string, number>(),
+          )
+          .entries(),
+      ).map(([type, count]) => ({ type, count }));
+
       const payload: CreateStayPayload = {
         title: data.title,
         description: data.slogan || "Enjoy a wonderful stay at this property.",
         propertyType: data.propertyType,
         maxGuests: data.maxGuests,
         bedrooms: data.bedrooms,
-        bathrooms: 1, // Defaulting as not captured in basic wizard
+        bathrooms: 1,
         amenities: [
           ...data.coreAmenities,
           ...data.kitchenAmenities,
@@ -134,20 +181,31 @@ export function StayWizard() {
         images: data.images,
         location: {
           address: data.address,
-          city: data.city,
-          province: data.country,
-          latitude: data.latitude || 0,
-          longitude: data.longitude || 0,
+          city: data.city || "Lusaka",
+          province: data.country || "Zambia",
+          latitude: data.latitude || -15.3875,
+          longitude: data.longitude || 28.3228,
         },
         baseRateNgwee: Math.floor((data.baseRate || 0) * 100),
         cancellationPolicy: data.cancelPolicy,
+        roomTypes: [
+          {
+            id: "whole-property",
+            name: "Entire property",
+            count: 1,
+            maxGuests: data.maxGuests,
+            bedrooms: data.bedrooms,
+            beds: roomTypeBeds,
+            pricePerNightNgwee: Math.floor((data.baseRate || 0) * 100),
+          },
+        ],
       };
 
       await createStay(payload);
       toast.success("Stay Listing Created Successfully!");
       router.push("/host/listings");
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to create listing.");
+      toast.error(error.response?.data?.message || error.message || "Failed to create listing.");
       console.error(error);
     } finally {
       setIsSubmitting(false);
@@ -268,8 +326,8 @@ export function StayWizard() {
                   control={control}
                   render={({ field }) => (
                     <div>
-                      <Label>City</Label>
-                      <Input {...field} placeholder="Cape Town" />
+                      <Label>City / Town</Label>
+                      <Input {...field} placeholder="Lusaka, Livingstone, etc." />
                       {errors.city && (
                         <p className="text-destructive text-sm mt-1">{errors.city.message}</p>
                       )}
@@ -281,8 +339,8 @@ export function StayWizard() {
                   control={control}
                   render={({ field }) => (
                     <div>
-                      <Label>Country</Label>
-                      <Input {...field} placeholder="South Africa" />
+                      <Label>Country / Province</Label>
+                      <Input {...field} placeholder="Zambia" />
                       {errors.country && (
                         <p className="text-destructive text-sm mt-1">{errors.country.message}</p>
                       )}
@@ -290,42 +348,21 @@ export function StayWizard() {
                   )}
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <Controller
-                  name="latitude"
-                  control={control}
-                  render={({ field }) => (
-                    <div>
-                      <Label>Latitude (Mock Leaflet)</Label>
-                      <Input
-                        type="number"
-                        step="any"
-                        {...field}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                      />
-                      {errors.latitude && (
-                        <p className="text-destructive text-sm mt-1">{errors.latitude.message}</p>
-                      )}
-                    </div>
-                  )}
-                />
-                <Controller
-                  name="longitude"
-                  control={control}
-                  render={({ field }) => (
-                    <div>
-                      <Label>Longitude</Label>
-                      <Input
-                        type="number"
-                        step="any"
-                        {...field}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                      />
-                      {errors.longitude && (
-                        <p className="text-destructive text-sm mt-1">{errors.longitude.message}</p>
-                      )}
-                    </div>
-                  )}
+
+              {/* Map Location Picker with Free Map & Google Maps options */}
+              <div className="pt-2">
+                <MapLocationPicker
+                  latitude={watch("latitude")}
+                  longitude={watch("longitude")}
+                  address={watch("address")}
+                  city={watch("city")}
+                  onChange={({ latitude, longitude, city }) => {
+                    setValue("latitude", latitude, { shouldValidate: true });
+                    setValue("longitude", longitude, { shouldValidate: true });
+                    if (city) {
+                      setValue("city", city, { shouldValidate: true });
+                    }
+                  }}
                 />
               </div>
               <Controller
@@ -598,20 +635,30 @@ export function StayWizard() {
         )}
 
         {/* Navigation */}
-        <div className="flex items-center justify-between pt-8 border-t mt-8">
-          <Button type="button" variant="outline" onClick={prevStep} disabled={currentStep === 0}>
-            <ChevronLeft className="h-4 w-4 mr-2" /> Back
+        <div className="flex items-center justify-between pt-8 border-t border-neutral-200/80 mt-8">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={prevStep}
+            disabled={currentStep === 0}
+            className="rounded-xl border-neutral-200/80 hover:bg-neutral-100 text-sm font-semibold h-11 px-5 cursor-pointer"
+          >
+            <ChevronLeft className="h-4 w-4 mr-1.5" /> Back
           </Button>
 
           {currentStep < STEPS.length - 1 ? (
-            <Button type="button" onClick={nextStep} className="bg-primary text-primary-foreground">
-              Continue <ChevronRight className="h-4 w-4 ml-2" />
+            <Button
+              type="button"
+              onClick={nextStep}
+              className="bg-purple text-white hover:bg-purple-hover font-semibold px-6 h-11 text-sm rounded-xl shadow-xs transition-all cursor-pointer"
+            >
+              Continue <ChevronRight className="h-4 w-4 ml-1.5" />
             </Button>
           ) : (
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-[#f2ba0d] hover:bg-[#B89430] text-[#1f1433] font-bold"
+              className="bg-purple text-white hover:bg-purple-hover font-semibold px-7 h-11 text-sm rounded-xl shadow-xs transition-all cursor-pointer"
             >
               {isSubmitting ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
               Publish Listing

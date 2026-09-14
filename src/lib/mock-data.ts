@@ -775,3 +775,354 @@ export const mockDestinations: Destination[] = [
     image: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=80",
   },
 ];
+
+// Explore discovery hierarchy (province → city → attraction)
+// Seed data for the Explore flow. Served through the /api/explore/* route
+// handlers — guest components access it via @/lib/api/explore and never import
+// this section from the client directly.
+
+export interface ExploreProvince {
+  id: string; // slug e.g. 'southern'
+  name: string;
+  desc: string;
+  image: string;
+  /** Lucide icon key rendered by the UI (JSON-serializable, not a component). */
+  icon: "sun" | "waves" | "trees" | "navigation" | "mountain";
+  stays: number;
+  experiences: number;
+}
+
+export interface ExploreCity {
+  id: string; // slug e.g. 'livingstone'
+  name: string;
+  region: string;
+  image: string;
+  stays: number;
+}
+
+export interface ExploreAttraction {
+  id: string; // slug e.g. 'victoria-falls'
+  name: string;
+  image: string;
+  rating: number;
+  reviews: number;
+}
+
+export const provinces: ExploreProvince[] = [
+  {
+    id: "lusaka",
+    name: "Lusaka Province",
+    desc: "Urban comforts meet rural charm — farm stays, city guesthouses, and bush lodges.",
+    image: "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=800&q=80",
+    icon: "sun",
+    stays: 42,
+    experiences: 15,
+  },
+  {
+    id: "southern",
+    name: "Southern Province",
+    desc: "Victoria Falls, Lake Kariba, and adventure-packed livingstone.",
+    image: "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800&q=80",
+    icon: "waves",
+    stays: 35,
+    experiences: 22,
+  },
+  {
+    id: "eastern",
+    name: "Eastern Province",
+    desc: "South Luangwa's world-class wildlife and untouched wilderness.",
+    image: "https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=800&q=80",
+    icon: "trees",
+    stays: 18,
+    experiences: 12,
+  },
+  {
+    id: "northern",
+    name: "Northern Province",
+    desc: "Hidden waterfalls, Lake Tanganyika, and Kasama's natural beauty.",
+    image: "https://images.unsplash.com/photo-1546703565-373809930f78?w=800&q=80",
+    icon: "mountain",
+    stays: 14,
+    experiences: 8,
+  },
+  {
+    id: "copperbelt",
+    name: "Copperbelt Province",
+    desc: "Ndola, Kitwe, and the industrial heritage of Zambia's mining heartland.",
+    image: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=80",
+    icon: "navigation",
+    stays: 20,
+    experiences: 6,
+  },
+  {
+    id: "central",
+    name: "Central Province",
+    desc: "Kafue National Park gateway and farm country around Chisamba.",
+    image: "https://images.unsplash.com/photo-1500076656116-558758c991c1?w=800&q=80",
+    icon: "trees",
+    stays: 11,
+    experiences: 9,
+  },
+];
+
+export const citiesByProvince: Record<string, ExploreCity[]> = {
+  lusaka: [
+    {
+      id: "lusaka-city",
+      name: "Lusaka City",
+      region: "Capital",
+      image: "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=600&q=80",
+      stays: 32,
+    },
+    {
+      id: "chisamba",
+      name: "Chisamba",
+      region: "Farm Country",
+      image: "https://images.unsplash.com/photo-1500076656116-558758c991c1?w=600&q=80",
+      stays: 8,
+    },
+    {
+      id: "chongwe",
+      name: "Chongwe",
+      region: "Bush Edge",
+      image: "https://images.unsplash.com/photo-1546703565-373809930f78?w=600&q=80",
+      stays: 6,
+    },
+  ],
+  southern: [
+    {
+      id: "livingstone",
+      name: "Livingstone",
+      region: "Victoria Falls",
+      image: "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=600&q=80",
+      stays: 24,
+    },
+    {
+      id: "kariba",
+      name: "Kariba",
+      region: "Lake Kariba",
+      image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=80",
+      stays: 11,
+    },
+    {
+      id: "choma",
+      name: "Choma",
+      region: "Southern Highs",
+      image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&q=80",
+      stays: 5,
+    },
+  ],
+  eastern: [
+    {
+      id: "mfuwe",
+      name: "Mfuwe",
+      region: "South Luangwa",
+      image: "https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=600&q=80",
+      stays: 15,
+    },
+    {
+      id: "chipata",
+      name: "Chipata",
+      region: "Gateway Town",
+      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=80",
+      stays: 4,
+    },
+  ],
+  northern: [
+    {
+      id: "kasama",
+      name: "Kasama",
+      region: "Waterfalls",
+      image: "https://images.unsplash.com/photo-1546703565-373809930f78?w=600&q=80",
+      stays: 8,
+    },
+    {
+      id: "mpulungu",
+      name: "Mpulungu",
+      region: "Lake Tanganyika",
+      image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=80",
+      stays: 6,
+    },
+  ],
+  copperbelt: [
+    {
+      id: "ndola",
+      name: "Ndola",
+      region: "Industrial Hub",
+      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=80",
+      stays: 12,
+    },
+    {
+      id: "kitwe",
+      name: "Kitwe",
+      region: "Mining Town",
+      image: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=600&q=80",
+      stays: 8,
+    },
+  ],
+  central: [
+    {
+      id: "kafue",
+      name: "Kafue",
+      region: "National Park",
+      image: "https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=600&q=80",
+      stays: 9,
+    },
+    {
+      id: "kapiri",
+      name: "Kapiri Mposhi",
+      region: "Rail Junction",
+      image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&q=80",
+      stays: 3,
+    },
+  ],
+};
+
+export const attractionsByCity: Record<string, ExploreAttraction[]> = {
+  livingstone: [
+    {
+      id: "victoria-falls",
+      name: "Victoria Falls",
+      image: "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=600&q=80",
+      rating: 4.9,
+      reviews: 312,
+    },
+    {
+      id: "devils-pool",
+      name: "Devil's Pool",
+      image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=80",
+      rating: 4.8,
+      reviews: 186,
+    },
+    {
+      id: "mosi-oa-tunya",
+      name: "Mosi-oa-Tunya Park",
+      image: "https://images.unsplash.com/photo-1546703565-373809930f78?w=600&q=80",
+      rating: 4.7,
+      reviews: 224,
+    },
+  ],
+  mfuwe: [
+    {
+      id: "south-luangwa-np",
+      name: "South Luangwa National Park",
+      image: "https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=600&q=80",
+      rating: 4.9,
+      reviews: 198,
+    },
+    {
+      id: "lions-paw",
+      name: "Lions Paw Camp",
+      image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80",
+      rating: 4.8,
+      reviews: 87,
+    },
+  ],
+  kafue: [
+    {
+      id: "kafue-np",
+      name: "Kafue National Park",
+      image: "https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=600&q=80",
+      rating: 4.7,
+      reviews: 156,
+    },
+    {
+      id: "kafue-river-lodge",
+      name: "Kafue River Lodge",
+      image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80",
+      rating: 4.6,
+      reviews: 64,
+    },
+  ],
+};
+
+// Explore hierarchy lookups (used server-side by /api/explore/*)
+
+export function getExploreProvince(id: string): ExploreProvince | undefined {
+  return provinces.find((p) => p.id === id);
+}
+
+export function getExploreCities(provinceId: string): ExploreCity[] {
+  return citiesByProvince[provinceId] ?? [];
+}
+
+export function getExploreAttractions(cityId: string): ExploreAttraction[] {
+  return attractionsByCity[cityId] ?? [];
+}
+
+export function getExploreAttractionsByProvince(provinceId: string): ExploreAttraction[] {
+  const cities = getExploreCities(provinceId);
+  return cities.flatMap((city) => attractionsByCity[city.id] ?? []);
+}
+
+// Location filters (server-side; applied before responses are sent)
+
+export function filterStaysByLocation<T extends { location: string }>(
+  stays: T[],
+  provinceId?: string,
+  cityId?: string,
+): T[] {
+  if (!provinceId) return stays;
+  const province = getExploreProvince(provinceId);
+  if (!province) return stays;
+  const provinceName = province.name.toLowerCase().replace("province", "").trim();
+  let filtered = stays.filter((s) => s.location.toLowerCase().includes(provinceName));
+  if (cityId) {
+    const city = getExploreCities(provinceId).find((c) => c.id === cityId);
+    if (city) {
+      const cityFiltered = stays.filter((s) =>
+        s.location.toLowerCase().includes(city.name.toLowerCase()),
+      );
+      if (cityFiltered.length > 0) filtered = cityFiltered;
+    }
+  }
+  return filtered;
+}
+
+export function filterExperiencesByLocation<T extends { location: string }>(
+  experiences: T[],
+  provinceId?: string,
+  cityId?: string,
+): T[] {
+  if (!provinceId) return experiences;
+  const province = getExploreProvince(provinceId);
+  if (!province) return experiences;
+  const provinceName = province.name.toLowerCase().replace("province", "").trim();
+  let filtered = experiences.filter((e) => e.location.toLowerCase().includes(provinceName));
+  if (cityId) {
+    const city = getExploreCities(provinceId).find((c) => c.id === cityId);
+    if (city) {
+      const cityFiltered = experiences.filter((e) =>
+        e.location.toLowerCase().includes(city.name.toLowerCase()),
+      );
+      if (cityFiltered.length > 0) filtered = cityFiltered;
+    }
+  }
+  return filtered;
+}
+
+export function filterTransportByLocation<T extends { from: string; to: string }>(
+  transport: T[],
+  provinceId?: string,
+  cityId?: string,
+): T[] {
+  if (!provinceId) return transport;
+  const province = getExploreProvince(provinceId);
+  if (!province) return transport;
+  const provinceName = province.name.toLowerCase().replace("province", "").trim();
+  let filtered = transport.filter(
+    (t) => t.from.toLowerCase().includes(provinceName) || t.to.toLowerCase().includes(provinceName),
+  );
+  if (cityId) {
+    const city = getExploreCities(provinceId).find((c) => c.id === cityId);
+    if (city) {
+      const cityFiltered = transport.filter(
+        (t) =>
+          t.from.toLowerCase().includes(city.name.toLowerCase()) ||
+          t.to.toLowerCase().includes(city.name.toLowerCase()),
+      );
+      if (cityFiltered.length > 0) filtered = cityFiltered;
+    }
+  }
+  return filtered;
+}

@@ -8,6 +8,7 @@ import { FileQuestion, Loader2 } from "lucide-react";
 
 import { getDraftListing, publishListing, updateDraftListing } from "@/lib/api/listings";
 import { ROUTES } from "@/lib/constants/routes";
+import { useListingDraftStore } from "@/store/listingDraftStore";
 import type { ListingDraft } from "@/types/listing";
 
 import {
@@ -41,18 +42,24 @@ export function ListingEditorPage({ draftId }: { draftId: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const [mounted, setMounted] = useState(false);
   const [draft, setDraft] = useState<ListingDraft | null>(null);
   const [loading, setLoading] = useState(true);
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(() => {
+    const urlStep = Number(searchParams.get("step"));
+    if (Number.isInteger(urlStep) && urlStep > 0) return urlStep - 1;
+    return 0;
+  });
   const [saveState, setSaveState] = useState<ListingSaveState>("idle");
 
   // Latest form snapshot — lets Save & Exit flush even between debounce ticks.
   const latestValues = useRef<Record<string, unknown> | null>(null);
-  const latestStep = useRef(0);
+  const latestStep = useRef(currentStep);
   const pendingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Load the draft on mount (backend first, localStorage fallback).
+  // Sync draft on mount (instant local lookup)
   useEffect(() => {
+    setMounted(true);
     let cancelled = false;
     (async () => {
       try {
@@ -62,12 +69,12 @@ export function ListingEditorPage({ draftId }: { draftId: string }) {
           setDraft(null);
         } else {
           const urlStep = Number(searchParams.get("step"));
-          const initialStep =
+          const stepIndex =
             Number.isInteger(urlStep) && urlStep > 0 ? urlStep - 1 : found.currentStep;
           setDraft(found);
-          setCurrentStep(initialStep);
+          setCurrentStep(stepIndex);
           latestValues.current = found.form ?? null;
-          latestStep.current = initialStep;
+          latestStep.current = stepIndex;
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -86,30 +93,31 @@ export function ListingEditorPage({ draftId }: { draftId: string }) {
   const Wizard = draft ? (WIZARDS_BY_TYPE[draft.type] as React.ElementType) : null;
 
   const saveSnapshot = useCallback(
-    async (values: Record<string, unknown>, step: number) => {
+    (values: Record<string, unknown>, step: number) => {
       if (!draftId) return;
       latestValues.current = values;
       latestStep.current = step;
+      setCurrentStep(step);
       setSaveState("saving");
 
-      try {
-        const updated = await updateDraftListing(draftId, {
-          form: values,
-          currentStep: step,
-          progressPercent: computeProgress(step, steps.length),
+      updateDraftListing(draftId, {
+        form: values,
+        currentStep: step,
+        progressPercent: computeProgress(step, steps.length),
+      })
+        .then((updated) => {
+          setDraft(updated);
+          setSaveState("saved");
+          if (pendingTimeout.current) clearTimeout(pendingTimeout.current);
+          pendingTimeout.current = setTimeout(
+            () => setSaveState((s) => (s === "saved" ? "idle" : s)),
+            1200,
+          );
+        })
+        .catch((err) => {
+          console.error("Auto-save failed", err);
+          setSaveState("error");
         });
-        setDraft(updated);
-        setCurrentStep(step);
-        setSaveState("saved");
-        if (pendingTimeout.current) clearTimeout(pendingTimeout.current);
-        pendingTimeout.current = setTimeout(
-          () => setSaveState((s) => (s === "saved" ? "idle" : s)),
-          1600,
-        );
-      } catch (err) {
-        console.error("Auto-save failed", err);
-        setSaveState("error");
-      }
     },
     [draftId, steps.length],
   );
@@ -119,7 +127,7 @@ export function ListingEditorPage({ draftId }: { draftId: string }) {
     if (latestValues.current !== null) {
       await saveSnapshot(latestValues.current, latestStep.current);
     }
-    router.push(ROUTES.host.listings);
+    router.push(ROUTES?.host?.listings ?? "/host/listings");
   }, [draftId, router, saveSnapshot]);
 
   const handlePublish = useCallback(
@@ -130,7 +138,7 @@ export function ListingEditorPage({ draftId }: { draftId: string }) {
       try {
         await publishListing(draftId);
         toast.success("Listing published — it's now live!");
-        router.push(ROUTES.host.listings);
+        router.push(ROUTES?.host?.listings ?? "/host/listings");
       } catch (err) {
         console.error(err);
         toast.error("Couldn't publish the listing. Please try again.");
@@ -139,9 +147,9 @@ export function ListingEditorPage({ draftId }: { draftId: string }) {
     [draftId, router, saveSnapshot],
   );
 
-  if (loading) {
+  if (!mounted || loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-neutral-50 font-sans">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background font-sans">
         <Loader2 className="h-8 w-8 text-purple animate-spin mb-4" />
         <p className="text-sm font-semibold text-neutral-500">Loading draft…</p>
       </div>
@@ -150,8 +158,8 @@ export function ListingEditorPage({ draftId }: { draftId: string }) {
 
   if (!draft || !Wizard || steps.length === 0) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-neutral-50 font-sans px-4">
-        <div className="bg-white border border-neutral-200 rounded-2xl shadow-sm p-10 max-w-md w-full text-center">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background font-sans px-4">
+        <div className="bg-white border border-neutral-200/80 rounded-2xl shadow-2xs p-10 max-w-md w-full text-center">
           <div className="h-14 w-14 rounded-2xl bg-neutral-100 flex items-center justify-center mx-auto mb-5">
             <FileQuestion className="h-7 w-7 text-neutral-400" />
           </div>
@@ -160,8 +168,8 @@ export function ListingEditorPage({ draftId }: { draftId: string }) {
             This draft may have been deleted or never existed.
           </p>
           <Link
-            href={ROUTES.host.listings}
-            className="inline-flex items-center justify-center h-10 px-5 rounded-xl bg-purple text-white text-sm font-bold hover:bg-purple-hover transition-colors"
+            href={ROUTES?.host?.listings ?? "/host/listings"}
+            className="inline-flex items-center justify-center h-10 px-5 rounded-xl bg-purple text-white text-sm font-semibold hover:bg-purple-hover transition-colors shadow-xs"
           >
             Back to my listings
           </Link>

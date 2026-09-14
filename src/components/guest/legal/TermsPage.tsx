@@ -11,9 +11,11 @@ export function TermsPage() {
           title="Terms of Service"
           description="Last updated: May 2025"
         />
-        <div className="space-y-6 text-muted-foreground text-base leading-relaxed">
+        <div className="space-y-10 text-neutral-500 text-[14px] leading-7">
           <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">1. Acceptance of Terms</h2>
+            <h2 className="text-[15px] font-semibold text-neutral-800 mb-2">
+              1. Acceptance of Terms
+            </h2>
             <p>
               By accessing or using Nearby Escapes, you agree to be bound by these Terms of Service.
               If you do not agree, please do not use our platform. We reserve the right to update
@@ -21,7 +23,9 @@ export function TermsPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">2. User Responsibilities</h2>
+            <h2 className="text-[15px] font-semibold text-neutral-800 mb-2">
+              2. User Responsibilities
+            </h2>
             <p>
               You agree to provide accurate information when creating an account and making
               bookings. You are responsible for maintaining the confidentiality of your account
@@ -30,7 +34,9 @@ export function TermsPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">3. Bookings & Payments</h2>
+            <h2 className="text-[15px] font-semibold text-neutral-800 mb-2">
+              3. Bookings &amp; Payments
+            </h2>
             <p>
               All bookings are subject to availability and host confirmation. Prices are displayed
               in Zambian Kwacha (K) and include applicable taxes unless otherwise stated.
@@ -39,7 +45,7 @@ export function TermsPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">4. Host Obligations</h2>
+            <h2 className="text-[15px] font-semibold text-neutral-800 mb-2">4. Host Obligations</h2>
             <p>
               Hosts agree to maintain accurate listings, honor confirmed bookings, respond promptly
               to guest inquiries, and provide services as described. Failure to meet these
@@ -47,7 +53,9 @@ export function TermsPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">5. Limitation of Liability</h2>
+            <h2 className="text-[15px] font-semibold text-neutral-800 mb-2">
+              5. Limitation of Liability
+            </h2>
             <p>
               Nearby Escapes acts as a marketplace connecting guests and hosts. We are not
               responsible for the actual condition of listings, the conduct of guests or hosts, or
@@ -56,7 +64,7 @@ export function TermsPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">6. Contact</h2>
+            <h2 className="text-[15px] font-semibold text-neutral-800 mb-2">6. Contact</h2>
             <p>For questions about these terms, contact legal@nearbyescapes.com.</p>
           </section>
         </div>

@@ -109,24 +109,24 @@ export function HelpPage() {
         {/* Header */}
         <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-12">
           <div className="mx-auto max-w-3xl px-4 md:px-6 pt-8 md:pt-12 text-center">
-            <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary mb-4">
-              <HelpCircle className="h-6 w-6" />
+            <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/8 text-primary mb-4">
+              <HelpCircle className="h-5 w-5" />
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground mb-2">
+            <h1 className="text-xl md:text-2xl font-semibold tracking-[-0.02em] text-neutral-900 mb-2">
               Help Center
             </h1>
-            <p className="text-base text-muted-foreground max-w-lg mx-auto mb-8">
+            <p className="text-[13px] text-neutral-400 max-w-lg mx-auto mb-8">
               Find answers to common questions or get in touch with our support team
             </p>
 
             {/* Search */}
             <div className="relative max-w-xl mx-auto">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-neutral-400" />
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search for help..."
-                className="h-12 pl-11 rounded-2xl border-border/60 shadow-sm text-base"
+                className="h-11 pl-10 rounded-2xl border-neutral-200 shadow-sm text-[13px]"
               />
             </div>
           </div>
@@ -141,10 +141,10 @@ export function HelpPage() {
                 key={id}
                 onClick={() => setActiveCategory(id)}
                 className={cn(
-                  "flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold border transition-all",
+                  "flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[12px] font-medium border transition-all",
                   activeCategory === id
                     ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                    : "bg-card text-muted-foreground border-border/60 hover:border-primary/30 hover:text-foreground",
+                    : "bg-card text-neutral-500 border-neutral-200 hover:border-primary/30 hover:text-neutral-900",
                 )}
               >
                 <Icon className="h-3.5 w-3.5" />
@@ -156,9 +156,9 @@ export function HelpPage() {
           {/* FAQ List */}
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center py-16 text-center">
-              <HelpCircle className="h-12 w-12 text-muted-foreground/30 mb-4" />
-              <h3 className="text-xl font-bold text-foreground mb-1">No results found</h3>
-              <p className="text-base text-muted-foreground max-w-sm">
+              <HelpCircle className="h-10 w-10 text-neutral-200 mb-4" />
+              <h3 className="text-base font-medium text-neutral-700 mb-1">No results found</h3>
+              <p className="text-[13px] text-neutral-400 max-w-sm">
                 Try different keywords or browse by category above.
               </p>
             </div>
@@ -173,9 +173,9 @@ export function HelpPage() {
                   >
                     <button
                       onClick={() => setOpenFaq(isOpen ? null : faq.question)}
-                      className="w-full flex items-center justify-between gap-4 p-4 text-left"
+                      className="w-full flex items-center justify-between gap-4 px-4 py-3.5 text-left"
                     >
-                      <span className="text-base font-semibold text-foreground">
+                      <span className="text-[14px] font-medium text-neutral-900">
                         {faq.question}
                       </span>
                       <ChevronDown
@@ -187,9 +187,7 @@ export function HelpPage() {
                     </button>
                     {isOpen && (
                       <div className="px-4 pb-4 animate-in fade-in slide-in-from-top-1 duration-200">
-                        <p className="text-base text-muted-foreground leading-relaxed">
-                          {faq.answer}
-                        </p>
+                        <p className="text-[13px] text-neutral-500 leading-relaxed">{faq.answer}</p>
                       </div>
                     )}
                   </div>
@@ -199,10 +197,10 @@ export function HelpPage() {
           )}
 
           {/* Contact section */}
-          <div className="mt-12 rounded-2xl border border-border/50 bg-card p-8 shadow-sm card-shadow text-center">
-            <MessageSquare className="h-8 w-8 text-primary mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-foreground mb-2">Still need help?</h3>
-            <p className="text-base text-muted-foreground max-w-md mx-auto mb-6">
+          <div className="mt-12 rounded-2xl border border-neutral-100 bg-white p-8 shadow-sm text-center">
+            <MessageSquare className="h-7 w-7 text-primary mx-auto mb-4" />
+            <h3 className="text-base font-semibold text-neutral-900 mb-1.5">Still need help?</h3>
+            <p className="text-[13px] text-neutral-400 max-w-md mx-auto mb-6">
               Our support team is available Monday to Friday, 8am–6pm, and Saturday 9am–4pm.
             </p>
             <div className="flex flex-wrap justify-center gap-3">

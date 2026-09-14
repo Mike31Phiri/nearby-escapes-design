@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useAuth } from "@/lib/store/authStore";
+import { DiscoveryDirectory } from "@/components/layout/DiscoveryDirectory";
 import {
   Facebook,
   Instagram,
@@ -91,9 +92,17 @@ export function Footer() {
 
   return (
     <footer className="mt-0 border-t border-transparent text-black">
+      {/* Discovery Directory — only on Home & Explore pages */}
+      {(pathname === "/" ||
+        pathname?.startsWith("/stays") ||
+        pathname?.startsWith("/experiences") ||
+        pathname?.startsWith("/transport") ||
+        pathname?.startsWith("/gems") ||
+        pathname?.startsWith("/packages")) && <DiscoveryDirectory />}
+
       {/* Newsletter Pre-Footer — only on homepage for unauthenticated users */}
       {!isAuthenticated && pathname === "/" && (
-        <div className="border-t border-black/5 bg-white-soft">
+        <div className="border-t border-purple/10 bg-[#f8f5fc]">
           <div className="mx-auto max-w-7xl px-6 pt-10 pb-10 md:pt-10 md:pb-12 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-center md:text-left">
               <h3 className="font-display text-xl md:text-xl font-bold tracking-tight text-black">
@@ -116,7 +125,7 @@ export function Footer() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email address"
                   required
-                  className="w-full h-[44px] md:h-12 rounded-full bg-white border border-transparent pl-11 pr-4 text-[14px] md:text-[15px] text-black placeholder:text-black-faint outline-none focus:border-purple focus:ring-2 focus:ring-purple-muted transition-all duration-200 shadow-md"
+                  className="w-full h-[44px] md:h-12 rounded-full bg-white border border-purple/15 pl-11 pr-4 text-[14px] md:text-[15px] text-black placeholder:text-black-faint outline-none focus:border-purple focus:ring-2 focus:ring-purple-muted transition-all duration-200 shadow-sm"
                 />
               </div>
               <button
@@ -132,7 +141,7 @@ export function Footer() {
       )}
 
       {/* Main Footer Columns */}
-      <div className="bg-white-soft">
+      <div className="border-t border-purple/10 bg-[#f8f5fc]">
         <div className="mx-auto max-w-7xl px-6 py-12 md:py-16">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-12">
             {/* Brand column */}

@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { cn } from "@/lib/utils";
 
@@ -17,23 +19,25 @@ export function AdminPageHeader({
   className,
 }: AdminPageHeaderProps) {
   return (
-    <div className={cn("bg-[#f2ba0d] w-full", className)}>
-      <div className="mx-auto max-w-7xl px-4 md:px-6 py-6 md:py-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
+    <div className={cn("bg-white border-b border-neutral-200/80 w-full shadow-2xs", className)}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 py-5 md:py-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="min-w-0">
             {eyebrow && (
-              <p className="text-[10px] sm:text-sm font-bold text-[#1f1433] uppercase tracking-widest mb-1">
+              <span className="inline-block text-[11px] font-semibold text-purple uppercase tracking-wider mb-1.5 px-2 py-0.5 rounded-md bg-purple/10 border border-purple/15">
                 {eyebrow}
-              </p>
+              </span>
             )}
-            <h1 className="font-display text-2xl md:text-3xl font-bold tracking-tight text-white leading-tight">
+            <h1 className="font-display text-xl sm:text-2xl font-semibold tracking-tight text-neutral-900 leading-snug">
               {title}
             </h1>
             {description && (
-              <p className="text-base text-white/70 mt-1 max-w-xl leading-relaxed">{description}</p>
+              <p className="text-neutral-500 mt-1 text-sm max-w-xl leading-relaxed">
+                {description}
+              </p>
             )}
           </div>
-          {actions && <div className="flex items-center gap-3 shrink-0">{actions}</div>}
+          {actions && <div className="flex items-center gap-3 shrink-0 flex-wrap">{actions}</div>}
         </div>
       </div>
     </div>

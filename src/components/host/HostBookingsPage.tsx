@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { Eye } from "lucide-react";
+import Link from "next/link";
+import { Eye, CalendarDays, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { mockHostBookings } from "@/lib/mock-host-bookings";
@@ -16,7 +17,6 @@ const bookingDates = (booking: HostBooking) =>
       ? formatDay(booking.date)
       : "";
 
-/* ------------------------- Request row ------------------------- */
 
 function BookingRow({
   booking,
@@ -28,41 +28,47 @@ function BookingRow({
   const badge = STATUS_BADGE[booking.status];
 
   return (
-    <div className="flex items-center gap-2.5 px-3 py-3 transition-colors hover:bg-neutral-50">
+    <div className="flex items-center gap-3 p-4 transition-colors hover:bg-neutral-50/70">
       <button
         onClick={() => onOpen(booking)}
         aria-label={`View details for ${booking.guestName}`}
-        className="flex items-center gap-2.5 flex-1 min-w-0 text-left outline-none"
+        className="flex items-center gap-3.5 flex-1 min-w-0 text-left outline-none"
       >
-        <div className="h-9 w-9 shrink-0 rounded-full bg-neutral-100 text-neutral-600 flex items-center justify-center text-[11px] font-bold">
+        <div className="h-10 w-10 shrink-0 rounded-full bg-purple/10 text-purple border border-purple/20 flex items-center justify-center text-xs font-bold">
           {initials(booking.guestName)}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-[12px] font-semibold text-neutral-900 truncate">
+          <div className="text-sm font-bold text-neutral-900 truncate">
             {booking.guestName}{" "}
-            <span className="text-neutral-400 font-medium">
+            <span className="text-neutral-400 font-normal">
               · {booking.guests} {booking.guests === 1 ? "guest" : "guests"}
             </span>
           </div>
-          <div className="text-[10px] text-neutral-500 truncate">{booking.listingName}</div>
-          <div className="text-[10px] text-neutral-400 truncate">
+          <div className="text-xs text-neutral-600 truncate mt-0.5">{booking.listingName}</div>
+          <div className="text-xs text-neutral-400 truncate mt-0.5 font-medium">
             {bookingDates(booking)} · K{booking.amount.toLocaleString()}
           </div>
         </div>
       </button>
+
       <span
-        className="text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap shrink-0"
-        style={{ background: badge.bg, color: badge.fg }}
+        className="text-[10px] font-bold px-2.5 py-0.5 rounded-full whitespace-nowrap shrink-0 border"
+        style={{
+          background: badge.bg,
+          color: badge.fg,
+          borderColor: `${badge.fg}30`,
+        }}
       >
         {badge.label}
       </span>
+
       <button
         onClick={() => onOpen(booking)}
         aria-label={`View details for booking ${booking.bookingRef}`}
-        className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-[11px] font-bold text-purple hover:border-purple/40 hover:bg-purple/5 transition-colors outline-none"
+        className="shrink-0 inline-flex items-center gap-1.5 rounded-xl border border-neutral-200 bg-white px-3 py-1.5 text-xs font-bold text-purple hover:border-purple/40 hover:bg-purple/5 transition-colors outline-none"
       >
         <Eye className="h-3.5 w-3.5" />
-        View details
+        View
       </button>
     </div>
   );
@@ -80,12 +86,12 @@ function GroupSection({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mb-4 last:mb-0">
-      <div className="flex items-center gap-2 mb-2">
+    <div className="space-y-3">
+      <div className="flex items-center gap-2">
         <div
           className={cn(
-            "w-[26px] h-[26px] rounded-lg flex items-center justify-center",
-            tone === "purple" ? "bg-[#f3eafb]" : "bg-emerald-50",
+            "w-6 h-6 rounded-lg flex items-center justify-center",
+            tone === "purple" ? "bg-purple/10" : "bg-emerald-50",
           )}
         >
           <span
@@ -95,18 +101,17 @@ function GroupSection({
             )}
           />
         </div>
-        <span className="text-[12px] font-medium text-neutral-900">
+        <span className="text-sm font-bold text-neutral-900">
           {title} ({count})
         </span>
       </div>
-      <div className="bg-white border border-neutral-200 rounded-xl overflow-hidden">
+      <div className="bg-white border border-neutral-200/80 rounded-2xl shadow-2xs overflow-hidden divide-y divide-neutral-100">
         {children}
       </div>
     </div>
   );
 }
 
-/* ------------------------------ Main page ------------------------------- */
 
 export function HostBookingsPage() {
   const [processing, setProcessing] = useState<string | null>(null);
@@ -154,48 +159,52 @@ export function HostBookingsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-background pb-16 font-sans">
       <HostPageHeader
         title="Bookings"
-        description="View and manage all your upcoming and past guest stays."
+        description="View, approve, and manage all your upcoming and past guest stays."
+        actions={
+          <Link
+            href="/host/bookings/manifest"
+            className="inline-flex items-center gap-1.5 h-10 px-4 rounded-xl border border-neutral-200/80 bg-white text-xs font-bold text-neutral-700 hover:border-purple/40 hover:text-purple shadow-2xs transition-all"
+          >
+            <FileText className="h-4 w-4" />
+            Daily Manifest
+          </Link>
+        }
       />
-      <div className="mx-auto max-w-7xl px-4 md:px-6 py-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 py-8 space-y-8">
         {/* Pending approval */}
         {pending.length > 0 && (
-          <div className="mb-6">
-            <GroupSection title="Pending approval" count={pending.length} tone="purple">
-              {pending.map((b) => (
-                <BookingRow key={b.id} booking={b} onOpen={openDetails} />
-              ))}
-            </GroupSection>
-          </div>
+          <GroupSection title="Pending approval" count={pending.length} tone="purple">
+            {pending.map((b) => (
+              <BookingRow key={b.id} booking={b} onOpen={openDetails} />
+            ))}
+          </GroupSection>
         )}
 
         {/* Confirmed upcoming */}
         {confirmed.length > 0 && (
-          <div className="mb-6">
-            <GroupSection title="Confirmed upcoming" count={confirmed.length} tone="emerald">
-              {confirmed.map((b) => (
-                <BookingRow key={b.id} booking={b} onOpen={openDetails} />
-              ))}
-            </GroupSection>
-          </div>
+          <GroupSection title="Confirmed upcoming" count={confirmed.length} tone="emerald">
+            {confirmed.map((b) => (
+              <BookingRow key={b.id} booking={b} onOpen={openDetails} />
+            ))}
+          </GroupSection>
         )}
 
         {/* Completed */}
         {completed.length > 0 && (
-          <div className="mb-6">
-            <GroupSection title="Completed" count={completed.length} tone="emerald">
-              {completed.map((b) => (
-                <BookingRow key={b.id} booking={b} onOpen={openDetails} />
-              ))}
-            </GroupSection>
-          </div>
+          <GroupSection title="Completed" count={completed.length} tone="emerald">
+            {completed.map((b) => (
+              <BookingRow key={b.id} booking={b} onOpen={openDetails} />
+            ))}
+          </GroupSection>
         )}
 
         {pending.length + confirmed.length + completed.length === 0 && (
-          <div className="bg-white border border-dashed border-neutral-200 rounded-2xl py-10 text-center">
-            <p className="text-[12px] text-neutral-400 font-medium">No bookings found</p>
+          <div className="bg-white border border-dashed border-neutral-200/80 rounded-2xl py-12 text-center shadow-2xs">
+            <CalendarDays className="h-10 w-10 text-neutral-300 mx-auto mb-2" />
+            <p className="text-sm text-neutral-500 font-medium">No bookings found</p>
           </div>
         )}
       </div>

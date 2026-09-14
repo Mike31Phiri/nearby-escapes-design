@@ -34,6 +34,17 @@ export const useListingDraftStore = create<ListingDraftState>()(
   ),
 );
 
-/** Reactive selector — all drafts belonging to a host. */
-export const selectHostDrafts = (hostId: string) => (state: ListingDraftState) =>
-  Object.values(state.drafts).filter((d) => d.hostId === hostId);
+import { useMemo } from "react";
+
+/** Safe, memoized hook — all drafts belonging to a host without new array references. */
+export function useHostDrafts(hostId: string = "host-1") {
+  const drafts = useListingDraftStore((state) => state.drafts);
+  return useMemo(() => {
+    return Object.values(drafts).filter((d) => d.hostId === hostId);
+  }, [drafts, hostId]);
+}
+
+/** Legacy selector — note: selecting raw (state) => state.drafts and memoizing with useMemo is preferred. */
+export const selectHostDrafts = (hostId: string) => (state: ListingDraftState) => {
+  return state.drafts;
+};

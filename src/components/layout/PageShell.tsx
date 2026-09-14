@@ -48,21 +48,21 @@ export function PageShellHeader({
   className,
 }: PageShellHeaderProps) {
   return (
-    <div className={cn("mb-8", className)}>
+    <div className={cn("mb-10", className)}>
       {/* Breadcrumbs */}
       {breadcrumbs && breadcrumbs.length > 0 && (
-        <nav className="flex items-center gap-2 text-base text-muted-foreground mb-4">
+        <nav className="flex items-center gap-1.5 text-[12px] text-neutral-400 mb-5">
           {breadcrumbs.map((item, i) => (
-            <span key={i} className="flex items-center gap-2">
-              {i === 0 && <ChevronLeft className="h-4 w-4 shrink-0" />}
+            <span key={i} className="flex items-center gap-1.5">
+              {i === 0 && <ChevronLeft className="h-3.5 w-3.5 shrink-0" />}
               {item.href ? (
-                <Link href={item.href} className="hover:text-primary transition-colors font-medium">
+                <Link href={item.href} className="hover:text-neutral-700 transition-colors">
                   {item.label}
                 </Link>
               ) : (
-                <span className="text-foreground font-semibold truncate">{item.label}</span>
+                <span className="text-neutral-600 font-medium truncate">{item.label}</span>
               )}
-              {i < breadcrumbs.length - 1 && <span className="text-muted-foreground/30">/</span>}
+              {i < breadcrumbs.length - 1 && <span className="text-neutral-300">/</span>}
             </span>
           ))}
         </nav>
@@ -71,11 +71,11 @@ export function PageShellHeader({
       {/* Title + Actions row */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div className="min-w-0">
-          <h1 className="text-2xl md:text-3xl font-display font-black tracking-tight text-foreground">
+          <h1 className="text-2xl md:text-[28px] font-semibold tracking-[-0.02em] text-neutral-900 leading-snug">
             {title}
           </h1>
           {description && (
-            <p className="text-muted-foreground mt-1.5 max-w-2xl text-base md:text-lg leading-relaxed">
+            <p className="text-neutral-400 mt-1.5 max-w-2xl text-[13px] leading-relaxed">
               {description}
             </p>
           )}
@@ -90,7 +90,7 @@ export function PageShellHeader({
 
 export function PageShellContent({ children, className, size = "lg" }: PageShellContentProps) {
   return (
-    <main className="flex-1 w-full mx-auto px-4 md:px-6 py-6 md:py-8">
+    <main className="flex-1 w-full mx-auto px-4 md:px-6 py-10 md:py-14">
       <div
         className={cn(
           size === "sm" && "max-w-3xl",

@@ -1,4 +1,4 @@
-/**
+ /**
  * Double-blind review system:
  * Reviews remain HIDDEN until BOTH parties have submitted their review,
  * or 14 days have elapsed since checkout — whichever comes first.
@@ -8,9 +8,7 @@ export type ReviewStatus = "HIDDEN" | "PUBLISHED";
 
 export type ReviewAuthorRole = "guest" | "host";
 
-// ---------------------------------------------------------------------------
 // Review — a single review submitted by a guest or host after a booking
-// ---------------------------------------------------------------------------
 export interface Review {
   id: string;
   bookingId: string;
@@ -34,9 +32,7 @@ export interface Review {
   };
 }
 
-// ---------------------------------------------------------------------------
 // ReviewSummary — aggregated stats displayed on a listing card / detail page
-// ---------------------------------------------------------------------------
 export interface ReviewSummary {
   listingId: string;
   averageRating: number;

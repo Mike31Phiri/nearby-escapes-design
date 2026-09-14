@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Heart, Star } from "lucide-react";
+import { Heart, Star, MapPin } from "lucide-react";
 import type { Stay } from "@/types/stay";
 import { cn } from "@/lib/utils";
 import { memo } from "react";
@@ -71,7 +71,7 @@ export const ListingCard = memo(function ListingCard({ listing, className }: Lis
         </button>
       </div>
 
-      {/* Info — Title, Price, Rating only */}
+      {/* Info */}
       <div className="pt-2.5 px-0.5">
         <div className="flex items-start justify-between gap-3">
           <h3 className="text-[14px] font-semibold text-black-soft leading-snug line-clamp-1 flex-1">
@@ -84,6 +84,10 @@ export const ListingCard = memo(function ListingCard({ listing, className }: Lis
             </span>
           </div>
         </div>
+        <p className="flex items-center gap-1 text-xs text-neutral-500 mt-1">
+          <MapPin className="h-3 w-3 shrink-0 text-neutral-400" />
+          <span className="truncate">{listing.location}</span>
+        </p>
         <div className="flex items-baseline gap-0.5 mt-1.5">
           <span className="text-[14px] font-bold text-purple">ZMW {listing.price}</span>
           <span className="text-[11px] text-black-muted">/ night</span>

@@ -4,9 +4,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { safeLocalStorage } from "@/lib/safeStorage";
 
-/* ------------------------------------------------------------------ */
-/* Types                                                               */
-/* ------------------------------------------------------------------ */
+/* Types */
 
 export interface ManifestGuest {
   id: string;
@@ -57,9 +55,7 @@ export interface BookingRecord {
   cancelledAt?: string;
 }
 
-/* ------------------------------------------------------------------ */
-/* Deterministic manifest generation                                   */
-/* ------------------------------------------------------------------ */
+/* Deterministic manifest generation */
 
 const GUEST_POOL = [
   "Amina Zulu",
@@ -108,7 +104,7 @@ export function getSlotKey(listingId: string, date: string, time: string): strin
   return `${listingId}|${date}|${time}`;
 }
 
-/**
+ /**
  * Build the full manifest slot for a listing/date/time, applying the
  * persisted check-in overrides on top of the deterministic guest list.
  */
@@ -133,9 +129,7 @@ export function getManifestSlot(
   return { listingId, listingName, emoji, date, time, guests, totalPeople, checkedInPeople };
 }
 
-/* ------------------------------------------------------------------ */
-/* Refund logic                                                        */
-/* ------------------------------------------------------------------ */
+/* Refund logic */
 
 export interface RefundInfo {
   /** "Outside 48 hours" → 100%, otherwise 50% */
@@ -155,9 +149,7 @@ export function getRefundInfo(booking: Pick<BookingRecord, "date" | "time" | "to
 export const formatKw = (amount: number) =>
   `K${amount.toLocaleString("en-ZM", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-/* ------------------------------------------------------------------ */
-/* Seeded booking records                                              */
-/* ------------------------------------------------------------------ */
+/* Seeded booking records */
 
 function iso(d: Date): string {
   const y = d.getFullYear();
@@ -297,9 +289,7 @@ function seedBookings(): BookingRecord[] {
   ];
 }
 
-/* ------------------------------------------------------------------ */
-/* Store                                                               */
-/* ------------------------------------------------------------------ */
+/* Store */
 
 interface HostBookingsState {
   /** slotKey → guestId → checkedIn */
@@ -372,7 +362,7 @@ export const useHostBookingsStore = create<HostBookingsState>()(
         bookings: state.bookings,
         seededOn: state.seededOn,
       }),
-      // Booking dates are relative to "today" — re-seed on a new day so the
+// Booking dates are relative to "today" — re-seed on a new day so the
       // 48-hour refund calculation stays honest (cancellations reset overnight).
       merge: (persisted, current) => {
         const p = persisted as Partial<HostBookingsState> | null | undefined;

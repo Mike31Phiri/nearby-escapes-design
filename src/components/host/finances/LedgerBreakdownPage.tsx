@@ -22,16 +22,14 @@ export function LedgerBreakdownPage({ payoutId }: LedgerBreakdownPageProps) {
 
   if (!payout) {
     return (
-      <div className="min-h-screen bg-neutral-50 pb-12 font-sans flex items-center justify-center">
+      <div className="min-h-screen bg-background pb-16 font-sans flex items-center justify-center">
         <div className="text-center">
           <ReceiptText className="h-10 w-10 text-neutral-300 mx-auto mb-3" />
           <p className="text-sm font-bold text-neutral-900">Payout not found</p>
-          <p className="text-[11px] text-neutral-500 mt-1">
-            The ledger you requested does not exist.
-          </p>
+          <p className="text-xs text-neutral-500 mt-1">The ledger you requested does not exist.</p>
           <Link
-            href={ROUTES.host.earnings}
-            className="inline-flex items-center gap-1.5 mt-4 text-sm font-bold text-purple hover:underline"
+            href={ROUTES?.host?.finances ?? "/host/finances"}
+            className="inline-flex items-center gap-1.5 mt-4 text-sm font-semibold text-purple hover:underline"
           >
             <ArrowLeft className="h-4 w-4" /> Back to Finance
           </Link>
@@ -73,82 +71,88 @@ export function LedgerBreakdownPage({ payoutId }: LedgerBreakdownPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50 pb-12 font-sans">
+    <div className="min-h-screen bg-background pb-16 font-sans">
       {/* Header */}
-      <div className="bg-white border-b border-neutral-200">
-        <div className="mx-auto max-w-6xl px-4 md:px-6 py-4">
+      <div className="bg-white border-b border-neutral-200/80">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 md:px-8 py-6">
           <button
-            onClick={() => router.push(ROUTES.host.earnings)}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-neutral-500 hover:text-purple transition-colors mb-3"
+            onClick={() => router.push(ROUTES?.host?.finances ?? "/host/finances")}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 hover:text-purple transition-colors mb-3"
           >
             <ArrowLeft className="h-3.5 w-3.5" /> Back to Finance
           </button>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-xl font-bold text-neutral-900">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900">
                 Ledger Breakdown — {payout.label}
               </h1>
               <div className="flex items-center gap-2 mt-1.5">
                 {payout.status === "cleared" ? (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full px-2 py-0.5">
-                    <CheckCircle2 className="h-3 w-3" /> Cleared · {payout.clearedOn}
+                  <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full px-2.5 py-0.5">
+                    <CheckCircle2 className="h-3.5 w-3.5" /> Cleared · {payout.clearedOn}
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-100 rounded-full px-2 py-0.5">
-                    <Clock className="h-3 w-3" /> Upcoming payout
+                  <span className="inline-flex items-center gap-1 text-[11px] font-medium text-purple bg-purple/10 border border-purple/20 rounded-full px-2.5 py-0.5">
+                    <Clock className="h-3.5 w-3.5" /> Upcoming payout
                   </span>
                 )}
-                <span className="text-[11px] text-neutral-500">
+                <span className="text-xs text-neutral-500">
                   {payout.entries.length} bookings ·{" "}
-                  <strong className="font-bold text-neutral-700">{fmt(totals.net)}</strong> net
+                  <strong className="font-semibold text-neutral-700">{fmt(totals.net)}</strong> net
                 </span>
               </div>
             </div>
             <button
               onClick={() => setExportOpen(true)}
-              className="inline-flex items-center justify-center gap-2 bg-purple hover:bg-purple-hover text-white text-sm font-bold h-10 px-5 rounded-xl shadow-sm transition-all"
+              className="inline-flex items-center justify-center gap-2 bg-purple hover:bg-purple-hover text-white text-sm font-semibold h-11 px-5 rounded-xl shadow-xs transition-all duration-200"
             >
-              <Download className="h-4 w-4" /> Download
+              <Download className="h-4 w-4" /> Download Statement
             </button>
           </div>
         </div>
       </div>
 
-      <div className="mx-auto max-w-6xl px-4 md:px-6 mt-6 space-y-5">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 md:px-8 mt-8 space-y-6">
         {/* Payout summary strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-white border border-neutral-200 rounded-2xl p-4 shadow-sm">
-            <p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-2xs">
+            <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">
               Gross Rate
             </p>
-            <p className="text-lg font-bold text-neutral-900 mt-1">{fmt(totals.gross)}</p>
+            <p className="text-xl font-semibold tracking-tight text-neutral-900 mt-1">
+              {fmt(totals.gross)}
+            </p>
           </div>
-          <div className="bg-white border border-neutral-200 rounded-2xl p-4 shadow-sm">
-            <p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">
+          <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-2xs">
+            <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">
               Platform Commission (12%)
             </p>
-            <p className="text-lg font-bold text-rose-600 mt-1">− {fmt(totals.commission)}</p>
+            <p className="text-xl font-semibold tracking-tight text-rose-600 mt-1">
+              − {fmt(totals.commission)}
+            </p>
           </div>
-          <div className="bg-white border border-neutral-200 rounded-2xl p-4 shadow-sm">
-            <p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">
+          <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-2xs">
+            <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">
               Withholding Tax (5%)
             </p>
-            <p className="text-lg font-bold text-amber-600 mt-1">− {fmt(totals.tax)}</p>
+            <p className="text-xl font-semibold tracking-tight text-amber-600 mt-1">
+              − {fmt(totals.tax)}
+            </p>
           </div>
-          <div className="bg-white border border-purple/20 bg-purple/[0.04] rounded-2xl p-4 shadow-sm">
-            <p className="text-[10px] font-black uppercase tracking-wider text-purple">
+          <div className="bg-purple/[0.04] border border-purple/20 rounded-2xl p-5 shadow-2xs">
+            <p className="text-xs font-medium uppercase tracking-wider text-purple">
               Net Earnings
             </p>
-            <p className="text-lg font-bold text-purple mt-1">{fmt(totals.net)}</p>
+            <p className="text-xl font-semibold tracking-tight text-purple mt-1">{fmt(totals.net)}</p>
           </div>
         </div>
 
         {/* Ledger table */}
-        <div className="bg-white border border-neutral-200 rounded-2xl shadow-sm overflow-hidden">
+        <div className="bg-white border border-neutral-200/80 rounded-2xl shadow-2xs overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-neutral-200 bg-neutral-50/70">
+                <tr className="border-b border-neutral-200/80 bg-neutral-50/70">
                   {[
                     "Booking ID",
                     "Guest",
@@ -160,7 +164,7 @@ export function LedgerBreakdownPage({ payoutId }: LedgerBreakdownPageProps) {
                   ].map((h) => (
                     <th
                       key={h}
-                      className="text-left px-4 py-3 text-[10px] font-black uppercase tracking-wider text-neutral-500 whitespace-nowrap"
+                      className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider text-neutral-500 whitespace-nowrap"
                     >
                       {h}
                     </th>
@@ -170,57 +174,55 @@ export function LedgerBreakdownPage({ payoutId }: LedgerBreakdownPageProps) {
               <tbody className="divide-y divide-neutral-100">
                 {payout.entries.map((entry) => (
                   <tr key={entry.bookingId} className="hover:bg-neutral-50/60 transition-colors">
-                    <td className="px-4 py-3 font-mono text-xs font-bold text-purple whitespace-nowrap">
+                    <td className="px-4 py-3.5 font-mono text-xs font-bold text-purple whitespace-nowrap">
                       {entry.bookingId}
                     </td>
-                    <td className="px-4 py-3 text-sm font-semibold text-neutral-900 whitespace-nowrap">
+                    <td className="px-4 py-3.5 text-sm font-semibold text-neutral-900 whitespace-nowrap">
                       {entry.guest}
                     </td>
-                    <td className="px-4 py-3 text-xs text-neutral-500 whitespace-nowrap">
+                    <td className="px-4 py-3.5 text-xs text-neutral-500 whitespace-nowrap">
                       {entry.date}
                     </td>
-                    <td className="px-4 py-3 text-xs font-semibold text-neutral-900 whitespace-nowrap">
+                    <td className="px-4 py-3.5 text-xs font-semibold text-neutral-900 whitespace-nowrap">
                       {fmt(entry.grossRate)}
                     </td>
-                    <td className="px-4 py-3 text-xs text-rose-600 whitespace-nowrap">
+                    <td className="px-4 py-3.5 text-xs text-rose-600 whitespace-nowrap">
                       − {fmt(entry.commission)}
                     </td>
-                    <td className="px-4 py-3 text-xs text-amber-600 whitespace-nowrap">
+                    <td className="px-4 py-3.5 text-xs text-amber-600 whitespace-nowrap">
                       − {fmt(entry.tax)}
                     </td>
-                    <td className="px-4 py-3 text-xs font-bold text-emerald-700 whitespace-nowrap">
+                    <td className="px-4 py-3.5 text-xs font-bold text-emerald-700 whitespace-nowrap">
                       {fmt(entry.netEarnings)}
                     </td>
                   </tr>
                 ))}
               </tbody>
               <tfoot>
-                <tr className="border-t-2 border-neutral-200 bg-neutral-50">
-                  <td className="px-4 py-3.5 font-black text-neutral-900 uppercase tracking-wider text-[11px]">
-                    Totals
-                  </td>
-                  <td className="px-4 py-3.5 text-[11px] text-neutral-500">
+                <tr className="border-t-2 border-neutral-200/80 bg-neutral-50">
+                  <td className="px-4 py-3.5 font-bold text-neutral-900 text-xs">Totals</td>
+                  <td className="px-4 py-3.5 text-xs text-neutral-500">
                     {payout.entries.length} bookings
                   </td>
                   <td />
-                  <td className="px-4 py-3.5 text-sm font-black text-neutral-900">
+                  <td className="px-4 py-3.5 text-sm font-bold text-neutral-900">
                     {fmt(totals.gross)}
                   </td>
-                  <td className="px-4 py-3.5 text-sm font-black text-rose-600">
+                  <td className="px-4 py-3.5 text-sm font-bold text-rose-600">
                     − {fmt(totals.commission)}
                   </td>
-                  <td className="px-4 py-3.5 text-sm font-black text-amber-600">
+                  <td className="px-4 py-3.5 text-sm font-bold text-amber-600">
                     − {fmt(totals.tax)}
                   </td>
-                  <td className="px-4 py-3.5 text-sm font-black text-purple">{fmt(totals.net)}</td>
+                  <td className="px-4 py-3.5 text-sm font-bold text-purple">{fmt(totals.net)}</td>
                 </tr>
               </tfoot>
             </table>
           </div>
         </div>
 
-        <p className="flex items-center gap-1.5 text-[11px] text-neutral-400">
-          <Landmark className="h-3.5 w-3.5" />
+        <p className="flex items-center gap-1.5 text-xs text-neutral-500">
+          <Landmark className="h-3.5 w-3.5 text-neutral-400" />
           Commission rate 12% · Withholding tax 5% · Net = Gross − Commission − Tax. Totals are
           rounded to 2 decimal places.
         </p>

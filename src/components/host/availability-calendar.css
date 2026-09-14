@@ -1,24 +1,3 @@
-/* ---------------------------------------------------------------------------
- * react-datepicker overrides for the host Availability Calendar.
- * Scoped under .availability-calendar so they never leak into guest flows.
- * Mobile (<768px): single month.  Tablet+ (md+): two months side by side.
- * ------------------------------------------------------------------------- */
-
-/* ── Base (single-month / mobile) ─────────────────────────────────────────── */
-
-.availability-calendar {
-  display: block;
-  width: 100%;
-  background: transparent !important;
-  border: none !important;
-  border-radius: 0 !important;
-  padding: 0 !important;
-  font-family: inherit;
-}
-
-.availability-calendar .react-datepicker__month-container {
-  width: 100%;
-  float: none;
 }
 
 /* Month header (e.g. "August 2026" + nav chevrons) */
@@ -189,7 +168,7 @@
   background: #ef4444;
 }
 
-/* ── Tablet+ (md+): two-month side-by-side layout ────────────────────────── */
+// Tablet+ (md+): two-month side-by-side layout
 
 @media (min-width: 768px) {
   .availability-calendar {

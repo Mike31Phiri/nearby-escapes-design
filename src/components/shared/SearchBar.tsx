@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { MagnifyingGlass as Search, MapPin, Users, CalendarBlank as CalendarDays } from "@phosphor-icons/react";
+import {
+  MagnifyingGlass as Search,
+  MapPin,
+  Users,
+  CalendarBlank as CalendarDays,
+} from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { DateRangePicker, serializeDates, type DateRange } from "@/components/ui/DateRangePicker";
@@ -26,11 +31,16 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
 
   const getPlaceholder = () => {
     switch (activeCategory) {
-      case "stays":        return "Search lodges, hotels...";
-      case "experiences":  return "Search safaris, tours...";
-      case "transport":    return "Destination city, e.g. Livingstone";
-      case "packages":     return "Search retreats...";
-      default:             return "Where to escape?";
+      case "stays":
+        return "Search lodges, hotels...";
+      case "experiences":
+        return "Search safaris, tours...";
+      case "transport":
+        return "Destination city, e.g. Livingstone";
+      case "packages":
+        return "Search retreats...";
+      default:
+        return "Where to escape?";
     }
   };
 
@@ -65,24 +75,28 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
 
   const dateLabel = dateRange.checkIn
     ? `${dateRange.checkIn.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}${
-        dateRange.checkOut ? `–${dateRange.checkOut.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}` : ""
+        dateRange.checkOut
+          ? `–${dateRange.checkOut.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}`
+          : ""
       }`
     : "Add dates";
 
   return (
-    <form onSubmit={handleSearch} className={cn("mx-auto w-full transition-all duration-300 relative z-30", className)}>
-      
-      {/* ── TRANSPORT TRIP TYPE PILLS ─────────────────────────────────── */}
+    <form
+      onSubmit={handleSearch}
+      className={cn("mx-auto w-full transition-all duration-300 relative z-30", className)}
+    >
+      {/* TRANSPORT TRIP TYPE PILLS */}
       {isTransport && (
         <div className="flex items-center justify-center gap-2 mt-2.5 md:mt-3 mb-3">
           <button
             type="button"
             onClick={() => setTripType("one_way")}
             className={cn(
-              "px-3.5 py-1 text-xs font-extrabold rounded-full transition-all duration-150 border cursor-pointer select-none shadow-xs",
+              "px-3.5 py-1 text-xs font-medium rounded-full transition-all duration-150 border cursor-pointer select-none shadow-2xs",
               tripType === "one_way"
-                ? "bg-purple text-white border-purple"
-                : "bg-white/90 border-neutral-300 text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900"
+                ? "bg-neutral-900 text-white border-neutral-900"
+                : "bg-white/90 border-neutral-300 text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900",
             )}
           >
             One way
@@ -91,10 +105,10 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
             type="button"
             onClick={() => setTripType("round_trip")}
             className={cn(
-              "px-3.5 py-1 text-xs font-extrabold rounded-full transition-all duration-150 border cursor-pointer select-none shadow-xs",
+              "px-3.5 py-1 text-xs font-medium rounded-full transition-all duration-150 border cursor-pointer select-none shadow-2xs",
               tripType === "round_trip"
-                ? "bg-purple text-white border-purple"
-                : "bg-white/90 border-neutral-300 text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900"
+                ? "bg-neutral-900 text-white border-neutral-900"
+                : "bg-white/90 border-neutral-300 text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900",
             )}
           >
             Round trip
@@ -102,7 +116,7 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
         </div>
       )}
 
-      {/* ── MOBILE ───────────────────────────────────────────────────── */}
+      {/* MOBILE */}
       <div className="md:hidden">
         {isTransport ? (
           /* Transport mobile card */
@@ -111,7 +125,9 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
             <div className="flex items-center gap-2 px-3 py-2 border-b border-purple-border/50">
               <MapPin className="h-3.5 w-3.5 text-purple shrink-0" strokeWidth={1.5} />
               <div className="flex-1 min-w-0">
-                <p className="text-[8px] font-extrabold uppercase tracking-wider text-purple leading-none mb-0.5">Leaving from</p>
+                <p className="text-[9px] font-medium uppercase tracking-wider text-neutral-500 leading-none mb-0.5">
+                  Leaving from
+                </p>
                 <input
                   type="text"
                   value={leavingFrom}
@@ -126,7 +142,9 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
             <div className="flex items-center gap-2 px-3 py-2 border-b border-purple-border/50">
               <MapPin className="h-3.5 w-3.5 text-purple shrink-0" strokeWidth={1.5} />
               <div className="flex-1 min-w-0">
-                <p className="text-[8px] font-extrabold uppercase tracking-wider text-purple leading-none mb-0.5">To?</p>
+                <p className="text-[9px] font-medium uppercase tracking-wider text-neutral-500 leading-none mb-0.5">
+                  To?
+                </p>
                 <input
                   type="text"
                   value={goingTo}
@@ -140,7 +158,9 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
             {/* When | Search button */}
             <div className="grid grid-cols-[1fr_auto] items-center px-3 py-1.5 gap-2">
               <div className="relative z-30 min-w-0">
-                <p className="text-[8px] font-extrabold uppercase tracking-wider text-purple leading-none mb-0.5">When</p>
+                <p className="text-[9px] font-medium uppercase tracking-wider text-neutral-500 leading-none mb-0.5">
+                  When
+                </p>
                 <DateRangePicker value={dateRange} onChange={setDateRange} variant="compact">
                   <span className="text-[12px] text-black-soft truncate block cursor-pointer font-medium">
                     {dateLabel}
@@ -150,7 +170,7 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
 
               <button
                 type="submit"
-                className="flex items-center justify-center bg-purple-800 hover:bg-purple-hover text-white rounded-full h-8 px-4 text-xs font-bold transition-all duration-200 shadow-sm shrink-0 gap-1.5 cursor-pointer"
+                className="flex items-center justify-center bg-purple hover:bg-purple-hover text-white rounded-full h-8 px-4 text-xs font-medium transition-all duration-200 shadow-sm shrink-0 gap-1.5 cursor-pointer"
               >
                 <Search className="h-3.5 w-3.5" strokeWidth={2.5} />
                 Search
@@ -180,10 +200,14 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
               <CalendarDays className="h-4 w-4 text-neutral-400 shrink-0" strokeWidth={1.8} />
               <div className="relative z-30 min-w-0 flex-1">
                 <DateRangePicker value={dateRange} onChange={setDateRange} variant="compact">
-                  <span className={cn(
-                    "text-xs truncate block cursor-pointer transition-colors",
-                    dateLabel === "Add dates" ? "text-neutral-400 font-medium" : "text-neutral-700 font-semibold"
-                  )}>
+                  <span
+                    className={cn(
+                      "text-xs truncate block cursor-pointer transition-colors",
+                      dateLabel === "Add dates"
+                        ? "text-neutral-400 font-medium"
+                        : "text-neutral-700 font-semibold",
+                    )}
+                  >
                     {dateLabel === "Add dates" ? "When?" : dateLabel}
                   </span>
                 </DateRangePicker>
@@ -202,7 +226,7 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
         )}
       </div>
 
-      {/* ── DESKTOP ───────────────────────────────────────────────────── */}
+      {/* DESKTOP */}
       <div className="hidden md:block bg-white rounded-full overflow-visible shadow-[0_8px_32px_rgba(42,27,61,0.15)] border border-purple-border/40 p-1">
         {isTransport ? (
           /* Desktop Transport Layout: Leaving from | To? | When | Search */
@@ -211,7 +235,9 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
             <div className="flex items-center gap-2 flex-[2] min-w-0 px-3 py-1 rounded-full transition-all duration-200 hover:bg-white-soft cursor-pointer">
               <MapPin className="h-4 w-4 text-purple shrink-0" strokeWidth={1.5} />
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-purple leading-tight">Leaving from</p>
+                <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500 leading-tight">
+                  Leaving from
+                </p>
                 <input
                   type="text"
                   value={leavingFrom}
@@ -228,7 +254,9 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
             <div className="flex items-center gap-2 flex-[2] min-w-0 px-3 py-1 rounded-full transition-all duration-200 hover:bg-white-soft cursor-pointer">
               <MapPin className="h-4 w-4 text-purple shrink-0" strokeWidth={1.5} />
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-purple leading-tight">To?</p>
+                <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500 leading-tight">
+                  To?
+                </p>
                 <input
                   type="text"
                   value={goingTo}
@@ -243,7 +271,9 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
 
             {/* Date */}
             <div className="relative z-30 flex-[1.8] min-w-0 px-3 py-1 transition-all duration-300">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-purple leading-tight mb-0.5">When</p>
+              <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500 leading-tight mb-0.5">
+                When
+              </p>
               <div className="min-w-0">
                 <DateRangePicker value={dateRange} onChange={setDateRange} variant="compact" />
               </div>
@@ -252,7 +282,7 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
             {/* Search button */}
             <button
               type="submit"
-              className="mr-0.5 flex items-center gap-1.5 bg-purple-800 hover:bg-purple-hover text-white rounded-full px-5 py-2 text-[12px] font-bold transition-all duration-200 shadow-sm hover:shadow-md shrink-0 cursor-pointer"
+              className="mr-0.5 flex items-center gap-1.5 bg-[#6b2bb8] hover:bg-[#5a22a0] text-white rounded-full px-5 py-2 text-[12px] font-medium transition-all duration-200 shadow-sm hover:shadow-md shrink-0 cursor-pointer"
             >
               <Search className="h-4 w-4" strokeWidth={2.5} />
               <span>Search</span>
@@ -276,20 +306,40 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
               </div>
             </div>
 
-            <div className={cn("h-8 w-px bg-border shrink-0 transition-all duration-300", !isStays && "invisible")} />
+            <div
+              className={cn(
+                "h-8 w-px bg-border shrink-0 transition-all duration-300",
+                !isStays && "invisible",
+              )}
+            />
 
             {/* Date */}
-            <div className={cn("relative z-30 flex-[2] min-w-0 px-3 py-1 transition-all duration-300", !isStays && "invisible pointer-events-none")}>
+            <div
+              className={cn(
+                "relative z-30 flex-[2] min-w-0 px-3 py-1 transition-all duration-300",
+                !isStays && "invisible pointer-events-none",
+              )}
+            >
               <p className="text-[10px] font-semibold text-black-soft leading-tight mb-0.5">Date</p>
               <div className="min-w-0">
                 <DateRangePicker value={dateRange} onChange={setDateRange} variant="compact" />
               </div>
             </div>
 
-            <div className={cn("h-8 w-px bg-border shrink-0 transition-all duration-300", !isStays && "invisible")} />
+            <div
+              className={cn(
+                "h-8 w-px bg-border shrink-0 transition-all duration-300",
+                !isStays && "invisible",
+              )}
+            />
 
             {/* Guests */}
-            <div className={cn("flex items-center gap-2 flex-[1.2] min-w-[100px] px-3 py-1 rounded-full transition-all duration-200 hover:bg-white-soft", !isStays && "invisible pointer-events-none")}>
+            <div
+              className={cn(
+                "flex items-center gap-2 flex-[1.2] min-w-[100px] px-3 py-1 rounded-full transition-all duration-200 hover:bg-white-soft",
+                !isStays && "invisible pointer-events-none",
+              )}
+            >
               <Users className="h-4 w-4 text-black shrink-0" strokeWidth={1.5} />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-semibold text-black-soft leading-tight">Guests</p>
@@ -306,7 +356,7 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
             {/* Search button */}
             <button
               type="submit"
-              className="mr-0.5 flex items-center gap-1.5 bg-purple-800 hover:bg-purple-hover text-white rounded-full px-4 py-2 text-[12px] font-bold transition-all duration-200 shadow-sm hover:shadow-md shrink-0"
+              className="mr-0.5 flex items-center gap-1.5 bg-[#6b2bb8] hover:bg-[#5a22a0] text-white rounded-full px-4 py-2 text-[12px] font-medium transition-all duration-200 shadow-sm hover:shadow-md shrink-0 cursor-pointer"
             >
               <Search className="h-4 w-4" strokeWidth={2.5} />
               <span className="hidden lg:inline">Search</span>

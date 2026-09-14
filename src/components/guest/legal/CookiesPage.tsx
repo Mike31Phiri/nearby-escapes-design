@@ -11,9 +11,9 @@ export function CookiesPage() {
           title="Cookie Policy"
           description="Last updated: May 2025"
         />
-        <div className="space-y-6 text-muted-foreground text-base leading-relaxed">
+        <div className="space-y-10 text-neutral-500 text-[14px] leading-7">
           <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">1. What Are Cookies</h2>
+            <h2 className="text-[15px] font-semibold text-neutral-800 mb-2">1. What Are Cookies</h2>
             <p>
               Cookies are small text files stored on your device when you visit a website. They help
               us remember your preferences, understand how you use our platform, and improve your
@@ -21,7 +21,9 @@ export function CookiesPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">2. How We Use Cookies</h2>
+            <h2 className="text-[15px] font-semibold text-neutral-800 mb-2">
+              2. How We Use Cookies
+            </h2>
             <p>
               We use the following types of cookies: Essential cookies required for authentication
               and secure transactions, Functional cookies that remember your preferences and
@@ -31,7 +33,9 @@ export function CookiesPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">3. Third-Party Cookies</h2>
+            <h2 className="text-[15px] font-semibold text-neutral-800 mb-2">
+              3. Third-Party Cookies
+            </h2>
             <p>
               We partner with trusted analytics and payment providers who may set their own cookies.
               These are subject to the respective partners&apos; privacy policies. We do not control
@@ -39,7 +43,7 @@ export function CookiesPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">4. Managing Cookies</h2>
+            <h2 className="text-[15px] font-semibold text-neutral-800 mb-2">4. Managing Cookies</h2>
             <p>
               You can control cookie preferences through your browser settings. Most browsers allow
               you to block or delete cookies. Note that disabling certain cookies may affect
@@ -47,7 +51,7 @@ export function CookiesPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">5. Updates</h2>
+            <h2 className="text-[15px] font-semibold text-neutral-800 mb-2">5. Updates</h2>
             <p>
               We may update this Cookie Policy from time to time. We encourage you to review this
               page periodically for any changes. Continued use of the platform after changes

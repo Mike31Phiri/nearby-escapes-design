@@ -67,12 +67,12 @@ export function DailyManifestPage() {
 
   if (!listing || !manifest || !slotKey) {
     return (
-      <div className="min-h-screen bg-[#faf9f5] flex flex-col items-center justify-center px-6 text-center">
+      <div className="min-h-screen bg-background font-sans flex flex-col items-center justify-center px-6 text-center">
         <p className="text-[14px] font-semibold text-neutral-700">Manifest not found</p>
         <p className="text-[12px] text-neutral-400 mt-1">This time slot may no longer exist.</p>
         <button
-          onClick={() => router.push(ROUTES.host.bookings)}
-          className="mt-4 h-10 rounded-lg bg-purple text-white text-[13px] font-bold px-5"
+          onClick={() => router.push(ROUTES?.host?.bookings ?? "/host/bookings")}
+          className="mt-4 h-10 rounded-xl bg-purple text-white text-[13px] font-bold px-5 hover:bg-purple-hover transition-colors shadow-xs"
         >
           Back to Bookings
         </button>
@@ -96,12 +96,12 @@ export function DailyManifestPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#faf9f5] pb-16">
+    <div className="min-h-screen bg-background font-sans pb-16">
       {/* Sticky header */}
       <header className="sticky top-0 z-40 bg-white border-b border-neutral-200">
         <div className="mx-auto max-w-2xl px-4 h-14 flex items-center gap-2">
           <button
-            onClick={() => router.push(ROUTES.host.bookings)}
+            onClick={() => router.push(ROUTES?.host?.bookings ?? "/host/bookings")}
             aria-label="Back to bookings"
             className="h-9 w-9 -ml-2 rounded-lg flex items-center justify-center text-neutral-600 hover:bg-neutral-100 transition-colors"
           >

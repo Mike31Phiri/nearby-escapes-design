@@ -5,10 +5,6 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/lib/constants/routes";
 
-/* ------------------------------------------------------------------ */
-/*  Types                                                              */
-/* ------------------------------------------------------------------ */
-
 export interface WizardStep {
   id: string;
   label: string;
@@ -26,10 +22,6 @@ interface ListingWizardShellProps {
   children: React.ReactNode;
 }
 
-/* ------------------------------------------------------------------ */
-/*  Shell                                                              */
-/* ------------------------------------------------------------------ */
-
 export function ListingWizardShell({
   steps,
   currentStep,
@@ -39,53 +31,45 @@ export function ListingWizardShell({
   children,
 }: ListingWizardShellProps) {
   const progress =
-    steps.length <= 1
-      ? 100
-      : Math.min(100, Math.round((currentStep / (steps.length - 1)) * 100));
+    steps.length <= 1 ? 100 : Math.min(100, Math.round((currentStep / (steps.length - 1)) * 100));
 
   return (
-    <div className="min-h-screen flex flex-col bg-neutral-50 font-sans">
-      {/* ── Top bar ─────────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 bg-white border-b border-neutral-200">
-        <div className="mx-auto max-w-3xl flex items-center justify-between px-4 h-14">
-          <div className="flex items-center gap-3 min-w-0">
+    <div className="min-h-screen flex flex-col bg-background font-sans">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-neutral-200/80">
+        <div className="mx-auto max-w-4xl flex items-center justify-between px-4 sm:px-6 h-16">
+          <div className="flex items-center gap-3.5 min-w-0">
             <Link
-              href={ROUTES.host.listings}
-              className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-neutral-100 transition-colors"
+              href={ROUTES?.host?.listings ?? "/host/listings"}
+              className="inline-flex items-center justify-center h-10 w-10 rounded-xl border border-neutral-200/80 bg-white text-neutral-600 hover:bg-neutral-100 hover:text-purple transition-colors shadow-2xs"
               aria-label="Back to listings"
             >
-              <ArrowLeft className="h-4 w-4 text-neutral-600" />
+              <ArrowLeft className="h-4 w-4" />
             </Link>
             <div className="min-w-0">
-              <p className="text-[11px] font-bold text-neutral-400 uppercase tracking-wide truncate">
-                Create listing
+              <p className="text-xs font-bold text-neutral-400 uppercase tracking-wider truncate">
+                Create Listing
               </p>
-              <h1 className="text-[13px] font-bold text-neutral-900 truncate">{title}</h1>
+              <h1 className="text-base font-bold text-neutral-900 truncate">{title}</h1>
             </div>
           </div>
 
           <button
             onClick={onSaveExit}
             className={cn(
-              "inline-flex items-center gap-1.5 h-8 px-3 rounded-lg text-[11px] font-bold transition-colors border",
+              "inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-semibold transition-all border shadow-2xs",
               saveState === "saving"
                 ? "border-amber-200 bg-amber-50 text-amber-700"
                 : saveState === "saved"
                   ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                  : "border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50",
+                  : "border-neutral-200/80 bg-white text-neutral-700 hover:border-purple/40 hover:text-purple hover:bg-neutral-50",
             )}
           >
-            <Save className="h-3.5 w-3.5" />
-            {saveState === "saving"
-              ? "Saving…"
-              : saveState === "saved"
-                ? "Saved"
-                : "Save & exit"}
+            <Save className="h-4 w-4" />
+            {saveState === "saving" ? "Saving…" : saveState === "saved" ? "Saved" : "Save & exit"}
           </button>
         </div>
 
-        {/* Progress bar */}
-        <div className="h-1 bg-neutral-100">
+        <div className="h-1 bg-neutral-200/50">
           <div
             className="h-full bg-purple transition-all duration-300"
             style={{ width: `${progress}%` }}
@@ -93,26 +77,25 @@ export function ListingWizardShell({
         </div>
       </header>
 
-      {/* ── Step indicators ─────────────────────────────────── */}
-      <div className="mx-auto max-w-3xl w-full px-4 pt-4 pb-2">
-        <div className="flex items-center gap-1.5">
+      <div className="mx-auto max-w-4xl w-full px-4 sm:px-6 pt-6 pb-3">
+        <div className="flex items-center gap-2">
           {steps.map((step, i) => (
-            <div key={step.id} className="flex items-center gap-1.5 flex-1">
+            <div key={step.id} className="flex items-center gap-2 flex-1">
               <div
                 className={cn(
-                  "h-6 min-w-6 rounded-full flex items-center justify-center text-[9px] font-black shrink-0",
+                  "h-8 min-w-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 transition-all",
                   i < currentStep
-                    ? "bg-purple text-white"
+                    ? "bg-purple text-white shadow-xs"
                     : i === currentStep
-                      ? "bg-purple text-white ring-2 ring-purple/20"
-                      : "bg-neutral-200 text-neutral-500",
+                      ? "bg-purple text-white ring-4 ring-purple/15 shadow-xs"
+                      : "bg-neutral-200/80 text-neutral-500",
                 )}
               >
                 {i + 1}
               </div>
               <span
                 className={cn(
-                  "text-[10px] font-bold truncate hidden sm:inline",
+                  "text-sm font-semibold truncate hidden sm:inline",
                   i === currentStep ? "text-neutral-900" : "text-neutral-400",
                 )}
               >
@@ -121,8 +104,8 @@ export function ListingWizardShell({
               {i < steps.length - 1 && (
                 <div
                   className={cn(
-                    "h-px flex-1",
-                    i < currentStep ? "bg-purple" : "bg-neutral-200",
+                    "h-0.5 flex-1 transition-colors",
+                    i < currentStep ? "bg-purple" : "bg-neutral-200/80",
                   )}
                 />
               )}
@@ -131,10 +114,7 @@ export function ListingWizardShell({
         </div>
       </div>
 
-      {/* ── Wizard content ──────────────────────────────────── */}
-      <main className="flex-1 mx-auto max-w-3xl w-full px-4 pb-20 pt-2">
-        {children}
-      </main>
+      <main className="flex-1 mx-auto max-w-4xl w-full px-4 sm:px-6 pb-20 pt-4">{children}</main>
     </div>
   );
 }

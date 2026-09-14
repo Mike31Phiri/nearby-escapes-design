@@ -41,8 +41,26 @@ const STEPS = [
   },
 ];
 
-export function TransportWizard() {
-  const [currentStep, setCurrentStep] = useState(0);
+export const TRANSPORT_STEPS = STEPS;
+
+export interface TransportWizardProps {
+  draftId?: string;
+  initialStep?: number;
+  initialValues?: Record<string, unknown>;
+  onStepChange?: (step: number) => void;
+  onAutoSave?: (values: Record<string, unknown>, step: number) => void;
+  onPublish?: (values: Record<string, unknown>) => void;
+}
+
+export function TransportWizard({
+  draftId,
+  initialStep = 0,
+  initialValues,
+  onStepChange,
+  onAutoSave,
+  onPublish,
+}: TransportWizardProps = {}) {
+  const [currentStep, setCurrentStep] = useState(initialStep);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
@@ -58,6 +76,7 @@ export function TransportWizard() {
       pricingType: "daily",
       dailyRate: 50,
       perKmRate: 0,
+      ...(initialValues as any),
     },
   });
 
@@ -73,17 +92,30 @@ export function TransportWizard() {
     const fieldsToValidate = STEPS[currentStep].fields;
     const isValid = await trigger(fieldsToValidate as any);
     if (isValid) {
-      setCurrentStep((prev) => Math.min(prev + 1, STEPS.length - 1));
+      const next = Math.min(currentStep + 1, STEPS.length - 1);
+      setCurrentStep(next);
+      onStepChange?.(next);
+      onAutoSave?.(methods.getValues() as any, next);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   const prevStep = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 0));
+    const prev = Math.max(currentStep - 1, 0);
+    setCurrentStep(prev);
+    onStepChange?.(prev);
+    onAutoSave?.(methods.getValues() as any, prev);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const onSubmit = async (data: TransportFormValues) => {
     setIsSubmitting(true);
     try {
+      if (onPublish) {
+        await onPublish(data as any);
+        return;
+      }
+
       const payload: CreateTransportPayload = {
         title: `${data.make} ${data.model} ${data.year}`,
         description: `Experience a premium ride with this ${data.year} ${data.make} ${data.model}.`,
@@ -107,10 +139,10 @@ export function TransportWizard() {
       };
 
       await createTransport(payload);
-      toast.success("Transport Created Successfully!");
+      toast.success("Transport Service Created Successfully!");
       router.push("/host/listings");
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to create transport.");
+      toast.error(error.response?.data?.message || error.message || "Failed to create transport.");
       console.error(error);
     } finally {
       setIsSubmitting(false);
@@ -404,23 +436,33 @@ export function TransportWizard() {
         )}
 
         {/* Navigation */}
-        <div className="flex items-center justify-between pt-8 border-t mt-8">
-          <Button type="button" variant="outline" onClick={prevStep} disabled={currentStep === 0}>
-            <ChevronLeft className="h-4 w-4 mr-2" /> Back
+        <div className="flex items-center justify-between pt-8 border-t border-neutral-200/80 mt-8">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={prevStep}
+            disabled={currentStep === 0}
+            className="rounded-xl border-neutral-200/80 hover:bg-neutral-100 text-sm font-semibold h-11 px-5 cursor-pointer"
+          >
+            <ChevronLeft className="h-4 w-4 mr-1.5" /> Back
           </Button>
 
           {currentStep < STEPS.length - 1 ? (
-            <Button type="button" onClick={nextStep} className="bg-primary text-primary-foreground">
-              Continue <ChevronRight className="h-4 w-4 ml-2" />
+            <Button
+              type="button"
+              onClick={nextStep}
+              className="bg-purple text-white hover:bg-purple-hover font-semibold px-6 h-11 text-sm rounded-xl shadow-xs transition-all cursor-pointer"
+            >
+              Continue <ChevronRight className="h-4 w-4 ml-1.5" />
             </Button>
           ) : (
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-[#f2ba0d] hover:bg-[#B89430] text-[#1f1433] font-bold"
+              className="bg-purple text-white hover:bg-purple-hover font-semibold px-7 h-11 text-sm rounded-xl shadow-xs transition-all cursor-pointer"
             >
               {isSubmitting ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
-              Publish Listing
+              Publish Transport
             </Button>
           )}
         </div>

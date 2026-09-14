@@ -50,15 +50,15 @@ export function BookingDetailsPage() {
 
   if (!booking) {
     return (
-      <div className="min-h-screen bg-[#faf9f5] flex flex-col items-center justify-center px-6 text-center">
+      <div className="min-h-screen bg-background font-sans flex flex-col items-center justify-center px-6 text-center">
         <XCircle className="h-10 w-10 text-neutral-300 mb-3" />
         <p className="text-[14px] font-semibold text-neutral-700">Booking not found</p>
         <p className="text-[12px] text-neutral-400 mt-1">
           We could&apos;nt find a booking with reference {ref}.
         </p>
         <button
-          onClick={() => router.push(ROUTES.host.bookings)}
-          className="mt-4 h-10 rounded-lg bg-purple text-white text-[13px] font-bold px-5"
+          onClick={() => router.push(ROUTES?.host?.bookings ?? "/host/bookings")}
+          className="mt-4 h-10 rounded-xl bg-purple text-white text-[13px] font-bold px-5 hover:bg-purple-hover transition-colors shadow-xs"
         >
           Back to Bookings
         </button>
@@ -87,13 +87,13 @@ export function BookingDetailsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#faf9f5] pb-16">
+    <div className="min-h-screen bg-background font-sans pb-16">
       {/* Sticky header */}
       <header className="sticky top-0 z-40 bg-white border-b border-neutral-200">
         <div className="mx-auto max-w-2xl px-4 h-14 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
             <button
-              onClick={() => router.push(ROUTES.host.bookings)}
+              onClick={() => router.push(ROUTES?.host?.bookings ?? "/host/bookings")}
               aria-label="Back"
               className="h-9 w-9 -ml-2 rounded-lg flex items-center justify-center text-neutral-600 hover:bg-neutral-100 transition-colors"
             >
@@ -165,50 +165,43 @@ export function BookingDetailsPage() {
         )}
 
         {/* Tour + status */}
-        <div className="bg-white border border-neutral-200 rounded-2xl p-4">
+        <div className="bg-white border border-neutral-200/90 rounded-2xl p-3.5 sm:p-4 shadow-2xs">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="h-12 w-12 shrink-0 rounded-xl bg-[#FAF7F2] border border-[#E8E3DC] flex items-center justify-center text-2xl">
+              <div className="h-10 w-10 sm:h-12 sm:w-12 shrink-0 rounded-xl bg-[#FAF7F2] border border-[#E8E3DC] flex items-center justify-center text-xl sm:text-2xl">
                 {booking.emoji}
               </div>
               <div className="min-w-0">
-                <p className="text-[15px] font-black text-neutral-900 leading-tight">
+                <p className="text-sm sm:text-[15px] font-bold text-neutral-900 leading-snug">
                   {booking.listingName}
                 </p>
-                <p className="text-[12px] text-neutral-500 mt-0.5 flex items-center gap-1">
-                  <CalendarDays className="h-3.5 w-3.5" /> {formatDayLabel(booking.date)} ·{" "}
-                  <Clock className="h-3.5 w-3.5" /> {formatTime12h(booking.time)}
+                <p className="text-xs text-neutral-500 mt-0.5 flex items-center gap-1">
+                  <CalendarDays className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> {formatDayLabel(booking.date)} ·{" "}
+                  <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> {formatTime12h(booking.time)}
                 </p>
               </div>
             </div>
             <span
               className={cn(
-                "shrink-0 rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-wide",
-                cancelled ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-700",
+                "shrink-0 rounded-full px-2 sm:px-2.5 py-0.5 sm:py-1 text-[10px] font-semibold uppercase tracking-wide",
+                cancelled ? "bg-rose-50 text-rose-600 border border-rose-200" : "bg-emerald-50 text-emerald-700 border border-emerald-200",
               )}
             >
-              {cancelled ? "Cancelled — Refunded" : "Confirmed"}
+              {cancelled ? "Cancelled" : "Confirmed"}
             </span>
           </div>
         </div>
 
         {/* Guest */}
-        <div className="bg-white border border-neutral-200 rounded-2xl p-4">
+        <div className="bg-white border border-neutral-200/90 rounded-2xl p-3.5 sm:p-4 shadow-2xs">
           <SectionLabel label="Guest" />
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 shrink-0 rounded-full bg-purple/10 text-purple flex items-center justify-center text-[12px] font-black">
-              {booking.guestName
-                .split(" ")
-                .map((n) => n[0])
-                .join("")
-                .slice(0, 2)}
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1 space-y-0.5">
+              <p className="text-xs sm:text-sm font-bold text-neutral-900 leading-tight">{booking.guestName}</p>
+              <p className="text-xs text-neutral-500 truncate">{booking.guestEmail}</p>
+              <p className="text-xs text-neutral-500">{booking.guestPhone}</p>
             </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-[14px] font-bold text-neutral-900">{booking.guestName}</p>
-              <p className="text-[12px] text-neutral-500 truncate">{booking.guestEmail}</p>
-              <p className="text-[12px] text-neutral-500">{booking.guestPhone}</p>
-            </div>
-            <div className="flex flex-col gap-1.5">
+            <div className="flex items-center sm:flex-col gap-1.5">
               <a
                 href={`mailto:${booking.guestEmail}`}
                 className="h-8 w-8 rounded-lg border border-neutral-200 flex items-center justify-center text-neutral-500 hover:text-purple hover:border-purple/40 transition-colors"
@@ -228,9 +221,9 @@ export function BookingDetailsPage() {
         </div>
 
         {/* Party */}
-        <div className="bg-white border border-neutral-200 rounded-2xl p-4">
+        <div className="bg-white border border-neutral-200/90 rounded-2xl p-3.5 sm:p-4 shadow-2xs">
           <SectionLabel label="Party" />
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2">
             {[
               { label: "Adults", value: booking.party.adults },
               { label: "Children", value: booking.party.children },
@@ -238,33 +231,33 @@ export function BookingDetailsPage() {
             ].map((p) => (
               <span
                 key={p.label}
-                className="rounded-lg bg-[#FAF7F2] border border-[#E8E3DC] px-3 py-1.5 text-[12px] font-semibold text-neutral-700"
+                className="rounded-lg bg-[#FAF7F2] border border-[#E8E3DC] px-2.5 py-1 text-xs font-medium text-neutral-700"
               >
                 {p.value} {p.label}
               </span>
             ))}
-            <span className="rounded-lg bg-purple/5 border border-purple/20 px-3 py-1.5 text-[12px] font-bold text-purple flex items-center gap-1">
-              <Users className="h-3.5 w-3.5" /> {partyTotal} total
+            <span className="rounded-lg bg-purple/5 border border-purple/20 px-2.5 py-1 text-xs font-semibold text-purple flex items-center gap-1">
+              <Users className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> {partyTotal} total
             </span>
           </div>
         </div>
 
         {/* Payment */}
-        <div className="bg-white border border-neutral-200 rounded-2xl p-4">
+        <div className="bg-white border border-neutral-200/90 rounded-2xl p-3.5 sm:p-4 shadow-2xs">
           <SectionLabel label="Payment" />
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[20px] font-black text-neutral-900">{formatKw(booking.total)}</p>
-              <p className="text-[11px] text-neutral-400">
+              <p className="text-base sm:text-lg font-bold text-neutral-900">{formatKw(booking.total)}</p>
+              <p className="text-[10px] sm:text-[11px] text-neutral-400">
                 {formatKw(booking.total / partyTotal)} per person
               </p>
             </div>
             <span
               className={cn(
-                "rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-wide",
+                "rounded-full px-2 sm:px-2.5 py-0.5 sm:py-1 text-[10px] font-semibold uppercase tracking-wide",
                 booking.paymentStatus === "paid"
-                  ? "bg-emerald-50 text-emerald-700"
-                  : "bg-amber-50 text-amber-700",
+                  ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                  : "bg-amber-50 text-amber-700 border border-amber-200",
               )}
             >
               {booking.paymentStatus === "paid" ? "Paid" : "Pending"}

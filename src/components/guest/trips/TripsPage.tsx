@@ -39,35 +39,6 @@ import {
 import { ReviewDialog } from "@/components/guest/reviews/ReviewDialog";
 import { useAuth } from "@/lib/store/authStore";
 
-// Stats Card
-
-function StatCard({
-  icon: Icon,
-  label,
-  value,
-  sub,
-  color,
-}: {
-  icon: React.ElementType;
-  label: string;
-  value: string | number;
-  sub?: string;
-  color: string;
-}) {
-  return (
-    <div className="group bg-white border border-gray-100 rounded-xl p-4 md:p-5 shadow-sm hover:shadow-md transition-all">
-      <div className="flex items-start justify-between mb-3">
-        <div className={cn("h-10 w-10 rounded-lg flex items-center justify-center border", color)}>
-          <Icon className="h-5 w-5" strokeWidth={1.5} />
-        </div>
-      </div>
-      <p className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">{value}</p>
-      <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mt-1">{label}</p>
-      {sub && <p className="text-[10px] text-gray-400 mt-0.5">{sub}</p>}
-    </div>
-  );
-}
-
 // Booking Type Icon
 
 const typeIcons = {
@@ -394,58 +365,14 @@ export function TripsPage() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col bg-background font-sans">
-      {/* COVER HERO */}
-      <div className="relative h-[200px] md:h-[240px] w-full overflow-hidden bg-gradient-to-br from-[#1f1433] via-[#2E154A] to-[#3A1A5A]">
-        <img
-          src="https://images.unsplash.com/photo-1488085061387-422e29b40080?w=1600&q=60"
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover opacity-30 md:opacity-25"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1f1433] via-[#1f1433]/60 to-transparent" />
-
-        <div className="absolute bottom-6 left-4 md:left-8 md:bottom-8">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-[#1f1433]/80 mb-2">
-            Travel History
-          </p>
-          <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-sm tracking-tight">
+    <div className="min-h-screen flex flex-col bg-[#fbfafc] font-sans">
+      <main className="flex-1 mx-auto w-full max-w-4xl px-4 md:px-6 pt-8 md:pt-10 pb-16">
+        {/* Simple Page Header */}
+        <div className="mb-8">
+          <h1 className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight">
             My Trips
           </h1>
-          <p className="text-base text-white/60 mt-1">All your bookings in one place</p>
-        </div>
-      </div>
-
-      <main className="flex-1 mx-auto w-full max-w-5xl px-4 md:px-8 -mt-12 relative z-10">
-        {/* STATS GRID */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8">
-          <StatCard
-            icon={CalendarDays}
-            label="Total Bookings"
-            value={bookings.length}
-            sub="All time"
-            color="text-indigo-600 bg-indigo-50 border-indigo-200"
-          />
-          <StatCard
-            icon={Clock}
-            label="Upcoming"
-            value={upcoming.length}
-            sub={`${past.length} completed`}
-            color="text-emerald-600 bg-emerald-50 border-emerald-200"
-          />
-          <StatCard
-            icon={CreditCard}
-            label="Total Spent"
-            value={`K${totalSpent.toLocaleString()}`}
-            sub="Across all trips"
-            color="text-amber-600 bg-amber-50 border-amber-200"
-          />
-          <StatCard
-            icon={MapIcon}
-            label="Destinations"
-            value={uniqueDestinations}
-            sub="Unique places"
-            color="text-sky-600 bg-sky-50 border-sky-200"
-          />
+          <p className="text-sm text-neutral-500 mt-0.5">View and manage your reservations</p>
         </div>
 
         {/* BOOKINGS */}

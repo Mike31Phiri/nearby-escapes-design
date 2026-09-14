@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   Compass,
@@ -15,7 +15,8 @@ import {
   CalendarDays,
   Search,
 } from "lucide-react";
-import { mockExperiences, categoryLabels, type Experience, type ExperienceCategory } from "@/lib/mock-data";
+import { mockExperiences, type Experience } from "@/lib/mock-data";
+import { ExperienceCard } from "@/components/shared/ListingCards";
 import {
   VerticalFilterSidebar,
   type FilterConfig,
@@ -107,72 +108,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 // Experience Card
-function ExperienceCard({ exp }: { exp: Experience }) {
-  const label = categoryLabels[exp.category] ?? "Experience";
-  const gradientFrom = CATEGORY_COLORS[exp.category] ?? "from-neutral-900/80";
-
-  return (
-    <Link
-      href={`/experiences/${exp.id}`}
-      className="group block bg-white rounded-2xl shadow-sm border border-neutral-100 overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
-    >
-      <div className="relative aspect-[16/10] overflow-hidden">
-        <img
-          src={exp.image}
-          alt={exp.name}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          loading="lazy"
-        />
-        <div className={cn("absolute inset-0 bg-gradient-to-t", gradientFrom, "via-transparent to-transparent")} />
-        <span className="absolute bottom-3 left-3 bg-black/60 text-white text-[10px] px-2.5 py-1 rounded-full font-bold backdrop-blur-sm">
-          {label}
-        </span>
-      </div>
-
-      <div className="p-4">
-        <div className="flex items-center gap-1 mb-1.5">
-          <Star className="h-3.5 w-3.5 fill-[#f2ba0d] text-[#f2ba0d]" />
-          <span className="text-xs font-bold text-neutral-800">{exp.rating}</span>
-          <span className="text-xs text-neutral-400">({exp.reviews})</span>
-        </div>
-
-        <h3 className="font-bold text-sm md:text-base text-neutral-900 line-clamp-1 group-hover:text-purple transition-colors leading-tight">
-          {exp.name}
-        </h3>
-
-        <p className="flex items-center gap-1 text-xs text-neutral-500 mt-1">
-          <MapPin className="h-3.5 w-3.5 shrink-0 text-neutral-400" />
-          <span className="truncate">{exp.location}</span>
-        </p>
-
-        <div className="mt-3 flex items-center gap-1.5 flex-wrap">
-          {exp.duration && (
-            <span className="inline-flex items-center gap-1 text-[10px] text-neutral-600 bg-neutral-50 border border-neutral-100 rounded-full px-2 py-0.5 font-medium">
-              <Clock className="h-3 w-3 text-neutral-400" />
-              {exp.duration}
-            </span>
-          )}
-          {exp.groupSize && (
-            <span className="inline-flex items-center gap-1 text-[10px] text-neutral-600 bg-neutral-50 border border-neutral-100 rounded-full px-2 py-0.5 font-medium">
-              <Users className="h-3 w-3 text-neutral-400" />
-              {exp.groupSize}
-            </span>
-          )}
-        </div>
-
-        <div className="mt-3 pt-3 border-t border-neutral-100 flex items-center justify-between">
-          <div>
-            <span className="text-sm md:text-base font-black text-neutral-900">K{exp.price}</span>
-            <span className="text-xs text-neutral-500 font-normal"> / person</span>
-          </div>
-          <span className="inline-flex items-center gap-1 text-xs font-bold text-purple group-hover:text-purple-hover transition-colors">
-            Book <ChevronRight className="h-3.5 w-3.5" />
-          </span>
-        </div>
-      </div>
-    </Link>
-  );
-}
+// (removed - using shared ListingCards ExperienceCard)
 
 function matchDuration(expDuration: string | undefined, filters: string[]): boolean {
   if (!expDuration || filters.length === 0) return true;
@@ -206,13 +142,22 @@ export function ExperiencesPage() {
   const city = searchParams.get("city") ?? "";
   const attraction = searchParams.get("attraction") ?? "";
   const q = searchParams.get("q") ?? "";
+  const catParam = searchParams.get("cat") ?? searchParams.get("category") ?? "";
 
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+    catParam ? [catParam] : [],
+  );
   const [drawerFilters, setDrawerFilters] = useState<Record<string, any>>(DEFAULT_DRAWER_FILTERS);
 
   const [sortValue, setSortValue] = useState("recommended");
   const [filtersOpen, setFiltersOpen] = useState(false);
-  
+
+  useEffect(() => {
+    if (catParam) {
+      setSelectedCategories([catParam]);
+    }
+  }, [catParam]);
+
   // Harmonized Search Inputs: Where, When, Guests
   const initialWhere = city || province || attraction || q || "";
   const [whereInput, setWhereInput] = useState(initialWhere);
@@ -237,7 +182,9 @@ export function ExperiencesPage() {
 
     if (whereInput.trim()) {
       const search = whereInput.toLowerCase();
-      result = result.filter((e) => e.location.toLowerCase().includes(search) || e.name.toLowerCase().includes(search));
+      result = result.filter(
+        (e) => e.location.toLowerCase().includes(search) || e.name.toLowerCase().includes(search),
+      );
       if (result.length === 0) result = [...mockExperiences];
     } else {
       const locationCtx = [attraction, city, province, q].filter(Boolean);
@@ -253,7 +200,8 @@ export function ExperiencesPage() {
       result = result.filter((e) => {
         return selectedCategories.some((cat) => {
           if (cat === "popular") return e.rating >= 4.7;
-          if (cat === "unique") return e.category === "cultural" || e.category === "adventure" || e.category === "farm";
+          if (cat === "unique")
+            return e.category === "cultural" || e.category === "adventure" || e.category === "farm";
           return e.category === cat;
         });
       });
@@ -327,20 +275,17 @@ export function ExperiencesPage() {
 
   return (
     <div className="min-h-screen bg-[#faf8f4] font-sans">
-
-      {/* ── HERO TITLE SECTION ─────────────────────────────────── */}
+      {/* HERO TITLE SECTION */}
       <div className="bg-white border-b border-neutral-100 py-3.5">
         <div className="max-w-[1400px] mx-auto px-3 md:px-6">
-
           {/* Title */}
-          <h1 className="text-lg md:text-xl font-extrabold text-neutral-900 text-center tracking-tight leading-snug">
+          <h1 className="text-xl md:text-2xl font-semibold text-neutral-900 text-center tracking-tight leading-snug">
             {dynamicTitle}
           </h1>
 
           {/* Search Bar — compact inline row on mobile, full grid on desktop */}
           <div className="mt-3 max-w-4xl mx-auto">
-
-            {/* ── MOBILE (< md): single pill-row ── */}
+            {/* MOBILE (< md): single pill-row */}
             <div className="grid md:hidden grid-cols-[1fr_auto_1fr_auto] items-center bg-white border border-neutral-200 shadow-[0_4px_20px_rgba(31,20,51,0.08)] rounded-full pl-3.5 pr-1.5 py-1.5 min-h-[48px] gap-1.5">
               {/* Where (1fr equal column) */}
               <div className="flex items-center gap-1.5 min-w-0 px-1">
@@ -371,19 +316,20 @@ export function ExperiencesPage() {
               {/* Search button (unshrinked) */}
               <button
                 type="button"
-                className="bg-purple text-white rounded-full h-9 w-9 hover:bg-purple-hover transition-colors shrink-0 flex items-center justify-center shadow-xs active:scale-95 cursor-pointer ml-0.5"
+                className="bg-neutral-900 text-white rounded-full h-9 w-9 hover:bg-neutral-800 transition-colors shrink-0 flex items-center justify-center shadow-xs active:scale-95 cursor-pointer ml-0.5"
                 aria-label="Search"
               >
                 <Search className="h-4 w-4" strokeWidth={2.5} />
               </button>
             </div>
 
-            {/* ── DESKTOP (md+): full grid ── */}
+            {/* DESKTOP (md+): full grid */}
             <div className="hidden md:grid md:grid-cols-12 bg-white border border-neutral-200 shadow-sm rounded-2xl p-1.5 gap-1.5">
-
               {/* WHERE */}
               <div className="md:col-span-4 bg-neutral-50/80 hover:bg-neutral-50 border border-neutral-100 rounded-xl px-3 py-1.5 transition-colors flex flex-col justify-center">
-                <p className="text-[8px] font-extrabold uppercase tracking-wider text-purple leading-none mb-0.5">Where</p>
+                <p className="text-[9px] font-medium uppercase tracking-wider text-neutral-500 leading-none mb-1">
+                  Where
+                </p>
                 <div className="flex items-center gap-1.5">
                   <MapPin className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
                   <input
@@ -391,38 +337,54 @@ export function ExperiencesPage() {
                     value={whereInput}
                     onChange={(e) => setWhereInput(e.target.value)}
                     placeholder="Destination, activity, or tour"
-                    className="w-full bg-transparent text-xs font-semibold text-neutral-800 focus:outline-none placeholder:text-neutral-400 truncate"
+                    className="w-full bg-transparent text-xs font-medium text-neutral-800 focus:outline-none placeholder:text-neutral-400 truncate"
                   />
                 </div>
               </div>
 
               {/* WHEN */}
               <div className="md:col-span-3 bg-neutral-50/80 hover:bg-neutral-50 border border-neutral-100 rounded-xl px-3 py-1.5 transition-colors flex flex-col justify-center">
-                <p className="text-[8px] font-extrabold uppercase tracking-wider text-purple leading-none mb-0.5">When</p>
+                <p className="text-[9px] font-medium uppercase tracking-wider text-neutral-500 leading-none mb-1">
+                  When
+                </p>
                 <div className="flex items-center gap-1.5">
                   <CalendarDays className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
                   <input
                     type="date"
                     value={whenInput}
                     onChange={(e) => setWhenInput(e.target.value)}
-                    className="w-full bg-transparent text-xs font-semibold text-neutral-800 focus:outline-none"
+                    className="w-full bg-transparent text-xs font-medium text-neutral-800 focus:outline-none"
                   />
                 </div>
               </div>
 
               {/* GUESTS */}
               <div className="md:col-span-3 bg-neutral-50/80 hover:bg-neutral-50 border border-neutral-100 rounded-xl px-3 py-1.5 transition-colors flex flex-col justify-center">
-                <p className="text-[8px] font-extrabold uppercase tracking-wider text-purple leading-none mb-0.5">Guests</p>
+                <p className="text-[9px] font-medium uppercase tracking-wider text-neutral-500 leading-none mb-1">
+                  Guests
+                </p>
                 <div className="flex items-center justify-between gap-1">
                   <div className="flex items-center gap-1 shrink-0">
                     <Users className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
-                    <span className="text-xs font-semibold text-neutral-800">
+                    <span className="text-xs font-medium text-neutral-800">
                       {groupSizeInput} {groupSizeInput === 1 ? "Person" : "People"}
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <button type="button" onClick={() => setGroupSizeInput((g) => Math.max(1, g - 1))} className="h-4 w-4 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 hover:border-purple hover:text-purple text-[10px] font-bold">−</button>
-                    <button type="button" onClick={() => setGroupSizeInput((g) => g + 1)} className="h-4 w-4 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 hover:border-purple hover:text-purple text-[10px] font-bold">+</button>
+                    <button
+                      type="button"
+                      onClick={() => setGroupSizeInput((g) => Math.max(1, g - 1))}
+                      className="h-4 w-4 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 hover:border-purple hover:text-purple text-[10px] font-bold"
+                    >
+                      −
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setGroupSizeInput((g) => g + 1)}
+                      className="h-4 w-4 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 hover:border-purple hover:text-purple text-[10px] font-bold"
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
               </div>
@@ -437,32 +399,32 @@ export function ExperiencesPage() {
                   Search
                 </Button>
               </div>
-
             </div>
           </div>
         </div>
       </div>
 
-
-      {/* ── STICKY FILTER BAR (Filters button + Category pills) ── */}
+      {/* STICKY FILTER BAR (Filters button + Category pills) */}
       <div className="sticky top-[64px] z-20 bg-white border-b border-neutral-200 shadow-xs">
         <div className="max-w-[1400px] mx-auto px-3 md:px-6">
-          <div className="flex items-center gap-1.5 py-2.5 overflow-x-auto scrollbar-none" style={{ scrollbarWidth: "none" }}>
-            
+          <div
+            className="flex items-center gap-1.5 py-2.5 overflow-x-auto scrollbar-none"
+            style={{ scrollbarWidth: "none" }}
+          >
             {/* Filters Button */}
             <button
               onClick={() => setFiltersOpen(true)}
               className={cn(
-                "flex-none flex items-center gap-2 border rounded-full px-6 py-2 text-sm font-bold transition-all duration-150 active:scale-95 whitespace-nowrap shadow-xs",
+                "flex-none flex items-center gap-2 border rounded-full px-5 py-2 text-sm font-medium transition-all duration-150 active:scale-95 whitespace-nowrap shadow-2xs",
                 chips.length > 0
                   ? "bg-purple/10 border-purple text-purple hover:bg-purple/15"
-                  : "bg-white border-neutral-300 text-neutral-800 hover:border-purple/60 hover:text-purple hover:bg-purple/[0.03]",
+                  : "bg-white border-neutral-300 text-neutral-800 hover:border-neutral-400 hover:bg-neutral-50",
               )}
             >
               <SlidersHorizontal className="h-4 w-4 shrink-0" />
               <span>Filters</span>
               {chips.length > 0 && (
-                <span className="flex items-center justify-center bg-purple text-white text-[11px] font-extrabold h-4.5 min-w-[18px] px-1 rounded-full leading-none">
+                <span className="flex items-center justify-center bg-purple text-white text-[11px] font-medium h-4.5 min-w-[18px] px-1 rounded-full leading-none">
                   {chips.length}
                 </span>
               )}
@@ -478,30 +440,29 @@ export function ExperiencesPage() {
                   key={item.cat}
                   onClick={() => toggleCategory(item.cat)}
                   className={cn(
-                    "flex-none whitespace-nowrap px-6 py-2 rounded-full border text-sm transition-all duration-150 active:scale-95 select-none",
+                    "flex-none whitespace-nowrap px-5 py-2 rounded-full border text-sm transition-all duration-150 active:scale-95 select-none font-medium",
                     active
-                      ? "bg-purple text-white border-purple shadow-sm font-bold scale-[1.02]"
-                      : "bg-white border-neutral-200 text-neutral-700 font-semibold hover:border-purple/50 hover:text-purple hover:bg-purple/[0.03] hover:shadow-xs",
+                      ? "bg-neutral-900 text-white border-neutral-900 shadow-xs"
+                      : "bg-white border-neutral-200 text-neutral-600 hover:border-neutral-300 hover:text-neutral-900 hover:bg-neutral-50",
                   )}
                 >
                   {item.label}
                 </button>
               );
             })}
-
           </div>
         </div>
       </div>
 
-      {/* ── MAIN CONTENT (3 Cards Per Row) ─────────────── */}
+      {/* MAIN CONTENT (3 Cards Per Row) */}
       <main className="max-w-[1400px] mx-auto px-3 md:px-6 py-4">
-
         {/* Title bar + sort */}
         <div className="flex items-center justify-between mb-3.5 gap-4">
           <div>
-            <h2 className="text-base font-bold text-neutral-900">{dynamicTitle}</h2>
+            <h2 className="text-base font-semibold text-neutral-900">{dynamicTitle}</h2>
             <p className="text-xs text-neutral-500 mt-0.5">
-              <span className="font-semibold text-neutral-700">{filteredExperiences.length}</span> experiences found
+              <span className="font-medium text-neutral-700">{filteredExperiences.length}</span>{" "}
+              experiences found
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
@@ -513,7 +474,9 @@ export function ExperiencesPage() {
                 className="appearance-none bg-white border border-neutral-200 rounded-lg pl-3 pr-8 py-1.5 text-xs font-semibold text-neutral-700 focus:outline-none focus:ring-2 focus:ring-purple/20 focus:border-purple transition-colors cursor-pointer"
               >
                 {SORT_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
                 ))}
               </select>
               <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-neutral-400 pointer-events-none" />
@@ -549,7 +512,7 @@ export function ExperiencesPage() {
         )}
       </main>
 
-      {/* ── FILTERS DRAWER ── */}
+      {/* FILTERS DRAWER */}
       {filtersOpen && (
         <>
           <div

@@ -144,7 +144,7 @@ export function HostInventoryPage() {
     counts && counts.total > 0 ? Math.round((counts.available / counts.total) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-neutral-50 pb-12">
+    <div className="min-h-screen bg-background pb-16 font-sans">
       <HostPageHeader
         title="Rooms, Seats & Slots"
         description="See what's available today — open or close units, and block dates per listing."
@@ -152,7 +152,7 @@ export function HostInventoryPage() {
           selectedListing ? (
             <Link
               href={`/host/listings/${selectedListing.id}`}
-              className="inline-flex items-center gap-2 bg-purple hover:bg-purple-hover text-white text-sm font-black uppercase tracking-wider h-10 px-4 rounded-xl shadow-sm transition-all duration-200"
+              className="inline-flex items-center gap-2 bg-purple hover:bg-purple-hover text-white text-xs font-bold uppercase tracking-wider h-10 px-4 rounded-xl shadow-xs transition-all duration-200"
             >
               <PencilLine className="h-4 w-4" />
               Update Listing
@@ -161,9 +161,9 @@ export function HostInventoryPage() {
         }
       />
 
-      <div className="mx-auto max-w-7xl px-4 md:px-6 mt-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 py-8 space-y-8">
         {/* Listing tabs */}
-        <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1 mb-6">
+        <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
           {listings.map((l) => {
             const active = l.id === selectedId;
             const Icon = typeIcons[l.type] ?? Bed;
@@ -172,29 +172,29 @@ export function HostInventoryPage() {
                 key={l.id}
                 onClick={() => switchListing(l.id)}
                 className={cn(
-                  "flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap border transition-all outline-none",
+                  "flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap border transition-all outline-none",
                   active
-                    ? "bg-purple text-white border-purple shadow-sm"
-                    : "bg-white text-neutral-600 border-neutral-200 hover:border-purple/40 hover:text-neutral-900",
+                    ? "bg-purple text-white border-purple shadow-xs"
+                    : "bg-white text-neutral-600 border-neutral-200/80 hover:border-purple/40 hover:text-neutral-900",
                 )}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-3.5 w-3.5" />
                 {l.name}
               </button>
             );
           })}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* LEFT: Units grid */}
           <div className="lg:col-span-2 space-y-6">
             {/* Summary strip */}
             {inventory && counts && (
-              <div className="bg-white border border-neutral-200 rounded-2xl p-5 shadow-sm">
+              <div className="bg-white border border-neutral-200/80 rounded-2xl p-6 shadow-2xs">
                 <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-purple/10 text-purple flex items-center justify-center">
-                      <Boxes className="h-5 w-5" />
+                  <div className="flex items-center gap-3.5">
+                    <div className="h-12 w-12 rounded-xl bg-purple/10 text-purple flex items-center justify-center shrink-0 border border-purple/15">
+                      <Boxes className="h-6 w-6" />
                     </div>
                     <div>
                       <h2 className="text-base font-bold text-neutral-900">
@@ -213,7 +213,7 @@ export function HostInventoryPage() {
                         / {counts.total} open
                       </span>
                     </p>
-                    <p className="text-[11px] text-neutral-500 mt-0.5">
+                    <p className="text-xs text-neutral-400 mt-0.5">
                       {counts.occupied} occupied · {counts.blocked} blocked
                     </p>
                   </div>
@@ -230,56 +230,56 @@ export function HostInventoryPage() {
                     style={{ width: `${(counts.occupied / counts.total) * 100}%` }}
                   />
                   <div
-                    className="bg-zinc-400 transition-all"
+                    className="bg-neutral-400 transition-all"
                     style={{ width: `${(counts.blocked / counts.total) * 100}%` }}
                   />
                 </div>
-                <p className="text-[11px] text-neutral-500 mt-1.5">
+                <p className="text-xs text-neutral-500 mt-2">
                   {utilPct}% of {inventory.unitLabelPlural.toLowerCase()} open today
                 </p>
               </div>
             )}
 
             {/* Units grid */}
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-base font-bold text-neutral-900">
                   {inventory?.unitLabelPlural ?? "Units"}
                 </h2>
-                <div className="flex items-center gap-3 text-[11px] font-semibold text-neutral-500">
+                <div className="flex items-center gap-3 text-xs font-semibold text-neutral-500">
                   <span className="flex items-center gap-1.5">
-                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Available
+                    <span className="h-2 w-2 rounded-full bg-emerald-500" /> Available
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <span className="h-2.5 w-2.5 rounded-full bg-purple" /> Occupied
+                    <span className="h-2 w-2 rounded-full bg-purple" /> Occupied
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <span className="h-2.5 w-2.5 rounded-full bg-zinc-400" /> Blocked
+                    <span className="h-2 w-2 rounded-full bg-neutral-400" /> Blocked
                   </span>
                 </div>
               </div>
 
               {units.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-16 text-center bg-white border border-neutral-200 rounded-2xl">
-                  <div className="h-14 w-14 rounded-full bg-purple/10 flex items-center justify-center mb-4">
-                    <Boxes className="h-6 w-6 text-purple" />
+                <div className="flex flex-col items-center justify-center py-16 text-center bg-white border border-neutral-200/80 rounded-2xl shadow-2xs">
+                  <div className="h-14 w-14 rounded-2xl bg-purple/10 text-purple flex items-center justify-center mb-4">
+                    <Boxes className="h-6 w-6" />
                   </div>
                   <h3 className="text-base font-bold text-neutral-900">No inventory units yet</h3>
-                  <p className="text-sm text-neutral-500 mt-1 max-w-xs leading-relaxed">
+                  <p className="text-xs text-neutral-500 mt-1 max-w-xs leading-relaxed">
                     Add rooms, seats or slots when updating this listing, then manage them here.
                   </p>
                   <Link
                     href={`/host/listings/${selectedId}`}
-                    className="mt-5 inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-purple text-white text-sm font-bold hover:bg-purple-hover transition-colors"
+                    className="mt-5 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple text-white text-xs font-bold hover:bg-purple-hover transition-colors shadow-xs"
                   >
-                    <PencilLine className="h-4 w-4" />
+                    <PencilLine className="h-3.5 w-3.5" />
                     Update listing
                   </Link>
                 </div>
               )}
 
               {units.length > 0 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   {units.map((unit) => {
                     const meta = STATUS_META[unit.status];
                     return (
@@ -287,7 +287,7 @@ export function HostInventoryPage() {
                         key={unit.id}
                         id={`unit-${unit.id}`}
                         className={cn(
-                          "bg-white border border-neutral-200 rounded-xl p-4 shadow-sm flex items-start justify-between gap-3 transition-shadow hover:shadow-md",
+                          "bg-white border border-neutral-200/80 rounded-2xl p-4 shadow-2xs flex items-start justify-between gap-3 transition-all hover:shadow-md",
                           highlightUnitId === unit.id &&
                             "ring-2 ring-purple/60 border-purple shadow-md",
                         )}
@@ -299,7 +299,7 @@ export function HostInventoryPage() {
                             </h3>
                             <span
                               className={cn(
-                                "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-black uppercase tracking-wider shrink-0",
+                                "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider shrink-0",
                                 meta.chip,
                               )}
                             >
@@ -308,12 +308,12 @@ export function HostInventoryPage() {
                             </span>
                           </div>
                           {unit.note && (
-                            <p className="text-[11px] text-neutral-500 mt-1">{unit.note}</p>
+                            <p className="text-xs text-neutral-500 mt-1">{unit.note}</p>
                           )}
                           {unit.price && (
                             <p className="text-xs font-bold text-neutral-900 mt-1.5">
                               K{unit.price}
-                              <span className="text-[10px] font-semibold text-neutral-400">
+                              <span className="text-[10px] font-normal text-neutral-400">
                                 {" "}
                                 / {inventory?.unitLabel.toLowerCase()}
                               </span>
@@ -325,9 +325,9 @@ export function HostInventoryPage() {
                           <button
                             onClick={() => toggleUnit(unit.id)}
                             className={cn(
-                              "flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[10px] font-black uppercase tracking-wider border transition-all outline-none shrink-0",
+                              "flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider border transition-all outline-none shrink-0",
                               unit.status === "available"
-                                ? "bg-zinc-50 text-neutral-600 border-neutral-200 hover:bg-zinc-100"
+                                ? "bg-neutral-50 text-neutral-600 border-neutral-200 hover:bg-neutral-100"
                                 : "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100",
                             )}
                           >
@@ -342,7 +342,7 @@ export function HostInventoryPage() {
                             )}
                           </button>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-neutral-400 shrink-0">
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-neutral-400 shrink-0">
                             Booked
                           </span>
                         )}
@@ -357,40 +357,40 @@ export function HostInventoryPage() {
           {/* RIGHT: Date blocking tools */}
           <div className="space-y-6">
             {/* Block / open dates */}
-            <div className="bg-white border border-neutral-200 rounded-2xl p-5 shadow-sm">
-              <div className="flex items-center gap-2.5 mb-1">
-                <div className="h-9 w-9 rounded-xl bg-[#f3eafb] text-purple flex items-center justify-center">
+            <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-2xs">
+              <div className="flex items-center gap-2.5 mb-2">
+                <div className="h-9 w-9 rounded-xl bg-purple/10 text-purple flex items-center justify-center">
                   <CalendarX className="h-4.5 w-4.5" />
                 </div>
                 <div>
                   <h2 className="text-base font-bold text-neutral-900">Block / Open Dates</h2>
                   <p className="text-xs text-neutral-500 mt-0.5">
-                    Hold dates for maintenance, or release them for bookings.
+                    Hold dates for maintenance, or release them.
                   </p>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-2 mt-4">
-                <div className="bg-neutral-50 rounded-lg px-3 py-2 border border-neutral-200">
-                  <div className="text-[10px] text-purple font-medium uppercase tracking-wide mb-0.5">
+                <div className="bg-neutral-50/80 rounded-xl px-3.5 py-2.5 border border-neutral-200/80">
+                  <div className="text-[10px] text-purple font-bold uppercase tracking-wide mb-0.5">
                     From
                   </div>
                   <input
                     type="date"
                     value={rangeFrom}
                     onChange={(e) => setRangeFrom(e.target.value)}
-                    className="text-[13px] font-medium text-neutral-900 bg-transparent border-none p-0 focus:outline-none w-full"
+                    className="text-xs font-semibold text-neutral-900 bg-transparent border-none p-0 focus:outline-none w-full"
                   />
                 </div>
-                <div className="bg-neutral-50 rounded-lg px-3 py-2 border border-neutral-200">
-                  <div className="text-[10px] text-purple font-medium uppercase tracking-wide mb-0.5">
+                <div className="bg-neutral-50/80 rounded-xl px-3.5 py-2.5 border border-neutral-200/80">
+                  <div className="text-[10px] text-purple font-bold uppercase tracking-wide mb-0.5">
                     To
                   </div>
                   <input
                     type="date"
                     value={rangeTo}
                     onChange={(e) => setRangeTo(e.target.value)}
-                    className="text-[13px] font-medium text-neutral-900 bg-transparent border-none p-0 focus:outline-none w-full"
+                    className="text-xs font-semibold text-neutral-900 bg-transparent border-none p-0 focus:outline-none w-full"
                   />
                 </div>
               </div>
@@ -398,26 +398,26 @@ export function HostInventoryPage() {
               <div className="flex gap-2 mt-3">
                 <button
                   onClick={handleBlockRange}
-                  className="flex-1 py-2.5 rounded-lg bg-purple text-[13px] font-medium text-white hover:bg-purple-hover transition-colors"
+                  className="flex-1 py-2.5 rounded-xl bg-purple text-xs font-bold text-white hover:bg-purple-hover transition-colors shadow-xs"
                 >
                   Block dates
                 </button>
                 <button
                   onClick={handleOpenRange}
-                  className="flex-1 py-2.5 rounded-lg border border-emerald-200 bg-emerald-50 text-[13px] font-medium text-emerald-700 hover:bg-emerald-100 transition-colors"
+                  className="flex-1 py-2.5 rounded-xl border border-emerald-200 bg-emerald-50 text-xs font-bold text-emerald-700 hover:bg-emerald-100 transition-colors"
                 >
                   Open dates
                 </button>
               </div>
 
-              <p className="text-[10px] text-neutral-400 mt-3 leading-relaxed">
-                Booked dates can&apos;t be blocked. Seasonal pricing rules are managed from the
+              <p className="text-[11px] text-neutral-400 mt-3 leading-relaxed">
+                Booked dates cannot be blocked. Seasonal pricing rules are managed from the
                 availability calendar.
               </p>
             </div>
 
-            {/* Manage listing */}
-            <div className="bg-white border border-neutral-200 rounded-2xl p-5 shadow-sm">
+            {/* Quick links card */}
+            <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-2xs">
               <div className="flex items-center gap-2.5 mb-3">
                 <div className="h-9 w-9 rounded-xl bg-purple/10 text-purple flex items-center justify-center">
                   <PencilLine className="h-4.5 w-4.5" />
@@ -425,7 +425,7 @@ export function HostInventoryPage() {
                 <div>
                   <h2 className="text-base font-bold text-neutral-900">Manage Listing</h2>
                   <p className="text-xs text-neutral-500 mt-0.5">
-                    Edit details, pricing, photos & availability.
+                    Edit details, pricing, photos & calendar.
                   </p>
                 </div>
               </div>
@@ -433,33 +433,33 @@ export function HostInventoryPage() {
               <div className="space-y-2">
                 <Link
                   href={`/host/listings/${selectedId}`}
-                  className="flex items-center justify-between rounded-xl border border-neutral-200 px-4 py-3 text-sm font-bold text-neutral-900 hover:border-purple/40 hover:bg-neutral-50 transition-all group"
+                  className="flex items-center justify-between rounded-xl border border-neutral-200/80 px-4 py-3 text-xs font-bold text-neutral-900 hover:border-purple/40 hover:bg-neutral-50 transition-all group"
                 >
                   <span className="flex items-center gap-2.5">
                     <TypeIcon className="h-4 w-4 text-purple" />
                     View & update listing
                   </span>
-                  <ArrowRight className="h-4 w-4 text-neutral-500 group-hover:translate-x-0.5 transition-transform" />
+                  <ArrowRight className="h-3.5 w-3.5 text-neutral-400 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
                 <Link
                   href="/host/listings"
-                  className="flex items-center justify-between rounded-xl border border-neutral-200 px-4 py-3 text-sm font-bold text-neutral-900 hover:border-purple/40 hover:bg-neutral-50 transition-all group"
+                  className="flex items-center justify-between rounded-xl border border-neutral-200/80 px-4 py-3 text-xs font-bold text-neutral-900 hover:border-purple/40 hover:bg-neutral-50 transition-all group"
                 >
                   <span className="flex items-center gap-2.5">
                     <Boxes className="h-4 w-4 text-purple" />
                     All my listings
                   </span>
-                  <ArrowRight className="h-4 w-4 text-neutral-500 group-hover:translate-x-0.5 transition-transform" />
+                  <ArrowRight className="h-3.5 w-3.5 text-neutral-400 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
                 <Link
                   href="/host/availability"
-                  className="flex items-center justify-between rounded-xl border border-neutral-200 px-4 py-3 text-sm font-bold text-neutral-900 hover:border-purple/40 hover:bg-neutral-50 transition-all group"
+                  className="flex items-center justify-between rounded-xl border border-neutral-200/80 px-4 py-3 text-xs font-bold text-neutral-900 hover:border-purple/40 hover:bg-neutral-50 transition-all group"
                 >
                   <span className="flex items-center gap-2.5">
                     <CalendarCheck className="h-4 w-4 text-purple" />
                     Full availability calendar
                   </span>
-                  <ArrowRight className="h-4 w-4 text-neutral-500 group-hover:translate-x-0.5 transition-transform" />
+                  <ArrowRight className="h-3.5 w-3.5 text-neutral-400 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
               </div>
             </div>

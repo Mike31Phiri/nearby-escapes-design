@@ -19,7 +19,7 @@ export function TripHistoryPage() {
                 <Building2 className="w-3 h-3" /> Stay
               </span>
             </div>
-            <p className="font-semibold text-black mt-1">Chisanga's Lakeside Lodge</p>
+            <p className="font-semibold text-black mt-1">Chisanga&apos;s Lakeside Lodge</p>
             <p className="text-xs text-black-muted mt-0.5">
               Livingstone, Zambia · Aug 12 - Aug 15, 2025
             </p>

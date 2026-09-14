@@ -9,6 +9,20 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: "/host/dashboard",
+        destination: "/host",
+        permanent: true,
+      },
+      {
+        source: "/host/earnings",
+        destination: "/host/finances",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

@@ -15,6 +15,12 @@ import {
   ChevronDown,
   ChevronUp,
   Gem,
+  Download,
+  FileSpreadsheet,
+  RotateCcw,
+  User,
+  Building2,
+  Calendar,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -42,6 +48,7 @@ import { mockDisputes } from "@/lib/mock-admin-data";
 import type { DisputeCase } from "@/lib/mock-admin-data";
 import { useLoading, withLoading } from "@/lib/loading-context";
 import { showSuccess, showWarning, showInfo } from "@/lib/admin-toast";
+import { toast } from "sonner";
 
 // Type Helpers
 
@@ -60,10 +67,10 @@ const typeLabels: Record<string, string> = {
 };
 
 const priorityConfig: Record<string, { label: string; className: string }> = {
-  low: { label: "Low", className: "bg-zinc-50 text-zinc-600 border-zinc-200" },
-  medium: { label: "Medium", className: "bg-amber-50 text-amber-700 border-amber-200" },
-  high: { label: "High", className: "bg-rose-50 text-rose-700 border-rose-200" },
-  critical: { label: "Critical", className: "bg-red-50 text-red-800 border-red-300" },
+  low: { label: "Low", className: "bg-neutral-50 text-neutral-600 border-neutral-200" },
+  medium: { label: "Medium", className: "bg-amber-50 text-amber-700 border-amber-200/80" },
+  high: { label: "High", className: "bg-rose-50 text-rose-700 border-rose-200/80" },
+  critical: { label: "Critical", className: "bg-red-50 text-red-700 border-red-200 font-semibold" },
 };
 
 const statusConfig: Record<string, { label: string; icon: React.ElementType; className: string }> =
@@ -71,32 +78,32 @@ const statusConfig: Record<string, { label: string; icon: React.ElementType; cla
     open: {
       label: "Open",
       icon: AlertTriangle,
-      className: "bg-rose-50 text-rose-700 border-rose-200",
+      className: "bg-rose-50 text-rose-700 border-rose-200/80",
     },
     investigating: {
       label: "Investigating",
       icon: Clock,
-      className: "bg-amber-50 text-amber-700 border-amber-200",
+      className: "bg-amber-50 text-amber-700 border-amber-200/80",
     },
     resolved_host: {
       label: "Resolved (Host)",
       icon: CheckCircle2,
-      className: "bg-blue-50 text-blue-700 border-blue-200",
+      className: "bg-blue-50 text-blue-700 border-blue-200/80",
     },
     resolved_guest: {
       label: "Resolved (Guest)",
       icon: CheckCircle2,
-      className: "bg-emerald-50 text-emerald-700 border-emerald-200",
+      className: "bg-emerald-50 text-emerald-700 border-emerald-200/80",
     },
     refunded: {
       label: "Refunded",
       icon: DollarSign,
-      className: "bg-violet-50 text-violet-700 border-violet-200",
+      className: "bg-purple/10 text-purple border-purple/20",
     },
     closed: {
       label: "Closed",
       icon: ShieldAlert,
-      className: "bg-zinc-50 text-zinc-600 border-zinc-200",
+      className: "bg-neutral-100 text-neutral-600 border-neutral-200",
     },
   };
 
@@ -116,9 +123,9 @@ function DisputeCard({
   const [expanded, setExpanded] = useState(false);
   const [resolveDialog, setResolveDialog] = useState<"host" | "guest" | null>(null);
   const { setLoading, setLoadingMessage } = useLoading();
-  const TypeIcon = typeIcons[dispute.listingType];
-  const priCfg = priorityConfig[dispute.priority];
-  const statCfg = statusConfig[dispute.status];
+  const TypeIcon = typeIcons[dispute.listingType] || Scale;
+  const priCfg = priorityConfig[dispute.priority] || priorityConfig.medium;
+  const statCfg = statusConfig[dispute.status] || statusConfig.open;
   const StatusIcon = statCfg.icon;
 
   const daysOpen = Math.floor(
@@ -137,35 +144,37 @@ function DisputeCard({
   return (
     <div
       className={cn(
-        "rounded-xl border shadow-sm transition-all duration-200",
+        "rounded-2xl border bg-white shadow-2xs transition-all duration-200",
         dispute.status === "open" || dispute.status === "investigating"
-          ? "border-border/50 bg-card hover:shadow-md"
-          : "border-border/30 bg-card/50",
+          ? "border-neutral-200/80 hover:border-neutral-300"
+          : "border-neutral-200/60 opacity-95",
       )}
     >
       <div className="p-5">
         {/* Header Row */}
         <div className="flex items-start justify-between gap-4">
-          <div className="flex items-center gap-3 min-w-0 flex-1">
+          <div className="flex items-center gap-3.5 min-w-0 flex-1">
             <div
               className={cn(
-                "h-10 w-10 shrink-0 rounded-xl flex items-center justify-center",
+                "h-11 w-11 shrink-0 rounded-xl flex items-center justify-center border",
                 dispute.priority === "critical"
-                  ? "bg-red-50 text-red-600"
+                  ? "bg-red-50 text-red-600 border-red-200/80"
                   : dispute.priority === "high"
-                    ? "bg-rose-50 text-rose-600"
-                    : "bg-muted text-muted-foreground",
+                    ? "bg-rose-50 text-rose-600 border-rose-200/80"
+                    : "bg-purple/10 text-purple border-purple/15",
               )}
             >
               <Scale className="h-5 w-5" />
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2 flex-wrap">
-                <h4 className="font-bold text-foreground truncate">{dispute.listingName}</h4>
+                <h4 className="font-semibold text-neutral-900 text-base truncate">
+                  {dispute.listingName}
+                </h4>
                 <Badge
                   variant="outline"
                   className={cn(
-                    "rounded-full text-[8px] font-bold uppercase tracking-wider px-2 py-0.5",
+                    "rounded-full text-[11px] font-semibold tracking-wide px-2.5 py-0.5",
                     priCfg.className,
                   )}
                 >
@@ -174,63 +183,75 @@ function DisputeCard({
                 <Badge
                   variant="outline"
                   className={cn(
-                    "rounded-full text-[8px] font-bold uppercase tracking-wider px-2 py-0.5",
+                    "rounded-full text-[11px] font-semibold tracking-wide px-2.5 py-0.5",
                     statCfg.className,
                   )}
                 >
-                  <StatusIcon className="h-2.5 w-2.5 mr-0.5" />
+                  <StatusIcon className="h-3 w-3 mr-1" />
                   {statCfg.label}
                 </Badge>
               </div>
-              <p className="text-sm text-muted-foreground flex items-center gap-2 mt-0.5">
-                <span className="font-semibold text-foreground">{dispute.reason}</span>
-                <span className="text-muted-foreground/40">·</span>
-                <span>Ref: {dispute.bookingRef}</span>
-                <span className="text-muted-foreground/40">·</span>
+              <p className="text-xs text-neutral-500 flex items-center gap-2 mt-1">
+                <span className="font-medium text-neutral-800">{dispute.reason}</span>
+                <span className="text-neutral-300">·</span>
+                <span className="font-mono">Ref: {dispute.bookingRef}</span>
+                <span className="text-neutral-300">·</span>
                 <span>{daysOpen}d open</span>
               </p>
             </div>
           </div>
           <button
             onClick={() => setExpanded(!expanded)}
-            className="shrink-0 h-8 w-8 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-muted/60 transition-colors"
+            className="shrink-0 h-8 w-8 rounded-xl flex items-center justify-center text-neutral-400 hover:text-neutral-700 hover:bg-neutral-100 transition-colors"
           >
             {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </button>
         </div>
 
         {/* Quick Info */}
-        <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm text-muted-foreground">
-          <span className="flex items-center gap-1.5">
-            <TypeIcon className="h-3 w-3" />
-            {typeLabels[dispute.listingType]}
-          </span>
-          <span>
-            <strong>{dispute.guestName}</strong> (guest) vs <strong>{dispute.hostName}</strong>{" "}
-            (host)
-          </span>
-          <span className="font-semibold text-foreground">
-            K{dispute.amount.toLocaleString()} disputed
-          </span>
-          <span className="capitalize">Raised by {dispute.raisedBy}</span>
+        <div className="mt-3.5 pt-3.5 border-t border-neutral-100 flex flex-wrap items-center justify-between gap-2 text-xs text-neutral-600">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+            <span className="flex items-center gap-1.5">
+              <TypeIcon className="h-3.5 w-3.5 text-neutral-400" />
+              {typeLabels[dispute.listingType]}
+            </span>
+            <span className="text-neutral-300">·</span>
+            <span>
+              <strong className="font-semibold text-neutral-900">{dispute.guestName}</strong> (guest) vs{" "}
+              <strong className="font-semibold text-neutral-900">{dispute.hostName}</strong> (host)
+            </span>
+            <span className="text-neutral-300">·</span>
+            <span className="font-semibold text-neutral-900">
+              K{dispute.amount.toLocaleString()} disputed
+            </span>
+            <span className="text-neutral-300">·</span>
+            <span className="capitalize text-neutral-500">Raised by {dispute.raisedBy}</span>
+          </div>
+
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="text-xs font-semibold text-purple hover:underline"
+          >
+            {expanded ? "Hide Details" : "View Case Details →"}
+          </button>
         </div>
 
         {/* Expanded Detail */}
         {expanded && (
-          <div className="mt-4 pt-4 border-t border-border/30 space-y-4">
-            <div className="rounded-lg bg-muted/40 p-4">
-              <p className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+          <div className="mt-4 pt-4 border-t border-neutral-100 space-y-4">
+            <div className="rounded-xl bg-neutral-50/80 border border-neutral-200/70 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-1.5">
                 Description
               </p>
-              <p className="text-base text-foreground leading-relaxed">{dispute.description}</p>
+              <p className="text-sm text-neutral-800 leading-relaxed">{dispute.description}</p>
             </div>
 
             {dispute.resolution && (
-              <div className="rounded-lg bg-blue-50/50 border border-blue-100 p-4">
-                <p className="text-sm font-bold uppercase tracking-wider text-blue-700 mb-1.5">
+              <div className="rounded-xl bg-blue-50/50 border border-blue-200/60 p-4">
+                <p className="text-xs font-semibold uppercase tracking-wider text-blue-700 mb-1.5">
                   Resolution
                 </p>
-                <p className="text-base text-blue-800">{dispute.resolution}</p>
+                <p className="text-sm text-blue-900">{dispute.resolution}</p>
               </div>
             )}
 
@@ -239,7 +260,7 @@ function DisputeCard({
               <div className="flex flex-wrap items-center gap-2 pt-2">
                 <Button
                   size="sm"
-                  className="h-8 rounded-lg text-sm font-semibold"
+                  className="h-8.5 px-3 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white"
                   onClick={() => setResolveDialog("guest")}
                 >
                   <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
@@ -248,7 +269,7 @@ function DisputeCard({
                 <Button
                   size="sm"
                   variant="outline"
-                  className="h-8 rounded-lg text-sm font-semibold border-blue-200 text-blue-700 hover:bg-blue-50"
+                  className="h-8.5 px-3 rounded-xl text-xs font-semibold border-neutral-200/80 text-blue-700 hover:bg-blue-50/50"
                   onClick={() => setResolveDialog("host")}
                 >
                   <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
@@ -257,7 +278,7 @@ function DisputeCard({
                 <Button
                   size="sm"
                   variant="outline"
-                  className="h-8 rounded-lg text-sm font-semibold"
+                  className="h-8.5 px-3 rounded-xl text-xs font-semibold border-neutral-200/80 text-neutral-700 hover:bg-neutral-50"
                   onClick={() => {
                     withLoading(
                       setLoading,
@@ -273,17 +294,17 @@ function DisputeCard({
                     );
                   }}
                 >
-                  <Clock className="h-3.5 w-3.5 mr-1" />
+                  <Clock className="h-3.5 w-3.5 mr-1 text-neutral-400" />
                   Mark Investigating
                 </Button>
               </div>
             )}
 
             {dispute.status === "resolved_host" || dispute.status === "resolved_guest" ? (
-              <div className="flex gap-2">
+              <div className="flex gap-2 pt-2">
                 <Button
                   size="sm"
-                  className="h-8 rounded-lg text-sm font-semibold"
+                  className="h-8.5 px-3 rounded-xl text-xs font-semibold bg-purple hover:bg-purple/95 text-white"
                   onClick={() => {
                     withLoading(
                       setLoading,
@@ -306,7 +327,7 @@ function DisputeCard({
                 <Button
                   size="sm"
                   variant="outline"
-                  className="h-8 rounded-lg text-sm font-semibold"
+                  className="h-8.5 px-3 rounded-xl text-xs font-semibold border-neutral-200/80 text-neutral-700 hover:bg-neutral-50"
                   onClick={() => {
                     withLoading(
                       setLoading,
@@ -320,7 +341,7 @@ function DisputeCard({
                     );
                   }}
                 >
-                  <ShieldAlert className="h-3.5 w-3.5 mr-1" />
+                  <ShieldAlert className="h-3.5 w-3.5 mr-1 text-neutral-400" />
                   Close Case
                 </Button>
               </div>
@@ -331,24 +352,24 @@ function DisputeCard({
 
       {/* Resolve Confirmation */}
       <AlertDialog open={resolveDialog !== null} onOpenChange={() => setResolveDialog(null)}>
-        <AlertDialogContent className="rounded-2xl max-w-md">
+        <AlertDialogContent className="rounded-2xl max-w-md bg-white border border-neutral-200/80 p-6 shadow-xl">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-xl font-bold">
+            <AlertDialogTitle className="text-xl font-semibold text-neutral-900">
               Resolve in {resolveDialog === "guest" ? "Guest's" : "Host's"} Favor?
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-base text-muted-foreground">
+            <AlertDialogDescription className="text-sm text-neutral-500 mt-2">
               {resolveDialog === "guest"
                 ? `This will mark the dispute in favor of ${dispute.guestName}. You'll be able to process a refund after resolution.`
                 : `This will mark the dispute in favor of ${dispute.hostName}. No refund will be issued.`}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="gap-2">
-            <AlertDialogCancel className="rounded-xl font-semibold border-border/60">
+          <AlertDialogFooter className="gap-2 mt-5">
+            <AlertDialogCancel className="rounded-xl font-semibold text-xs border-neutral-200">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => resolveDialog && handleResolve(resolveDialog)}
-              className="rounded-xl bg-primary text-white hover:bg-primary/90 font-bold"
+              className="rounded-xl bg-primary text-white hover:bg-primary/95 text-xs font-semibold"
             >
               <CheckCircle2 className="h-4 w-4 mr-1.5" />
               Confirm Resolution
@@ -434,88 +455,127 @@ export function AdminDisputes() {
     );
   };
 
-  return (
-    <div className="min-h-screen flex flex-col font-sans bg-[#faf9f5]">
-      <div className="flex-1">
-        <AdminPageHeader
-          eyebrow="Resolution Center"
-          title="Disputes &amp; Resolution"
-          description={`${stats.total} cases — K${stats.disputedAmount.toLocaleString()} total disputed`}
-          actions={
-            <div className="flex items-center gap-2 text-sm">
-              {stats.critical > 0 && (
-                <Badge
-                  variant="outline"
-                  className="rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-50 text-red-700 border-red-200"
-                >
-                  {stats.critical} critical
-                </Badge>
-              )}
-              <span className="text-white/80">
-                <span className="font-semibold text-[#1f1433]">{stats.open}</span> open
-              </span>
-              <span className="text-white/30">·</span>
-              <span className="text-emerald-400 font-semibold">{stats.resolved} resolved</span>
-            </div>
-          }
-        />
+  const handleExportCSV = () => {
+    const headers = [
+      "Dispute ID",
+      "Booking Ref",
+      "Listing Name",
+      "Listing Type",
+      "Guest Name",
+      "Host Name",
+      "Disputed Amount (ZMW)",
+      "Priority",
+      "Status",
+      "Reason",
+      "Raised By",
+      "Raised Date",
+    ];
 
-        {/* Filters */}
-        <div className="mx-auto max-w-7xl px-4 md:px-6 -mt-6 relative z-10">
-          <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border/40 bg-card p-3 shadow-sm card-shadow">
-            <div className="relative flex-1 min-w-[200px]">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search by listing, guest, host, or reference..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 h-10 rounded-xl border-border/60 text-base"
-              />
-            </div>
-            <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-              <SelectTrigger className="w-[140px] h-10 rounded-xl border-border/60">
-                <SelectValue placeholder="Priority" />
-              </SelectTrigger>
-              <SelectContent className="rounded-xl">
-                <SelectItem value="all">All Priorities</SelectItem>
-                <SelectItem value="critical">Critical</SelectItem>
-                <SelectItem value="high">High</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="low">Low</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[160px] h-10 rounded-xl border-border/60">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent className="rounded-xl">
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="open">Open</SelectItem>
-                <SelectItem value="investigating">Investigating</SelectItem>
-                <SelectItem value="resolved_host">Resolved (Host)</SelectItem>
-                <SelectItem value="resolved_guest">Resolved (Guest)</SelectItem>
-                <SelectItem value="refunded">Refunded</SelectItem>
-                <SelectItem value="closed">Closed</SelectItem>
-              </SelectContent>
-            </Select>
+    const rows = filteredDisputes.map((d) => [
+      d.id,
+      d.bookingRef,
+      `"${d.listingName}"`,
+      d.listingType,
+      `"${d.guestName}"`,
+      `"${d.hostName}"`,
+      d.amount,
+      d.priority,
+      d.status,
+      `"${d.reason}"`,
+      d.raisedBy,
+      d.raisedAt,
+    ]);
+
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `nearbyescapes-disputes-${new Date().toISOString().split("T")[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Disputes CSV export downloaded successfully");
+  };
+
+  return (
+    <div className="flex-1 min-h-screen bg-neutral-50/50 pb-16">
+      <AdminPageHeader
+        eyebrow="Resolution Center & Support"
+        title="Disputes & Resolution"
+        description={`${stats.total} cases — K${stats.disputedAmount.toLocaleString()} total disputed`}
+        actions={
+          <div className="flex items-center gap-2.5">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleExportCSV}
+              className="h-9 px-3.5 rounded-xl text-xs font-semibold border-neutral-200/80 bg-white hover:bg-neutral-50 shadow-2xs"
+            >
+              <Download className="h-3.5 w-3.5 mr-1.5 text-neutral-500" />
+              Export CSV
+            </Button>
           </div>
+        }
+      />
+
+      <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 space-y-6">
+        {/* Filters */}
+        <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-neutral-200/80 bg-white p-4 shadow-2xs">
+          <div className="relative flex-1 min-w-[240px]">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+            <Input
+              placeholder="Search by listing, guest, host, or reference..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9 h-10 rounded-xl border-neutral-200/80 bg-neutral-50/50 text-sm focus:bg-white transition-all"
+            />
+          </div>
+          <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+            <SelectTrigger className="w-[140px] h-10 rounded-xl border-neutral-200/80 bg-neutral-50/50 text-xs font-medium">
+              <SelectValue placeholder="Priority" />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl">
+              <SelectItem value="all">All Priorities</SelectItem>
+              <SelectItem value="critical">Critical</SelectItem>
+              <SelectItem value="high">High</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="low">Low</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[160px] h-10 rounded-xl border-neutral-200/80 bg-neutral-50/50 text-xs font-medium">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl">
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="open">Open</SelectItem>
+              <SelectItem value="investigating">Investigating</SelectItem>
+              <SelectItem value="resolved_host">Resolved (Host)</SelectItem>
+              <SelectItem value="resolved_guest">Resolved (Guest)</SelectItem>
+              <SelectItem value="refunded">Refunded</SelectItem>
+              <SelectItem value="closed">Closed</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Cases List */}
-        <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 pb-8 space-y-3">
+        <div className="space-y-3">
           {filteredDisputes.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-              <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                <Scale className="h-7 w-7 text-muted-foreground/40" />
+            <div className="flex flex-col items-center justify-center py-20 text-center bg-white rounded-2xl border border-neutral-200/80 p-8 shadow-2xs">
+              <div className="h-14 w-14 rounded-2xl bg-neutral-100 flex items-center justify-center mb-3">
+                <Scale className="h-6 w-6 text-neutral-400" />
               </div>
-              <h3 className="text-xl font-bold text-foreground">No disputes found</h3>
-              <p className="text-base text-muted-foreground mt-1 max-w-sm">
+              <h3 className="text-base font-semibold text-neutral-900">No disputes found</h3>
+              <p className="text-xs text-neutral-500 mt-1 max-w-sm">
                 Try adjusting your search or filter criteria.
               </p>
               <Button
                 variant="outline"
                 size="sm"
-                className="mt-6 rounded-full text-sm font-semibold"
+                className="mt-5 rounded-xl text-xs font-semibold"
                 onClick={() => {
                   setSearch("");
                   setStatusFilter("all");
@@ -539,36 +599,28 @@ export function AdminDisputes() {
         </div>
 
         {/* Stats Row */}
-        <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6 pb-16">
-          <h3 className="text-[10px] sm:text-sm font-bold text-[#1f1433] uppercase tracking-widest mb-3">
-            Analysis
+        <div>
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-3">
+            Resolution Analysis
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
-              <p className="text-2xl font-bold text-foreground">{stats.total}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                Total Cases
-              </p>
+            <div className="rounded-2xl border border-neutral-200/80 bg-white p-4 shadow-2xs">
+              <p className="text-2xl font-semibold text-neutral-900">{stats.total}</p>
+              <p className="text-xs text-neutral-500 mt-0.5">Total Cases</p>
             </div>
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
-              <p className="text-2xl font-bold text-amber-600">{stats.open}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                Open
-              </p>
+            <div className="rounded-2xl border border-neutral-200/80 bg-white p-4 shadow-2xs">
+              <p className="text-2xl font-semibold text-amber-600">{stats.open}</p>
+              <p className="text-xs text-neutral-500 mt-0.5">Open</p>
             </div>
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
-              <p className="text-2xl font-bold text-emerald-600">{stats.resolved}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                Resolved
-              </p>
+            <div className="rounded-2xl border border-neutral-200/80 bg-white p-4 shadow-2xs">
+              <p className="text-2xl font-semibold text-emerald-600">{stats.resolved}</p>
+              <p className="text-xs text-neutral-500 mt-0.5">Resolved</p>
             </div>
-            <div className="rounded-xl border border-border/40 bg-card p-4 shadow-sm card-shadow text-center">
-              <p className="text-2xl font-bold text-blue-600">
+            <div className="rounded-2xl border border-neutral-200/80 bg-white p-4 shadow-2xs">
+              <p className="text-2xl font-semibold text-blue-600">
                 K{(stats.disputedAmount / 1000).toFixed(0)}k
               </p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                Disputed Amount
-              </p>
+              <p className="text-xs text-neutral-500 mt-0.5">Disputed Amount</p>
             </div>
           </div>
         </div>

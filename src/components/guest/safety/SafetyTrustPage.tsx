@@ -129,19 +129,16 @@ export function SafetyTrustPage() {
             Home
           </Link>
           <div className="max-w-3xl">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f2ba0d]/15 text-[#1f1433] mb-4">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white mb-4">
               <ShieldCheck className="h-5 w-5" />
             </div>
-            <p className="text-[#1f1433] text-[10px] font-bold uppercase tracking-[0.12em] mb-3">
-              Trust & safety
+            <p className="text-white/40 text-[10px] font-medium uppercase tracking-[0.10em] mb-3">
+              Trust &amp; safety
             </p>
-            <h1 className="font-display text-3xl md:text-4xl lg:text-[3.25rem] font-black text-white leading-[1.1] mb-4">
-              Your safety is our{" "}
-              <span className="font-script text-[1.2em] font-normal text-gold lowercase">
-                promise
-              </span>
+            <h1 className="text-2xl md:text-3xl lg:text-[2.5rem] font-semibold text-white leading-[1.15] tracking-[-0.02em] mb-4">
+              Your safety is our promise
             </h1>
-            <p className="text-white/60 text-[15px] leading-relaxed max-w-xl">
+            <p className="text-white/50 text-[14px] leading-relaxed max-w-xl">
               We work hard to keep Nearby Escapes secure for everyone — guests and hosts alike. From
               verified profiles to secure payments, trust is built into everything we do.
             </p>
@@ -151,10 +148,10 @@ export function SafetyTrustPage() {
 
       {/*  Trust Pillars  */}
       <main className="flex-1 mx-auto max-w-7xl px-4 md:px-8 py-14 md:py-16">
-        <p className="text-[#1f1433] text-[10px] font-bold uppercase tracking-[0.12em] mb-3 text-center">
+        <p className="text-neutral-400 text-[10px] font-medium uppercase tracking-[0.10em] mb-2 text-center">
           How we keep you safe
         </p>
-        <h2 className="font-display text-2xl md:text-3xl font-bold text-[#334155] text-center mb-10 md:mb-12">
+        <h2 className="text-xl md:text-2xl font-semibold text-neutral-800 tracking-[-0.02em] text-center mb-10 md:mb-12">
           Our trust framework
         </h2>
 
@@ -169,12 +166,15 @@ export function SafetyTrustPage() {
                   <Icon className="h-5 w-5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-lg text-[#334155] mb-1">{title}</h3>
-                  <p className="text-base text-[#64748B] leading-relaxed mb-4">{desc}</p>
+                  <h3 className="font-medium text-[15px] text-neutral-800 mb-1">{title}</h3>
+                  <p className="text-[13px] text-neutral-500 leading-relaxed mb-4">{desc}</p>
                   <div className="grid sm:grid-cols-2 gap-x-6 gap-y-2">
                     {items.map((item) => (
-                      <div key={item} className="flex items-start gap-2 text-base text-[#64748B]">
-                        <CheckCircle2 className="h-4 w-4 text-[#1f1433] mt-0.5 shrink-0" />
+                      <div
+                        key={item}
+                        className="flex items-start gap-2 text-[13px] text-neutral-500"
+                      >
+                        <CheckCircle2 className="h-3.5 w-3.5 text-neutral-700 mt-0.5 shrink-0" />
                         <span>{item}</span>
                       </div>
                     ))}
@@ -187,13 +187,13 @@ export function SafetyTrustPage() {
 
         {/*  Community Guidelines  */}
         <section className="mt-14 md:mt-16">
-          <p className="text-[#1f1433] text-[10px] font-bold uppercase tracking-[0.12em] mb-3 text-center">
+          <p className="text-neutral-400 text-[10px] font-medium uppercase tracking-[0.10em] mb-2 text-center">
             Together we thrive
           </p>
-          <h2 className="font-display text-2xl md:text-3xl font-bold text-[#334155] text-center mb-3">
+          <h2 className="text-xl md:text-2xl font-semibold text-neutral-800 tracking-[-0.02em] text-center mb-2">
             Community guidelines
           </h2>
-          <p className="text-base text-[#64748B] text-center max-w-lg mx-auto mb-8">
+          <p className="text-[13px] text-neutral-400 text-center max-w-lg mx-auto mb-8">
             A few simple principles that help keep Nearby Escapes welcoming, safe, and fair for
             everyone.
           </p>
@@ -201,13 +201,13 @@ export function SafetyTrustPage() {
             {guidelines.map(({ icon: Icon, title, desc }) => (
               <div
                 key={title}
-                className="bg-white border border-[#E0DBD0] rounded-2xl p-5 text-center"
+                className="bg-white border border-neutral-100 rounded-2xl p-5 text-center"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f2ba0d]/5 text-[#1f1433] mx-auto mb-3">
-                  <Icon className="h-5 w-5" />
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-50 text-neutral-700 mx-auto mb-3">
+                  <Icon className="h-4 w-4" />
                 </div>
-                <h3 className="font-bold text-base text-[#334155] mb-1">{title}</h3>
-                <p className="text-sm text-[#64748B] leading-relaxed">{desc}</p>
+                <h3 className="font-medium text-[14px] text-neutral-800 mb-1">{title}</h3>
+                <p className="text-[12px] text-neutral-500 leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
@@ -216,24 +216,24 @@ export function SafetyTrustPage() {
         {/*  Safety Tips  */}
         <section className="mt-14 md:mt-16">
           <div className="bg-white border border-[#E0DBD0] rounded-2xl p-6 md:p-8 shadow-sm">
-            <p className="text-[#1f1433] text-[10px] font-bold uppercase tracking-[0.12em] mb-3">
+            <p className="text-neutral-400 text-[10px] font-medium uppercase tracking-[0.10em] mb-2">
               For guests
             </p>
-            <h2 className="font-display text-xl md:text-2xl font-bold text-[#334155] mb-1">
+            <h2 className="text-[17px] md:text-xl font-semibold text-neutral-800 tracking-[-0.015em] mb-1">
               Stay safe while travelling
             </h2>
-            <p className="text-base text-[#64748B] mb-6 max-w-lg">
+            <p className="text-[13px] text-neutral-500 mb-6 max-w-lg">
               A few practical tips to help you have a smooth and safe experience.
             </p>
             <div className="grid sm:grid-cols-2 gap-5">
               {safetyTips.map(({ title, desc }) => (
                 <div key={title} className="flex gap-3">
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#f2ba0d]/10 text-[#1f1433] text-sm font-black">
-                    <CheckCircle2 className="h-4 w-4" />
+                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-neutral-600">
+                    <CheckCircle2 className="h-3.5 w-3.5" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-base text-[#334155]">{title}</h3>
-                    <p className="text-sm text-[#64748B] mt-0.5">{desc}</p>
+                    <h3 className="font-medium text-[13px] text-neutral-800">{title}</h3>
+                    <p className="text-[12px] text-neutral-500 mt-0.5">{desc}</p>
                   </div>
                 </div>
               ))}
@@ -244,23 +244,21 @@ export function SafetyTrustPage() {
         {/*  Report an Issue  */}
         <section className="mt-14 md:mt-16 bg-gradient-to-br from-[#1f1433] to-[#1A0B2D] rounded-2xl p-8 md:p-10 text-center">
           <AlertTriangle className="h-8 w-8 text-[#1f1433] mx-auto mb-4" />
-          <h2 className="font-display text-xl md:text-2xl font-bold text-white mb-2">
-            Report a concern
-          </h2>
-          <p className="text-[#9B95A8] text-base max-w-md mx-auto mb-6">
+          <h2 className="text-[17px] md:text-xl font-semibold text-white mb-2">Report a concern</h2>
+          <p className="text-white/50 text-[13px] max-w-md mx-auto mb-6">
             If you encounter an issue that needs our attention — whether it&apos;s a safety concern,
             a dispute, or a policy violation — our team is ready to help.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/help"
-              className="inline-flex items-center gap-2 h-11 px-6 rounded-xl bg-[#f2ba0d] text-[#334155] font-bold text-base hover:bg-[#d4b065] transition-colors"
+              className="inline-flex items-center gap-2 h-10 px-5 rounded-xl bg-[#f2ba0d] text-neutral-900 font-medium text-[13px] hover:bg-[#d4b065] transition-colors"
             >
               <MessageSquare className="h-4 w-4" /> Contact support
             </Link>
             <a
               href="mailto:safety@nearbyescapes.com"
-              className="inline-flex items-center gap-2 h-11 px-6 rounded-xl border border-white/20 text-white font-bold text-base hover:bg-white/5 transition-colors"
+              className="inline-flex items-center gap-2 h-10 px-5 rounded-xl border border-white/20 text-white font-medium text-[13px] hover:bg-white/5 transition-colors"
             >
               <Mail className="h-4 w-4" /> Email safety team
             </a>

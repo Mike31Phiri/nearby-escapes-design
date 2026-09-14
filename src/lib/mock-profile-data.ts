@@ -56,7 +56,7 @@ export interface MonthlyEarning {
   bookings: number;
 }
 
-// ---- Host Profiles ----
+// Host Profiles
 
 export const mockHostProfile: HostProfile = {
   id: "host-1",
@@ -149,7 +149,7 @@ export const mockHostProfile: HostProfile = {
   ],
 };
 
-// ---- Mock Monthly Earnings ----
+// Mock Monthly Earnings
 export const mockEarnings: MonthlyEarning[] = [
   { month: "Jan", amount: 12400, bookings: 24 },
   { month: "Feb", amount: 10800, bookings: 19 },
@@ -165,7 +165,7 @@ export const mockEarnings: MonthlyEarning[] = [
   { month: "Dec", amount: 16700, bookings: 33 },
 ];
 
-// ---- Host profiles mapped by stay listing ID (for detail pages) ----
+// Host profiles mapped by stay listing ID (for detail pages)
 // Each host gets a distinct personality, bio, and stats
 
 export interface StayHost {
@@ -330,7 +330,7 @@ export const mockStayHosts: Record<string, StayHost> = {
   },
 };
 
-// ---- Guest Trip History -----
+// Guest Trip History
 export const mockTrips: TripBooking[] = [
   {
     id: "trip-1",
@@ -400,7 +400,7 @@ export const mockTrips: TripBooking[] = [
   },
 ];
 
-// ---- Guest Reviews ----
+// Guest Reviews
 export const mockReviews: UserReview[] = [
   {
     id: "rev-1",

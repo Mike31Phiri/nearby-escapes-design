@@ -1,8 +1,6 @@
 import * as z from "zod";
 
-// ==========================================
 // 1. STAY WIZARD SCHEMAS
-// ==========================================
 
 export const stayStep1Schema = z.object({
   propertyType: z.string().min(1, "Please select a property type"),
@@ -38,8 +36,13 @@ export const roomTypeSchema = z.object({
 
 export type RoomTypeFormValues = z.infer<typeof roomTypeSchema>;
 
+// Flat capacity captured by the stay wizard: max guests, bedrooms and a
+// per-room bed breakdown. (roomTypeSchema above powers the roomTypes
+// inventory used by newer stay payloads.)
 export const stayStep3Schema = z.object({
-  roomTypes: z.array(roomTypeSchema).min(1, "Add at least one room type"),
+  maxGuests: z.number().min(1, "Must accommodate at least 1 guest"),
+  bedrooms: z.number().min(0, "Cannot be negative"),
+  beds: z.array(bedConfigRowSchema).min(1, "Define at least one room and bed"),
 });
 
 export const stayStep4Schema = z.object({
@@ -57,6 +60,8 @@ export const stayStep5Schema = z.object({
 
 export const stayStep6Schema = z
   .object({
+    /** Nightly rate in K (converted to Ngwee when submitting). */
+    baseRate: z.number().min(1, "Enter a nightly rate"),
     cancelPolicy: z.string().min(1, "Please select a cancellation policy"),
     customCancellationPolicy: z.string().optional(),
     /** Free-text policies the host wants to put across (own rules, local customs, etc.) */
@@ -83,9 +88,7 @@ export const staySchema = stayStep1Schema
 
 export type StayFormValues = z.infer<typeof staySchema>;
 
-// ==========================================
 // 2. TRANSPORT WIZARD SCHEMAS
-// ==========================================
 
 export const transportStep1Schema = z.object({
   make: z.string().min(2, "Make is required"),
@@ -125,12 +128,10 @@ export const transportSchema = transportStep1Schema
 
 export type TransportFormValues = z.infer<typeof transportSchema>;
 
-// ==========================================
 // 3. EXPERIENCE WIZARD SCHEMAS
 //
 // Mirrors the product-detail requirements the guest sees on the listing
 // page — hosts must provide all of these before the experience goes live.
-// ==========================================
 
 /** One stop in the experience's step-by-step itinerary. */
 export const experienceItineraryItemSchema = z.object({
@@ -147,7 +148,7 @@ export const experienceOptionSchema = z.object({
 });
 
 // 3.1 Basic details & categorization
-//     Activity title (location + activity format), category, search tags.
+// Activity title (location + activity format), category, search tags.
 export const experienceStep1Schema = z.object({
   title: z.string().min(10, "Title must be at least 10 characters").max(60, "Title too long"),
   category: z.string().min(1, "Category is required"),
@@ -155,7 +156,7 @@ export const experienceStep1Schema = z.object({
 });
 
 // 3.2 Descriptions & highlights
-//     3–5 summary bullet points + detailed experience text.
+// 3–5 summary bullet points + detailed experience text.
 export const experienceStep2Schema = z.object({
   highlights: z
     .array(z.string())
@@ -165,8 +166,8 @@ export const experienceStep2Schema = z.object({
 });
 
 // 3.3 Inclusions, exclusions & prerequisites
-//     Included items, extra fees (e.g. park entry), dietary requirements,
-//     suitability rules and physical limits.
+// Included items, extra fees (e.g. park entry), dietary requirements,
+// suitability rules and physical limits.
 export const experienceStep3Schema = z.object({
   inclusions: z.array(z.string()),
   exclusions: z.array(z.string()),
@@ -179,7 +180,7 @@ export const experienceStep3Schema = z.object({
 });
 
 // 3.4 Logistics & itinerary
-//     Step-by-step schedule, pickup / drop-off points, radius rules.
+// Step-by-step schedule, pickup / drop-off points, radius rules.
 export const experienceStep4Schema = z.object({
   meetingPoint: z.string().min(5, "Meeting point is required"),
   latitude: z.number().min(-90).max(90),
@@ -187,13 +188,11 @@ export const experienceStep4Schema = z.object({
   endPoint: z.string().optional(),
   hotelPickup: z.boolean(),
   pickupRadiusKm: z.number().min(0).optional(),
-  itinerary: z
-    .array(experienceItineraryItemSchema)
-    .min(1, "Add at least one itinerary stop"),
+  itinerary: z.array(experienceItineraryItemSchema).min(1, "Add at least one itinerary stop"),
 });
 
 // 3.5 Product options & pricing
-//     Variations, departure times, capacities, pricing categories.
+// Variations, departure times, capacities, pricing categories.
 export const experienceStep5Schema = z
   .object({
     options: z.array(experienceOptionSchema).optional(),
@@ -210,13 +209,13 @@ export const experienceStep5Schema = z
   });
 
 // 3.6 Media
-//     High-resolution photos — minimum 4 required.
+// High-resolution photos — minimum 4 required.
 export const experienceStep6Schema = z.object({
   images: z.array(z.string()).min(4, "Upload at least 4 photos"),
 });
 
 // 3.7 Verification & editorial review
-//     Supplier compliance confirmation before the listing can be published.
+// Supplier compliance confirmation before the listing can be published.
 export const experienceStep7Schema = z.object({
   compliance: z.array(z.string()).min(1, "Confirm at least the required checks"),
   editorialNotes: z.string().optional(),
@@ -232,9 +231,7 @@ export const experienceSchema = experienceStep1Schema
 
 export type ExperienceFormValues = z.infer<typeof experienceSchema>;
 
-// ==========================================
 // 4. GEM (ATTRACTION) WIZARD SCHEMAS
-// ==========================================
 
 export const gemStep1Schema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters").max(80, "Title too long"),

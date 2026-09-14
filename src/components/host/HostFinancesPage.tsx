@@ -24,10 +24,16 @@ import {
   CalendarRange,
   ArrowUpDown,
   ChevronRight,
-  Wallet,
-  PiggyBank,
-  ReceiptText,
+  CalendarClock,
+  Landmark,
+  RotateCcw,
+  Zap,
+  Sliders,
 } from "lucide-react";
+import {
+  PayoutSettingsModal,
+  type PayoutSettings,
+} from "@/components/host/finances/PayoutSettingsModal";
 
 export function HostFinancesPage() {
   const router = useRouter();
@@ -35,14 +41,14 @@ export function HostFinancesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<"payouts" | "transactions">("payouts");
   const [txTab, setTxTab] = useState<"all" | "booking" | "payout" | "refund">("all");
-  const [isEditingMethod, setIsEditingMethod] = useState(false);
-  const [payoutMethod, setPayoutMethod] = useState({
-    type: "Airtel Money",
+  const [payoutSettings, setPayoutSettings] = useState<PayoutSettings>({
+    mode: "automated",
+    frequency: "weekly",
+    payoutDay: "Tuesday",
+    channel: "Airtel Money",
     account: "+260 97X XXX XXX",
-    schedule: "Weekly (Every Tuesday)",
   });
-  const [tempMethod, setTempMethod] = useState(payoutMethod.type);
-  const [tempAccount, setTempAccount] = useState(payoutMethod.account);
+  const [settingsModalOpen, setSettingsModalOpen] = useState(false);
 
   // Date range + sorting for the transaction log
   const [dateFrom, setDateFrom] = useState("");
@@ -74,7 +80,7 @@ export function HostFinancesPage() {
     return { pct, up: pct >= 0 };
   }, [monthlyData]);
 
-  // Simulate the automatic weekly bulk payout process
+  // Simulate the payout process based on configured mode (Automated or Instant)
   const simulateAutoPayout = () => {
     if (expectedPayouts <= 0) {
       toast.error("No pending payouts available to process");
@@ -82,11 +88,14 @@ export function HostFinancesPage() {
     }
 
     const payoutAmount = expectedPayouts;
+    const isInstant = payoutSettings.mode === "instant";
     const newTx: Transaction = {
       id: `PAY-${Math.floor(1000 + Math.random() * 9000)}`,
       date: new Date().toISOString().split("T")[0],
       type: "payout",
-      description: `Automatic bulk payout to ${payoutMethod.type}`,
+      description: isInstant
+        ? `Instant post-checkin payout to ${payoutSettings.channel}`
+        : `Automatic weekly payout (${payoutSettings.payoutDay}) to ${payoutSettings.channel}`,
       amount: -payoutAmount,
       status: "paid",
     };
@@ -99,25 +108,10 @@ export function HostFinancesPage() {
     }));
 
     toast.success(
-      `Simulation: Automatic bulk payment of K${payoutAmount.toLocaleString()} disbursed to your ${payoutMethod.type}!`,
+      isInstant
+        ? `Simulation: Instant payout of K${payoutAmount.toLocaleString()} disbursed post-check-in to your ${payoutSettings.channel}!`
+        : `Simulation: Automatic weekly payout of K${payoutAmount.toLocaleString()} disbursed to your ${payoutSettings.channel}!`,
     );
-  };
-
-  // Handle payout method save
-  const handleSavePayoutMethod = () => {
-    if (!tempAccount.trim()) {
-      toast.error("Please enter a valid account or phone number");
-      return;
-    }
-
-    setPayoutMethod({
-      type: tempMethod,
-      account: tempAccount,
-      schedule:
-        tempMethod === "Bank Transfer" ? "Bi-Weekly (1st & 15th)" : "Weekly (Every Tuesday)",
-    });
-    setIsEditingMethod(false);
-    toast.success("Payout method updated successfully");
   };
 
   // Filtered, searched, date-ranged and sorted transactions
@@ -197,30 +191,30 @@ export function HostFinancesPage() {
       label: "Upcoming Payouts",
       value: `K${payoutSummary.upcoming.toLocaleString()}`,
       sub: `${mockPayouts.filter((p) => p.status === "upcoming").length} cycle scheduled`,
-      icon: Wallet,
-      iconBg: "bg-amber-50 text-amber-600",
+      icon: CalendarClock,
+      iconBg: "bg-purple/10 text-purple border border-purple/15",
       trend: null as null | { pct: number; up: boolean },
     },
     {
       label: "Cleared Payouts",
       value: `K${payoutSummary.cleared.toLocaleString()}`,
       sub: "Sent to your accounts",
-      icon: PiggyBank,
-      iconBg: "bg-emerald-50 text-emerald-600",
+      icon: Landmark,
+      iconBg: "bg-purple/10 text-purple border border-purple/15",
       trend: { pct: trends.pct, up: trends.up },
     },
     {
       label: "YTD Gross Sales",
       value: `K${ytdGross.toLocaleString()}`,
       sub: "Gross before fees & tax",
-      icon: ReceiptText,
-      iconBg: "bg-purple/10 text-purple",
+      icon: TrendingUp,
+      iconBg: "bg-purple/10 text-purple border border-purple/15",
       trend: { pct: trends.pct + 3.2, up: true },
     },
   ];
 
   return (
-    <div className="min-h-screen bg-neutral-50 pb-12 font-sans">
+    <div className="min-h-screen bg-background pb-16 font-sans">
       <HostPageHeader
         title="Finance"
         description="Monthly payouts, ledger breakdowns and transaction logs"
@@ -228,52 +222,61 @@ export function HostFinancesPage() {
           expectedPayouts > 0 ? (
             <button
               onClick={simulateAutoPayout}
-              className="inline-flex items-center justify-center gap-2 bg-purple hover:bg-purple-hover text-white text-sm font-bold uppercase tracking-wider h-10 px-4 rounded-xl shadow-sm transition-all duration-200 border-none"
-              title="Test the background bulk payment worker"
+              className="inline-flex items-center justify-center gap-2 bg-purple hover:bg-purple-hover text-white text-sm font-semibold h-11 px-5 rounded-xl shadow-xs transition-all duration-200"
+              title={
+                payoutSettings.mode === "instant"
+                  ? "Simulate instant post-checkin payout"
+                  : "Simulate scheduled weekly bulk payout"
+              }
             >
-              <RefreshCw className="h-3.5 w-3.5" /> Simulate Auto-Payout
+              <RefreshCw className="h-4 w-4" />
+              {payoutSettings.mode === "instant"
+                ? "Simulate Instant Payout"
+                : "Simulate Auto-Payout"}
             </button>
           ) : null
         }
       />
-      <div className="mx-auto max-w-7xl px-4 md:px-6 mt-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 mt-8 space-y-8">
         {/* Headline metric cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
           {metricCards.map((card) => {
             const Icon = card.icon;
             return (
               <div
                 key={card.label}
-                className="bg-white border border-neutral-200 rounded-2xl p-5 shadow-sm"
+                className="bg-white border border-neutral-200/80 rounded-2xl p-6 shadow-2xs hover:shadow-sm transition-all duration-200"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm font-bold uppercase tracking-wider text-neutral-500">
+                  <span className="text-xs font-medium uppercase tracking-wider text-neutral-500">
                     {card.label}
                   </span>
                   <div
-                    className={`h-8 w-8 rounded-lg flex items-center justify-center ${card.iconBg}`}
+                    className={`h-9 w-9 rounded-xl flex items-center justify-center ${card.iconBg}`}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-4.5 w-4.5" />
                   </div>
                 </div>
-                <div className="text-2xl font-bold text-neutral-900">{card.value}</div>
-                <div className="flex items-center gap-2 mt-1.5">
+                <div className="text-2xl font-semibold tracking-tight text-neutral-900">
+                  {card.value}
+                </div>
+                <div className="flex items-center gap-2 mt-2">
                   {card.trend ? (
                     <span
-                      className={`inline-flex items-center gap-0.5 text-[10px] font-black uppercase tracking-wider ${
+                      className={`inline-flex items-center gap-0.5 text-xs font-medium ${
                         card.trend.up ? "text-emerald-600" : "text-rose-600"
                       }`}
                     >
                       {card.trend.up ? (
-                        <TrendingUp className="h-3 w-3" />
+                        <TrendingUp className="h-3.5 w-3.5" />
                       ) : (
-                        <TrendingDown className="h-3 w-3" />
+                        <TrendingDown className="h-3.5 w-3.5" />
                       )}
                       {card.trend.up ? "+" : ""}
                       {card.trend.pct}%
                     </span>
                   ) : (
-                    <Clock className="h-3 w-3 text-amber-500" />
+                    <Clock className="h-3.5 w-3.5 text-neutral-400" />
                   )}
                   <span className="text-xs text-neutral-500">{card.sub}</span>
                 </div>
@@ -283,30 +286,54 @@ export function HostFinancesPage() {
         </div>
 
         {/* Auto-Payout Banner */}
-        <div className="flex items-start gap-3 bg-emerald-50 border border-emerald-100/60 rounded-2xl p-4 mb-8">
-          <div className="h-9 w-9 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-            <CheckCircle2 className="h-5 w-5" />
+        <div className="flex items-start gap-3.5 bg-neutral-50/80 border border-neutral-200/80 rounded-2xl p-5 shadow-2xs">
+          <div className="h-9 w-9 rounded-xl bg-purple/10 text-purple border border-purple/15 flex items-center justify-center shrink-0">
+            {payoutSettings.mode === "instant" ? (
+              <Zap className="h-5 w-5" />
+            ) : (
+              <CheckCircle2 className="h-5 w-5" />
+            )}
           </div>
           <div className="flex-1">
-            <div className="text-sm font-bold text-emerald-800">
-              Automatic Weekly Bulk Payouts Active
+            <div className="text-sm font-semibold text-neutral-900">
+              {payoutSettings.mode === "instant"
+                ? "Instant Post-Check-in Payouts Active"
+                : `Automatic Weekly Bulk Payouts Active (Every ${payoutSettings.payoutDay})`}
             </div>
-            <div className="text-[11px] text-emerald-700/95 mt-1 leading-relaxed">
-              To minimize transfer fees, all payouts are consolidated and sent automatically.
-              {expectedPayouts > 0 ? (
+            <div className="text-xs text-neutral-600 mt-1 leading-relaxed">
+              {payoutSettings.mode === "instant" ? (
                 <>
-                  {" "}
-                  Your current pending balance of{" "}
-                  <strong className="font-bold">K{expectedPayouts.toLocaleString()}</strong> will be
-                  automatically transferred to your{" "}
-                  <strong className="font-bold">{payoutMethod.type}</strong> on the next settlement
-                  date (Tuesday, Jun 30).
+                  Payouts are triggered and disbursed automatically 24 hours after each guest checks
+                  in. Earnings are sent straight to your{" "}
+                  <strong className="font-semibold text-neutral-900">
+                    {payoutSettings.channel}
+                  </strong>{" "}
+                  ({payoutSettings.account}).
                 </>
               ) : (
                 <>
-                  {" "}
-                  All earnings have been settled. Future booking payouts will accumulate and release
-                  on your next schedule.
+                  To minimize transfer fees, all payouts are consolidated and sent automatically
+                  every {payoutSettings.payoutDay}.
+                  {expectedPayouts > 0 ? (
+                    <>
+                      {" "}
+                      Your current pending balance of{" "}
+                      <strong className="font-semibold text-neutral-900">
+                        K{expectedPayouts.toLocaleString()}
+                      </strong>{" "}
+                      will be automatically transferred to your{" "}
+                      <strong className="font-semibold text-neutral-900">
+                        {payoutSettings.channel}
+                      </strong>{" "}
+                      on the next settlement date ({payoutSettings.payoutDay}).
+                    </>
+                  ) : (
+                    <>
+                      {" "}
+                      All earnings have been settled. Future booking payouts will accumulate and
+                      release on your next {payoutSettings.payoutDay} schedule.
+                    </>
+                  )}
                 </>
               )}
             </div>
@@ -314,16 +341,16 @@ export function HostFinancesPage() {
         </div>
 
         {/* Main Content Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* LEFT/MAIN: Payouts & Transactions */}
           <div className="lg:col-span-2 space-y-6">
             {/* Tabs */}
-            <div className="flex border-b border-neutral-200 gap-6 bg-white rounded-t-2xl px-5 pt-4">
+            <div className="flex border-b border-neutral-200/80 gap-6 bg-white rounded-t-2xl px-6 pt-4 border-t border-x border-neutral-200/80">
               {(["payouts", "transactions"] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`pb-3 text-sm font-bold uppercase tracking-wider border-b-2 transition-all outline-none ${
+                  className={`pb-3 text-sm font-bold capitalize tracking-tight border-b-2 transition-all outline-none ${
                     activeTab === tab
                       ? "border-purple text-purple"
                       : "border-transparent text-neutral-500 hover:text-neutral-900"
@@ -336,15 +363,15 @@ export function HostFinancesPage() {
 
             {activeTab === "payouts" ? (
               /* Monthly payout table */
-              <div className="bg-white border border-neutral-200 rounded-2xl rounded-tl-none shadow-sm overflow-hidden">
+              <div className="bg-white border border-neutral-200/80 rounded-2xl rounded-tl-none shadow-2xs overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-neutral-200 bg-neutral-50/70">
+                      <tr className="border-b border-neutral-200/80 bg-neutral-50/70">
                         {["Month", "Bookings", "Gross", "Net Payout", "Status"].map((h) => (
                           <th
                             key={h}
-                            className="text-left px-5 py-3 text-[10px] font-black uppercase tracking-wider text-neutral-500 whitespace-nowrap"
+                            className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-neutral-500 whitespace-nowrap"
                           >
                             {h}
                           </th>
@@ -358,10 +385,10 @@ export function HostFinancesPage() {
                         .map((payout) => (
                           <tr
                             key={payout.id}
-                            onClick={() => router.push(ROUTES.host.financeLedger(payout.id))}
+                            onClick={() => router.push(ROUTES?.host?.financeLedger ? ROUTES.host.financeLedger(payout.id) : `/host/finances/ledger/${payout.id}`)}
                             onKeyDown={(e) => {
                               if (e.key === "Enter") {
-                                router.push(ROUTES.host.financeLedger(payout.id));
+                                router.push(ROUTES?.host?.financeLedger ? ROUTES.host.financeLedger(payout.id) : `/host/finances/ledger/${payout.id}`);
                               }
                             }}
                             tabIndex={0}
@@ -373,7 +400,7 @@ export function HostFinancesPage() {
                               <div className="text-sm font-bold text-neutral-900">
                                 {payout.label}
                               </div>
-                              <div className="text-[10px] text-neutral-500 mt-0.5">
+                              <div className="text-xs text-neutral-500 mt-0.5">
                                 {payout.clearedOn ?? "Scheduled this month"}
                               </div>
                             </td>
@@ -383,17 +410,17 @@ export function HostFinancesPage() {
                             <td className="px-5 py-4 text-xs font-semibold text-neutral-900">
                               K{sumLedger(payout.entries, "grossRate").toLocaleString()}
                             </td>
-                            <td className="px-5 py-4 text-sm font-black text-neutral-900">
+                            <td className="px-5 py-4 text-sm font-semibold text-neutral-900">
                               K{payout.amount.toLocaleString()}
                             </td>
                             <td className="px-5 py-4">
                               {payout.status === "cleared" ? (
-                                <span className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full px-2 py-0.5">
-                                  <CheckCircle2 className="h-3 w-3" /> Cleared
+                                <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full px-2.5 py-0.5">
+                                  <CheckCircle2 className="h-3.5 w-3.5" /> Cleared
                                 </span>
                               ) : (
-                                <span className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-100 rounded-full px-2 py-0.5">
-                                  <Clock className="h-3 w-3" /> Upcoming
+                                <span className="inline-flex items-center gap-1 text-[11px] font-medium text-purple bg-purple/10 border border-purple/20 rounded-full px-2.5 py-0.5">
+                                  <Clock className="h-3.5 w-3.5" /> Upcoming
                                 </span>
                               )}
                             </td>
@@ -405,30 +432,30 @@ export function HostFinancesPage() {
                     </tbody>
                   </table>
                 </div>
-                <div className="px-5 py-3 border-t border-neutral-100 bg-neutral-50/50 text-[11px] text-neutral-500">
+                <div className="px-5 py-3 border-t border-neutral-100 bg-neutral-50/50 text-xs text-neutral-500">
                   Click any month to open its ledger breakdown with booking-level fees.
                 </div>
               </div>
             ) : (
               /* Transaction Log */
-              <div className="bg-white border border-neutral-200 rounded-2xl shadow-sm">
-                <div className="p-5">
+              <div className="bg-white border border-neutral-200/80 rounded-2xl shadow-2xs">
+                <div className="p-6">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
-                    <h2 className="text-base font-bold text-neutral-900">Transactions</h2>
+                    <h2 className="text-base font-semibold text-neutral-900">Transactions</h2>
                     <div className="flex items-center gap-2">
                       <div className="relative w-full sm:w-56">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-neutral-500/60" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-neutral-400" />
                         <input
                           type="text"
                           placeholder="Search transactions..."
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
-                          className="w-full pl-9 pr-4 py-1.5 h-8 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-purple"
+                          className="w-full pl-9 pr-3.5 h-9 bg-white border border-neutral-200/80 rounded-xl text-sm focus:outline-none focus:border-purple focus:ring-1 focus:ring-purple/20"
                         />
                       </div>
                       <button
                         onClick={exportCSV}
-                        className="inline-flex items-center gap-1.5 h-8 px-3.5 rounded-xl bg-purple text-white text-[11px] font-black uppercase tracking-wider hover:bg-purple-hover transition-all"
+                        className="inline-flex items-center gap-1.5 h-9 px-4 rounded-xl bg-purple text-white text-xs font-semibold hover:bg-purple-hover shadow-xs transition-all"
                         title="Export the filtered report as CSV"
                       >
                         <Download className="h-3.5 w-3.5" />
@@ -438,13 +465,13 @@ export function HostFinancesPage() {
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2 mb-4">
-                    <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-neutral-50 border border-neutral-200">
-                      <CalendarRange className="h-3.5 w-3.5 text-purple" />
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-neutral-50 border border-neutral-200/80">
+                      <CalendarRange className="h-4 w-4 text-purple" />
                       <input
                         type="date"
                         value={dateFrom}
                         onChange={(e) => setDateFrom(e.target.value)}
-                        className="text-[11px] font-medium text-neutral-900 bg-transparent border-none p-0 focus:outline-none w-[110px]"
+                        className="text-xs font-medium text-neutral-900 bg-transparent border-none p-0 focus:outline-none w-[110px]"
                         aria-label="From date"
                       />
                       <span className="text-neutral-400">→</span>
@@ -452,7 +479,7 @@ export function HostFinancesPage() {
                         type="date"
                         value={dateTo}
                         onChange={(e) => setDateTo(e.target.value)}
-                        className="text-[11px] font-medium text-neutral-900 bg-transparent border-none p-0 focus:outline-none w-[110px]"
+                        className="text-xs font-medium text-neutral-900 bg-transparent border-none p-0 focus:outline-none w-[110px]"
                         aria-label="To date"
                       />
                     </div>
@@ -467,15 +494,15 @@ export function HostFinancesPage() {
                         <button
                           key={p.label}
                           onClick={() => applyDatePreset(p.days || undefined)}
-                          className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
+                          className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                             (p.days === 0 && !dateFrom && !dateTo) ||
                             (p.days > 0 &&
                               dateFrom ===
                                 new Date(Date.now() - (p.days - 1) * 86400000)
                                   .toISOString()
                                   .split("T")[0])
-                              ? "bg-purple text-white"
-                              : "bg-neutral-50 text-neutral-500 hover:bg-neutral-100"
+                              ? "bg-purple text-white shadow-xs"
+                              : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200/70"
                           }`}
                         >
                           {p.label}
@@ -485,12 +512,12 @@ export function HostFinancesPage() {
 
                     <div className="flex-1" />
 
-                    <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-neutral-50 border border-neutral-200">
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-neutral-50 border border-neutral-200/80">
                       <ArrowUpDown className="h-3.5 w-3.5 text-purple" />
                       <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-                        className="text-[11px] font-medium text-neutral-900 bg-transparent border-none p-0 focus:outline-none appearance-none"
+                        className="text-xs font-medium text-neutral-900 bg-transparent border-none p-0 focus:outline-none appearance-none"
                       >
                         <option value="newest">Newest first</option>
                         <option value="oldest">Oldest first</option>
@@ -501,40 +528,36 @@ export function HostFinancesPage() {
                   </div>
 
                   {/* Filtered summary chips */}
-                  <div className="grid grid-cols-3 gap-2 mb-4">
-                    <div className="rounded-lg bg-emerald-50 border border-emerald-100 px-3 py-2">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-700">
-                        Settled
-                      </p>
-                      <p className="text-sm font-black text-emerald-700">
+                  <div className="grid grid-cols-3 gap-3 mb-5">
+                    <div className="rounded-xl bg-neutral-50/80 border border-neutral-200/80 px-3.5 py-2.5">
+                      <p className="text-xs font-medium text-neutral-500">Settled</p>
+                      <p className="text-base font-semibold text-neutral-900 mt-0.5">
                         K{filteredSummary.settled.toLocaleString()}
                       </p>
                     </div>
-                    <div className="rounded-lg bg-[#f3eafb] border border-purple/30 px-3 py-2">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-purple">
-                        Pending
-                      </p>
-                      <p className="text-sm font-black text-purple">
+                    <div className="rounded-xl bg-neutral-50/80 border border-neutral-200/80 px-3.5 py-2.5">
+                      <p className="text-xs font-medium text-neutral-500">Pending</p>
+                      <p className="text-base font-semibold text-neutral-900 mt-0.5">
                         K{filteredSummary.pending.toLocaleString()}
                       </p>
                     </div>
-                    <div className="rounded-lg bg-[#f3eafb] border border-purple/20 px-3 py-2">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-purple">
+                    <div className="rounded-xl bg-neutral-50/80 border border-neutral-200/80 px-3.5 py-2.5">
+                      <p className="text-xs font-medium text-neutral-500">
                         Net · {filteredSummary.count} txns
                       </p>
-                      <p className="text-sm font-black text-purple">
+                      <p className="text-base font-semibold text-neutral-900 mt-0.5">
                         K{filteredSummary.net.toLocaleString()}
                       </p>
                     </div>
                   </div>
 
                   {/* Tabs */}
-                  <div className="flex border-b border-neutral-200 gap-4 mb-4 overflow-x-auto scrollbar-hide">
+                  <div className="flex border-b border-neutral-200/80 gap-4 mb-4 overflow-x-auto scrollbar-hide">
                     {(["all", "booking", "payout", "refund"] as const).map((tab) => (
                       <button
                         key={tab}
                         onClick={() => setTxTab(tab)}
-                        className={`pb-2.5 text-sm font-bold uppercase tracking-wider border-b-2 transition-all outline-none whitespace-nowrap ${
+                        className={`pb-2.5 text-xs font-semibold uppercase tracking-wider border-b-2 transition-all outline-none whitespace-nowrap ${
                           txTab === tab
                             ? "border-purple text-purple"
                             : "border-transparent text-neutral-500 hover:text-neutral-900"
@@ -546,7 +569,7 @@ export function HostFinancesPage() {
                   </div>
 
                   {/* Transactions List */}
-                  <div className="divide-y divide-neutral-200">
+                  <div className="divide-y divide-neutral-100">
                     {filteredTransactions.length === 0 ? (
                       <div className="text-center py-10">
                         <p className="text-sm text-neutral-500">No matching transactions found</p>
@@ -560,40 +583,34 @@ export function HostFinancesPage() {
                             className="py-3.5 flex items-center justify-between gap-4"
                           >
                             <div className="flex items-center gap-3">
-                              <div
-                                className={`h-9 w-9 rounded-full flex items-center justify-center shrink-0 ${
-                                  tx.type === "payout"
-                                    ? "bg-[#f3eafb] text-purple"
-                                    : tx.type === "refund"
-                                      ? "bg-rose-50 text-rose-600"
-                                      : "bg-[#f3eafb] text-purple"
-                                }`}
-                              >
+                              <div className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0 bg-purple/10 text-purple border border-purple/15">
                                 {tx.type === "payout" ? (
-                                  <ArrowDownLeft className="h-4 w-4" />
-                                ) : (
                                   <ArrowUpRight className="h-4 w-4" />
+                                ) : tx.type === "refund" ? (
+                                  <RotateCcw className="h-4 w-4" />
+                                ) : (
+                                  <ArrowDownLeft className="h-4 w-4" />
                                 )}
                               </div>
                               <div className="min-w-0">
-                                <div className="text-sm font-bold text-neutral-900 truncate">
+                                <div className="text-sm font-medium text-neutral-900 truncate">
                                   {tx.description}
                                 </div>
-                                <div className="text-[10px] text-neutral-500 mt-0.5">
+                                <div className="text-xs text-neutral-500 mt-0.5">
                                   {tx.date} {tx.guestName && ` · Guest: ${tx.guestName}`}
                                 </div>
                               </div>
                             </div>
                             <div className="text-right">
                               <div
-                                className={`text-sm font-bold ${
-                                  isPositive ? "text-emerald-600" : "text-rose-600"
+                                className={`text-sm font-semibold ${
+                                  isPositive ? "text-emerald-600" : "text-neutral-900"
                                 }`}
                               >
                                 {isPositive ? "+" : ""}K{tx.amount.toLocaleString()}
                               </div>
                               <div
-                                className={`text-[9px] font-black uppercase tracking-wider mt-0.5 ${
+                                className={`text-[10px] font-medium uppercase tracking-wider mt-0.5 ${
                                   tx.status === "paid"
                                     ? "text-emerald-600"
                                     : tx.status === "pending"
@@ -616,128 +633,116 @@ export function HostFinancesPage() {
 
           {/* RIGHT COLUMN: Payout Setup & History */}
           <div className="space-y-6">
-            {/* Payout method panel */}
-            <div className="bg-white border border-neutral-200 rounded-2xl p-5 shadow-sm">
+            {/* Payout Settings & Destination panel */}
+            <div className="bg-white border border-neutral-200/80 rounded-2xl p-6 shadow-2xs">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-base font-bold text-neutral-900">Payout Destination</h2>
-                {!isEditingMethod && (
-                  <Link
-                    href={ROUTES.host.settings}
-                    className="text-sm font-bold text-purple hover:text-purple transition-colors"
-                  >
-                    Edit
-                  </Link>
-                )}
+                <h2 className="text-base font-semibold text-neutral-900">Payout Settings</h2>
+                <button
+                  onClick={() => setSettingsModalOpen(true)}
+                  className="text-xs font-semibold text-purple hover:underline transition-colors"
+                >
+                  Configure
+                </button>
               </div>
 
-              {isEditingMethod ? (
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block mb-1">
-                      Payment Channel
-                    </label>
-                    <select
-                      value={tempMethod}
-                      onChange={(e) => setTempMethod(e.target.value)}
-                      className="w-full h-9 rounded-lg border border-neutral-200 px-3 text-sm bg-white text-neutral-900 focus:outline-none focus:border-purple"
-                    >
-                      <option value="Airtel Money">Airtel Mobile Money</option>
-                      <option value="MTN Mobile Money">MTN Mobile Money</option>
-                      <option value="Bank Transfer">Bank Account Transfer</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block mb-1">
-                      {tempMethod === "Bank Transfer" ? "Bank Routing & Account #" : "Phone Number"}
-                    </label>
-                    <input
-                      type="text"
-                      value={tempAccount}
-                      onChange={(e) => setTempAccount(e.target.value)}
-                      className="w-full h-9 rounded-lg border border-neutral-200 px-3 text-sm text-neutral-900 bg-white focus:outline-none focus:border-purple"
-                    />
-                  </div>
-                  <div className="flex items-center gap-2 pt-2">
-                    <button
-                      onClick={handleSavePayoutMethod}
-                      className="flex-1 h-8 rounded-lg bg-purple text-white hover:bg-purple-hover text-[10px] font-black uppercase tracking-wider transition-all"
-                    >
-                      Save Method
-                    </button>
-                    <button
-                      onClick={() => setIsEditingMethod(false)}
-                      className="flex-1 h-8 rounded-lg border border-neutral-200 text-neutral-900 hover:bg-neutral-100 text-[10px] font-black uppercase tracking-wider transition-all"
-                    >
-                      Cancel
-                    </button>
-                  </div>
+              <div className="divide-y divide-neutral-100">
+                <div className="flex justify-between items-center py-3">
+                  <span className="text-xs text-neutral-500">Payout Mode</span>
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-purple/10 text-purple border border-purple/20">
+                    {payoutSettings.mode === "instant" ? (
+                      <Zap className="h-3 w-3" />
+                    ) : (
+                      <CalendarClock className="h-3 w-3" />
+                    )}
+                    {payoutSettings.mode === "instant"
+                      ? "Instant (Post-Check-in)"
+                      : `Automated (${payoutSettings.payoutDay}s)`}
+                  </span>
                 </div>
-              ) : (
-                <div className="divide-y divide-neutral-200">
-                  <div className="flex justify-between items-center py-2.5">
-                    <span className="text-sm text-neutral-500 flex items-center gap-1.5">
-                      {payoutMethod.type === "Bank Transfer" ? (
-                        <Building2 className="h-4 w-4 text-indigo-500" />
-                      ) : (
-                        <Smartphone className="h-4 w-4 text-emerald-500" />
-                      )}
-                      Type
-                    </span>
-                    <span className="text-sm font-bold text-neutral-900">{payoutMethod.type}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2.5">
-                    <span className="text-sm text-neutral-500">Destination</span>
-                    <span className="text-sm font-bold text-neutral-900">
-                      {payoutMethod.account}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center py-2.5">
-                    <span className="text-sm text-neutral-500">Payout Schedule</span>
-                    <span className="text-sm font-bold text-purple pl-2 max-w-[140px]">
-                      {payoutMethod.schedule}
-                    </span>
-                  </div>
+
+                <div className="flex justify-between items-center py-3">
+                  <span className="text-xs text-neutral-500">Schedule & Frequency</span>
+                  <span className="text-sm font-medium text-neutral-900 text-right">
+                    {payoutSettings.mode === "instant"
+                      ? "24h after guest check-in"
+                      : `Weekly (Every ${payoutSettings.payoutDay})`}
+                  </span>
                 </div>
-              )}
+
+                <div className="flex justify-between items-center py-3">
+                  <span className="text-xs text-neutral-500 flex items-center gap-2">
+                    {payoutSettings.channel === "Bank Transfer" ? (
+                      <Building2 className="h-4 w-4 text-purple" />
+                    ) : (
+                      <Smartphone className="h-4 w-4 text-purple" />
+                    )}
+                    Payment Channel
+                  </span>
+                  <span className="text-sm font-medium text-neutral-900">
+                    {payoutSettings.channel}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center py-3">
+                  <span className="text-xs text-neutral-500">Destination Account</span>
+                  <span className="text-sm font-medium text-neutral-900 font-mono text-xs">
+                    {payoutSettings.account}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setSettingsModalOpen(true)}
+                className="w-full border border-neutral-200/80 rounded-xl py-2.5 mt-5 text-xs font-semibold text-neutral-700 hover:text-purple hover:border-purple/40 hover:bg-neutral-50 transition-all flex items-center justify-center gap-1.5 shadow-2xs"
+              >
+                <Sliders className="h-3.5 w-3.5" /> Adjust Payout Settings
+              </button>
             </div>
 
             {/* Payout History Snapshot */}
-            <div className="bg-white border border-neutral-200 rounded-2xl p-5 shadow-sm">
-              <h2 className="text-base font-bold text-neutral-900 mb-4">Payout History</h2>
+            <div className="bg-white border border-neutral-200/80 rounded-2xl p-6 shadow-2xs">
+              <h2 className="text-base font-semibold text-neutral-900 mb-4">Payout History</h2>
               <div className="space-y-3.5">
                 {[...mockPayouts]
                   .filter((p) => p.status === "cleared")
                   .map((p) => (
                     <Link
                       key={p.id}
-                      href={ROUTES.host.financeLedger(p.id)}
-                      className="flex justify-between items-center group"
+                      href={ROUTES?.host?.financeLedger ? ROUTES.host.financeLedger(p.id) : `/host/finances/ledger/${p.id}`}
+                      className="flex justify-between items-center group py-1"
                     >
                       <div>
-                        <div className="text-sm font-bold text-neutral-900 group-hover:text-purple transition-colors">
+                        <div className="text-sm font-semibold text-neutral-900 group-hover:text-purple transition-colors">
                           {p.label} payout
                         </div>
-                        <div className="text-[10px] text-neutral-500 mt-0.5">
+                        <div className="text-xs text-neutral-500 mt-0.5">
                           {p.entries.length} bookings · {p.clearedOn}
                         </div>
                       </div>
-                      <span className="text-sm font-bold text-emerald-600 flex items-center gap-1">
+                      <span className="text-sm font-semibold text-emerald-600 flex items-center gap-1">
                         K{p.amount.toLocaleString()}
-                        <ChevronRight className="h-3.5 w-3.5 text-neutral-300 group-hover:text-purple group-hover:translate-x-0.5 transition-all" />
+                        <ChevronRight className="h-4 w-4 text-neutral-300 group-hover:text-purple group-hover:translate-x-0.5 transition-all" />
                       </span>
                     </Link>
                   ))}
               </div>
               <button
                 onClick={exportCSV}
-                className="w-full border border-neutral-200 rounded-xl py-2 mt-4 text-[11px] font-black uppercase tracking-wider text-secondary hover:text-purple hover:bg-neutral-50 transition-all flex items-center justify-center gap-1"
+                className="w-full border border-neutral-200/80 rounded-xl py-2.5 mt-5 text-xs font-semibold text-neutral-700 hover:text-purple hover:border-purple/40 hover:bg-neutral-50 transition-all flex items-center justify-center gap-1.5 shadow-2xs"
               >
-                Export Statement <Download className="h-3 w-3" />
+                Export Statement <Download className="h-3.5 w-3.5" />
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      <PayoutSettingsModal
+        open={settingsModalOpen}
+        onOpenChange={setSettingsModalOpen}
+        settings={payoutSettings}
+        onSave={setPayoutSettings}
+      />
     </div>
   );
 }

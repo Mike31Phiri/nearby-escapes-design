@@ -88,14 +88,16 @@ export const ROUTES = {
 
   // Host portal
   host: {
-    dashboard: "/host/dashboard",
+    dashboard: "/host",
+    create: "/host/create",
     listings: "/host/listings",
     listing: (id: string) => `/host/listings/${id}`,
     editListing: (id: string) => `/host/listings/${id}/edit`,
     bookings: "/host/bookings",
     booking: (id: string) => `/host/bookings/${id}`,
     inventory: "/host/inventory",
-    earnings: "/host/earnings",
+    finances: "/host/finances",
+    earnings: "/host/finances",
     financeLedger: (id: string) => `/host/finances/ledger/${id}`,
     reviews: "/host/reviews",
     account: "/host/account",

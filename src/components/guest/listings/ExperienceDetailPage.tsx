@@ -22,6 +22,9 @@ import {
   Map,
   ImageIcon,
   X,
+  Search,
+  AlertCircle,
+  Loader2,
 } from "lucide-react";
 import { ReviewSection } from "@/components/guest/reviews/ReviewSection";
 import { cn } from "@/lib/utils";
@@ -122,9 +125,56 @@ export function ExperienceDetailPage({
   const isPackage = item.id.startsWith("p");
   const isGem = item.id.startsWith("g");
   const [showAuthDialog, setShowAuthDialog] = useState(false);
+  const [showAllPhotos, setShowAllPhotos] = useState(false);
+  const [showReviewsModal, setShowReviewsModal] = useState(false);
   const { isAuthenticated } = useAuth();
   const { isSaved, addItem, removeItem } = useWishlistStore();
   const isFavorited = isSaved(item.id);
+
+  const handleShare = () => {
+    if (typeof window !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href);
+      toast.success("Experience link copied to clipboard!");
+    } else {
+      toast.success("Link copied!");
+    }
+  };
+
+  // Availability state
+  const today = new Date().toISOString().split("T")[0];
+  const [selectedDate, setSelectedDate] = useState("");
+  const [adults, setAdults] = useState(2);
+  const [children, setChildren] = useState(0);
+  const [checkingAvailability, setCheckingAvailability] = useState(false);
+  const [availabilityResult, setAvailabilityResult] = useState<
+    "idle" | "available" | "unavailable"
+  >("idle");
+
+  const totalGuests = adults + children;
+
+  const handleCheckAvailability = () => {
+    if (!selectedDate) {
+      toast.error("Please select a date");
+      return;
+    }
+    setCheckingAvailability(true);
+    setTimeout(() => {
+      // Experiences are generally available — simulate 90% chance
+      const available = Math.random() > 0.1;
+      setAvailabilityResult(available ? "available" : "unavailable");
+      setCheckingAvailability(false);
+    }, 800);
+  };
+
+  const handleProceedToBook = () => {
+    const params = new URLSearchParams({
+      type: isPackage ? "package" : "experience",
+      id: item.id,
+    });
+    if (selectedDate) params.set("date", selectedDate);
+    params.set("guests", String(totalGuests));
+    router.push(`/checkout/book?${params.toString()}`);
+  };
 
   let categoryLabel = "Attraction";
   if (isPackage) categoryLabel = "Curated Package";
@@ -193,7 +243,7 @@ export function ExperienceDetailPage({
             Explore
           </Link>{" "}
           <span className="mx-1.5 text-black-muted/50">›</span>
-          <Link href="/zambia" className="hover:text-purple transition-colors">
+          <Link href="/" className="hover:text-purple transition-colors">
             Zambia
           </Link>{" "}
           <span className="mx-1.5 text-black-muted/50">›</span>
@@ -240,16 +290,27 @@ export function ExperienceDetailPage({
           {/* Action Buttons */}
           <div className="absolute bottom-4 right-4 flex gap-2">
             <button
+              onClick={handleShare}
+              className="bg-white/90 backdrop-blur-sm h-9 w-9 rounded-lg shadow-lg flex items-center justify-center hover:bg-white transition-colors text-black"
+              title="Share experience"
+            >
+              <Share2 className="h-4 w-4" />
+            </button>
+            <button
               onClick={handleToggleFavorite}
               className="bg-white/90 backdrop-blur-sm h-9 w-9 rounded-lg shadow-lg flex items-center justify-center hover:bg-white transition-colors text-black"
+              title="Save experience"
             >
               <Heart
                 className={cn("h-4 w-4", isFavorited ? "fill-purple text-purple" : "text-black")}
               />
             </button>
-            <button className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg text-xs font-semibold shadow-lg flex items-center gap-2 hover:bg-white transition-colors text-black">
+            <button
+              onClick={() => setShowAllPhotos(true)}
+              className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg text-xs font-semibold shadow-lg flex items-center gap-2 hover:bg-white transition-colors text-black"
+            >
               <ImageIcon className="w-4 h-4" />
-              32 photos
+              {images.length} photos
             </button>
           </div>
         </div>
@@ -262,24 +323,25 @@ export function ExperienceDetailPage({
             <div className="pt-2">
               <div className="flex justify-between items-start">
                 <div>
-                  <h1 className="text-3xl font-bold tracking-tight text-black">
+                  <h1 className="text-2xl sm:text-[28px] font-semibold tracking-tight text-neutral-900">
                     {item.name || "Mosi-oa-Tunya Safari & River Cruise"}
                   </h1>
-                  <div className="mt-1 text-sm text-black-soft font-medium flex flex-wrap items-center gap-y-2 gap-x-4">
-                    <span className="flex items-center gap-1">
-                      <span className="bg-gold text-white px-2 py-0.5 rounded text-xs font-bold">
-                        {avgRating.toFixed(1)}
-                      </span>
-                      ({reviewCount} reviews)
+                  <div className="mt-2 flex flex-wrap items-center gap-2 text-xs sm:text-sm text-neutral-600">
+                    <span className="flex items-center gap-1 font-medium text-neutral-900">
+                      <Star className="h-3.5 w-3.5 fill-[#f59e0b] text-[#f59e0b]" />
+                      {avgRating.toFixed(1)}
                     </span>
-                    <span className="text-purple font-semibold">Hosted by Guide Kapasa</span>
-                    <span className="text-[10px] bg-purple-muted text-purple px-2 py-0.5 rounded-full font-bold border border-purple-border/20 flex items-center gap-1">
-                      <ShieldCheck className="h-3 w-3" /> Trained Local Expert
+                    <span className="text-neutral-300">·</span>
+                    <span className="text-neutral-600 underline cursor-pointer font-normal">
+                      {reviewCount} reviews
                     </span>
+                    <span className="text-neutral-300">·</span>
+                    <span className="text-neutral-600 font-normal">
+                      {item.location || "Livingstone, Zambia"}
+                    </span>
+                    <span className="text-neutral-300">·</span>
+                    <span className="text-neutral-700 font-medium">Hosted by Guide Kapasa</span>
                   </div>
-                  <p className="text-xs text-purple mt-2 font-script text-lg">
-                    A premium adventure, accessible to the curious youth explorer.
-                  </p>
                 </div>
               </div>
 
@@ -336,7 +398,9 @@ export function ExperienceDetailPage({
 
             {/* What's Included */}
             <div className="pt-6">
-              <h2 className="font-semibold text-lg text-black">What's included & what to bring</h2>
+              <h2 className="font-semibold text-lg text-black">
+                What&apos;s included & what to bring
+              </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 mt-3 text-sm">
                 <div className="bg-green-50 text-green-800 p-2.5 rounded-lg flex items-center gap-2">
                   <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0" /> Bottled water & local
@@ -389,7 +453,10 @@ export function ExperienceDetailPage({
                   </span>{" "}
                   · {reviewCount} reviews
                 </h2>
-                <button className="text-purple text-xs font-semibold hover:underline">
+                <button
+                  onClick={() => setShowReviewsModal(true)}
+                  className="text-purple text-xs font-semibold hover:underline"
+                >
                   Read all reviews
                 </button>
               </div>
@@ -400,7 +467,7 @@ export function ExperienceDetailPage({
                       <span className="font-semibold text-sm text-black">{rev.userName}</span>
                       <span className="text-xs text-black-faint">{rev.date}</span>
                     </div>
-                    <p className="text-sm text-black-soft mt-1">"{rev.comment}"</p>
+                    <p className="text-sm text-black-soft mt-1">&quot;{rev.comment}&quot;</p>
                   </div>
                 ))}
                 {reviews.length === 0 && (
@@ -413,9 +480,9 @@ export function ExperienceDetailPage({
                         <span className="text-xs text-black-faint">Jan 2026</span>
                       </div>
                       <p className="text-sm text-black-soft mt-1">
-                        "Kapasa is a legend! He made the history of the Zambezi so interesting. The
-                        boat was comfortable, and the price was unbeatable for a full 4-hour safari.
-                        Definitely recommend to all my friends."
+                        &quot;Kapasa is a legend! He made the history of the Zambezi so interesting.
+                        The boat was comfortable, and the price was unbeatable for a full 4-hour
+                        safari. Definitely recommend to all my friends.&quot;
                       </p>
                     </div>
                     <div className="bg-white p-4 rounded-xl border border-white-soft">
@@ -424,8 +491,9 @@ export function ExperienceDetailPage({
                         <span className="text-xs text-black-faint">Dec 2025</span>
                       </div>
                       <p className="text-sm text-black-soft mt-1">
-                        "Went on this with a group of 6. We had the boat to ourselves! Saw a huge
-                        pod of hippos. The sunset was magical. A must-do for any young adventurer."
+                        &quot;Went on this with a group of 6. We had the boat to ourselves! Saw a
+                        huge pod of hippos. The sunset was magical. A must-do for any young
+                        adventurer.&quot;
                       </p>
                     </div>
                   </>
@@ -457,9 +525,9 @@ export function ExperienceDetailPage({
                 </div>
               </div>
               <p className="text-sm text-black-soft mt-3 italic">
-                "I've been guiding on the Zambezi for 5 years. My goal is to show young Zambians the
-                beauty of our own backyard. Every booking directly supports my family and local
-                youth training programs."
+                &quot;I&apos;ve been guiding on the Zambezi for 5 years. My goal is to show young
+                Zambians the beauty of our own backyard. Every booking directly supports my family
+                and local youth training programs.&quot;
               </p>
             </div>
           </div>
@@ -480,57 +548,115 @@ export function ExperienceDetailPage({
                 </div>
               </div>
 
-              {/* FOMO / Scarcity */}
-              <div className="mt-4 p-2 bg-red-50 border border-red-100 rounded-lg flex items-center gap-2 text-red-800 text-xs font-semibold">
-                <span className="w-2 h-2 bg-red-500 rounded-full inline-block animate-pulse shrink-0"></span>
-                Only 4 spots left for August 15th!
-              </div>
-
               <div className="py-4 space-y-3">
                 {/* Date Picker */}
-                <div className="bg-white-warm rounded-lg p-3 border border-white-soft flex justify-between items-center cursor-pointer hover:border-purple transition-colors">
-                  <div>
-                    <span className="text-[10px] text-black-faint block font-medium">
-                      SELECT DATE
-                    </span>
-                    <span className="text-sm font-semibold text-black">Aug 15, 2026</span>
-                  </div>
-                  <button className="text-xs border border-white-soft rounded px-2 py-1 bg-white hover:bg-white-warm transition-colors text-black-soft">
-                    Change
-                  </button>
+                <div>
+                  <label className="text-[10px] text-black-faint block font-medium mb-1">
+                    SELECT DATE
+                  </label>
+                  <input
+                    type="date"
+                    value={selectedDate}
+                    min={today}
+                    onChange={(e) => {
+                      setSelectedDate(e.target.value);
+                      setAvailabilityResult("idle");
+                    }}
+                    className="w-full bg-white-warm rounded-lg p-2.5 border border-white-soft text-sm font-semibold text-black focus:outline-none focus:ring-2 focus:ring-purple/30 focus:border-purple/40"
+                  />
                 </div>
 
                 {/* Group Size */}
-                <div className="bg-white-warm rounded-lg p-3 border border-white-soft flex justify-between items-center cursor-pointer hover:border-purple transition-colors">
+                <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <span className="text-[10px] text-black-faint block font-medium">
-                      TRAVELERS
-                    </span>
-                    <span className="text-sm font-semibold text-black">2 adults</span>
+                    <label className="text-[10px] text-black-faint block font-medium mb-1">
+                      ADULTS
+                    </label>
+                    <select
+                      value={adults}
+                      onChange={(e) => setAdults(Number(e.target.value))}
+                      className="w-full bg-white-warm rounded-lg p-2.5 border border-white-soft text-sm font-semibold text-black focus:outline-none focus:ring-2 focus:ring-purple/30"
+                    >
+                      {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+                        <option key={n} value={n}>
+                          {n}
+                        </option>
+                      ))}
+                    </select>
                   </div>
-                  <button className="text-xs border border-white-soft rounded px-2 py-1 bg-white hover:bg-white-warm transition-colors text-black-soft">
-                    Edit
-                  </button>
+                  <div>
+                    <label className="text-[10px] text-black-faint block font-medium mb-1">
+                      CHILDREN
+                    </label>
+                    <select
+                      value={children}
+                      onChange={(e) => setChildren(Number(e.target.value))}
+                      className="w-full bg-white-warm rounded-lg p-2.5 border border-white-soft text-sm font-semibold text-black focus:outline-none focus:ring-2 focus:ring-purple/30"
+                    >
+                      {[0, 1, 2, 3, 4].map((n) => (
+                        <option key={n} value={n}>
+                          {n}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
-                {/* Price Breakdown */}
-                <div className="pt-3 border-t border-white-soft space-y-1.5 text-sm">
-                  <div className="flex justify-between text-black-soft">
-                    <span>2 people x K{item.price || "850"}</span>
-                    <span>K{((item.price || 850) * 2).toLocaleString()}</span>
+                {/* Check Availability Button */}
+                <button
+                  onClick={handleCheckAvailability}
+                  disabled={checkingAvailability || !selectedDate}
+                  className="w-full bg-purple text-white rounded-xl py-3 font-semibold hover:bg-purple-hover transition-colors text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                >
+                  {checkingAvailability ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Checking availability...
+                    </>
+                  ) : (
+                    <>
+                      <Search className="h-4 w-4" />
+                      Check availability
+                    </>
+                  )}
+                </button>
+
+                {/* Availability Result */}
+                {availabilityResult === "available" && (
+                  <div className="p-2.5 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2 text-green-700 text-xs font-semibold">
+                    <CheckCircle2 className="h-4 w-4 shrink-0" />
+                    Available! {totalGuests} spot{totalGuests !== 1 ? "s" : ""} remaining
                   </div>
-                  <div className="flex justify-between text-black-soft">
-                    <span>Gear & refreshments</span>
-                    <span className="text-green-600 font-medium">Included</span>
+                )}
+                {availabilityResult === "unavailable" && (
+                  <div className="p-2.5 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700 text-xs font-semibold">
+                    <AlertCircle className="h-4 w-4 shrink-0" />
+                    Sold out for this date. Try another date.
                   </div>
-                  <div className="flex justify-between text-black font-bold border-t border-white-soft pt-2 mt-1">
-                    <span>Total (ZMW)</span>
-                    <span>K{((item.price || 850) * 2).toLocaleString()}</span>
+                )}
+
+                {/* Price Breakdown (show when available) */}
+                {availabilityResult === "available" && (
+                  <div className="pt-3 border-t border-white-soft space-y-1.5 text-sm">
+                    <div className="flex justify-between text-black-soft">
+                      <span>
+                        {totalGuests} people x K{item.price || "850"}
+                      </span>
+                      <span>K{((item.price || 850) * totalGuests).toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-black-soft">
+                      <span>Gear & refreshments</span>
+                      <span className="text-green-600 font-medium">Included</span>
+                    </div>
+                    <div className="flex justify-between text-black font-bold border-t border-white-soft pt-2 mt-1">
+                      <span>Total (ZMW)</span>
+                      <span>K{((item.price || 850) * totalGuests).toLocaleString()}</span>
+                    </div>
+                    <p className="text-[10px] text-purple font-bold text-center mt-1">
+                      Direct booking. No platform service fees!
+                    </p>
                   </div>
-                  <p className="text-[10px] text-purple font-bold text-center mt-1">
-                    Direct booking. No platform service fees!
-                  </p>
-                </div>
+                )}
               </div>
 
               {/* Cancellation policy */}
@@ -540,16 +666,21 @@ export function ExperienceDetailPage({
                 </span>
               </div>
 
-              <button
-                onClick={() =>
-                  router.push(
-                    `/checkout/book?type=${isPackage ? "package" : "experience"}&id=${item.id}`,
-                  )
-                }
-                className="w-full bg-purple text-white rounded-xl py-3.5 font-semibold hover:bg-purple-hover transition-colors text-base shadow-md shadow-purple/20"
-              >
-                Book your adventure
-              </button>
+              {availabilityResult === "available" ? (
+                <button
+                  onClick={handleProceedToBook}
+                  className="w-full bg-purple text-white rounded-xl py-3.5 font-semibold hover:bg-purple-hover transition-colors text-base shadow-md shadow-purple/20"
+                >
+                  Book your adventure
+                </button>
+              ) : (
+                <button
+                  disabled
+                  className="w-full bg-black/10 text-black-faint rounded-xl py-3.5 font-semibold text-base cursor-not-allowed"
+                >
+                  Select date to book
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -627,21 +758,156 @@ export function ExperienceDetailPage({
             <span className="text-xs text-black-muted">/ person</span>
           </div>
           <div className="text-xs text-black-muted flex items-center gap-1">
-            <span className="text-red-700 font-bold">Only 4 spots left!</span> ·{" "}
-            <span className="bg-gold text-white px-1 py-0.5 rounded text-[10px] font-bold">
-              {avgRating.toFixed(1)}
-            </span>
+            {availabilityResult === "available" ? (
+              <span className="text-green-600 font-bold">Available</span>
+            ) : (
+              <>
+                <span className="text-red-700 font-bold">Only 4 spots left!</span> ·{" "}
+                <span className="bg-gold text-white px-1 py-0.5 rounded text-[10px] font-bold">
+                  {avgRating.toFixed(1)}
+                </span>
+              </>
+            )}
           </div>
         </div>
-        <button
-          onClick={() =>
-            router.push(`/checkout/book?type=${isPackage ? "package" : "experience"}&id=${item.id}`)
-          }
-          className="bg-purple text-white px-6 py-3 rounded-full font-semibold shadow-md hover:bg-purple-hover transition-colors text-sm flex-1 ml-4 max-w-[140px]"
-        >
-          Book now
-        </button>
+        {availabilityResult === "available" ? (
+          <button
+            onClick={handleProceedToBook}
+            className="bg-purple text-white px-6 py-3 rounded-full font-semibold shadow-md hover:bg-purple-hover transition-colors text-sm flex-1 ml-4 max-w-[140px]"
+          >
+            Book now
+          </button>
+        ) : (
+          <button
+            onClick={handleCheckAvailability}
+            disabled={checkingAvailability || !selectedDate}
+            className="bg-purple text-white px-6 py-3 rounded-full font-semibold shadow-md hover:bg-purple-hover transition-colors text-sm flex-1 ml-4 max-w-[140px] disabled:opacity-50"
+          >
+            {checkingAvailability ? "Checking..." : "Check dates"}
+          </button>
+        )}
       </div>
+
+      {/* All Reviews Modal */}
+      {showReviewsModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in"
+          onClick={() => setShowReviewsModal(false)}
+        >
+          <div
+            className="bg-white rounded-3xl max-w-xl w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl animate-in zoom-in-95"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6 border-b border-black/[0.08] flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold text-neutral-900">
+                  {avgRating.toFixed(1)} ★ ({reviewCount} reviews)
+                </h3>
+                <p className="text-xs text-neutral-500">
+                  Verified traveler reviews for {item.name}
+                </p>
+              </div>
+              <button
+                onClick={() => setShowReviewsModal(false)}
+                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto space-y-4">
+              <div className="grid grid-cols-2 gap-2 p-3.5 bg-neutral-50 rounded-2xl text-xs">
+                <div className="flex justify-between text-neutral-600">
+                  <span>Guide Knowledge</span>
+                  <span className="font-bold text-neutral-900">5.0 ★</span>
+                </div>
+                <div className="flex justify-between text-neutral-600">
+                  <span>Safety Standards</span>
+                  <span className="font-bold text-neutral-900">4.9 ★</span>
+                </div>
+                <div className="flex justify-between text-neutral-600">
+                  <span>Value for Money</span>
+                  <span className="font-bold text-neutral-900">4.9 ★</span>
+                </div>
+                <div className="flex justify-between text-neutral-600">
+                  <span>Scenic Experience</span>
+                  <span className="font-bold text-neutral-900">5.0 ★</span>
+                </div>
+              </div>
+
+              {reviews.map((r: any, idx: number) => (
+                <div
+                  key={idx}
+                  className="p-4 rounded-2xl bg-neutral-50 border border-black/[0.05] space-y-1.5"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-xs text-neutral-900">
+                      {r.userName || r.author}
+                    </span>
+                    <span className="text-[10px] text-neutral-400">{r.date}</span>
+                  </div>
+                  <div className="text-[10px] text-amber-500 font-bold">★★★★★ 5.0</div>
+                  <p className="text-xs text-neutral-700 leading-relaxed">
+                    &quot;{r.comment}&quot;
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Full-Screen Photo Lightbox */}
+      {showAllPhotos && (
+        <div
+          className="fixed inset-0 z-50 bg-black flex flex-col animate-in fade-in"
+          onClick={() => setShowAllPhotos(false)}
+        >
+          <div className="absolute top-0 inset-x-0 p-5 flex items-center justify-between z-10 bg-gradient-to-b from-black/80 to-transparent">
+            <span className="text-white font-bold text-sm">
+              {activeImg + 1} / {images.length} — {item.name}
+            </span>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowAllPhotos(false);
+              }}
+              className="h-9 w-9 rounded-full bg-white/20 text-white flex items-center justify-center hover:bg-white/30 transition-colors"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <div className="flex-1 flex items-center justify-center relative p-4">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                prevImg();
+              }}
+              className="absolute left-4 z-10 h-12 w-12 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+
+            <img
+              src={images[activeImg]}
+              alt={item.name}
+              className="max-h-[85vh] max-w-full object-contain rounded-xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                nextImg();
+              }}
+              className="absolute right-4 z-10 h-12 w-12 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
+          </div>
+        </div>
+      )}
 
       <AuthGuardDialog
         isOpen={showAuthDialog}

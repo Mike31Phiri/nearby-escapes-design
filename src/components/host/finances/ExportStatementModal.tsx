@@ -145,7 +145,7 @@ export function ExportStatementModal({
                       className={`flex flex-col items-start gap-1.5 rounded-xl border-2 p-4 text-left transition-all ${
                         selected
                           ? "border-purple bg-purple/5"
-                          : "border-neutral-200 hover:border-neutral-300"
+                          : "border-neutral-200/80 hover:border-purple/30"
                       }`}
                     >
                       <Icon
@@ -156,22 +156,22 @@ export function ExportStatementModal({
                       >
                         .{opt.label}
                       </span>
-                      <span className="text-[10px] text-neutral-500">{opt.hint}</span>
+                      <span className="text-xs text-neutral-500">{opt.hint}</span>
                     </button>
                   );
                 })}
               </div>
 
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-3">
                 <button
                   onClick={handleExport}
-                  className="flex-1 h-10 rounded-xl bg-purple hover:bg-purple-hover text-white text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2"
+                  className="flex-1 h-11 rounded-xl bg-purple hover:bg-purple-hover text-white text-sm font-semibold shadow-xs transition-all flex items-center justify-center gap-2"
                 >
                   <FileDown className="h-4 w-4" /> Generate {format.toUpperCase()}
                 </button>
                 <button
                   onClick={() => onOpenChange(false)}
-                  className="h-10 px-4 rounded-xl border border-neutral-200 text-neutral-700 hover:bg-neutral-50 text-xs font-bold transition-all"
+                  className="h-11 px-5 rounded-xl border border-neutral-200/80 text-neutral-700 hover:bg-neutral-50 text-sm font-semibold transition-all"
                 >
                   Cancel
                 </button>

@@ -2,11 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   NEARBY ESCAPES — DESIGN TOKEN SYSTEM
-   Purple (brand) · Yellow (CTA only) · Warm neutrals (text / surfaces)
-   ═══════════════════════════════════════════════════════════════════════════ */
-
+/* Design token system: brand purple, CTA yellow, warm neutrals */
 :root {
   /* Fonts */
   --font-sans: "Work Sans", system-ui, -apple-system, sans-serif;
@@ -86,10 +82,7 @@
   --foreground: var(--color-black);
   --border: var(--neutral-200);
 
-  /* ─── Shadcn/ui component tokens ──────────────────────────────
-     Used by dropdowns, menus, dialogs, cards, inputs and buttons.
-     Without these, surfaces like dropdown panels render transparent
-     and blend into the page content underneath. */
+  /* Component tokens */
   --input: var(--neutral-200);
   --ring: var(--purple-400);
   --primary: var(--color-purple);
@@ -106,8 +99,6 @@
   --card-foreground: var(--color-black);
 
   /* Error / destructive (errors only) */
-  --destructive: #dc2626;
-  --destructive-foreground: #ffffff;
 }
 
 /* Base */

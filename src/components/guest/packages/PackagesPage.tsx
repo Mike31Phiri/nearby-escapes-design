@@ -79,7 +79,7 @@ export function PackagesPage() {
                       <span className="text-sm text-muted-foreground"> / person</span>
                     </div>
                     <Button size="sm" className="rounded-full text-sm font-bold h-8" asChild>
-                      <Link href={`/checkout/book?type=experience&id=${pkg.id}`}>
+                      <Link href={`/packages/${pkg.id}`}>
                         View Details
                         <ArrowRight className="h-3 w-3 ml-1" />
                       </Link>

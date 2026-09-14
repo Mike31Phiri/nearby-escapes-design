@@ -5,9 +5,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { safeLocalStorage } from "@/lib/safeStorage";
 import { formatDateObj, getWeekdayIndex } from "@/lib/utils/calendar";
 
-/* ------------------------------------------------------------------ */
-/* Types                                                               */
-/* ------------------------------------------------------------------ */
+/* Types */
 
 export interface TourListing {
   id: string;
@@ -82,9 +80,7 @@ export interface TourDayState {
   openSlots: number;
 }
 
-/* ------------------------------------------------------------------ */
-/* Mock listings                                                       */
-/* ------------------------------------------------------------------ */
+/* Mock listings */
 
 export const TOUR_LISTINGS: TourListing[] = [
   {
@@ -166,9 +162,7 @@ const DEFAULT_SCHEDULES: Record<string, TourSchedule> = {
   "t-pottery-workshop": defaultSchedule("recurring", [2, 4, 6], [["11:00", 8]], "24h"),
 };
 
-/* ------------------------------------------------------------------ */
-/* Deterministic mock bookings                                         */
-/* ------------------------------------------------------------------ */
+/* Deterministic mock bookings */
 
 /** FNV-1a style hash → stable pseudo-random number in [0, 1). */
 function hashSeed(str: string): number {
@@ -187,7 +181,7 @@ export function scheduleApplies(schedule: TourSchedule | undefined, date: string
   return schedule.daysOfWeek.includes(getWeekdayIndex(date));
 }
 
-/**
+ /**
  * Deterministic mock bookings for a listing on a date — same input always
  * yields the same bookings, so no state is needed to render them.
  */
@@ -224,7 +218,7 @@ export function getMockBookings(
   return bookings.sort((a, b) => a.time.localeCompare(b.time));
 }
 
-/**
+ /**
  * Slots for a date. Effective capacity = host capacity override if set,
  * otherwise 0 if zeroed out, otherwise the schedule default.
  */
@@ -280,9 +274,7 @@ export function getDayState(
   return { status: open > 0 ? "available" : "no-slots", openSlots: open };
 }
 
-/* ------------------------------------------------------------------ */
-/* Store                                                               */
-/* ------------------------------------------------------------------ */
+/* Store */
 
 interface TourAvailabilityState {
   /** Last applied schedule per listing */
@@ -442,9 +434,7 @@ export const useTourAvailabilityStore = create<TourAvailabilityState>()(
           const existing = new Set(
             state.blockedDates.filter((b) => b.listingId === listingId).map((b) => b.date),
           );
-          const fresh = dates
-            .filter((d) => !existing.has(d))
-            .map((date) => ({ listingId, date }));
+          const fresh = dates.filter((d) => !existing.has(d)).map((date) => ({ listingId, date }));
           if (fresh.length === 0) return state;
           return { blockedDates: [...state.blockedDates, ...fresh] };
         });

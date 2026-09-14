@@ -17,6 +17,7 @@ import {
   Search,
 } from "lucide-react";
 import { mockTransport, type Transport } from "@/lib/mock-data";
+import { TransportCard } from "@/components/shared/ListingCards";
 import {
   VerticalFilterSidebar,
   type FilterConfig,
@@ -81,71 +82,7 @@ const SORT_OPTIONS = [
 ];
 
 // Transport Card
-function TransportCard({ route }: { route: Transport }) {
-  const isPrivate =
-    route.operator.toLowerCase().includes("tour") ||
-    route.operator.toLowerCase().includes("transfer");
-  const isMinivan = route.id === "t3";
-
-  const vehicleLabel = isPrivate ? "Private Car" : isMinivan ? "Minivan" : "Bus";
-  const capacityLabel = isPrivate ? "Up to 4 seats" : isMinivan ? "8 seats" : "40 seats";
-
-  return (
-    <Link
-      href={`/transport/${route.id}`}
-      className="group block bg-white rounded-2xl shadow-sm border border-neutral-100 overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
-    >
-      <div className="relative aspect-[16/10] overflow-hidden bg-neutral-100">
-        <img
-          src={route.image}
-          alt={route.from + " to " + route.to}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-        <span className="absolute bottom-3 left-3 bg-black/60 text-white text-[10px] px-2.5 py-1 rounded-full font-bold backdrop-blur-sm inline-flex items-center gap-1">
-          {isPrivate ? <Car className="h-3 w-3 text-[#f2ba0d]" /> : <Bus className="h-3 w-3 text-[#f2ba0d]" />}
-          {vehicleLabel}
-        </span>
-      </div>
-
-      <div className="p-4">
-        <div className="flex items-center justify-between gap-1 mb-1.5">
-          <h3 className="font-bold text-sm md:text-base text-neutral-900 flex items-center gap-2 group-hover:text-purple transition-colors leading-tight">
-            <span>{route.from}</span>
-            <ArrowRight className="h-3.5 w-3.5 text-purple shrink-0" />
-            <span>{route.to}</span>
-          </h3>
-        </div>
-
-        <p className="text-xs text-neutral-500">
-          By <span className="font-semibold text-neutral-700">{route.operator}</span>
-        </p>
-
-        <div className="mt-3 flex items-center gap-1.5 flex-wrap">
-          <span className="inline-flex items-center gap-1 text-[10px] text-neutral-600 bg-neutral-50 border border-neutral-100 rounded-full px-2 py-0.5 font-medium">
-            <Clock className="h-3 w-3 text-neutral-400" />
-            {route.duration}
-          </span>
-          <span className="inline-flex items-center gap-1 text-[10px] text-neutral-600 bg-neutral-50 border border-neutral-100 rounded-full px-2 py-0.5 font-medium">
-            <Users className="h-3 w-3 text-neutral-400" />
-            {capacityLabel}
-          </span>
-        </div>
-
-        <div className="mt-3 pt-3 border-t border-neutral-100 flex items-center justify-between">
-          <div>
-            <span className="text-sm md:text-base font-black text-neutral-900">K{route.price}</span>
-            <span className="text-xs text-neutral-500 font-normal"> / person</span>
-          </div>
-          <span className="inline-flex items-center gap-1 text-xs font-bold text-purple group-hover:text-purple-hover transition-colors">
-            Book seat <ChevronRight className="h-3.5 w-3.5" />
-          </span>
-        </div>
-      </div>
-    </Link>
-  );
-}
+// (removed - using shared ListingCards TransportCard)
 
 // Main Page
 export function TransportPage() {
@@ -159,9 +96,10 @@ export function TransportPage() {
 
   const [sortValue, setSortValue] = useState("recommended");
   const [filtersOpen, setFiltersOpen] = useState(false);
-  
+
   // Harmonized Search Inputs: Where, When, Passengers
-  const initialWhere = fromParam && toParam ? `${fromParam} to ${toParam}` : fromParam || toParam || qParam || "";
+  const initialWhere =
+    fromParam && toParam ? `${fromParam} to ${toParam}` : fromParam || toParam || qParam || "";
   const [whereInput, setWhereInput] = useState(initialWhere);
   const [whenInput, setWhenInput] = useState("");
   const [passengers, setPassengers] = useState(1);
@@ -184,10 +122,11 @@ export function TransportPage() {
 
     if (whereInput.trim()) {
       const q = whereInput.toLowerCase();
-      result = result.filter((t) =>
-        t.from.toLowerCase().includes(q) ||
-        t.to.toLowerCase().includes(q) ||
-        t.operator.toLowerCase().includes(q)
+      result = result.filter(
+        (t) =>
+          t.from.toLowerCase().includes(q) ||
+          t.to.toLowerCase().includes(q) ||
+          t.operator.toLowerCase().includes(q),
       );
       if (result.length === 0) result = [...mockTransport];
     } else if (fromParam || toParam || qParam) {
@@ -204,11 +143,15 @@ export function TransportPage() {
 
     if (selectedVehicleTypes.length > 0) {
       result = result.filter((t) => {
-        const isPrivate = t.operator.toLowerCase().includes("tour") || t.operator.toLowerCase().includes("transfer");
+        const isPrivate =
+          t.operator.toLowerCase().includes("tour") ||
+          t.operator.toLowerCase().includes("transfer");
         const isMinivan = t.id === "t3";
         const vType = isPrivate ? "private" : isMinivan ? "minivan" : "bus";
         return selectedVehicleTypes.some((type) => {
-          if (type === "popular") return t.seats <= 14;
+          // Seat estimates mirror the capacity labels shown on TransportCard.
+          const seats = isPrivate ? 4 : isMinivan ? 8 : 40;
+          if (type === "popular") return seats <= 14;
           if (type === "unique") return isPrivate || isMinivan;
           return type === vType;
         });
@@ -248,20 +191,17 @@ export function TransportPage() {
 
   return (
     <div className="min-h-screen bg-[#faf8f4] font-sans">
-
-      {/* ── HERO TITLE SECTION ─────────────────────────────────── */}
+      {/* HERO TITLE SECTION */}
       <div className="bg-white border-b border-neutral-100 py-3.5">
         <div className="max-w-[1400px] mx-auto px-3 md:px-6">
-
           {/* Title */}
-          <h1 className="text-lg md:text-xl font-extrabold text-neutral-900 text-center tracking-tight leading-snug">
+          <h1 className="text-xl md:text-2xl font-semibold text-neutral-900 text-center tracking-tight leading-snug">
             {dynamicTitle}
           </h1>
 
           {/* Search Bar — compact inline row on mobile, full grid on desktop */}
           <div className="mt-3 max-w-4xl mx-auto">
-
-            {/* ── MOBILE (< md): single pill-row ── */}
+            {/* MOBILE (< md): single pill-row */}
             <div className="grid md:hidden grid-cols-[1fr_auto_1fr_auto] items-center bg-white border border-neutral-200 shadow-[0_4px_20px_rgba(31,20,51,0.08)] rounded-full pl-3.5 pr-1.5 py-1.5 min-h-[48px] gap-1.5">
               {/* Where (1fr equal column) */}
               <div className="flex items-center gap-1.5 min-w-0 px-1">
@@ -292,19 +232,20 @@ export function TransportPage() {
               {/* Search button (unshrinked) */}
               <button
                 type="button"
-                className="bg-purple text-white rounded-full h-9 w-9 hover:bg-purple-hover transition-colors shrink-0 flex items-center justify-center shadow-xs active:scale-95 cursor-pointer ml-0.5"
+                className="bg-neutral-900 text-white rounded-full h-9 w-9 hover:bg-neutral-800 transition-colors shrink-0 flex items-center justify-center shadow-xs active:scale-95 cursor-pointer ml-0.5"
                 aria-label="Search"
               >
                 <Search className="h-4 w-4" strokeWidth={2.5} />
               </button>
             </div>
 
-            {/* ── DESKTOP (md+): full grid ── */}
+            {/* DESKTOP (md+): full grid */}
             <div className="hidden md:grid md:grid-cols-12 bg-white border border-neutral-200 shadow-sm rounded-2xl p-1.5 gap-1.5">
-
               {/* WHERE */}
               <div className="md:col-span-4 bg-neutral-50/80 hover:bg-neutral-50 border border-neutral-100 rounded-xl px-3 py-1.5 transition-colors flex flex-col justify-center">
-                <p className="text-[8px] font-extrabold uppercase tracking-wider text-purple leading-none mb-0.5">Where</p>
+                <p className="text-[9px] font-medium uppercase tracking-wider text-neutral-500 leading-none mb-1">
+                  Where
+                </p>
                 <div className="flex items-center gap-1.5">
                   <MapPin className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
                   <input
@@ -312,38 +253,54 @@ export function TransportPage() {
                     value={whereInput}
                     onChange={(e) => setWhereInput(e.target.value)}
                     placeholder="Origin or destination city"
-                    className="w-full bg-transparent text-xs font-semibold text-neutral-800 focus:outline-none placeholder:text-neutral-400 truncate"
+                    className="w-full bg-transparent text-xs font-medium text-neutral-800 focus:outline-none placeholder:text-neutral-400 truncate"
                   />
                 </div>
               </div>
 
               {/* WHEN */}
               <div className="md:col-span-3 bg-neutral-50/80 hover:bg-neutral-50 border border-neutral-100 rounded-xl px-3 py-1.5 transition-colors flex flex-col justify-center">
-                <p className="text-[8px] font-extrabold uppercase tracking-wider text-purple leading-none mb-0.5">When</p>
+                <p className="text-[9px] font-medium uppercase tracking-wider text-neutral-500 leading-none mb-1">
+                  When
+                </p>
                 <div className="flex items-center gap-1.5">
                   <CalendarDays className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
                   <input
                     type="date"
                     value={whenInput}
                     onChange={(e) => setWhenInput(e.target.value)}
-                    className="w-full bg-transparent text-xs font-semibold text-neutral-800 focus:outline-none"
+                    className="w-full bg-transparent text-xs font-medium text-neutral-800 focus:outline-none"
                   />
                 </div>
               </div>
 
               {/* PASSENGERS */}
               <div className="md:col-span-3 bg-neutral-50/80 hover:bg-neutral-50 border border-neutral-100 rounded-xl px-3 py-1.5 transition-colors flex flex-col justify-center">
-                <p className="text-[8px] font-extrabold uppercase tracking-wider text-purple leading-none mb-0.5">Passengers</p>
+                <p className="text-[9px] font-medium uppercase tracking-wider text-neutral-500 leading-none mb-1">
+                  Passengers
+                </p>
                 <div className="flex items-center justify-between gap-1">
                   <div className="flex items-center gap-1 shrink-0">
                     <Users className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
-                    <span className="text-xs font-semibold text-neutral-800">
+                    <span className="text-xs font-medium text-neutral-800">
                       {passengers} {passengers === 1 ? "Passenger" : "Passengers"}
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <button type="button" onClick={() => setPassengers((p) => Math.max(1, p - 1))} className="h-4 w-4 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 hover:border-purple hover:text-purple text-[10px] font-bold">−</button>
-                    <button type="button" onClick={() => setPassengers((p) => p + 1)} className="h-4 w-4 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 hover:border-purple hover:text-purple text-[10px] font-bold">+</button>
+                    <button
+                      type="button"
+                      onClick={() => setPassengers((p) => Math.max(1, p - 1))}
+                      className="h-4 w-4 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 hover:border-purple hover:text-purple text-[10px] font-bold"
+                    >
+                      −
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPassengers((p) => p + 1)}
+                      className="h-4 w-4 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 hover:border-purple hover:text-purple text-[10px] font-bold"
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
               </div>
@@ -358,32 +315,32 @@ export function TransportPage() {
                   Search
                 </Button>
               </div>
-
             </div>
           </div>
         </div>
       </div>
 
-
-      {/* ── STICKY FILTER BAR (Filters button + Vehicle Type pills) ── */}
+      {/* STICKY FILTER BAR (Filters button + Vehicle Type pills) */}
       <div className="sticky top-[64px] z-20 bg-white border-b border-neutral-200 shadow-xs">
         <div className="max-w-[1400px] mx-auto px-3 md:px-6">
-          <div className="flex items-center gap-2.5 py-2.5 overflow-x-auto scrollbar-none" style={{ scrollbarWidth: "none" }}>
-            
+          <div
+            className="flex items-center gap-2.5 py-2.5 overflow-x-auto scrollbar-none"
+            style={{ scrollbarWidth: "none" }}
+          >
             {/* Filters Button */}
             <button
               onClick={() => setFiltersOpen(true)}
               className={cn(
-                "flex-none flex items-center gap-2 border rounded-full px-6 py-2 text-sm font-bold transition-all duration-150 active:scale-95 whitespace-nowrap shadow-xs",
+                "flex-none flex items-center gap-2 border rounded-full px-5 py-2 text-sm font-medium transition-all duration-150 active:scale-95 whitespace-nowrap shadow-2xs",
                 chips.length > 0
                   ? "bg-purple/10 border-purple text-purple hover:bg-purple/15"
-                  : "bg-white border-neutral-300 text-neutral-800 hover:border-purple/60 hover:text-purple hover:bg-purple/[0.03]",
+                  : "bg-white border-neutral-300 text-neutral-800 hover:border-neutral-400 hover:bg-neutral-50",
               )}
             >
               <SlidersHorizontal className="h-4 w-4 shrink-0" />
               <span>Filters</span>
               {chips.length > 0 && (
-                <span className="flex items-center justify-center bg-purple text-white text-[11px] font-extrabold h-4.5 min-w-[18px] px-1 rounded-full leading-none">
+                <span className="flex items-center justify-center bg-purple text-white text-[11px] font-medium h-4.5 min-w-[18px] px-1 rounded-full leading-none">
                   {chips.length}
                 </span>
               )}
@@ -399,30 +356,29 @@ export function TransportPage() {
                   key={cat.type}
                   onClick={() => toggleVehicleType(cat.type)}
                   className={cn(
-                    "flex-none whitespace-nowrap px-6 py-2 rounded-full border text-sm transition-all duration-150 active:scale-95 select-none",
+                    "flex-none whitespace-nowrap px-5 py-2 rounded-full border text-sm transition-all duration-150 active:scale-95 select-none font-medium",
                     active
-                      ? "bg-purple text-white border-purple shadow-sm font-bold scale-[1.02]"
-                      : "bg-white border-neutral-200 text-neutral-700 font-semibold hover:border-purple/50 hover:text-purple hover:bg-purple/[0.03] hover:shadow-xs",
+                      ? "bg-neutral-900 text-white border-neutral-900 shadow-xs"
+                      : "bg-white border-neutral-200 text-neutral-600 hover:border-neutral-300 hover:text-neutral-900 hover:bg-neutral-50",
                   )}
                 >
                   {cat.label}
                 </button>
               );
             })}
-
           </div>
         </div>
       </div>
 
-      {/* ── MAIN CONTENT (3 Cards Per Row) ─────────────── */}
+      {/* MAIN CONTENT (3 Cards Per Row) */}
       <main className="max-w-[1400px] mx-auto px-3 md:px-6 py-4">
-
         {/* Title bar + sort */}
         <div className="flex items-center justify-between mb-3.5 gap-4">
           <div>
-            <h2 className="text-base font-bold text-neutral-900">{dynamicTitle}</h2>
+            <h2 className="text-base font-semibold text-neutral-900">{dynamicTitle}</h2>
             <p className="text-xs text-neutral-500 mt-0.5">
-              <span className="font-semibold text-neutral-700">{filteredTransport.length}</span> routes found
+              <span className="font-medium text-neutral-700">{filteredTransport.length}</span>{" "}
+              routes found
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
@@ -434,7 +390,9 @@ export function TransportPage() {
                 className="appearance-none bg-white border border-neutral-200 rounded-lg pl-3 pr-8 py-1.5 text-xs font-semibold text-neutral-700 focus:outline-none focus:ring-2 focus:ring-purple/20 focus:border-purple transition-colors cursor-pointer"
               >
                 {SORT_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
                 ))}
               </select>
               <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-neutral-400 pointer-events-none" />
@@ -470,7 +428,7 @@ export function TransportPage() {
         )}
       </main>
 
-      {/* ── FILTERS DRAWER ── */}
+      {/* FILTERS DRAWER */}
       {filtersOpen && (
         <>
           <div

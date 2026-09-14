@@ -20,11 +20,23 @@ export interface SeasonalPricingEntry {
   label?: string; // e.g. "Peak Season", "Christmas Special"
 }
 
+/** Pricing and stay duration rules configured for a listing */
+export interface PricingRules {
+  basePrice: number;
+  weekendPrice: number;
+  minStayWeekends: number;
+  minStayWeekdays: number;
+  weeklyDiscount: number; // percentage, e.g. 10
+  monthlyDiscount: number; // percentage, e.g. 20
+}
+
 interface AvailabilityStore {
   /** Keyed by listingId, array of date entries */
   availability: Record<string, AvailabilityEntry[]>;
   /** Seasonal pricing rules per listing */
   seasonalPricing: SeasonalPricingEntry[];
+  /** Custom pricing & stay rules per listing */
+  pricingRules: Record<string, PricingRules>;
 
   // --- Date blocking ---
   /** Set the availability for a single date (toggle) */
@@ -44,6 +56,10 @@ interface AvailabilityStore {
   getSeasonalPricingForListing: (listingId: string) => SeasonalPricingEntry[];
   getEffectivePrice: (listingId: string, date: string, basePrice: number) => number;
   getSeasonalPricingForDate: (listingId: string, date: string) => SeasonalPricingEntry | undefined;
+
+  // --- Listing pricing rules ---
+  getPricingRulesForListing: (listingId: string, defaultBasePrice?: number) => PricingRules;
+  updatePricingRulesForListing: (listingId: string, rules: Partial<PricingRules>) => void;
 }
 
 // Helpers
@@ -110,6 +126,17 @@ function generateInitialSeasonalPricing(): SeasonalPricingEntry[] {
   return MOCK_LISTING_IDS.flatMap((id) => generateMockSeasonalPricing(id));
 }
 
+function generateInitialPricingRules(): Record<string, PricingRules> {
+  return {
+    h1: { basePrice: 450, weekendPrice: 550, minStayWeekends: 2, minStayWeekdays: 1, weeklyDiscount: 10, monthlyDiscount: 20 },
+    h2: { basePrice: 380, weekendPrice: 480, minStayWeekends: 2, minStayWeekdays: 1, weeklyDiscount: 10, monthlyDiscount: 15 },
+    h3: { basePrice: 420, weekendPrice: 520, minStayWeekends: 2, minStayWeekdays: 1, weeklyDiscount: 10, monthlyDiscount: 20 },
+    h4: { basePrice: 180, weekendPrice: 220, minStayWeekends: 1, minStayWeekdays: 1, weeklyDiscount: 5, monthlyDiscount: 10 },
+    h5: { basePrice: 95, weekendPrice: 120, minStayWeekends: 1, minStayWeekdays: 1, weeklyDiscount: 5, monthlyDiscount: 10 },
+    h6: { basePrice: 250, weekendPrice: 320, minStayWeekends: 2, minStayWeekdays: 1, weeklyDiscount: 10, monthlyDiscount: 20 },
+  };
+}
+
 // Store
 
 export const useAvailabilityStore = create<AvailabilityStore>()(
@@ -117,6 +144,7 @@ export const useAvailabilityStore = create<AvailabilityStore>()(
     (set, get) => ({
       availability: generateInitialAvailability(),
       seasonalPricing: generateInitialSeasonalPricing(),
+      pricingRules: generateInitialPricingRules(),
 
       // Date Blocking
 
@@ -247,6 +275,39 @@ export const useAvailabilityStore = create<AvailabilityStore>()(
         }
         return basePrice;
       },
+
+      // Listing Pricing Rules
+
+      getPricingRulesForListing: (listingId, defaultBasePrice = 850) => {
+        const rules = get().pricingRules?.[listingId];
+        if (rules) return rules;
+        return {
+          basePrice: defaultBasePrice,
+          weekendPrice: Math.round(defaultBasePrice * 1.25),
+          minStayWeekends: 2,
+          minStayWeekdays: 1,
+          weeklyDiscount: 10,
+          monthlyDiscount: 20,
+        };
+      },
+
+      updatePricingRulesForListing: (listingId, rules) =>
+        set((state) => {
+          const current = state.pricingRules?.[listingId] || {
+            basePrice: 850,
+            weekendPrice: 1050,
+            minStayWeekends: 2,
+            minStayWeekdays: 1,
+            weeklyDiscount: 10,
+            monthlyDiscount: 20,
+          };
+          return {
+            pricingRules: {
+              ...(state.pricingRules || {}),
+              [listingId]: { ...current, ...rules },
+            },
+          };
+        }),
     }),
     {
       name: "nearby-escapes-availability",
@@ -254,6 +315,7 @@ export const useAvailabilityStore = create<AvailabilityStore>()(
       partialize: (state) => ({
         availability: state.availability,
         seasonalPricing: state.seasonalPricing,
+        pricingRules: state.pricingRules,
       }),
     },
   ),

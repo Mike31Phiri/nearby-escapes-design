@@ -1,9 +1,7 @@
 import type { BookingStatus } from "./booking";
 import type { ListingStatus, ListingVertical } from "./listing";
 
-// ---------------------------------------------------------------------------
 // AdminStats — platform-wide dashboard metrics for the admin panel
-// ---------------------------------------------------------------------------
 export interface AdminStats {
   totalUsers: number;
   totalHosts: number;
@@ -21,9 +19,7 @@ export interface AdminStats {
   pendingKYC: number;
 }
 
-// ---------------------------------------------------------------------------
 // AuditLogEntry — immutable record of every admin action for compliance
-// ---------------------------------------------------------------------------
 export type AuditTargetType = "user" | "listing" | "booking" | "payout" | "package";
 
 export interface AuditLogEntry {
@@ -40,9 +36,7 @@ export interface AuditLogEntry {
   timestamp: string;
 }
 
-// ---------------------------------------------------------------------------
 // PayoutQueueItem — a pending or processed payout to a host
-// ---------------------------------------------------------------------------
 export type PayoutStatus = "pending" | "processing" | "paid";
 
 export interface PayoutQueueItem {
@@ -60,9 +54,7 @@ export interface PayoutQueueItem {
   requestedAt: string;
 }
 
-// ---------------------------------------------------------------------------
 // AdminBookingRow — enriched booking record for the admin bookings table
-// ---------------------------------------------------------------------------
 export interface AdminBookingRow {
   id: string;
   bookingRef: string;
@@ -86,9 +78,7 @@ export interface AdminBookingRow {
   vertical: ListingVertical;
 }
 
-// ---------------------------------------------------------------------------
 // AdminListingRow — enriched listing record for the admin listings table
-// ---------------------------------------------------------------------------
 export interface AdminListingRow {
   id: string;
   title: string;

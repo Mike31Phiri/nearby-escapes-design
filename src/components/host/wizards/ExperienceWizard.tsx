@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 
+import { MapLocationPicker } from "../MapLocationPicker";
 import { experienceSchema, type ExperienceFormValues } from "@/lib/validations/onboarding";
 
 const STEPS = [
@@ -43,8 +44,26 @@ const STEPS = [
   { id: "pricing", label: "Pricing", fields: ["priceAdult", "priceChild"] as const },
 ];
 
-export function ExperienceWizard() {
-  const [currentStep, setCurrentStep] = useState(0);
+export const EXPERIENCE_STEPS = STEPS;
+
+export interface ExperienceWizardProps {
+  draftId?: string;
+  initialStep?: number;
+  initialValues?: Record<string, unknown>;
+  onStepChange?: (step: number) => void;
+  onAutoSave?: (values: Record<string, unknown>, step: number) => void;
+  onPublish?: (values: Record<string, unknown>) => void;
+}
+
+export function ExperienceWizard({
+  draftId,
+  initialStep = 0,
+  initialValues,
+  onStepChange,
+  onAutoSave,
+  onPublish,
+}: ExperienceWizardProps = {}) {
+  const [currentStep, setCurrentStep] = useState(initialStep);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
@@ -59,6 +78,9 @@ export function ExperienceWizard() {
       difficulty: "Moderate",
       minGroup: 1,
       maxGroup: 10,
+      latitude: -17.8419,
+      longitude: 25.8543,
+      ...(initialValues as any),
     },
   });
 
@@ -66,6 +88,8 @@ export function ExperienceWizard() {
     control,
     handleSubmit,
     trigger,
+    watch,
+    setValue,
     formState: { errors },
   } = methods;
 
@@ -73,17 +97,30 @@ export function ExperienceWizard() {
     const fieldsToValidate = STEPS[currentStep].fields;
     const isValid = await trigger(fieldsToValidate as any);
     if (isValid) {
-      setCurrentStep((prev) => Math.min(prev + 1, STEPS.length - 1));
+      const next = Math.min(currentStep + 1, STEPS.length - 1);
+      setCurrentStep(next);
+      onStepChange?.(next);
+      onAutoSave?.(methods.getValues() as any, next);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   const prevStep = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 0));
+    const prev = Math.max(currentStep - 1, 0);
+    setCurrentStep(prev);
+    onStepChange?.(prev);
+    onAutoSave?.(methods.getValues() as any, prev);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const onSubmit = async (data: ExperienceFormValues) => {
     setIsSubmitting(true);
     try {
+      if (onPublish) {
+        await onPublish(data as any);
+        return;
+      }
+
       const payload: CreateExperiencePayload = {
         title: data.title,
         description: data.description,
@@ -98,13 +135,13 @@ export function ExperienceWizard() {
         minGroupSize: data.minGroup,
         inclusions: data.inclusions,
         exclusions: data.exclusions,
-        images: ["https://images.unsplash.com/photo-1518780664697-55e3ad937233"], // Mock image
+        images: ["https://images.unsplash.com/photo-1518780664697-55e3ad937233"],
         pricePerAdultNgwee: Math.floor((data.priceAdult || 0) * 100),
         pricePerChildNgwee: Math.floor((data.priceChild || 0) * 100),
         location: {
           address: data.meetingPoint,
-          city: "Lusaka", // Fallback since city isn't captured
-          province: "Lusaka",
+          city: "Livingstone",
+          province: "Southern",
           latitude: data.latitude,
           longitude: data.longitude,
         },
@@ -114,7 +151,7 @@ export function ExperienceWizard() {
       toast.success("Experience Created Successfully!");
       router.push("/host/listings");
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to create experience.");
+      toast.error(error.response?.data?.message || error.message || "Failed to create experience.");
       console.error(error);
     } finally {
       setIsSubmitting(false);
@@ -206,36 +243,18 @@ export function ExperienceWizard() {
               )}
             />
 
-            <div className="grid grid-cols-2 gap-4">
-              <Controller
-                name="latitude"
-                control={control}
-                render={({ field }) => (
-                  <div>
-                    <Label>Latitude</Label>
-                    <Input
-                      type="number"
-                      step="any"
-                      {...field}
-                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                    />
-                  </div>
-                )}
-              />
-              <Controller
-                name="longitude"
-                control={control}
-                render={({ field }) => (
-                  <div>
-                    <Label>Longitude</Label>
-                    <Input
-                      type="number"
-                      step="any"
-                      {...field}
-                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                    />
-                  </div>
-                )}
+            <div className="pt-2">
+              <MapLocationPicker
+                latitude={watch("latitude")}
+                longitude={watch("longitude")}
+                address={watch("meetingPoint")}
+                onChange={({ latitude, longitude, city }) => {
+                  setValue("latitude", latitude, { shouldValidate: true });
+                  setValue("longitude", longitude, { shouldValidate: true });
+                  if (city && !watch("meetingPoint")) {
+                    setValue("meetingPoint", city, { shouldValidate: true });
+                  }
+                }}
               />
             </div>
 
@@ -488,23 +507,33 @@ export function ExperienceWizard() {
         )}
 
         {/* Navigation */}
-        <div className="flex items-center justify-between pt-8 border-t mt-8">
-          <Button type="button" variant="outline" onClick={prevStep} disabled={currentStep === 0}>
-            <ChevronLeft className="h-4 w-4 mr-2" /> Back
+        <div className="flex items-center justify-between pt-8 border-t border-neutral-200/80 mt-8">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={prevStep}
+            disabled={currentStep === 0}
+            className="rounded-xl border-neutral-200/80 hover:bg-neutral-100 text-sm font-semibold h-11 px-5 cursor-pointer"
+          >
+            <ChevronLeft className="h-4 w-4 mr-1.5" /> Back
           </Button>
 
           {currentStep < STEPS.length - 1 ? (
-            <Button type="button" onClick={nextStep} className="bg-primary text-primary-foreground">
-              Continue <ChevronRight className="h-4 w-4 ml-2" />
+            <Button
+              type="button"
+              onClick={nextStep}
+              className="bg-purple text-white hover:bg-purple-hover font-semibold px-6 h-11 text-sm rounded-xl shadow-xs transition-all cursor-pointer"
+            >
+              Continue <ChevronRight className="h-4 w-4 ml-1.5" />
             </Button>
           ) : (
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-[#f2ba0d] hover:bg-[#B89430] text-[#1f1433] font-bold"
+              className="bg-purple text-white hover:bg-purple-hover font-semibold px-7 h-11 text-sm rounded-xl shadow-xs transition-all cursor-pointer"
             >
               {isSubmitting ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
-              Publish Listing
+              Publish Experience
             </Button>
           )}
         </div>

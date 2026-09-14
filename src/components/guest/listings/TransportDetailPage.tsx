@@ -20,6 +20,15 @@ import {
   Lightbulb,
   RefreshCcw,
   Bus,
+  Search,
+  AlertCircle,
+  CheckCircle2,
+  Loader2,
+  Share2,
+  X,
+  Star,
+  Sparkles,
+  ShieldCheck,
 } from "lucide-react";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useAuth } from "@/lib/store/authStore";
@@ -38,6 +47,50 @@ export function TransportDetailPage({ route, backHref = "/transport" }: Transpor
 
   const [activeImg, setActiveImg] = useState(0);
   const [showAuthDialog, setShowAuthDialog] = useState(false);
+  const [showAllPhotos, setShowAllPhotos] = useState(false);
+  const [showReviewsModal, setShowReviewsModal] = useState(false);
+
+  // Availability & Booking state
+  const today = new Date().toISOString().split("T")[0];
+  const [selectedDate, setSelectedDate] = useState("2026-07-18");
+  const [selectedDeparture, setSelectedDeparture] = useState(route.departureTime || "06:00 AM");
+  const [travelClass, setTravelClass] = useState<"standard" | "vip">("standard");
+  const [seatPreference, setSeatPreference] = useState<"window" | "aisle" | "any">("window");
+  const [passengers, setPassengers] = useState(1);
+  const [checkingAvailability, setCheckingAvailability] = useState(false);
+  const [availabilityResult, setAvailabilityResult] = useState<
+    "idle" | "available" | "unavailable"
+  >("available");
+
+  const handleShare = () => {
+    if (typeof window !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href);
+      toast.success("Route link copied to clipboard!");
+    } else {
+      toast.success("Link copied!");
+    }
+  };
+
+  const handleCheckAvailability = () => {
+    if (!selectedDate) {
+      toast.error("Please select a travel date");
+      return;
+    }
+    setCheckingAvailability(true);
+    setTimeout(() => {
+      // Transport is generally available
+      const available = Math.random() > 0.15;
+      setAvailabilityResult(available ? "available" : "unavailable");
+      setCheckingAvailability(false);
+    }, 800);
+  };
+
+  const handleProceedToBook = () => {
+    const params = new URLSearchParams({ type: "transport", id: route.id });
+    if (selectedDate) params.set("date", selectedDate);
+    params.set("guests", String(passengers));
+    router.push(`/checkout/book?${params.toString()}`);
+  };
 
   const { isAuthenticated } = useAuth();
   const { isSaved, addItem, removeItem } = useWishlistStore();
@@ -97,7 +150,7 @@ export function TransportDetailPage({ route, backHref = "/transport" }: Transpor
             Explore
           </Link>{" "}
           <span className="mx-1.5 text-black-muted/50">›</span>
-          <Link href="/zambia" className="hover:text-purple transition-colors">
+          <Link href="/" className="hover:text-purple transition-colors">
             Zambia
           </Link>{" "}
           <span className="mx-1.5 text-black-muted/50">›</span>
@@ -144,12 +197,26 @@ export function TransportDetailPage({ route, backHref = "/transport" }: Transpor
 
           <div className="absolute bottom-4 right-4 flex gap-2">
             <button
+              onClick={handleShare}
+              className="bg-white/90 backdrop-blur-sm h-9 w-9 rounded-lg shadow-lg flex items-center justify-center hover:bg-white transition-colors text-black"
+              title="Share route"
+            >
+              <Share2 className="h-4 w-4" />
+            </button>
+            <button
               onClick={handleToggleFavorite}
               className="bg-white/90 backdrop-blur-sm h-9 w-9 rounded-lg shadow-lg flex items-center justify-center hover:bg-white transition-colors text-black"
+              title="Save route"
             >
               <Heart
                 className={cn("h-4 w-4", isFavorited ? "fill-purple text-purple" : "text-black")}
               />
+            </button>
+            <button
+              onClick={() => setShowAllPhotos(true)}
+              className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg text-xs font-semibold shadow-lg flex items-center gap-1.5 hover:bg-white transition-colors text-black"
+            >
+              <span>{images.length} photos</span>
             </button>
           </div>
         </div>
@@ -162,19 +229,23 @@ export function TransportDetailPage({ route, backHref = "/transport" }: Transpor
             <div className="pt-2">
               <div className="flex justify-between items-start">
                 <div>
-                  <h1 className="text-3xl font-bold tracking-tight text-black">{title}</h1>
-                  <div className="mt-1 text-sm text-black-soft font-medium flex flex-wrap items-center gap-y-2 gap-x-4">
-                    <span className="flex items-center gap-1">
-                      <span className="bg-gold text-white px-2 py-0.5 rounded text-xs font-bold">
-                        {avgRating.toFixed(1)}
-                      </span>
-                      ({reviewCount} traveler reviews)
+                  <h1 className="text-2xl sm:text-[28px] font-semibold tracking-tight text-neutral-900 leading-tight">
+                    {title}
+                  </h1>
+                  <div className="mt-2 flex flex-wrap items-center gap-2 text-xs sm:text-sm text-neutral-600">
+                    <span className="flex items-center gap-1 font-medium text-neutral-900">
+                      <Star className="h-3.5 w-3.5 fill-[#f59e0b] text-[#f59e0b]" />
+                      {avgRating.toFixed(1)}
                     </span>
-                    <span className="text-purple font-semibold">Hosted by {hostName}</span>
+                    <span className="text-neutral-300">·</span>
+                    <span className="text-neutral-600 underline cursor-pointer font-normal">
+                      {reviewCount} reviews
+                    </span>
+                    <span className="text-neutral-300">·</span>
+                    <span className="text-neutral-600 font-normal">Zambia Scheduled Route</span>
+                    <span className="text-neutral-300">·</span>
+                    <span className="text-neutral-700 font-medium">Operator: {hostName}</span>
                   </div>
-                  <p className="text-xs text-purple mt-2 font-script text-lg">
-                    Premium comfort, budget-friendly fares. Daily service for the curious explorer.
-                  </p>
                 </div>
               </div>
 
@@ -204,9 +275,10 @@ export function TransportDetailPage({ route, backHref = "/transport" }: Transpor
               <h2 className="font-semibold text-lg text-black">About this ride</h2>
               <p className="text-sm text-black-soft leading-relaxed mt-2 whitespace-pre-wrap">
                 Operating daily for over 7 years, {hostName} is a locally-owned family business
-                providing reliable and comfortable road travel between Zambia's two biggest cities.
-                Our coaches are equipped with modern AC, free high-speed Wi-Fi, and USB charging
-                ports at every seat. We make two scheduled rest stops for food and restroom breaks.
+                providing reliable and comfortable road travel between Zambia&apos;s two biggest
+                cities. Our coaches are equipped with modern AC, free high-speed Wi-Fi, and USB
+                charging ports at every seat. We make two scheduled rest stops for food and restroom
+                breaks.
               </p>
             </div>
 
@@ -306,7 +378,10 @@ export function TransportDetailPage({ route, backHref = "/transport" }: Transpor
                   </span>{" "}
                   · {reviewCount} reviews
                 </h2>
-                <button className="text-purple text-xs font-semibold hover:underline">
+                <button
+                  onClick={() => setShowReviewsModal(true)}
+                  className="text-purple text-xs font-semibold hover:underline"
+                >
                   Read all reviews
                 </button>
               </div>
@@ -317,8 +392,8 @@ export function TransportDetailPage({ route, backHref = "/transport" }: Transpor
                     <span className="text-xs text-black-faint">Dec 2025</span>
                   </div>
                   <p className="text-sm text-black-soft mt-2">
-                    "Super reliable! The bus left exactly on time, the Wi-Fi worked the whole trip,
-                    and the AC was ice-cold. Best value for money on this route."
+                    &quot;Super reliable! The bus left exactly on time, the Wi-Fi worked the whole
+                    trip, and the AC was ice-cold. Best value for money on this route.&quot;
                   </p>
                 </div>
                 <div className="bg-white p-4 rounded-xl border border-white-soft">
@@ -327,9 +402,9 @@ export function TransportDetailPage({ route, backHref = "/transport" }: Transpor
                     <span className="text-xs text-black-faint">Nov 2025</span>
                   </div>
                   <p className="text-sm text-black-soft mt-2">
-                    "We took this bus for our group trip. The drivers were super friendly, they
+                    &quot;We took this bus for our group trip. The drivers were super friendly, they
                     helped us load our gear, and we made it to Livingstone right on time. Highly
-                    recommend!"
+                    recommend!&quot;
                   </p>
                 </div>
               </div>
@@ -352,9 +427,9 @@ export function TransportDetailPage({ route, backHref = "/transport" }: Transpor
                 </div>
               </div>
               <p className="text-sm text-black-soft mt-3 italic">
-                "We are proud to offer the youth of Zambia reliable, comfortable travel at a price
-                their pockets can handle. We reinvest everything we make to keep our buses in top
-                condition and our drivers well-paid."
+                &quot;We are proud to offer the youth of Zambia reliable, comfortable travel at a
+                price their pockets can handle. We reinvest everything we make to keep our buses in
+                top condition and our drivers well-paid.&quot;
               </p>
             </div>
           </div>
@@ -381,42 +456,175 @@ export function TransportDetailPage({ route, backHref = "/transport" }: Transpor
                 Only 12 seats left for this departure!
               </div>
 
-              <div className="py-5 space-y-3">
-                {/* Date Picker */}
-                <div className="bg-white-warm rounded-lg p-3 border border-white-soft flex justify-between items-center cursor-pointer hover:border-purple transition-colors">
-                  <div>
-                    <span className="text-[10px] text-black-faint block font-medium">
-                      SELECT DATE
-                    </span>
-                    <span className="text-sm font-semibold text-black">Aug 15, 2026</span>
+              <div className="py-4 space-y-4">
+                {/* Departure Time Slots */}
+                <div>
+                  <label className="text-[10px] text-black-faint block font-bold uppercase tracking-wider mb-1.5">
+                    DEPARTURE TIME
+                  </label>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {["06:00 AM", "11:30 AM", "15:00 PM"].map((t) => (
+                      <button
+                        key={t}
+                        type="button"
+                        onClick={() => setSelectedDeparture(t)}
+                        className={cn(
+                          "py-2 px-1 rounded-xl text-xs font-bold border transition-all text-center",
+                          selectedDeparture === t
+                            ? "border-purple bg-purple/10 text-purple"
+                            : "border-black/10 bg-white text-neutral-600 hover:border-black/20",
+                        )}
+                      >
+                        {t}
+                      </button>
+                    ))}
                   </div>
-                  <span className="text-xs text-purple font-semibold">Change</span>
+                </div>
+
+                {/* Travel Date */}
+                <div>
+                  <label className="text-[10px] text-black-faint block font-bold uppercase tracking-wider mb-1.5">
+                    TRAVEL DATE
+                  </label>
+                  <input
+                    type="date"
+                    value={selectedDate}
+                    min={today}
+                    onChange={(e) => {
+                      setSelectedDate(e.target.value);
+                      setAvailabilityResult("available");
+                    }}
+                    className="w-full bg-white-warm rounded-xl p-2.5 border border-white-soft text-sm font-semibold text-black focus:outline-none focus:ring-2 focus:ring-purple/30"
+                  />
+                </div>
+
+                {/* Travel Class */}
+                <div>
+                  <label className="text-[10px] text-black-faint block font-bold uppercase tracking-wider mb-1.5">
+                    SEAT CLASS
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setTravelClass("standard")}
+                      className={cn(
+                        "p-2.5 rounded-xl border text-xs font-bold text-center transition-all",
+                        travelClass === "standard"
+                          ? "border-purple bg-purple/10 text-purple"
+                          : "border-neutral-200 text-neutral-600",
+                      )}
+                    >
+                      Standard (K{route.price})
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTravelClass("vip")}
+                      className={cn(
+                        "p-2.5 rounded-xl border text-xs font-bold text-center transition-all",
+                        travelClass === "vip"
+                          ? "border-purple bg-purple/10 text-purple"
+                          : "border-neutral-200 text-neutral-600",
+                      )}
+                    >
+                      VIP First (+K70)
+                    </button>
+                  </div>
+                </div>
+
+                {/* Seat Preference */}
+                <div>
+                  <label className="text-[10px] text-black-faint block font-bold uppercase tracking-wider mb-1.5">
+                    SEAT PREFERENCE
+                  </label>
+                  <div className="grid grid-cols-3 gap-1.5 text-xs">
+                    {(["window", "aisle", "any"] as const).map((pref) => (
+                      <button
+                        key={pref}
+                        type="button"
+                        onClick={() => setSeatPreference(pref)}
+                        className={cn(
+                          "py-2 rounded-xl border font-bold capitalize transition-all",
+                          seatPreference === pref
+                            ? "border-purple bg-purple/10 text-purple"
+                            : "border-neutral-200 text-neutral-600",
+                        )}
+                      >
+                        {pref}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Seat Selector */}
-                <div className="bg-white-warm rounded-lg p-3 border border-white-soft flex justify-between items-center cursor-pointer hover:border-purple transition-colors">
-                  <div>
-                    <span className="text-[10px] text-black-faint block font-medium">SEATS</span>
-                    <span className="text-sm font-semibold text-black">1 seat</span>
-                  </div>
-                  <span className="text-xs text-purple font-semibold">Edit</span>
+                <div>
+                  <label className="text-[10px] text-black-faint block font-medium mb-1">
+                    SEATS
+                  </label>
+                  <select
+                    value={passengers}
+                    onChange={(e) => setPassengers(Number(e.target.value))}
+                    className="w-full bg-white-warm rounded-lg p-2.5 border border-white-soft text-sm font-semibold text-black focus:outline-none focus:ring-2 focus:ring-purple/30"
+                  >
+                    {[1, 2, 3, 4, 5, 6].map((n) => (
+                      <option key={n} value={n}>
+                        {n} seat{n !== 1 ? "s" : ""}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
-                {/* All-Inclusive Price Breakdown */}
-                <div className="pt-4 space-y-2 text-sm">
-                  <div className="flex justify-between text-black-soft">
-                    <span>1 seat x {priceDisplay}</span>
-                    <span>{priceDisplay}</span>
+                {/* Check Availability Button */}
+                <button
+                  onClick={handleCheckAvailability}
+                  disabled={checkingAvailability || !selectedDate}
+                  className="w-full bg-purple text-white rounded-xl py-3 font-semibold hover:bg-purple-hover transition-colors text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                >
+                  {checkingAvailability ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Checking availability...
+                    </>
+                  ) : (
+                    <>
+                      <Search className="h-4 w-4" />
+                      Check availability
+                    </>
+                  )}
+                </button>
+
+                {/* Availability Result */}
+                {availabilityResult === "available" && (
+                  <div className="p-2.5 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2 text-green-700 text-xs font-semibold">
+                    <CheckCircle2 className="h-4 w-4 shrink-0" />
+                    Seats available! {passengers} seat{passengers !== 1 ? "s" : ""} remaining
                   </div>
-                  <div className="flex justify-between text-black-soft">
-                    <span>Luggage allowance</span>
-                    <span className="text-green-600 font-medium">Included</span>
+                )}
+                {availabilityResult === "unavailable" && (
+                  <div className="p-2.5 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700 text-xs font-semibold">
+                    <AlertCircle className="h-4 w-4 shrink-0" />
+                    Sold out for this date. Try another date.
                   </div>
-                  <div className="flex justify-between text-black font-bold border-t border-white-soft pt-3 mt-2">
-                    <span>Total (ZMW)</span>
-                    <span>{priceDisplay}</span>
+                )}
+
+                {/* Price Breakdown (show when available) */}
+                {availabilityResult === "available" && (
+                  <div className="pt-3 border-t border-white-soft space-y-2 text-sm">
+                    <div className="flex justify-between text-black-soft">
+                      <span>
+                        {passengers} seat{passengers !== 1 ? "s" : ""} x {priceDisplay}
+                      </span>
+                      <span>{`K${(route.price * passengers).toLocaleString()}`}</span>
+                    </div>
+                    <div className="flex justify-between text-black-soft">
+                      <span>Luggage allowance</span>
+                      <span className="text-green-600 font-medium">Included</span>
+                    </div>
+                    <div className="flex justify-between text-black font-bold border-t border-white-soft pt-3 mt-2">
+                      <span>Total (ZMW)</span>
+                      <span>{`K${(route.price * passengers).toLocaleString()}`}</span>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Cancellation policy */}
@@ -426,12 +634,21 @@ export function TransportDetailPage({ route, backHref = "/transport" }: Transpor
                 </span>
               </div>
 
-              <button
-                onClick={() => router.push(`/checkout/book?type=transport&id=${route.id}`)}
-                className="w-full bg-purple text-white rounded-xl py-3.5 font-semibold hover:bg-purple-hover transition-colors text-base shadow-md shadow-purple/20"
-              >
-                Book your seat
-              </button>
+              {availabilityResult === "available" ? (
+                <button
+                  onClick={handleProceedToBook}
+                  className="w-full bg-purple text-white rounded-xl py-3.5 font-semibold hover:bg-purple-hover transition-colors text-base shadow-md shadow-purple/20"
+                >
+                  Book your seat
+                </button>
+              ) : (
+                <button
+                  disabled
+                  className="w-full bg-black/10 text-black-faint rounded-xl py-3.5 font-semibold text-base cursor-not-allowed"
+                >
+                  Select date to book
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -513,19 +730,154 @@ export function TransportDetailPage({ route, backHref = "/transport" }: Transpor
             <span className="text-xs text-black-muted">/ seat</span>
           </div>
           <div className="text-xs text-black-muted flex items-center gap-1">
-            <span className="text-red-700 font-bold">12 seats left!</span> ·{" "}
-            <span className="bg-gold text-white px-1 py-0.5 rounded text-[10px] font-bold">
-              {avgRating.toFixed(1)}
-            </span>
+            {availabilityResult === "available" ? (
+              <span className="text-green-600 font-bold">Available</span>
+            ) : (
+              <>
+                <span className="text-red-700 font-bold">12 seats left!</span> ·{" "}
+                <span className="bg-gold text-white px-1 py-0.5 rounded text-[10px] font-bold">
+                  {avgRating.toFixed(1)}
+                </span>
+              </>
+            )}
           </div>
         </div>
-        <button
-          onClick={() => router.push(`/checkout/book?type=transport&id=${route.id}`)}
-          className="bg-purple text-white px-6 py-3 rounded-full font-semibold shadow-md hover:bg-purple-hover transition-colors text-sm flex-1 ml-4 max-w-[140px]"
-        >
-          Book now
-        </button>
+        {availabilityResult === "available" ? (
+          <button
+            onClick={handleProceedToBook}
+            className="bg-purple text-white px-6 py-3 rounded-full font-semibold shadow-md hover:bg-purple-hover transition-colors text-sm flex-1 ml-4 max-w-[140px]"
+          >
+            Book now
+          </button>
+        ) : (
+          <button
+            onClick={handleCheckAvailability}
+            disabled={checkingAvailability || !selectedDate}
+            className="bg-purple text-white px-6 py-3 rounded-full font-semibold shadow-md hover:bg-purple-hover transition-colors text-sm flex-1 ml-4 max-w-[140px] disabled:opacity-50"
+          >
+            {checkingAvailability ? "Checking..." : "Check dates"}
+          </button>
+        )}
       </div>
+
+      {/* All Reviews Modal */}
+      {showReviewsModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in"
+          onClick={() => setShowReviewsModal(false)}
+        >
+          <div
+            className="bg-white rounded-3xl max-w-xl w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl animate-in zoom-in-95"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6 border-b border-black/[0.08] flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold text-neutral-900">
+                  {avgRating.toFixed(1)} ★ ({reviewCount} reviews)
+                </h3>
+                <p className="text-xs text-neutral-500">Verified passenger reviews for {title}</p>
+              </div>
+              <button
+                onClick={() => setShowReviewsModal(false)}
+                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto space-y-4">
+              <div className="grid grid-cols-2 gap-2 p-3.5 bg-neutral-50 rounded-2xl text-xs">
+                <div className="flex justify-between text-neutral-600">
+                  <span>Punctuality</span>
+                  <span className="font-bold text-neutral-900">4.9 ★</span>
+                </div>
+                <div className="flex justify-between text-neutral-600">
+                  <span>Seat Comfort</span>
+                  <span className="font-bold text-neutral-900">4.8 ★</span>
+                </div>
+                <div className="flex justify-between text-neutral-600">
+                  <span>Driver Safety</span>
+                  <span className="font-bold text-neutral-900">5.0 ★</span>
+                </div>
+                <div className="flex justify-between text-neutral-600">
+                  <span>AC &amp; Wi-Fi</span>
+                  <span className="font-bold text-neutral-900">4.7 ★</span>
+                </div>
+              </div>
+
+              {reviews.map((r: any, idx: number) => (
+                <div
+                  key={idx}
+                  className="p-4 rounded-2xl bg-neutral-50 border border-black/[0.05] space-y-1.5"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-xs text-neutral-900">
+                      {r.userName || r.author}
+                    </span>
+                    <span className="text-[10px] text-neutral-400">{r.date}</span>
+                  </div>
+                  <div className="text-[10px] text-amber-500 font-bold">★★★★★ 5.0</div>
+                  <p className="text-xs text-neutral-700 leading-relaxed">
+                    &quot;{r.comment}&quot;
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Full-Screen Photo Lightbox */}
+      {showAllPhotos && (
+        <div
+          className="fixed inset-0 z-50 bg-black flex flex-col animate-in fade-in"
+          onClick={() => setShowAllPhotos(false)}
+        >
+          <div className="absolute top-0 inset-x-0 p-5 flex items-center justify-between z-10 bg-gradient-to-b from-black/80 to-transparent">
+            <span className="text-white font-bold text-sm">
+              {activeImg + 1} / {images.length} — {title}
+            </span>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowAllPhotos(false);
+              }}
+              className="h-9 w-9 rounded-full bg-white/20 text-white flex items-center justify-center hover:bg-white/30 transition-colors"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <div className="flex-1 flex items-center justify-center relative p-4">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                prevImg();
+              }}
+              className="absolute left-4 z-10 h-12 w-12 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+
+            <img
+              src={images[activeImg]}
+              alt={title}
+              className="max-h-[85vh] max-w-full object-contain rounded-xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                nextImg();
+              }}
+              className="absolute right-4 z-10 h-12 w-12 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
+          </div>
+        </div>
+      )}
 
       <AuthGuardDialog
         isOpen={showAuthDialog}

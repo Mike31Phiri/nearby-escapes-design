@@ -11,20 +11,20 @@ interface HostPageHeaderProps {
 
 export function HostPageHeader({ title, description, actions }: HostPageHeaderProps) {
   return (
-    <div className="bg-white border-b border-neutral-200 w-full">
-      <div className="mx-auto max-w-7xl px-4 md:px-6 py-4 md:py-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h1 className="font-display text-lg md:text-xl font-bold tracking-tight text-neutral-900 leading-[1.2]">
+    <div className="bg-white border-b border-neutral-200/80 w-full shadow-2xs">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+          <div className="min-w-0">
+            <h1 className="font-display text-lg sm:text-xl md:text-2xl font-semibold tracking-tight text-neutral-900 leading-snug">
               {title}
             </h1>
             {description && (
-              <p className="text-neutral-500 mt-0.5 text-sm max-w-lg leading-relaxed">
+              <p className="text-neutral-500 mt-0.5 sm:mt-1 text-xs sm:text-sm max-w-xl leading-relaxed">
                 {description}
               </p>
             )}
           </div>
-          {actions && <div className="flex items-center gap-3 shrink-0">{actions}</div>}
+          {actions && <div className="flex items-center gap-2.5 sm:gap-3 shrink-0 flex-wrap">{actions}</div>}
         </div>
       </div>
     </div>

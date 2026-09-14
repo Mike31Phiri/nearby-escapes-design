@@ -1,9 +1,7 @@
 import type { ExperienceDifficulty, TransportServiceType } from "./listing";
 import type { ZambiaProvince } from "./search";
 
-// ---------------------------------------------------------------------------
 // StayFilterState — UI filter state for the Stay vertical
-// ---------------------------------------------------------------------------
 export interface StayFilterState {
   /** [minNgwee, maxNgwee] nightly rate range (integers) */
   priceRange: [number, number];
@@ -16,9 +14,7 @@ export interface StayFilterState {
   categories: string[];
 }
 
-// ---------------------------------------------------------------------------
 // ExperienceFilterState — UI filter state for the Experience vertical
-// ---------------------------------------------------------------------------
 export interface ExperienceFilterState {
   /** [minNgwee, maxNgwee] per-adult price range (integers) */
   priceRange: [number, number];
@@ -32,9 +28,7 @@ export interface ExperienceFilterState {
   province?: ZambiaProvince;
 }
 
-// ---------------------------------------------------------------------------
 // TransportFilterState — UI filter state for the Transport vertical
-// ---------------------------------------------------------------------------
 export interface TransportFilterState {
   serviceType?: TransportServiceType;
   /** e.g. ['SUV', 'Minibus', 'Saloon'] */
@@ -45,9 +39,7 @@ export interface TransportFilterState {
   priceRange: [number, number];
 }
 
-// ---------------------------------------------------------------------------
 // PackageFilterState — UI filter state for the Package vertical
-// ---------------------------------------------------------------------------
 export interface PackageFilterState {
   /** e.g. ['Adventure', 'Honeymoon', 'Family'] */
   categories: string[];

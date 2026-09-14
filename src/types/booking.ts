@@ -3,9 +3,7 @@ import type { ListingVertical } from "./listing";
 export type BookingStatus = "confirmed" | "completed" | "cancelled";
 // NOTE: No 'pending' — the platform is Instant Book only.
 
-// ---------------------------------------------------------------------------
 // Booking — one line-item booking for a single listing
-// ---------------------------------------------------------------------------
 export interface Booking {
   id: string;
   /** The parent Trip this booking belongs to */
@@ -29,9 +27,7 @@ export interface Booking {
   createdAt: string;
 }
 
-// ---------------------------------------------------------------------------
 // Trip — groups related bookings for a single guest itinerary
-// ---------------------------------------------------------------------------
 export interface Trip {
   id: string;
   guestId: string;
@@ -46,9 +42,7 @@ export interface Trip {
   createdAt: string;
 }
 
-// ---------------------------------------------------------------------------
 // AddOn — an extra item attached to a trip after initial booking
-// ---------------------------------------------------------------------------
 export interface AddOn {
   id: string;
   tripId: string;

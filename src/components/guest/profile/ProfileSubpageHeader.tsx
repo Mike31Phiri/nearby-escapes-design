@@ -12,16 +12,16 @@ export function ProfileSubpageHeader({ title, rightAction }: ProfileSubpageHeade
   const router = useRouter();
 
   return (
-    <div className="w-full bg-white border-b border-white-soft px-4 py-4 sticky top-0 z-10 flex justify-between items-center">
+    <div className="w-full bg-white border-b border-neutral-200/80 px-4 py-3.5 sticky top-0 z-10 flex justify-between items-center">
       <button
         onClick={() => router.back()}
-        className="p-1 hover:bg-white-soft rounded-full transition text-black"
+        className="p-1.5 hover:bg-neutral-100 rounded-full transition text-neutral-700 hover:text-neutral-900"
         aria-label="Go back"
       >
-        <ChevronLeft className="w-6 h-6" />
+        <ChevronLeft className="w-5 h-5" />
       </button>
-      <h1 className="text-lg font-bold text-black">{title}</h1>
-      {rightAction ? rightAction : <div className="w-6"></div>}
+      <h1 className="text-base font-semibold text-neutral-900">{title}</h1>
+      {rightAction ? rightAction : <div className="w-8"></div>}
     </div>
   );
 }

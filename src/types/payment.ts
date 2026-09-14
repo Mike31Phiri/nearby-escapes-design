@@ -2,9 +2,7 @@ export type PaymentStatus = "pending" | "processing" | "succeeded" | "failed" | 
 
 export type PaymentMethod = "card" | "mobile_money";
 
-// ---------------------------------------------------------------------------
 // DPOPayment — a completed or in-flight payment record via DPO Pay
-// ---------------------------------------------------------------------------
 export interface DPOPayment {
   id: string;
   bookingId: string;
@@ -16,7 +14,7 @@ export interface DPOPayment {
   currency: "ZMW";
   method: PaymentMethod;
   status: PaymentStatus;
-  /**
+   /**
    * The src URL for the DPO-hosted payment iframe.
    * Render this inside an <iframe> on the checkout page.
    * e.g. 'https://secure.3gdirectpay.com/payv2.php?ID=<token>'
@@ -26,14 +24,12 @@ export interface DPOPayment {
   updatedAt: string;
 }
 
-// ---------------------------------------------------------------------------
 // PaymentIntent — short-lived object used to initialise the checkout flow
-// ---------------------------------------------------------------------------
 export interface PaymentIntent {
   bookingId: string;
   /** Amount the guest will be charged, in Ngwee (integer). Never float. */
   amountNgwee: number;
-  /**
+   /**
    * The DPO-hosted iframe URL to embed on the checkout page.
    * Valid only until expiresAt.
    */

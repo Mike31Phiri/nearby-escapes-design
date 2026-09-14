@@ -85,15 +85,13 @@ export function AboutPage() {
             Home
           </Link>
           <div className="max-w-3xl">
-            <p className="text-[#1f1433] text-[10px] font-bold uppercase tracking-[0.12em] mb-4">
+            <p className="text-white/40 text-[10px] font-medium uppercase tracking-[0.10em] mb-4">
               Our story
             </p>
-            <h1 className="font-display text-3xl md:text-4xl lg:text-[3.25rem] font-black text-white leading-[1.1] mb-5">
-              Connecting guests with the{" "}
-              <span className="font-script text-[1.2em] font-normal text-gold lowercase">real</span>{" "}
-              Zambia
+            <h1 className="text-2xl md:text-3xl lg:text-[2.5rem] font-semibold text-white leading-[1.15] tracking-[-0.02em] mb-5">
+              Connecting guests with the real Zambia
             </h1>
-            <p className="text-white/60 text-[15px] leading-relaxed max-w-xl">
+            <p className="text-white/50 text-[14px] leading-relaxed max-w-xl">
               Nearby Escapes is a Zambian-built marketplace that helps you discover stays,
               experiences, and transport — all curated by locals who know Zambia best.
             </p>
@@ -106,9 +104,11 @@ export function AboutPage() {
         <div className="bg-white rounded-2xl shadow-[0_4px_24px_rgba(42,27,61,0.10)] border border-[#E0DBD0] divide-y md:divide-y-0 md:divide-x divide-[#E0DBD0] grid grid-cols-2 md:grid-cols-4 overflow-hidden">
           {stats.map(({ value, label, sub }) => (
             <div key={label} className="py-5 text-center">
-              <p className="font-display text-2xl md:text-3xl font-black text-[#1f1433]">{value}</p>
-              <p className="text-sm text-[#64748B] mt-0.5 font-medium">{label}</p>
-              {sub && <p className="text-[10px] text-[#64748B]/60">{sub}</p>}
+              <p className="text-xl md:text-2xl font-semibold text-neutral-900 tracking-[-0.02em]">
+                {value}
+              </p>
+              <p className="text-[12px] text-neutral-500 mt-0.5">{label}</p>
+              {sub && <p className="text-[10px] text-neutral-400">{sub}</p>}
             </div>
           ))}
         </div>
@@ -120,14 +120,14 @@ export function AboutPage() {
           <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <Quote className="h-5 w-5 text-[#1f1433]" />
-                <span className="text-[10px] font-bold text-[#1f1433] uppercase tracking-[0.12em]">
+                <Quote className="h-4 w-4 text-neutral-400" />
+                <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-[0.10em]">
                   Our mission
                 </span>
               </div>
-              <h2 className="font-display text-2xl md:text-3xl font-bold text-[#334155] leading-[1.2] mb-5">
+              <h2 className="text-xl md:text-2xl font-semibold text-neutral-800 tracking-[-0.02em] leading-[1.25] mb-5">
                 Zambia is full of hidden escapes.{" "}
-                <span className="text-[#1f1433]">We make them easy to find.</span>
+                <span className="text-neutral-500">We make them easy to find.</span>
               </h2>
               <div className="space-y-4 text-[15px] text-[#64748B] leading-relaxed">
                 <p>
@@ -170,10 +170,12 @@ export function AboutPage() {
         <section className="bg-[#f2ba0d]">
           <div className="mx-auto max-w-7xl px-4 md:px-8 py-14 md:py-16">
             <div className="text-center mb-10 md:mb-12">
-              <p className="text-[#1f1433] text-[10px] font-bold uppercase tracking-[0.12em] mb-3">
+              <p className="text-white/40 text-[10px] font-medium uppercase tracking-[0.10em] mb-2">
                 What we stand for
               </p>
-              <h2 className="font-display text-2xl md:text-3xl font-bold text-white">Our values</h2>
+              <h2 className="text-xl md:text-2xl font-semibold text-white tracking-[-0.02em]">
+                Our values
+              </h2>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
               {values.map(({ icon: Icon, title, desc }) => (
@@ -181,11 +183,11 @@ export function AboutPage() {
                   key={title}
                   className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/[0.08] transition-colors"
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f2ba0d]/15 text-[#1f1433] mb-4">
-                    <Icon className="h-5 w-5" />
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 text-white mb-4">
+                    <Icon className="h-4 w-4" />
                   </div>
-                  <h3 className="text-white font-bold text-base mb-2">{title}</h3>
-                  <p className="text-[#9B95A8] text-[13px] leading-relaxed">{desc}</p>
+                  <h3 className="text-white font-medium text-[14px] mb-2">{title}</h3>
+                  <p className="text-white/40 text-[12px] leading-relaxed">{desc}</p>
                 </div>
               ))}
             </div>
@@ -195,10 +197,10 @@ export function AboutPage() {
         {/*  Timeline  */}
         <section className="mx-auto max-w-7xl px-4 md:px-8 py-14 md:py-16">
           <div className="text-center mb-10 md:mb-12">
-            <p className="text-[#1f1433] text-[10px] font-bold uppercase tracking-[0.12em] mb-3">
+            <p className="text-neutral-400 text-[10px] font-medium uppercase tracking-[0.10em] mb-2">
               Our journey
             </p>
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-[#334155]">
+            <h2 className="text-xl md:text-2xl font-semibold text-neutral-800 tracking-[-0.02em]">
               How we got here
             </h2>
           </div>
@@ -219,11 +221,11 @@ export function AboutPage() {
                       i % 2 === 0 ? "md:text-right md:pr-12" : "md:pl-12"
                     }`}
                   >
-                    <span className="inline-block text-[#1f1433] text-sm font-black tracking-widest mb-1">
+                    <span className="inline-block text-neutral-400 text-[11px] font-medium tracking-widest mb-1">
                       {year}
                     </span>
-                    <h3 className="font-display text-xl font-bold text-[#334155] mb-1">{title}</h3>
-                    <p className="text-base text-[#64748B] leading-relaxed">{desc}</p>
+                    <h3 className="text-[15px] font-semibold text-neutral-800 mb-1">{title}</h3>
+                    <p className="text-[13px] text-neutral-500 leading-relaxed">{desc}</p>
                   </div>
                   {/* Dot */}
                   <div className="absolute left-4 md:left-1/2 top-1 w-3 h-3 rounded-full bg-[#f2ba0d] border-2 border-white -translate-x-1/2 z-10" />
@@ -239,21 +241,21 @@ export function AboutPage() {
         <section className="bg-white border-y border-[#E0DBD0]">
           <div className="mx-auto max-w-7xl px-4 md:px-8 py-14 md:py-16">
             <div className="text-center mb-10">
-              <p className="text-[#1f1433] text-[10px] font-bold uppercase tracking-[0.12em] mb-3">
+              <p className="text-neutral-400 text-[10px] font-medium uppercase tracking-[0.10em] mb-2">
                 The people behind it
               </p>
-              <h2 className="font-display text-2xl md:text-3xl font-bold text-[#334155]">
+              <h2 className="text-xl md:text-2xl font-semibold text-neutral-800 tracking-[-0.02em]">
                 Meet the team
               </h2>
             </div>
             <div className="flex flex-wrap justify-center gap-8 md:gap-12">
               {team.map(({ name, role, initials }) => (
                 <div key={name} className="text-center">
-                  <div className="mx-auto h-16 w-16 rounded-full bg-[#f2ba0d] flex items-center justify-center text-white font-bold text-xl mb-3">
+                  <div className="mx-auto h-14 w-14 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 font-medium text-base mb-3">
                     {initials}
                   </div>
-                  <h3 className="font-bold text-base text-[#334155]">{name}</h3>
-                  <p className="text-sm text-[#64748B]">{role}</p>
+                  <h3 className="font-medium text-[14px] text-neutral-800">{name}</h3>
+                  <p className="text-[12px] text-neutral-400">{role}</p>
                 </div>
               ))}
             </div>
@@ -265,23 +267,23 @@ export function AboutPage() {
           <div className="bg-gradient-to-br from-[#1f1433] to-[#1A0B2D] rounded-3xl overflow-hidden">
             <div className="relative px-6 md:px-12 py-12 md:py-16 text-center">
               <div className="relative z-10 max-w-2xl mx-auto">
-                <h2 className="font-display text-2xl md:text-3xl font-bold text-white mb-3">
+                <h2 className="text-xl md:text-2xl font-semibold text-white tracking-[-0.02em] mb-3">
                   Ready to explore Zambia?
                 </h2>
-                <p className="text-[#9B95A8] text-base md:text-[15px] leading-relaxed mb-8">
+                <p className="text-white/50 text-[13px] md:text-[14px] leading-relaxed mb-8">
                   Whether you&apos;re planning a weekend escape or a once-in-a-lifetime safari,
                   Nearby Escapes makes it easy to discover, book, and enjoy the best of Zambia.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <Link
                     href="/explore"
-                    className="inline-flex items-center gap-2 h-12 px-7 rounded-xl bg-[#f2ba0d] text-[#334155] font-bold text-base hover:bg-[#d4b065] transition-colors"
+                    className="inline-flex items-center gap-2 h-11 px-6 rounded-xl bg-[#f2ba0d] text-neutral-900 font-medium text-[13px] hover:bg-[#d4b065] transition-colors"
                   >
                     Start exploring <ArrowRight className="h-4 w-4" />
                   </Link>
                   <Link
                     href="/become-host"
-                    className="inline-flex items-center gap-2 h-12 px-7 rounded-xl border border-white/20 text-white font-bold text-base hover:bg-white/5 transition-colors"
+                    className="inline-flex items-center gap-2 h-11 px-6 rounded-xl border border-white/20 text-white font-medium text-[13px] hover:bg-white/5 transition-colors"
                   >
                     Become a host
                   </Link>

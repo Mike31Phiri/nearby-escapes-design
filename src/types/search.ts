@@ -1,8 +1,6 @@
 import type { ExperienceDifficulty, TransportServiceType } from "./listing";
 
-// ---------------------------------------------------------------------------
 // Zambia's 10 provinces
-// ---------------------------------------------------------------------------
 export type ZambiaProvince =
   | "Central"
   | "Copperbelt"
@@ -15,9 +13,7 @@ export type ZambiaProvince =
   | "Southern"
   | "Western";
 
-// ---------------------------------------------------------------------------
 // Per-vertical search parameter shapes
-// ---------------------------------------------------------------------------
 
 export interface StaySearchParams {
   province?: ZambiaProvince;
@@ -73,9 +69,7 @@ export interface PackageSearchParams {
   page?: number;
 }
 
-// ---------------------------------------------------------------------------
 // Generic paginated search result wrapper
-// ---------------------------------------------------------------------------
 export interface SearchResult<T> {
   items: T[];
   total: number;

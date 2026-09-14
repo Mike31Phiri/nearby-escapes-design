@@ -16,6 +16,8 @@ import {
   ChevronDown,
   Loader2,
   Phone,
+  Sparkles,
+  HelpCircle,
 } from "lucide-react";
 import { EnvelopeSimple as MessageSquare } from "@phosphor-icons/react";
 import { Label } from "@/components/ui/label";
@@ -37,13 +39,14 @@ function PasswordStrength({ password }: { password: string }) {
         score: 0,
         label: "Enter a password",
         color: "text-black-faint",
-        bar: "bg-purple-border",
+        bar: "bg-black/[0.08]",
       };
     if (val.length < 6)
       return { score: 1, label: "Too short", color: "text-red-500", bar: "bg-red-400" };
-    if (val.length < 8) return { score: 2, label: "Weak", color: "text-gold", bar: "bg-gold" };
+    if (val.length < 8)
+      return { score: 2, label: "Weak", color: "text-amber-500", bar: "bg-amber-400" };
     if (val.length < 12) return { score: 3, label: "Good", color: "text-purple", bar: "bg-purple" };
-    return { score: 4, label: "Strong", color: "text-purple", bar: "bg-purple" };
+    return { score: 4, label: "Strong", color: "text-emerald-600", bar: "bg-emerald-500" };
   };
   const strength = getStrength(password);
   return (
@@ -54,7 +57,7 @@ function PasswordStrength({ password }: { password: string }) {
             key={i}
             className={cn(
               "h-1 flex-1 rounded-full transition-colors duration-300",
-              i <= strength.score ? strength.bar : "bg-purple-border",
+              i <= strength.score ? strength.bar : "bg-black/[0.08]",
             )}
           />
         ))}
@@ -77,16 +80,16 @@ function OtpInputs({
   fieldId: string;
 }) {
   return (
-    <div className="flex gap-3 justify-center">
+    <div className="flex gap-2.5 sm:gap-3 justify-center">
       {value.map((digit, idx) => (
         <input
           key={idx}
           id={`${fieldId}-${idx}`}
           className={cn(
-            "w-12 h-14 md:w-14 md:h-16 rounded-2xl border-2 text-center text-xl md:text-2xl font-bold text-black font-sans bg-white outline-none transition-all duration-200",
+            "w-11 h-13 sm:w-13 sm:h-15 rounded-2xl border-2 text-center text-xl sm:text-2xl font-bold text-black font-sans bg-white outline-none transition-all duration-200",
             digit
-              ? "border-purple bg-gold/5"
-              : "border-purple-border focus:border-purple focus:ring-2 focus:ring-purple/10",
+              ? "border-purple bg-purple/[0.03]"
+              : "border-black/[0.1] focus:border-purple focus:ring-2 focus:ring-purple/10",
           )}
           type="text"
           inputMode="numeric"
@@ -111,7 +114,7 @@ function SubmitButton({ loading, children }: { loading: boolean; children: React
     <button
       type="submit"
       disabled={loading}
-      className="w-full py-3.5 bg-gold hover:bg-gold-hover disabled:opacity-60 disabled:cursor-not-allowed text-black text-[15px] font-bold rounded-full transition-all duration-200 shadow-md flex items-center justify-center gap-2"
+      className="w-full py-3.5 bg-[var(--color-yellow,#ffca28)] hover:brightness-95 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed text-black text-[15px] font-bold rounded-2xl transition-all duration-200 shadow-md shadow-black/[0.04] flex items-center justify-center gap-2"
     >
       {loading && <Loader2 className="h-4 w-4 animate-spin" />}
       {children}
@@ -137,7 +140,7 @@ function InputField({
       )}
       <input
         className={cn(
-          "w-full py-3 rounded-xl border border-purple-border bg-white text-[15px] font-medium text-black outline-none transition-all focus:border-purple focus:ring-2 focus:ring-purple/10 placeholder:text-black-faint",
+          "w-full py-3 rounded-xl border border-black/[0.12] bg-white text-[15px] font-medium text-black outline-none transition-all focus:border-purple focus:ring-2 focus:ring-purple/10 placeholder:text-black-faint/60",
           Icon ? "pl-10" : "pl-4",
           rightSlot ? "pr-11" : "pr-4",
           className,
@@ -157,73 +160,13 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Left brand panel
-const heroContent = {
-  login: {
-    eyebrow: "Welcome back",
-    headline: "Your next escape\nis waiting",
-    sub: "Sign in to manage your bookings, saved lodges, and upcoming trips.",
-  },
-  register: {
-    eyebrow: "Join free today",
-    headline: "Find your\nhidden gem",
-    sub: "Create an account and start discovering Zambia's best kept secrets.",
-  },
-  otp: {
-    eyebrow: "Almost there",
-    headline: "Verify your\nnumber",
-    sub: "Enter the 6-digit code we sent to your phone to continue.",
-  },
-  reset: {
-    eyebrow: "Account recovery",
-    headline: "Reset your\npassword",
-    sub: "We'll help you get back into your account in just a few steps.",
-  },
-};
-
-function BrandPanel({ tab }: { tab: "login" | "register" | "otp" | "reset" }) {
-  const c = heroContent[tab];
-  return (
-    <div className="hidden lg:flex lg:w-[44%] xl:w-[40%] bg-purple-deep flex-col justify-between p-10 xl:p-14 relative overflow-hidden shrink-0">
-      <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-purple/30 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-gold/10 blur-2xl pointer-events-none" />
-
-      <Link href="/" className="flex items-center gap-1.5 no-underline z-10 w-max">
-        <span className="text-xl font-semibold text-white tracking-tight">Nearby</span>
-        <span className="font-script text-purple text-[1.3em] leading-none">Escapes</span>
-      </Link>
-
-      <div className="relative z-10 mt-auto">
-        <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-gold mb-3">
-          {c.eyebrow}
-        </p>
-        <h1 className="font-sans text-[2.5rem] xl:text-[3rem] font-bold text-white leading-[1.15] tracking-tight whitespace-pre-line">
-          {c.headline}
-        </h1>
-        <p className="text-base text-white/60 mt-3 leading-relaxed max-w-sm">{c.sub}</p>
-      </div>
-
-      <div className="relative z-10 mt-10 flex flex-col gap-2.5">
-        {["SSL encrypted & secure", "No credit card required", "Cancel anytime"].map((item) => (
-          <div key={item} className="flex items-center gap-2.5">
-            <div className="h-5 w-5 rounded-full bg-gold/20 flex items-center justify-center shrink-0">
-              <Check className="h-3 w-3 text-gold" strokeWidth={2.5} />
-            </div>
-            <span className="text-sm text-white/70">{item}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 // Eye toggle
 function EyeToggle({ show, onToggle }: { show: boolean; onToggle: () => void }) {
   return (
     <button
       type="button"
       onClick={onToggle}
-      className="text-black-faint hover:text-black-soft transition-colors"
+      className="text-black-faint hover:text-black transition-colors p-1"
     >
       {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
     </button>
@@ -248,53 +191,59 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
-  const [agreeTerms, setAgreeTerms] = useState(true);
-  const [dealsAlerts, setDealsAlerts] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(false);
 
-  const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
-  const [secs, setSecs] = useState(522);
+  // OTP state
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [secs, setSecs] = useState(59);
 
-  const [resetStep, setResetStep] = useState<1 | 2 | 3>(1);
+  // Reset state
+  const [resetStep, setResetStep] = useState(1);
   const [resetEmail, setResetEmail] = useState("");
-  const [resetOtp, setResetOtp] = useState<string[]>(Array(6).fill(""));
+  const [resetOtp, setResetOtp] = useState(["", "", "", "", "", ""]);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
-    if (activeTab !== "otp") return;
-    const timer = setInterval(() => setSecs((s) => (s > 0 ? s - 1 : 0)), 1000);
-    return () => clearInterval(timer);
-  }, [activeTab]);
+    if (activeTab === "otp" && secs > 0) {
+      const timer = setInterval(() => setSecs((s) => s - 1), 1000);
+      return () => clearInterval(timer);
+    }
+  }, [activeTab, secs]);
 
-  const formatTimer = (time: number) => {
-    const m = Math.floor(time / 60);
-    const s = time % 60;
-    return `${m}:${String(s).padStart(2, "0")}`;
-  };
+  const handleOtpChange = (index: number, val: string, fieldId: string) => {
+    const isMainOtp = fieldId === "otp";
+    const current = isMainOtp ? [...otp] : [...resetOtp];
+    current[index] = val;
+    if (isMainOtp) setOtp(current);
+    else setResetOtp(current);
 
-  const handleOtpChange = (index: number, val: string, field: "otp" | "resetOtp") => {
-    const target = field === "otp" ? otp : resetOtp;
-    const setTarget = field === "otp" ? setOtp : setResetOtp;
-    const next = [...target];
-    next[index] = val;
-    setTarget(next);
-    if (val && index < 5) document.getElementById(`${field}-${index + 1}`)?.focus();
+    if (val && index < 5) {
+      const nextInput = document.getElementById(`${fieldId}-${index + 1}`);
+      nextInput?.focus();
+    }
   };
 
   const handleOtpKeyDown = (
     index: number,
     e: React.KeyboardEvent<HTMLInputElement>,
-    field: "otp" | "resetOtp",
+    fieldId: string,
   ) => {
-    const target = field === "otp" ? otp : resetOtp;
-    const setTarget = field === "otp" ? setOtp : setResetOtp;
-    if (e.key === "Backspace" && !target[index] && index > 0) {
-      const next = [...target];
-      next[index - 1] = "";
-      setTarget(next);
-      document.getElementById(`${field}-${index - 1}`)?.focus();
+    const isMainOtp = fieldId === "otp";
+    const current = isMainOtp ? otp : resetOtp;
+
+    if (e.key === "Backspace" && !current[index] && index > 0) {
+      const prevInput = document.getElementById(`${fieldId}-${index - 1}`);
+      prevInput?.focus();
     }
+  };
+
+  const formatTimer = (s: number) => {
+    const m = Math.floor(s / 60);
+    const rem = s % 60;
+    return `${m}:${rem < 10 ? "0" : ""}${rem}`;
   };
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
@@ -307,7 +256,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
     try {
       const { user } = await authApi.login({ email, password });
       setUser(user);
-      toast.success(`Welcome back, ${user.name.split("")[0]}!`);
+      toast.success(`Welcome back, ${user.name.split(" ")[0]}!`);
       const dest = user.roles?.includes("host")
         ? "/host"
         : user.roles?.includes("admin")
@@ -403,35 +352,66 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
   };
 
   return (
-    <div className="min-h-screen flex bg-white font-sans">
-      <BrandPanel tab={activeTab} />
+    <div className="min-h-screen flex flex-col justify-between bg-[#fbfafc] font-sans relative overflow-hidden">
+      {/* Subtle modern ambient background glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-b from-[#6b2bb8]/5 via-[#ffca28]/5 to-transparent blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-24 right-0 w-[400px] h-[400px] bg-[#6b2bb8]/5 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="flex-1 flex flex-col min-h-screen">
-        {/* Mobile logo bar */}
-        <div className="lg:hidden flex items-center px-5 py-4 border-b border-purple-border">
-          <Link href="/" className="flex items-center gap-1.5 no-underline">
-            <span className="text-[18px] font-semibold text-black tracking-tight">Nearby</span>
-            <span className="font-script text-purple font-normal text-[1.3em] leading-none">
-              Escapes
-            </span>
-          </Link>
-        </div>
+      {/* Top Header Bar */}
+      <header className="relative z-10 w-full max-w-6xl mx-auto px-6 py-6 flex items-center justify-center">
+        <Link href="/" className="flex items-center gap-1.5 no-underline group">
+          <span className="text-2xl font-bold text-neutral-900 tracking-tight">Nearby</span>
+          <span className="font-script text-[#6b2bb8] text-[1.45em] leading-none transition-transform group-hover:scale-105">
+            Escapes
+          </span>
+        </Link>
+      </header>
 
-        <div className="flex-1 flex items-start lg:items-center justify-center px-5 md:px-10 py-8 lg:py-10 overflow-y-auto">
-          <div className="w-full max-w-md">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-1.5 text-sm text-black-faint hover:text-black transition-colors mb-6"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" /> Back to home
-            </Link>
+      {/* Centered Unified Card Container (No Desktop Split) */}
+      <main className="relative z-10 flex-1 flex items-center justify-center px-4 sm:px-6 py-6 md:py-10">
+        <div className="w-full max-w-[480px]">
+          {/* Main Card */}
+          <div className="bg-white rounded-3xl border border-black/[0.08] shadow-[0_12px_40px_rgba(0,0,0,0.06)] p-7 sm:p-9">
+            {/* Quick Segment Switcher (Login / Register) */}
+            {(activeTab === "login" || activeTab === "register") && (
+              <div className="grid grid-cols-2 p-1 bg-black/[0.04] rounded-2xl mb-7">
+                <button
+                  type="button"
+                  onClick={() => router.push("/auth/login")}
+                  className={cn(
+                    "py-2 text-sm font-bold rounded-xl transition-all duration-200",
+                    activeTab === "login"
+                      ? "bg-white text-black shadow-sm"
+                      : "text-neutral-500 hover:text-neutral-900",
+                  )}
+                >
+                  Sign In
+                </button>
+                <button
+                  type="button"
+                  onClick={() => router.push("/auth/register")}
+                  className={cn(
+                    "py-2 text-sm font-bold rounded-xl transition-all duration-200",
+                    activeTab === "register"
+                      ? "bg-white text-black shadow-sm"
+                      : "text-neutral-500 hover:text-neutral-900",
+                  )}
+                >
+                  Create Account
+                </button>
+              </div>
+            )}
 
-            {/* LOGIN */}
+            {/* 1. LOGIN TAB */}
             {activeTab === "login" && (
-              <form onSubmit={handleLoginSubmit} className="space-y-5">
-                <div className="mb-8">
-                  <h2 className="text-2xl font-bold text-black tracking-tight">Sign in</h2>
-                  <p className="text-sm text-black-muted mt-1">Welcome back to Nearby Escapes</p>
+              <form onSubmit={handleLoginSubmit} className="space-y-4">
+                <div className="mb-6">
+                  <h1 className="text-2xl font-bold text-neutral-900 tracking-tight">
+                    Welcome back
+                  </h1>
+                  <p className="text-sm text-neutral-500 mt-1">
+                    Sign in to manage your bookings and saved escapes
+                  </p>
                 </div>
 
                 <div className="space-y-1.5">
@@ -448,11 +428,19 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                 </div>
 
                 <div className="space-y-1.5">
-                  <FieldLabel>Password</FieldLabel>
+                  <div className="flex items-center justify-between">
+                    <FieldLabel>Password</FieldLabel>
+                    <Link
+                      href="/auth/reset"
+                      className="text-xs font-semibold text-[#6b2bb8] hover:underline"
+                    >
+                      Forgot password?
+                    </Link>
+                  </div>
                   <InputField
                     icon={Lock}
                     type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
+                    placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     autoComplete="current-password"
@@ -464,70 +452,53 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                       />
                     }
                   />
-                  <div className="text-right">
-                    <button
-                      type="button"
-                      onClick={() => router.push("/auth/reset")}
-                      className="text-[11px] font-bold text-purple hover:text-purple-hover transition-colors"
-                    >
-                      Forgot password?
-                    </button>
-                  </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <Checkbox
-                    id="remember-me"
-                    className="rounded border-purple-border data-[state=checked]:bg-gold data-[state=checked]:border-purple"
-                  />
-                  <Label
-                    htmlFor="remember-me"
-                    className="text-sm text-black-muted cursor-pointer select-none"
-                  >
-                    Keep me signed in on this device
-                  </Label>
+                <div className="pt-2">
+                  <SubmitButton loading={loading}>Sign In</SubmitButton>
                 </div>
 
-                <SubmitButton loading={loading}>Sign in</SubmitButton>
-
-                <p className="text-center text-sm text-black-muted">
-                  New to Nearby Escapes?{""}
+                <div className="pt-2 text-center text-xs text-neutral-500">
+                  Don&apos;t have an account?{" "}
                   <button
                     type="button"
                     onClick={() => router.push("/auth/register")}
-                    className="font-bold text-purple hover:text-purple-hover transition-colors"
+                    className="font-bold text-[#6b2bb8] hover:underline"
                   >
-                    Create a free account
+                    Sign up now
                   </button>
-                </p>
+                </div>
               </form>
             )}
 
-            {/* REGISTER */}
+            {/* 2. REGISTER TAB */}
             {activeTab === "register" && (
               <form onSubmit={handleRegisterSubmit} className="space-y-4">
-                <div className="mb-6">
-                  <h2 className="text-2xl font-bold text-black tracking-tight">
-                    Create your account
-                  </h2>
-                  <p className="text-sm text-black-muted mt-1">Join the community of explorers</p>
+                <div className="mb-5">
+                  <h1 className="text-2xl font-bold text-neutral-900 tracking-tight">
+                    Join Nearby Escapes
+                  </h1>
+                  <p className="text-sm text-neutral-500 mt-1">
+                    Discover, book, or host unique stays & adventures
+                  </p>
                 </div>
 
+                {/* Account Type / Role */}
                 <div className="space-y-1.5">
-                  <FieldLabel>I am a</FieldLabel>
-                  <div className="grid grid-cols-2 gap-3">
+                  <FieldLabel>I am joining as</FieldLabel>
+                  <div className="grid grid-cols-2 gap-2.5">
                     {[
                       {
                         value: "guest" as const,
                         icon: Backpack,
                         label: "Guest",
-                        sub: "Find & book escapes",
+                        sub: "Explore & book",
                       },
                       {
                         value: "host" as const,
                         icon: Home,
-                        label: "Local host",
-                        sub: "List your property",
+                        label: "Local Host",
+                        sub: "List property/tour",
                       },
                     ].map(({ value, icon: Icon, label, sub }) => (
                       <button
@@ -535,20 +506,26 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                         type="button"
                         onClick={() => setRole(value)}
                         className={cn(
-                          "flex flex-col items-center gap-1.5 py-3.5 rounded-2xl border-2 transition-all duration-200",
+                          "flex items-center gap-2.5 p-3 rounded-2xl border-2 transition-all duration-200 text-left",
                           role === value
-                            ? "border-purple bg-purple-muted shadow-sm"
-                            : "border-purple-border bg-white hover:border-purple/40",
+                            ? "border-[#6b2bb8] bg-[#6b2bb8]/5"
+                            : "border-black/[0.08] bg-white hover:border-black/[0.2]",
                         )}
                       >
-                        <Icon
+                        <div
                           className={cn(
-                            "h-5 w-5",
-                            role === value ? "text-purple" : "text-black-faint",
+                            "w-8 h-8 rounded-xl flex items-center justify-center shrink-0",
+                            role === value
+                              ? "bg-[#6b2bb8] text-white"
+                              : "bg-black/[0.04] text-neutral-600",
                           )}
-                        />
-                        <span className="text-sm font-bold text-black">{label}</span>
-                        <span className="text-[10px] text-black-faint">{sub}</span>
+                        >
+                          <Icon className="h-4 w-4" />
+                        </div>
+                        <div>
+                          <div className="text-xs font-bold text-neutral-900">{label}</div>
+                          <div className="text-[10px] text-neutral-500">{sub}</div>
+                        </div>
                       </button>
                     ))}
                   </div>
@@ -595,9 +572,8 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                 <div className="space-y-1.5">
                   <FieldLabel>Phone number</FieldLabel>
                   <div className="flex gap-2">
-                    <div className="flex items-center gap-1.5 px-3.5 py-3 rounded-xl border border-purple-border bg-white text-sm font-semibold text-black-soft shrink-0">
+                    <div className="flex items-center gap-1 px-3 py-3 rounded-xl border border-black/[0.12] bg-neutral-50 text-xs font-bold text-neutral-700 shrink-0">
                       🇿🇲 +260
-                      <ChevronDown className="h-3 w-3 text-black-faint" />
                     </div>
                     <InputField
                       icon={Phone}
@@ -609,17 +585,14 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                       required
                     />
                   </div>
-                  <p className="text-xs text-black-faint">
-                    We&apos;ll send booking confirmations here
-                  </p>
                 </div>
 
                 <div className="space-y-1.5">
-                  <FieldLabel>Password</FieldLabel>
+                  <FieldLabel>Create password</FieldLabel>
                   <InputField
                     icon={Lock}
                     type={showPassword ? "text" : "password"}
-                    placeholder="Create a strong password"
+                    placeholder="At least 6 characters"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     autoComplete="new-password"
@@ -634,65 +607,46 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                   {password && <PasswordStrength password={password} />}
                 </div>
 
-                <div className="flex items-start gap-3">
+                <div className="flex items-start gap-2 pt-1">
                   <Checkbox
-                    id="agree-terms"
+                    id="terms"
                     checked={agreeTerms}
-                    onCheckedChange={(c) => setAgreeTerms(!!c)}
-                    className="rounded border-purple-border data-[state=checked]:bg-gold data-[state=checked]:border-purple mt-0.5"
+                    onCheckedChange={(v) => setAgreeTerms(!!v)}
+                    className="mt-0.5"
                   />
                   <Label
-                    htmlFor="agree-terms"
-                    className="text-sm text-black-muted cursor-pointer select-none leading-relaxed"
+                    htmlFor="terms"
+                    className="text-xs text-neutral-500 font-normal leading-relaxed cursor-pointer"
                   >
-                    I agree to the{""}
-                    <Link
-                      href="/terms"
-                      className="font-bold text-purple hover:text-purple-hover transition-colors"
-                    >
+                    I agree to the{" "}
+                    <Link href="/terms" className="text-[#6b2bb8] underline font-medium">
                       Terms of Service
-                    </Link>
-                    {""}and{""}
-                    <Link
-                      href="/privacy"
-                      className="font-bold text-purple hover:text-purple-hover transition-colors"
-                    >
+                    </Link>{" "}
+                    and{" "}
+                    <Link href="/privacy" className="text-[#6b2bb8] underline font-medium">
                       Privacy Policy
                     </Link>
                   </Label>
                 </div>
 
-                <div className="flex items-start gap-3">
-                  <Checkbox
-                    id="deals-alerts"
-                    checked={dealsAlerts}
-                    onCheckedChange={(c) => setDealsAlerts(!!c)}
-                    className="rounded border-purple-border data-[state=checked]:bg-gold data-[state=checked]:border-purple mt-0.5"
-                  />
-                  <Label
-                    htmlFor="deals-alerts"
-                    className="text-sm text-black-muted cursor-pointer select-none leading-relaxed"
-                  >
-                    Send me deals and hidden gem alerts for my area
-                  </Label>
+                <div className="pt-2">
+                  <SubmitButton loading={loading}>Create Account</SubmitButton>
                 </div>
 
-                <SubmitButton loading={loading}>Create my account</SubmitButton>
-
-                <p className="text-center text-sm text-black-muted">
-                  Already have an account?{""}
+                <div className="pt-1 text-center text-xs text-neutral-500">
+                  Already have an account?{" "}
                   <button
                     type="button"
                     onClick={() => router.push("/auth/login")}
-                    className="font-bold text-purple hover:text-purple-hover transition-colors"
+                    className="font-bold text-[#6b2bb8] hover:underline"
                   >
                     Sign in
                   </button>
-                </p>
+                </div>
               </form>
             )}
 
-            {/* OTP */}
+            {/* 3. OTP TAB */}
             {activeTab === "otp" && (
               <form
                 onSubmit={(e) => {
@@ -707,17 +661,18 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                 className="space-y-6 text-center"
               >
                 <div>
-                  <div className="h-16 w-16 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-5">
-                    <MessageSquare className="h-7 w-7 text-black" weight="regular" />
+                  <div className="h-14 w-14 rounded-2xl bg-[#6b2bb8]/10 flex items-center justify-center mx-auto mb-4">
+                    <MessageSquare className="h-6 w-6 text-[#6b2bb8]" weight="regular" />
                   </div>
-                  <h2 className="text-2xl font-bold text-black tracking-tight">
-                    Check your messages
+                  <h2 className="text-2xl font-bold text-neutral-900 tracking-tight">
+                    Verify phone number
                   </h2>
-                  <p className="text-sm text-black-muted mt-2 leading-relaxed">
-                    We sent a 6-digit code to{""}
-                    <strong className="text-black font-bold">+260 {phone || "97 ••• ••34"}</strong>.
-                    <br />
-                    It expires in 10 minutes.
+                  <p className="text-xs text-neutral-500 mt-2 leading-relaxed max-w-xs mx-auto">
+                    We sent a 6-digit code to{" "}
+                    <strong className="text-neutral-900 font-bold">
+                      +260 {phone || "97 ••• ••34"}
+                    </strong>
+                    . Expires in 10 minutes.
                   </p>
                 </div>
 
@@ -728,70 +683,75 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                   fieldId="otp"
                 />
 
-                <div className="text-sm text-black-muted">
-                  Didn&apos;t get it?{""}
+                <div className="text-xs text-neutral-500">
+                  Didn&apos;t receive the code?{" "}
                   <button
                     type="button"
                     onClick={() => toast.info("Verification code re-sent.")}
-                    className="font-bold text-purple hover:text-purple-hover transition-colors"
+                    className="font-bold text-[#6b2bb8] hover:underline"
                   >
                     Resend code
-                  </button>
-                  {""}· <span className="font-bold text-black-soft">{formatTimer(secs)}</span>
+                  </button>{" "}
+                  · <span className="font-bold text-neutral-700">{formatTimer(secs)}</span>
                 </div>
 
-                <SubmitButton loading={false}>Verify &amp; continue</SubmitButton>
+                <SubmitButton loading={false}>Verify & Continue</SubmitButton>
 
                 <button
                   type="button"
                   onClick={() => router.push("/auth/register")}
-                  className="text-sm text-black-faint hover:text-black-soft font-semibold flex items-center justify-center gap-1.5 transition-colors mx-auto"
+                  className="text-xs text-neutral-500 hover:text-neutral-900 font-semibold flex items-center justify-center gap-1 mx-auto transition-colors"
                 >
-                  <ArrowLeft className="h-3.5 w-3.5" /> Change number
+                  <ArrowLeft className="h-3 w-3" /> Change phone number
                 </button>
               </form>
             )}
 
-            {/* RESET */}
+            {/* 4. RESET TAB */}
             {activeTab === "reset" && (
-              <form onSubmit={handleResetSubmit} className="space-y-6">
-                <div className="mb-2">
-                  <h2 className="text-2xl font-bold text-black tracking-tight">Reset password</h2>
-                  <p className="text-sm text-black-muted mt-1">We&apos;ll help you regain access</p>
+              <form onSubmit={handleResetSubmit} className="space-y-5">
+                <div>
+                  <h2 className="text-2xl font-bold text-neutral-900 tracking-tight">
+                    Reset password
+                  </h2>
+                  <p className="text-xs text-neutral-500 mt-1">
+                    Follow the steps below to regain access to your account
+                  </p>
                 </div>
 
+                {/* Step indicator */}
                 <div className="flex items-center gap-2">
                   {[
                     { num: 1, label: "Email", done: resetStep > 1, active: resetStep === 1 },
                     { num: 2, label: "Verify", done: resetStep > 2, active: resetStep === 2 },
-                    { num: 3, label: "New password", done: false, active: resetStep === 3 },
+                    { num: 3, label: "New pass", done: false, active: resetStep === 3 },
                   ].map((step, i) => (
                     <Fragment key={step.num}>
                       <div
                         className={cn(
-                          "flex items-center gap-1.5 text-sm font-semibold transition-colors",
-                          step.done || step.active ? "text-purple" : "text-black-faint",
+                          "flex items-center gap-1.5 text-xs font-semibold transition-colors",
+                          step.done || step.active ? "text-[#6b2bb8]" : "text-neutral-400",
                         )}
                       >
                         <div
                           className={cn(
-                            "w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold border-2 transition-all",
+                            "w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold border transition-all",
                             step.done
-                              ? "bg-gold border-purple text-black"
+                              ? "bg-[#6b2bb8] border-[#6b2bb8] text-white"
                               : step.active
-                                ? "bg-purple border-purple text-white"
-                                : "bg-white border-purple-border text-black-faint",
+                                ? "bg-[#ffca28] border-[#ffca28] text-black"
+                                : "bg-white border-neutral-200 text-neutral-400",
                           )}
                         >
                           {step.done ? <Check className="h-3 w-3" /> : step.num}
                         </div>
-                        <span className="hidden sm:inline">{step.label}</span>
+                        <span>{step.label}</span>
                       </div>
                       {i < 2 && (
                         <div
                           className={cn(
                             "flex-1 h-0.5 rounded transition-colors",
-                            step.done ? "bg-gold" : "bg-purple-border",
+                            step.done ? "bg-[#6b2bb8]" : "bg-neutral-200",
                           )}
                         />
                       )}
@@ -801,7 +761,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
 
                 {resetStep === 1 && (
                   <div className="space-y-1.5">
-                    <FieldLabel>Enter your email</FieldLabel>
+                    <FieldLabel>Enter your registered email</FieldLabel>
                     <InputField
                       icon={Mail}
                       type="email"
@@ -816,9 +776,9 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                 {resetStep === 2 && (
                   <div className="space-y-3">
                     <FieldLabel>Verification code</FieldLabel>
-                    <p className="text-sm text-black-muted">
-                      We sent a code to{""}
-                      <strong className="text-black font-bold">{resetEmail}</strong>
+                    <p className="text-xs text-neutral-500">
+                      We sent a 6-digit code to{" "}
+                      <strong className="text-neutral-900">{resetEmail}</strong>
                     </p>
                     <OtpInputs
                       value={resetOtp}
@@ -830,7 +790,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                 )}
 
                 {resetStep === 3 && (
-                  <>
+                  <div className="space-y-3">
                     <div className="space-y-1.5">
                       <FieldLabel>New password</FieldLabel>
                       <InputField
@@ -848,56 +808,68 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                           />
                         }
                       />
-                      {newPassword && <PasswordStrength password={newPassword} />}
                     </div>
                     <div className="space-y-1.5">
                       <FieldLabel>Confirm new password</FieldLabel>
                       <InputField
-                        type="password"
-                        placeholder="Repeat new password"
+                        icon={Lock}
+                        type={showConfirmPassword ? "text" : "password"}
+                        placeholder="Re-enter new password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         autoComplete="new-password"
                         required
+                        rightSlot={
+                          <EyeToggle
+                            show={showConfirmPassword}
+                            onToggle={() => setShowConfirmPassword(!showConfirmPassword)}
+                          />
+                        }
                       />
                     </div>
-                  </>
+                  </div>
                 )}
 
                 <SubmitButton loading={loading}>
                   {resetStep === 1
-                    ? "Send Reset Link"
+                    ? "Send Reset Code"
                     : resetStep === 2
                       ? "Verify Code"
-                      : "Set new password"}
+                      : "Save New Password"}
                 </SubmitButton>
 
-                <p className="text-center text-sm text-black-muted">
-                  Remembered it?{""}
+                <div className="text-center">
                   <button
                     type="button"
                     onClick={() => router.push("/auth/login")}
-                    className="font-bold text-purple hover:text-purple-hover transition-colors"
+                    className="text-xs text-neutral-500 hover:text-neutral-900 font-semibold inline-flex items-center gap-1"
                   >
-                    Back to sign in
+                    <ArrowLeft className="h-3 w-3" /> Back to Sign In
                   </button>
-                </p>
+                </div>
               </form>
             )}
           </div>
         </div>
+      </main>
 
-        {/* Trust strip */}
-        <div className="flex items-center justify-center px-4 py-3 border-t border-purple-border bg-white-warm text-center">
-          <p className="text-[11px] font-medium text-black-faint flex items-center gap-1.5">
-            <ShieldCheck className="h-3.5 w-3.5 text-gold shrink-0" />
-            By signing in you agree with our{""}
-            <Link href="/terms" className="underline hover:text-black transition-colors ml-1">
-              T&apos;s and C&apos;s
-            </Link>
-          </p>
+      {/* Global Bottom Footer */}
+      <footer className="relative z-10 w-full py-6 text-center text-xs text-neutral-400">
+        <div className="flex items-center justify-center gap-5 mb-2 font-medium">
+          <Link href="/terms" className="hover:text-neutral-700 transition-colors">
+            Terms of Service
+          </Link>
+          <span>•</span>
+          <Link href="/privacy" className="hover:text-neutral-700 transition-colors">
+            Privacy Policy
+          </Link>
+          <span>•</span>
+          <Link href="/help" className="hover:text-neutral-700 transition-colors">
+            Help Center
+          </Link>
         </div>
-      </div>
+        <p>© 2026 Nearby Escapes Zambia. All rights reserved.</p>
+      </footer>
     </div>
   );
 }

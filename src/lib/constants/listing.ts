@@ -1,9 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import { Wifi, Waves, AirVent, Utensils, Car, Shield, Tv, Coffee } from "lucide-react";
 
-// ---------------------------------------------------------------------------
 // Shared item shapes
-// ---------------------------------------------------------------------------
 
 export interface OptionItem {
   value: string;
@@ -16,9 +14,7 @@ export interface AmenityItem {
   icon: LucideIcon;
 }
 
-// ---------------------------------------------------------------------------
 // Stay wizard constants
-// ---------------------------------------------------------------------------
 
 export const PROPERTY_TYPES: OptionItem[] = [
   { value: "chalet", label: "Chalet" },

@@ -1,8 +1,6 @@
-// ---------------------------------------------------------------------------
 // Attraction — non-bookable reference data (Gems)
 // Nearby Escapes does NOT control these places. They are geographic anchors
 // used to surface nearby Stays, Experiences, and Transport.
-// ---------------------------------------------------------------------------
 
 export type AttractionCategory =
   | "waterfall"

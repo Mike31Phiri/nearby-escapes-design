@@ -221,26 +221,28 @@ function StatCard({
   accent?: string;
 }) {
   return (
-    <div className="group flex items-center gap-4 rounded-xl border border-neutral-200 bg-white p-5 shadow-sm card-shadow transition-all duration-300 hover:shadow-md hover:border-purple/30">
+    <div className="group flex items-center gap-4 rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-2xs transition-all duration-300 hover:shadow-md hover:border-purple/30">
       <div
         className={cn(
-          "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-transform duration-300 group-",
+          "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-105",
         )}
         style={{
-          backgroundColor: accent ? `${accent}1a` : "var(--primary)1a",
-          color: accent ?? "var(--primary)",
+          backgroundColor: accent ? `${accent}1a` : "rgba(107, 43, 184, 0.1)",
+          color: accent ?? "var(--color-purple)",
         }}
       >
         <Icon className="h-5.5 w-5.5" />
       </div>
       <div className="min-w-0">
-        <p className="text-2xl font-bold tracking-tight text-neutral-900">{value}</p>
-        <p className="text-sm font-semibold text-neutral-500 uppercase tracking-wider">{label}</p>
+        <p className="text-xl sm:text-2xl font-black tracking-tight text-neutral-900">{value}</p>
+        <p className="text-[10px] sm:text-xs font-bold text-neutral-400 uppercase tracking-wider mt-0.5">
+          {label}
+        </p>
         {trend && (
           <p
             className={cn(
               "text-[10px] font-bold mt-0.5 flex items-center gap-0.5",
-              trend.positive ? "text-emerald-600" : "text-destructive",
+              trend.positive ? "text-emerald-600" : "text-rose-600",
             )}
           >
             <TrendingUp className={cn("h-3 w-3", !trend.positive && "rotate-180")} />
@@ -441,22 +443,22 @@ export function HostListingDetailPage({ listing }: Props) {
     <div className="min-h-screen flex flex-col bg-background font-sans">
       <main className="flex-1">
         {/* Header */}
-        <div className="relative bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pb-8">
+        <div className="relative bg-gradient-to-b from-purple/8 via-purple/[0.02] to-transparent pb-8">
           <div className="mx-auto max-w-5xl px-4 md:px-6 pt-8 md:pt-12">
             {/* Back + Actions Row */}
             <div className="flex items-center justify-between mb-6">
               <Link
-                href="/host"
-                className="text-sm font-semibold text-neutral-500 hover:text-purple transition-colors flex items-center gap-1"
+                href="/host/listings"
+                className="text-xs font-semibold text-neutral-500 hover:text-purple transition-colors flex items-center gap-1.5"
               >
-                <ArrowLeft className="h-3 w-3" />
-                Back to Dashboard
+                <ArrowLeft className="h-3.5 w-3.5" />
+                Back to Listings
               </Link>
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-8 rounded-lg text-sm font-semibold border-border/60"
+                  className="h-8 rounded-xl text-xs font-semibold border-neutral-200/80 bg-white hover:border-purple/40 hover:text-purple"
                   onClick={handleCopyLink}
                 >
                   <Copy className="h-3.5 w-3.5 mr-1" />
@@ -465,7 +467,7 @@ export function HostListingDetailPage({ listing }: Props) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-8 rounded-lg text-sm font-semibold border-border/60"
+                  className="h-8 rounded-xl text-xs font-semibold border-neutral-200/80 bg-white hover:border-purple/40 hover:text-purple"
                   asChild
                 >
                   <Link
@@ -601,15 +603,15 @@ export function HostListingDetailPage({ listing }: Props) {
 
         {/* Management Actions Bar */}
         <div className="mx-auto max-w-5xl px-4 md:px-6 mt-6">
-          <div className="flex flex-wrap items-center gap-2 rounded-xl border border-neutral-200 bg-white p-3 shadow-sm card-shadow">
-            <span className="text-sm font-bold uppercase tracking-wider text-neutral-500 mr-2">
+          <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-neutral-200/80 bg-white p-3.5 shadow-2xs">
+            <span className="text-xs font-bold uppercase tracking-wider text-neutral-400 mr-2">
               Management
             </span>
 
             <Button
               variant="outline"
               size="sm"
-              className="h-8 rounded-lg text-sm font-semibold"
+              className="h-8 rounded-xl text-xs font-semibold border-neutral-200/80 bg-white hover:border-purple/40 hover:text-purple"
               asChild
             >
               <Link href={`/host/availability`}>
@@ -621,7 +623,7 @@ export function HostListingDetailPage({ listing }: Props) {
             <Button
               variant="outline"
               size="sm"
-              className="h-8 rounded-lg text-sm font-semibold"
+              className="h-8 rounded-xl text-xs font-semibold border-neutral-200/80 bg-white hover:border-purple/40 hover:text-purple"
               onClick={() => toast.success("Edit mode coming soon")}
             >
               <Edit3 className="h-3.5 w-3.5 mr-1" />
@@ -632,7 +634,7 @@ export function HostListingDetailPage({ listing }: Props) {
               <Button
                 variant="outline"
                 size="sm"
-                className="h-8 rounded-lg text-sm font-semibold"
+                className="h-8 rounded-xl text-xs font-semibold border-neutral-200/80 bg-white hover:border-purple/40 hover:text-purple"
                 onClick={() => setStatusMenuOpen(!statusMenuOpen)}
               >
                 <RefreshCw className="h-3.5 w-3.5 mr-1" />

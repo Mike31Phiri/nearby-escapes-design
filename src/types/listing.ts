@@ -3,12 +3,10 @@ export type ListingVertical = "stay" | "experience" | "transport" | "package";
 /** Listing verticals a host can create themselves (package is admin-curated). */
 export type ListingType = "stay" | "experience" | "transport";
 
-// ---------------------------------------------------------------------------
 // Host listing drafts — create → auto-save → publish flow
-// ---------------------------------------------------------------------------
 export type ListingDraftStatus = "draft" | "live";
 
-/**
+ /**
  * A host's in-progress listing produced by the create wizard.
  * `form` is a snapshot of the raw react-hook-form values for the listing's
  * type so the wizard can be rehydrated exactly where the host left off.
@@ -32,9 +30,7 @@ export interface ListingDraft {
 
 export type ListingStatus = "draft" | "pending_review" | "active" | "paused" | "rejected";
 
-// ---------------------------------------------------------------------------
 // Shared location shape used across listing types
-// ---------------------------------------------------------------------------
 export interface ListingLocation {
   address: string;
   city: string;
@@ -43,9 +39,7 @@ export interface ListingLocation {
   longitude: number;
 }
 
-// ---------------------------------------------------------------------------
 // BaseListing — fields common to Stay, Experience, and Transport
-// ---------------------------------------------------------------------------
 export interface BaseListing {
   id: string;
   hostId: string;
@@ -63,19 +57,15 @@ export interface BaseListing {
   updatedAt: string;
 }
 
-// ---------------------------------------------------------------------------
 // Stay
-// ---------------------------------------------------------------------------
 export interface Bed {
   type: string; // e.g. 'King', 'Twin', 'Sofa bed'
   count: number;
 }
 
-// ---------------------------------------------------------------------------
 // Room types & inventory — a lodge/guesthouse can have several room types
 // (e.g. Standard Room x10, 3-Bedroom Suite x4), each with its own capacity
 // and nightly price. `count` is how many identical units exist.
-// ---------------------------------------------------------------------------
 export interface RoomType {
   id: string;
   name: string; // e.g. 'Standard Room', '3-Bedroom Family Suite'
@@ -109,9 +99,7 @@ export interface StayListing extends BaseListing {
   customCancellationPolicy?: string;
 }
 
-// ---------------------------------------------------------------------------
 // Experience
-// ---------------------------------------------------------------------------
 export type ExperienceDifficulty = "Easy" | "Moderate" | "Challenging" | "Extreme";
 
 export interface ExperienceItineraryItem {
@@ -144,7 +132,7 @@ export interface ExperienceListing extends BaseListing {
   pricePerAdultNgwee: number;
   /** Per-child price in Ngwee (integer). Never float. */
   pricePerChildNgwee: number;
-  // ---- Host-provided fields surfaced on the guest detail page ----
+  // Host-provided fields surfaced on the guest detail page
   /** Keywords travelers can search for. */
   searchTags?: string[];
   /** 3–5 summary bullet points. */
@@ -167,9 +155,7 @@ export interface ExperienceListing extends BaseListing {
   editorialNotes?: string;
 }
 
-// ---------------------------------------------------------------------------
 // Transport
-// ---------------------------------------------------------------------------
 export type TransportServiceType = "self-drive" | "chauffeured" | "both";
 export type TransportPricingType = "daily" | "per-km";
 export type FuelType = "petrol" | "diesel" | "electric" | "hybrid";
@@ -191,9 +177,7 @@ export interface TransportListing extends BaseListing {
   perKmRateNgwee: number;
 }
 
-// ---------------------------------------------------------------------------
 // Package — admin-curated; does NOT extend BaseListing (no single hostId)
-// ---------------------------------------------------------------------------
 export type PackageStatus = "draft" | "active" | "archived";
 
 export interface Package {
@@ -216,9 +200,7 @@ export interface Package {
   updatedAt: string;
 }
 
-// ---------------------------------------------------------------------------
 // Attraction (Gem) — non-bookable reference data
-// ---------------------------------------------------------------------------
 export type AttractionCategory =
   | "waterfall"
   | "game-reserve"

@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
   Landmark,
-  Workflow,
   ShieldCheck,
   KeyRound,
   Smartphone,
@@ -18,6 +17,7 @@ import { AccountSettingsSection } from "@/components/host/AccountSettingsSection
 import { mockHostProfile } from "@/lib/mock-profile-data";
 import {
   maskIban,
+
   isValidIban,
   isValidSwift,
   usePayoutSettingsStore,
@@ -93,9 +93,9 @@ export function HostSettingsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50 pb-12 font-sans">
+    <div className="min-h-screen bg-background pb-16 font-sans">
       <HostPageHeader title="Settings" description="Account, business and payout configuration" />
-      <div className="mx-auto max-w-3xl px-4 md:px-6 mt-8 space-y-12">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 md:px-8 mt-8 space-y-12">
         <SettingsSection
           icon={UserCog}
           title="Account Settings"
@@ -112,9 +112,9 @@ export function HostSettingsPage() {
             !showBankForm ? (
               <button
                 onClick={openGate}
-                className="inline-flex items-center gap-1.5 h-9 px-4 rounded-xl border border-neutral-200 text-sm font-bold text-neutral-700 hover:border-purple/40 hover:text-purple transition-all"
+                className="inline-flex items-center gap-1.5 h-10 px-4 rounded-xl border border-neutral-200/80 text-xs font-semibold text-neutral-700 hover:border-purple/40 hover:text-purple transition-all shadow-2xs"
               >
-                Add
+                Add Method
               </button>
             ) : undefined
           }
@@ -131,14 +131,6 @@ export function HostSettingsPage() {
             onCancelBankForm={() => setShowBankForm(false)}
             onSaveBank={handleSaveBank}
           />
-        </SettingsSection>
-
-        <SettingsSection
-          icon={Workflow}
-          title="Automations"
-          description="Automate repetitive host tasks"
-        >
-          <PlaceholderSection />
         </SettingsSection>
       </div>
 
@@ -162,9 +154,7 @@ export function HostSettingsPage() {
   );
 }
 
-/* ---------------------------------- */
-/* Security gate modal               */
-/* ---------------------------------- */
+/* Security gate modal */
 
 interface SecurityGateModalProps {
   gateMode: "password" | "2fa";
@@ -231,23 +221,22 @@ function SecurityGateModal({
               value={gateInput}
               onChange={(e) => setGateInput(e.target.value)}
               placeholder={gateMode === "password" ? "Enter your password" : "Enter 6-digit code"}
-              className={`w-full pl-10 pr-4 h-11 rounded-xl border text-sm bg-neutral-50 focus:outline-none focus:bg-white ${
-                gateError
-                  ? "border-rose-300 focus:border-rose-400"
-                  : "border-neutral-200 focus:border-purple"
-              }`}
+              className={`w-full pl-10 pr-4 h-11 rounded-xl border text-sm bg-neutral-50 focus:outline-none focus:bg-white ${gateError
+                ? "border-rose-300 focus:border-rose-400"
+                : "border-neutral-200/80 focus:border-purple focus:ring-1 focus:ring-purple/20"
+                }`}
             />
           </div>
 
           {gateError && (
-            <p className="flex items-center gap-1.5 text-[11px] font-semibold text-rose-600 mb-3">
+            <p className="flex items-center gap-1.5 text-xs font-semibold text-rose-600 mb-3">
               <AlertTriangle className="h-3.5 w-3.5" /> {gateError}
             </p>
           )}
 
           <button
             onClick={onToggleMode}
-            className="text-xs font-bold text-purple hover:underline mb-4"
+            className="text-xs font-semibold text-purple hover:underline mb-4"
           >
             {gateMode === "password" ? "Use 2FA code instead" : "Use password instead"}
           </button>
@@ -255,13 +244,13 @@ function SecurityGateModal({
           <div className="flex items-center gap-2.5">
             <button
               onClick={onVerify}
-              className="flex-1 h-10 rounded-xl bg-purple hover:bg-purple-hover text-white text-xs font-black uppercase tracking-wider transition-all"
+              className="flex-1 h-10 rounded-xl bg-purple hover:bg-purple-hover text-white text-xs font-semibold shadow-xs transition-all"
             >
               Verify
             </button>
             <button
               onClick={onClose}
-              className="h-10 px-4 rounded-xl border border-neutral-200 text-neutral-700 hover:bg-neutral-50 text-xs font-bold transition-all"
+              className="h-10 px-4 rounded-xl border border-neutral-200/80 text-neutral-700 hover:bg-neutral-50 text-xs font-semibold transition-all"
             >
               Cancel
             </button>
@@ -272,9 +261,7 @@ function SecurityGateModal({
   );
 }
 
-/* ---------------------------------- */
-/* Payout Methods section             */
-/* ---------------------------------- */
+/* Payout Methods section */
 
 interface PayoutMethodsSectionProps {
   bank: BankDetails | null;
@@ -307,15 +294,15 @@ function PayoutMethodsSection({
     <>
       {/* Confirmation banner shown after saving pending details */}
       {pending && updatedAt && (
-        <div className="flex items-start gap-3 bg-amber-50 border border-amber-200/70 rounded-2xl p-4">
-          <div className="h-9 w-9 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+        <div className="flex items-start gap-3 bg-amber-50 border border-amber-200/70 rounded-2xl p-4 shadow-2xs mb-4">
+          <div className="h-9 w-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
             <AlertTriangle className="h-4.5 w-4.5" />
           </div>
           <div className="flex-1">
-            <div className="text-sm font-bold text-amber-800">
+            <div className="text-sm font-bold text-amber-900">
               Bank details change pending verification
             </div>
-            <p className="text-[11px] text-amber-700/95 mt-1 leading-relaxed">
+            <p className="text-xs text-amber-800/90 mt-1 leading-relaxed">
               We&apos;ve sent an alert to{" "}
               <strong className="font-bold">{mockHostProfile.email}</strong> noting this change.
               Verification can take up to 24 hours.
@@ -324,11 +311,11 @@ function PayoutMethodsSection({
         </div>
       )}
 
-      <div className="bg-white border border-neutral-200 rounded-2xl p-5 shadow-sm">
+      <div className="bg-white border border-neutral-200/80 rounded-2xl p-6 shadow-2xs">
         {showBankForm ? (
           <div className="space-y-4">
             <div>
-              <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block mb-1.5">
+              <label className="text-xs font-semibold text-neutral-700 block mb-1.5">
                 Bank Name
               </label>
               <input
@@ -336,43 +323,37 @@ function PayoutMethodsSection({
                 value={bankForm.bankName}
                 onChange={(e) => setBankForm({ ...bankForm, bankName: e.target.value })}
                 placeholder="e.g. Zambia National Bank"
-                className={`w-full h-11 rounded-xl border px-3.5 text-sm bg-white text-neutral-900 focus:outline-none ${
-                  bankErrors.bankName
-                    ? "border-rose-300 focus:border-rose-400"
-                    : "border-neutral-200 focus:border-purple"
-                }`}
+                className={`w-full h-11 rounded-xl border px-3.5 text-sm bg-white text-neutral-900 focus:outline-none ${bankErrors.bankName
+                  ? "border-rose-300 focus:border-rose-400"
+                  : "border-neutral-200/80 focus:border-purple focus:ring-1 focus:ring-purple/20"
+                  }`}
               />
               {bankErrors.bankName && (
-                <p className="text-[10px] font-semibold text-rose-600 mt-1">
-                  {bankErrors.bankName}
-                </p>
+                <p className="text-xs font-semibold text-rose-600 mt-1">{bankErrors.bankName}</p>
               )}
             </div>
 
             <div>
-              <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block mb-1.5">
-                IBAN
-              </label>
+              <label className="text-xs font-semibold text-neutral-700 block mb-1.5">IBAN</label>
               <input
                 type="text"
                 value={bankForm.iban}
                 onChange={(e) => setBankForm({ ...bankForm, iban: e.target.value })}
                 placeholder="ZM48 0100 0000 0000 0000 4821"
-                className={`w-full h-11 rounded-xl border px-3.5 font-mono text-sm bg-white text-neutral-900 focus:outline-none ${
-                  bankErrors.iban
-                    ? "border-rose-300 focus:border-rose-400"
-                    : "border-neutral-200 focus:border-purple"
-                }`}
+                className={`w-full h-11 rounded-xl border px-3.5 font-mono text-sm bg-white text-neutral-900 focus:outline-none ${bankErrors.iban
+                  ? "border-rose-300 focus:border-rose-400"
+                  : "border-neutral-200/80 focus:border-purple focus:ring-1 focus:ring-purple/20"
+                  }`}
               />
               {bankErrors.iban ? (
-                <p className="text-[10px] font-semibold text-rose-600 mt-1">{bankErrors.iban}</p>
+                <p className="text-xs font-semibold text-rose-600 mt-1">{bankErrors.iban}</p>
               ) : (
-                <p className="text-[10px] text-neutral-400 mt-1">15–34 alphanumeric characters.</p>
+                <p className="text-xs text-neutral-400 mt-1">15–34 alphanumeric characters.</p>
               )}
             </div>
 
             <div>
-              <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block mb-1.5">
+              <label className="text-xs font-semibold text-neutral-700 block mb-1.5">
                 SWIFT / BIC Code
               </label>
               <input
@@ -380,31 +361,28 @@ function PayoutMethodsSection({
                 value={bankForm.swift}
                 onChange={(e) => setBankForm({ ...bankForm, swift: e.target.value })}
                 placeholder="ZNBKZMLX"
-                className={`w-full h-11 rounded-xl border px-3.5 font-mono uppercase text-sm bg-white text-neutral-900 focus:outline-none ${
-                  bankErrors.swift
-                    ? "border-rose-300 focus:border-rose-400"
-                    : "border-neutral-200 focus:border-purple"
-                }`}
+                className={`w-full h-11 rounded-xl border px-3.5 font-mono uppercase text-sm bg-white text-neutral-900 focus:outline-none ${bankErrors.swift
+                  ? "border-rose-300 focus:border-rose-400"
+                  : "border-neutral-200/80 focus:border-purple focus:ring-1 focus:ring-purple/20"
+                  }`}
               />
               {bankErrors.swift ? (
-                <p className="text-[10px] font-semibold text-rose-600 mt-1">{bankErrors.swift}</p>
+                <p className="text-xs font-semibold text-rose-600 mt-1">{bankErrors.swift}</p>
               ) : (
-                <p className="text-[10px] text-neutral-400 mt-1">
-                  8 or 11 characters, e.g. ZNBKZMLX.
-                </p>
+                <p className="text-xs text-neutral-400 mt-1">8 or 11 characters, e.g. ZNBKZMLX.</p>
               )}
             </div>
 
             <div className="flex items-center gap-2.5 pt-2">
               <button
                 onClick={onSaveBank}
-                className="flex-1 h-10 rounded-xl bg-purple hover:bg-purple-hover text-white text-xs font-black uppercase tracking-wider transition-all"
+                className="flex-1 h-10 rounded-xl bg-purple hover:bg-purple-hover text-white text-xs font-semibold shadow-xs transition-all"
               >
                 Save
               </button>
               <button
                 onClick={onCancelBankForm}
-                className="h-10 px-4 rounded-xl border border-neutral-200 text-neutral-700 hover:bg-neutral-50 text-xs font-bold transition-all"
+                className="h-10 px-4 rounded-xl border border-neutral-200/80 text-neutral-700 hover:bg-neutral-50 text-xs font-semibold transition-all"
               >
                 Cancel
               </button>
@@ -413,14 +391,14 @@ function PayoutMethodsSection({
         ) : (
           <div className="space-y-3">
             {/* Mobile Money — default */}
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-xl bg-neutral-50 border border-neutral-200/70">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-xl bg-neutral-50 border border-neutral-200/80">
               <div className="h-11 w-11 rounded-xl bg-purple/10 text-purple flex items-center justify-center shrink-0">
                 <Smartphone className="h-5 w-5" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-sm font-bold text-neutral-900">Mobile Money</span>
-                  <span className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-purple bg-purple/10 border border-purple/20 rounded-full px-2 py-0.5">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-purple bg-purple/10 border border-purple/20 rounded-full px-2 py-0.5">
                     Default
                   </span>
                 </div>
@@ -428,14 +406,14 @@ function PayoutMethodsSection({
               </div>
               <button
                 onClick={() => toast.info("Edit payment method — feature coming soon")}
-                className="inline-flex items-center gap-1.5 h-9 px-4 rounded-xl border border-neutral-200 text-sm font-bold text-neutral-700 hover:border-purple/40 hover:text-purple transition-all shrink-0"
+                className="inline-flex items-center gap-1.5 h-9 px-4 rounded-xl border border-neutral-200/80 text-xs font-semibold text-neutral-700 hover:border-purple/40 hover:text-purple transition-all shrink-0 shadow-2xs"
               >
                 Edit
               </button>
             </div>
 
             {/* Bank */}
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-xl bg-neutral-50 border border-neutral-200/70">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-xl bg-neutral-50 border border-neutral-200/80">
               <div className="h-11 w-11 rounded-xl bg-purple/10 text-purple flex items-center justify-center shrink-0">
                 <Banknote className="h-5 w-5" />
               </div>
@@ -445,11 +423,11 @@ function PayoutMethodsSection({
                     {bank?.bankName ?? "No bank set"}
                   </span>
                   {pending ? (
-                    <span className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5">
+                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5">
                       <AlertTriangle className="h-3 w-3" /> Pending Verification
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full px-2 py-0.5">
+                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full px-2 py-0.5">
                       <CheckCircle2 className="h-3 w-3" /> Verified
                     </span>
                   )}
@@ -463,7 +441,7 @@ function PayoutMethodsSection({
               </div>
               <button
                 onClick={onEdit}
-                className="inline-flex items-center gap-1.5 h-9 px-4 rounded-xl border border-neutral-200 text-sm font-bold text-neutral-700 hover:border-purple/40 hover:text-purple transition-all shrink-0"
+                className="inline-flex items-center gap-1.5 h-9 px-4 rounded-xl border border-neutral-200/80 text-xs font-semibold text-neutral-700 hover:border-purple/40 hover:text-purple transition-all shrink-0 shadow-2xs"
               >
                 Edit
               </button>
@@ -475,9 +453,7 @@ function PayoutMethodsSection({
   );
 }
 
-/* ---------------------------------- */
 /* Section wrapper (heading + content) */
-/* ---------------------------------- */
 
 function SettingsSection({
   icon: Icon,
@@ -500,8 +476,8 @@ function SettingsSection({
             <Icon className="h-4 w-4" />
           </div>
           <div>
-            <h2 className="text-lg font-bold tracking-tight text-neutral-900">{title}</h2>
-            {description && <p className="text-sm text-gray-500 mt-0.5">{description}</p>}
+            <h2 className="text-lg font-semibold tracking-tight text-neutral-900">{title}</h2>
+            {description && <p className="text-xs text-neutral-500 mt-0.5">{description}</p>}
           </div>
         </div>
         {action}
@@ -511,20 +487,4 @@ function SettingsSection({
   );
 }
 
-/* ---------------------------------- */
-/* Placeholder for other sections     */
-/* ---------------------------------- */
 
-function PlaceholderSection() {
-  return (
-    <div className="bg-white border border-neutral-200 rounded-2xl p-10 shadow-sm flex flex-col items-center text-center">
-      <div className="h-12 w-12 rounded-2xl bg-purple/10 text-purple flex items-center justify-center mb-4">
-        <ShieldCheck className="h-6 w-6" />
-      </div>
-      <p className="text-sm text-neutral-500 mt-1.5 max-w-sm">
-        This section is coming soon. Check back shortly — we&apos;re rolling out new host tools
-        every week.
-      </p>
-    </div>
-  );
-}

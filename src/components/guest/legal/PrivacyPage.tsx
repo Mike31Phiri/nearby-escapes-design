@@ -11,9 +11,11 @@ export function PrivacyPage() {
           title="Privacy Policy"
           description="Last updated: May 2025"
         />
-        <div className="space-y-6 text-muted-foreground text-base leading-relaxed">
+        <div className="space-y-10 text-neutral-500 text-[14px] leading-7">
           <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">1. Information We Collect</h2>
+            <h2 className="text-[15px] font-semibold text-neutral-800 mb-2">
+              1. Information We Collect
+            </h2>
             <p>
               When you use Nearby Escapes, we collect information you provide directly: your name,
               email address, phone number, payment information, and communication preferences. We
@@ -22,7 +24,7 @@ export function PrivacyPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">
+            <h2 className="text-[15px] font-semibold text-neutral-800 mb-2">
               2. How We Use Your Information
             </h2>
             <p>
@@ -33,7 +35,9 @@ export function PrivacyPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">3. Information Sharing</h2>
+            <h2 className="text-[15px] font-semibold text-neutral-800 mb-2">
+              3. Information Sharing
+            </h2>
             <p>
               We share your information with hosts only as necessary to complete your bookings
               (name, contact details, and booking preferences). Payment information is processed by
@@ -42,7 +46,7 @@ export function PrivacyPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">4. Data Security</h2>
+            <h2 className="text-[15px] font-semibold text-neutral-800 mb-2">4. Data Security</h2>
             <p>
               We implement industry-standard encryption, secure servers, and regular security audits
               to protect your personal information. All payment transactions are processed through
@@ -51,7 +55,7 @@ export function PrivacyPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">5. Your Rights</h2>
+            <h2 className="text-[15px] font-semibold text-neutral-800 mb-2">5. Your Rights</h2>
             <p>
               You have the right to access, correct, or delete your personal information at any time
               through your account settings. You may also request a copy of your data or withdraw
@@ -59,7 +63,7 @@ export function PrivacyPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">6. Contact</h2>
+            <h2 className="text-[15px] font-semibold text-neutral-800 mb-2">6. Contact</h2>
             <p>
               For privacy-related inquiries, contact us at privacy@nearbyescapes.com or write to:
               Nearby Escapes, PO Box 12345, Lusaka, Zambia.
