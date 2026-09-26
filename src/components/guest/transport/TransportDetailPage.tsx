@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -82,7 +82,7 @@ export function TransportDetailPage({
                 {transport.serviceType || transport.vehicleType || "Transport"}
               </span>
             </div>
-            <h1 className="text-2xl md:text-3xl font-display font-black tracking-tight text-foreground mb-1.5">
+            <h1 className="text-2xl md:text-3xl font-display font-bold tracking-tight text-foreground mb-1.5">
               {title}
             </h1>
             <div className="flex flex-wrap items-center gap-3 text-base text-muted-foreground">
@@ -201,7 +201,7 @@ export function TransportDetailPage({
           {/* Booking Sidebar */}
           <div className="sticky top-24 bg-card border border-border/60 rounded-2xl p-6 shadow-xl card-shadow hidden lg:block">
             <div className="flex items-baseline gap-1 mb-4">
-              <span className="text-2xl font-black">K{priceDisplay}</span>
+              <span className="text-2xl font-bold">K{priceDisplay}</span>
               <span className="text-base text-muted-foreground">
                 {transport.from ? "/ seat" : "/ day"}
               </span>

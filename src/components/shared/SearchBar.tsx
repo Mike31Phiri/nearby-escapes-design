@@ -95,8 +95,8 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
             className={cn(
               "px-3.5 py-1 text-xs font-medium rounded-full transition-all duration-150 border cursor-pointer select-none shadow-2xs",
               tripType === "one_way"
-                ? "bg-neutral-900 text-white border-neutral-900"
-                : "bg-white/90 border-neutral-300 text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900",
+                ? "bg-purple text-white border-purple"
+                : "bg-white/90 border-neutral-300 text-neutral-600 hover:border-purple/50 hover:text-purple",
             )}
           >
             One way
@@ -107,8 +107,8 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
             className={cn(
               "px-3.5 py-1 text-xs font-medium rounded-full transition-all duration-150 border cursor-pointer select-none shadow-2xs",
               tripType === "round_trip"
-                ? "bg-neutral-900 text-white border-neutral-900"
-                : "bg-white/90 border-neutral-300 text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900",
+                ? "bg-purple text-white border-purple"
+                : "bg-white/90 border-neutral-300 text-neutral-600 hover:border-purple/50 hover:text-purple",
             )}
           >
             Round trip
@@ -235,7 +235,7 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
             <div className="flex items-center gap-2 flex-[2] min-w-0 px-3 py-1 rounded-full transition-all duration-200 hover:bg-white-soft cursor-pointer">
               <MapPin className="h-4 w-4 text-purple shrink-0" strokeWidth={1.5} />
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500 leading-tight">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-500 leading-tight">
                   Leaving from
                 </p>
                 <input
@@ -254,7 +254,7 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
             <div className="flex items-center gap-2 flex-[2] min-w-0 px-3 py-1 rounded-full transition-all duration-200 hover:bg-white-soft cursor-pointer">
               <MapPin className="h-4 w-4 text-purple shrink-0" strokeWidth={1.5} />
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500 leading-tight">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-500 leading-tight">
                   To?
                 </p>
                 <input
@@ -271,7 +271,7 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
 
             {/* Date */}
             <div className="relative z-30 flex-[1.8] min-w-0 px-3 py-1 transition-all duration-300">
-              <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500 leading-tight mb-0.5">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-500 leading-tight mb-0.5">
                 When
               </p>
               <div className="min-w-0">
@@ -282,7 +282,7 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
             {/* Search button */}
             <button
               type="submit"
-              className="mr-0.5 flex items-center gap-1.5 bg-[#6b2bb8] hover:bg-[#5a22a0] text-white rounded-full px-5 py-2 text-[12px] font-medium transition-all duration-200 shadow-sm hover:shadow-md shrink-0 cursor-pointer"
+              className="mr-0.5 flex items-center gap-1.5 bg-purple hover:bg-purple-hover text-white rounded-full px-5 py-2 text-xs font-semibold transition-all duration-200 shadow-sm hover:shadow-md shrink-0 cursor-pointer"
             >
               <Search className="h-4 w-4" strokeWidth={2.5} />
               <span>Search</span>
@@ -295,7 +295,7 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
             <div className="flex items-center gap-2 flex-[2.5] min-w-0 px-3 py-1 rounded-full transition-all duration-200 hover:bg-white-soft cursor-pointer">
               <MapPin className="h-4 w-4 text-black shrink-0" strokeWidth={1.5} />
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-semibold text-black-soft leading-tight">Where</p>
+                <p className="text-[11px] font-semibold text-black-subtle tracking-wide leading-tight">Where</p>
                 <input
                   type="text"
                   value={destination}
@@ -320,7 +320,7 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
                 !isStays && "invisible pointer-events-none",
               )}
             >
-              <p className="text-[10px] font-semibold text-black-soft leading-tight mb-0.5">Date</p>
+              <p className="text-[11px] font-semibold text-black-subtle tracking-wide leading-tight mb-0.5">Date</p>
               <div className="min-w-0">
                 <DateRangePicker value={dateRange} onChange={setDateRange} variant="compact" />
               </div>
@@ -342,7 +342,7 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
             >
               <Users className="h-4 w-4 text-black shrink-0" strokeWidth={1.5} />
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-semibold text-black-soft leading-tight">Guests</p>
+                <p className="text-[11px] font-semibold text-black-subtle tracking-wide leading-tight">Guests</p>
                 <input
                   type="number"
                   min={1}
@@ -356,7 +356,7 @@ export function SearchBar({ className, onSearch, activeCategory = "stays" }: Sea
             {/* Search button */}
             <button
               type="submit"
-              className="mr-0.5 flex items-center gap-1.5 bg-[#6b2bb8] hover:bg-[#5a22a0] text-white rounded-full px-4 py-2 text-[12px] font-medium transition-all duration-200 shadow-sm hover:shadow-md shrink-0 cursor-pointer"
+              className="mr-0.5 flex items-center gap-1.5 bg-purple hover:bg-purple-hover text-white rounded-full px-4 py-2 text-xs font-semibold transition-all duration-200 shadow-sm hover:shadow-md shrink-0 cursor-pointer"
             >
               <Search className="h-4 w-4" strokeWidth={2.5} />
               <span className="hidden lg:inline">Search</span>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
@@ -526,7 +526,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
       <header className="sticky top-0 z-30 bg-white border-b border-black/[0.08] shadow-[0_1px_4px_rgba(0,0,0,0.03)]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           {/* Page Title */}
-          <h1 className="text-xl font-black text-[#2d0f5e] tracking-tight">Checkout</h1>
+          <h1 className="text-xl font-bold text-[#2d0f5e] tracking-tight">Checkout</h1>
 
           {/* Right Help info */}
           <div className="flex items-center gap-2 text-xs text-neutral-500">
@@ -550,7 +550,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
             {/* SECTION 1: Contact Details (Lead Traveler) */}
             <section className="bg-white rounded-2xl border border-black/[0.08] shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-6 md:p-7">
               <div className="flex items-center gap-3.5 mb-5">
-                <div className="w-8 h-8 rounded-full bg-[#6b2bb8] text-white font-black text-sm flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-full bg-[#6b2bb8] text-white font-bold text-sm flex items-center justify-center shrink-0">
                   1
                 </div>
                 <div>
@@ -642,7 +642,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
             {/* SECTION 2: Activity & Traveler Details */}
             <section className="bg-white rounded-2xl border border-black/[0.08] shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-6 md:p-7">
               <div className="flex items-center gap-3.5 mb-5">
-                <div className="w-8 h-8 rounded-full bg-[#6b2bb8] text-white font-black text-sm flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-full bg-[#6b2bb8] text-white font-bold text-sm flex items-center justify-center shrink-0">
                   2
                 </div>
                 <div>
@@ -928,7 +928,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
             {/* SECTION 3: Payment Details */}
             <section className="bg-white rounded-2xl border border-black/[0.08] shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-6 md:p-7">
               <div className="flex items-center gap-3.5 mb-5">
-                <div className="w-8 h-8 rounded-full bg-[#6b2bb8] text-white font-black text-sm flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-full bg-[#6b2bb8] text-white font-bold text-sm flex items-center justify-center shrink-0">
                   3
                 </div>
                 <div>
@@ -1005,10 +1005,10 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                           className="h-11 rounded-xl border-neutral-300 text-sm pr-20"
                         />
                         <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-neutral-400">
-                          <span className="text-[10px] font-black tracking-wider text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
+                          <span className="text-[10px] font-bold tracking-wider text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
                             VISA
                           </span>
-                          <span className="text-[10px] font-black tracking-wider text-red-600 bg-red-50 px-1.5 py-0.5 rounded">
+                          <span className="text-[10px] font-bold tracking-wider text-red-600 bg-red-50 px-1.5 py-0.5 rounded">
                             MC
                           </span>
                         </div>
@@ -1069,7 +1069,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                                 : "border-neutral-200 text-neutral-600 hover:border-neutral-300"
                             }`}
                           >
-                            <div className={`font-black text-xs ${m.color}`}>{m.name}</div>
+                            <div className={`font-bold text-xs ${m.color}`}>{m.name}</div>
                           </button>
                         ))}
                       </div>
@@ -1198,7 +1198,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full h-14 rounded-2xl bg-[#6b2bb8] hover:bg-[#5a22a0] active:scale-[0.99] text-white font-black text-base uppercase tracking-wider shadow-lg shadow-[#6b2bb8]/20 transition-all flex items-center justify-center gap-2"
+                    className="w-full h-14 rounded-2xl bg-[#6b2bb8] hover:bg-[#5a22a0] active:scale-[0.99] text-white font-bold text-base uppercase tracking-wider shadow-lg shadow-[#6b2bb8]/20 transition-all flex items-center justify-center gap-2"
                   >
                     {isSubmitting ? (
                       <Loader2 className="h-5 w-5 animate-spin" />
@@ -1228,7 +1228,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-neutral-900 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm">
+                <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-neutral-900 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm">
                   {isStay ? "Stay / Lodge" : isExperience ? "Tour / Activity" : "Transfer"}
                 </div>
                 <div className="absolute bottom-3 left-4 right-4 text-white">
@@ -1357,12 +1357,12 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
 
                   <div className="pt-3 border-t border-black/[0.08] flex items-baseline justify-between">
                     <div>
-                      <div className="text-sm font-black text-neutral-900">Total Price</div>
+                      <div className="text-sm font-bold text-neutral-900">Total Price</div>
                       <div className="text-[10px] text-neutral-400 font-medium">
                         All taxes &amp; fees included
                       </div>
                     </div>
-                    <div className="text-xl font-black text-neutral-900">
+                    <div className="text-xl font-bold text-neutral-900">
                       K{priceBreakdown.total.toLocaleString()}
                     </div>
                   </div>
@@ -1401,7 +1401,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
           <div className="text-[10px] text-neutral-500 uppercase tracking-wider font-bold">
             Total (ZMW)
           </div>
-          <div className="text-lg font-black text-neutral-900">
+          <div className="text-lg font-bold text-neutral-900">
             K{priceBreakdown.total.toLocaleString()}
           </div>
         </div>
@@ -1409,7 +1409,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
           type="button"
           onClick={() => handleSubmit()}
           disabled={isSubmitting}
-          className="h-12 px-6 rounded-xl bg-[#6b2bb8] text-white font-black text-xs uppercase tracking-wider shadow-md hover:bg-[#5a22a0] flex items-center gap-1.5"
+          className="h-12 px-6 rounded-xl bg-[#6b2bb8] text-white font-bold text-xs uppercase tracking-wider shadow-md hover:bg-[#5a22a0] flex items-center gap-1.5"
         >
           {isSubmitting ? (
             <Loader2 className="h-4 w-4 animate-spin" />

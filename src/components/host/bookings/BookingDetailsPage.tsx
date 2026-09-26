@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -31,7 +31,7 @@ import { ROUTES } from "@/lib/constants/routes";
 
 function SectionLabel({ label }: { label: string }) {
   return (
-    <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-1.5">
+    <p className="text-[11px] font-semibold uppercase tracking-wide text-black-muted mb-1.5">
       {label}
     </p>
   );
@@ -183,7 +183,7 @@ export function BookingDetailsPage() {
             </div>
             <span
               className={cn(
-                "shrink-0 rounded-full px-2 sm:px-2.5 py-0.5 sm:py-1 text-[10px] font-semibold uppercase tracking-wide",
+                "shrink-0 rounded-full px-2 sm:px-2.5 py-0.5 sm:py-1 text-[11px] font-semibold uppercase tracking-wide",
                 cancelled ? "bg-rose-50 text-rose-600 border border-rose-200" : "bg-emerald-50 text-emerald-700 border border-emerald-200",
               )}
             >
@@ -248,13 +248,13 @@ export function BookingDetailsPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-base sm:text-lg font-bold text-neutral-900">{formatKw(booking.total)}</p>
-              <p className="text-[10px] sm:text-[11px] text-neutral-400">
+              <p className="text-[11px] font-semibold text-black-muted tracking-wide">
                 {formatKw(booking.total / partyTotal)} per person
               </p>
             </div>
             <span
               className={cn(
-                "rounded-full px-2 sm:px-2.5 py-0.5 sm:py-1 text-[10px] font-semibold uppercase tracking-wide",
+                "rounded-full px-2 sm:px-2.5 py-0.5 sm:py-1 text-[11px] font-semibold uppercase tracking-wide",
                 booking.paymentStatus === "paid"
                   ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                   : "bg-amber-50 text-amber-700 border border-amber-200",
@@ -284,7 +284,7 @@ export function BookingDetailsPage() {
         >
           <SheetTitle className="sr-only">Cancel booking</SheetTitle>
           <div className="px-5 pt-5 pb-2">
-            <p className="text-[15px] font-black text-neutral-900">Cancel booking?</p>
+            <p className="text-[15px] font-bold text-neutral-900">Cancel booking?</p>
             <p className="text-[12px] text-neutral-500 mt-0.5">
               Ref {booking.ref} · {booking.listingName} · {formatDayLabel(booking.date)}
             </p>
@@ -293,7 +293,7 @@ export function BookingDetailsPage() {
           <div className="px-5 space-y-3">
             {/* Policy */}
             <div className="rounded-xl bg-[#FAF7F2] border border-[#E8E3DC] p-3.5">
-              <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-1">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-black-muted mb-1">
                 Cancellation policy
               </p>
               <p className="text-[13px] text-neutral-700">{policyText}</p>
@@ -311,7 +311,7 @@ export function BookingDetailsPage() {
                     : "Tour is within 48 hours"}
                 </p>
               </div>
-              <p className="text-[18px] font-black text-neutral-900">{formatKw(refund.amount)}</p>
+              <p className="text-[18px] font-bold text-neutral-900">{formatKw(refund.amount)}</p>
             </div>
 
             {/* Processing state */}

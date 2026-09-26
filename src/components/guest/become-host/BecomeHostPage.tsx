@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -193,7 +193,7 @@ export function BecomeHostPage() {
                     <Button
                       onClick={handleSubmit}
                       disabled={submitting}
-                      className="bg-yellow hover:bg-yellow-hover text-black font-black uppercase tracking-widest text-base rounded-xl shadow-lg shadow-yellow/25 hover:shadow-yellow/40 transition-all h-11 px-6"
+                      className="bg-yellow hover:bg-yellow-hover text-black font-bold uppercase tracking-widest text-base rounded-xl shadow-lg shadow-yellow/25 hover:shadow-yellow/40 transition-all h-11 px-6"
                     >
                       {submitting ? (
                         <>
@@ -210,7 +210,7 @@ export function BecomeHostPage() {
                   ) : (
                     <Button
                       onClick={goNext}
-                      className="bg-yellow hover:bg-yellow-hover text-black font-black uppercase tracking-widest text-base rounded-xl shadow-lg shadow-yellow/25 hover:shadow-yellow/40 transition-all h-11 px-6"
+                      className="bg-yellow hover:bg-yellow-hover text-black font-bold uppercase tracking-widest text-base rounded-xl shadow-lg shadow-yellow/25 hover:shadow-yellow/40 transition-all h-11 px-6"
                     >
                       Continue
                       <ChevronRight className="h-4 w-4 ml-1" />

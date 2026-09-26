@@ -7,10 +7,7 @@ import {
   LogIn,
   LogOut,
   CalendarOff,
-  Boxes,
-  CircleCheck,
   Users,
-  Lock,
   ArrowRight,
   Check,
   Phone,
@@ -24,7 +21,6 @@ import { BACKDROP_CLASS } from "@/lib/utils";
 import { HostPageHeader } from "@/components/layout/HostPageHeader";
 import { ROUTES } from "@/lib/constants/routes";
 import { mockHostProfile } from "@/lib/mock-profile-data";
-import { mockInventories, inventoryCounts } from "@/lib/mock-inventory";
 import { useNotificationStore } from "@/store/notificationStore";
 import { BookingDetailsDialog } from "./BookingDetailsDialog";
 import type { BookingDetailsData } from "./BookingDetailsDialog";
@@ -38,71 +34,7 @@ function greeting() {
   return "Good evening";
 }
 
-// ---------------------------------------------------------------------------
-// Inventory Stats
-// ---------------------------------------------------------------------------
 
-const INVENTORY_STATS = [
-  { key: "total" as const, label: "Total Units", icon: Boxes },
-  { key: "available" as const, label: "Available", icon: CircleCheck },
-  { key: "occupied" as const, label: "Occupied", icon: Users },
-  { key: "blocked" as const, label: "Blocked", icon: Lock },
-];
-
-function InventoryStatsSection() {
-  const totals = useMemo(() => {
-    const agg = { total: 0, available: 0, occupied: 0, blocked: 0 };
-    for (const inv of mockInventories) {
-      const c = inventoryCounts(inv);
-      agg.total += c.total;
-      agg.available += c.available;
-      agg.occupied += c.occupied;
-      agg.blocked += c.blocked;
-    }
-    return agg;
-  }, []);
-
-  return (
-    <section className="space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-        <div>
-          <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-neutral-900 leading-snug">
-            Inventory Overview
-          </h2>
-        </div>
-        <Link
-          href="/host/inventory"
-          className="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold text-purple hover:text-purple-hover transition-colors self-start sm:self-auto"
-        >
-          Manage inventory <ArrowRight className="h-4 w-4" />
-        </Link>
-      </div>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
-        {INVENTORY_STATS.map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <div
-              key={stat.key}
-              className="bg-white border border-neutral-200/80 rounded-2xl p-4 sm:p-5 shadow-2xs flex items-center gap-3.5"
-            >
-              <div className="w-10 h-10 rounded-xl border border-purple/20 bg-purple/10 text-purple flex items-center justify-center shrink-0">
-                <Icon className="h-5 w-5" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-2xl font-bold tracking-tight leading-none text-neutral-900">
-                  {totals[stat.key]}
-                </p>
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 mt-1">
-                  {stat.label}
-                </p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
 
 // ---------------------------------------------------------------------------
 // Check-In Dialog
@@ -404,7 +336,6 @@ export function HostDashboardPage() {
     <div className="min-h-screen bg-background pb-28 sm:pb-20 xl:pb-16 font-sans">
       <HostPageHeader
         title={`${mounted ? greeting() : "Hello"}, ${host.name.split(" ")[0]}`}
-        description="Here's what needs your attention today across your listings and bookings."
         actions={
           <Link
             href={ROUTES?.host?.create ?? "/host/create"}
@@ -417,57 +348,56 @@ export function HostDashboardPage() {
       />
 
       {/* Main Content */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 py-5 sm:py-8 md:py-10 space-y-6 sm:space-y-8 md:space-y-10">
-        {/* Inventory Stats */}
-        <InventoryStatsSection />
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 py-5 sm:py-8 md:py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-start">
+          {/* Left/Main Column: Today's Operational Schedule Queue */}
+          <div className="lg:col-span-2 min-w-0">
+            <HostTodaySchedule
+              activeTab={scheduleTab}
+              onTabChange={setScheduleTab}
+              items={scheduleItems}
+              onItemsChange={setScheduleItems}
+              onSelectBooking={(details) => {
+                setSelectedBooking(details);
+                setDetailsOpen(true);
+              }}
+            />
+          </div>
 
-        {/* Quick Actions */}
-        <section className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-            <div>
-              <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-neutral-900 leading-snug">
+          {/* Right Column: Quick Actions */}
+          <div className="lg:col-span-1">
+            <section className="space-y-3">
+              <h2 className="text-base sm:text-lg font-semibold tracking-normal text-black leading-snug">
                 Quick Actions
               </h2>
-            </div>
+              <div className="grid grid-cols-3 gap-2 sm:gap-2.5 lg:grid-cols-1">
+                {quickActions.map((action) => {
+                  const Icon = action.icon;
+                  return (
+                    <button
+                      key={action.label}
+                      type="button"
+                      onClick={action.onClick}
+                      className="bg-white border border-neutral-200/80 rounded-xl p-2.5 sm:p-3 shadow-2xs hover:border-purple/30 hover:shadow-xs transition-all flex flex-col sm:flex-row items-center gap-2 sm:gap-3 group text-center sm:text-left cursor-pointer outline-none active:scale-98 w-full"
+                    >
+                      <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-purple/10 text-purple border border-purple/15 flex items-center justify-center shrink-0 group-hover:bg-purple group-hover:text-white transition-colors">
+                        <Icon className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs sm:text-sm font-medium text-black truncate">
+                          {action.label}
+                        </p>
+                        <p className="text-[11px] font-normal text-black-muted truncate hidden xs:block sm:block">
+                          {action.sublabel}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
           </div>
-          <div className="grid grid-cols-3 gap-2 sm:gap-3">
-            {quickActions.map((action) => {
-              const Icon = action.icon;
-              return (
-                <button
-                  key={action.label}
-                  type="button"
-                  onClick={action.onClick}
-                  className="bg-white border border-neutral-200/80 rounded-2xl p-3 sm:p-4 shadow-2xs hover:border-purple/30 hover:shadow-xs transition-all flex flex-col sm:flex-row items-center sm:items-center gap-2 sm:gap-3.5 group text-center sm:text-left cursor-pointer outline-none active:scale-98"
-                >
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-purple/10 text-purple border border-purple/15 flex items-center justify-center shrink-0 group-hover:bg-purple group-hover:text-white transition-colors">
-                    <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-xs sm:text-sm font-semibold text-neutral-900 truncate">
-                      {action.label}
-                    </p>
-                    <p className="text-[10px] sm:text-[11px] text-neutral-500 truncate hidden xs:block sm:block">
-                      {action.sublabel}
-                    </p>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* Today's Operational Schedule Queue */}
-        <HostTodaySchedule
-          activeTab={scheduleTab}
-          onTabChange={setScheduleTab}
-          items={scheduleItems}
-          onItemsChange={setScheduleItems}
-          onSelectBooking={(details) => {
-            setSelectedBooking(details);
-            setDetailsOpen(true);
-          }}
-        />
+        </div>
       </div>
 
       {/* Booking details dialog */}

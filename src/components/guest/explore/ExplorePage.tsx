@@ -548,19 +548,19 @@ function SectionHeading({
   return (
     <div className="flex items-end justify-between mb-5">
       <div className="flex items-start gap-3">
-        <div className="w-1 h-7 rounded-full bg-[#6b2bb8] mt-0.5 shrink-0" />
+        <div className="w-1 h-8 rounded-full bg-purple mt-0.5 shrink-0" />
         <div>
-          <h2 className="text-lg md:text-xl font-semibold text-neutral-900 tracking-tight leading-tight">
+          <h2 className="text-xl md:text-2xl font-bold text-black tracking-tight leading-tight">
             {title}
           </h2>
-          {subtitle && <p className="text-xs text-neutral-500 mt-0.5 font-normal">{subtitle}</p>}
+          {subtitle && <p className="text-xs text-black-muted mt-0.5 font-medium tracking-wide">{subtitle}</p>}
         </div>
       </div>
       {onAction ? (
         <button
           type="button"
           onClick={onAction}
-          className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-[#6b2bb8] hover:text-[#5a1f9e] transition-colors group shrink-0 cursor-pointer"
+          className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-purple hover:opacity-80 transition-opacity group shrink-0 cursor-pointer"
         >
           <span>{cta}</span>
           <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -568,7 +568,7 @@ function SectionHeading({
       ) : href ? (
         <Link
           href={href}
-          className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-[#6b2bb8] hover:text-[#5a1f9e] transition-colors group shrink-0"
+          className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-purple hover:opacity-80 transition-opacity group shrink-0"
         >
           <span>{cta}</span>
           <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -603,7 +603,7 @@ function Carousel({
         type="button"
         onClick={() => scroll("left")}
         aria-label="Scroll left"
-        className="hidden md:flex absolute -left-4 top-1/2 -translate-y-1/2 z-20 h-9 w-9 items-center justify-center rounded-full bg-white shadow-md border border-neutral-200 text-neutral-700 hover:text-[#6b2bb8] hover:border-[#6b2bb8] hover:scale-105 active:scale-95 transition-all duration-200 opacity-0 group-hover/carousel:opacity-100 cursor-pointer"
+        className="hidden md:flex absolute -left-4 top-1/2 -translate-y-1/2 z-20 h-9 w-9 items-center justify-center rounded-full bg-white shadow-md border border-neutral-200 text-neutral-700 hover:text-purple hover:border-purple hover:scale-105 active:scale-95 transition-all duration-200 opacity-0 group-hover/carousel:opacity-100 cursor-pointer"
       >
         <ChevronLeft className="h-4 w-4" />
       </button>
@@ -621,7 +621,7 @@ function Carousel({
         type="button"
         onClick={() => scroll("right")}
         aria-label="Scroll right"
-        className="hidden md:flex absolute -right-4 top-1/2 -translate-y-1/2 z-20 h-9 w-9 items-center justify-center rounded-full bg-white shadow-md border border-neutral-200 text-neutral-700 hover:text-[#6b2bb8] hover:border-[#6b2bb8] hover:scale-105 active:scale-95 transition-all duration-200 opacity-0 group-hover/carousel:opacity-100 cursor-pointer"
+        className="hidden md:flex absolute -right-4 top-1/2 -translate-y-1/2 z-20 h-9 w-9 items-center justify-center rounded-full bg-white shadow-md border border-neutral-200 text-neutral-700 hover:text-purple hover:border-purple hover:scale-105 active:scale-95 transition-all duration-200 opacity-0 group-hover/carousel:opacity-100 cursor-pointer"
       >
         <ChevronRight className="h-4 w-4" />
       </button>
@@ -632,7 +632,7 @@ function Carousel({
           <button
             type="button"
             onClick={onSeeAll}
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#6b2bb8] hover:text-[#5a1f9e] transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-purple hover:opacity-80 transition-opacity cursor-pointer"
           >
             <span>See all</span>
             <ArrowRight className="h-4 w-4" />
@@ -642,7 +642,7 @@ function Carousel({
         <div className="mt-4 text-center md:hidden">
           <Link
             href={seeAllHref}
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#6b2bb8] hover:text-[#5a1f9e] transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-purple hover:opacity-80 transition-opacity"
           >
             <span>See all</span>
             <ArrowRight className="h-4 w-4" />
@@ -666,13 +666,13 @@ function ProvinceCard({
     <Link
       key={province.id}
       href={`/explore/${province.id}`}
-      className="group relative block overflow-hidden rounded-2xl min-w-[220px] sm:min-w-[240px] md:min-w-[260px] shrink-0 aspect-[4/3] bg-white-bone shadow-sm transition-all hover:shadow-lg snap-start"
+      className="group relative block overflow-hidden rounded-2xl min-w-[220px] sm:min-w-[240px] md:min-w-[260px] shrink-0 aspect-[4/3] bg-white-bone shadow-xs border border-neutral-200/80 snap-start"
     >
       <img
         src={province.image}
         alt={province.name}
         loading="lazy"
-        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        className="absolute inset-0 h-full w-full object-cover "
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
       {featured && (
@@ -681,8 +681,8 @@ function ProvinceCard({
         </div>
       )}
       <div className="absolute bottom-0 left-0 p-4 w-full">
-        <h3 className="font-display text-white font-bold text-lg leading-tight">{province.name}</h3>
-        <p className="text-white/70 text-[11px] mt-0.5">
+        <h3 className="text-white font-semibold text-lg leading-tight">{province.name}</h3>
+        <p className="text-white/80 text-[11px] font-semibold tracking-wide mt-0.5">
           {province.stays} stays · {province.experiences} tours
         </p>
       </div>
@@ -706,16 +706,16 @@ function PlaceCard({
     <Link
       key={place.id}
       href={`/explore/${place.provinceId}/${place.id}`}
-      className="group flex items-center gap-3 bg-white border border-neutral-200/90 rounded-2xl px-5 py-3.5 shrink-0 snap-start shadow-sm hover:shadow-md hover:border-[#6b2bb8] hover:bg-[#f3eafb]/40 transition-all duration-200 min-w-[180px] sm:min-w-[200px]"
+      className="group flex items-center gap-3 bg-white border border-neutral-200/90 rounded-2xl px-5 py-3.5 shrink-0 snap-start shadow-xs min-w-[180px] sm:min-w-[200px]"
     >
-      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f3eafb] text-[#6b2bb8] group-hover:scale-105 transition-transform shrink-0">
+      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple/10 text-purple shrink-0">
         <MapPin className="h-5 w-5" />
       </div>
       <div className="pr-1 min-w-0">
-        <h3 className="font-bold text-sm sm:text-base text-[#1a1a1f] group-hover:text-[#6b2bb8] transition-colors leading-tight whitespace-nowrap">
+        <h3 className="font-semibold text-sm sm:text-base text-black leading-tight whitespace-nowrap">
           {place.name}
         </h3>
-        <p className="text-[11px] text-[#5a5a66] mt-0.5 whitespace-nowrap">
+        <p className="text-[11px] font-medium tracking-wide text-black-subtle mt-0.5 whitespace-nowrap">
           {place.stays} stays · {place.region}
         </p>
       </div>
@@ -728,13 +728,13 @@ function CategoryCard({ cat }: { cat: (typeof EXPLORE_CATEGORIES)[0] }) {
   return (
     <Link
       href={cat.href}
-      className="group relative block overflow-hidden rounded-2xl min-w-[200px] sm:min-w-[220px] md:min-w-[240px] shrink-0 aspect-[4/3] bg-white-bone shadow-sm transition-all hover:shadow-lg snap-start"
+      className="group relative block overflow-hidden rounded-2xl min-w-[200px] sm:min-w-[220px] md:min-w-[240px] shrink-0 aspect-[4/3] bg-white-bone shadow-xs border border-neutral-200/80 snap-start"
     >
       <img
         src={cat.img}
         alt={cat.label}
         loading="lazy"
-        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        className="absolute inset-0 h-full w-full object-cover "
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
       <div className="absolute top-3 left-3 flex h-7 w-7 items-center justify-center rounded-full bg-white/20 backdrop-blur-md border border-white/25 shadow-sm">
@@ -744,7 +744,7 @@ function CategoryCard({ cat }: { cat: (typeof EXPLORE_CATEGORIES)[0] }) {
         {cat.count}
       </div>
       <div className="absolute bottom-0 left-0 p-4 w-full">
-        <h3 className="font-display text-white font-bold text-base leading-tight">{cat.label}</h3>
+        <h3 className="text-white font-semibold text-base leading-tight">{cat.label}</h3>
         <p className="text-white/70 text-[11px] mt-0.5 line-clamp-1">{cat.desc}</p>
       </div>
     </Link>
@@ -783,12 +783,12 @@ function PackageCard({
         isGrid ? "w-full" : "w-[260px] sm:w-[280px] md:w-[300px] shrink-0",
       )}
     >
-      <div className="relative aspect-[16/10] bg-white-bone rounded-xl overflow-hidden transition-shadow group-hover:shadow-sm">
+      <div className="relative aspect-[16/10] bg-white-bone rounded-xl overflow-hidden shadow-xs">
         <img
           src={pkg.image}
           alt={pkg.name}
           loading="lazy"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="h-full w-full object-cover "
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
         <span className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-md border border-white/10">
@@ -797,20 +797,20 @@ function PackageCard({
       </div>
       <div className="pt-2.5 px-0.5">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="text-[14px] font-semibold text-black-soft leading-snug line-clamp-1 flex-1">
+          <h3 className="card-title line-clamp-1 flex-1">
             {pkg.name}
           </h3>
           <div className="flex items-center gap-1 shrink-0">
             <Star className="h-3 w-3 fill-purple text-purple" strokeWidth={1.5} />
-            <span className="text-[12px] font-semibold text-black-muted">
+            <span className="card-rating font-semibold">
               {pkg.rating.toFixed(1)}
             </span>
           </div>
         </div>
-        <p className="text-[11px] text-black-muted mt-0.5 line-clamp-1">{pkg.location}</p>
+        <p className="card-location line-clamp-1 mt-0.5">{pkg.location}</p>
         <div className="flex items-baseline gap-1 mt-1.5">
-          <span className="text-[14px] font-bold text-purple">ZMW {pkg.price}</span>
-          <span className="text-[11px] text-black-muted">/ package</span>
+          <span className="card-price text-purple">ZMW {pkg.price}</span>
+          <span className="card-price-modifier">/ package</span>
         </div>
       </div>
     </Link>
@@ -836,7 +836,7 @@ function AttractionCard({
           src={attraction.image}
           alt={attraction.name}
           loading="lazy"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="h-full w-full object-cover "
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
         {attraction.rating >= 4.8 && (
@@ -847,17 +847,17 @@ function AttractionCard({
       </div>
       <div className="pt-2.5 px-0.5">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="text-[14px] font-semibold text-black-soft leading-snug line-clamp-1 flex-1">
+          <h3 className="card-title line-clamp-1 flex-1">
             {attraction.name}
           </h3>
           <div className="flex items-center gap-1 shrink-0">
             <Star className="h-3 w-3 fill-purple text-purple" strokeWidth={1.5} />
-            <span className="text-[12px] font-semibold text-black-muted">
+            <span className="card-rating font-semibold">
               {attraction.rating.toFixed(1)}
             </span>
           </div>
         </div>
-        <p className="text-[11px] text-black-muted mt-0.5">
+        <p className="card-location mt-0.5">
           {attraction.provinceName ?? "Landmark"} · {attraction.reviews.toLocaleString()} reviews
         </p>
       </div>
@@ -885,26 +885,26 @@ function ExperienceItemCard({
           src={exp.image}
           alt={exp.name}
           loading="lazy"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="h-full w-full object-cover "
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
       </div>
       <div className="pt-2.5 px-0.5">
         <div className="flex items-start justify-between gap-3">
-          <h3 className="text-[14px] font-semibold text-black-soft leading-snug line-clamp-1 flex-1">
+          <h3 className="card-title line-clamp-1 flex-1">
             {exp.name}
           </h3>
           <div className="flex items-center gap-1 shrink-0">
             <Star className="h-3 w-3 fill-purple text-purple" strokeWidth={1.5} />
-            <span className="text-[12px] font-semibold text-black-muted">
+            <span className="card-rating font-semibold">
               {exp.rating.toFixed(1)}
             </span>
           </div>
         </div>
-        <p className="text-[11px] text-black-muted mt-1">{exp.location}</p>
+        <p className="card-location mt-1">{exp.location}</p>
         <div className="flex items-baseline gap-0.5 mt-1.5">
-          <span className="text-[14px] font-bold text-purple">ZMW {exp.price}</span>
-          <span className="text-[11px] text-black-muted">/ person</span>
+          <span className="card-price text-purple">ZMW {exp.price}</span>
+          <span className="card-price-modifier">/ person</span>
         </div>
       </div>
     </Link>
@@ -922,7 +922,7 @@ function TransportItemCard({
     <Link
       href={`/listings/transport/${route.id}`}
       className={cn(
-        "group bg-white rounded-xl border border-purple-border overflow-hidden transition-all hover:shadow-[0_4px_16px_rgba(31,20,51,0.10)] block snap-start",
+        "group bg-white rounded-xl border border-purple-border overflow-hidden shadow-xs block snap-start",
         isGrid ? "w-full" : "w-[280px] sm:w-[300px] shrink-0",
       )}
     >
@@ -931,7 +931,7 @@ function TransportItemCard({
           src={route.image}
           alt={`${route.from} to ${route.to}`}
           loading="lazy"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="h-full w-full object-cover "
         />
       </div>
       <div className="p-3.5 flex flex-col gap-2">
@@ -941,7 +941,7 @@ function TransportItemCard({
             <span className="text-black-muted text-xs">→</span>
             <span>{route.to}</span>
           </div>
-          <span className="text-[14px] font-bold text-purple shrink-0">ZMW {route.price}</span>
+          <span className="card-price text-purple shrink-0">ZMW {route.price}</span>
         </div>
         <div className="flex items-center justify-between text-xs">
           <p className="font-semibold text-black-soft truncate">{route.operator}</p>
@@ -960,13 +960,13 @@ function FlashDealCard({ deal }: { deal: (typeof FLASH_DEALS)[0] }) {
   return (
     <Link
       href={`/listings/stays/${deal.id.replace("deal-", "")}`}
-      className="group relative block overflow-hidden rounded-2xl w-[260px] sm:w-[280px] shrink-0 aspect-[4/3] bg-white-bone shadow-[0_2px_12px_rgba(31,20,51,0.10)] transition-all hover:shadow-[0_12px_32px_rgba(31,20,51,0.18)] snap-start"
+      className="group relative block overflow-hidden rounded-2xl w-[260px] sm:w-[280px] shrink-0 aspect-[4/3] bg-white-bone shadow-xs border border-neutral-200/80 snap-start"
     >
       <img
         src={deal.image}
         alt={deal.name}
         loading="lazy"
-        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        className="absolute inset-0 h-full w-full object-cover "
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
       <div className="absolute top-3 left-3">
@@ -980,7 +980,7 @@ function FlashDealCard({ deal }: { deal: (typeof FLASH_DEALS)[0] }) {
         </span>
       </div>
       <div className="absolute bottom-0 left-0 p-4 w-full">
-        <h3 className="font-display text-white font-bold text-base leading-tight mb-1.5 line-clamp-1">
+        <h3 className="text-white font-semibold text-base leading-tight mb-1.5 line-clamp-1">
           {deal.name}
         </h3>
         <div className="flex items-center gap-2">
@@ -1845,10 +1845,10 @@ function LocationHub({
                 type="button"
                 onClick={() => handleSwitchTab(tab.key)}
                 className={cn(
-                  "shrink-0 inline-flex items-center gap-2 py-3.5 text-sm font-bold transition-all duration-150 cursor-pointer border-b-2 whitespace-nowrap",
+                  "shrink-0 inline-flex items-center gap-2 py-3.5 text-sm font-semibold transition-all duration-150 cursor-pointer border-b-2 whitespace-nowrap",
                   activeTab === tab.key
-                    ? "border-[#6b2bb8] text-[#6b2bb8]"
-                    : "border-transparent text-neutral-500 hover:text-[#6b2bb8]",
+                    ? "border-purple text-purple"
+                    : "border-transparent text-neutral-500 hover:text-purple",
                 )}
               >
                 {tab.icon}
@@ -1875,10 +1875,10 @@ function LocationHub({
                     type="button"
                     onClick={() => setStayFilter(active ? "" : pill.type)}
                     className={cn(
-                      "flex-none whitespace-nowrap px-6 py-2 rounded-full border text-sm transition-all duration-150 active:scale-95 select-none cursor-pointer",
+                      "flex-none whitespace-nowrap px-6 py-2 rounded-full border text-sm font-semibold transition-all duration-150 active:scale-95 select-none cursor-pointer",
                       active
-                        ? "bg-[#6b2bb8] text-white border-[#6b2bb8] shadow-sm font-bold scale-[1.02]"
-                        : "bg-white border-neutral-200 text-neutral-700 font-semibold hover:border-[#6b2bb8]/50 hover:text-[#6b2bb8] hover:bg-[#6b2bb8]/[0.03] hover:shadow-xs",
+                        ? "bg-purple text-white border-purple shadow-sm"
+                        : "bg-white border-neutral-200 text-neutral-700 hover:border-purple/50 hover:text-purple hover:bg-purple/[0.03]",
                     )}
                   >
                     {pill.label}
@@ -1905,10 +1905,10 @@ function LocationHub({
                     type="button"
                     onClick={() => setExperienceFilter(active ? "" : pill.type)}
                     className={cn(
-                      "flex-none whitespace-nowrap px-6 py-2 rounded-full border text-sm transition-all duration-150 active:scale-95 select-none cursor-pointer",
+                      "flex-none whitespace-nowrap px-6 py-2 rounded-full border text-sm font-semibold transition-all duration-150 active:scale-95 select-none cursor-pointer",
                       active
-                        ? "bg-[#6b2bb8] text-white border-[#6b2bb8] shadow-sm font-bold scale-[1.02]"
-                        : "bg-white border-neutral-200 text-neutral-700 font-semibold hover:border-[#6b2bb8]/50 hover:text-[#6b2bb8] hover:bg-[#6b2bb8]/[0.03] hover:shadow-xs",
+                        ? "bg-purple text-white border-purple shadow-sm"
+                        : "bg-white border-neutral-200 text-neutral-700 hover:border-purple/50 hover:text-purple hover:bg-purple/[0.03]",
                     )}
                   >
                     {pill.label}
@@ -1935,10 +1935,10 @@ function LocationHub({
                     type="button"
                     onClick={() => setPackageFilter(pill.type)}
                     className={cn(
-                      "flex-none whitespace-nowrap px-6 py-2 rounded-full border text-sm transition-all duration-150 active:scale-95 select-none cursor-pointer",
+                      "flex-none whitespace-nowrap px-6 py-2 rounded-full border text-sm font-semibold transition-all duration-150 active:scale-95 select-none cursor-pointer",
                       active
-                        ? "bg-[#6b2bb8] text-white border-[#6b2bb8] shadow-sm font-bold scale-[1.02]"
-                        : "bg-white border-neutral-200 text-neutral-700 font-semibold hover:border-[#6b2bb8]/50 hover:text-[#6b2bb8] hover:bg-[#6b2bb8]/[0.03] hover:shadow-xs",
+                        ? "bg-purple text-white border-purple shadow-sm"
+                        : "bg-white border-neutral-200 text-neutral-700 hover:border-purple/50 hover:text-purple hover:bg-purple/[0.03]",
                     )}
                   >
                     {pill.label}
@@ -1965,10 +1965,10 @@ function LocationHub({
                     type="button"
                     onClick={() => setTransportFilter(pill.type)}
                     className={cn(
-                      "flex-none whitespace-nowrap px-6 py-2 rounded-full border text-sm transition-all duration-150 active:scale-95 select-none cursor-pointer",
+                      "flex-none whitespace-nowrap px-6 py-2 rounded-full border text-sm font-semibold transition-all duration-150 active:scale-95 select-none cursor-pointer",
                       active
-                        ? "bg-[#6b2bb8] text-white border-[#6b2bb8] shadow-sm font-bold scale-[1.02]"
-                        : "bg-white border-neutral-200 text-neutral-700 font-semibold hover:border-[#6b2bb8]/50 hover:text-[#6b2bb8] hover:bg-[#6b2bb8]/[0.03] hover:shadow-xs",
+                        ? "bg-purple text-white border-purple shadow-sm"
+                        : "bg-white border-neutral-200 text-neutral-700 hover:border-purple/50 hover:text-purple hover:bg-purple/[0.03]",
                     )}
                   >
                     {pill.label}
@@ -2160,23 +2160,11 @@ function LocationHub({
         </div>
       )}
 
-      {/* 2. STAYS TAB (Full Grid with Active Pill Filter) */}
+      {/* 2. STAYS TAB */}
       {activeTab === "stays" && (
         <main className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
-          <div className="flex items-end justify-between mb-6">
-            <div>
-              <h2 className="text-xl md:text-2xl font-semibold text-neutral-900 tracking-tight">
-                {stayFilter === "Popular"
-                  ? `Popular Stays in ${locationName}`
-                  : stayFilter
-                    ? `${stayFilter} Stays in ${locationName}`
-                    : `All Stays in ${locationName}`}
-              </h2>
-              <p className="text-xs md:text-sm text-neutral-500 mt-1 font-normal">
-                Showing {filteredStays.length} vetted safari lodges, villas and guesthouses
-              </p>
-            </div>
-            {stayFilter && (
+          {stayFilter && (
+            <div className="flex justify-end mb-4">
               <button
                 type="button"
                 onClick={() => setStayFilter("")}
@@ -2184,8 +2172,8 @@ function LocationHub({
               >
                 Clear filter
               </button>
-            )}
-          </div>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filteredStays.map((stay) => (
@@ -2195,23 +2183,11 @@ function LocationHub({
         </main>
       )}
 
-      {/* 3. EXPERIENCES TAB (Full Grid with Active Pill Filter) */}
+      {/* 3. EXPERIENCES TAB */}
       {activeTab === "experiences" && (
         <main className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
-          <div className="flex items-end justify-between mb-6">
-            <div>
-              <h2 className="text-xl md:text-2xl font-semibold text-neutral-900 tracking-tight">
-                {experienceFilter === "popular"
-                  ? `Popular Experiences in ${locationName}`
-                  : experienceFilter
-                    ? `${experienceFilter.charAt(0).toUpperCase() + experienceFilter.slice(1)} Experiences in ${locationName}`
-                    : `All Experiences in ${locationName}`}
-              </h2>
-              <p className="text-xs md:text-sm text-neutral-500 mt-1 font-normal">
-                Showing {filteredExperiences.length} guided tours, safaris and authentic activities
-              </p>
-            </div>
-            {experienceFilter && (
+          {experienceFilter && (
+            <div className="flex justify-end mb-4">
               <button
                 type="button"
                 onClick={() => setExperienceFilter("")}
@@ -2219,8 +2195,8 @@ function LocationHub({
               >
                 Clear filter
               </button>
-            )}
-          </div>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {filteredExperiences.map((exp) => (
@@ -2230,21 +2206,11 @@ function LocationHub({
         </main>
       )}
 
-      {/* 4. PACKAGES TAB (Full Grid with Active Pill Filter) */}
+      {/* 4. PACKAGES TAB */}
       {activeTab === "packages" && (
         <main className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
-          <div className="flex items-end justify-between mb-6">
-            <div>
-              <h2 className="text-xl md:text-2xl font-semibold text-neutral-900 tracking-tight">
-                {packageFilter === "all"
-                  ? `Holiday Packages in & around ${locationName}`
-                  : `${packageFilter.charAt(0).toUpperCase() + packageFilter.slice(1)} Packages in ${locationName}`}
-              </h2>
-              <p className="text-xs md:text-sm text-neutral-500 mt-1 font-normal">
-                Showing {filteredPackages.length} curated multi-day itineraries and safari getaways
-              </p>
-            </div>
-            {packageFilter !== "all" && (
+          {packageFilter !== "all" && (
+            <div className="flex justify-end mb-4">
               <button
                 type="button"
                 onClick={() => setPackageFilter("all")}
@@ -2252,8 +2218,8 @@ function LocationHub({
               >
                 Show all
               </button>
-            )}
-          </div>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {filteredPackages.map((pkg) => (
@@ -2263,19 +2229,11 @@ function LocationHub({
         </main>
       )}
 
-      {/* 5. TRANSPORT TAB (Full Grid with Active Pill Filter) */}
+      {/* 5. TRANSPORT TAB */}
       {activeTab === "transport" && (
         <main className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
-          <div className="flex items-end justify-between mb-6">
-            <div>
-              <h2 className="text-xl md:text-2xl font-semibold text-neutral-900 tracking-tight">
-                Transport &amp; Connections for {locationName}
-              </h2>
-              <p className="text-xs md:text-sm text-neutral-500 mt-1 font-normal">
-                Showing {filteredTransport.length} routes, scheduled buses and private shuttles
-              </p>
-            </div>
-            {transportFilter !== "all" && (
+          {transportFilter !== "all" && (
+            <div className="flex justify-end mb-4">
               <button
                 type="button"
                 onClick={() => setTransportFilter("all")}
@@ -2283,8 +2241,8 @@ function LocationHub({
               >
                 Show all
               </button>
-            )}
-          </div>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {filteredTransport.map((route) => (

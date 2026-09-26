@@ -235,21 +235,18 @@ export function HostTodaySchedule({
       label: "Arriving Today",
       shortLabel: "Arriving",
       icon: LogIn,
-      count: arrivingItems.length,
     },
     {
       key: "hosting" as const,
       label: "Currently Hosting",
       shortLabel: "Hosting",
       icon: Bed,
-      count: hostingItems.length,
     },
     {
       key: "departing" as const,
       label: "Departing Today",
       shortLabel: "Departing",
       icon: LogOut,
-      count: departingItems.length,
     },
   ];
 
@@ -258,53 +255,43 @@ export function HostTodaySchedule({
       {/* Section Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>
-          <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-neutral-900 leading-snug">
+          <h2 className="text-base sm:text-lg font-semibold tracking-normal text-black leading-snug">
             Today&apos;s Schedule
           </h2>
         </div>
 
         <Link
           href="/host/bookings"
-          className="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold text-purple hover:text-purple-hover transition-colors group self-start sm:self-auto"
+          className="inline-flex items-center gap-1 text-xs sm:text-sm font-medium text-purple hover:text-purple-hover transition-colors group self-start sm:self-auto"
         >
           <span>View all bookings</span>
           <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
         </Link>
       </div>
 
-      {/* Uniform, High-Contrast Segmented Tab Bar (Fits all 3 tabs gracefully on mobile) */}
-      <div className="p-1 sm:p-1.5 bg-neutral-100 rounded-2xl border border-neutral-200/80 flex gap-1 sm:gap-1.5">
-        {tabConfigs.map(({ key, label, shortLabel, icon: Icon, count }) => {
+      {/* Airbnb-style unconfined straight-line tabs */}
+      <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide py-1">
+        {tabConfigs.map(({ key, label, shortLabel, icon: Icon }) => {
           const isActive = activeTab === key;
           return (
             <button
               key={key}
               onClick={() => setActiveTab(key)}
               className={cn(
-                "flex-1 min-w-0 flex items-center justify-center gap-1.5 sm:gap-2.5 py-2.5 sm:py-3 px-2 sm:px-4 rounded-xl text-xs sm:text-sm transition-all duration-200 cursor-pointer",
+                "inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm transition-colors cursor-pointer shrink-0 whitespace-nowrap",
                 isActive
-                  ? "bg-white text-neutral-900 font-semibold shadow-xs border border-neutral-200/90"
-                  : "text-neutral-600 hover:text-neutral-900 hover:bg-white/50 font-medium border border-transparent",
+                  ? "bg-purple/10 text-purple font-semibold"
+                  : "text-black-subtle hover:text-black hover:bg-neutral-100/80 font-medium",
               )}
             >
               <Icon
                 className={cn(
-                  "h-4 w-4 sm:h-4.5 sm:w-4.5 shrink-0 transition-colors",
-                  isActive ? "text-purple" : "text-neutral-400",
+                  "h-4 w-4 shrink-0 transition-colors",
+                  isActive ? "text-purple" : "text-black-muted",
                 )}
               />
-              <span className="hidden sm:inline truncate">{label}</span>
-              <span className="sm:hidden truncate">{shortLabel}</span>
-              <span
-                className={cn(
-                  "px-2 sm:px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold shrink-0 transition-colors",
-                  isActive
-                    ? "bg-purple/10 text-purple border border-purple/20"
-                    : "bg-neutral-200/70 text-neutral-600",
-                )}
-              >
-                {count}
-              </span>
+              <span className="hidden sm:inline">{label}</span>
+              <span className="sm:hidden">{shortLabel}</span>
             </button>
           );
         })}
@@ -362,7 +349,7 @@ export function HostTodaySchedule({
                     <div className="flex items-center gap-2 flex-wrap">
                       <button
                         onClick={() => onSelectBooking(toBookingDetails(item))}
-                        className="text-sm sm:text-base font-semibold text-neutral-900 hover:text-purple transition-colors text-left cursor-pointer truncate"
+                        className="text-sm sm:text-base font-semibold text-black hover:text-purple transition-colors text-left cursor-pointer truncate"
                       >
                         {item.guestName}
                       </button>
@@ -373,15 +360,15 @@ export function HostTodaySchedule({
                           <Check className="h-2.5 w-2.5" /> Checked In
                         </span>
                       ) : isCheckedOut ? (
-                        <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-700 border border-neutral-200">
+                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-neutral-100 text-black-subtle border border-neutral-200 tracking-wide">
                           <Check className="h-2.5 w-2.5" /> Checked Out
                         </span>
                       ) : activeTab === "hosting" ? (
-                        <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-purple/10 text-purple border border-purple/20">
+                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-purple/10 text-purple border border-purple/20 tracking-wide">
                           In-House
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 tracking-wide">
                           Confirmed
                         </span>
                       )}
@@ -402,10 +389,10 @@ export function HostTodaySchedule({
                   {/* Payout amount: clean and compact */}
                   {item.amount != null && (
                     <div className="text-left md:text-right pr-1">
-                      <div className="text-[11px] sm:text-xs font-semibold text-neutral-800">
+                      <div className="text-xs sm:text-sm font-semibold text-black">
                         K{item.amount.toLocaleString()}
                       </div>
-                      <div className="text-[9px] sm:text-[10px] text-neutral-400 font-medium tracking-wide">
+                      <div className="text-[11px] text-black-muted font-semibold tracking-wide uppercase">
                         payout
                       </div>
                     </div>

@@ -1,84 +1,131 @@
+/* Nearby Escapes — Host Availability Calendar Styling */
+
+.availability-calendar.react-datepicker {
+  width: 100% !important;
+  border: none !important;
+  background: transparent !important;
+  font-family: inherit !important;
+  display: block !important;
+  position: relative;
 }
 
-/* Month header (e.g. "August 2026" + nav chevrons) */
+/* Header & Current Month Label */
 .availability-calendar .react-datepicker__header {
   background: transparent !important;
   border-bottom: none !important;
-  padding: 0 !important;
+  padding: 0 0 8px 0 !important;
+  position: relative;
 }
 
 .availability-calendar .react-datepicker__current-month {
-  font-size: 13px;
-  font-weight: 500;
-  color: #1c1030;
-  letter-spacing: normal;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f1433;
+  letter-spacing: -0.01em;
+  padding: 6px 0 10px;
+  text-align: center;
 }
 
+/* Navigation Buttons */
 .availability-calendar .react-datepicker__navigation {
-  top: 2px;
+  position: absolute;
+  top: 6px;
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  background: #f8f6fb;
+  border: 1px solid rgba(31, 20, 51, 0.12);
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+  transition: all 0.15s ease;
+}
+
+.availability-calendar .react-datepicker__navigation:hover {
+  background: #efeaf6;
+  border-color: #1f1433;
+}
+
+.availability-calendar .react-datepicker__navigation--previous {
+  left: 8px;
+}
+
+.availability-calendar .react-datepicker__navigation--next {
+  right: 8px;
 }
 
 .availability-calendar .react-datepicker__navigation-icon::before {
-  border-color: #2a1b47;
-  border-width: 1.5px 1.5px 0 0;
-  height: 7px;
-  width: 7px;
-  top: 4px;
+  border-color: #1f1433 !important;
+  border-width: 2px 2px 0 0 !important;
+  height: 7px !important;
+  width: 7px !important;
+  top: 11px !important;
 }
 
-/* Weekday header row */
+/* Weekday Names Header Row */
 .availability-calendar .react-datepicker__day-names {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-  margin: 8px 0 4px;
+  gap: 6px;
+  margin: 0 0 6px 0;
+  padding: 0;
   white-space: normal;
 }
 
 .availability-calendar .react-datepicker__day-name {
   width: 100% !important;
-  font-size: 9px;
-  font-weight: 500;
-  color: #64748b;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #8e8798;
   line-height: 1;
+  text-align: center;
+  margin: 0 !important;
+  padding: 4px 0;
 }
 
-/* Month body */
+/* Month Body & Weeks */
 .availability-calendar .react-datepicker__month {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   margin: 0 !important;
+  padding: 0 !important;
 }
 
 .availability-calendar .react-datepicker__week {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
+  gap: 6px;
   white-space: normal;
 }
 
-/* Day cells */
+/* Day Cells Base */
 .availability-calendar .react-datepicker__day {
   width: 100% !important;
-  height: 32px;
+  height: 38px;
   margin: 0 !important;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  font-size: 11px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 500;
   line-height: 1;
-  color: #1c1030;
+  color: #1f1433;
   position: relative;
+  transition: all 0.15s ease;
+  user-select: none;
 }
 
 .availability-calendar .react-datepicker__day:focus-visible {
-  outline: 2px solid #3d2463;
-  outline-offset: -2px;
+  outline: 2px solid #1f1433;
+  outline-offset: 1px;
 }
 
-/* Kill react-datepicker's default blue selection/keyboard styles */
+/* Clear default react-datepicker selection highlights */
 .availability-calendar .react-datepicker__day--selected,
 .availability-calendar .react-datepicker__day--keyboard-selected,
 .availability-calendar .react-datepicker__day--in-range,
@@ -87,55 +134,66 @@
   color: inherit;
 }
 
-/* Outside-month overflow days (prev/next month in the grid) */
+/* Outside Month Days: Invisible to maintain grid alignment */
 .availability-calendar .react-datepicker__day--outside-month {
-  opacity: 0.2;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
 }
 
-/* Disabled days */
-.availability-calendar .react-datepicker__day--disabled {
-  cursor: default;
-}
-
-/* Day state classes */
-.availability-calendar .rdp-past {
-  opacity: 0.4;
-  cursor: default;
-}
-
-.availability-calendar .rdp-booked {
-  background: #fef3c7;
-  color: #92400e;
-  font-weight: 500;
-  cursor: default;
-}
-
-.availability-calendar .rdp-blocked {
-  background: #fee2e2;
-  color: #b91c1c;
-  cursor: pointer;
-}
-
-.availability-calendar .rdp-blocked:hover {
-  background: #fecaca;
-}
-
+/* Status States */
+/* 1. Open / Available */
 .availability-calendar .rdp-open {
-  background: #dcfce7;
-  border: 1px solid #86efac;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
   color: #166534;
   cursor: pointer;
 }
-
 .availability-calendar .rdp-open:hover {
-  background: #bbf7d0;
+  background: #dcfce7;
+  border-color: #86efac;
+  transform: scale(1.04);
 }
 
+/* 2. Booked */
+.availability-calendar .rdp-booked {
+  background: #fef9c3;
+  border: 1px solid #fef08a;
+  color: #854d0e;
+  font-weight: 600;
+  cursor: not-allowed;
+}
+
+/* 3. Blocked by Host */
+.availability-calendar .rdp-blocked {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  cursor: pointer;
+  font-weight: 500;
+}
+.availability-calendar .rdp-blocked:hover {
+  background: #fee2e2;
+  border-color: #f87171;
+  transform: scale(1.04);
+}
+
+/* 4. Past Dates */
+.availability-calendar .rdp-past {
+  background: #fafafc;
+  border: 1px solid #f0edf5;
+  color: #a09ab0;
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* 5. Today Highlight */
 .availability-calendar .rdp-today {
-  border: 1.5px solid #2a1b47 !important;
+  box-shadow: 0 0 0 2px #1f1433 inset !important;
+  font-weight: 700;
 }
 
-/* Cell content: day number + status dot */
+/* Cell content layout */
 .availability-calendar .rdp-cell {
   position: relative;
   display: flex;
@@ -152,7 +210,7 @@
 
 .availability-calendar .rdp-dot {
   position: absolute;
-  bottom: 1px;
+  bottom: 3px;
   left: 50%;
   transform: translateX(-50%);
   width: 12px;
@@ -161,56 +219,43 @@
 }
 
 .availability-calendar .rdp-dot-booked {
-  background: #f59e0b;
+  background: #eab308;
 }
 
 .availability-calendar .rdp-dot-blocked {
   background: #ef4444;
 }
 
-// Tablet+ (md+): two-month side-by-side layout
-
+/* Responsive Two-Month Layout */
 @media (min-width: 768px) {
-  .availability-calendar {
+  .availability-calendar.react-datepicker {
     display: flex !important;
-    gap: 12px;
-    align-items: flex-start;
+    gap: 20px;
+    align-items: stretch;
   }
 
   .availability-calendar .react-datepicker__month-container {
     flex: 1 1 0;
     min-width: 0;
+    background: #ffffff;
+    border: 1px solid rgba(31, 20, 51, 0.08);
+    border-radius: 16px;
+    padding: 16px 14px 14px;
+    box-shadow: 0 1px 4px rgba(31, 20, 51, 0.04);
+  }
+}
+
+@media (max-width: 767px) {
+  .availability-calendar.react-datepicker {
+    display: block !important;
+    width: 100% !important;
   }
 
-  /* Left (previous) month: slightly muted */
-  .availability-calendar .react-datepicker__month-container:nth-child(1) {
-    flex: 0.88 1 0;
-    opacity: 0.85;
-  }
-
-  /* Right (current) month: larger and emphasized */
-  .availability-calendar .react-datepicker__month-container:nth-child(2) {
-    flex: 1.2 1 0;
-    box-shadow: 0 1px 6px rgba(61, 36, 99, 0.08), 0 0 0 1px rgba(61, 36, 99, 0.06);
-    border-radius: 12px;
-    padding: 8px 4px 4px;
-    background: #fff;
-  }
-
-  /* Bigger day cells in the current month */
-  .availability-calendar .react-datepicker__month-container:nth-child(2) .react-datepicker__day {
-    height: 34px;
-    font-size: 12px;
-  }
-
-  /* Current month header slightly bolder */
-  .availability-calendar .react-datepicker__month-container:nth-child(2) .react-datepicker__current-month {
-    font-size: 14px;
-    font-weight: 600;
-  }
-
-  /* Navigation arrows: ensure visible in both containers */
-  .availability-calendar .react-datepicker__navigation {
-    display: flex !important;
+  .availability-calendar .react-datepicker__month-container {
+    width: 100% !important;
+    background: #ffffff;
+    border: 1px solid rgba(31, 20, 51, 0.08);
+    border-radius: 16px;
+    padding: 14px 12px 12px;
   }
 }

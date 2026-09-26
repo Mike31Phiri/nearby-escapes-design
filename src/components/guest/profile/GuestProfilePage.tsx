@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Star, MapPin, Calendar, User, ChevronRight, CheckCircle2, Clock, X } from "lucide-react";
+import { Star, MapPin, Calendar, User, ChevronRight, CheckCircle2, Clock, X, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AccountSettingsMenu } from "./AccountSettingsMenu";
 import { useAuth } from "@/lib/store/authStore";
@@ -57,7 +57,7 @@ export function GuestProfilePage() {
       title: "Chisanga's Lakeside Lodge",
       location: "Livingstone, Southern Province",
       image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80",
-      dates: "12 Aug – 15 Aug 2025",
+      dates: "12 Aug 2025",
       guests: "2 Guests",
       price: "ZMW 3,450",
       status: "completed",
@@ -91,20 +91,22 @@ export function GuestProfilePage() {
   return (
     <div className="min-h-screen bg-[#fbfafc] font-sans">
       <main className="max-w-5xl mx-auto w-full px-4 md:px-6 pt-8 md:pt-10 pb-16">
-        {/* Header without auth links */}
-        <div className="mb-8">
-          <h1 className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight">Profile</h1>
-          <p className="text-sm text-neutral-500 mt-0.5">
-            Manage your personal info, travel history, and account settings
-          </p>
-        </div>
-
         {/* Content Layout */}
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 items-start">
           {/* LEFT COLUMN */}
           <div className="w-full lg:w-2/3 space-y-6">
             {/* Centered Profile Overview Card */}
-            <div className="bg-white border border-neutral-200/80 rounded-2xl p-6 sm:p-8 shadow-2xs text-center">
+            <div className="relative bg-white border border-neutral-200/80 rounded-2xl p-6 sm:p-8 shadow-2xs text-center">
+              {/* Edit Profile button on top right */}
+              <Link
+                href="/settings/info"
+                className="absolute top-3.5 right-3.5 sm:top-4 sm:right-4 p-2 rounded-xl text-neutral-400 hover:text-purple hover:bg-purple/5 transition-colors border border-transparent hover:border-purple/15 cursor-pointer"
+                aria-label="Edit profile"
+                title="Edit profile"
+              >
+                <Pencil className="w-4 h-4" />
+              </Link>
+
               {/* Profile icon in center */}
               <div className="flex flex-col items-center">
                 <div className="relative mb-3">
@@ -137,13 +139,6 @@ export function GuestProfilePage() {
                   Member since {user?.createdAt ? new Date(user.createdAt).getFullYear() : "2024"} ·
                   Verified Guest
                 </p>
-
-                <Link
-                  href="/settings/info"
-                  className="text-xs font-medium text-[#6b2bb8] hover:text-[#5a22a0] hover:underline mt-2.5 inline-block"
-                >
-                  Edit profile
-                </Link>
               </div>
 
               {/* Stats Strip */}
@@ -217,12 +212,7 @@ export function GuestProfilePage() {
                     ? bookings.slice(0, 3).map((b) => {
                         const tripType = b.type || "stay";
                         const checkIn = b.details?.checkIn;
-                        const checkOut = b.details?.checkOut;
-                        const dateStr = checkIn
-                          ? checkOut
-                            ? `${checkIn} – ${checkOut}`
-                            : checkIn
-                          : b.details?.date || "Recent booking";
+                        const dateStr = checkIn || b.details?.date || "Recent booking";
                         const guestsStr = b.details?.guests
                           ? `${b.details.guests} Guest${b.details.guests > 1 ? "s" : ""}`
                           : "1 Guest";
@@ -270,13 +260,13 @@ export function GuestProfilePage() {
                                 </span>
                               </div>
                               <div className="min-w-0 space-y-1">
-                                <div className="flex items-center gap-2">
-                                  <p className="font-semibold text-sm text-neutral-900 truncate">
-                                    {tripData.title}
-                                  </p>
+                                <p className="font-semibold text-sm text-neutral-900 truncate">
+                                  {tripData.title}
+                                </p>
+                                <div>
                                   <span
                                     className={cn(
-                                      "text-[10px] font-medium px-2 py-0.5 rounded-full border shrink-0",
+                                      "inline-block text-[10px] font-medium px-2 py-0.5 rounded-full border",
                                       isUpcoming
                                         ? "text-[#6b2bb8] bg-[#6b2bb8]/10 border-[#6b2bb8]/25"
                                         : b.status === "confirmed"
@@ -302,8 +292,6 @@ export function GuestProfilePage() {
                                   <span>{guestsStr}</span>
                                 </p>
                                 <div className="flex items-center gap-2 text-[11px] text-neutral-400 pt-0.5">
-                                  <span>Ref: {tripData.bookingRef}</span>
-                                  <span>·</span>
                                   <span className="font-medium text-neutral-700">{priceStr}</span>
                                 </div>
                               </div>
@@ -340,21 +328,21 @@ export function GuestProfilePage() {
                               </span>
                             </div>
                             <div className="min-w-0 space-y-1">
-                              <div className="flex items-center gap-2">
-                                <p className="font-semibold text-sm text-neutral-900 truncate">
+                              <p className="font-semibold text-sm text-neutral-900 truncate">
                                   {trip.title}
                                 </p>
-                                <span
-                                  className={cn(
-                                    "text-[10px] font-medium px-2 py-0.5 rounded-full border shrink-0",
-                                    trip.status === "completed"
-                                      ? "text-emerald-700 bg-emerald-50 border-emerald-200"
-                                      : "text-[#6b2bb8] bg-[#6b2bb8]/10 border-[#6b2bb8]/25",
-                                  )}
-                                >
-                                  {trip.status === "completed" ? "Completed" : "Upcoming"}
-                                </span>
-                              </div>
+                                <div>
+                                  <span
+                                    className={cn(
+                                      "inline-block text-[10px] font-medium px-2 py-0.5 rounded-full border",
+                                      trip.status === "completed"
+                                        ? "text-emerald-700 bg-emerald-50 border-emerald-200"
+                                        : "text-[#6b2bb8] bg-[#6b2bb8]/10 border-[#6b2bb8]/25",
+                                    )}
+                                  >
+                                    {trip.status === "completed" ? "Completed" : "Upcoming"}
+                                  </span>
+                                </div>
                               <p className="text-xs text-neutral-500 flex items-center gap-1">
                                 <MapPin className="w-3 h-3 text-neutral-400 shrink-0" />
                                 <span className="truncate">{trip.location}</span>
@@ -366,8 +354,6 @@ export function GuestProfilePage() {
                                 <span>{trip.guests}</span>
                               </p>
                               <div className="flex items-center gap-2 text-[11px] text-neutral-400 pt-0.5">
-                                <span>Ref: {trip.bookingRef}</span>
-                                <span>·</span>
                                 <span className="font-medium text-neutral-700">{trip.price}</span>
                               </div>
                             </div>

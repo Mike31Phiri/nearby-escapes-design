@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -79,7 +79,7 @@ export function ExperienceDetailPage({
                 {experience.category || experience.activityType || "Experience"}
               </span>
             </div>
-            <h1 className="text-2xl md:text-3xl font-display font-black tracking-tight text-foreground mb-1.5">
+            <h1 className="text-2xl md:text-3xl font-display font-bold tracking-tight text-foreground mb-1.5">
               {title}
             </h1>
             <div className="flex flex-wrap items-center gap-3 text-base text-muted-foreground">
@@ -212,7 +212,7 @@ export function ExperienceDetailPage({
           {/* Booking Sidebar */}
           <div className="sticky top-24 bg-card border border-border/60 rounded-2xl p-6 shadow-xl card-shadow hidden lg:block">
             <div className="flex items-baseline gap-1 mb-4">
-              <span className="text-2xl font-black">K{priceDisplay}</span>
+              <span className="text-2xl font-bold">K{priceDisplay}</span>
               <span className="text-base text-muted-foreground">/ person</span>
             </div>
             <Button className="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold h-12 text-lg">

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
@@ -206,7 +206,7 @@ export function HostInventoryPage() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-black text-neutral-900">
+                    <p className="text-2xl font-bold text-neutral-900">
                       {counts.available}
                       <span className="text-sm font-bold text-neutral-500">
                         {" "}
@@ -299,7 +299,7 @@ export function HostInventoryPage() {
                             </h3>
                             <span
                               className={cn(
-                                "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider shrink-0",
+                                "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide shrink-0",
                                 meta.chip,
                               )}
                             >
@@ -313,7 +313,7 @@ export function HostInventoryPage() {
                           {unit.price && (
                             <p className="text-xs font-bold text-neutral-900 mt-1.5">
                               K{unit.price}
-                              <span className="text-[10px] font-normal text-neutral-400">
+                              <span className="text-xs text-black-muted">
                                 {" "}
                                 / {inventory?.unitLabel.toLowerCase()}
                               </span>
@@ -325,7 +325,7 @@ export function HostInventoryPage() {
                           <button
                             onClick={() => toggleUnit(unit.id)}
                             className={cn(
-                              "flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider border transition-all outline-none shrink-0",
+                              "flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wide border transition-all outline-none shrink-0",
                               unit.status === "available"
                                 ? "bg-neutral-50 text-neutral-600 border-neutral-200 hover:bg-neutral-100"
                                 : "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100",
@@ -342,7 +342,7 @@ export function HostInventoryPage() {
                             )}
                           </button>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-neutral-400 shrink-0">
+                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide text-neutral-400 shrink-0">
                             Booked
                           </span>
                         )}
@@ -372,7 +372,7 @@ export function HostInventoryPage() {
 
               <div className="grid grid-cols-2 gap-2 mt-4">
                 <div className="bg-neutral-50/80 rounded-xl px-3.5 py-2.5 border border-neutral-200/80">
-                  <div className="text-[10px] text-purple font-bold uppercase tracking-wide mb-0.5">
+                  <div className="text-[11px] text-purple font-semibold uppercase tracking-wide mb-0.5">
                     From
                   </div>
                   <input
@@ -383,7 +383,7 @@ export function HostInventoryPage() {
                   />
                 </div>
                 <div className="bg-neutral-50/80 rounded-xl px-3.5 py-2.5 border border-neutral-200/80">
-                  <div className="text-[10px] text-purple font-bold uppercase tracking-wide mb-0.5">
+                  <div className="text-[11px] text-purple font-semibold uppercase tracking-wide mb-0.5">
                     To
                   </div>
                   <input

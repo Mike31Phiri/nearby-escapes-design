@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -463,7 +463,7 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                 {itinerary.map((item) => (
                   <div key={item.day} className="relative group">
                     {/* Numbered node */}
-                    <div className="absolute -left-[35px] top-0 w-8 h-8 rounded-full bg-neutral-900 text-white font-black text-xs flex items-center justify-center ring-4 ring-white shadow-sm">
+                    <div className="absolute -left-[35px] top-0 w-8 h-8 rounded-full bg-neutral-900 text-white font-bold text-xs flex items-center justify-center ring-4 ring-white shadow-sm">
                       D{item.day}
                     </div>
 
@@ -754,7 +754,7 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                       </span>
                     </div>
                   )}
-                  <div className="pt-2 border-t border-black/[0.06] flex items-baseline justify-between font-black text-base text-neutral-900">
+                  <div className="pt-2 border-t border-black/[0.06] flex items-baseline justify-between font-bold text-base text-neutral-900">
                     <span>Total Cost</span>
                     <span>K{totalPackageCost.toLocaleString()}</span>
                   </div>
@@ -763,7 +763,7 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                 {/* Book Button */}
                 <button
                   onClick={handleProceedToBook}
-                  className="w-full h-12 rounded-2xl bg-[#ffca28] hover:bg-[#f5be18] active:scale-[0.99] text-black font-black text-sm uppercase tracking-wider shadow-md transition-all flex items-center justify-center gap-2"
+                  className="w-full h-12 rounded-2xl bg-[#ffca28] hover:bg-[#f5be18] active:scale-[0.99] text-black font-bold text-sm uppercase tracking-wider shadow-md transition-all flex items-center justify-center gap-2"
                 >
                   Book Package <ArrowRight className="h-4 w-4" />
                 </button>

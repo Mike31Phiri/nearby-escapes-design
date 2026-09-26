@@ -122,7 +122,7 @@ function SectionHeader({
   return (
     <div className="flex items-end justify-between mb-5 md:mb-6">
       <div>
-        <Heading className="font-display text-xl md:text-2xl font-semibold tracking-tight text-neutral-900 leading-[1.2]">
+        <Heading className="text-xl md:text-2xl font-bold tracking-tight text-black leading-tight">
           {title}
         </Heading>
         <p
@@ -180,7 +180,7 @@ export function HomePage() {
       <section className="relative pt-10 pb-8 md:pt-20 md:pb-28 overflow-hidden bg-white">
         <div className="relative mx-auto max-w-7xl px-4 md:px-8">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="font-display text-[1.75rem] md:text-[2.75rem] lg:text-[3rem] font-bold tracking-tight text-black leading-[1.15]">
+            <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-black leading-tight">
               <span className="md:hidden">
                 Find your next{" "}
                 <span className="font-script text-[1.3em] font-normal text-black lowercase relative -top-0.5">
@@ -289,17 +289,17 @@ export function HomePage() {
                     <Link
                       key={prov.id}
                       href={`/explore/${prov.id}`}
-                      className="group relative block overflow-hidden rounded-2xl min-w-[220px] sm:min-w-[240px] md:min-w-[260px] shrink-0 aspect-[4/3] bg-white-bone shadow-sm transition-all hover:shadow-lg snap-start"
+                      className="group relative block overflow-hidden rounded-2xl min-w-[220px] sm:min-w-[240px] md:min-w-[260px] shrink-0 aspect-[4/3] bg-white-bone shadow-xs border border-neutral-200/80 snap-start"
                     >
                       <img
                         src={prov.image}
                         alt={prov.name}
                         loading="lazy"
-                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="absolute inset-0 h-full w-full object-cover "
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                       <div className="absolute bottom-0 left-0 p-4 w-full">
-                        <h3 className="font-display text-white font-bold text-lg leading-tight">
+                        <h3 className="text-white font-semibold text-lg leading-tight">
                           {prov.name} Province
                         </h3>
                         <p className="text-white/70 text-[11px] mt-0.5">{prov.stays} stays</p>
@@ -388,17 +388,17 @@ export function HomePage() {
                       <Link
                         key={city.id}
                         href={`/explore/${city.province}/${city.id}`}
-                        className="group relative block overflow-hidden rounded-2xl min-w-[220px] sm:min-w-[240px] md:min-w-[260px] shrink-0 aspect-[4/3] bg-white-bone shadow-sm transition-all hover:shadow-lg snap-start"
+                        className="group relative block overflow-hidden rounded-2xl min-w-[220px] sm:min-w-[240px] md:min-w-[260px] shrink-0 aspect-[4/3] bg-white-bone shadow-xs border border-neutral-200/80 snap-start"
                       >
                         <img
                           src={city.image}
                           alt={city.name}
                           loading="lazy"
-                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          className="absolute inset-0 h-full w-full object-cover "
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                         <div className="absolute bottom-0 left-0 p-4 w-full">
-                          <h3 className="font-display text-white font-bold text-lg leading-tight">
+                          <h3 className="text-white font-semibold text-lg leading-tight">
                             {city.name}
                           </h3>
                           <p className="text-white/70 text-[11px] mt-0.5">{city.stays} stays</p>
@@ -469,7 +469,7 @@ export function HomePage() {
                       <Link
                         key={deal.id}
                         href={`/listings/stays/${deal.id.replace("deal-", "")}`}
-                        className="group relative block overflow-hidden rounded-2xl w-[260px] sm:w-[280px] shrink-0 aspect-[4/3] bg-white-bone shadow-[0_2px_12px_rgba(31,20,51,0.10)] transition-all hover:shadow-[0_12px_32px_rgba(31,20,51,0.18)] snap-start"
+                        className="group relative block overflow-hidden rounded-2xl w-[260px] sm:w-[280px] shrink-0 aspect-[4/3] bg-white-bone shadow-xs border border-neutral-200/80 snap-start"
                         style={{ WebkitMaskImage: "-webkit-radial-gradient(white, black)" }}
                       >
                         <img
@@ -490,7 +490,7 @@ export function HomePage() {
                           </span>
                         </div>
                         <div className="absolute bottom-0 left-0 p-4 w-full">
-                          <h3 className="font-display text-white font-bold text-base leading-tight mb-1.5">
+                          <h3 className="text-white font-semibold text-base leading-tight mb-1.5">
                             {deal.name}
                           </h3>
                           <div className="flex items-center gap-2">
@@ -528,7 +528,7 @@ export function HomePage() {
                       href={`/listings/experiences/${exp.id}`}
                       className="group w-[260px] sm:w-[280px] md:w-[300px] shrink-0 snap-start"
                     >
-                      <div className="relative aspect-[16/10] bg-white-bone rounded-xl overflow-hidden transition-shadow group-hover:shadow-sm">
+                      <div className="relative aspect-[16/10] bg-white-bone rounded-xl overflow-hidden shadow-xs">
                         <img
                           src={exp.image}
                           alt={exp.name}
@@ -578,7 +578,7 @@ export function HomePage() {
                     <Link
                       key={t.id}
                       href={`/listings/transport/${t.id}`}
-                      className="group w-[280px] sm:w-[300px] shrink-0 snap-start bg-white rounded-xl border border-purple-border overflow-hidden transition-all hover:shadow-[0_4px_16px_rgba(31,20,51,0.10)]"
+                      className="group w-[280px] sm:w-[300px] shrink-0 snap-start bg-white rounded-xl border border-purple-border overflow-hidden shadow-xs"
                     >
                       <div className="relative aspect-[16/9] bg-white-bone">
                         <img
@@ -592,7 +592,7 @@ export function HomePage() {
                         <div className="flex items-center justify-between gap-2">
                           <div className="flex items-center gap-1.5 text-black font-bold text-sm sm:text-base">
                             <span>{t.from}</span>
-                            <span className="text-white text-xs">→</span>
+                            <span className="text-black-muted text-xs">→</span>
                             <span>{t.to}</span>
                           </div>
                           <span className="text-[14px] font-bold text-white shrink-0">
@@ -633,7 +633,7 @@ export function HomePage() {
                       href={`/listings/experiences/${pkg.id}`}
                       className="group w-[260px] sm:w-[280px] md:w-[300px] shrink-0 snap-start"
                     >
-                      <div className="relative aspect-[16/10] bg-white-bone rounded-xl overflow-hidden transition-shadow group-hover:shadow-sm">
+                      <div className="relative aspect-[16/10] bg-white-bone rounded-xl overflow-hidden shadow-xs">
                         <img
                           src={pkg.image}
                           alt={pkg.name}
@@ -682,7 +682,7 @@ export function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-r from-black/10 to-transparent" />
           </div>
           <div className="px-6 md:px-0 md:pr-10 py-8">
-            <h2 className="font-display text-xl md:text-2xl font-bold text-black leading-snug mb-3">
+            <h2 className="text-xl md:text-2xl font-bold text-black leading-snug mb-3">
               Turn your passion into profit
             </h2>
             <p className="text-[13px] text-black-muted leading-relaxed max-w-md mb-6">

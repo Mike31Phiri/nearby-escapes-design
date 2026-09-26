@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, Suspense } from "react";
 import Link from "next/link";
@@ -63,18 +63,18 @@ function SectionHeading({
     <div className="flex items-end justify-between mb-5">
       <div className="flex items-start gap-3">
         {/* Colored left accent bar */}
-        <div className="w-1 h-8 rounded-full bg-[#6b2bb8] mt-0.5 shrink-0" />
+        <div className="w-1 h-8 rounded-full bg-purple mt-0.5 shrink-0" />
         <div>
-          <h2 className="text-lg md:text-xl font-black text-[#1a1a1f] tracking-tight leading-tight">
+          <h2 className="text-xl md:text-2xl font-bold text-black tracking-tight leading-tight">
             {title}
           </h2>
-          {subtitle && <p className="text-xs text-[#5a5a66] mt-0.5 font-medium">{subtitle}</p>}
+          {subtitle && <p className="text-xs text-black-muted mt-0.5 font-medium tracking-wide">{subtitle}</p>}
         </div>
       </div>
       {href && cta && (
         <Link
           href={href}
-          className="hidden sm:inline-flex items-center gap-1 text-sm font-bold text-[#6b2bb8] hover:text-[#5a1f9e] transition-colors group"
+          className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-purple hover:opacity-80 transition-opacity group"
         >
           {cta}{" "}
           <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -95,7 +95,7 @@ function Carousel({ children, seeAllHref }: { children: React.ReactNode; seeAllH
         <div className="mt-4 text-center md:hidden">
           <Link
             href={seeAllHref}
-            className="inline-flex items-center gap-1.5 text-sm font-bold text-[#6b2bb8] hover:text-[#5a1f9e] transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-purple hover:opacity-80 transition-opacity"
           >
             See all <ArrowRight className="h-4 w-4" />
           </Link>
@@ -110,18 +110,18 @@ function PlaceCard({ place }: { place: PlaceToVisit }) {
   return (
     <Link
       href={`/explore/${place.id}`}
-      className="group block min-w-[160px] sm:min-w-[180px] md:min-w-[200px] shrink-0 rounded-2xl overflow-hidden shadow-sm border border-neutral-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 snap-start"
+      className="group block min-w-[160px] sm:min-w-[180px] md:min-w-[200px] shrink-0 rounded-2xl overflow-hidden border border-neutral-200/80 shadow-xs snap-start"
     >
       <div className="relative aspect-[3/4]">
         <img
           src={place.image}
           alt={place.name}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-3">
-          <h3 className="font-black text-white text-sm leading-tight">{place.name}</h3>
-          <p className="text-white/60 text-[11px] mt-0.5 font-medium">{place.stays} stays</p>
+          <h3 className="font-semibold text-white text-sm leading-snug">{place.name}</h3>
+          <p className="text-white/80 text-[11px] mt-0.5 font-semibold tracking-wide">{place.stays} stays</p>
         </div>
       </div>
     </Link>
@@ -133,30 +133,30 @@ function AttractionCard({ attraction }: { attraction: AttractionItem }) {
   return (
     <Link
       href="#"
-      className="group block min-w-[240px] sm:min-w-[260px] md:min-w-[280px] shrink-0 rounded-2xl bg-white shadow-sm border border-neutral-100 overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 snap-start"
+      className="group block min-w-[240px] sm:min-w-[260px] md:min-w-[280px] shrink-0 rounded-2xl bg-white border border-neutral-200/80 shadow-xs overflow-hidden snap-start"
     >
       <div className="relative aspect-[16/10] overflow-hidden">
         <img
           src={attraction.image}
           alt={attraction.name}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="h-full w-full object-cover"
           loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
         {/* rating pill overlay */}
         <div className="absolute top-3 left-3 flex items-center gap-1 bg-black/60 backdrop-blur-sm rounded-full px-2.5 py-1">
           <Star className="h-3 w-3 fill-[#f2ba0d] text-[#f2ba0d]" />
-          <span className="text-white text-[11px] font-bold">{attraction.rating}</span>
+          <span className="text-white text-[11px] font-semibold tracking-wide">{attraction.rating}</span>
         </div>
         {/* Travelers' choice badge */}
         {attraction.rating >= 4.8 && (
-          <div className="absolute top-3 right-3 bg-[#f2ba0d] text-[#1a1a1f] text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full shadow-sm">
+          <div className="absolute top-3 right-3 bg-[#f2ba0d] text-black text-[11px] font-semibold tracking-wide uppercase px-2 py-0.5 rounded-full shadow-xs">
             Top Pick
           </div>
         )}
       </div>
       <div className="p-3.5">
-        <h3 className="font-bold text-sm text-[#1a1a1f] group-hover:text-[#6b2bb8] transition-colors line-clamp-1 leading-tight">
+        <h3 className="card-title line-clamp-1">
           {attraction.name}
         </h3>
         <div className="flex items-center gap-1 mt-1.5">
@@ -173,7 +173,7 @@ function AttractionCard({ attraction }: { attraction: AttractionItem }) {
               />
             ))}
           </div>
-          <span className="text-[11px] text-[#5a5a66] font-medium">({attraction.reviews})</span>
+          <span className="card-rating">({attraction.reviews})</span>
         </div>
       </div>
     </Link>
@@ -254,11 +254,11 @@ export function ExploreHub({
               <span key={crumb.label} className="flex items-center gap-1.5">
                 {i > 0 && <ChevronRight className="h-3.5 w-3.5 text-white/40" />}
                 {i === crumbs.length - 1 ? (
-                  <span className="text-white/90 text-xs font-semibold">{crumb.label}</span>
+                  <span className="text-white text-xs font-semibold tracking-wide">{crumb.label}</span>
                 ) : (
                   <Link
                     href={crumb.href}
-                    className="text-white/50 hover:text-white/80 text-xs font-medium transition-colors"
+                    className="text-white/70 hover:text-white text-xs font-medium tracking-wide transition-colors"
                   >
                     {crumb.label}
                   </Link>
@@ -268,7 +268,7 @@ export function ExploreHub({
           </nav>
 
           {/* Title */}
-          <h1 className="font-black text-3xl md:text-5xl text-white leading-[1.1] tracking-tight max-w-2xl mb-4">
+          <h1 className="font-bold text-3xl md:text-5xl text-white leading-tight tracking-tight max-w-2xl mb-4">
             {pageTitle}
           </h1>
 
@@ -287,10 +287,10 @@ export function ExploreHub({
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
                 className={cn(
-                  "shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-bold transition-all duration-200 cursor-pointer",
+                  "shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold transition-colors cursor-pointer",
                   activeTab === tab.key
-                    ? "bg-[#6b2bb8] text-white shadow-sm shadow-[#6b2bb8]/30"
-                    : "text-[#5a5a66] hover:text-[#1a1a1f] hover:bg-neutral-100",
+                    ? "bg-purple text-white shadow-xs"
+                    : "text-black-subtle hover:text-black hover:bg-neutral-100",
                 )}
               >
                 {TAB_ICONS[tab.key]}
@@ -434,27 +434,27 @@ export function ExploreHub({
             <SectionHeading title={`More in ${locationName}`} subtitle="Keep discovering" />
             <Link
               href={`/${provinceId ? `explore/${provinceId}` : "#"}`}
-              className="group relative flex overflow-hidden rounded-2xl bg-neutral-100 h-44 shadow-sm transition-all duration-300 hover:shadow-xl"
+              className="group relative flex overflow-hidden rounded-2xl bg-neutral-100 h-44 shadow-xs border border-neutral-200/80"
             >
               {coverImage && (
                 <img
                   src={coverImage}
                   alt={locationName}
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="absolute inset-0 h-full w-full object-cover"
                 />
               )}
               <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
               <div className="relative z-10 flex flex-col justify-center px-8">
-                <p className="text-[#f2ba0d] text-xs font-bold uppercase tracking-widest mb-2">
+                <p className="text-[#f2ba0d] text-[11px] font-semibold uppercase tracking-wide mb-2">
                   Continue exploring
                 </p>
-                <h3 className="font-black text-white text-2xl md:text-3xl flex items-center gap-3">
+                <h3 className="font-bold text-white text-2xl md:text-3xl flex items-center gap-3">
                   {locationName}
-                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 group-hover:bg-[#6b2bb8] transition-colors">
+                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 group-hover:bg-purple transition-colors">
                     <ChevronRight className="h-4 w-4 text-white transition-transform group-hover:translate-x-0.5" />
                   </span>
                 </h3>
-                <p className="text-white/50 text-sm mt-1.5">Explore all categories</p>
+                <p className="text-white/70 text-sm mt-1.5">Explore all categories</p>
               </div>
             </Link>
           </div>

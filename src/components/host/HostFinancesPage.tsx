@@ -19,7 +19,6 @@ import {
   Smartphone,
   Building2,
   Clock,
-  RefreshCw,
   Download,
   CalendarRange,
   ArrowUpDown,
@@ -218,24 +217,6 @@ export function HostFinancesPage() {
       <HostPageHeader
         title="Finance"
         description="Monthly payouts, ledger breakdowns and transaction logs"
-        actions={
-          expectedPayouts > 0 ? (
-            <button
-              onClick={simulateAutoPayout}
-              className="inline-flex items-center justify-center gap-2 bg-purple hover:bg-purple-hover text-white text-sm font-semibold h-11 px-5 rounded-xl shadow-xs transition-all duration-200"
-              title={
-                payoutSettings.mode === "instant"
-                  ? "Simulate instant post-checkin payout"
-                  : "Simulate scheduled weekly bulk payout"
-              }
-            >
-              <RefreshCw className="h-4 w-4" />
-              {payoutSettings.mode === "instant"
-                ? "Simulate Instant Payout"
-                : "Simulate Auto-Payout"}
-            </button>
-          ) : null
-        }
       />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 mt-8 space-y-8">
         {/* Headline metric cards */}
@@ -610,7 +591,7 @@ export function HostFinancesPage() {
                                 {isPositive ? "+" : ""}K{tx.amount.toLocaleString()}
                               </div>
                               <div
-                                className={`text-[10px] font-medium uppercase tracking-wider mt-0.5 ${
+                                className={`text-[11px] font-semibold uppercase tracking-wide mt-0.5 ${
                                   tx.status === "paid"
                                     ? "text-emerald-600"
                                     : tx.status === "pending"

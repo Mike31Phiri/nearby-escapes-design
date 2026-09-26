@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { CheckCircle2, Sparkles, ShieldCheck, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,7 @@ export function SuccessStep({
       </div>
 
       <p className="font-bold tracking-wide text-2xl text-gold mb-2">Almost there</p>
-      <h1 className="font-display text-2xl md:text-4xl font-black tracking-tight text-purple mb-3">
+      <h1 className="font-display text-2xl md:text-4xl font-bold tracking-tight text-purple mb-3">
         Application received!
       </h1>
       <p className="text-sm text-black-muted max-w-md mx-auto leading-relaxed mb-8">
@@ -57,7 +57,7 @@ export function SuccessStep({
 
       <Button
         onClick={onFinish}
-        className="bg-gold hover:bg-gold-hover text-black font-black uppercase tracking-widest h-12 px-10 rounded-xl shadow-lg shadow-gold/25 hover:shadow-gold/40 transition-all"
+        className="bg-gold hover:bg-gold-hover text-black font-bold uppercase tracking-widest h-12 px-10 rounded-xl shadow-lg shadow-gold/25 hover:shadow-gold/40 transition-all"
       >
         Go to my dashboard
       </Button>

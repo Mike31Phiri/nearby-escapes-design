@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -71,7 +71,7 @@ export function BookingConfirmationPage() {
             <div className="h-16 w-16 rounded-full bg-black/[0.04] flex items-center justify-center mx-auto mb-4">
               <Search className="h-6 w-6 text-black-faint" />
             </div>
-            <h1 className="text-xl font-black tracking-tight mb-2 text-black">
+            <h1 className="text-xl font-bold tracking-tight mb-2 text-black">
               No booking reference found
             </h1>
             <p className="text-black-faint text-base mb-6">

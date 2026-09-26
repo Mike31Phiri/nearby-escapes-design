@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { Check, QrCode, ScanLine, X } from "lucide-react";
@@ -95,7 +95,7 @@ export function ScanQROverlay({ open, onClose, onScanned }: ScanQROverlayProps) 
             <div className="mx-auto h-20 w-20 rounded-full bg-emerald-500 flex items-center justify-center shadow-[0_0_40px_rgba(16,185,129,0.6)]">
               <Check className="h-10 w-10 text-white" strokeWidth={3} />
             </div>
-            <p className="mt-6 text-white text-lg font-black">Guest matched!</p>
+            <p className="mt-6 text-white text-lg font-bold">Guest matched!</p>
             <p className="mt-1 text-emerald-300 text-[14px] font-semibold">{matched.name}</p>
             <p className="mt-0.5 text-white/50 text-[12px]">
               Party of {matched.partySize} · Checked in ✓

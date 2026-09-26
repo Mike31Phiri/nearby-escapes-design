@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useMemo } from "react";
@@ -123,7 +123,7 @@ export function ExperienceCategoryPage({ category, experiences }: ExperienceCate
             <p className="text-[#1f1433] text-base font-bold uppercase tracking-widest mb-3">
               {hero.tagline}
             </p>
-            <h1 className="font-display text-3xl md:text-4xl font-black text-white leading-[1.1] mb-4">
+            <h1 className="font-display text-3xl md:text-4xl font-bold text-white leading-[1.1] mb-4">
               {hero.title}
             </h1>
             <p className="text-white/70 text-[15px] leading-relaxed max-w-xl">{hero.description}</p>

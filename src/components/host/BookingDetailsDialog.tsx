@@ -29,7 +29,7 @@ export interface BookingDetailsData {
 }
 
 export const STATUS_BADGE: Record<BookingStatus, { bg: string; fg: string; label: string }> = {
-  pending: { bg: "rgba(107, 43, 184, 0.1)", fg: "#6b2bb8", label: "Pending" },
+  pending: { bg: "rgba(107, 43, 184, 0.1)", fg: "var(--color-purple)", label: "Pending" },
   confirmed: { bg: "#ecfdf5", fg: "#047857", label: "Confirmed" },
   completed: { bg: "#f3eafb", fg: "#3D2463", label: "Completed" },
   cancelled: { bg: "#fef2f2", fg: "#b91c1c", label: "Cancelled" },
@@ -67,7 +67,7 @@ function SectionLabel({ icon: Icon, label }: { icon: React.ElementType; label: s
   return (
     <div className="flex items-center gap-1.5 mb-2.5">
       <Icon className="h-3.5 w-3.5 text-purple" />
-      <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">
+      <span className="text-[11px] font-semibold uppercase tracking-wide text-black-muted">
         {label}
       </span>
     </div>
@@ -136,11 +136,11 @@ export function BookingDetailsDialog({
           </div>
           <div className="flex-1 min-w-0 pr-6">
             <div className="flex items-center gap-1.5 mb-1 flex-wrap">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-purple bg-purple/10 border border-purple/20 rounded-full px-2 py-0.5">
+              <span className="text-[11px] font-semibold uppercase tracking-wide text-purple bg-purple/10 border border-purple/20 rounded-full px-2 py-0.5">
                 {TYPE_LABELS[booking.listingType]}
               </span>
               <span
-                className="text-[10px] font-semibold uppercase tracking-wider rounded-full px-2 py-0.5 border"
+                className="text-[11px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 border"
                 style={{
                   background: STATUS_BADGE[booking.status].bg,
                   color: STATUS_BADGE[booking.status].fg,

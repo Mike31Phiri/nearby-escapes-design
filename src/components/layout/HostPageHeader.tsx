@@ -15,11 +15,11 @@ export function HostPageHeader({ title, description, actions }: HostPageHeaderPr
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
           <div className="min-w-0">
-            <h1 className="font-display text-lg sm:text-xl md:text-2xl font-semibold tracking-tight text-neutral-900 leading-snug">
+            <h1 className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight text-black leading-snug">
               {title}
             </h1>
             {description && (
-              <p className="text-neutral-500 mt-0.5 sm:mt-1 text-xs sm:text-sm max-w-xl leading-relaxed">
+              <p className="text-black-muted mt-1 text-xs sm:text-sm max-w-xl leading-relaxed">
                 {description}
               </p>
             )}

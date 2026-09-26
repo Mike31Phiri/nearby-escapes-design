@@ -1,8 +1,7 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import {
-  User,
   Bell,
   CreditCard,
   Building2,
@@ -91,7 +90,7 @@ function PaymentMethodCard({
         <div className="flex items-center gap-2">
           <p className="text-base font-bold text-neutral-900">{method.label}</p>
           {method.isDefault && (
-            <span className="rounded-full bg-purple/10 text-purple text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 border border-purple/20">
+            <span className="rounded-full bg-purple/10 text-purple text-[11px] font-semibold uppercase tracking-wide px-2 py-0.5 border border-purple/20">
               Default
             </span>
           )}
@@ -109,7 +108,7 @@ function PaymentMethodCard({
         {!method.isDefault && (
           <button
             onClick={() => onSetDefault(method.id)}
-            className="h-8 rounded-xl px-2.5 hover:bg-neutral-100 text-[10px] font-bold uppercase tracking-wider text-neutral-500 hover:text-purple transition-colors"
+            className="h-8 rounded-xl px-2.5 hover:bg-neutral-100 text-[11px] font-semibold uppercase tracking-wide text-black-muted hover:text-purple transition-colors"
           >
             Set Default
           </button>
@@ -167,7 +166,7 @@ function InfoRow({
         <Icon className="h-4 w-4" />
       </div>
       <div className="min-w-0">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">{label}</p>
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-black-muted">{label}</p>
         <p className="text-sm font-semibold text-neutral-900 truncate mt-0.5">{value}</p>
       </div>
     </div>
@@ -179,7 +178,7 @@ function InfoRow({
 function SettingsSectionLabel() {
   return (
     <div className="flex items-center gap-3">
-      <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
+      <span className="text-[11px] font-semibold uppercase tracking-wide text-black-muted">
         Settings
       </span>
       <div className="h-px flex-1 bg-neutral-200" />
@@ -288,22 +287,14 @@ export function HostAccountPage() {
               PROFILE (top of the account page)
            */}
           <section>
-            <div className="flex items-center justify-between">
-              <SectionHeader
-                icon={User}
-                title="Profile"
-                description="Your public host profile information"
-              />
+            <div className="relative rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-2xs">
               <button
                 onClick={() => setEditOpen(true)}
                 aria-label="Edit profile"
-                className="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200/80 bg-white text-neutral-500 shadow-2xs transition-colors hover:border-purple/40 hover:text-purple"
+                className="absolute top-5 right-5 flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200/80 bg-white text-neutral-500 shadow-2xs transition-colors hover:border-purple/40 hover:text-purple cursor-pointer"
               >
                 <Pencil className="h-4 w-4" />
               </button>
-            </div>
-
-            <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-2xs">
               {/* Avatar + name */}
               <div className="flex items-center gap-4">
                 <div className="h-16 w-16 rounded-2xl overflow-hidden bg-purple/10 shrink-0 border border-purple/20">
@@ -374,7 +365,7 @@ export function HostAccountPage() {
                         <Upload className="h-3.5 w-3.5 mr-1.5" />
                         Change Photo
                       </label>
-                      <p className="text-[10px] text-neutral-400 mt-1">JPG or PNG. 1MB max.</p>
+                      <p className="text-xs text-black-muted mt-1">JPG or PNG. 1MB max.</p>
                     </div>
                   </div>
 

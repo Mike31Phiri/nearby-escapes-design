@@ -398,7 +398,7 @@ function PayoutMethodsSection({
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-sm font-bold text-neutral-900">Mobile Money</span>
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-purple bg-purple/10 border border-purple/20 rounded-full px-2 py-0.5">
+                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-purple bg-purple/10 border border-purple/20 rounded-full px-2.5 py-0.5 tracking-wide">
                     Default
                   </span>
                 </div>
@@ -423,11 +423,11 @@ function PayoutMethodsSection({
                     {bank?.bankName ?? "No bank set"}
                   </span>
                   {pending ? (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5">
+                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-2.5 py-0.5 tracking-wide">
                       <AlertTriangle className="h-3 w-3" /> Pending Verification
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full px-2 py-0.5">
+                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full px-2.5 py-0.5 tracking-wide">
                       <CheckCircle2 className="h-3 w-3" /> Verified
                     </span>
                   )}

@@ -2,36 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Design token system: brand purple, CTA yellow, warm neutrals */
+/* ============================================================
+   NEARBY ESCAPES — DESIGN TOKEN SYSTEM
+   Brand: Purple · Gold · Warm Neutrals
+   Typography: Poppins — 400 / 500 / 600 / 700 only
+   Spacing: 4px base grid (4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 / 48 / 64 / 80 / 96)
+   ============================================================ */
+
 :root {
-  /* Fonts */
-  --font-sans: "Work Sans", system-ui, -apple-system, sans-serif;
-  --font-script: "Dancing Script", cursive;
+  /* ── Typeface ───────────────────────────────────────────────
+     Single font family. No secondary typeface is permitted.
+     Weight 800 (extrabold) and 900 (black) are strictly banned.
+     Use: font-normal(400)  font-medium(500)  font-semibold(600)  font-bold(700) */
+  --font-sans: var(--font-poppins), "Poppins", system-ui, -apple-system, sans-serif;
 
-  /* Type Scale — Major Second (×1.125) · base 16px */
-  --font-base: 16px; /* 1rem = 16px */
+  /* ── Root size ──────────────────────────────────────────────
+     1rem = 16px. All Tailwind text-* tokens below map to this. */
+  --font-base: 16px;
 
-  --text-2xs: 0.625rem; /* 10px */
-  --text-xs: 0.6875rem; /* 11px */
-  --text-sm: 0.8125rem; /* 13px */
-  --text-md: 0.875rem; /* 14px */
-  --text-base: 1rem; /* 16px */
-  --text-lg: 1.125rem; /* 18px */
-  --text-xl: 1.25rem; /* 20px */
-  --text-2xl: 1.4375rem; /* 23px */
-  --text-3xl: 1.625rem; /* 26px */
-  --text-4xl: 1.8125rem; /* 29px */
-  --text-5xl: 2rem; /* 32px */
-  --text-6xl: 2.25rem; /* 36px */
-  --text-7xl: 2.5625rem; /* 41px */
-  --text-8xl: 2.875rem; /* 46px */
-  --text-9xl: 3.25rem; /* 52px */
+  /* ── Type Scale ─────────────────────────────────────────────
+     Aligned to Tailwind defaults: text-xs=12px, text-sm=14px etc.
+     These CSS vars are kept for any legacy CSS that still references them.
+     Prefer Tailwind utility classes in JSX over these vars directly.
 
-  /* Background */
+     Token       Size    Tracking        Leading        Primary role
+     ─────────   ──────  ──────────────  ─────────────  ─────────────────────────
+     text-5xl    48px    tracking-tight  leading-tight   Hero stats ("500+")
+     text-4xl    36px    tracking-tight  leading-tight   Page hero — desktop
+     text-3xl    30px    tracking-tight  leading-tight   Section headers / hero mobile
+     text-2xl    24px    tracking-normal leading-snug    Modal titles, large card titles
+     text-xl     20px    tracking-normal leading-snug    Standard sub-headings
+     text-lg     18px    tracking-normal leading-normal  Price emphasis, minor groupings
+     text-base   16px    tracking-normal leading-relaxed Default body copy
+     text-sm     14px    tracking-normal leading-normal  Form labels, compact UI text
+     text-xs     12px    tracking-wide   leading-normal  Captions, metadata
+     text-[11px] 11px    tracking-wide   leading-normal  Accessibility floor — must be font-semibold+  */
+  --text-xs:   0.75rem;   /* 12px */
+  --text-sm:   0.875rem;  /* 14px */
+  --text-base: 1rem;      /* 16px */
+  --text-lg:   1.125rem;  /* 18px */
+  --text-xl:   1.25rem;   /* 20px */
+  --text-2xl:  1.5rem;    /* 24px */
+  --text-3xl:  1.875rem;  /* 30px */
+  --text-4xl:  2.25rem;   /* 36px */
+  --text-5xl:  3rem;      /* 48px */
+
+  /* ── Semantic Text Colors ───────────────────────────────────
+     Three levels only. Never use raw hex values in JSX/TSX.
+     text-black        → #1A1A1A  Primary headings, high-emphasis text
+     text-black-subtle → #334155  Default body copy, secondary data
+     text-black-muted  → #64748B  Captions, microcopy, disabled states  */
+  --color-text-primary: #1a1a1a;
+  --color-text-subtle:  #334155;
+  --color-text-muted:   #64748b;
+
+  /* ── Background ─────────────────────────────────────────────*/
   --color-bg: #faf8f4; /* warm page canvas */
 
-  /* Purple Scale (brand / attention) */
-  --purple-50: #f3eafb;
+  /* ── Purple Scale (brand / attention) ───────────────────────*/
+  --purple-50:  #f3eafb;
   --purple-100: #e4d4f5;
   --purple-200: #c9a9eb;
   --purple-300: #a878db;
@@ -42,20 +71,21 @@
   --purple-800: #3a146a;
   --purple-900: #2a0f50;
 
-  --color-purple: var(--purple-500);
-  --color-purple-hover: var(--purple-600);
-  --color-purple-deep: var(--purple-900);
-  --color-purple-muted: var(--purple-100);
+  --color-purple:        var(--purple-500);
+  --color-purple-hover:  var(--purple-600);
+  --color-purple-deep:   var(--purple-900);
+  --color-purple-muted:  var(--purple-100);
   --color-purple-border: rgba(107, 43, 184, 0.2);
 
-  /* Yellow (CTA only — leave this, nothing else) */
-  --color-yellow: #f2ba0d;
+  /* ── Gold (CTA accent only) ─────────────────────────────────
+     Use only for primary CTA backgrounds and star ratings.    */
+  --color-yellow:       #f2ba0d;
   --color-yellow-hover: #d4b065;
   --color-yellow-muted: rgba(242, 186, 13, 0.15);
 
-  /* Warm Neutral Scale (text + surfaces) */
-  --neutral-0: #ffffff; /* pure white — cards, navbar */
-  --neutral-50: #f7f7f8;
+  /* ── Neutral Scale (surfaces + text) ────────────────────────*/
+  --neutral-0:   #ffffff;
+  --neutral-50:  #f7f7f8;
   --neutral-100: #efeff1;
   --neutral-200: #e0e0e4;
   --neutral-300: #c8c8cf;
@@ -64,49 +94,87 @@
   --neutral-600: #5a5a66;
   --neutral-700: #3e3e48;
   --neutral-800: #2a2a32;
-  --neutral-900: #1a1a1f; /* near-black */  /* Semantic text */
-  --color-black:           var(--neutral-900);
-  --color-black-soft:      var(--neutral-800);
-  --color-black-subtle:    var(--neutral-700);
-  --color-black-muted:     var(--neutral-600);
-  --color-black-faint:     var(--neutral-500);
+  --neutral-900: #1a1a1f; /* near-black */
 
-  /* Surfaces */
-  --color-white: var(--neutral-0);
+  /* Semantic text aliases — strict 3-tier system from Typography Rules */
+  --color-black:        #1A1A1A; /* Primary headings and high-emphasis text */
+  --color-black-soft:   #262626; /* Secondary high-contrast text */
+  --color-black-subtle: #334155; /* Default body copy and secondary data */
+  --color-black-muted:  #64748B; /* Captions, microcopy, disabled states */
+  --color-black-faint:  #94A3B8; /* Muted placeholders */
+
+  /* ── Surfaces ────────────────────────────────────────────────*/
+  --color-white:      var(--neutral-0);
   --color-white-warm: var(--color-bg);
   --color-white-soft: #f9f7f2;
   --color-white-bone: #f0eae0;
 
-  /* Utility aliases */
-  --background: var(--color-bg);
-  --foreground: var(--color-black);
-  --border: var(--neutral-200);
+  /* ── Shadcn/ui component aliases (required for UI lib) ───────*/
+  --background:           var(--color-bg);
+  --foreground:           var(--color-text-primary);
+  --border:               var(--neutral-200);
+  --input:                var(--neutral-200);
+  --ring:                 var(--purple-400);
+  --primary:              var(--color-purple);
+  --primary-foreground:   #ffffff;
+  --secondary:            var(--neutral-100);
+  --secondary-foreground: var(--color-text-primary);
+  --muted:                var(--neutral-100);
+  --muted-foreground:     var(--color-text-muted);
+  --accent:               var(--purple-50);
+  --accent-foreground:    var(--purple-700);
+  --popover:              var(--neutral-0);
+  --popover-foreground:   var(--color-text-primary);
+  --card:                 var(--neutral-0);
+  --card-foreground:      var(--color-text-primary);
 
-  /* Component tokens */
-  --input: var(--neutral-200);
-  --ring: var(--purple-400);
-  --primary: var(--color-purple);
-  --primary-foreground: #ffffff;
-  --secondary: var(--neutral-100);
-  --secondary-foreground: var(--color-black);
-  --muted: var(--neutral-100);
-  --muted-foreground: var(--neutral-500);
-  --accent: var(--purple-50);
-  --accent-foreground: var(--purple-700);
-  --popover: var(--neutral-0);
-  --popover-foreground: var(--color-black);
-  --card: var(--neutral-0);
-  --card-foreground: var(--color-black);
+  /* ── Radius ──────────────────────────────────────────────────*/
+  --radius: 0.75rem; /* 12px — base for rounded-xl */
 
-  /* Error / destructive (errors only) */
+  /* ── Shadows ─────────────────────────────────────────────────*/
+  --shadow-card-sm:    0 1px 3px rgba(26, 26, 26, 0.06);
+  --shadow-card:       0 4px 16px rgba(26, 26, 26, 0.08);
+  --shadow-card-hover: 0 12px 32px rgba(26, 26, 26, 0.14);
+
+  /* ── Spacing Scale (4px base grid) ──────────────────────────
+     Reference guide — use Tailwind utility classes in JSX/TSX.
+     ─────────────────────────────────────────────────────────────
+     MICRO    icon-to-label / badge internal pad   → gap-1 / p-1   (4px)
+     TIGHT    chip padding, list item gaps         → gap-2 / p-2   (8px)
+     COMPACT  input internal, card element rows    → gap-3 / p-3   (12px)
+     STANDARD between form fields, card sections   → gap-4 / p-4   (16px)
+     RELAXED  between sibling UI components        → gap-5         (20px)
+     CARD     card grid gap (mobile)               → gap-6         (24px)
+     SECTION  title to content block gap           → gap-8         (32px)
+     BLOCK    between page sub-sections            → gap-10        (40px)
+     PAGE-SM  section vertical pad (mobile)        → py-12         (48px)
+     PAGE-MD  section vertical pad (desktop)       → py-16         (64px)
+     PAGE-LG  hero / major section separation      → py-20         (80px)
+     ─────────────────────────────────────────────────────────────
+     Page container: max-w-7xl mx-auto px-4 sm:px-6 lg:px-8       */
+  --space-1:  0.25rem;  /*  4px */
+  --space-2:  0.5rem;   /*  8px */
+  --space-3:  0.75rem;  /* 12px */
+  --space-4:  1rem;     /* 16px */
+  --space-5:  1.25rem;  /* 20px */
+  --space-6:  1.5rem;   /* 24px */
+  --space-8:  2rem;     /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
 }
 
-/* Base */
+/* ============================================================
+   BASE LAYER — element resets and typographic defaults
+   ============================================================ */
 @layer base {
   * {
     border-color: var(--border);
   }
 
+  /* Consistent motion for all interactive elements */
   a,
   button,
   input,
@@ -123,77 +191,189 @@
   }
 
   html {
-    /* Major Second base — 16px root so every rem is predictable */
-    font-size: var(--font-base);
+    font-size: var(--font-base); /* 1rem = 16px */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-optical-sizing: auto;
   }
 
   body {
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-sans);
-    font-size: var(--text-base);
+    font-size: var(--text-base);  /* 16px */
+    font-weight: 400;
+    line-height: 1.625;           /* leading-relaxed */
+    letter-spacing: 0.01em;       /* slight openness — counters Poppins' tight default */
+    /* Disable ligatures and discretionary features to keep text
+       readable at body sizes. Enables kerning for visual polish. */
+    font-feature-settings: "kern" 1, "liga" 0, "calt" 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  /* ── Heading Defaults ───────────────────────────────────────
+     h1/h2  → font-bold (700) + tracking-tight + leading-tight
+     h3–h6  → font-semibold (600) + tracking-normal + leading-snug */
+  h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-sans);
-    color: var(--color-black);
-    letter-spacing: -0.02em;
-    line-height: 1.2;
+    color: var(--color-text-primary);
   }
 
-  /* Major Second heading scale (×1.125) */
+  /* H1 — Page heroes | 36px desktop · 30px mobile */
   h1 {
-    font-size: var(--text-6xl);
+    font-size: var(--text-4xl); /* 36px */
     font-weight: 700;
-  } /* 36px */
+    line-height: 1.25;           /* leading-tight */
+    letter-spacing: -0.025em;   /* tracking-tight */
+  }
+
+  /* H2 — Section headers | 30px desktop · 24px mobile */
   h2 {
-    font-size: var(--text-5xl);
-    font-weight: 600;
-  } /* 32px */
+    font-size: var(--text-3xl); /* 30px */
+    font-weight: 700;
+    line-height: 1.25;           /* leading-tight */
+    letter-spacing: -0.025em;   /* tracking-tight */
+  }
+
+  /* H3 — Modal titles, large card titles | 24px */
   h3 {
-    font-size: var(--text-4xl);
+    font-size: var(--text-2xl); /* 24px */
     font-weight: 600;
-  } /* 29px */
+    line-height: 1.375;          /* leading-snug */
+    letter-spacing: 0;
+  }
+
+  /* H4 — Standard sub-headings | 20px */
   h4 {
-    font-size: var(--text-3xl);
+    font-size: var(--text-xl);  /* 20px */
     font-weight: 600;
-  } /* 26px */
+    line-height: 1.375;          /* leading-snug */
+    letter-spacing: 0;
+  }
+
+  /* H5 — Minor groupings, price emphasis | 18px */
   h5 {
-    font-size: var(--text-2xl);
+    font-size: var(--text-lg);  /* 18px */
     font-weight: 600;
-  } /* 23px */
+    line-height: 1.5;            /* leading-normal */
+    letter-spacing: 0;
+  }
+
+  /* H6 — Form section labels | 14px */
   h6 {
-    font-size: var(--text-xl);
+    font-size: var(--text-sm);  /* 14px */
     font-weight: 600;
-  } /* 20px */
+    line-height: 1.5;            /* leading-normal */
+    letter-spacing: 0;
+  }
 
+  /* Mobile overrides — scale down page heroes */
+  @media (max-width: 768px) {
+    h1 { font-size: var(--text-3xl); } /* 30px */
+    h2 { font-size: var(--text-2xl); } /* 24px */
+    h3 { font-size: var(--text-xl);  } /* 20px */
+  }
+
+  /* ── Semantic Typography Utilities ─────────────────────────*/
+
+  /* Sub-copy beneath page heroes */
   .text-lead {
-    font-size: var(--text-xl);
-    line-height: 1.6;
-    color: var(--color-black-muted);
+    font-size: var(--text-xl);   /* 20px */
+    font-weight: 400;
+    line-height: 1.625;          /* leading-relaxed */
+    color: var(--color-text-subtle);
+    letter-spacing: 0;
   }
 
+  /* Default body / listing descriptions */
+  .text-body {
+    font-size: var(--text-base); /* 16px */
+    font-weight: 400;
+    line-height: 1.625;          /* leading-relaxed */
+    color: var(--color-text-subtle);
+    letter-spacing: 0;
+  }
+
+  /* Form labels, compact UI text */
+  .text-label {
+    font-size: var(--text-sm);   /* 14px */
+    font-weight: 500;
+    line-height: 1.5;            /* leading-normal */
+    color: var(--color-text-subtle);
+    letter-spacing: 0;
+  }
+
+  /* Metadata, timestamps, supporting copy */
   .text-caption {
-    font-size: var(--text-sm);
-    line-height: 1.4;
-    color: var(--color-black-faint);
+    font-size: var(--text-xs);   /* 12px */
+    font-weight: 400;
+    line-height: 1.5;            /* leading-normal */
+    color: var(--color-text-muted);
+    letter-spacing: 0.025em;     /* tracking-wide */
   }
 
+  /* All-caps badges, STATUS PILLS — accessibility floor at 11px */
   .text-overline {
-    font-size: var(--text-sm);
-    font-weight: 600;
+    font-size: 0.6875rem;        /* 11px — minimum accessible size */
+    font-weight: 600;            /* font-semibold REQUIRED at 11px */
+    line-height: 1.5;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-black-muted);
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
   }
 
+  /* ── Listing Card Typography ────────────────────────────────
+     Use these classes on all listing card elements.           */
+
+  /* text-lg font-semibold — card heading */
+  .card-title {
+    font-size: var(--text-lg);   /* 18px */
+    font-weight: 600;
+    line-height: 1.375;          /* leading-snug */
+    color: var(--color-text-primary);
+    letter-spacing: 0;
+  }
+
+  /* text-sm font-normal — location / context line */
+  .card-location {
+    font-size: var(--text-sm);   /* 14px */
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--color-text-subtle);
+    letter-spacing: 0;
+  }
+
+  /* text-lg font-bold — price figure */
+  .card-price {
+    font-size: var(--text-lg);   /* 18px */
+    font-weight: 700;
+    line-height: 1.375;
+    color: var(--color-text-primary);
+    letter-spacing: 0;
+  }
+
+  /* text-xs font-medium tracking-wide — "per night" modifier */
+  .card-price-modifier {
+    font-size: var(--text-xs);   /* 12px */
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    letter-spacing: 0.025em;
+  }
+
+  /* text-xs font-medium — rating + review count */
+  .card-rating {
+    font-size: var(--text-xs);   /* 12px */
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--color-text-subtle);
+    letter-spacing: 0.025em;
+  }
+
+  /* ── Accessibility ──────────────────────────────────────────*/
   :focus-visible {
     outline: 2px solid var(--color-purple);
     outline-offset: 2px;
@@ -226,21 +406,27 @@
   }
 }
 
-/* Components */
+/* ============================================================
+   COMPONENT LAYER
+   ============================================================ */
 @layer components {
-  /* Primary CTA — yellow only */
+  /* ── Buttons ──────────────────────────────────────────────── */
+
+  /* Primary CTA — gold/yellow only */
   .btn-cta {
     @apply inline-flex items-center justify-center gap-2 font-bold rounded-xl transition-all duration-200;
+    font-size: var(--text-sm);
     background-color: var(--color-yellow);
-    color: var(--color-black);
+    color: var(--color-text-primary);
   }
   .btn-cta:hover {
     background-color: var(--color-yellow-hover);
   }
 
-  /* Secondary / brand — purple */
+  /* Brand button — purple */
   .btn-brand {
     @apply inline-flex items-center justify-center gap-2 font-bold rounded-xl transition-all duration-200;
+    font-size: var(--text-sm);
     background-color: var(--color-purple);
     color: var(--color-white);
   }
@@ -248,9 +434,10 @@
     background-color: var(--color-purple-hover);
   }
 
-  /* Soft purple button */
+  /* Soft / ghost purple */
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 font-bold rounded-xl transition-all duration-200;
+    @apply inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-all duration-200;
+    font-size: var(--text-sm);
     background-color: var(--color-purple-muted);
     color: var(--color-purple);
   }
@@ -258,33 +445,31 @@
     background-color: var(--purple-200);
   }
 
+  /* ── Card Shadows ────────────────────────────────────────── */
   .card-shadow {
-    box-shadow: 0 1px 3px rgba(31, 20, 51, 0.06);
-    transition:
-      box-shadow 0.2s ease,
-      transform 0.2s ease;
+    box-shadow: var(--shadow-card-sm);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
   }
   .card-shadow:hover {
-    box-shadow: 0 4px 16px rgba(31, 20, 51, 0.1);
+    box-shadow: var(--shadow-card);
   }
 
   .card-shadow-lg {
-    box-shadow: 0 4px 16px rgba(31, 20, 51, 0.1);
-    transition:
-      box-shadow 0.2s ease,
-      transform 0.2s ease;
+    box-shadow: var(--shadow-card);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
   }
   .card-shadow-lg:hover {
-    box-shadow: 0 12px 32px rgba(31, 20, 51, 0.18);
+    box-shadow: var(--shadow-card-hover);
   }
 
   .card-hover-effect {
     @apply transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)];
   }
   .card-hover-effect:hover {
-    box-shadow: 0 4px 16px rgba(31, 20, 51, 0.1);
+    box-shadow: var(--shadow-card);
   }
 
+  /* ── Image Utilities ─────────────────────────────────────── */
   .image-loading {
     @apply animate-pulse;
     background-color: var(--color-white-bone);
@@ -297,51 +482,43 @@
     transform: scale(1.05);
   }
 
+  /* ── Layout Helpers ──────────────────────────────────────────
+     Always use .page-container as the outermost page wrapper.
+     Always use .page-section for vertical section breathing room. */
+  .page-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .page-section {
+    @apply py-12 md:py-16 lg:py-20;
+  }
+
+  /* ── Animations ──────────────────────────────────────────── */
   .section-enter {
     animation: section-fade-up 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
   }
 
   @keyframes section-fade-up {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
   .stagger-children > * {
     animation: section-fade-up 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
   }
-  .stagger-children > *:nth-child(1) {
-    animation-delay: 0ms;
-  }
-  .stagger-children > *:nth-child(2) {
-    animation-delay: 60ms;
-  }
-  .stagger-children > *:nth-child(3) {
-    animation-delay: 120ms;
-  }
-  .stagger-children > *:nth-child(4) {
-    animation-delay: 180ms;
-  }
-  .stagger-children > *:nth-child(5) {
-    animation-delay: 240ms;
-  }
-  .stagger-children > *:nth-child(6) {
-    animation-delay: 300ms;
-  }
-  .stagger-children > *:nth-child(7) {
-    animation-delay: 360ms;
-  }
-  .stagger-children > *:nth-child(8) {
-    animation-delay: 420ms;
-  }
+  .stagger-children > *:nth-child(1) { animation-delay: 0ms;   }
+  .stagger-children > *:nth-child(2) { animation-delay: 60ms;  }
+  .stagger-children > *:nth-child(3) { animation-delay: 120ms; }
+  .stagger-children > *:nth-child(4) { animation-delay: 180ms; }
+  .stagger-children > *:nth-child(5) { animation-delay: 240ms; }
+  .stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+  .stagger-children > *:nth-child(7) { animation-delay: 360ms; }
+  .stagger-children > *:nth-child(8) { animation-delay: 420ms; }
 }
 
-/* Utilities */
+/* ============================================================
+   UTILITY LAYER
+   ============================================================ */
 @layer utilities {
   .scrollbar-hide {
     -ms-overflow-style: none;
@@ -349,17 +526,5 @@
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
-  }
-
-  @media (max-width: 768px) {
-    h1 {
-      font-size: var(--text-5xl);
-    } /* 32px */
-    h2 {
-      font-size: var(--text-4xl);
-    } /* 29px */
-    h3 {
-      font-size: var(--text-3xl);
-    } /* 26px */
   }
 }

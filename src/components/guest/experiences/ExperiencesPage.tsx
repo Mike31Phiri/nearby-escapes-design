@@ -440,10 +440,10 @@ export function ExperiencesPage() {
                   key={item.cat}
                   onClick={() => toggleCategory(item.cat)}
                   className={cn(
-                    "flex-none whitespace-nowrap px-5 py-2 rounded-full border text-sm transition-all duration-150 active:scale-95 select-none font-medium",
+                    "flex-none whitespace-nowrap px-5 py-2 rounded-full border text-sm transition-all duration-150 active:scale-95 select-none font-medium cursor-pointer",
                     active
-                      ? "bg-neutral-900 text-white border-neutral-900 shadow-xs"
-                      : "bg-white border-neutral-200 text-neutral-600 hover:border-neutral-300 hover:text-neutral-900 hover:bg-neutral-50",
+                      ? "bg-purple text-white border-purple shadow-xs"
+                      : "bg-white border-neutral-200 text-neutral-600 hover:border-purple/50 hover:text-purple hover:bg-purple/[0.03]",
                   )}
                 >
                   {item.label}

@@ -10,7 +10,9 @@ import { HostPageHeader } from "@/components/layout/HostPageHeader";
 import { useAvailabilityStore } from "@/store/availabilityStore";
 import { PricingRulesModal } from "@/components/host/availability/PricingRulesModal";
 import { toast } from "sonner";
-import { Lock } from "lucide-react";
+import { Lock, Boxes, CircleCheck, Users, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { getInventoryForListing, inventoryCounts } from "@/lib/mock-inventory";
 
 function toKey(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
@@ -55,6 +57,9 @@ export function HostAvailabilityPage() {
   const getPricingRulesForListing = useAvailabilityStore((s) => s.getPricingRulesForListing);
   const updatePricingRulesForListing = useAvailabilityStore((s) => s.updatePricingRulesForListing);
   const pricingRulesMap = useAvailabilityStore((s) => s.pricingRules);
+
+  const inventory = useMemo(() => getInventoryForListing(selectedId), [selectedId]);
+  const inventoryStats = useMemo(() => (inventory ? inventoryCounts(inventory) : null), [inventory]);
 
   const currentListing = useMemo(
     () => hostListings.find((l) => l.id === selectedId) || hostListings[0],
@@ -174,13 +179,12 @@ export function HostAvailabilityPage() {
     <div className="min-h-screen bg-background pb-16 font-sans">
       <HostPageHeader
         title="Availability Calendar"
-        description="Manage property availability, block dates, and control booking windows."
       />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 py-8 space-y-8">
         {/* Listing selector */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="w-full sm:max-w-md">
-            <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wide text-black-muted mb-1.5">
               Select Listing
             </label>
             <select
@@ -195,14 +199,136 @@ export function HostAvailabilityPage() {
               ))}
             </select>
           </div>
+
+          <Link
+            href={`/host/inventory?listing=${selectedId}`}
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-purple hover:text-purple-hover transition-colors self-start sm:self-end pb-1"
+          >
+            <span>Manage detailed units</span>
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
+
+        {/* Inventory Breakdown Section */}
+        <section className="space-y-3">
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5">
+            {/* Total Units */}
+            <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 sm:p-5 shadow-2xs flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl border border-purple/20 bg-purple/10 text-purple flex items-center justify-center shrink-0">
+                <Boxes className="h-5 w-5" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-2xl font-bold tracking-tight leading-none text-black">
+                  {inventoryStats ? inventoryStats.total : 0}
+                </p>
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-black-muted mt-1 truncate">
+                  Total {inventory?.unitLabelPlural || "Units"}
+                </p>
+              </div>
+            </div>
+
+            {/* Available Units */}
+            <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 sm:p-5 shadow-2xs flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+                <CircleCheck className="h-5 w-5" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-2xl font-bold tracking-tight leading-none text-emerald-700">
+                  {inventoryStats ? inventoryStats.available : 0}
+                </p>
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-black-muted mt-1 truncate">
+                  Available
+                </p>
+              </div>
+            </div>
+
+            {/* Booked / Occupied Units */}
+            <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 sm:p-5 shadow-2xs flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl border border-purple/25 bg-purple/10 text-purple flex items-center justify-center shrink-0">
+                <Users className="h-5 w-5" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-2xl font-bold tracking-tight leading-none text-purple">
+                  {inventoryStats ? inventoryStats.occupied : 0}
+                </p>
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-black-muted mt-1 truncate">
+                  Occupied
+                </p>
+              </div>
+            </div>
+
+            {/* Blocked Units */}
+            <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 sm:p-5 shadow-2xs flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl border border-neutral-200 bg-neutral-100 text-neutral-600 flex items-center justify-center shrink-0">
+                <Lock className="h-5 w-5" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-2xl font-bold tracking-tight leading-none text-black">
+                  {inventoryStats ? inventoryStats.blocked : 0}
+                </p>
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-black-muted mt-1 truncate">
+                  Blocked
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Unit Chips Breakdown */}
+          {inventory && inventory.units.length > 0 && (
+            <div className="bg-white border border-neutral-200/80 rounded-2xl p-3.5 sm:p-4 shadow-2xs">
+              <div className="flex items-center justify-between mb-2.5">
+                <span className="text-xs font-semibold text-black uppercase tracking-wider">
+                  {inventory.unitLabel} Inventory Status
+                </span>
+                <span className="text-xs text-black-muted">
+                  {inventoryStats?.available ?? 0} of {inventory.units.length} ready to book
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {inventory.units.map((unit) => {
+                  const isAvail = unit.status === "available";
+                  const isOcc = unit.status === "occupied";
+                  return (
+                    <div
+                      key={unit.id}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold border border-neutral-200/80 bg-neutral-50/60"
+                    >
+                      <span
+                        className={`w-2 h-2 rounded-full ${
+                          isAvail
+                            ? "bg-emerald-500"
+                            : isOcc
+                              ? "bg-purple"
+                              : "bg-neutral-400"
+                        }`}
+                      />
+                      <span className="text-black font-medium">{unit.label}</span>
+                      <span
+                        className={`text-[11px] font-semibold tracking-wide uppercase px-1.5 py-0.2 rounded-md ${
+                          isAvail
+                            ? "text-emerald-700 bg-emerald-50 border border-emerald-200"
+                            : isOcc
+                              ? "text-purple bg-purple/10 border border-purple/20"
+                              : "text-neutral-600 bg-neutral-100 border border-neutral-200"
+                        }`}
+                      >
+                        {unit.status}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </section>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Calendar Box */}
           <div className="lg:col-span-2 space-y-4">
             <div className="bg-white border border-neutral-200/80 rounded-2xl overflow-hidden p-5 sm:p-6 shadow-2xs">
               <DatePicker
-                key={`dp-${isDesktop ? "desk" : "mob"}-${firstMonth.year}-${firstMonth.month}`}
+                key={`dp-${isDesktop ? "desk" : "mob"}`}
                 inline
                 calendarClassName="availability-calendar"
                 calendarStartDay={1}
@@ -221,29 +347,29 @@ export function HostAvailabilityPage() {
               {/* Legend */}
               <div
                 className={cn(
-                  "flex flex-wrap items-center gap-3 mt-5 pt-4 border-t border-neutral-100",
+                  "flex flex-wrap items-center gap-4 mt-6 pt-5 border-t border-neutral-100",
                   isDesktop && "justify-center",
                 )}
               >
-                <div className="flex items-center gap-1.5 text-xs text-neutral-600 font-medium">
-                  <span className="w-3 h-3 rounded-md bg-emerald-100 border border-emerald-300"></span>
-                  Open
+                <div className="flex items-center gap-2 text-xs text-neutral-600 font-medium">
+                  <span className="w-3.5 h-3.5 rounded-md bg-emerald-50 border border-emerald-300"></span>
+                  Available
                 </div>
-                <div className="flex items-center gap-1.5 text-xs text-neutral-600 font-medium">
-                  <span className="w-3 h-3 rounded-md bg-amber-400"></span>
+                <div className="flex items-center gap-2 text-xs text-neutral-600 font-medium">
+                  <span className="w-3.5 h-3.5 rounded-md bg-amber-100 border border-amber-300"></span>
                   Booked
                 </div>
-                <div className="flex items-center gap-1.5 text-xs text-neutral-600 font-medium">
-                  <span className="w-3 h-3 rounded-md bg-rose-500"></span>
+                <div className="flex items-center gap-2 text-xs text-neutral-600 font-medium">
+                  <span className="w-3.5 h-3.5 rounded-md bg-rose-50 border border-rose-300"></span>
                   Blocked
                 </div>
-                <div className="flex items-center gap-1.5 text-xs text-neutral-600 font-medium">
-                  <span className="w-3 h-3 rounded-md bg-teal-100 border border-teal-300"></span>
-                  Check-out
+                <div className="flex items-center gap-2 text-xs text-neutral-600 font-medium">
+                  <span className="w-3.5 h-3.5 rounded-md bg-neutral-100 border border-neutral-200 opacity-60"></span>
+                  Past
                 </div>
-                <div className="flex items-center gap-1.5 text-xs text-neutral-600 font-medium">
-                  <span className="w-3 h-3 rounded-md bg-amber-100 border border-amber-300"></span>
-                  Check-in
+                <div className="flex items-center gap-2 text-xs text-neutral-600 font-medium">
+                  <span className="w-3.5 h-3.5 rounded-md bg-white border-2 border-purple"></span>
+                  Today
                 </div>
               </div>
             </div>
@@ -262,7 +388,7 @@ export function HostAvailabilityPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="bg-neutral-50/80 rounded-xl p-3 border border-neutral-200/80">
-                  <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block mb-1">
+                  <span className="text-[11px] text-black-muted font-semibold uppercase tracking-wide block mb-1">
                     From
                   </span>
                   <input
@@ -273,7 +399,7 @@ export function HostAvailabilityPage() {
                   />
                 </div>
                 <div className="bg-neutral-50/80 rounded-xl p-3 border border-neutral-200/80">
-                  <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block mb-1">
+                  <span className="text-[11px] text-black-muted font-semibold uppercase tracking-wide block mb-1">
                     To
                   </span>
                   <input

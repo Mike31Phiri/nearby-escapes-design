@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -148,7 +148,7 @@ export function Footer() {
             <div className="md:col-span-1">
               {/* Text-based logo matching Navbar (no broken image refs) */}
               <Link href="/" className="flex items-center gap-1.5 mb-4 group">
-                <span className="font-display font-extrabold text-[1.2rem] tracking-tight text-black">
+                <span className="font-display font-bold text-[1.2rem] tracking-tight text-black">
                   Nearby
                 </span>
                 <span className="font-script font-bold text-[1.5rem] text-purple">Escapes</span>

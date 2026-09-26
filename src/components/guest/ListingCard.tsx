@@ -42,11 +42,11 @@ export const ListingCard = memo(function ListingCard({ listing, className }: Lis
           ? `/listings/stays/${listing.id}?${searchParams.toString()}`
           : `/listings/stays/${listing.id}`
       }
-      className={cn("group block transition-all", className)}
+      className={cn("group block", className)}
       aria-label={`View details for ${listing.name} in ${listing.location}, priced at ZMW ${listing.price} per night`}
     >
       {/* Image */}
-      <div className="relative aspect-[16/10] bg-white-bone rounded-xl overflow-hidden transition-shadow group-hover:shadow-sm">
+      <div className="relative aspect-[16/10] bg-white-bone rounded-xl overflow-hidden">
         <img
           src={listing.image}
           alt={listing.name}
@@ -54,7 +54,6 @@ export const ListingCard = memo(function ListingCard({ listing, className }: Lis
           decoding="async"
           className="h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
         {/* Wishlist Button */}
         <button
@@ -74,23 +73,23 @@ export const ListingCard = memo(function ListingCard({ listing, className }: Lis
       {/* Info */}
       <div className="pt-2.5 px-0.5">
         <div className="flex items-start justify-between gap-3">
-          <h3 className="text-[14px] font-semibold text-black-soft leading-snug line-clamp-1 flex-1">
+          <h3 className="card-title line-clamp-1 flex-1">
             {listing.name}
           </h3>
-          <div className="flex items-center gap-1 shrink-0">
-            <Star className="h-3 w-3 fill-purple text-purple" strokeWidth={1.5} />
-            <span className="text-[12px] font-semibold text-black-muted">
+          <div className="flex items-center gap-1 shrink-0 pt-0.5">
+            <Star className="h-3.5 w-3.5 fill-gold text-gold" strokeWidth={1.5} />
+            <span className="card-rating font-semibold">
               {listing.rating.toFixed(1)}
             </span>
           </div>
         </div>
-        <p className="flex items-center gap-1 text-xs text-neutral-500 mt-1">
-          <MapPin className="h-3 w-3 shrink-0 text-neutral-400" />
+        <p className="card-location flex items-center gap-1 mt-1">
+          <MapPin className="h-3.5 w-3.5 shrink-0 text-black-muted" />
           <span className="truncate">{listing.location}</span>
         </p>
-        <div className="flex items-baseline gap-0.5 mt-1.5">
-          <span className="text-[14px] font-bold text-purple">ZMW {listing.price}</span>
-          <span className="text-[11px] text-black-muted">/ night</span>
+        <div className="flex items-baseline gap-1 mt-2">
+          <span className="card-price">ZMW {listing.price}</span>
+          <span className="card-price-modifier">/ night</span>
         </div>
       </div>
     </Link>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
@@ -65,7 +65,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
             <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
               <MessageSquare className="h-6 w-6 text-muted-foreground" />
             </div>
-            <h1 className="text-xl font-black tracking-tight mb-2">Booking not found</h1>
+            <h1 className="text-xl font-bold tracking-tight mb-2">Booking not found</h1>
             <p className="text-muted-foreground text-base mb-6">
               We couldn&apos;t find a booking with this reference. Please check your booking details
               and try again.
@@ -106,7 +106,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
             <div className="inline-flex h-20 w-20 rounded-full bg-emerald-500/10 items-center justify-center mb-6">
               <CheckCircle2 className="h-10 w-10 text-emerald-500" />
             </div>
-            <h1 className="text-2xl font-black tracking-tight text-[#334155] mb-2">
+            <h1 className="text-2xl font-bold tracking-tight text-[#334155] mb-2">
               Review Submitted! 🎉
             </h1>
             <p className="text-[#64748B] text-base mb-2">
@@ -169,7 +169,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
 
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl md:text-3xl font-black tracking-tight text-[#334155] mb-2">
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#334155] mb-2">
             Leave a review
           </h1>
           <p className="text-[#64748B] text-base">
@@ -351,7 +351,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
           onClick={handleSubmit}
           disabled={!canSubmit || submitting}
           className={cn(
-            "w-full h-12 rounded-xl font-black text-base flex items-center justify-center gap-2 transition-all duration-200",
+            "w-full h-12 rounded-xl font-bold text-base flex items-center justify-center gap-2 transition-all duration-200",
             canSubmit && !submitting
               ? "bg-[#f2ba0d] text-white hover:bg-[#3A2B4D] shadow-md shadow-[#1f1433]/20 hover:shadow-lg"
               : "bg-gray-200 text-gray-400 cursor-not-allowed",

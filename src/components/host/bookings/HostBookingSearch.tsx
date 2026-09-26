@@ -95,11 +95,11 @@ export function HostBookingSearch() {
                   <span className="block text-[12px] font-bold text-neutral-900 truncate">
                     {b.ref} · {b.guestName}
                   </span>
-                  <span className="block text-[10px] text-neutral-400 truncate">
+                  <span className="block text-xs text-black-muted truncate">
                     {b.listingName} · {formatDayLabel(b.date)} {formatTime12h(b.time)}
                   </span>
                 </span>
-                <span className="text-[10px] text-neutral-300">↵</span>
+                <span className="text-xs text-black-faint">↵</span>
               </button>
             </li>
           ))}
@@ -176,7 +176,7 @@ export function HostBookingSearch() {
                           <span className="block text-[12px] font-bold text-neutral-900 truncate">
                             {b.ref} · {b.guestName}
                           </span>
-                          <span className="block text-[10px] text-neutral-400 truncate">
+                          <span className="block text-xs text-black-muted truncate">
                             {b.listingName} · {formatDayLabel(b.date)} {formatTime12h(b.time)}
                           </span>
                         </span>

@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard,
+  Home,
   CalendarDays,
   CalendarCheck,
   DollarSign,
@@ -34,11 +34,12 @@ const hostRoutes = [
   "/host/account",
   "/host/listings",
   "/host/create",
+  "/host/help",
 ];
 
 // Desktop navigation links
 const desktopNavLinks: { href: string; label: string; icon: LucideIcon }[] = [
-  { href: "/host", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/host", label: "Home", icon: Home },
   { href: "/host/listings", label: "Listings", icon: Building2 },
   { href: "/host/bookings", label: "Bookings", icon: CalendarCheck },
   { href: "/host/availability", label: "Calendar", icon: CalendarDays },
@@ -49,7 +50,7 @@ const desktopNavLinks: { href: string; label: string; icon: LucideIcon }[] = [
 
 // Mobile bottom navigation items
 const bottomNavItems: { href: string; label: string; icon: LucideIcon; isMenu?: boolean }[] = [
-  { href: "/host", label: "Home", icon: LayoutDashboard },
+  { href: "/host", label: "Home", icon: Home },
   { href: "/host/availability", label: "Calendar", icon: CalendarDays },
   { href: "/host/create", label: "New Listing", icon: PlusCircle },
   { href: "/host/finances", label: "Earnings", icon: DollarSign },
@@ -81,17 +82,17 @@ export function HostNav() {
               href="/host"
               className="flex items-center gap-2 no-underline outline-none focus-visible:outline-none shrink-0 group"
             >
-              <span className="text-[21px] font-semibold text-neutral-900 tracking-tight">
+              <span className="text-[21px] font-bold text-black tracking-tight">
                 Nearby
               </span>
               <span className="font-script text-purple text-[1.35em] leading-none">Escapes</span>
-              <span className="ml-1 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider rounded-md bg-purple/10 text-purple border border-purple/20">
+              <span className="ml-1 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide rounded-md bg-purple/10 text-purple border border-purple/20">
                 Host
               </span>
             </Link>
 
             {/* Desktop Center Links */}
-            <nav className="hidden xl:flex items-center gap-1">
+            <nav className="hidden xl:flex items-center gap-1.5">
               {desktopNavLinks.map((item) => {
                 const active = isActive(item.href);
                 return (
@@ -99,10 +100,10 @@ export function HostNav() {
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      "px-3 py-1.5 rounded-lg text-xs transition-all duration-150",
+                      "px-3.5 py-1.5 rounded-full text-xs transition-colors",
                       active
-                        ? "bg-purple text-white font-medium shadow-2xs"
-                        : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 font-normal",
+                        ? "bg-purple/10 text-purple font-semibold"
+                        : "text-black-subtle hover:text-black hover:bg-neutral-100/80 font-medium",
                     )}
                   >
                     {item.label}
@@ -120,9 +121,14 @@ export function HostNav() {
 
               {/* Help center (accessible on both mobile and desktop) */}
               <Link
-                href="/help"
-                className="flex items-center justify-center h-9 w-9 rounded-full border border-neutral-200 hover:border-purple/40 hover:text-purple transition-colors text-neutral-600 bg-white"
-                aria-label="Help center"
+                href="/host/help"
+                className={cn(
+                  "flex items-center justify-center h-9 w-9 rounded-full border transition-colors bg-white",
+                  pathname === "/host/help"
+                    ? "border-purple text-purple bg-purple/10"
+                    : "border-neutral-200 hover:border-purple/40 hover:text-purple text-neutral-600",
+                )}
+                aria-label="Host Help Center"
               >
                 <HelpCircle className="h-4 w-4" strokeWidth={1.8} />
               </Link>
@@ -186,16 +192,16 @@ export function HostNav() {
                         {/* Help */}
                         <SheetClose asChild>
                           <Link
-                            href="/help"
+                            href="/host/help"
                             className={cn(
                               "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
-                              pathname === "/help"
+                              pathname === "/host/help"
                                 ? "bg-purple/10 text-purple font-semibold"
                                 : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
                             )}
                           >
                             <HelpCircle className="h-4 w-4 shrink-0 text-neutral-500" />
-                            <span>Help &amp; Support</span>
+                            <span>Host Help Center</span>
                           </Link>
                         </SheetClose>
 

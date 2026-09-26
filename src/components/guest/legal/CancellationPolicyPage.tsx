@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import {
   ShieldCheck,
@@ -261,7 +261,7 @@ export function CancellationPolicyPage() {
           <div className="space-y-4">
             {steps.map(({ step, title, description }) => (
               <div key={step} className="flex gap-4 p-4 rounded-xl border border-border/50 bg-card">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-black text-base">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-base">
                   {step}
                 </div>
                 <div>

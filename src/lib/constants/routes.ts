@@ -103,6 +103,7 @@ export const ROUTES = {
     account: "/host/account",
     settings: "/host/settings",
     availability: "/host/availability",
+    help: "/host/help",
   },
 
   // Admin portal

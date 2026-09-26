@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -207,7 +207,7 @@ export function Navbar() {
             >
               <Bell className="h-4 w-4" strokeWidth={2} />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1.5 h-3.5 w-3.5 rounded-full bg-gold text-black text-[8px] font-black flex items-center justify-center shadow-sm">
+                <span className="absolute -top-1 -right-1.5 h-3.5 w-3.5 rounded-full bg-gold text-black text-[8px] font-bold flex items-center justify-center shadow-sm">
                   {unreadCount}
                 </span>
               )}

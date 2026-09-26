@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import {
@@ -57,7 +57,7 @@ export function WishlistPage() {
               </p>
               <Button
                 size="lg"
-                className="rounded-full font-black uppercase tracking-widest text-sm shadow-lg"
+                className="rounded-full font-bold uppercase tracking-widest text-sm shadow-lg"
                 asChild
               >
                 <Link href="/explore">

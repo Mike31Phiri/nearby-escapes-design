@@ -52,7 +52,7 @@ function BookingRow({
       </button>
 
       <span
-        className="text-[10px] font-bold px-2.5 py-0.5 rounded-full whitespace-nowrap shrink-0 border"
+        className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full tracking-wide whitespace-nowrap shrink-0 border"
         style={{
           background: badge.bg,
           color: badge.fg,

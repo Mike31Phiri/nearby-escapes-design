@@ -312,7 +312,7 @@ function TermsPolicyCard() {
                 {p.label}
               </p>
               {policy === p.value && (
-                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-purple bg-purple/10 border border-purple/20 rounded-full px-2 py-0.5">
+                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-purple bg-purple/10 border border-purple/20 rounded-full px-2.5 py-0.5 tracking-wide">
                   <CheckCircle2 className="h-3 w-3" /> Default
                 </span>
               )}
@@ -407,7 +407,7 @@ function LegalDocumentsCard() {
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-neutral-900 flex items-center gap-1.5">
                     {doc.name}
-                    <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full px-2 py-0.5">
+                    <span className="inline-flex items-center gap-0.5 text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full px-2.5 py-0.5 tracking-wide">
                       <CheckCircle2 className="h-3 w-3" /> On file
                     </span>
                   </p>

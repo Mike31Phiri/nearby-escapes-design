@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import type { ElementType } from "react";
 
@@ -21,7 +21,7 @@ export function SectionTitle({ icon: Icon, eyebrow, title, subtitle }: SectionTi
             {eyebrow}
           </p>
         )}
-        <h2 className="font-display text-xl md:text-2xl font-extrabold tracking-tight text-black">
+        <h2 className="font-display text-xl md:text-2xl font-bold tracking-tight text-black">
           {title}
         </h2>
         {subtitle && (

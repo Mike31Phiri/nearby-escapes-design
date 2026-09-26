@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -20,7 +20,7 @@ function PaymentBadge({ status }: { status: "paid" | "pending" }) {
   return (
     <span
       className={cn(
-        "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold",
+        "shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold tracking-wide",
         status === "paid" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700",
       )}
     >
@@ -130,7 +130,7 @@ export function DailyManifestPage() {
         {/* Progress card */}
         <div className="bg-white border border-neutral-200 rounded-2xl p-4">
           <div className="flex items-end justify-between mb-2">
-            <p className="text-[22px] font-black text-neutral-900 leading-none">
+            <p className="text-[22px] font-bold text-neutral-900 leading-none">
               {checkedInPeople}
               <span className="text-neutral-300 font-bold">/{totalPeople}</span>
             </p>
@@ -168,7 +168,7 @@ export function DailyManifestPage() {
           {guests.filter((g) => !g.checkedIn).length > 0 && (
             <div className="px-4 pt-3 pb-1 flex items-center gap-1.5">
               <Users className="h-3.5 w-3.5 text-neutral-400" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
+              <span className="text-[11px] font-semibold uppercase tracking-wide text-black-muted">
                 Waiting ({guests.filter((g) => !g.checkedIn).length})
               </span>
             </div>
@@ -201,7 +201,7 @@ export function DailyManifestPage() {
             <>
               <div className="px-4 pt-3 pb-1 flex items-center gap-1.5 bg-[#F4FAF6]">
                 <Check className="h-3.5 w-3.5 text-emerald-600" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-emerald-700">
+                <span className="text-[11px] font-semibold uppercase tracking-wide text-emerald-700">
                   Checked In ({checkedCount})
                 </span>
               </div>

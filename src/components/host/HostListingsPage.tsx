@@ -62,20 +62,20 @@ function DraftCard({ draft }: { draft: ListingDraft }) {
   return (
     <div className="flex flex-col gap-3 rounded-2xl border border-dashed border-purple/30 bg-white shadow-2xs p-5 transition-all hover:shadow-md">
       <div className="flex items-center justify-between gap-2">
-        <span className="rounded-full bg-purple/10 border border-purple/20 px-2.5 py-0.5 text-[10px] font-bold text-purple uppercase tracking-wider flex items-center gap-1">
+        <span className="rounded-full bg-purple/10 border border-purple/20 px-2.5 py-0.5 text-[11px] font-semibold text-purple uppercase tracking-wide flex items-center gap-1">
           <TypeIcon className="h-3.5 w-3.5" />
           {typeLabels[draft.type] ?? "Listing"}
         </span>
-        <span className="rounded-full bg-neutral-100 text-neutral-600 border border-neutral-200 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider">
+        <span className="rounded-full bg-neutral-100 text-neutral-600 border border-neutral-200 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide">
           Draft
         </span>
       </div>
 
       <div>
-        <h3 className="text-sm font-bold text-neutral-900 truncate">
+        <h3 className="text-sm font-semibold text-black truncate">
           {draft.title || "Untitled draft"}
         </h3>
-        <p className="text-xs text-neutral-500 mt-0.5">
+        <p className="text-xs text-black-muted mt-0.5 font-medium tracking-wide">
           Saved{" "}
           {new Date(draft.updatedAt).toLocaleDateString(undefined, {
             month: "short",
@@ -85,7 +85,7 @@ function DraftCard({ draft }: { draft: ListingDraft }) {
       </div>
 
       <div>
-        <div className="flex items-center justify-between text-[10px] font-bold mb-1.5">
+        <div className="flex items-center justify-between text-[11px] font-semibold tracking-wide mb-1.5">
           <span className="text-neutral-500">{pct}% complete</span>
           <span className="text-neutral-400">Step {Math.min(draft.currentStep + 1, 99)}</span>
         </div>
@@ -122,7 +122,7 @@ function ListingCard({ listing }: { listing: HostListing }) {
   return (
     <Link
       href={`/host/listings/${listing.id}`}
-      className="group block bg-white rounded-2xl shadow-sm border border-neutral-100 overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+      className="group block bg-white rounded-2xl shadow-xs border border-neutral-200/80 overflow-hidden"
     >
       {/* Image */}
       <div className="relative aspect-[16/10] overflow-hidden bg-neutral-100">
@@ -135,20 +135,20 @@ function ListingCard({ listing }: { listing: HostListing }) {
             src={listing.image}
             alt={listing.name}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover "
             onError={() => setImgError(true)}
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
 
         <div className="absolute top-3 left-3 flex items-center gap-1.5">
-          <span className="rounded-full bg-white/95 backdrop-blur-sm px-2.5 py-1 text-[11px] font-medium text-neutral-800 uppercase tracking-wider flex items-center gap-1 shadow-2xs">
+          <span className="rounded-full bg-white/95 backdrop-blur-sm px-2.5 py-1 text-[11px] font-semibold text-black uppercase tracking-wide flex items-center gap-1 shadow-2xs">
             <TypeIcon className="h-3 w-3 text-purple" />
             <span>{typeLabels[listing.type]}</span>
           </span>
           <span
             className={cn(
-              "rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider border shadow-2xs",
+              "rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide border shadow-2xs",
               statusClass,
             )}
           >
@@ -183,19 +183,19 @@ function ListingCard({ listing }: { listing: HostListing }) {
           )}
         </div>
 
-        <h3 className="text-base font-bold text-neutral-900 truncate group-hover:text-purple transition-colors">
+        <h3 className="card-title truncate group-hover:text-purple transition-colors">
           {listing.name}
         </h3>
 
-        <p className="text-xs text-neutral-500 flex items-center gap-1 mt-1">
+        <p className="card-location flex items-center gap-1 mt-1">
           <MapPin className="h-3.5 w-3.5 shrink-0 text-neutral-400" />
           <span className="truncate">{listing.location}</span>
         </p>
 
         <div className="mt-4 pt-3.5 border-t border-neutral-100 flex items-center justify-between">
           <div>
-            <span className="text-base font-black text-neutral-900">K{listing.price}</span>
-            <span className="text-xs text-neutral-500 font-normal">
+            <span className="card-price">K{listing.price}</span>
+            <span className="card-price-modifier">
               {" "}
               /
               {listing.type === "stay" ? "night" : listing.type === "transport" ? "seat" : "person"}
@@ -333,7 +333,7 @@ export function HostListingsPage() {
         {/* Filters + Search bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide pb-1">
-            {filters.map(({ id, label, count }) => {
+            {filters.map(({ id, label }) => {
               const isActive = activeFilter === id;
               return (
                 <button
@@ -347,14 +347,6 @@ export function HostListingsPage() {
                   )}
                 >
                   {label}
-                  <span
-                    className={cn(
-                      "rounded-full px-1.5 py-0.2 text-[10px] font-bold",
-                      isActive ? "bg-white/20 text-white" : "bg-neutral-100 text-neutral-500",
-                    )}
-                  >
-                    {count}
-                  </span>
                 </button>
               );
             })}
@@ -375,10 +367,10 @@ export function HostListingsPage() {
         {sortedDrafts.length > 0 && (
           <section className="space-y-4">
             <div>
-              <h2 className="font-display text-lg md:text-xl font-bold text-neutral-900 tracking-tight">
+              <h2 className="text-xl md:text-2xl font-bold text-black tracking-tight leading-tight">
                 Your Drafts
               </h2>
-              <p className="text-xs text-neutral-500 mt-0.5">
+              <p className="text-xs text-black-muted mt-0.5 font-medium tracking-wide">
                 Continue where you left off — all progress is automatically saved.
               </p>
             </div>
@@ -396,7 +388,7 @@ export function HostListingsPage() {
             <div className="h-16 w-16 rounded-2xl bg-purple/10 text-purple flex items-center justify-center mx-auto mb-4">
               <Building2 className="h-8 w-8" />
             </div>
-            <h3 className="text-lg font-bold text-neutral-900 mb-1">
+            <h3 className="text-lg font-bold text-black mb-1">
               {searchQuery
                 ? "No listings match your search"
                 : activeFilter === "active"

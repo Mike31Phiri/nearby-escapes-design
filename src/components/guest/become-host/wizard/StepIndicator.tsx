@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -25,7 +25,7 @@ export function StepIndicator({ currentStep }: StepIndicatorProps) {
             >
               <div
                 className={cn(
-                  "h-9 w-9 rounded-full flex items-center justify-center text-sm font-black transition-all duration-300 border-2",
+                  "h-9 w-9 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 border-2",
                   isActive
                     ? "bg-gold text-black border-gold shadow-lg shadow-gold/25 scale-110"
                     : isCompleted

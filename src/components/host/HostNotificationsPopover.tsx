@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
@@ -85,7 +85,7 @@ export function HostNotificationsPopover() {
         >
           <Bell className="h-[18px] w-[18px]" />
           {mounted && unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1.5 h-3.5 w-3.5 rounded-full bg-rose-500 text-white text-[8px] font-black flex items-center justify-center shadow-sm">
+            <span className="absolute -top-1 -right-1.5 h-3.5 w-3.5 rounded-full bg-rose-500 text-white text-[11px] font-semibold flex items-center justify-center shadow-sm">
               {unreadCount > 9 ? "9+" : unreadCount}
             </span>
           )}
@@ -113,11 +113,11 @@ export function HostNotificationsPopover() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-200 bg-neutral-50">
           <div className="flex items-center gap-2">
             <Bell className="h-4 w-4 text-purple" />
-            <h3 className="text-sm font-black uppercase tracking-wider text-neutral-900">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-neutral-900">
               Notifications
             </h3>
             {unreadCount > 0 && (
-              <span className="bg-rose-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full">
+              <span className="bg-rose-500 text-white text-[11px] font-semibold px-2 py-0.5 rounded-full tracking-wide">
                 {unreadCount}
               </span>
             )}
@@ -179,7 +179,7 @@ export function HostNotificationsPopover() {
                           >
                             {n.title}
                           </p>
-                          <span className="text-[10px] text-neutral-400 whitespace-nowrap mt-0.5 shrink-0">
+                          <span className="text-xs text-black-muted whitespace-nowrap mt-0.5 shrink-0">
                             {formatTimestamp(n.timestamp)}
                           </span>
                         </div>
@@ -205,7 +205,7 @@ export function HostNotificationsPopover() {
 
         {/* Footer hint */}
         {visible.length > 0 && (
-          <div className="flex items-center justify-center gap-1.5 px-4 py-2.5 border-t border-neutral-200 bg-neutral-50 text-[10px] text-neutral-400">
+          <div className="flex items-center justify-center gap-1.5 px-4 py-2.5 border-t border-neutral-200 bg-neutral-50 text-xs text-black-muted">
             <X className="h-3 w-3" />
             Tap a notification to open it
           </div>
