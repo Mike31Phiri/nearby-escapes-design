@@ -98,7 +98,7 @@ function DraftCard({ draft }: { draft: ListingDraft }) {
       </div>
 
       <Link
-        href={ROUTES?.listingDrafts?.editor ? ROUTES.listingDrafts.editor(draft.id, draft.currentStep + 1) : `/listings/create/${draft.id}?step=${draft.currentStep + 1}`}
+        href={ROUTES.host.create}
         className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-purple text-white text-xs font-bold h-9 hover:bg-purple-hover transition-colors shadow-xs"
       >
         <PlayCircle className="h-3.5 w-3.5" />
@@ -255,10 +255,7 @@ export function HostListingsPage() {
       .map((d) => {
         const form = (d.form || {}) as Record<string, any>;
         const price =
-          Number(form.baseRate) ||
-          Number(form.priceAdult) ||
-          Number(form.dailyRate) ||
-          1200;
+          Number(form.baseRate) || Number(form.priceAdult) || Number(form.dailyRate) || 1200;
         const location = form.city || form.meetingPoint || form.address || "Zambia";
         return {
           id: d.id,
@@ -320,12 +317,12 @@ export function HostListingsPage() {
         description="Manage, update, and monitor performance across all your properties and services."
         actions={
           <Link
-              href="/host/create"
-              className="inline-flex items-center gap-1.5 border border-neutral-200 hover:border-purple/40 bg-white hover:bg-purple/5 text-neutral-600 hover:text-purple text-xs font-medium px-3.5 py-2 rounded-xl transition-all"
-            >
-              <Plus className="h-3.5 w-3.5" />
-              <span className="font-normal">New listing</span>
-            </Link>
+            href="/host/create"
+            className="inline-flex items-center gap-1.5 border border-neutral-200 hover:border-purple/40 bg-white hover:bg-purple/5 text-neutral-600 hover:text-purple text-xs font-medium px-3.5 py-2 rounded-xl transition-all"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            <span className="font-normal">New listing</span>
+          </Link>
         }
       />
 
@@ -416,7 +413,10 @@ export function HostListingsPage() {
                 Clear search
               </Button>
             ) : (
-              <Button className="bg-purple hover:bg-purple-hover text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-xs transition-all border-none" asChild>
+              <Button
+                className="bg-purple hover:bg-purple-hover text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-xs transition-all border-none"
+                asChild
+              >
                 <Link href="/host/create">
                   <Plus className="h-4 w-4 mr-1.5" />
                   Create your first listing

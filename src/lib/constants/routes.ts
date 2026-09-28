@@ -77,13 +77,13 @@ export const ROUTES = {
     settings: "/account/settings",
   },
 
-  // Host listing creation drafts — spec: /listings/create/[id]?step=N
+  // Host listing creation
   listingDrafts: {
-    /** Entry point: capability check → type select → auto-create draft */
+    /** Entry point: new modern multi-step listing creator */
     create: "/host/create",
-    /** The wizard editor, one step per URL query param */
-    editor: (id: string, step = 1) => `/listings/create/${id}?step=${step}`,
-    base: "/listings/create",
+    /** Resumes or edits listing creation */
+    editor: (_id?: string, _step = 1) => "/host/create",
+    base: "/host/create",
   },
 
   // Host portal

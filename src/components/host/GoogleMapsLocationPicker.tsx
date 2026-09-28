@@ -1,18 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback, useMemo } from "react";
-import {
-  MapPin,
-  Navigation,
-  ExternalLink,
-  Search,
-  Compass,
-  Layers,
-  Sparkles,
-  Info,
-} from "lucide-react";
+import { useEffect, useRef, useState, useMemo } from "react";
+import { Search, Navigation } from "lucide-react";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 
 interface GoogleMapsLocationPickerProps {
   latitude: number;
@@ -33,7 +23,6 @@ interface GoogleMapEvent {
 interface GoogleMapsInstance {
   setCenter: (coords: { lat: number; lng: number }) => void;
   setZoom: (zoom: number) => void;
-  setMapTypeId: (mapTypeId: string) => void;
 }
 
 interface GoogleMarkerInstance {
@@ -70,7 +59,6 @@ export function GoogleMapsLocationPicker({
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [mapViewType, setMapViewType] = useState<"roadmap" | "satellite">("roadmap");
 
   const [lat, setLat] = useState<number>(latitude || -15.3875);
   const [lng, setLng] = useState<number>(longitude || 28.3228);
@@ -103,25 +91,21 @@ export function GoogleMapsLocationPicker({
     script.async = true;
     script.defer = true;
     document.head.appendChild(script);
-
-    return () => {
-      delete window.initGoogleMapsCallback;
-    };
   }, [apiKey]);
 
-  // Initialize Real Google Map once script is loaded
+  // Initialize interactive Google Map
   useEffect(() => {
-    if (!isScriptLoaded || !window.google?.maps || !mapContainerRef.current) return;
+    if (!isScriptLoaded || !mapContainerRef.current || !window.google?.maps) return;
 
     const initialCenter = { lat, lng };
 
     const map = new window.google.maps.Map(mapContainerRef.current, {
       center: initialCenter,
       zoom: 15,
-      mapTypeId: mapViewType === "satellite" ? "satellite" : "roadmap",
+      mapTypeId: "roadmap",
       streetViewControl: false,
       mapTypeControl: false,
-      fullscreenControl: true,
+      fullscreenControl: false,
       zoomControl: true,
       styles: [
         {
@@ -160,10 +144,10 @@ export function GoogleMapsLocationPicker({
       onChangeRef.current({ latitude: newLat, longitude: newLng });
     });
 
-    // Places autocomplete on search input if available
+    // Places autocomplete on search input restricted to Zambia
     if (searchInputRef.current) {
       const autocomplete = new window.google.maps.places.Autocomplete(searchInputRef.current, {
-        componentRestrictions: { country: "zm" }, // Restrict search to Zambia!
+        componentRestrictions: { country: "zm" },
         fields: ["geometry", "formatted_address", "name"],
       });
 
@@ -192,13 +176,13 @@ export function GoogleMapsLocationPicker({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isScriptLoaded, apiKey]);
 
-  // Update map type (roadmap / satellite)
-  const handleToggleMapType = (type: "roadmap" | "satellite") => {
-    setMapViewType(type);
-    if (googleMapInstanceRef.current && window.google?.maps) {
-      googleMapInstanceRef.current.setMapTypeId(type);
-    }
-  };
+  // Center on province or city changes if Google Maps is active
+  useEffect(() => {
+    if (!googleMapInstanceRef.current || !markerInstanceRef.current) return;
+    const newPos = { lat, lng };
+    googleMapInstanceRef.current.setCenter(newPos);
+    markerInstanceRef.current.setPosition(newPos);
+  }, [lat, lng, province, city, address]);
 
   // Device GPS Locator
   const handleGetDeviceLocation = () => {
@@ -224,7 +208,7 @@ export function GoogleMapsLocationPicker({
         }
 
         onChange({ latitude: curLat, longitude: curLng });
-        toast.success("Coordinates acquired from device GPS");
+        toast.success("Coordinates updated from GPS");
       },
       (err) => {
         setIsLocating(false);
@@ -236,7 +220,7 @@ export function GoogleMapsLocationPicker({
     );
   };
 
-  // Manual fallback search if API key is not active
+  // Fallback search using Zambia geocoding
   const handleFallbackSearch = (e?: React.SyntheticEvent) => {
     if (e) {
       e.preventDefault();
@@ -259,30 +243,27 @@ export function GoogleMapsLocationPicker({
           setLat(resLat);
           setLng(resLng);
           onChange({ latitude: resLat, longitude: resLng, address: results[0].display_name });
-          toast.success(`Found "${query}" in Zambia`);
+          toast.success(`Found "${query}"`);
         } else {
-          toast.info(`Could not find "${query}". You can adjust coordinates manually.`);
+          toast.info(`Could not locate "${query}". Adjust coordinates directly.`);
         }
       })
       .catch(() => {
-        toast.info("Search service unreachable. Adjust coordinates manually.");
+        toast.info("Search service unreachable.");
       });
   };
 
   // Google Maps standard embedded iframe URL fallback
   const googleMapsEmbedUrl = useMemo(() => {
-    const tParam = mapViewType === "satellite" ? "k" : "m";
-    return `https://maps.google.com/maps?q=${lat},${lng}&t=${tParam}&z=15&ie=UTF8&iwloc=&output=embed`;
-  }, [lat, lng, mapViewType]);
-
-  const externalGoogleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+    return `https://maps.google.com/maps?q=${lat},${lng}&t=m&z=15&ie=UTF8&iwloc=&output=embed`;
+  }, [lat, lng]);
 
   return (
-    <div className="space-y-4 font-sans">
-      {/* Search Bar & Map Controls Header */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+    <div className="space-y-3 font-sans">
+      {/* Search Input & GPS */}
+      <div className="flex items-center gap-2">
         <div className="relative flex-1">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-neutral-400" />
           <input
             ref={searchInputRef}
             type="text"
@@ -294,121 +275,53 @@ export function GoogleMapsLocationPicker({
                 handleFallbackSearch(e);
               }
             }}
-            placeholder="Search neighborhood, district or landmark in Zambia..."
-            className="w-full h-11 pl-10 pr-24 rounded-xl border border-neutral-200/90 bg-white text-xs sm:text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-purple focus:ring-1 focus:ring-purple/20 transition-all"
+            placeholder="Search town, landmark or street in Zambia..."
+            className="w-full h-9 pl-9 pr-20 rounded-xl border border-neutral-200 bg-white text-xs text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-purple focus:ring-1 focus:ring-purple/20 transition-all"
           />
           {!apiKey && (
             <button
               type="button"
               onClick={handleFallbackSearch}
-              className="absolute right-2 top-1/2 -translate-y-1/2 h-7 px-3 rounded-lg bg-neutral-100 hover:bg-neutral-200 text-neutral-700 text-xs font-semibold transition-colors cursor-pointer"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 h-6 px-2.5 rounded-lg bg-neutral-100 hover:bg-neutral-200 text-neutral-700 text-[11px] font-semibold transition-colors cursor-pointer"
             >
               Search
             </button>
           )}
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
-          {/* Map Layer Switcher */}
-          <div className="flex items-center bg-neutral-100 p-1 rounded-xl border border-neutral-200/60">
-            <button
-              type="button"
-              onClick={() => handleToggleMapType("roadmap")}
-              className={cn(
-                "px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer",
-                mapViewType === "roadmap"
-                  ? "bg-white text-purple shadow-2xs"
-                  : "text-neutral-600 hover:text-neutral-900",
-              )}
-            >
-              Map
-            </button>
-            <button
-              type="button"
-              onClick={() => handleToggleMapType("satellite")}
-              className={cn(
-                "px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer",
-                mapViewType === "satellite"
-                  ? "bg-white text-purple shadow-2xs"
-                  : "text-neutral-600 hover:text-neutral-900",
-              )}
-            >
-              Satellite
-            </button>
-          </div>
-
-          {/* GPS Button */}
-          <button
-            type="button"
-            onClick={handleGetDeviceLocation}
-            disabled={isLocating}
-            className="inline-flex items-center gap-1.5 h-9 px-3 rounded-xl border border-purple/20 bg-purple/5 text-xs font-semibold text-purple hover:bg-purple/10 transition-colors cursor-pointer"
-          >
-            <Navigation className={cn("h-3.5 w-3.5", isLocating && "animate-spin")} />
-            <span>{isLocating ? "Locating…" : "My GPS"}</span>
-          </button>
-
-          {/* Direct Open in Google Maps */}
-          <a
-            href={externalGoogleMapsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 h-9 px-3 rounded-xl border border-neutral-200/80 bg-white text-xs font-semibold text-neutral-700 hover:text-purple hover:border-purple/40 transition-colors"
-          >
-            <span>Google Maps</span>
-            <ExternalLink className="h-3.5 w-3.5 text-neutral-400" />
-          </a>
-        </div>
+        <button
+          type="button"
+          onClick={handleGetDeviceLocation}
+          disabled={isLocating}
+          className="inline-flex items-center gap-1.5 h-9 px-3 rounded-xl border border-purple/20 bg-purple/5 text-xs font-semibold text-purple hover:bg-purple/10 transition-colors shrink-0 cursor-pointer"
+          title="Use current GPS location"
+        >
+          <Navigation className="h-3.5 w-3.5" />
+          <span className="hidden sm:inline">{isLocating ? "Locating..." : "Use GPS"}</span>
+        </button>
       </div>
 
-      {/* Map Viewport */}
-      <div className="relative w-full h-[320px] sm:h-[380px] rounded-2xl overflow-hidden border border-neutral-200 shadow-2xs bg-neutral-100">
+      {/* Map Viewport - Compact & Focused */}
+      <div className="relative w-full h-[220px] sm:h-[260px] rounded-xl overflow-hidden border border-neutral-200 bg-neutral-100">
         {apiKey ? (
           <div ref={mapContainerRef} className="w-full h-full" />
         ) : (
-          <div className="relative w-full h-full">
-            <iframe
-              title="Google Maps Location Picker"
-              src={googleMapsEmbedUrl}
-              className="w-full h-full border-0"
-              loading="lazy"
-            />
-            {/* Center pin indicator badge */}
-            <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-xs border border-neutral-200/80 rounded-xl px-3 py-1.5 shadow-2xs flex items-center gap-2 pointer-events-none">
-              <MapPin className="h-4 w-4 text-purple shrink-0" />
-              <span className="text-xs font-medium text-neutral-800">
-                Centered at {lat.toFixed(4)}, {lng.toFixed(4)}
-              </span>
-            </div>
-          </div>
+          <iframe
+            title="Location Map"
+            src={googleMapsEmbedUrl}
+            className="w-full h-full border-0"
+            loading="lazy"
+          />
         )}
       </div>
 
-      {/* Coordinate & Precision Controls */}
-      <div className="bg-neutral-50 border border-neutral-200/70 rounded-xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-lg bg-purple/10 text-purple border border-purple/20 flex items-center justify-center shrink-0">
-            <Compass className="h-4 w-4" />
-          </div>
-          <div>
-            <span className="text-xs font-semibold text-neutral-900 block">Exact Coordinates</span>
-            <span className="text-[11px] text-neutral-500">
-              {apiKey
-                ? "Click or drag the pin on Google Maps to adjust pinpoint accuracy"
-                : "Used by Google Maps navigation and guest directions in Zambia"}
-            </span>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-neutral-200 text-xs">
-            <span className="text-neutral-400 font-medium">Lat:</span>
-            <span className="font-mono font-semibold text-neutral-800">{lat}</span>
-          </div>
-          <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-neutral-200 text-xs">
-            <span className="text-neutral-400 font-medium">Lng:</span>
-            <span className="font-mono font-semibold text-neutral-800">{lng}</span>
-          </div>
+      {/* Compact Coordinates Bar */}
+      <div className="flex items-center justify-between text-[11px] text-neutral-500 pt-0.5 px-0.5">
+        <span>Click map or drag pin to adjust coordinates</span>
+        <div className="flex items-center gap-2 font-mono">
+          <span className="bg-neutral-100 px-2 py-0.5 rounded text-neutral-700">
+            {lat.toFixed(4)}, {lng.toFixed(4)}
+          </span>
         </div>
       </div>
     </div>

@@ -21,6 +21,11 @@ const nextConfig: NextConfig = {
         destination: "/host/finances",
         permanent: true,
       },
+      {
+        source: "/listings/create/:path*",
+        destination: "/host/create",
+        permanent: false,
+      },
     ];
   },
   images: {
