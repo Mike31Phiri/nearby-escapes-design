@@ -1219,7 +1219,6 @@ export function HostCreatePage() {
                   </p>
                 </div>
 
-                {/* Grid of Subtype Cards - Compact: Icons with names below */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-3">
                   {currentSubtypes.map((sub) => {
                     const Icon = sub.icon;
@@ -1231,26 +1230,23 @@ export function HostCreatePage() {
                         onClick={() => setSelectedSubtype(sub.id)}
                         onDoubleClick={handleNextFromStep2}
                         className={cn(
-                          "flex flex-col items-center justify-center text-center p-3 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[82px] sm:min-h-[88px]",
+                          "flex flex-col items-center justify-center text-center p-3.5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[88px] sm:min-h-[96px]",
                           isSelected
-                            ? "border-purple bg-purple/[0.04]"
-                            : "border-neutral-200/80 hover:border-neutral-300",
+                            ? "border-2 border-purple bg-purple/[0.02]"
+                            : "border-neutral-300 hover:border-neutral-900",
                         )}
                       >
-                        <div
+                        <Icon
                           className={cn(
-                            "h-7 w-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors border shrink-0",
-                            isSelected
-                              ? "bg-purple/10 text-purple border-purple/20"
-                              : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                            "h-7 w-7 mb-2 transition-colors shrink-0",
+                            isSelected ? "text-purple" : "text-neutral-800",
                           )}
-                        >
-                          <Icon className="h-3.5 w-3.5" />
-                        </div>
+                          strokeWidth={1.5}
+                        />
                         <span
                           className={cn(
                             "text-xs sm:text-sm font-semibold leading-tight line-clamp-2 text-center transition-colors",
-                            isSelected ? "text-purple font-semibold" : "text-neutral-800",
+                            isSelected ? "text-purple font-semibold" : "text-neutral-900",
                           )}
                         >
                           {sub.title}
