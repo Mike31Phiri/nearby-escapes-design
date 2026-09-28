@@ -113,143 +113,38 @@ const LISTING_TYPES: {
 interface SubtypeOption {
   id: string;
   title: string;
-  description: string;
+  description?: string;
   icon: React.ElementType;
 }
 
 const STAY_SUBTYPES: SubtypeOption[] = [
-  {
-    id: "safari_lodge",
-    title: "Safari Lodge",
-    description: "Wilderness lodge near national parks & wildlife reserves",
-    icon: Hotel,
-  },
-  {
-    id: "bush_camp",
-    title: "Bush Camp / Tented Camp",
-    description: "Canvas safari tents & immersive wilderness camps",
-    icon: Tent,
-  },
-  {
-    id: "chalet",
-    title: "Chalet / Cottage",
-    description: "Standalone self-catering or catered chalets",
-    icon: Home,
-  },
-  {
-    id: "apartment",
-    title: "Apartment / Flat",
-    description: "Modern self-contained apartment in urban centers",
-    icon: Building2,
-  },
-  {
-    id: "guest_house",
-    title: "Guest House / B&B",
-    description: "Cozy hosted rooms with morning breakfast",
-    icon: Coffee,
-  },
-  {
-    id: "villa",
-    title: "Villa / Holiday Home",
-    description: "Private spacious property for families and groups",
-    icon: Castle,
-  },
-  {
-    id: "boutique_hotel",
-    title: "Boutique Hotel",
-    description: "Intimate hotel with personalized hospitality",
-    icon: Sparkles,
-  },
-  {
-    id: "eco_retreat",
-    title: "Eco Retreat / Farm Stay",
-    description: "Working farm or off-grid nature sanctuary",
-    icon: Mountain,
-  },
+  { id: "safari_lodge", title: "Safari Lodge", icon: Hotel },
+  { id: "bush_camp", title: "Bush Camp", icon: Tent },
+  { id: "chalet", title: "Chalet / Cottage", icon: Home },
+  { id: "apartment", title: "Apartment", icon: Building2 },
+  { id: "guest_house", title: "Guest House", icon: Coffee },
+  { id: "villa", title: "Villa", icon: Castle },
+  { id: "boutique_hotel", title: "Boutique Hotel", icon: Sparkles },
+  { id: "eco_retreat", title: "Eco Retreat", icon: Mountain },
 ];
 
 const EXPERIENCE_SUBTYPES: SubtypeOption[] = [
-  {
-    id: "cultural_heritage",
-    title: "Cultural & Heritage Tour",
-    description: "Traditional ceremonies, historic trails & village visits",
-    icon: Landmark,
-  },
-  {
-    id: "tea_food_tasting",
-    title: "Food, Drink & Tea Tasting",
-    description: "Kawambwa tea sessions, local brews & culinary tastings",
-    icon: Coffee,
-  },
-  {
-    id: "game_drive_safari",
-    title: "Wildlife Safari & Game Drive",
-    description: "Guided 4x4 game viewing, night drives & walking safaris",
-    icon: Compass,
-  },
-  {
-    id: "vic_falls_adventure",
-    title: "Victoria Falls & Adventure",
-    description: "Devil's Pool, helicopter flights, gorge swing & rafting",
-    icon: Waves,
-  },
-  {
-    id: "boat_water_safari",
-    title: "Boat Cruise & Water Safari",
-    description: "Zambezi sunset cruises, canoe safaris & Kariba boat trips",
-    icon: Ship,
-  },
-  {
-    id: "nature_birding",
-    title: "Nature Walk & Birding",
-    description: "Guided birdwatching & botany walks across habitats",
-    icon: Footprints,
-  },
-  {
-    id: "art_craft_workshop",
-    title: "Crafts, Art & Workshop",
-    description: "Traditional basket weaving, copper art & pottery sessions",
-    icon: Palette,
-  },
+  { id: "cultural_heritage", title: "Cultural Tour", icon: Landmark },
+  { id: "tea_food_tasting", title: "Food & Tasting", icon: Coffee },
+  { id: "game_drive_safari", title: "Wildlife Safari", icon: Compass },
+  { id: "vic_falls_adventure", title: "Victoria Falls", icon: Waves },
+  { id: "boat_water_safari", title: "Boat Safari", icon: Ship },
+  { id: "nature_birding", title: "Nature Walk", icon: Footprints },
+  { id: "art_craft_workshop", title: "Art & Crafts", icon: Palette },
 ];
 
 const TRANSPORT_SUBTYPES: SubtypeOption[] = [
-  {
-    id: "airport_transfer",
-    title: "Airport Transfer & Shuttle",
-    description: "Direct airport pickups (KKIA Lusaka / Livingstone)",
-    icon: Plane,
-  },
-  {
-    id: "safari_4x4",
-    title: "4x4 Safari Vehicle with Driver",
-    description: "Pop-up roof Land Cruiser with professional driver-guide",
-    icon: CarFront,
-  },
-  {
-    id: "intercity_shuttle",
-    title: "Intercity Private Shuttle",
-    description: "City-to-city private transfers (e.g. Lusaka to Livingstone)",
-    icon: Bus,
-  },
-  {
-    id: "self_drive_rental",
-    title: "Car Rental / Self-Drive",
-    description: "Independent SUV, 4x4 or sedan rentals for self-guided trips",
-    icon: Key,
-  },
-  {
-    id: "chauffeur_service",
-    title: "Chauffeur & City Ride",
-    description: "Dedicated private driver for business or city sightseeing",
-    icon: Navigation,
-  },
-  {
-    id: "boat_transfer",
-    title: "Boat & Water Transfer",
-    description: "Lake Kariba speedboats, Zambezi river crossings & charters",
-    icon: Anchor,
-  },
+  { id: "airport_transfer", title: "Airport Transfer", icon: Plane },
+  { id: "safari_4x4", title: "4x4 Safari Vehicle", icon: CarFront },
+  { id: "intercity_shuttle", title: "Intercity Shuttle", icon: Bus },
+  { id: "self_drive_rental", title: "Car Rental", icon: Key },
+  { id: "chauffeur_service", title: "Chauffeur Ride", icon: Navigation },
+  { id: "boat_transfer", title: "Boat Transfer", icon: Anchor },
 ];
 
 const SUBTYPES_BY_VERTICAL: Record<ListingType, SubtypeOption[]> = {
@@ -1234,19 +1129,18 @@ export function HostCreatePage() {
               /* ========================================================================= */
               /* STEP 1: VERTICAL CATEGORY (STAY, EXPERIENCE, TRANSPORT)                    */
               /* ========================================================================= */
-              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-200">
-                <div className="text-center mb-8">
-                  <h1 className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight text-black leading-snug">
+              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-200">
+                <div className="text-center mb-6">
+                  <h1 className="text-lg sm:text-xl font-semibold tracking-tight text-black leading-snug">
                     What are you listing?
                   </h1>
-                  <p className="text-xs sm:text-sm text-black-subtle mt-2 max-w-lg mx-auto leading-relaxed">
-                    Choose a category to begin. Stays, Experiences, and Transport can all be managed
-                    seamlessly from your host portal.
+                  <p className="text-xs text-black-subtle mt-1 max-w-lg mx-auto leading-relaxed">
+                    Choose a category to begin creating your listing.
                   </p>
                 </div>
 
-                {/* Cards horizontally in a single line on larger screens */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+                {/* Vertical Category Cards - Compact: Icons with names below */}
+                <div className="grid grid-cols-3 gap-3 sm:gap-4 max-w-lg mx-auto">
                   {availableTypes.map((type) => {
                     const Icon = type.icon;
                     const isSelected = selectedType === type.id;
@@ -1257,38 +1151,31 @@ export function HostCreatePage() {
                         onClick={() => handleSelectVertical(type.id)}
                         onDoubleClick={handleNextFromStep1}
                         className={cn(
-                          "relative text-left rounded-2xl p-5 sm:p-6 transition-colors duration-150 cursor-pointer outline-none flex flex-col justify-between bg-white border",
+                          "flex flex-col items-center justify-center text-center p-3.5 sm:p-4 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[88px] sm:min-h-[96px]",
                           isSelected
-                            ? "border-purple"
+                            ? "border-purple bg-purple/[0.04]"
                             : "border-neutral-200/80 hover:border-neutral-300",
                         )}
                       >
-                        <div className="mb-4">
-                          <div
-                            className={cn(
-                              "h-12 w-12 rounded-2xl flex items-center justify-center transition-colors border",
-                              isSelected
-                                ? "bg-purple/10 text-purple border-purple/20"
-                                : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
-                            )}
-                          >
-                            <Icon className="h-6 w-6" />
-                          </div>
+                        <div
+                          className={cn(
+                            "h-9 w-9 rounded-xl flex items-center justify-center mb-2 transition-colors border shrink-0",
+                            isSelected
+                              ? "bg-purple/10 text-purple border-purple/20"
+                              : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                          )}
+                        >
+                          <Icon className="h-5 w-5" />
                         </div>
 
-                        <div className="space-y-1.5 flex-1">
-                          <h3
-                            className={cn(
-                              "text-base sm:text-lg font-semibold transition-colors leading-snug",
-                              isSelected ? "text-purple" : "text-black",
-                            )}
-                          >
-                            {type.title}
-                          </h3>
-                          <p className="text-xs sm:text-sm text-black-subtle leading-relaxed">
-                            {type.description}
-                          </p>
-                        </div>
+                        <span
+                          className={cn(
+                            "text-xs sm:text-sm font-semibold transition-colors leading-tight",
+                            isSelected ? "text-purple" : "text-black",
+                          )}
+                        >
+                          {type.title}
+                        </span>
                       </button>
                     );
                   })}
@@ -1332,8 +1219,8 @@ export function HostCreatePage() {
                   </p>
                 </div>
 
-                {/* Grid of Subtype Cards - Space Optimized */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3">
+                {/* Grid of Subtype Cards - Compact: Icons with names below */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-3">
                   {currentSubtypes.map((sub) => {
                     const Icon = sub.icon;
                     const isSelected = selectedSubtype === sub.id;
@@ -1344,36 +1231,30 @@ export function HostCreatePage() {
                         onClick={() => setSelectedSubtype(sub.id)}
                         onDoubleClick={handleNextFromStep2}
                         className={cn(
-                          "relative text-left rounded-xl p-3 sm:p-3.5 transition-colors duration-150 cursor-pointer outline-none flex flex-col justify-between bg-white border min-h-[92px]",
+                          "flex flex-col items-center justify-center text-center p-3 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[82px] sm:min-h-[88px]",
                           isSelected
-                            ? "border-purple bg-purple/[0.02]"
+                            ? "border-purple bg-purple/[0.04]"
                             : "border-neutral-200/80 hover:border-neutral-300",
                         )}
                       >
-                        <div className="flex items-center gap-2.5 mb-2">
-                          <div
-                            className={cn(
-                              "h-8 w-8 rounded-lg flex items-center justify-center shrink-0 transition-colors border",
-                              isSelected
-                                ? "bg-purple/10 text-purple border-purple/20"
-                                : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
-                            )}
-                          >
-                            <Icon className="h-4 w-4" />
-                          </div>
-                          <h3
-                            className={cn(
-                              "text-xs sm:text-sm font-semibold transition-colors leading-tight line-clamp-1",
-                              isSelected ? "text-purple" : "text-black",
-                            )}
-                          >
-                            {sub.title}
-                          </h3>
+                        <div
+                          className={cn(
+                            "h-7 w-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors border shrink-0",
+                            isSelected
+                              ? "bg-purple/10 text-purple border-purple/20"
+                              : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                          )}
+                        >
+                          <Icon className="h-3.5 w-3.5" />
                         </div>
-
-                        <p className="text-[11px] text-neutral-500 line-clamp-2 leading-relaxed">
-                          {sub.description}
-                        </p>
+                        <span
+                          className={cn(
+                            "text-xs sm:text-sm font-semibold leading-tight line-clamp-2 text-center transition-colors",
+                            isSelected ? "text-purple font-semibold" : "text-neutral-800",
+                          )}
+                        >
+                          {sub.title}
+                        </span>
                       </button>
                     );
                   })}
