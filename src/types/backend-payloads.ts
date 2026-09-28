@@ -1,9 +1,9 @@
 /**
  * NEARBY ESCAPES — BACKEND API CONTRACT & PAYLOAD SPECIFICATION
- * 
+ *
  * This file defines the exact Request and Response data shapes for all
  * endpoints required by the Nearby Escapes platform.
- * 
+ *
  * BACKEND TEAMS (NestJS / Express / Django / FastAPI / Laravel / Go):
  * Implement endpoints matching these routes and payload contracts.
  */
@@ -224,29 +224,37 @@ export interface CreateListingRequest {
   cancellationPolicy: CancellationPolicyType;
   stayDetails?: {
     propertyType: string;
-    bedrooms: number;
-    beds: number;
-    baths: number;
-    maxGuests: number;
-    checkInFrom: string;
-    checkInUntil: string;
-    checkOutBefore: string;
+    bedrooms?: number;
+    beds?: number;
+    baths?: number;
+    maxGuests?: number;
+    checkInFrom?: string;
+    checkInUntil?: string;
+    checkOutBefore?: string;
+    guestFavourites?: string[];
+    standoutAmenities?: string[];
+    safetyAmenities?: string[];
   };
   experienceDetails?: {
     activityType: string;
-    durationMinutes: number;
-    maxParticipants: number;
-    difficulty: "easy" | "moderate" | "challenging";
+    durationMinutes?: number;
+    maxParticipants?: number;
+    difficulty?: "easy" | "moderate" | "challenging";
     whatsIncluded: string[];
-    meetingPoint: string;
-    timeSlots: string[];
+    whatToBring?: string[];
+    whatNotToBring?: string[];
+    meetingPoint?: string;
+    timeSlots?: string[];
   };
   transportDetails?: {
     vehicleType: string;
-    seatingCapacity: number;
-    pickupLocation: string;
-    dropoffLocation: string;
-    includesDriver: boolean;
+    seatingCapacity?: number;
+    pickupLocation?: string;
+    dropoffLocation?: string;
+    includesDriver?: boolean;
+    features?: string[];
+    whatToBring?: string[];
+    guidelines?: string[];
   };
 }
 
