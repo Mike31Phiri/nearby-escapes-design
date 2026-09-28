@@ -360,7 +360,7 @@ export function HostCreatePage() {
   // Flow step state: 1 = vertical, 2 = sub-type, 3 = amenities, 4 = location, 5 = media uploads, 6 = name & description, 7 = pricing & conditional discounts
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4 | 5 | 6 | 7>(1);
   const [selectedType, setSelectedType] = useState<ListingType>("stay");
-  const [selectedSubtype, setSelectedSubtype] = useState<string>("safari_lodge");
+  const [selectedSubtype, setSelectedSubtype] = useState<string>("");
 
   // Track draft ID once created after Step 3
   const [createdDraftId, setCreatedDraftId] = useState<string | null>(null);
@@ -371,9 +371,9 @@ export function HostCreatePage() {
     standouts: string[];
     safety: string[];
   }>({
-    guestFavourites: ["wifi", "air_conditioning", "parking", "hot_water"],
-    standouts: ["solar_power", "borehole_water"],
-    safety: ["security_guard", "first_aid"],
+    guestFavourites: [],
+    standouts: [],
+    safety: [],
   });
 
   const [experienceItems, setExperienceItems] = useState<{
@@ -381,9 +381,9 @@ export function HostCreatePage() {
     whatToCarry: string[];
     whatNotToBring: string[];
   }>({
-    whatsIncluded: ["safari_guide", "game_vehicle", "water_snacks"],
-    whatToCarry: ["id_passport", "walking_shoes", "sun_protection", "water_bottle"],
-    whatNotToBring: ["drones", "plastic_bags", "bright_clothing"],
+    whatsIncluded: [],
+    whatToCarry: [],
+    whatNotToBring: [],
   });
 
   const [transportItems, setTransportItems] = useState<{
@@ -391,9 +391,9 @@ export function HostCreatePage() {
     whatToCarry: string[];
     guidelines: string[];
   }>({
-    vehicleFeatures: ["ac", "pro_driver", "fuel_included", "chilled_water"],
-    whatToCarry: ["id_passport", "booking_voucher"],
-    guidelines: ["no_smoking", "no_hazardous", "no_overload"],
+    vehicleFeatures: [],
+    whatToCarry: [],
+    guidelines: [],
   });
 
   // Step 4 State: Location (Country is fixed to Zambia)
@@ -1151,27 +1151,24 @@ export function HostCreatePage() {
                         onClick={() => handleSelectVertical(type.id)}
                         onDoubleClick={handleNextFromStep1}
                         className={cn(
-                          "flex flex-col items-center justify-center text-center p-3.5 sm:p-4 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[88px] sm:min-h-[96px]",
+                          "flex flex-col items-center justify-center text-center p-4 sm:p-5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[96px] sm:min-h-[104px]",
                           isSelected
-                            ? "border-purple bg-purple/[0.04]"
-                            : "border-neutral-200/80 hover:border-neutral-300",
+                            ? "border-2 border-purple bg-purple/[0.02]"
+                            : "border-neutral-300 hover:border-neutral-900",
                         )}
                       >
-                        <div
+                        <Icon
                           className={cn(
-                            "h-9 w-9 rounded-xl flex items-center justify-center mb-2 transition-colors border shrink-0",
-                            isSelected
-                              ? "bg-purple/10 text-purple border-purple/20"
-                              : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                            "h-8 w-8 mb-2 transition-colors shrink-0",
+                            isSelected ? "text-purple" : "text-neutral-800",
                           )}
-                        >
-                          <Icon className="h-5 w-5" />
-                        </div>
+                          strokeWidth={1.5}
+                        />
 
                         <span
                           className={cn(
                             "text-xs sm:text-sm font-semibold transition-colors leading-tight",
-                            isSelected ? "text-purple" : "text-black",
+                            isSelected ? "text-purple font-semibold" : "text-neutral-900",
                           )}
                         >
                           {type.title}
@@ -1304,11 +1301,8 @@ export function HostCreatePage() {
                     {/* Guest Favourites */}
                     <div className="space-y-2">
                       <div className="flex items-center justify-between pb-1 border-b border-neutral-100">
-                        <h2 className="text-xs sm:text-sm font-semibold text-black tracking-tight flex items-center gap-2">
-                          <span>Guest Favourites</span>
-                          <span className="text-[10px] font-normal px-2 py-0.5 rounded-full bg-purple/10 text-purple border border-purple/20">
-                            {stayAmenities.guestFavourites.length} selected
-                          </span>
+                        <h2 className="text-xs sm:text-sm font-semibold text-black tracking-tight">
+                          Guest Favourites
                         </h2>
                         {activeInputCategory !== "guestFavourites" && (
                           <button
@@ -1332,28 +1326,23 @@ export function HostCreatePage() {
                               type="button"
                               onClick={() => toggleStayAmenity("guestFavourites", item.id)}
                               className={cn(
-                                "flex flex-col items-center justify-center text-center p-2.5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[76px] sm:min-h-[84px]",
+                                "flex flex-col items-center justify-center text-center p-3 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[84px] sm:min-h-[92px]",
                                 isSelected
-                                  ? "border-purple bg-purple/[0.04]"
-                                  : "border-neutral-200/80 hover:border-neutral-300",
+                                  ? "border-2 border-purple bg-purple/[0.02]"
+                                  : "border-neutral-300 hover:border-neutral-900",
                               )}
                             >
-                              <div
+                              <Icon
                                 className={cn(
-                                  "h-7 w-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors border shrink-0",
-                                  isSelected
-                                    ? "bg-purple/10 text-purple border-purple/20"
-                                    : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                                  "h-7 w-7 mb-2 transition-colors shrink-0",
+                                  isSelected ? "text-purple" : "text-neutral-800",
                                 )}
-                              >
-                                <Icon className="h-3.5 w-3.5" />
-                              </div>
+                                strokeWidth={1.5}
+                              />
                               <span
                                 className={cn(
-                                  "text-[11px] sm:text-xs leading-tight line-clamp-2 text-center transition-colors",
-                                  isSelected
-                                    ? "text-purple font-semibold"
-                                    : "text-neutral-700 font-medium",
+                                  "text-xs font-semibold leading-tight line-clamp-2 text-center transition-colors",
+                                  isSelected ? "text-purple font-semibold" : "text-neutral-900",
                                 )}
                               >
                                 {item.label}
@@ -1370,28 +1359,23 @@ export function HostCreatePage() {
                               type="button"
                               onClick={() => toggleStayAmenity("guestFavourites", custom)}
                               className={cn(
-                                "flex flex-col items-center justify-center text-center p-2.5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[76px] sm:min-h-[84px]",
+                                "flex flex-col items-center justify-center text-center p-3 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[84px] sm:min-h-[92px]",
                                 isSelected
-                                  ? "border-purple bg-purple/[0.04]"
-                                  : "border-neutral-200/80 hover:border-neutral-300",
+                                  ? "border-2 border-purple bg-purple/[0.02]"
+                                  : "border-neutral-300 hover:border-neutral-900",
                               )}
                             >
-                              <div
+                              <Sparkles
                                 className={cn(
-                                  "h-7 w-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors border shrink-0",
-                                  isSelected
-                                    ? "bg-purple/10 text-purple border-purple/20"
-                                    : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                                  "h-7 w-7 mb-2 transition-colors shrink-0",
+                                  isSelected ? "text-purple" : "text-neutral-800",
                                 )}
-                              >
-                                <Sparkles className="h-3.5 w-3.5" />
-                              </div>
+                                strokeWidth={1.5}
+                              />
                               <span
                                 className={cn(
-                                  "text-[11px] sm:text-xs leading-tight line-clamp-2 text-center transition-colors",
-                                  isSelected
-                                    ? "text-purple font-semibold"
-                                    : "text-neutral-700 font-medium",
+                                  "text-xs font-semibold leading-tight line-clamp-2 text-center transition-colors",
+                                  isSelected ? "text-purple font-semibold" : "text-neutral-900",
                                 )}
                               >
                                 {custom}
@@ -1443,11 +1427,8 @@ export function HostCreatePage() {
                     {/* Standouts */}
                     <div className="space-y-2 pt-1">
                       <div className="flex items-center justify-between pb-1 border-b border-neutral-100">
-                        <h2 className="text-xs sm:text-sm font-semibold text-black tracking-tight flex items-center gap-2">
-                          <span>Standout Amenities</span>
-                          <span className="text-[10px] font-normal px-2 py-0.5 rounded-full bg-purple/10 text-purple border border-purple/20">
-                            {stayAmenities.standouts.length} selected
-                          </span>
+                        <h2 className="text-xs sm:text-sm font-semibold text-black tracking-tight">
+                          Standout Amenities
                         </h2>
                         {activeInputCategory !== "standouts" && (
                           <button
@@ -1471,28 +1452,23 @@ export function HostCreatePage() {
                               type="button"
                               onClick={() => toggleStayAmenity("standouts", item.id)}
                               className={cn(
-                                "flex flex-col items-center justify-center text-center p-2.5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[76px] sm:min-h-[84px]",
+                                "flex flex-col items-center justify-center text-center p-3 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[84px] sm:min-h-[92px]",
                                 isSelected
-                                  ? "border-purple bg-purple/[0.04]"
-                                  : "border-neutral-200/80 hover:border-neutral-300",
+                                  ? "border-2 border-purple bg-purple/[0.02]"
+                                  : "border-neutral-300 hover:border-neutral-900",
                               )}
                             >
-                              <div
+                              <Icon
                                 className={cn(
-                                  "h-7 w-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors border shrink-0",
-                                  isSelected
-                                    ? "bg-purple/10 text-purple border-purple/20"
-                                    : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                                  "h-7 w-7 mb-2 transition-colors shrink-0",
+                                  isSelected ? "text-purple" : "text-neutral-800",
                                 )}
-                              >
-                                <Icon className="h-3.5 w-3.5" />
-                              </div>
+                                strokeWidth={1.5}
+                              />
                               <span
                                 className={cn(
-                                  "text-[11px] sm:text-xs leading-tight line-clamp-2 text-center transition-colors",
-                                  isSelected
-                                    ? "text-purple font-semibold"
-                                    : "text-neutral-700 font-medium",
+                                  "text-xs font-semibold leading-tight line-clamp-2 text-center transition-colors",
+                                  isSelected ? "text-purple font-semibold" : "text-neutral-900",
                                 )}
                               >
                                 {item.label}
@@ -1509,28 +1485,23 @@ export function HostCreatePage() {
                               type="button"
                               onClick={() => toggleStayAmenity("standouts", custom)}
                               className={cn(
-                                "flex flex-col items-center justify-center text-center p-2.5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[76px] sm:min-h-[84px]",
+                                "flex flex-col items-center justify-center text-center p-3 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[84px] sm:min-h-[92px]",
                                 isSelected
-                                  ? "border-purple bg-purple/[0.04]"
-                                  : "border-neutral-200/80 hover:border-neutral-300",
+                                  ? "border-2 border-purple bg-purple/[0.02]"
+                                  : "border-neutral-300 hover:border-neutral-900",
                               )}
                             >
-                              <div
+                              <Sparkles
                                 className={cn(
-                                  "h-7 w-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors border shrink-0",
-                                  isSelected
-                                    ? "bg-purple/10 text-purple border-purple/20"
-                                    : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                                  "h-7 w-7 mb-2 transition-colors shrink-0",
+                                  isSelected ? "text-purple" : "text-neutral-800",
                                 )}
-                              >
-                                <Sparkles className="h-3.5 w-3.5" />
-                              </div>
+                                strokeWidth={1.5}
+                              />
                               <span
                                 className={cn(
-                                  "text-[11px] sm:text-xs leading-tight line-clamp-2 text-center transition-colors",
-                                  isSelected
-                                    ? "text-purple font-semibold"
-                                    : "text-neutral-700 font-medium",
+                                  "text-xs font-semibold leading-tight line-clamp-2 text-center transition-colors",
+                                  isSelected ? "text-purple font-semibold" : "text-neutral-900",
                                 )}
                               >
                                 {custom}
@@ -1610,28 +1581,23 @@ export function HostCreatePage() {
                               type="button"
                               onClick={() => toggleStayAmenity("safety", item.id)}
                               className={cn(
-                                "flex flex-col items-center justify-center text-center p-2.5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[76px] sm:min-h-[84px]",
+                                "flex flex-col items-center justify-center text-center p-3 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[84px] sm:min-h-[92px]",
                                 isSelected
-                                  ? "border-purple bg-purple/[0.04]"
-                                  : "border-neutral-200/80 hover:border-neutral-300",
+                                  ? "border-2 border-purple bg-purple/[0.02]"
+                                  : "border-neutral-300 hover:border-neutral-900",
                               )}
                             >
-                              <div
+                              <Icon
                                 className={cn(
-                                  "h-7 w-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors border shrink-0",
-                                  isSelected
-                                    ? "bg-purple/10 text-purple border-purple/20"
-                                    : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                                  "h-7 w-7 mb-2 transition-colors shrink-0",
+                                  isSelected ? "text-purple" : "text-neutral-800",
                                 )}
-                              >
-                                <Icon className="h-3.5 w-3.5" />
-                              </div>
+                                strokeWidth={1.5}
+                              />
                               <span
                                 className={cn(
-                                  "text-[11px] sm:text-xs leading-tight line-clamp-2 text-center transition-colors",
-                                  isSelected
-                                    ? "text-purple font-semibold"
-                                    : "text-neutral-700 font-medium",
+                                  "text-xs font-semibold leading-tight line-clamp-2 text-center transition-colors",
+                                  isSelected ? "text-purple font-semibold" : "text-neutral-900",
                                 )}
                               >
                                 {item.label}
@@ -1648,28 +1614,23 @@ export function HostCreatePage() {
                               type="button"
                               onClick={() => toggleStayAmenity("safety", custom)}
                               className={cn(
-                                "flex flex-col items-center justify-center text-center p-2.5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[76px] sm:min-h-[84px]",
+                                "flex flex-col items-center justify-center text-center p-3 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[84px] sm:min-h-[92px]",
                                 isSelected
-                                  ? "border-purple bg-purple/[0.04]"
-                                  : "border-neutral-200/80 hover:border-neutral-300",
+                                  ? "border-2 border-purple bg-purple/[0.02]"
+                                  : "border-neutral-300 hover:border-neutral-900",
                               )}
                             >
-                              <div
+                              <Sparkles
                                 className={cn(
-                                  "h-7 w-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors border shrink-0",
-                                  isSelected
-                                    ? "bg-purple/10 text-purple border-purple/20"
-                                    : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                                  "h-7 w-7 mb-2 transition-colors shrink-0",
+                                  isSelected ? "text-purple" : "text-neutral-800",
                                 )}
-                              >
-                                <ShieldCheck className="h-3.5 w-3.5" />
-                              </div>
+                                strokeWidth={1.5}
+                              />
                               <span
                                 className={cn(
-                                  "text-[11px] sm:text-xs leading-tight line-clamp-2 text-center transition-colors",
-                                  isSelected
-                                    ? "text-purple font-semibold"
-                                    : "text-neutral-700 font-medium",
+                                  "text-xs font-semibold leading-tight line-clamp-2 text-center transition-colors",
+                                  isSelected ? "text-purple font-semibold" : "text-neutral-900",
                                 )}
                               >
                                 {custom}
@@ -1754,28 +1715,23 @@ export function HostCreatePage() {
                               type="button"
                               onClick={() => toggleExperienceItem("whatsIncluded", item.id)}
                               className={cn(
-                                "flex flex-col items-center justify-center text-center p-2.5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[76px] sm:min-h-[84px]",
+                                "flex flex-col items-center justify-center text-center p-3 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[84px] sm:min-h-[92px]",
                                 isSelected
-                                  ? "border-purple bg-purple/[0.04]"
-                                  : "border-neutral-200/80 hover:border-neutral-300",
+                                  ? "border-2 border-purple bg-purple/[0.02]"
+                                  : "border-neutral-300 hover:border-neutral-900",
                               )}
                             >
-                              <div
+                              <Icon
                                 className={cn(
-                                  "h-7 w-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors border shrink-0",
-                                  isSelected
-                                    ? "bg-purple/10 text-purple border-purple/20"
-                                    : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                                  "h-7 w-7 mb-2 transition-colors shrink-0",
+                                  isSelected ? "text-purple" : "text-neutral-800",
                                 )}
-                              >
-                                <Icon className="h-3.5 w-3.5" />
-                              </div>
+                                strokeWidth={1.5}
+                              />
                               <span
                                 className={cn(
-                                  "text-[11px] sm:text-xs leading-tight line-clamp-2 text-center transition-colors",
-                                  isSelected
-                                    ? "text-purple font-semibold"
-                                    : "text-neutral-700 font-medium",
+                                  "text-xs font-semibold leading-tight line-clamp-2 text-center transition-colors",
+                                  isSelected ? "text-purple font-semibold" : "text-neutral-900",
                                 )}
                               >
                                 {item.label}
@@ -1792,28 +1748,23 @@ export function HostCreatePage() {
                               type="button"
                               onClick={() => toggleExperienceItem("whatsIncluded", custom)}
                               className={cn(
-                                "flex flex-col items-center justify-center text-center p-2.5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[76px] sm:min-h-[84px]",
+                                "flex flex-col items-center justify-center text-center p-3 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[84px] sm:min-h-[92px]",
                                 isSelected
-                                  ? "border-purple bg-purple/[0.04]"
-                                  : "border-neutral-200/80 hover:border-neutral-300",
+                                  ? "border-2 border-purple bg-purple/[0.02]"
+                                  : "border-neutral-300 hover:border-neutral-900",
                               )}
                             >
-                              <div
+                              <Sparkles
                                 className={cn(
-                                  "h-7 w-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors border shrink-0",
-                                  isSelected
-                                    ? "bg-purple/10 text-purple border-purple/20"
-                                    : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                                  "h-7 w-7 mb-2 transition-colors shrink-0",
+                                  isSelected ? "text-purple" : "text-neutral-800",
                                 )}
-                              >
-                                <Sparkles className="h-3.5 w-3.5" />
-                              </div>
+                                strokeWidth={1.5}
+                              />
                               <span
                                 className={cn(
-                                  "text-[11px] sm:text-xs leading-tight line-clamp-2 text-center transition-colors",
-                                  isSelected
-                                    ? "text-purple font-semibold"
-                                    : "text-neutral-700 font-medium",
+                                  "text-xs font-semibold leading-tight line-clamp-2 text-center transition-colors",
+                                  isSelected ? "text-purple font-semibold" : "text-neutral-900",
                                 )}
                               >
                                 {custom}
@@ -1893,28 +1844,23 @@ export function HostCreatePage() {
                               type="button"
                               onClick={() => toggleExperienceItem("whatToCarry", item.id)}
                               className={cn(
-                                "flex flex-col items-center justify-center text-center p-2.5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[76px] sm:min-h-[84px]",
+                                "flex flex-col items-center justify-center text-center p-3 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[84px] sm:min-h-[92px]",
                                 isSelected
-                                  ? "border-purple bg-purple/[0.04]"
-                                  : "border-neutral-200/80 hover:border-neutral-300",
+                                  ? "border-2 border-purple bg-purple/[0.02]"
+                                  : "border-neutral-300 hover:border-neutral-900",
                               )}
                             >
-                              <div
+                              <Icon
                                 className={cn(
-                                  "h-7 w-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors border shrink-0",
-                                  isSelected
-                                    ? "bg-purple/10 text-purple border-purple/20"
-                                    : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                                  "h-7 w-7 mb-2 transition-colors shrink-0",
+                                  isSelected ? "text-purple" : "text-neutral-800",
                                 )}
-                              >
-                                <Icon className="h-3.5 w-3.5" />
-                              </div>
+                                strokeWidth={1.5}
+                              />
                               <span
                                 className={cn(
-                                  "text-[11px] sm:text-xs leading-tight line-clamp-2 text-center transition-colors",
-                                  isSelected
-                                    ? "text-purple font-semibold"
-                                    : "text-neutral-700 font-medium",
+                                  "text-xs font-semibold leading-tight line-clamp-2 text-center transition-colors",
+                                  isSelected ? "text-purple font-semibold" : "text-neutral-900",
                                 )}
                               >
                                 {item.label}
@@ -1931,28 +1877,23 @@ export function HostCreatePage() {
                               type="button"
                               onClick={() => toggleExperienceItem("whatToCarry", custom)}
                               className={cn(
-                                "flex flex-col items-center justify-center text-center p-2.5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[76px] sm:min-h-[84px]",
+                                "flex flex-col items-center justify-center text-center p-3 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[84px] sm:min-h-[92px]",
                                 isSelected
-                                  ? "border-purple bg-purple/[0.04]"
-                                  : "border-neutral-200/80 hover:border-neutral-300",
+                                  ? "border-2 border-purple bg-purple/[0.02]"
+                                  : "border-neutral-300 hover:border-neutral-900",
                               )}
                             >
-                              <div
+                              <Sparkles
                                 className={cn(
-                                  "h-7 w-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors border shrink-0",
-                                  isSelected
-                                    ? "bg-purple/10 text-purple border-purple/20"
-                                    : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                                  "h-7 w-7 mb-2 transition-colors shrink-0",
+                                  isSelected ? "text-purple" : "text-neutral-800",
                                 )}
-                              >
-                                <Sparkles className="h-3.5 w-3.5" />
-                              </div>
+                                strokeWidth={1.5}
+                              />
                               <span
                                 className={cn(
-                                  "text-[11px] sm:text-xs leading-tight line-clamp-2 text-center transition-colors",
-                                  isSelected
-                                    ? "text-purple font-semibold"
-                                    : "text-neutral-700 font-medium",
+                                  "text-xs font-semibold leading-tight line-clamp-2 text-center transition-colors",
+                                  isSelected ? "text-purple font-semibold" : "text-neutral-900",
                                 )}
                               >
                                 {custom}
@@ -2004,11 +1945,8 @@ export function HostCreatePage() {
                     {/* What NOT to Bring */}
                     <div className="space-y-2 pt-1">
                       <div className="flex items-center justify-between pb-1 border-b border-neutral-100">
-                        <h2 className="text-xs sm:text-sm font-semibold text-black tracking-tight flex items-center gap-2">
-                          <span>What NOT to Bring</span>
-                          <span className="text-[10px] font-normal px-2 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200/60">
-                            {experienceItems.whatNotToBring.length} rules
-                          </span>
+                        <h2 className="text-xs sm:text-sm font-semibold text-black tracking-tight">
+                          What NOT to Bring
                         </h2>
                         {activeInputCategory !== "whatNotToBring" && (
                           <button
@@ -2032,28 +1970,23 @@ export function HostCreatePage() {
                               type="button"
                               onClick={() => toggleExperienceItem("whatNotToBring", item.id)}
                               className={cn(
-                                "flex flex-col items-center justify-center text-center p-2.5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[76px] sm:min-h-[84px]",
+                                "flex flex-col items-center justify-center text-center p-3 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[84px] sm:min-h-[92px]",
                                 isSelected
-                                  ? "border-rose-400 bg-rose-50/50"
-                                  : "border-neutral-200/80 hover:border-neutral-300",
+                                  ? "border-2 border-rose-500 bg-rose-50/30"
+                                  : "border-neutral-300 hover:border-neutral-900",
                               )}
                             >
-                              <div
+                              <Icon
                                 className={cn(
-                                  "h-7 w-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors border shrink-0",
-                                  isSelected
-                                    ? "bg-rose-100 text-rose-600 border-rose-200"
-                                    : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                                  "h-7 w-7 mb-2 transition-colors shrink-0",
+                                  isSelected ? "text-rose-600" : "text-neutral-800",
                                 )}
-                              >
-                                <Icon className="h-3.5 w-3.5" />
-                              </div>
+                                strokeWidth={1.5}
+                              />
                               <span
                                 className={cn(
-                                  "text-[11px] sm:text-xs leading-tight line-clamp-2 text-center transition-colors",
-                                  isSelected
-                                    ? "text-rose-700 font-semibold"
-                                    : "text-neutral-700 font-medium",
+                                  "text-xs font-semibold leading-tight line-clamp-2 text-center transition-colors",
+                                  isSelected ? "text-rose-600 font-semibold" : "text-neutral-900",
                                 )}
                               >
                                 {item.label}
@@ -2070,28 +2003,23 @@ export function HostCreatePage() {
                               type="button"
                               onClick={() => toggleExperienceItem("whatNotToBring", custom)}
                               className={cn(
-                                "flex flex-col items-center justify-center text-center p-2.5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[76px] sm:min-h-[84px]",
+                                "flex flex-col items-center justify-center text-center p-3 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[84px] sm:min-h-[92px]",
                                 isSelected
-                                  ? "border-rose-400 bg-rose-50/50"
-                                  : "border-neutral-200/80 hover:border-neutral-300",
+                                  ? "border-2 border-rose-500 bg-rose-50/30"
+                                  : "border-neutral-300 hover:border-neutral-900",
                               )}
                             >
-                              <div
+                              <Sparkles
                                 className={cn(
-                                  "h-7 w-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors border shrink-0",
-                                  isSelected
-                                    ? "bg-rose-100 text-rose-600 border-rose-200"
-                                    : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                                  "h-7 w-7 mb-2 transition-colors shrink-0",
+                                  isSelected ? "text-rose-600" : "text-neutral-800",
                                 )}
-                              >
-                                <Ban className="h-3.5 w-3.5" />
-                              </div>
+                                strokeWidth={1.5}
+                              />
                               <span
                                 className={cn(
-                                  "text-[11px] sm:text-xs leading-tight line-clamp-2 text-center transition-colors",
-                                  isSelected
-                                    ? "text-rose-700 font-semibold"
-                                    : "text-neutral-700 font-medium",
+                                  "text-xs font-semibold leading-tight line-clamp-2 text-center transition-colors",
+                                  isSelected ? "text-rose-600 font-semibold" : "text-neutral-900",
                                 )}
                               >
                                 {custom}
@@ -2176,28 +2104,23 @@ export function HostCreatePage() {
                               type="button"
                               onClick={() => toggleTransportItem("vehicleFeatures", item.id)}
                               className={cn(
-                                "flex flex-col items-center justify-center text-center p-2.5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[76px] sm:min-h-[84px]",
+                                "flex flex-col items-center justify-center text-center p-3 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[84px] sm:min-h-[92px]",
                                 isSelected
-                                  ? "border-purple bg-purple/[0.04]"
-                                  : "border-neutral-200/80 hover:border-neutral-300",
+                                  ? "border-2 border-purple bg-purple/[0.02]"
+                                  : "border-neutral-300 hover:border-neutral-900",
                               )}
                             >
-                              <div
+                              <Icon
                                 className={cn(
-                                  "h-7 w-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors border shrink-0",
-                                  isSelected
-                                    ? "bg-purple/10 text-purple border-purple/20"
-                                    : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                                  "h-7 w-7 mb-2 transition-colors shrink-0",
+                                  isSelected ? "text-purple" : "text-neutral-800",
                                 )}
-                              >
-                                <Icon className="h-3.5 w-3.5" />
-                              </div>
+                                strokeWidth={1.5}
+                              />
                               <span
                                 className={cn(
-                                  "text-[11px] sm:text-xs leading-tight line-clamp-2 text-center transition-colors",
-                                  isSelected
-                                    ? "text-purple font-semibold"
-                                    : "text-neutral-700 font-medium",
+                                  "text-xs font-semibold leading-tight line-clamp-2 text-center transition-colors",
+                                  isSelected ? "text-purple font-semibold" : "text-neutral-900",
                                 )}
                               >
                                 {item.label}
@@ -2214,28 +2137,23 @@ export function HostCreatePage() {
                               type="button"
                               onClick={() => toggleTransportItem("vehicleFeatures", custom)}
                               className={cn(
-                                "flex flex-col items-center justify-center text-center p-2.5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[76px] sm:min-h-[84px]",
+                                "flex flex-col items-center justify-center text-center p-3 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[84px] sm:min-h-[92px]",
                                 isSelected
-                                  ? "border-purple bg-purple/[0.04]"
-                                  : "border-neutral-200/80 hover:border-neutral-300",
+                                  ? "border-2 border-purple bg-purple/[0.02]"
+                                  : "border-neutral-300 hover:border-neutral-900",
                               )}
                             >
-                              <div
+                              <Sparkles
                                 className={cn(
-                                  "h-7 w-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors border shrink-0",
-                                  isSelected
-                                    ? "bg-purple/10 text-purple border-purple/20"
-                                    : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                                  "h-7 w-7 mb-2 transition-colors shrink-0",
+                                  isSelected ? "text-purple" : "text-neutral-800",
                                 )}
-                              >
-                                <Sparkles className="h-3.5 w-3.5" />
-                              </div>
+                                strokeWidth={1.5}
+                              />
                               <span
                                 className={cn(
-                                  "text-[11px] sm:text-xs leading-tight line-clamp-2 text-center transition-colors",
-                                  isSelected
-                                    ? "text-purple font-semibold"
-                                    : "text-neutral-700 font-medium",
+                                  "text-xs font-semibold leading-tight line-clamp-2 text-center transition-colors",
+                                  isSelected ? "text-purple font-semibold" : "text-neutral-900",
                                 )}
                               >
                                 {custom}
@@ -2315,28 +2233,23 @@ export function HostCreatePage() {
                               type="button"
                               onClick={() => toggleTransportItem("whatToCarry", item.id)}
                               className={cn(
-                                "flex flex-col items-center justify-center text-center p-2.5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[76px] sm:min-h-[84px]",
+                                "flex flex-col items-center justify-center text-center p-3 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[84px] sm:min-h-[92px]",
                                 isSelected
-                                  ? "border-purple bg-purple/[0.04]"
-                                  : "border-neutral-200/80 hover:border-neutral-300",
+                                  ? "border-2 border-purple bg-purple/[0.02]"
+                                  : "border-neutral-300 hover:border-neutral-900",
                               )}
                             >
-                              <div
+                              <Icon
                                 className={cn(
-                                  "h-7 w-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors border shrink-0",
-                                  isSelected
-                                    ? "bg-purple/10 text-purple border-purple/20"
-                                    : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                                  "h-7 w-7 mb-2 transition-colors shrink-0",
+                                  isSelected ? "text-purple" : "text-neutral-800",
                                 )}
-                              >
-                                <Icon className="h-3.5 w-3.5" />
-                              </div>
+                                strokeWidth={1.5}
+                              />
                               <span
                                 className={cn(
-                                  "text-[11px] sm:text-xs leading-tight line-clamp-2 text-center transition-colors",
-                                  isSelected
-                                    ? "text-purple font-semibold"
-                                    : "text-neutral-700 font-medium",
+                                  "text-xs font-semibold leading-tight line-clamp-2 text-center transition-colors",
+                                  isSelected ? "text-purple font-semibold" : "text-neutral-900",
                                 )}
                               >
                                 {item.label}
@@ -2353,28 +2266,23 @@ export function HostCreatePage() {
                               type="button"
                               onClick={() => toggleTransportItem("whatToCarry", custom)}
                               className={cn(
-                                "flex flex-col items-center justify-center text-center p-2.5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[76px] sm:min-h-[84px]",
+                                "flex flex-col items-center justify-center text-center p-3 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[84px] sm:min-h-[92px]",
                                 isSelected
-                                  ? "border-purple bg-purple/[0.04]"
-                                  : "border-neutral-200/80 hover:border-neutral-300",
+                                  ? "border-2 border-purple bg-purple/[0.02]"
+                                  : "border-neutral-300 hover:border-neutral-900",
                               )}
                             >
-                              <div
+                              <Sparkles
                                 className={cn(
-                                  "h-7 w-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors border shrink-0",
-                                  isSelected
-                                    ? "bg-purple/10 text-purple border-purple/20"
-                                    : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                                  "h-7 w-7 mb-2 transition-colors shrink-0",
+                                  isSelected ? "text-purple" : "text-neutral-800",
                                 )}
-                              >
-                                <Sparkles className="h-3.5 w-3.5" />
-                              </div>
+                                strokeWidth={1.5}
+                              />
                               <span
                                 className={cn(
-                                  "text-[11px] sm:text-xs leading-tight line-clamp-2 text-center transition-colors",
-                                  isSelected
-                                    ? "text-purple font-semibold"
-                                    : "text-neutral-700 font-medium",
+                                  "text-xs font-semibold leading-tight line-clamp-2 text-center transition-colors",
+                                  isSelected ? "text-purple font-semibold" : "text-neutral-900",
                                 )}
                               >
                                 {custom}
@@ -2454,28 +2362,23 @@ export function HostCreatePage() {
                               type="button"
                               onClick={() => toggleTransportItem("guidelines", item.id)}
                               className={cn(
-                                "flex flex-col items-center justify-center text-center p-2.5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[76px] sm:min-h-[84px]",
+                                "flex flex-col items-center justify-center text-center p-3 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[84px] sm:min-h-[92px]",
                                 isSelected
-                                  ? "border-rose-400 bg-rose-50/50"
-                                  : "border-neutral-200/80 hover:border-neutral-300",
+                                  ? "border-2 border-rose-500 bg-rose-50/30"
+                                  : "border-neutral-300 hover:border-neutral-900",
                               )}
                             >
-                              <div
+                              <Icon
                                 className={cn(
-                                  "h-7 w-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors border shrink-0",
-                                  isSelected
-                                    ? "bg-rose-100 text-rose-600 border-rose-200"
-                                    : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                                  "h-7 w-7 mb-2 transition-colors shrink-0",
+                                  isSelected ? "text-rose-600" : "text-neutral-800",
                                 )}
-                              >
-                                <Icon className="h-3.5 w-3.5" />
-                              </div>
+                                strokeWidth={1.5}
+                              />
                               <span
                                 className={cn(
-                                  "text-[11px] sm:text-xs leading-tight line-clamp-2 text-center transition-colors",
-                                  isSelected
-                                    ? "text-rose-700 font-semibold"
-                                    : "text-neutral-700 font-medium",
+                                  "text-xs font-semibold leading-tight line-clamp-2 text-center transition-colors",
+                                  isSelected ? "text-rose-600 font-semibold" : "text-neutral-900",
                                 )}
                               >
                                 {item.label}
@@ -2492,28 +2395,23 @@ export function HostCreatePage() {
                               type="button"
                               onClick={() => toggleTransportItem("guidelines", custom)}
                               className={cn(
-                                "flex flex-col items-center justify-center text-center p-2.5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[76px] sm:min-h-[84px]",
+                                "flex flex-col items-center justify-center text-center p-3 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[84px] sm:min-h-[92px]",
                                 isSelected
-                                  ? "border-rose-400 bg-rose-50/50"
-                                  : "border-neutral-200/80 hover:border-neutral-300",
+                                  ? "border-2 border-rose-500 bg-rose-50/30"
+                                  : "border-neutral-300 hover:border-neutral-900",
                               )}
                             >
-                              <div
+                              <Sparkles
                                 className={cn(
-                                  "h-7 w-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors border shrink-0",
-                                  isSelected
-                                    ? "bg-rose-100 text-rose-600 border-rose-200"
-                                    : "bg-neutral-100 text-neutral-600 border-neutral-200/60",
+                                  "h-7 w-7 mb-2 transition-colors shrink-0",
+                                  isSelected ? "text-rose-600" : "text-neutral-800",
                                 )}
-                              >
-                                <Ban className="h-3.5 w-3.5" />
-                              </div>
+                                strokeWidth={1.5}
+                              />
                               <span
                                 className={cn(
-                                  "text-[11px] sm:text-xs leading-tight line-clamp-2 text-center transition-colors",
-                                  isSelected
-                                    ? "text-rose-700 font-semibold"
-                                    : "text-neutral-700 font-medium",
+                                  "text-xs font-semibold leading-tight line-clamp-2 text-center transition-colors",
+                                  isSelected ? "text-rose-600 font-semibold" : "text-neutral-900",
                                 )}
                               >
                                 {custom}
