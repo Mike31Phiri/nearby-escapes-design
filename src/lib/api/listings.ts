@@ -28,13 +28,16 @@ const generateId = () => `lst_${Date.now().toString(36)}_${Math.random().toStrin
 const now = () => new Date().toISOString();
 
 /** Create a new draft listing with the given type (status: draft). Instant client-side state. */
-export async function createDraftListing(type: ListingType): Promise<ListingDraft> {
+export async function createDraftListing(
+  type: ListingType,
+  initialForm: Record<string, unknown> = {},
+): Promise<ListingDraft> {
   const draft: ListingDraft = {
     id: generateId(),
     hostId: HOST_ID,
     type,
     status: "draft",
-    form: {},
+    form: initialForm,
     currentStep: 0,
     progressPercent: 0,
     createdAt: now(),

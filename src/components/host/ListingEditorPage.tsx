@@ -11,20 +11,52 @@ import { ROUTES } from "@/lib/constants/routes";
 import { useListingDraftStore } from "@/store/listingDraftStore";
 import type { ListingDraft } from "@/types/listing";
 
+import dynamic from "next/dynamic";
 import {
   ListingWizardShell,
   type ListingSaveState,
   type WizardStep,
 } from "./wizards/ListingWizardShell";
-import { StayWizard, STAY_STEPS } from "./wizards/StayWizard";
-import { ExperienceWizard, EXPERIENCE_STEPS } from "./wizards/ExperienceWizard";
-import { TransportWizard, TRANSPORT_STEPS } from "./wizards/TransportWizard";
+import { STEPS_BY_TYPE } from "./wizards/wizard-steps";
 
-const STEPS_BY_TYPE: Record<string, WizardStep[]> = {
-  stay: STAY_STEPS,
-  experience: EXPERIENCE_STEPS,
-  transport: TRANSPORT_STEPS,
-};
+const StayWizard = dynamic(
+  () => import("./wizards/StayWizard").then((mod) => mod.StayWizard),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="p-16 flex flex-col items-center justify-center text-center">
+        <Loader2 className="h-8 w-8 text-purple animate-spin mb-3" />
+        <p className="text-sm font-medium text-neutral-600">Loading Stay Editor...</p>
+      </div>
+    ),
+  }
+);
+
+const ExperienceWizard = dynamic(
+  () => import("./wizards/ExperienceWizard").then((mod) => mod.ExperienceWizard),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="p-16 flex flex-col items-center justify-center text-center">
+        <Loader2 className="h-8 w-8 text-purple animate-spin mb-3" />
+        <p className="text-sm font-medium text-neutral-600">Loading Experience Editor...</p>
+      </div>
+    ),
+  }
+);
+
+const TransportWizard = dynamic(
+  () => import("./wizards/TransportWizard").then((mod) => mod.TransportWizard),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="p-16 flex flex-col items-center justify-center text-center">
+        <Loader2 className="h-8 w-8 text-purple animate-spin mb-3" />
+        <p className="text-sm font-medium text-neutral-600">Loading Transport Editor...</p>
+      </div>
+    ),
+  }
+);
 
 const WIZARDS_BY_TYPE: Record<string, React.ElementType> = {
   stay: StayWizard,
