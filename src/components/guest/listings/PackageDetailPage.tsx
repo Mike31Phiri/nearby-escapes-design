@@ -383,7 +383,7 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
         </div>
 
         {/* 2-Column Main Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_400px] gap-8 lg:gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_400px] gap-8 lg:gap-10">
           {/* LEFT COLUMN: Details & Itinerary */}
           <div className="space-y-8">
             {/* Highlights Banner */}
@@ -702,8 +702,8 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
           </div>
 
           {/* RIGHT COLUMN: Sticky Booking Sidebar */}
-          <aside className="lg:sticky lg:top-20" id="booking-section">
-            <div className="bg-white rounded-3xl border border-black/[0.08] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-6 md:p-7 space-y-5">
+          <aside className="relative h-full" id="booking-section">
+            <div className="bg-white rounded-3xl border border-black/[0.08] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-6 md:p-7 space-y-5 sticky top-24">
               <div className="flex items-baseline justify-between border-b border-black/[0.06] pb-4">
                 <div>
                   <div className="text-3xl font-extrabold text-neutral-900 tracking-tight">

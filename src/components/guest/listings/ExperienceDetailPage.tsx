@@ -406,7 +406,7 @@ export function ExperienceDetailPage({
         </div>
 
         {/* Main Info + Booking Sidebar Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_400px] gap-8 lg:gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_400px] gap-8 lg:gap-10">
           {/* LEFT COLUMN: Trust & Information */}
           <div className="space-y-8 divide-y divide-neutral-200">
             {/* Header: Title, Location, Host */}
@@ -579,7 +579,7 @@ export function ExperienceDetailPage({
           </div>
 
           {/* RIGHT COLUMN: Streamlined Sticky Booking Card */}
-          <div className="relative" id="booking-section">
+          <div className="relative h-full" id="booking-section">
             <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm sticky top-24 space-y-4">
               {/* Clear Pricing Header */}
               <div className="flex items-baseline justify-between border-b border-neutral-100 pb-4">
