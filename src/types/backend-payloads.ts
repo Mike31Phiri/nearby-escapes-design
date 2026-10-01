@@ -50,13 +50,13 @@ export interface ApiResponse<T> {
 // 1. AUTHENTICATION & SESSION (/api/auth)
 // ============================================================================
 
-/** POST /api/auth/register */
+/** POST /api/auth/register - Public Guest Registration */
 export interface RegisterRequest {
   fullName: string;
   email: string;
   password: string;
   phone: string;
-  role: "guest" | "host";
+  role?: "guest"; // Host signup is separated from standard auth. Public registrations default to "guest".
 }
 
 export interface RegisterResponse {
@@ -407,6 +407,43 @@ export interface VerifyPaymentResponse {
   status: "successful" | "failed" | "pending";
   bookingRef: string;
   receiptNumber?: string;
+}
+
+// ============================================================================
+// 5B. HOST ONBOARDING & VERIFICATION (/api/host/onboard)
+// ============================================================================
+
+export type HostApplicationStatus = "pending_review" | "under_review" | "approved" | "rejected";
+
+/** POST /api/host/onboard - Submit host KYC & business onboarding application */
+export interface HostOnboardingRequest {
+  businessName: string;
+  operatingSince: string;
+  province: string;
+  town: string;
+  businessEmail: string;
+  businessPhone: string;
+  pacraDocs: Array<{ id: string; name: string; url: string; size?: number }>;
+  ownershipDocs: Array<{ id: string; name: string; url: string; size?: number }>;
+  operationDocs: Array<{ id: string; name: string; url: string; size?: number }>;
+}
+
+export interface HostOnboardingResponse {
+  applicationId: string;
+  userId: string;
+  businessName: string;
+  status: HostApplicationStatus;
+  submittedAt: string;
+  message: string;
+}
+
+/** GET /api/host/application-status */
+export interface HostApplicationStatusResponse {
+  applicationId: string;
+  status: HostApplicationStatus;
+  businessName: string;
+  submittedAt: string;
+  reviewerNotes?: string;
 }
 
 // ============================================================================

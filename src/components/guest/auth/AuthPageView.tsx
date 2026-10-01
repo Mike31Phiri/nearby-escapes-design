@@ -11,8 +11,6 @@ import {
   Eye,
   EyeOff,
   Check,
-  Backpack,
-  Home,
   ChevronDown,
   Loader2,
   Phone,
@@ -187,7 +185,6 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const [role, setRole] = useState<"guest" | "host">("guest");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
@@ -301,11 +298,12 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
         email: email.trim(),
         password,
         phone: `+260${phone.trim().replace(/\s/g, "")}`,
-        role,
+        role: "guest",
       });
       setUser(user);
       toast.success("Account created! Welcome to Nearby Escapes.");
-      setTimeout(() => router.push(role === "host" ? "/host" : "/profile"), 600);
+      const dest = redirectTarget === "/" ? "/profile" : redirectTarget;
+      setTimeout(() => router.push(dest), 600);
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Registration failed. Please try again.");
     } finally {
@@ -500,56 +498,8 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                     Join Nearby Escapes
                   </h1>
                   <p className="text-sm text-neutral-500 mt-1">
-                    Discover, book, or host unique stays & adventures
+                    Create an account to book stays, tours & transfers across Zambia
                   </p>
-                </div>
-
-                {/* Account Type / Role */}
-                <div className="space-y-1.5">
-                  <FieldLabel>I am joining as</FieldLabel>
-                  <div className="grid grid-cols-2 gap-2.5">
-                    {[
-                      {
-                        value: "guest" as const,
-                        icon: Backpack,
-                        label: "Guest",
-                        sub: "Explore & book",
-                      },
-                      {
-                        value: "host" as const,
-                        icon: Home,
-                        label: "Local Host",
-                        sub: "List property/tour",
-                      },
-                    ].map(({ value, icon: Icon, label, sub }) => (
-                      <button
-                        key={value}
-                        type="button"
-                        onClick={() => setRole(value)}
-                        className={cn(
-                          "flex items-center gap-2.5 p-3 rounded-2xl border-2 transition-all duration-200 text-left",
-                          role === value
-                            ? "border-[#6b2bb8] bg-[#6b2bb8]/5"
-                            : "border-black/[0.08] bg-white hover:border-black/[0.2]",
-                        )}
-                      >
-                        <div
-                          className={cn(
-                            "w-8 h-8 rounded-xl flex items-center justify-center shrink-0",
-                            role === value
-                              ? "bg-[#6b2bb8] text-white"
-                              : "bg-black/[0.04] text-neutral-600",
-                          )}
-                        >
-                          <Icon className="h-4 w-4" />
-                        </div>
-                        <div>
-                          <div className="text-xs font-bold text-neutral-900">{label}</div>
-                          <div className="text-[10px] text-neutral-500">{sub}</div>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
@@ -664,6 +614,16 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                     Sign in
                   </button>
                 </div>
+
+                <div className="pt-3 text-center text-xs text-neutral-500 border-t border-black/[0.06] mt-2">
+                  Looking to list your property, tour, or transfer?{" "}
+                  <Link
+                    href="/become-host"
+                    className="font-bold text-[#6b2bb8] hover:underline inline-flex items-center gap-0.5"
+                  >
+                    Become a Host
+                  </Link>
+                </div>
               </form>
             )}
 
@@ -685,7 +645,8 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                       setUser(res.user);
                     }
                     toast.success("Verification successful! Logging you in...");
-                    setTimeout(() => router.push(role === "host" ? "/host" : "/profile"), 600);
+                    const dest = redirectTarget === "/" ? "/profile" : redirectTarget;
+                    setTimeout(() => router.push(dest), 600);
                   } catch (err: any) {
                     toast.error(err.response?.data?.message || "Invalid or expired verification code.");
                   } finally {

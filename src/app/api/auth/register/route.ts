@@ -50,7 +50,8 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const assignedRole = role === "host" ? "host" : role === "admin" ? "admin" : "guest";
+    // Public registration creates a guest account. Host capabilities require /become-host onboarding.
+    const assignedRole = "guest";
 
     const user = await createMockUser({
       name: name.trim(),

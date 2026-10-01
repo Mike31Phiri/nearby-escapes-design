@@ -168,7 +168,6 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
   const [loading, setLoading] = useState(false);
 
   // Register
-  const [role, setRole] = useState<"guest" | "host">("guest");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
@@ -286,11 +285,11 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
         email: email.trim(),
         password,
         phone: `+260${phone.trim().replace(/\s/g, "")}`,
-        role,
+        role: "guest",
       });
       setUser(user);
       toast.success("Account created! Welcome to Nearby Escapes.");
-      const dest = role === "host" ? "/host" : "/profile";
+      const dest = redirectTarget === "/" ? "/profile" : redirectTarget;
       setTimeout(() => router.push(dest), 600);
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Registration failed. Please try again.");
@@ -488,55 +487,6 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                   <p className="text-base text-[#64748B] mt-1">Join the community of explorers</p>
                 </div>
 
-                {/* Role selector */}
-                <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
-                    I am a
-                  </Label>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setRole("guest")}
-                      className={cn(
-                        "flex flex-col items-center gap-1.5 py-3.5 rounded-xl border-2 transition-all duration-200",
-                        role === "guest"
-                          ? "border-[#D4AF37] bg-[#D4AF37]/5 shadow-sm"
-                          : "border-gray-200 bg-white hover:border-gray-300",
-                      )}
-                    >
-                      <Backpack
-                        className={cn(
-                          "h-5 w-5",
-                          role === "guest" ? "text-[#D4AF37]" : "text-gray-400",
-                        )}
-                      />
-                      <span className="text-sm font-bold text-[#1A0B2E] font-display">Guest</span>
-                      <span className="text-[9px] text-[#64748B]">Find &amp; book escapes</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setRole("host")}
-                      className={cn(
-                        "flex flex-col items-center gap-1.5 py-3.5 rounded-xl border-2 transition-all duration-200",
-                        role === "host"
-                          ? "border-[#D4AF37] bg-[#D4AF37]/5 shadow-sm"
-                          : "border-gray-200 bg-white hover:border-gray-300",
-                      )}
-                    >
-                      <Home
-                        className={cn(
-                          "h-5 w-5",
-                          role === "host" ? "text-[#D4AF37]" : "text-gray-400",
-                        )}
-                      />
-                      <span className="text-sm font-bold text-[#1A0B2E] font-display">
-                        Local host
-                      </span>
-                      <span className="text-[9px] text-[#64748B]">List your property</span>
-                    </button>
-                  </div>
-                </div>
-
                 {/* Name */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
@@ -713,7 +663,8 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                     return;
                   }
                   toast.success("Verification successful! Logging you in...");
-                  setTimeout(() => router.push(role === "host" ? "/host" : "/profile"), 800);
+                  const dest = redirectTarget === "/" ? "/profile" : redirectTarget;
+                  setTimeout(() => router.push(dest), 800);
                 }}
                 className="space-y-6 text-center"
               >
