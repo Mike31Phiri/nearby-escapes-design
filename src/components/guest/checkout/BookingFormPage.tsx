@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
@@ -48,6 +48,7 @@ import { useAuth } from "@/lib/store/authStore";
 import { createPaymentToken, generateBookingRef } from "@/lib/dpo";
 import { useBookingStore } from "@/store/bookingStore";
 import { useProfileStore } from "@/store/profileStore";
+import { useInventoryStore } from "@/store/inventoryStore";
 
 // Types
 
@@ -511,6 +512,22 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
         },
         createdAt: new Date().toISOString(),
       });
+
+      // Automatically decrement inventory in persistent store
+      try {
+        const inv = useInventoryStore.getState().getInventory(listing.id);
+        const availableUnit = inv.units.find((u) => u.status === "available");
+        if (availableUnit) {
+          useInventoryStore.getState().setUnitStatus(
+            listing.id,
+            availableUnit.id,
+            "occupied",
+            `Booked by ${fullName} · Ref ${bookingRef}`,
+          );
+        }
+      } catch (e) {
+        console.warn("Could not decrement inventory unit:", e);
+      }
 
       // Redirect to confirmation or payment url
       window.location.href = result.paymentUrl;
