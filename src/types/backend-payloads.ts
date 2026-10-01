@@ -127,17 +127,19 @@ export interface VerifyOtpRequest {
 
 /** GET /api/listings (Search & Filter) */
 export interface ListingSearchQuery {
+  q?: string;
   vertical?: ListingVertical | "all";
   city?: string;
   province?: string;
   checkIn?: string; // YYYY-MM-DD
   checkOut?: string; // YYYY-MM-DD
   guests?: number;
+  category?: string;
   minPriceNgwee?: number;
   maxPriceNgwee?: number;
   bedrooms?: number;
   amenities?: string[];
-  sort?: "price_asc" | "price_desc" | "rating" | "newest";
+  sort?: "price_asc" | "price_desc" | "rating" | "popular" | "newest";
   page?: number;
   limit?: number;
 }
@@ -261,6 +263,54 @@ export interface CreateListingRequest {
 /** PATCH /api/listings/:id/status */
 export interface UpdateListingStatusRequest {
   status: ListingStatus;
+}
+
+// ============================================================================
+// 2B. SAVED / WISHLISTS (/api/saved)
+// ============================================================================
+
+export interface SavedListingItemDTO {
+  id: string;
+  listingId: string;
+  vertical: ListingVertical;
+  title: string;
+  city: string;
+  province: string;
+  featuredImage: string;
+  pricePerUnitNgwee: number;
+  currency: Currency;
+  rating: number;
+  reviewCount: number;
+  savedAt: string;
+}
+
+/** GET /api/saved */
+export interface GetSavedListingsResponse {
+  data: SavedListingItemDTO[];
+  total: number;
+}
+
+/** POST /api/saved/toggle */
+export interface ToggleSavedListingRequest {
+  listingId: string;
+}
+
+export interface ToggleSavedListingResponse {
+  saved: boolean;
+  listingId: string;
+  totalSaved: number;
+}
+
+/** POST /api/saved */
+export interface AddSavedListingRequest {
+  listingId: string;
+}
+
+export interface AddSavedListingResponse {
+  success: boolean;
+  savedId: string;
+  listingId: string;
+  savedAt: string;
 }
 
 // ============================================================================
