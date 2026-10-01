@@ -82,3 +82,5 @@ Activity mode: [to be completed at end of build]
 
 ## Revisions
 
+- **Mandatory Availability Check & 10-Minute Checkout Slot Hold**: Enforced two-step booking activation across all detail pages (users must click "Check Availability" before the "Reserve" button activates; altering dates or party size resets availability). On the checkout page (`/checkout/book`), added a prominent 10-minute countdown banner and sidebar status pill holding the slot to prevent double-bookings while the user completes payment, with an option to extend the hold.
+
