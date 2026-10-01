@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -85,7 +85,6 @@ export function ExperienceDetailPage({
       "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=1200",
     ];
   }, [item]);
-
   const handleShare = () => {
     if (typeof window !== "undefined" && navigator.clipboard) {
       navigator.clipboard.writeText(window.location.href);
@@ -94,6 +93,20 @@ export function ExperienceDetailPage({
       toast.success("Link copied!");
     }
   };
+
+  const [isBookingSectionVisible, setIsBookingSectionVisible] = useState(false);
+  useEffect(() => {
+    const el = document.getElementById("booking-section");
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsBookingSectionVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   // Single Listing Time Slots & Inventory
   const inventories = useInventoryStore((s) => s.inventories);
@@ -421,82 +434,6 @@ export function ExperienceDetailPage({
                   Hosted by <span className="font-medium text-neutral-800">{hostName}</span>
                 </span>
               </div>
-
-              {/* Mobile Quick-Book Card */}
-              <div className="lg:hidden mt-5 p-4 sm:p-5 rounded-2xl bg-white border border-neutral-200 shadow-sm space-y-3.5">
-                <div className="flex items-baseline justify-between">
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-2xl sm:text-3xl font-bold text-neutral-900">
-                      {priceDisplay}
-                    </span>
-                    <span className="text-xs font-normal text-neutral-500">/ person</span>
-                  </div>
-                  <span className="text-xs font-semibold text-purple bg-purple/10 px-2.5 py-1 rounded-full">
-                    Instant Book
-                  </span>
-                </div>
-
-                <div className="space-y-2.5">
-                  <div>
-                    <label className="text-[10px] font-semibold uppercase text-neutral-400 block mb-0.5">
-                      Select Date
-                    </label>
-                    <input
-                      type="date"
-                      value={selectedDate}
-                      min={today}
-                      onChange={(e) => {
-                        setSelectedDate(e.target.value);
-                        setAvailabilityResult("idle");
-                      }}
-                      className="w-full bg-neutral-50 border border-neutral-200 rounded-xl p-2.5 text-xs font-semibold text-neutral-900 focus:outline-none"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="text-[10px] font-semibold uppercase text-neutral-400 block mb-0.5">
-                        Adults
-                      </label>
-                      <select
-                        value={adults}
-                        onChange={(e) => setAdults(Number(e.target.value))}
-                        className="w-full bg-neutral-50 border border-neutral-200 rounded-xl p-2 text-xs font-semibold text-neutral-900 focus:outline-none"
-                      >
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="text-[10px] font-semibold uppercase text-neutral-400 block mb-0.5">
-                        Children
-                      </label>
-                      <select
-                        value={children}
-                        onChange={(e) => setChildren(Number(e.target.value))}
-                        className="w-full bg-neutral-50 border border-neutral-200 rounded-xl p-2 text-xs font-semibold text-neutral-900 focus:outline-none"
-                      >
-                        {[0, 1, 2, 3, 4, 5].map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={handleProceedToBook}
-                  className="w-full bg-purple hover:bg-purple-hover text-white rounded-xl py-3.5 font-bold text-sm sm:text-base transition-all shadow-md shadow-purple/25 flex items-center justify-center gap-2 cursor-pointer active:scale-98"
-                >
-                  <span>Reserve Experience</span>
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-              </div>
             </div>
 
             {/* About the Experience (Truncated with Show More Modal) */}
@@ -638,39 +575,7 @@ export function ExperienceDetailPage({
               onViewAllReviews={() => setShowReviewsModal(true)}
             />
 
-            {/* Meet the Guide */}
-            <div className="pt-8">
-              <h2 className="text-lg font-semibold text-neutral-900">Meet your host &amp; guide</h2>
-              <div className="flex items-center gap-3.5 mt-3.5">
-                <div className="w-11 h-11 rounded-full flex items-center justify-center font-medium text-white text-base shrink-0 shadow-sm bg-purple">
-                  {hostName.slice(0, 2).toUpperCase()}
-                </div>
-                <div>
-                  <p className="font-semibold text-sm text-neutral-900">{hostName}</p>
-                  <p className="text-xs font-normal text-neutral-500 flex items-center gap-1.5 mt-0.5">
-                    <span className="bg-emerald-500 w-1.5 h-1.5 rounded-full inline-block"></span>
-                    Responds within 30 minutes
-                  </p>
-                </div>
-              </div>
-              <p className="text-xs font-normal text-neutral-600 leading-relaxed mt-3 italic">
-                &quot;Passionate about showcasing the beauty, wildlife, and heritage of Zambia. Safety
-                and genuine memories are our top priorities.&quot;
-              </p>
-              <div className="mt-3.5">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setHostQuestionSent(false);
-                    setShowHostContactModal(true);
-                  }}
-                  className="px-3.5 py-1.5 border border-neutral-300 hover:border-neutral-400 rounded-lg text-xs font-medium text-neutral-700 hover:bg-neutral-50 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
-                >
-                  <MessageSquare className="h-3.5 w-3.5 text-neutral-400" />
-                  Contact guide
-                </button>
-              </div>
-            </div>
+            {/* Host section removed per instruction */}
           </div>
 
           {/* RIGHT COLUMN: Streamlined Sticky Booking Card */}
@@ -976,8 +881,13 @@ export function ExperienceDetailPage({
         </section>
       </main>
 
-      {/* MOBILE STICKY BOTTOM BAR */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-neutral-200 px-5 py-3.5 flex items-center justify-between shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-50">
+      {/* MOBILE STICKY BOTTOM BAR (Solid white, hides when booking section is visible) */}
+      <div
+        className={cn(
+          "lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 px-5 py-3.5 flex items-center justify-between shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-50 transition-all duration-300",
+          isBookingSectionVisible ? "opacity-0 pointer-events-none translate-y-full" : "opacity-100 translate-y-0",
+        )}
+      >
         <div>
           <div className="flex items-baseline gap-1.5">
             <span className="text-2xl font-black text-neutral-900">{priceDisplay}</span>{" "}

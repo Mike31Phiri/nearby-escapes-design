@@ -9,7 +9,7 @@ Build mode: fast
 
 ## Slices
 
-- [ ] **1. Unified Detail Page System & Design Consistency**
+- [x] **1. Unified Detail Page System & Design Consistency**
   Becomes usable: All three detail pages (`/stays/[id]`, `/experiences/[id]`, `/transport/[id]`) share a unified visual shell: 5-photo hero gallery, clean Zambian Kwacha (ZMW) pricing, consistent typography, badges, amenities pills, host card, reviews, and sticky booking card.
   Why now: Solves the core user pain point of "inconsistent design style" across the three verticals, establishing the shared visual foundation.
   PRD ref: `prd.md > Screens and Layout`, `prd.md > Look and Feel`
@@ -19,7 +19,7 @@ Build mode: fast
   Learner check: Open `/stays/s1`, `/experiences/e1`, and `/transport/t1` in the browser and confirm the pages look consistent and cohesive.
   Commit: `Unify visual layout and design across Stays, Experiences, and Transport detail pages`
 
-- [ ] **2. Experience Daily Slot Checking & Availability Engine**
+- [x] **2. Experience Daily Slot Checking & Availability Engine**
   Becomes usable: On the Experience detail page, guests must pick a date and check daily availability slots (e.g. 10:00 AM, 1:00 PM, 3:30 PM). Selecting an active slot unlocks the "Book Now" CTA with live capacity indicators.
   Why now: Directly implements the core business logic the user requested before checkout can be initiated for experiences.
   PRD ref: `prd.md > Features and Behavior #2`
