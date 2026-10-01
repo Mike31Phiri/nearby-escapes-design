@@ -1,6 +1,5 @@
 "use client";
 
-import { ShieldCheck } from "lucide-react";
 import { UploadZone } from "../wizard/UploadZone";
 import { SectionTitle } from "../wizard/SectionTitle";
 import type { OnboardingData, ValidationErrors } from "../wizard/onboarding";
@@ -13,43 +12,62 @@ interface ProofOfOwnershipStepProps {
 
 export function ProofOfOwnershipStep({ data, errors, onChange }: ProofOfOwnershipStepProps) {
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-200">
       <SectionTitle
-        icon={ShieldCheck}
-        eyebrow="Almost done"
-        title="Proof of ownership & operation"
-        subtitle="We verify every host to keep the community safe. Upload clear, readable copies of the documents below."
+        title="Business verification documents"
+        subtitle="We verify all hosts to keep the platform trusted and safe. Upload clear copies of your business documentation below."
       />
 
-      <div className="rounded-xl border border-gold/30 bg-gold/5 p-4">
-        <p className="text-sm text-black-muted leading-relaxed">
-          <span className="font-bold text-black">Accepted formats:</span> PDF, JPG or PNG. Each file
-          must be legible and show the full document. Your files are encrypted and only viewed by
-          our verification team.
-        </p>
-      </div>
-
-      <div className="space-y-6">
-        <div className="space-y-2">
-          <h3 className="text-base font-bold text-black">1. Proof of Ownership</h3>
-          <UploadZone
-            title="Proof of Ownership"
-            description="Title deed, lease agreement, business registration (PACRA) or council permit"
-            docs={data.ownershipDocs}
-            onDocsChange={(docs) => onChange("ownershipDocs", docs)}
-            error={errors.ownershipDocs}
-          />
+      <div className="max-w-2xl mx-auto space-y-6">
+        <div className="rounded-xl border border-purple/20 bg-purple/[0.03] p-4">
+          <p className="text-xs text-neutral-600 leading-relaxed">
+            <span className="font-semibold text-neutral-900">Accepted formats:</span> PDF, JPG or PNG (up to 10MB each).
+            Ensure company names, registration numbers, and dates are legible. Documents are encrypted and reviewed only by our compliance team.
+          </p>
         </div>
 
-        <div className="space-y-2">
-          <h3 className="text-base font-bold text-black">2. Proof of Operation</h3>
-          <UploadZone
-            title="Proof of Operation"
-            description="Operating license, tax clearance (TPIN), or insurance certificate"
-            docs={data.operationDocs}
-            onDocsChange={(docs) => onChange("operationDocs", docs)}
-            error={errors.operationDocs}
-          />
+        <div className="space-y-5">
+          {/* 1. PACRA Business Registration */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-neutral-800">
+              1. PACRA Business Registration <span className="text-rose-500">*</span>
+            </label>
+            <UploadZone
+              title="PACRA Registration Document"
+              description="Certificate of incorporation, PACRA business registration, or official certificate"
+              docs={data.pacraDocs}
+              onDocsChange={(docs) => onChange("pacraDocs", docs)}
+              error={errors.pacraDocs}
+            />
+          </div>
+
+          {/* 2. Proof of Ownership */}
+          <div className="space-y-1.5 pt-2">
+            <label className="text-xs font-semibold text-neutral-800">
+              2. Proof of Ownership <span className="text-rose-500">*</span>
+            </label>
+            <UploadZone
+              title="Proof of Ownership"
+              description="Title deed, signed lease agreement, council property permit, or vehicle logbook"
+              docs={data.ownershipDocs}
+              onDocsChange={(docs) => onChange("ownershipDocs", docs)}
+              error={errors.ownershipDocs}
+            />
+          </div>
+
+          {/* 3. Proof of Operation */}
+          <div className="space-y-1.5 pt-2">
+            <label className="text-xs font-semibold text-neutral-800">
+              3. Proof of Operation <span className="text-rose-500">*</span>
+            </label>
+            <UploadZone
+              title="Proof of Operation"
+              description="Operating license, TPIN tax clearance, council operating permit, or insurance certificate"
+              docs={data.operationDocs}
+              onDocsChange={(docs) => onChange("operationDocs", docs)}
+              error={errors.operationDocs}
+            />
+          </div>
         </div>
       </div>
     </div>

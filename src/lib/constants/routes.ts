@@ -90,6 +90,9 @@ export const ROUTES = {
   host: {
     dashboard: "/host",
     create: "/host/create",
+    createStay: "/host/create/stay",
+    createExperience: "/host/create/experience",
+    createTransport: "/host/create/transport",
     listings: "/host/listings",
     listing: (id: string) => `/host/listings/${id}`,
     editListing: (id: string) => `/host/listings/${id}/edit`,

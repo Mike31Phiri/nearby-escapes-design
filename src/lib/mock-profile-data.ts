@@ -146,6 +146,18 @@ export const mockHostProfile: HostProfile = {
       rating: 0,
       revenue: 0,
     },
+    {
+      id: "h7",
+      name: "Toyota Land Cruiser Prado 4x4 (Fleet of 3)",
+      type: "transport",
+      location: "Lusaka & Safari Circuits",
+      status: "active",
+      image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&q=80",
+      price: 1200,
+      bookings: 42,
+      rating: 4.95,
+      revenue: 50400,
+    },
   ],
 };
 

@@ -197,29 +197,59 @@ export const unblockDates = async (payload: BlockDatesPayload): Promise<{ succes
   }
 };
 
+export interface AdjustInventoryDto {
+  inventoryCount?: number;          // e.g. 14 (sets absolute active count)
+  operation?: "increase" | "decrease" | "set";
+  amount?: number;                  // e.g. 1
+}
+
+export interface AdjustInventoryResponseDto {
+  id: string;
+  propertyName: string;
+  inventoryCount: number;
+  activeUnitsCount: number;
+  updatedAt: string;
+}
+
 /**
- * Update pricing and minimum stay rules for a date range
- * POST /api/availability/pricing-rules
+ * Adjust a property's inventory count (activates/deactivates units without deleting records)
+ * PATCH /api/properties/:id/inventory (also accessible via PATCH /api/listings/:id/inventory)
  */
-export const updateSeasonalPricing = async (
-  listingId: string,
-  dateFrom: string,
-  dateTo: string,
-  priceNgwee: number,
-  weekendMultiplier?: number,
-): Promise<{ success: boolean }> => {
-  const body: SetPricingRulesRequest = {
-    listingId,
-    startDate: dateFrom,
-    endDate: dateTo,
-    pricePerUnitNgwee: priceNgwee,
-    weekendMultiplier,
-  };
+export const adjustPropertyInventory = async (
+  propertyId: string,
+  dto: AdjustInventoryDto,
+): Promise<AdjustInventoryResponseDto> => {
   try {
-    await apiClient.post("/availability/pricing-rules", body);
-    return { success: true };
+    const { data } = await apiClient.patch<AdjustInventoryResponseDto>(
+      `/properties/${propertyId}/inventory`,
+      dto,
+    );
+    return data;
   } catch {
-    return { success: true };
+    const target = dto.inventoryCount ?? 14;
+    return {
+      id: propertyId,
+      propertyName: "Property Inventory",
+      inventoryCount: target,
+      activeUnitsCount: target,
+      updatedAt: new Date().toISOString(),
+    };
+  }
+};
+
+/**
+ * Update property base nightly price
+ * PATCH /api/properties/:id/price
+ */
+export const updatePropertyPrice = async (
+  propertyId: string,
+  priceNgwee: number,
+): Promise<{ success: boolean; priceNgwee: number }> => {
+  try {
+    await apiClient.patch(`/properties/${propertyId}/price`, { pricePerUnitNgwee: priceNgwee });
+    return { success: true, priceNgwee };
+  } catch {
+    return { success: true, priceNgwee };
   }
 };
 

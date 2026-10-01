@@ -1,6 +1,6 @@
-﻿"use client";
+"use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -167,6 +167,20 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
   const [showAllPhotos, setShowAllPhotos] = useState(false);
   const [showReviewsModal, setShowReviewsModal] = useState(false);
   const [activeImg, setActiveImg] = useState(0);
+
+  const [isBookingSectionVisible, setIsBookingSectionVisible] = useState(false);
+  useEffect(() => {
+    const el = document.getElementById("booking-section");
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsBookingSectionVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   // Booking options state
   const today = new Date().toISOString().split("T")[0];
@@ -369,7 +383,7 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
         </div>
 
         {/* 2-Column Main Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_400px] gap-8 lg:gap-10 items-start">
           {/* LEFT COLUMN: Details & Itinerary */}
           <div className="space-y-8">
             {/* Highlights Banner */}
@@ -443,6 +457,81 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* MOBILE QUICK-BOOK CARD: High visibility near top for mobile */}
+            <div className="lg:hidden p-5 bg-white border border-neutral-200 rounded-2xl shadow-sm space-y-4">
+              <div className="flex items-baseline justify-between">
+                <div>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-3xl font-extrabold text-neutral-900">
+                      K{packageItem.price.toLocaleString()}
+                    </span>
+                    <span className="text-xs font-normal text-neutral-500">/ person</span>
+                  </div>
+                  <span className="text-[11px] text-neutral-400 font-medium">All-inclusive safari package</span>
+                </div>
+                <span className="text-xs font-semibold text-purple bg-purple/10 px-2.5 py-1 rounded-full">
+                  Instant Booking
+                </span>
+              </div>
+
+              <div className="space-y-2.5">
+                <div>
+                  <label className="text-[10px] font-semibold uppercase text-neutral-400 block mb-1">
+                    Tour Start Date
+                  </label>
+                  <input
+                    type="date"
+                    min={today}
+                    value={travelDate}
+                    onChange={(e) => setTravelDate(e.target.value)}
+                    className="w-full bg-neutral-50 border border-neutral-200 rounded-xl p-2.5 text-xs font-semibold text-neutral-900 focus:outline-none focus:ring-2 focus:ring-purple/30"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[10px] font-semibold uppercase text-neutral-400 block mb-1">
+                      Adults (12+)
+                    </label>
+                    <select
+                      value={adults}
+                      onChange={(e) => setAdults(Number(e.target.value))}
+                      className="w-full bg-neutral-50 border border-neutral-200 rounded-xl p-2 text-xs font-semibold text-neutral-900 focus:outline-none"
+                    >
+                      {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+                        <option key={n} value={n}>
+                          {n} Adult{n > 1 ? "s" : ""}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-semibold uppercase text-neutral-400 block mb-1">
+                      Children (3-11)
+                    </label>
+                    <select
+                      value={children}
+                      onChange={(e) => setChildren(Number(e.target.value))}
+                      className="w-full bg-neutral-50 border border-neutral-200 rounded-xl p-2 text-xs font-semibold text-neutral-900 focus:outline-none"
+                    >
+                      {[0, 1, 2, 3, 4].map((n) => (
+                        <option key={n} value={n}>
+                          {n} {n === 1 ? "Child" : "Children"}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={handleProceedToBook}
+                className="w-full bg-purple hover:bg-purple-hover text-white rounded-xl py-3.5 font-bold text-sm sm:text-base transition-all shadow-md shadow-purple/25 flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+              >
+                <span>Book Package · K{totalPackageCost.toLocaleString()}</span>
+                <ArrowRight className="h-4 w-4" />
+              </button>
             </div>
 
             {/* Day-by-Day Itinerary */}
@@ -613,11 +702,11 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
           </div>
 
           {/* RIGHT COLUMN: Sticky Booking Sidebar */}
-          <aside className="lg:sticky lg:top-20">
+          <aside className="lg:sticky lg:top-20" id="booking-section">
             <div className="bg-white rounded-3xl border border-black/[0.08] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-6 md:p-7 space-y-5">
               <div className="flex items-baseline justify-between border-b border-black/[0.06] pb-4">
                 <div>
-                  <div className="text-2xl font-semibold text-neutral-900 tracking-tight">
+                  <div className="text-3xl font-extrabold text-neutral-900 tracking-tight">
                     K{packageItem.price.toLocaleString()}
                   </div>
                   <div className="text-xs text-neutral-500 font-normal">
@@ -763,9 +852,10 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                 {/* Book Button */}
                 <button
                   onClick={handleProceedToBook}
-                  className="w-full h-12 rounded-2xl bg-[#ffca28] hover:bg-[#f5be18] active:scale-[0.99] text-black font-bold text-sm uppercase tracking-wider shadow-md transition-all flex items-center justify-center gap-2"
+                  className="w-full bg-purple hover:bg-purple-hover text-white rounded-xl py-3.5 sm:py-4 font-bold text-base transition-all shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35 flex items-center justify-center gap-2 transform active:scale-[0.99] cursor-pointer"
                 >
-                  Book Package <ArrowRight className="h-4 w-4" />
+                  <span>Book Package</span>
+                  <ArrowRight className="h-5 w-5" />
                 </button>
 
                 <p className="text-center text-[10px] text-neutral-400">
@@ -776,6 +866,38 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
           </aside>
         </div>
       </main>
+
+      {/* MOBILE STICKY BOTTOM BAR (Solid white, hides when booking section is visible) */}
+      <div
+        className={cn(
+          "lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 px-5 py-3.5 flex items-center justify-between shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-50 transition-all duration-300",
+          isBookingSectionVisible ? "opacity-0 pointer-events-none translate-y-full" : "opacity-100 translate-y-0",
+        )}
+      >
+        <div>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-2xl font-black text-neutral-900">
+              K{totalPackageCost.toLocaleString()}
+            </span>{" "}
+            <span className="text-xs font-medium text-neutral-500">total</span>
+          </div>
+          <div className="text-xs text-neutral-600 flex items-center gap-1 font-medium mt-0.5">
+            <span className="text-purple font-semibold">{totalGuests} traveler{totalGuests > 1 ? "s" : ""}</span>
+            {travelDate && (
+              <>
+                <span>·</span>
+                <span className="text-neutral-500">{travelDate}</span>
+              </>
+            )}
+          </div>
+        </div>
+        <button
+          onClick={handleProceedToBook}
+          className="bg-purple text-white px-7 py-3 rounded-xl font-bold shadow-md shadow-purple/25 hover:bg-purple-hover transition-colors text-sm ml-4 cursor-pointer"
+        >
+          Book now
+        </button>
+      </div>
 
       {/* Full-Screen Photo Lightbox Modal */}
       {showAllPhotos && (

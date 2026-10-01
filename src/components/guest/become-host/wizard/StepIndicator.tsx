@@ -1,57 +1,39 @@
-﻿"use client";
+"use client";
 
-import { Check } from "lucide-react";
+import React from "react";
 import { cn } from "@/lib/utils";
-import { WIZARD_STEPS, WIZARD_STEP_COUNT } from "./onboarding";
+import { WIZARD_STEP_COUNT } from "./onboarding";
 
 interface StepIndicatorProps {
   currentStep: number;
+  totalSteps?: number;
+  className?: string;
 }
 
-export function StepIndicator({ currentStep }: StepIndicatorProps) {
+export function StepIndicator({
+  currentStep,
+  totalSteps = WIZARD_STEP_COUNT,
+  className,
+}: StepIndicatorProps) {
   return (
-    <div className="w-full max-w-2xl mx-auto mb-10">
-      <div className="flex items-center justify-between mb-3">
-        {WIZARD_STEPS.map((step, idx) => {
-          const isActive = idx === currentStep;
-          const isCompleted = idx < currentStep;
-          return (
-            <div
-              key={step.id}
-              className={cn(
-                "flex flex-col items-center gap-1.5 transition-all duration-300",
-                isActive ? "opacity-100" : isCompleted ? "opacity-90" : "opacity-40",
-              )}
-            >
-              <div
-                className={cn(
-                  "h-9 w-9 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 border-2",
-                  isActive
-                    ? "bg-gold text-black border-gold shadow-lg shadow-gold/25 scale-110"
-                    : isCompleted
-                      ? "bg-gold/15 text-black border-gold/40"
-                      : "bg-black/5 text-black-faint border-black/10",
-                )}
-              >
-                {isCompleted ? <Check className="h-4 w-4" strokeWidth={3} /> : idx + 1}
-              </div>
-              <span
-                className={cn(
-                  "text-[10px] font-bold uppercase tracking-wider hidden sm:block",
-                  isActive ? "text-black" : "text-black-faint",
-                )}
-              >
-                {step.short}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-      <div className="h-1.5 rounded-full bg-black/10 overflow-hidden">
-        <div
-          className="h-full bg-gradient-to-r from-gold to-gold rounded-full transition-all duration-500"
-          style={{ width: `${((currentStep + 1) / WIZARD_STEP_COUNT) * 100}%` }}
-        />
+    <div className={cn("flex items-center gap-2", className)}>
+      <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">
+        Step {currentStep + 1} of {totalSteps}
+      </span>
+      <div className="flex items-center gap-1.5">
+        {Array.from({ length: totalSteps }).map((_, stepNum) => (
+          <div
+            key={stepNum}
+            className={cn(
+              "h-1.5 rounded-full transition-all duration-300",
+              stepNum === currentStep
+                ? "w-6 bg-purple"
+                : stepNum < currentStep
+                  ? "w-3 bg-purple/40"
+                  : "w-3 bg-neutral-200",
+            )}
+          />
+        ))}
       </div>
     </div>
   );

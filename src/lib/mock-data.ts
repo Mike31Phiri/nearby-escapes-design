@@ -39,6 +39,7 @@ export interface Transport {
   /** Display times used on the transport detail page (falls back to defaults when absent). */
   departureTime?: string;
   arrivalTime?: string;
+  rateUnit?: "trip" | "day";
 }
 
 export type ExperienceCategory =
@@ -443,6 +444,19 @@ export const mockTransport: Transport[] = [
     arrivalTime: "1:45 PM",
     price: 320,
     image: "https://images.unsplash.com/photo-1591696205602-2f950c417cb9?w=800&q=80",
+  },
+  {
+    id: "t4",
+    from: "Lusaka / Flexible",
+    to: "Lower Zambezi & Safari Circuits",
+    operator: "Zambezi 4x4 Safari Rentals",
+    duration: "Daily / On-demand",
+    departures: "Daily",
+    departureTime: "Flexible Pick-up",
+    arrivalTime: "Flexible Return",
+    price: 1200,
+    rateUnit: "day",
+    image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&q=80",
   },
 ];
 

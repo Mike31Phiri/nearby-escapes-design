@@ -1,27 +1,24 @@
-﻿"use client";
+"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, ChevronRight, Loader2, Award } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowLeft, ChevronRight, Loader2, Send } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/store/authStore";
+import { BackButton } from "@/components/shared/BackButton";
+import { ROUTES } from "@/lib/constants/routes";
 
 import { StepIndicator } from "./wizard/StepIndicator";
 import { BusinessBasicsStep } from "./steps/BusinessBasicsStep";
-import { ListingTypeStep } from "./steps/ListingTypeStep";
-import { ListingSubTypeStep } from "./steps/ListingSubTypeStep";
 import { ProofOfOwnershipStep } from "./steps/ProofOfOwnershipStep";
 import { SuccessStep } from "./wizard/SuccessStep";
 import {
   INITIAL_ONBOARDING_DATA,
   WIZARD_STEP_COUNT,
-  LISTING_TYPE_OPTIONS,
-  SUB_TYPE_OPTIONS,
 } from "./wizard/onboarding";
 import type { OnboardingData, ValidationErrors } from "./wizard/onboarding";
 
-const TOTAL_STEPS = WIZARD_STEP_COUNT;
+const TOTAL_STEPS = WIZARD_STEP_COUNT; // 2 steps: Business Basics & Verification Docs
 
 export function BecomeHostPage() {
   const router = useRouter();
@@ -34,8 +31,10 @@ export function BecomeHostPage() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
+    router.prefetch(ROUTES.host.dashboard);
+    router.prefetch(ROUTES.host.create);
     if (!success && user && (user.roles?.includes("host") || user.roles?.includes("admin"))) {
-      router.replace("/host");
+      router.replace(ROUTES.host.dashboard);
     }
   }, [user, router, success]);
 
@@ -69,12 +68,8 @@ export function BecomeHostPage() {
           errs.businessPhone = "Enter a valid phone number";
         break;
       case 1:
-        if (!data.listingType) errs.listingType = "Select the type of listing you'd like to host";
-        break;
-      case 2:
-        if (!data.subType) errs.subType = "Select a category to continue";
-        break;
-      case 3:
+        if (data.pacraDocs.length === 0)
+          errs.pacraDocs = "Please upload your PACRA registration document";
         if (data.ownershipDocs.length === 0)
           errs.ownershipDocs = "Please upload at least one proof of ownership document";
         if (data.operationDocs.length === 0)
@@ -103,7 +98,7 @@ export function BecomeHostPage() {
     if (!validateStep()) return;
     setSubmitting(true);
 
-    await new Promise((r) => setTimeout(r, 2000));
+    await new Promise((r) => setTimeout(r, 250));
 
     if (user) {
       setUser({
@@ -113,9 +108,9 @@ export function BecomeHostPage() {
       });
     }
 
-    toast.success("Application submitted! 🎉", {
+    toast.success("Application submitted", {
       description:
-        "Our team will review your documents and get back to you within 1–3 business days.",
+        "Our team will review your business documents and get back to you within 1–3 business days.",
     });
 
     setSubmitting(false);
@@ -123,23 +118,11 @@ export function BecomeHostPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [validateStep, user, setUser, data.businessName]);
 
-  const listingLabel =
-    LISTING_TYPE_OPTIONS.find((option) => option.value === data.listingType)?.label ?? "";
-  const subTypeLabel =
-    data.listingType && data.subType
-      ? (SUB_TYPE_OPTIONS[data.listingType].find((option) => option.value === data.subType)
-          ?.label ?? "")
-      : "";
-
   const renderStepContent = () => {
     switch (step) {
       case 0:
         return <BusinessBasicsStep data={data} errors={errors} onChange={updateField} />;
       case 1:
-        return <ListingTypeStep data={data} errors={errors} onChange={updateField} />;
-      case 2:
-        return <ListingSubTypeStep data={data} errors={errors} onChange={updateField} />;
-      case 3:
         return <ProofOfOwnershipStep data={data} errors={errors} onChange={updateField} />;
       default:
         return null;
@@ -149,72 +132,83 @@ export function BecomeHostPage() {
   const isLastStep = step === TOTAL_STEPS - 1;
 
   return (
-    <div className="min-h-screen flex flex-col bg-white-warm font-sans">
+    <div className="min-h-screen flex flex-col bg-background font-sans">
       <main className="flex-1">
-        {/* Compact step indicator only */}
-        {!success && (
-          <div className="mx-auto max-w-3xl px-4 md:px-6 pt-6 md:pt-8">
-            <div className="scale-90 origin-left">
-              <StepIndicator currentStep={step} />
-            </div>
-          </div>
-        )}
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 md:px-8 pt-8 pb-20">
+          {/* Header navigation bar */}
+          {!success && (
+            <div className="flex items-center justify-between mb-6">
+              {step === 0 ? (
+                <BackButton fallback={ROUTES.home} ariaLabel="Back to home" />
+              ) : (
+                <button
+                  type="button"
+                  onClick={goBack}
+                  className="inline-flex items-center gap-2 text-xs font-semibold text-black-subtle hover:text-black transition-colors cursor-pointer"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  <span>Back</span>
+                </button>
+              )}
 
-        {/* Content */}
-        <div className="mx-auto max-w-3xl px-4 md:px-6 pt-6 md:pt-8 pb-20">
-          <div className="bg-white border border-border rounded-2xl shadow-sm p-6 md:p-10">
+              {/* Clean 2-step indicator pill */}
+              <StepIndicator currentStep={step} totalSteps={TOTAL_STEPS} />
+            </div>
+          )}
+
+          {/* Form Container */}
+          <div className="bg-white border border-neutral-200/80 rounded-2xl shadow-2xs p-6 sm:p-10">
             {success ? (
               <SuccessStep
                 businessName={data.businessName}
-                listingLabel={listingLabel}
-                subTypeLabel={subTypeLabel}
-                onFinish={() => router.push("/host")}
+                onFinish={() => router.push(ROUTES.host.dashboard)}
               />
             ) : (
               <>
                 {renderStepContent()}
 
-                {/* Navigation Buttons */}
-                <div className="flex items-center justify-between pt-8 mt-8 border-t border-border">
+                {/* Footer Navigation Controls */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 mt-6 border-t border-neutral-100">
                   {step > 0 ? (
-                    <Button
-                      variant="outline"
+                    <button
+                      type="button"
                       onClick={goBack}
-                      className="rounded-xl font-semibold text-base border-border text-black-soft hover:bg-white-soft"
+                      className="w-full sm:w-auto h-11 px-6 rounded-xl border border-neutral-200/80 bg-white hover:bg-neutral-50 text-neutral-700 text-xs sm:text-sm font-semibold transition-all cursor-pointer"
                     >
-                      <ChevronLeft className="h-4 w-4 mr-1" />
                       Back
-                    </Button>
+                    </button>
                   ) : (
-                    <span />
+                    <div />
                   )}
 
                   {isLastStep ? (
-                    <Button
+                    <button
+                      type="button"
                       onClick={handleSubmit}
                       disabled={submitting}
-                      className="bg-yellow hover:bg-yellow-hover text-black font-bold uppercase tracking-widest text-base rounded-xl shadow-lg shadow-yellow/25 hover:shadow-yellow/40 transition-all h-11 px-6"
+                      className="w-full sm:w-auto h-11 px-8 rounded-xl font-semibold text-xs sm:text-sm inline-flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs bg-purple text-white hover:bg-purple-hover active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {submitting ? (
                         <>
                           <Loader2 className="h-4 w-4 animate-spin" />
-                          Submitting...
+                          <span>Submitting...</span>
                         </>
                       ) : (
                         <>
-                          <Award className="h-4 w-4" />
-                          Submit Application
+                          <Send className="h-4 w-4" />
+                          <span>Submit Application</span>
                         </>
                       )}
-                    </Button>
+                    </button>
                   ) : (
-                    <Button
+                    <button
+                      type="button"
                       onClick={goNext}
-                      className="bg-yellow hover:bg-yellow-hover text-black font-bold uppercase tracking-widest text-base rounded-xl shadow-lg shadow-yellow/25 hover:shadow-yellow/40 transition-all h-11 px-6"
+                      className="w-full sm:w-auto h-11 px-8 rounded-xl font-semibold text-xs sm:text-sm inline-flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs bg-purple text-white hover:bg-purple-hover active:scale-98"
                     >
-                      Continue
-                      <ChevronRight className="h-4 w-4 ml-1" />
-                    </Button>
+                      <span>Continue</span>
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
                   )}
                 </div>
               </>

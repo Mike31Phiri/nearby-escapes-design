@@ -1,14 +1,39 @@
 import apiClient from "./client";
 import type { User } from "@/types/user";
-import type { LoginDto, RegisterDto } from "./dto/auth.dto";
+import type {
+  LoginDto,
+  RegisterDto,
+  ResetPasswordDto,
+  SendOtpDto,
+  VerifyOtpDto,
+} from "./dto/auth.dto";
 
-export const login = async (dto: LoginDto): Promise<{ user: User }> => {
-  const { data } = await apiClient.post<{ user: User }>("/auth/login", dto);
+export const login = async (
+  dto: LoginDto,
+): Promise<{ user: User; accessToken?: string; refreshToken?: string }> => {
+  const { data } = await apiClient.post<{
+    user: User;
+    accessToken?: string;
+    refreshToken?: string;
+  }>("/auth/login", dto);
+  if (data.accessToken && typeof window !== "undefined") {
+    localStorage.setItem("nearby_access_token", data.accessToken);
+  }
   return data;
 };
 
-export const register = async (dto: RegisterDto): Promise<{ user: User; message: string }> => {
-  const { data } = await apiClient.post<{ user: User; message: string }>("/auth/register", dto);
+export const register = async (
+  dto: RegisterDto,
+): Promise<{ user: User; message: string; accessToken?: string; refreshToken?: string }> => {
+  const { data } = await apiClient.post<{
+    user: User;
+    message: string;
+    accessToken?: string;
+    refreshToken?: string;
+  }>("/auth/register", dto);
+  if (data.accessToken && typeof window !== "undefined") {
+    localStorage.setItem("nearby_access_token", data.accessToken);
+  }
   return data;
 };
 
@@ -18,10 +43,72 @@ export const fetchCurrentUser = async (): Promise<User> => {
 };
 
 export const logout = async (): Promise<void> => {
-  await apiClient.post("/auth/logout");
+  try {
+    await apiClient.post("/auth/logout");
+  } finally {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("nearby_access_token");
+      localStorage.removeItem("token");
+    }
+  }
 };
 
-export const forgotPassword = async (email: string): Promise<{ message: string }> => {
-  const { data } = await apiClient.post<{ message: string }>("/auth/forgot-password", { email });
+export const forgotPassword = async (
+  email: string,
+): Promise<{ success: boolean; message: string; resetToken?: string; devOtp?: string }> => {
+  const { data } = await apiClient.post<{
+    success: boolean;
+    message: string;
+    resetToken?: string;
+    devOtp?: string;
+  }>("/auth/forgot-password", { email });
+  return data;
+};
+
+export const resetPassword = async (
+  dto: ResetPasswordDto,
+): Promise<{ success: boolean; message: string }> => {
+  const { data } = await apiClient.post<{ success: boolean; message: string }>(
+    "/auth/reset-password",
+    dto,
+  );
+  return data;
+};
+
+export const sendOtp = async (
+  dto: SendOtpDto,
+): Promise<{ success: boolean; message: string; devOtp?: string }> => {
+  const { data } = await apiClient.post<{ success: boolean; message: string; devOtp?: string }>(
+    "/auth/send-otp",
+    dto,
+  );
+  return data;
+};
+
+export const verifyOtp = async (
+  dto: VerifyOtpDto,
+): Promise<{
+  success: boolean;
+  message: string;
+  user?: User;
+  accessToken?: string;
+}> => {
+  const { data } = await apiClient.post<{
+    success: boolean;
+    message: string;
+    user?: User;
+    accessToken?: string;
+  }>("/auth/verify-otp", dto);
+  if (data.accessToken && typeof window !== "undefined") {
+    localStorage.setItem("nearby_access_token", data.accessToken);
+  }
+  return data;
+};
+
+export const refreshSession = async (): Promise<{ user: User; accessToken: string }> => {
+  const { data } = await apiClient.post<{ user: User; accessToken: string }>("/auth/refresh");
+  if (data.accessToken && typeof window !== "undefined") {
+    localStorage.setItem("nearby_access_token", data.accessToken);
+  }
   return data;
 };

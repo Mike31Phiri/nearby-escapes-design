@@ -53,7 +53,6 @@ export function HostAvailabilityPage() {
   const availability = useAvailabilityStore((s) => s.availability);
   const toggleDateBlock = useAvailabilityStore((s) => s.toggleDateBlock);
   const blockDateRange = useAvailabilityStore((s) => s.blockDateRange);
-  const getSeasonalPricingForListing = useAvailabilityStore((s) => s.getSeasonalPricingForListing);
   const getPricingRulesForListing = useAvailabilityStore((s) => s.getPricingRulesForListing);
   const updatePricingRulesForListing = useAvailabilityStore((s) => s.updatePricingRulesForListing);
   const pricingRulesMap = useAvailabilityStore((s) => s.pricingRules);
@@ -69,11 +68,6 @@ export function HostAvailabilityPage() {
   const currentRules = useMemo(
     () => getPricingRulesForListing(selectedId, currentListing?.price || 850),
     [selectedId, currentListing?.price, pricingRulesMap, getPricingRulesForListing],
-  );
-
-  const pricing = useMemo(
-    () => getSeasonalPricingForListing(selectedId),
-    [selectedId, getSeasonalPricingForListing],
   );
 
   const todayStr = useMemo(() => toKey(new Date()), []);

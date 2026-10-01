@@ -331,12 +331,21 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
         setLoading(false);
       }
     } else if (resetStep === 2) {
-      if (resetOtp.join("").length < 6) {
+      const code = resetOtp.join("");
+      if (code.length < 6) {
         toast.error("Please enter the 6-digit code.");
         return;
       }
-      toast.success("Code verified! Set your new password.");
-      setResetStep(3);
+      setLoading(true);
+      try {
+        await authApi.verifyOtp({ email: resetEmail, otp: code });
+        toast.success("Code verified! Set your new password.");
+        setResetStep(3);
+      } catch (err: any) {
+        toast.error(err.response?.data?.message || "Invalid or expired code.");
+      } finally {
+        setLoading(false);
+      }
     } else {
       if (!newPassword || newPassword.length < 6) {
         toast.error("Password must be at least 6 characters.");
@@ -346,8 +355,20 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
         toast.error("Passwords do not match.");
         return;
       }
-      toast.success("Password reset! Please sign in.");
-      setTimeout(() => router.push("/auth/login"), 800);
+      setLoading(true);
+      try {
+        await authApi.resetPassword({
+          email: resetEmail,
+          otp: resetOtp.join(""),
+          newPassword,
+        });
+        toast.success("Password reset! Please sign in.");
+        setTimeout(() => router.push("/auth/login"), 800);
+      } catch (err: any) {
+        toast.error(err.response?.data?.message || "Failed to reset password.");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -649,14 +670,27 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
             {/* 3. OTP TAB */}
             {activeTab === "otp" && (
               <form
-                onSubmit={(e) => {
+                onSubmit={async (e) => {
                   e.preventDefault();
-                  if (otp.join("").length < 6) {
+                  const code = otp.join("");
+                  if (code.length < 6) {
                     toast.error("Please enter the complete 6-digit code.");
                     return;
                   }
-                  toast.success("Verification successful! Logging you in...");
-                  setTimeout(() => router.push(role === "host" ? "/host" : "/profile"), 800);
+                  setLoading(true);
+                  try {
+                    const fullPhone = phone.startsWith("+260") ? phone : `+260${phone.replace(/\s/g, "")}`;
+                    const res = await authApi.verifyOtp({ phone: fullPhone, otp: code });
+                    if (res.user) {
+                      setUser(res.user);
+                    }
+                    toast.success("Verification successful! Logging you in...");
+                    setTimeout(() => router.push(role === "host" ? "/host" : "/profile"), 600);
+                  } catch (err: any) {
+                    toast.error(err.response?.data?.message || "Invalid or expired verification code.");
+                  } finally {
+                    setLoading(false);
+                  }
                 }}
                 className="space-y-6 text-center"
               >
@@ -687,15 +721,24 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                   Didn&apos;t receive the code?{" "}
                   <button
                     type="button"
-                    onClick={() => toast.info("Verification code re-sent.")}
-                    className="font-bold text-[#6b2bb8] hover:underline"
+                    onClick={async () => {
+                      try {
+                        const fullPhone = phone.startsWith("+260") ? phone : `+260${phone.replace(/\s/g, "")}`;
+                        await authApi.sendOtp({ phone: fullPhone });
+                        setSecs(59);
+                        toast.success("Verification code re-sent.");
+                      } catch {
+                        toast.error("Could not resend code. Please try again.");
+                      }
+                    }}
+                    className="font-bold text-[#6b2bb8] hover:underline cursor-pointer"
                   >
                     Resend code
                   </button>{" "}
                   · <span className="font-bold text-neutral-700">{formatTimer(secs)}</span>
                 </div>
 
-                <SubmitButton loading={false}>Verify & Continue</SubmitButton>
+                <SubmitButton loading={loading}>Verify & Continue</SubmitButton>
 
                 <button
                   type="button"

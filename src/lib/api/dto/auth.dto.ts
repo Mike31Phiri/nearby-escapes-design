@@ -8,5 +8,27 @@ export interface RegisterDto {
   email: string;
   password: string;
   phone?: string;
-  role: "guest" | "host";
+  role: "guest" | "host" | "admin";
+}
+
+export interface ForgotPasswordDto {
+  email: string;
+}
+
+export interface ResetPasswordDto {
+  token?: string;
+  email?: string;
+  otp?: string;
+  newPassword: string;
+}
+
+export interface SendOtpDto {
+  phone?: string;
+  email?: string;
+}
+
+export interface VerifyOtpDto {
+  phone?: string;
+  email?: string;
+  otp: string;
 }

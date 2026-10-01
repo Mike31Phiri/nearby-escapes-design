@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -338,6 +338,16 @@ export function Navbar() {
                       >
                         <User className="h-4 w-4 text-neutral-400 shrink-0" />
                         Profile
+                      </Link>
+                    </SheetClose>
+
+                    <SheetClose asChild>
+                      <Link
+                        href="/host/listings"
+                        className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150"
+                      >
+                        <Building2 className="h-4 w-4 text-neutral-400 shrink-0" />
+                        My Listings
                       </Link>
                     </SheetClose>
 

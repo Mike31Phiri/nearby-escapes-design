@@ -51,3 +51,6 @@ lucide-files.json
 reference-host.html
 .data/
 scripts/
+.claude/
+agent/
+skills-lock.json

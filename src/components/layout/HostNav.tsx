@@ -146,89 +146,174 @@ export function HostNav() {
                 <SheetContent
                   side="right"
                   overlayClassName={BACKDROP_CLASS}
-                  className="w-[280px] p-0 flex flex-col bg-white border-l border-neutral-200 text-neutral-900"
+                  className="w-[290px] p-0 flex flex-col bg-white border-l border-neutral-200 text-neutral-900 shadow-2xl"
                 >
                   <SheetTitle className="sr-only">Host Menu</SheetTitle>
-                  <div className="flex-1 overflow-y-auto px-4 py-6 flex flex-col justify-between">
+
+                  {/* Top Header */}
+                  <div className="px-5 py-4 border-b border-neutral-100 flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-bold text-neutral-900">Host Menu</p>
+                      <p className="text-[11px] text-neutral-500">Manage your hosting</p>
+                    </div>
+                    <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-purple/10 text-purple border border-purple/20">
+                      Host Mode
+                    </span>
+                  </div>
+
+                  <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col justify-between space-y-6">
                     <div className="space-y-5">
-                      <div className="px-2">
-                        <p className="text-xs font-semibold text-neutral-900">Host Account</p>
-                        <p className="text-[11px] text-neutral-500 mt-0.5">Preferences &amp; legal</p>
+                      {/* Section 1: Management (Items not on bottom nav) */}
+                      <div>
+                        <p className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 px-2 mb-1.5">
+                          Management
+                        </p>
+                        <div className="flex flex-col gap-1">
+                          {/* Listings */}
+                          <SheetClose asChild>
+                            <Link
+                              href="/host/listings"
+                              className={cn(
+                                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
+                                pathname === "/host/listings" || pathname.startsWith("/host/listings")
+                                  ? "bg-purple/10 text-purple font-semibold"
+                                  : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
+                              )}
+                            >
+                              <Building2 className="h-4 w-4 shrink-0 text-neutral-500" />
+                              <span>My Listings</span>
+                            </Link>
+                          </SheetClose>
+
+                          {/* Bookings */}
+                          <SheetClose asChild>
+                            <Link
+                              href="/host/bookings"
+                              className={cn(
+                                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
+                                pathname === "/host/bookings" || pathname.startsWith("/host/bookings")
+                                  ? "bg-purple/10 text-purple font-semibold"
+                                  : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
+                              )}
+                            >
+                              <CalendarCheck className="h-4 w-4 shrink-0 text-neutral-500" />
+                              <span>Bookings</span>
+                            </Link>
+                          </SheetClose>
+
+                          {/* Inventory */}
+                          <SheetClose asChild>
+                            <Link
+                              href="/host/inventory"
+                              className={cn(
+                                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
+                                pathname === "/host/inventory" || pathname.startsWith("/host/inventory")
+                                  ? "bg-purple/10 text-purple font-semibold"
+                                  : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
+                              )}
+                            >
+                              <Boxes className="h-4 w-4 shrink-0 text-neutral-500" />
+                              <span>Inventory</span>
+                            </Link>
+                          </SheetClose>
+
+                          {/* Reviews */}
+                          <SheetClose asChild>
+                            <Link
+                              href="/host/reviews"
+                              className={cn(
+                                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
+                                pathname === "/host/reviews" || pathname.startsWith("/host/reviews")
+                                  ? "bg-purple/10 text-purple font-semibold"
+                                  : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
+                              )}
+                            >
+                              <Star className="h-4 w-4 shrink-0 text-neutral-500" />
+                              <span>Reviews</span>
+                            </Link>
+                          </SheetClose>
+                        </div>
                       </div>
 
-                      <div className="flex flex-col gap-1">
-                        {/* Profile */}
-                        <SheetClose asChild>
-                          <Link
-                            href="/host/account"
-                            className={cn(
-                              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
-                              pathname === "/host/account"
-                                ? "bg-purple/10 text-purple font-semibold"
-                                : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
-                            )}
-                          >
-                            <CircleUserRound className="h-4 w-4 shrink-0 text-neutral-500" />
-                            <span>Profile</span>
-                          </Link>
-                        </SheetClose>
+                      {/* Section 2: Account & Settings */}
+                      <div>
+                        <p className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 px-2 mb-1.5">
+                          Account &amp; Settings
+                        </p>
+                        <div className="flex flex-col gap-1">
+                          {/* Profile */}
+                          <SheetClose asChild>
+                            <Link
+                              href="/host/account"
+                              className={cn(
+                                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
+                                pathname === "/host/account"
+                                  ? "bg-purple/10 text-purple font-semibold"
+                                  : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
+                              )}
+                            >
+                              <CircleUserRound className="h-4 w-4 shrink-0 text-neutral-500" />
+                              <span>Profile</span>
+                            </Link>
+                          </SheetClose>
 
-                        {/* Settings */}
-                        <SheetClose asChild>
-                          <Link
-                            href="/host/settings"
-                            className={cn(
-                              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
-                              pathname === "/host/settings"
-                                ? "bg-purple/10 text-purple font-semibold"
-                                : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
-                            )}
-                          >
-                            <Settings2 className="h-4 w-4 shrink-0 text-neutral-500" />
-                            <span>Settings</span>
-                          </Link>
-                        </SheetClose>
+                          {/* Settings */}
+                          <SheetClose asChild>
+                            <Link
+                              href="/host/settings"
+                              className={cn(
+                                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
+                                pathname === "/host/settings"
+                                  ? "bg-purple/10 text-purple font-semibold"
+                                  : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
+                              )}
+                            >
+                              <Settings2 className="h-4 w-4 shrink-0 text-neutral-500" />
+                              <span>Settings</span>
+                            </Link>
+                          </SheetClose>
 
-                        {/* Help */}
-                        <SheetClose asChild>
-                          <Link
-                            href="/host/help"
-                            className={cn(
-                              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
-                              pathname === "/host/help"
-                                ? "bg-purple/10 text-purple font-semibold"
-                                : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
-                            )}
-                          >
-                            <HelpCircle className="h-4 w-4 shrink-0 text-neutral-500" />
-                            <span>Host Help Center</span>
-                          </Link>
-                        </SheetClose>
+                          {/* Help */}
+                          <SheetClose asChild>
+                            <Link
+                              href="/host/help"
+                              className={cn(
+                                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
+                                pathname === "/host/help"
+                                  ? "bg-purple/10 text-purple font-semibold"
+                                  : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
+                              )}
+                            >
+                              <HelpCircle className="h-4 w-4 shrink-0 text-neutral-500" />
+                              <span>Host Help Center</span>
+                            </Link>
+                          </SheetClose>
 
-                        {/* Privacy Policy */}
-                        <SheetClose asChild>
-                          <Link
-                            href="/privacy"
-                            className={cn(
-                              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
-                              pathname === "/privacy"
-                                ? "bg-purple/10 text-purple font-semibold"
-                                : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
-                            )}
-                          >
-                            <ShieldCheck className="h-4 w-4 shrink-0 text-neutral-500" />
-                            <span>Privacy Policy</span>
-                          </Link>
-                        </SheetClose>
+                          {/* Privacy Policy */}
+                          <SheetClose asChild>
+                            <Link
+                              href="/privacy"
+                              className={cn(
+                                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
+                                pathname === "/privacy"
+                                  ? "bg-purple/10 text-purple font-semibold"
+                                  : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
+                              )}
+                            >
+                              <ShieldCheck className="h-4 w-4 shrink-0 text-neutral-500" />
+                              <span>Privacy Policy</span>
+                            </Link>
+                          </SheetClose>
+                        </div>
                       </div>
                     </div>
 
                     {/* Log out */}
-                    <div className="border-t border-neutral-100 pt-4">
+                    <div className="border-t border-neutral-100 pt-3">
                       <SheetClose asChild>
                         <Link
                           href="/auth/login"
-                          className="flex items-center gap-3 rounded-xl px-3 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50 transition-colors w-full text-left"
+                          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium text-rose-600 hover:bg-rose-50 transition-colors w-full text-left"
                         >
                           <LogOut className="h-4 w-4 shrink-0" />
                           <span>Log Out</span>

@@ -1,5 +1,7 @@
-import { HostCreatePage } from "@/components/host/HostCreatePage";
+"use client";
 
-export default function HostCreateRoute() {
-  return <HostCreatePage />;
+import { CreateVerticalGateway } from "@/components/host/create/CreateVerticalGateway";
+
+export default function HostCreateGatewayPage() {
+  return <CreateVerticalGateway />;
 }

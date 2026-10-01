@@ -41,8 +41,7 @@ export function UploadZone({
       name: file.name,
       size: file.size,
     }));
-    // Append to the existing list — dedupe by name+size so re-selecting the
-    // same file doesn't create duplicates.
+    // Append to existing list, deduping by name+size
     const merged = [...docs, ...next].filter(
       (doc, idx, arr) => arr.findIndex((d) => d.name === doc.name && d.size === doc.size) === idx,
     );
@@ -65,7 +64,7 @@ export function UploadZone({
   };
 
   return (
-    <div className="space-y-2.5">
+    <div className="space-y-3">
       <div
         role="button"
         tabIndex={0}
@@ -83,10 +82,10 @@ export function UploadZone({
         onDragLeave={() => setDragging(false)}
         onDrop={handleDrop}
         className={cn(
-          "border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2",
+          "border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all duration-200 outline-none",
           dragging
-            ? "border-purple bg-purple/5"
-            : "border-border bg-white-soft hover:border-purple/40 hover:bg-purple/[0.03]",
+            ? "border-purple bg-purple/[0.04]"
+            : "border-neutral-200 bg-neutral-50/40 hover:border-purple/40 hover:bg-purple/[0.02]",
         )}
       >
         <input
@@ -97,9 +96,11 @@ export function UploadZone({
           className="hidden"
           onChange={handleInput}
         />
-        <UploadCloud className="h-8 w-8 mx-auto text-black-subtle mb-2" />
-        <p className="text-sm font-bold text-black">{dragging ? "Drop files to upload" : title}</p>
-        <p className="text-xs text-black-muted mt-1">
+        <UploadCloud className="h-8 w-8 mx-auto text-purple/70 mb-2" />
+        <p className="text-xs sm:text-sm font-semibold text-neutral-800">
+          {dragging ? "Drop files to upload" : title}
+        </p>
+        <p className="text-[11px] text-neutral-400 mt-1">
           {dragging ? description : `${description} — click or drag & drop`}
         </p>
       </div>
@@ -109,20 +110,20 @@ export function UploadZone({
           {docs.map((doc) => (
             <li
               key={doc.id}
-              className="flex items-center gap-3 rounded-lg border border-border bg-white px-3 py-2.5 card-shadow"
+              className="flex items-center gap-3 rounded-xl border border-neutral-200/80 bg-white px-3.5 py-2.5 shadow-2xs"
             >
-              <div className="h-8 w-8 rounded-lg bg-black/5 flex items-center justify-center shrink-0">
-                <FileText className="h-4 w-4 text-black" />
+              <div className="h-8 w-8 rounded-lg bg-purple/10 flex items-center justify-center shrink-0">
+                <FileText className="h-4 w-4 text-purple" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold text-black truncate">{doc.name}</p>
-                <p className="text-[11px] text-black-subtle">{formatSize(doc.size)}</p>
+                <p className="text-xs sm:text-sm font-semibold text-neutral-800 truncate">{doc.name}</p>
+                <p className="text-[11px] text-neutral-400 font-mono">{formatSize(doc.size)}</p>
               </div>
               <button
                 type="button"
                 onClick={() => removeDoc(doc.id)}
                 aria-label={`Remove ${doc.name}`}
-                className="h-7 w-7 rounded-full flex items-center justify-center text-black-subtle hover:bg-destructive/5 hover:text-destructive transition-colors"
+                className="h-7 w-7 rounded-lg flex items-center justify-center text-neutral-400 hover:bg-rose-50 hover:text-rose-500 transition-colors cursor-pointer"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -131,7 +132,7 @@ export function UploadZone({
         </ul>
       )}
 
-      {error && <p className="text-[11px] font-medium text-destructive">{error}</p>}
+      {error && <p className="text-[11px] font-medium text-rose-500">{error}</p>}
     </div>
   );
 }

@@ -123,7 +123,8 @@ function generateInitialAvailability(): Record<string, AvailabilityEntry[]> {
 }
 
 function generateInitialSeasonalPricing(): SeasonalPricingEntry[] {
-  return MOCK_LISTING_IDS.flatMap((id) => generateMockSeasonalPricing(id));
+  // Seasonal pricing removed — platform relies strictly on property base rate editing
+  return [];
 }
 
 function generateInitialPricingRules(): Record<string, PricingRules> {
@@ -259,21 +260,14 @@ export const useAvailabilityStore = create<AvailabilityStore>()(
       },
 
       getEffectivePrice: (listingId, date, basePrice) => {
-        const seasonal = get().getSeasonalPricingForDate(listingId, date);
-        if (!seasonal) return basePrice;
-        // If a specific price is set, use it. Otherwise apply a multiplier.
-        if (seasonal.price > 0) return seasonal.price;
-        // Peak season: +30%, Green season: -20%
-        if (seasonal.label?.toLowerCase().includes("peak")) {
-          return Math.round(basePrice * 1.3);
+        // Seasonal pricing removed — rely strictly on property rate and weekend rules
+        const rules = get().pricingRules?.[listingId];
+        const dayOfWeek = new Date(date).getDay();
+        const isWeekend = dayOfWeek === 5 || dayOfWeek === 6; // Friday or Saturday
+        if (isWeekend && rules?.weekendPrice && rules.weekendPrice > 0) {
+          return rules.weekendPrice;
         }
-        if (
-          seasonal.label?.toLowerCase().includes("green") ||
-          seasonal.label?.toLowerCase().includes("off")
-        ) {
-          return Math.round(basePrice * 0.8);
-        }
-        return basePrice;
+        return rules?.basePrice || basePrice;
       },
 
       // Listing Pricing Rules

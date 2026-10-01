@@ -1,7 +1,6 @@
 "use client";
 
 import type { ElementType } from "react";
-import { CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SelectCardProps {
@@ -11,6 +10,7 @@ interface SelectCardProps {
   selected: boolean;
   onSelect: () => void;
   layout?: "compact" | "detailed";
+  onDoubleClick?: () => void;
 }
 
 export function SelectCard({
@@ -20,37 +20,78 @@ export function SelectCard({
   selected,
   onSelect,
   layout = "detailed",
+  onDoubleClick,
 }: SelectCardProps) {
+  if (layout === "compact") {
+    return (
+      <button
+        type="button"
+        onClick={onSelect}
+        onDoubleClick={onDoubleClick}
+        aria-pressed={selected}
+        className={cn(
+          "flex flex-col items-center justify-center text-center p-3.5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[88px] sm:min-h-[96px]",
+          selected
+            ? "border-2 border-purple bg-purple/[0.02]"
+            : "border-neutral-300 hover:border-neutral-900",
+        )}
+      >
+        <Icon
+          className={cn(
+            "h-7 w-7 mb-2 transition-colors shrink-0",
+            selected ? "text-purple" : "text-neutral-800",
+          )}
+          strokeWidth={1.5}
+        />
+        <span
+          className={cn(
+            "text-xs sm:text-sm font-semibold leading-tight line-clamp-2 text-center transition-colors",
+            selected ? "text-purple font-semibold" : "text-neutral-900",
+          )}
+        >
+          {label}
+        </span>
+        {description && (
+          <span className="text-[10px] text-neutral-400 mt-1 line-clamp-1">
+            {description}
+          </span>
+        )}
+      </button>
+    );
+  }
+
   return (
     <button
       type="button"
       onClick={onSelect}
+      onDoubleClick={onDoubleClick}
       aria-pressed={selected}
       className={cn(
-        "group relative flex flex-col items-center text-center rounded-xl border-2 transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2",
-        layout === "compact" ? "p-4" : "p-5",
+        "relative flex flex-col items-center justify-center text-center p-4 sm:p-5 rounded-xl border transition-all cursor-pointer outline-none bg-white min-h-[104px] sm:min-h-[116px]",
         selected
-          ? "border-purple bg-purple/5 shadow-md shadow-purple/10"
-          : "border-border bg-white hover:border-purple/40 hover:shadow-md hover:shadow-purple/5",
+          ? "border-2 border-purple bg-purple/[0.02]"
+          : "border-neutral-300 hover:border-neutral-900",
       )}
     >
-      {selected && (
-        <div className="absolute top-2 right-2 h-5 w-5 rounded-full bg-gold flex items-center justify-center">
-          <CheckCircle2 className="h-3 w-3 text-black" />
-        </div>
-      )}
-      <div
+      <Icon
         className={cn(
-          "rounded-xl flex items-center justify-center mb-3 transition-colors duration-200",
-          layout === "compact" ? "h-11 w-11" : "h-12 w-12",
-          selected ? "bg-purple text-white" : "bg-purple/5 text-purple group-hover:bg-purple/10",
+          "h-8 w-8 mb-2.5 transition-colors shrink-0",
+          selected ? "text-purple" : "text-neutral-800",
+        )}
+        strokeWidth={1.5}
+      />
+      <span
+        className={cn(
+          "text-xs sm:text-sm font-semibold transition-colors leading-tight",
+          selected ? "text-purple font-semibold" : "text-neutral-900",
         )}
       >
-        <Icon className={layout === "compact" ? "h-5 w-5" : "h-6 w-6"} />
-      </div>
-      <h3 className="text-sm font-bold text-black mb-0.5">{label}</h3>
-      {description && layout === "detailed" && (
-        <p className="text-[11px] text-black-muted leading-snug">{description}</p>
+        {label}
+      </span>
+      {description && (
+        <p className="text-[11px] text-neutral-400 mt-1 max-w-[200px] leading-relaxed line-clamp-2">
+          {description}
+        </p>
       )}
     </button>
   );

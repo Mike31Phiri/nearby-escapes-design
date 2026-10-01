@@ -29,7 +29,7 @@ Build mode: fast
   Learner check: Pick a date on an experience, click a time slot, verify that spots remaining update and "Book Now" activates with the selected slot.
   Commit: `Add daily time slot availability checker to Experience detail page`
 
-- [ ] **3. Multi-Unit Inventory & Live Capacity Enforcement**
+- [x] **3. Multi-Unit Inventory & Live Capacity Enforcement**
   Becomes usable: Stay and Transport detail booking cards check live inventory from `useInventoryStore` (e.g., lodge chalets and shuttle seats). When inventory reaches 0, the booking CTA displays a high-visibility "Sold Out" state.
   Why now: Prevents overbooking for lodge chalets and transport seats, fulfilling the core inventory requirement for hosts.
   PRD ref: `prd.md > Features and Behavior #3`
@@ -39,7 +39,7 @@ Build mode: fast
   Learner check: Check a stay and transport detail page; verify the remaining units count displays accurately in the booking card.
   Commit: `Enforce live unit and seat inventory on Stay and Transport booking widgets`
 
-- [ ] **4. End-to-End Booking Checkout & Automatic Inventory Decrement**
+- [x] **4. End-to-End Booking Checkout & Automatic Inventory Decrement**
   Becomes usable: Clicking "Book Now" on any detail page takes the selected dates, slots, or seats into `/checkout/book`. Completing the checkout form and simulated payment confirms the reservation on `/checkout/confirmation` and automatically decrements the active inventory in `useInventoryStore`.
   Why now: Closes the full guest loop from discovery to confirmed booking with live inventory consequence.
   PRD ref: `prd.md > The Core Journey #1`, `prd.md > What We're Building`
@@ -49,7 +49,7 @@ Build mode: fast
   Learner check: Book an experience or chalet, walk through checkout, see the confirmation receipt, and verify remaining inventory drops.
   Commit: `Connect checkout to automatic inventory reduction and booking confirmation`
 
-- [ ] **5. Host Portal Listing Creation & Inventory Sync**
+- [x] **5. Host Portal Listing Creation & Inventory Sync**
   Becomes usable: A host can use `/host/create` to publish a stay, experience, or transport listing and adjust property unit counts in `/host/inventory` (e.g., 15 chalets under the lodge name), with new listings immediately appearing in `/explore` and detail pages.
   Why now: Completes the host side of the POC, ensuring older lodge operators have an ultra-simple listing and inventory experience with full catalog parity.
   PRD ref: `prd.md > The Core Journey #2`, `prd.md > Features and Behavior #4`
@@ -61,7 +61,7 @@ Build mode: fast
 
 ## Hands-on Checkpoints
 
-- [ ] Early usable behavior explored — Slice 2 (Unified detail pages + Experience daily slot checking tried in browser)
+- [x] Early usable behavior explored — Slice 2 (Unified detail pages + Experience daily slot checking tried in browser)
 - [ ] Final kick-the-tires exploration and feedback completed
 
 ## Final Review
