@@ -19,10 +19,8 @@ import {
   Plus,
   Minus,
   MessageSquare,
-  Sparkles,
   Ticket,
   HelpCircle,
-  Truck,
   Check,
   CreditCard as CardIcon,
   Tag,
@@ -171,7 +169,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
 
   const handleExtendHold = () => {
     setSecondsLeft(600);
-    toast.success("Reservation lock refreshed! Slot held for an additional 10 minutes.");
+    toast.success("We're holding your spot for another 10 minutes!");
   };
 
   // Parse query parameters
@@ -198,8 +196,8 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
     children: 0,
     roomType: "standard",
     rooms: 1,
-    addTransport: paramTransport === "true" || paramTransport === null,
-    addFarmTour: true,
+    addTransport: false,
+    addFarmTour: false,
     addBushBraai: false,
   });
 
@@ -261,14 +259,14 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
       const roomCount = stayOptions.rooms;
       const stayCost = listing.price * nights * roomCount;
 
-      const transportCost = stayOptions.addTransport ? 280 : 0;
+      const transportCost = 0;
       const adultCount = stayOptions.adults;
       const childCount = stayOptions.children;
-      const farmTourCost = stayOptions.addFarmTour ? 150 * adultCount : 0;
-      const bushBraaiCost = stayOptions.addBushBraai ? 200 * (adultCount + childCount) : 0;
+      const farmTourCost = 0;
+      const bushBraaiCost = 0;
 
       const discount = Math.round(stayCost * 0.1);
-      const subtotal = stayCost + transportCost + farmTourCost + bushBraaiCost - discount;
+      const subtotal = stayCost - discount;
       const serviceFee = Math.round(stayCost * 0.05);
       const total = Math.max(0, subtotal + serviceFee - promoDiscount);
 
@@ -590,65 +588,54 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
         {/* 10-MINUTE RESERVATION LOCK BANNER */}
         <div
           className={cn(
-            "w-full rounded-2xl p-4 sm:p-5 border transition-all mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs",
+            "w-full rounded-2xl p-3.5 sm:p-4 border transition-all mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs",
             isExpired
-              ? "bg-amber-50/90 border-amber-300 text-amber-950"
-              : "bg-[#6b2bb8]/5 border-[#6b2bb8]/20 text-neutral-900",
+              ? "bg-amber-50/90 border-amber-200 text-amber-950"
+              : "bg-purple/5 border-purple/15 text-neutral-900",
           )}
         >
-          <div className="flex items-start sm:items-center gap-3.5">
+          <div className="flex items-center gap-3">
             <div
               className={cn(
-                "w-11 h-11 rounded-xl flex items-center justify-center shrink-0 shadow-xs",
-                isExpired ? "bg-amber-500 text-white" : "bg-[#6b2bb8] text-white",
+                "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-white shadow-2xs",
+                isExpired ? "bg-amber-500" : "bg-purple",
               )}
             >
               {isExpired ? (
-                <AlertTriangle className="h-5 w-5" />
+                <AlertTriangle className="h-4 w-4" />
               ) : (
-                <Lock className="h-5 w-5 animate-pulse" />
+                <Lock className="h-4 w-4" />
               )}
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h3 className="font-bold text-sm sm:text-base leading-tight">
-                  {isExpired
-                    ? "Reservation Lock Expired"
-                    : "Slot Temporarily Locked — No Double Booking"}
-                </h3>
-                {!isExpired && (
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wide bg-[#6b2bb8]/15 text-[#6b2bb8] border border-[#6b2bb8]/20">
-                    Locked For You
-                  </span>
-                )}
-              </div>
-              <p className="text-xs text-neutral-600 mt-1 max-w-xl leading-relaxed">
+              <span className="font-semibold text-sm text-neutral-900 block">
                 {isExpired
-                  ? "Your 10-minute hold has expired. To prevent someone else from booking this slot, extend your hold now."
-                  : "We've locked your slot for 10 minutes so nobody else can book it while you finalize your contact and payment details."}
+                  ? "Your 10-minute hold has expired"
+                  : "We're holding this spot for you"}
+              </span>
+              <p className="text-xs text-neutral-500 mt-0.5">
+                {isExpired
+                  ? "Don't worry—click the button to hold your spot for another 10 minutes so you can finish paying."
+                  : "Take your time filling in your details—we've saved this reservation so nobody else can take it while you finish checkout."}
               </p>
             </div>
           </div>
 
           {/* Countdown Timer Display */}
-          <div className="flex items-center gap-3 self-end sm:self-center shrink-0">
+          <div className="flex items-center gap-2 self-start sm:self-center shrink-0">
             {!isExpired ? (
-              <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-xl border border-[#6b2bb8]/20 shadow-2xs">
-                <Clock className="h-4 w-4 text-[#6b2bb8] animate-pulse" />
-                <div className="text-right">
-                  <div className="text-[10px] font-semibold text-neutral-500 uppercase tracking-wider leading-none">
-                    Hold Timer
-                  </div>
-                  <div className="text-xl font-black font-mono text-[#6b2bb8] leading-tight">
-                    {formatCountdown(secondsLeft)}
-                  </div>
-                </div>
+              <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-neutral-200/80 shadow-2xs">
+                <Clock className="h-3.5 w-3.5 text-purple shrink-0" />
+                <span className="text-xs font-medium text-neutral-500">Hold Timer:</span>
+                <span className="text-sm font-bold text-purple tabular-nums">
+                  {formatCountdown(secondsLeft)}
+                </span>
               </div>
             ) : (
               <button
                 type="button"
                 onClick={handleExtendHold}
-                className="px-4 py-2.5 rounded-xl bg-[#6b2bb8] text-white text-xs font-bold shadow-sm hover:bg-[#582399] transition-colors flex items-center gap-1.5 cursor-pointer"
+                className="px-3.5 py-1.5 rounded-xl bg-purple hover:bg-purple-hover text-white text-xs font-semibold shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
               >
                 <RefreshCw className="h-3.5 w-3.5" />
                 <span>Extend Hold (+10 min)</span>
@@ -955,69 +942,6 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   </p>
                 </div>
 
-                {/* Stay Add-ons (Stays only) */}
-                {isStay && (
-                  <div className="pt-2 space-y-3">
-                    <div className="text-xs font-bold text-neutral-800 uppercase tracking-wider">
-                      Popular Add-ons
-                    </div>
-                    <label
-                      className={`flex items-center justify-between p-3.5 rounded-xl border transition-colors cursor-pointer ${stayOptions.addTransport ? "bg-[#6b2bb8]/5 border-[#6b2bb8]/30" : "bg-white border-neutral-200"}`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <Truck className="h-4 w-4 text-[#6b2bb8]" />
-                        <div>
-                          <div className="text-xs font-bold text-neutral-900">
-                            Airport Return Shuttle
-                          </div>
-                          <div className="text-[11px] text-neutral-500">
-                            Private roundtrip pickup &amp; drop-off
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-neutral-900">+K280</span>
-                        <input
-                          type="checkbox"
-                          checked={stayOptions.addTransport}
-                          onChange={(e) =>
-                            setStayOptions((s) => ({ ...s, addTransport: e.target.checked }))
-                          }
-                          className="h-4 w-4 rounded border-neutral-300 text-[#6b2bb8]"
-                        />
-                      </div>
-                    </label>
-
-                    <label
-                      className={`flex items-center justify-between p-3.5 rounded-xl border transition-colors cursor-pointer ${stayOptions.addFarmTour ? "bg-[#6b2bb8]/5 border-[#6b2bb8]/30" : "bg-white border-neutral-200"}`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <Sparkles className="h-4 w-4 text-emerald-600" />
-                        <div>
-                          <div className="text-xs font-bold text-neutral-900">
-                            Guided Wildlife &amp; Farm Experience
-                          </div>
-                          <div className="text-[11px] text-neutral-500">
-                            Interactive morning guided tour
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-neutral-900">
-                          +K{150 * stayOptions.adults}
-                        </span>
-                        <input
-                          type="checkbox"
-                          checked={stayOptions.addFarmTour}
-                          onChange={(e) =>
-                            setStayOptions((s) => ({ ...s, addFarmTour: e.target.checked }))
-                          }
-                          className="h-4 w-4 rounded border-neutral-300 text-[#6b2bb8]"
-                        />
-                      </div>
-                    </label>
-                  </div>
-                )}
 
                 {/* Special Requests */}
                 <div className="space-y-1.5">
@@ -1295,23 +1219,23 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   />
                   <span>
                     I acknowledge and agree to Nearby Escapes{" "}
-                    <Link href="/terms" className="text-[#6b2bb8] underline font-medium">
+                    <Link href="/terms" className="text-purple underline font-medium">
                       Terms of Service
                     </Link>
                     ,{" "}
-                    <Link href="/privacy" className="text-[#6b2bb8] underline font-medium">
+                    <Link href="/privacy" className="text-purple underline font-medium">
                       Privacy Policy
                     </Link>
                     , and the tour operator&apos;s cancellation policy.
                   </span>
                 </label>
 
-                {/* Desktop Book Now Button */}
+                {/* Complete Payment Button */}
                 <div className="pt-3">
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full h-14 rounded-2xl bg-[#6b2bb8] hover:bg-[#5a22a0] active:scale-[0.99] text-white font-bold text-base uppercase tracking-wider shadow-lg shadow-[#6b2bb8]/20 transition-all flex items-center justify-center gap-2"
+                    className="w-full h-14 rounded-2xl bg-purple hover:bg-purple-hover active:scale-[0.99] text-white font-bold text-base uppercase tracking-wider shadow-lg shadow-purple/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     {isSubmitting ? (
                       <Loader2 className="h-5 w-5 animate-spin" />
@@ -1319,8 +1243,8 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                       <Lock className="h-4 w-4" />
                     )}
                     {isSubmitting
-                      ? "Processing your booking..."
-                      : `Book Now • K${priceBreakdown.total.toLocaleString()}`}
+                      ? "Processing payment..."
+                      : `Complete Payment • K${priceBreakdown.total.toLocaleString()}`}
                   </Button>
                   <p className="text-center text-[11px] text-neutral-400 mt-2 font-medium">
                     🔒 Secure checkout • No surprise fees.
@@ -1414,21 +1338,21 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                     "p-2.5 rounded-xl border flex items-center justify-between text-xs transition-colors",
                     isExpired
                       ? "bg-amber-50 border-amber-200 text-amber-900"
-                      : "bg-[#6b2bb8]/5 border-[#6b2bb8]/20 text-neutral-900",
+                      : "bg-purple/5 border-purple/15 text-neutral-900",
                   )}
                 >
                   <div className="flex items-center gap-2">
                     <Lock
                       className={cn(
                         "h-3.5 w-3.5 shrink-0",
-                        isExpired ? "text-amber-600" : "text-[#6b2bb8]",
+                        isExpired ? "text-amber-600" : "text-purple",
                       )}
                     />
-                    <span className="font-semibold text-xs">
-                      {isExpired ? "Hold expired" : "Slot locked for you"}
+                    <span className="font-medium text-xs">
+                      {isExpired ? "Hold expired" : "Holding your spot"}
                     </span>
                   </div>
-                  <span className="font-mono font-bold text-xs text-[#6b2bb8]">
+                  <span className="font-bold text-xs text-purple tabular-nums">
                     {!isExpired ? formatCountdown(secondsLeft) : "00:00"}
                   </span>
                 </div>
@@ -1463,21 +1387,6 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                     </div>
                   )}
 
-                  {isStay && stayOptions.addTransport && (
-                    <div className="flex justify-between text-neutral-600">
-                      <span>Airport Return Transfer</span>
-                      <span className="font-semibold text-neutral-900">K280</span>
-                    </div>
-                  )}
-
-                  {isStay && stayOptions.addFarmTour && (
-                    <div className="flex justify-between text-neutral-600">
-                      <span>Guided Farm Experience</span>
-                      <span className="font-semibold text-neutral-900">
-                        K{(150 * stayOptions.adults).toLocaleString()}
-                      </span>
-                    </div>
-                  )}
 
                   {promoApplied && (
                     <div className="flex justify-between text-emerald-600 font-bold">
@@ -1533,30 +1442,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
         </div>
       </main>
 
-      {/* Mobile Sticky Bottom Action Bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-black/[0.08] p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] flex items-center justify-between gap-4">
-        <div>
-          <div className="text-[10px] text-neutral-500 uppercase tracking-wider font-bold">
-            Total (ZMW)
-          </div>
-          <div className="text-lg font-bold text-neutral-900">
-            K{priceBreakdown.total.toLocaleString()}
-          </div>
-        </div>
-        <Button
-          type="button"
-          onClick={() => handleSubmit()}
-          disabled={isSubmitting}
-          className="h-12 px-6 rounded-xl bg-[#6b2bb8] text-white font-bold text-xs uppercase tracking-wider shadow-md hover:bg-[#5a22a0] flex items-center gap-1.5"
-        >
-          {isSubmitting ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Lock className="h-3.5 w-3.5" />
-          )}
-          Book Now
-        </Button>
-      </div>
+
     </div>
   );
 }
