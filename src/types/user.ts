@@ -16,6 +16,7 @@ export interface User {
   /** Array form for convenience: always [role] */
   roles: UserRole[];
   isVerified: boolean;
+  isHostVerified?: boolean;
   verificationStatus: "PENDING" | "VERIFIED" | "SUSPENDED";
   homeCity?: string | null;
   bio?: string | null;

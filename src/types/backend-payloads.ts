@@ -443,7 +443,7 @@ export interface HostApplicationStatusResponse {
   status: HostApplicationStatus;
   businessName: string;
   submittedAt: string;
-  reviewerNotes?: string;
+  reviewerNotes?: string | null;
 }
 
 // ============================================================================

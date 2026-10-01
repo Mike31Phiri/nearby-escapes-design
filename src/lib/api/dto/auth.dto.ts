@@ -8,7 +8,6 @@ export interface RegisterDto {
   email: string;
   password: string;
   phone?: string;
-  role?: "guest";
 }
 
 export interface ForgotPasswordDto {

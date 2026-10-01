@@ -298,7 +298,6 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
         email: email.trim(),
         password,
         phone: `+260${phone.trim().replace(/\s/g, "")}`,
-        role: "guest",
       });
       setUser(user);
       toast.success("Account created! Welcome to Nearby Escapes.");

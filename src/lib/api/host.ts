@@ -18,6 +18,9 @@ import type {
   SetPricingRulesRequest,
   CreateHostSupportTicketRequest,
   HostSupportTicketResponse,
+  HostOnboardingRequest,
+  HostOnboardingResponse,
+  HostApplicationStatusResponse,
 } from "@/types/backend-payloads";
 
 export interface HostStatsDTO {
@@ -311,6 +314,48 @@ export const submitHostSupportTicket = async (
       status: "open",
       estimatedResponseTime: "Within 2 hours",
       createdAt: new Date().toISOString(),
+    };
+  }
+};
+
+/**
+ * Submit host KYC & business onboarding application
+ * POST /api/host/onboard
+ */
+export const submitHostOnboarding = async (
+  payload: HostOnboardingRequest,
+): Promise<HostOnboardingResponse> => {
+  try {
+    const { data } = await apiClient.post<HostOnboardingResponse>("/host/onboard", payload);
+    return data;
+  } catch {
+    return {
+      applicationId: `app_${Math.random().toString(36).substring(2, 9)}`,
+      userId: "usr_guest",
+      businessName: payload.businessName,
+      status: "pending_review",
+      submittedAt: new Date().toISOString(),
+      message:
+        "Application submitted. Our verification team will review your documents within 1–3 business days.",
+    };
+  }
+};
+
+/**
+ * Check host onboarding application status
+ * GET /api/host/application-status
+ */
+export const fetchHostApplicationStatus = async (): Promise<HostApplicationStatusResponse> => {
+  try {
+    const { data } = await apiClient.get<HostApplicationStatusResponse>("/host/application-status");
+    return data;
+  } catch {
+    return {
+      applicationId: "app_44910",
+      status: "pending_review",
+      businessName: "Nearby Escapes Host Partner",
+      submittedAt: new Date().toISOString(),
+      reviewerNotes: undefined,
     };
   }
 };

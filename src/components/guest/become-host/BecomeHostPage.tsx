@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/lib/store/authStore";
 import { BackButton } from "@/components/shared/BackButton";
 import { ROUTES } from "@/lib/constants/routes";
+import { submitHostOnboarding } from "@/lib/api/host";
 
 import { StepIndicator } from "./wizard/StepIndicator";
 import { BusinessBasicsStep } from "./steps/BusinessBasicsStep";
@@ -98,25 +99,41 @@ export function BecomeHostPage() {
     if (!validateStep()) return;
     setSubmitting(true);
 
-    await new Promise((r) => setTimeout(r, 250));
-
-    if (user) {
-      setUser({
-        ...user,
-        roles: [...(user.roles || []), "host"],
-        name: data.businessName,
+    try {
+      await submitHostOnboarding({
+        businessName: data.businessName,
+        operatingSince: data.operatingSince,
+        province: data.province,
+        town: data.town,
+        businessEmail: data.businessEmail,
+        businessPhone: data.businessPhone,
+        pacraDocs: data.pacraDocs.map((d) => ({ id: d.id, name: d.name, url: `/uploads/${d.name}`, size: d.size })),
+        ownershipDocs: data.ownershipDocs.map((d) => ({ id: d.id, name: d.name, url: `/uploads/${d.name}`, size: d.size })),
+        operationDocs: data.operationDocs.map((d) => ({ id: d.id, name: d.name, url: `/uploads/${d.name}`, size: d.size })),
       });
+
+      if (user) {
+        setUser({
+          ...user,
+          roles: [...(user.roles || []), "host"],
+          name: data.businessName,
+          isHostVerified: true,
+        });
+      }
+
+      toast.success("Application submitted", {
+        description:
+          "Our team will review your business documents and get back to you within 1–3 business days.",
+      });
+
+      setSuccess(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch {
+      toast.error("Failed to submit application. Please check your network and try again.");
+    } finally {
+      setSubmitting(false);
     }
-
-    toast.success("Application submitted", {
-      description:
-        "Our team will review your business documents and get back to you within 1–3 business days.",
-    });
-
-    setSubmitting(false);
-    setSuccess(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [validateStep, user, setUser, data.businessName]);
+  }, [validateStep, user, setUser, data]);
 
   const renderStepContent = () => {
     switch (step) {

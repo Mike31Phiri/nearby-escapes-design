@@ -49,6 +49,13 @@ export async function POST(req: NextRequest) {
       maxAge: 60 * 60 * 24 * 7, // 7 days
     });
 
+    res.cookies.set("access_token", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    });
+
     return res;
   } catch (err) {
     console.error("[api/auth/login] Error:", err);
