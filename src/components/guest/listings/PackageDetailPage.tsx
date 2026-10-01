@@ -703,10 +703,10 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
 
           {/* RIGHT COLUMN: Sticky Booking Sidebar */}
           <aside className="relative h-full" id="booking-section">
-            <div className="bg-white rounded-3xl border border-black/[0.08] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-6 md:p-7 space-y-5 sticky top-24">
-              <div className="flex items-baseline justify-between border-b border-black/[0.06] pb-4">
+            <div className="bg-white rounded-3xl border border-black/[0.08] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-4 sm:p-5 space-y-3.5 sticky top-20 max-h-[calc(100vh-5.5rem)] overflow-y-auto">
+              <div className="flex items-baseline justify-between border-b border-black/[0.06] pb-2.5">
                 <div>
-                  <div className="text-3xl font-extrabold text-neutral-900 tracking-tight">
+                  <div className="text-2xl sm:text-[26px] font-extrabold text-neutral-900 tracking-tight">
                     K{packageItem.price.toLocaleString()}
                   </div>
                   <div className="text-xs text-neutral-500 font-normal">
@@ -714,40 +714,40 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="flex items-center gap-1 font-medium text-xs bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full border border-emerald-100">
-                    <ShieldCheck className="h-3.5 w-3.5" /> Best Rate Guaranteed
+                  <div className="flex items-center gap-1 font-medium text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-100">
+                    <ShieldCheck className="h-3.5 w-3.5" /> Best Rate
                   </div>
                 </div>
               </div>
 
               {/* Form Controls */}
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {/* Start Date */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-neutral-700">Tour Start Date</label>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-semibold text-neutral-500 block uppercase tracking-wider">Tour Start Date</label>
                   <div className="relative">
-                    <CalendarDays className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+                    <CalendarDays className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-neutral-400" />
                     <input
                       type="date"
                       min={today}
                       value={travelDate}
                       onChange={(e) => setTravelDate(e.target.value)}
-                      className="w-full h-11 pl-10 pr-3 rounded-xl border border-neutral-300 text-sm font-semibold text-neutral-900 focus:outline-none focus:ring-2 focus:ring-[#6b2bb8]"
+                      className="w-full h-9 pl-9 pr-3 rounded-xl border border-neutral-300 text-xs font-semibold text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                     />
                   </div>
                 </div>
 
                 {/* Room Category */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-neutral-700">Accommodation Tier</label>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-semibold text-neutral-500 block uppercase tracking-wider">Accommodation Tier</label>
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       type="button"
                       onClick={() => setRoomType("standard")}
                       className={cn(
-                        "p-2.5 rounded-xl border text-xs font-bold transition-all text-center",
+                        "py-2 px-2.5 rounded-xl border text-xs font-bold transition-all text-center cursor-pointer",
                         roomType === "standard"
-                          ? "border-[#6b2bb8] bg-[#6b2bb8]/5 text-neutral-900 shadow-sm"
+                          ? "border-purple bg-purple/5 text-neutral-900 shadow-xs"
                           : "border-neutral-200 text-neutral-500 hover:border-neutral-300",
                       )}
                     >
@@ -757,38 +757,38 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                       type="button"
                       onClick={() => setRoomType("luxury")}
                       className={cn(
-                        "p-2.5 rounded-xl border text-xs font-bold transition-all text-center",
+                        "py-2 px-2.5 rounded-xl border text-xs font-bold transition-all text-center cursor-pointer",
                         roomType === "luxury"
-                          ? "border-[#6b2bb8] bg-[#6b2bb8]/5 text-neutral-900 shadow-sm"
+                          ? "border-purple bg-purple/5 text-neutral-900 shadow-xs"
                           : "border-neutral-200 text-neutral-500 hover:border-neutral-300",
                       )}
                     >
-                      Luxury Suite (+K250)
+                      Luxury (+K250)
                     </button>
                   </div>
                 </div>
 
                 {/* Travelers Stepper */}
-                <div className="bg-neutral-50 p-3.5 rounded-xl border border-black/[0.05] space-y-3">
+                <div className="bg-neutral-50 p-2.5 rounded-xl border border-black/[0.05] space-y-2">
                   <div className="flex items-center justify-between text-xs">
                     <div>
-                      <div className="font-bold text-neutral-900">Adults (12+)</div>
+                      <div className="font-semibold text-neutral-900 text-xs">Adults (12+)</div>
                       <div className="text-[10px] text-neutral-500">K{pricePerAdult} each</div>
                     </div>
-                    <div className="flex items-center gap-2.5">
+                    <div className="flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => setAdults(Math.max(1, adults - 1))}
                         disabled={adults <= 1}
-                        className="w-7 h-7 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 disabled:opacity-30"
+                        className="w-6 h-6 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 disabled:opacity-30 cursor-pointer"
                       >
                         <Minus className="h-3 w-3" />
                       </button>
-                      <span className="w-5 text-center font-bold text-sm">{adults}</span>
+                      <span className="w-4 text-center font-bold text-xs">{adults}</span>
                       <button
                         type="button"
                         onClick={() => setAdults(adults + 1)}
-                        className="w-7 h-7 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600"
+                        className="w-6 h-6 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 cursor-pointer"
                       >
                         <Plus className="h-3 w-3" />
                       </button>
@@ -799,23 +799,23 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
 
                   <div className="flex items-center justify-between text-xs">
                     <div>
-                      <div className="font-bold text-neutral-900">Children (Ages 3–11)</div>
+                      <div className="font-semibold text-neutral-900 text-xs">Children (3–11)</div>
                       <div className="text-[10px] text-neutral-500">50% off (K{pricePerChild})</div>
                     </div>
-                    <div className="flex items-center gap-2.5">
+                    <div className="flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => setChildren(Math.max(0, children - 1))}
                         disabled={children <= 0}
-                        className="w-7 h-7 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 disabled:opacity-30"
+                        className="w-6 h-6 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 disabled:opacity-30 cursor-pointer"
                       >
                         <Minus className="h-3 w-3" />
                       </button>
-                      <span className="w-5 text-center font-bold text-sm">{children}</span>
+                      <span className="w-4 text-center font-bold text-xs">{children}</span>
                       <button
                         type="button"
                         onClick={() => setChildren(children + 1)}
-                        className="w-7 h-7 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600"
+                        className="w-6 h-6 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 cursor-pointer"
                       >
                         <Plus className="h-3 w-3" />
                       </button>
@@ -824,12 +824,12 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                 </div>
 
                 {/* Price Breakdown */}
-                <div className="pt-2 space-y-1.5 text-xs text-neutral-600">
+                <div className="pt-1.5 space-y-1 text-xs text-neutral-600">
                   <div className="flex justify-between">
                     <span>
                       Adults ({adults} × K{pricePerAdult})
                     </span>
-                    <span className="font-bold text-neutral-900">
+                    <span className="font-semibold text-neutral-900">
                       K{(pricePerAdult * adults).toLocaleString()}
                     </span>
                   </div>
@@ -838,12 +838,12 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                       <span>
                         Children ({children} × K{pricePerChild})
                       </span>
-                      <span className="font-bold text-neutral-900">
+                      <span className="font-semibold text-neutral-900">
                         K{(pricePerChild * children).toLocaleString()}
                       </span>
                     </div>
                   )}
-                  <div className="pt-2 border-t border-black/[0.06] flex items-baseline justify-between font-bold text-base text-neutral-900">
+                  <div className="pt-1.5 border-t border-black/[0.06] flex items-baseline justify-between font-bold text-sm text-neutral-900">
                     <span>Total Cost</span>
                     <span>K{totalPackageCost.toLocaleString()}</span>
                   </div>
@@ -852,14 +852,14 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                 {/* Book Button */}
                 <button
                   onClick={handleProceedToBook}
-                  className="w-full bg-purple hover:bg-purple-hover text-white rounded-xl py-3.5 sm:py-4 font-bold text-base transition-all shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35 flex items-center justify-center gap-2 transform active:scale-[0.99] cursor-pointer"
+                  className="w-full bg-purple hover:bg-purple-hover text-white rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35 flex items-center justify-center gap-2 transform active:scale-[0.99] cursor-pointer"
                 >
                   <span>Book Package</span>
-                  <ArrowRight className="h-5 w-5" />
+                  <ArrowRight className="h-4 w-4" />
                 </button>
 
                 <p className="text-center text-[10px] text-neutral-400">
-                  ⚡ Instant Confirmation • Free Cancellation up to 7 days prior
+                  ⚡ Instant Confirmation • Free Cancellation up to 7 days
                 </p>
               </div>
             </div>

@@ -602,11 +602,11 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
 
           {/* RIGHT COLUMN: Streamlined Booking Card */}
           <div className="relative h-full" id="booking-section">
-            <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm sticky top-24 space-y-4">
+            <div className="bg-white border border-neutral-200 rounded-2xl p-4 sm:p-5 shadow-sm sticky top-20 space-y-3 max-h-[calc(100vh-5.5rem)] overflow-y-auto">
               {/* Clear Nightly Pricing */}
-              <div className="flex items-baseline justify-between border-b border-neutral-100 pb-4">
+              <div className="flex items-baseline justify-between border-b border-neutral-100 pb-2.5">
                 <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-extrabold text-neutral-900 tracking-tight">
+                  <span className="text-2xl sm:text-[26px] font-extrabold text-neutral-900 tracking-tight">
                     {priceDisplay}
                   </span>
                   <span className="text-xs font-normal text-neutral-500">/ night</span>
@@ -618,52 +618,53 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                 </div>
               </div>
 
-              <div className="space-y-3">
-                {/* Check-In Date */}
-                <div>
-                  <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
-                    Check-in
-                  </label>
-                  <input
-                    type="date"
-                    value={checkIn}
-                    min={today}
-                    onChange={(e) => {
-                      setCheckIn(e.target.value);
-                      setAvailabilityResult("available");
-                      if (checkOut && e.target.value >= checkOut) setCheckOut("");
-                    }}
-                    className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
-                  />
-                </div>
+              <div className="space-y-2.5">
+                {/* Check-In and Check-Out Side-by-Side */}
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wider">
+                      Check-in
+                    </label>
+                    <input
+                      type="date"
+                      value={checkIn}
+                      min={today}
+                      onChange={(e) => {
+                        setCheckIn(e.target.value);
+                        setAvailabilityResult("available");
+                        if (checkOut && e.target.value >= checkOut) setCheckOut("");
+                      }}
+                      className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
+                    />
+                  </div>
 
-                {/* Check-Out Date */}
-                <div>
-                  <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
-                    Check-out
-                  </label>
-                  <input
-                    type="date"
-                    value={checkOut}
-                    min={checkIn || today}
-                    onChange={(e) => {
-                      setCheckOut(e.target.value);
-                      setAvailabilityResult("available");
-                    }}
-                    className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
-                  />
+                  <div>
+                    <label className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wider">
+                      Check-out
+                    </label>
+                    <input
+                      type="date"
+                      value={checkOut}
+                      min={checkIn || today}
+                      onChange={(e) => {
+                        setCheckOut(e.target.value);
+                        setAvailabilityResult("available");
+                      }}
+                      className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
+                    />
+                  </div>
                 </div>
 
                 {/* Guest Selector */}
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
+                    <label className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wider">
                       Adults
                     </label>
                     <select
                       value={adults}
                       onChange={(e) => setAdults(Number(e.target.value))}
-                      className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
+                      className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                     >
                       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
                         <option key={n} value={n}>
@@ -673,13 +674,13 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                     </select>
                   </div>
                   <div>
-                    <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
+                    <label className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wider">
                       Children
                     </label>
                     <select
                       value={children}
                       onChange={(e) => setChildren(Number(e.target.value))}
-                      className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
+                      className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                     >
                       {[0, 1, 2, 3, 4, 5].map((n) => (
                         <option key={n} value={n}>
@@ -692,8 +693,8 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
 
                 {/* Live Availability Status */}
                 {availabilityResult === "available" && (
-                  <div className="p-2 bg-emerald-50 border border-emerald-200/60 rounded-lg flex items-center gap-1.5 text-emerald-800 text-[11px] font-normal">
-                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
+                  <div className="py-1 px-2.5 bg-emerald-50 border border-emerald-200/60 rounded-lg flex items-center gap-1.5 text-emerald-800 text-[11px] font-normal">
+                    <CheckCircle2 className="h-3 w-3 shrink-0 text-emerald-600" />
                     <span>
                       {availableRoomsCount > 0 ? `${availableRoomsCount} units open` : "Space available"} ·{" "}
                       {nights > 0 ? `${nights} night${nights !== 1 ? "s" : ""}` : "Select dates"}
@@ -701,15 +702,15 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                   </div>
                 )}
                 {isSoldOut && (
-                  <div className="p-2 bg-rose-50 border border-rose-200/60 rounded-lg flex items-center gap-1.5 text-rose-800 text-[11px] font-normal">
-                    <AlertCircle className="h-3.5 w-3.5 shrink-0 text-rose-600" />
+                  <div className="py-1 px-2.5 bg-rose-50 border border-rose-200/60 rounded-lg flex items-center gap-1.5 text-rose-800 text-[11px] font-normal">
+                    <AlertCircle className="h-3 w-3 shrink-0 text-rose-600" />
                     <span>All units currently booked for this lodge.</span>
                   </div>
                 )}
 
                 {/* Price Breakdown */}
                 {nights > 0 ? (
-                  <div className="pt-3 border-t border-neutral-100 space-y-1.5 text-xs">
+                  <div className="pt-2 border-t border-neutral-100 space-y-1 text-xs">
                     <div className="flex justify-between text-neutral-500 font-normal">
                       <span>
                         {nights} night{nights !== 1 ? "s" : ""} x K{nightlyRate.toLocaleString()}
@@ -722,16 +723,16 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                       <span>Breakfast &amp; Wi-Fi</span>
                       <span className="text-emerald-700 font-medium">Included</span>
                     </div>
-                    <div className="flex justify-between text-neutral-900 font-semibold border-t border-neutral-100 pt-2 text-sm">
+                    <div className="flex justify-between text-neutral-900 font-semibold border-t border-neutral-100 pt-1.5 text-sm">
                       <span>Total</span>
                       <span>K{(nightlyRate * nights).toLocaleString()}</span>
                     </div>
-                    <p className="text-[11px] text-neutral-400 font-normal text-center mt-1">
+                    <p className="text-[10px] text-neutral-400 font-normal text-center">
                       No surprise fees · Taxes included
                     </p>
                   </div>
                 ) : (
-                  <div className="pt-1 text-xs font-normal text-neutral-400 text-center">
+                  <div className="pt-1 text-[11px] font-normal text-neutral-400 text-center">
                     Select dates to see total
                   </div>
                 )}
@@ -743,18 +744,18 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                 onClick={handleProceedToBook}
                 disabled={isSoldOut}
                 className={cn(
-                  "w-full rounded-xl py-3.5 sm:py-4 font-bold text-base transition-all flex items-center justify-center gap-2 transform active:scale-[0.99] cursor-pointer",
+                  "w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 transform active:scale-[0.99] cursor-pointer",
                   isSoldOut
                     ? "bg-neutral-200 text-neutral-400 cursor-not-allowed"
                     : "bg-purple hover:bg-purple-hover text-white shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35",
                 )}
               >
                 <span>{isSoldOut ? "Sold Out (0 Rooms Available)" : "Reserve Stay"}</span>
-                {!isSoldOut && <ArrowRight className="h-5 w-5" />}
+                {!isSoldOut && <ArrowRight className="h-4 w-4" />}
               </button>
 
               {/* Cross-sell */}
-              <div className="pt-3 border-t border-neutral-100 flex items-center justify-between text-xs">
+              <div className="pt-2 border-t border-neutral-100 flex items-center justify-between text-[11px]">
                 <span className="text-neutral-500 font-normal">Need transport or tours?</span>
                 <Link href="/experiences" className="text-purple font-medium hover:underline">
                   Explore activities →

@@ -580,11 +580,11 @@ export function ExperienceDetailPage({
 
           {/* RIGHT COLUMN: Streamlined Sticky Booking Card */}
           <div className="relative h-full" id="booking-section">
-            <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm sticky top-24 space-y-4">
+            <div className="bg-white border border-neutral-200 rounded-2xl p-4 sm:p-5 shadow-sm sticky top-20 space-y-3 max-h-[calc(100vh-5.5rem)] overflow-y-auto">
               {/* Clear Pricing Header */}
-              <div className="flex items-baseline justify-between border-b border-neutral-100 pb-4">
+              <div className="flex items-baseline justify-between border-b border-neutral-100 pb-2.5">
                 <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-extrabold text-neutral-900 tracking-tight">
+                  <span className="text-2xl sm:text-[26px] font-extrabold text-neutral-900 tracking-tight">
                     {priceDisplay}
                   </span>
                   <span className="text-xs font-normal text-neutral-500">/ person</span>
@@ -596,10 +596,10 @@ export function ExperienceDetailPage({
                 </div>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 {/* Select Date */}
                 <div>
-                  <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
+                  <label className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wider">
                     Experience Date
                   </label>
                   <input
@@ -610,20 +610,20 @@ export function ExperienceDetailPage({
                       setSelectedDate(e.target.value);
                       setAvailabilityResult("idle");
                     }}
-                    className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
+                    className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                   />
                 </div>
 
                 {/* Select Time Slot (Interactive Pills) */}
                 {timeSlots.length > 0 && (
                   <div>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <label className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider">
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-[10px] font-semibold text-neutral-500 uppercase tracking-wider">
                         Available Time Slots
                       </label>
                       <span className="text-[10px] text-neutral-400">Pick preferred time</span>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div className="grid grid-cols-2 gap-1.5">
                       {timeSlots.map((slot) => {
                         const slotVal = slot.timeSlot || slot.label;
                         const isSelected = selectedSlot === slotVal;
@@ -640,7 +640,7 @@ export function ExperienceDetailPage({
                               }
                             }}
                             className={cn(
-                              "p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between cursor-pointer",
+                              "p-2 rounded-xl border text-left transition-all flex flex-col justify-between cursor-pointer",
                               isSelected && isAvail
                                 ? "border-purple bg-purple/5 ring-1 ring-purple text-neutral-900"
                                 : isAvail
@@ -654,7 +654,7 @@ export function ExperienceDetailPage({
                                 <CheckCircle2 className="h-3.5 w-3.5 text-purple" />
                               )}
                             </span>
-                            <span className="text-[10px] text-neutral-500 mt-1">
+                            <span className="text-[10px] text-neutral-500 mt-0.5">
                               {isAvail ? `${slot.capacity ?? 4} spots open` : "Sold Out"}
                             </span>
                           </button>
@@ -667,13 +667,13 @@ export function ExperienceDetailPage({
                 {/* Guest Selectors */}
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
+                    <label className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wider">
                       Adults
                     </label>
                     <select
                       value={adults}
                       onChange={(e) => setAdults(Number(e.target.value))}
-                      className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
+                      className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                     >
                       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15].map((n) => (
                         <option key={n} value={n}>
@@ -683,13 +683,13 @@ export function ExperienceDetailPage({
                     </select>
                   </div>
                   <div>
-                    <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
+                    <label className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wider">
                       Children
                     </label>
                     <select
                       value={children}
                       onChange={(e) => setChildren(Number(e.target.value))}
-                      className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
+                      className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                     >
                       {[0, 1, 2, 3, 4, 5].map((n) => (
                         <option key={n} value={n}>
@@ -700,47 +700,25 @@ export function ExperienceDetailPage({
                   </div>
                 </div>
 
-                {/* Check Availability Button if date unverified */}
-                {availabilityResult === "idle" && (
-                  <button
-                    type="button"
-                    onClick={handleCheckAvailability}
-                    disabled={checkingAvailability || !selectedDate || isSoldOut}
-                    className="w-full bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded-xl py-2.5 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
-                  >
-                    {checkingAvailability ? (
-                      <>
-                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                        <span>Checking availability...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Search className="h-3.5 w-3.5 text-purple" />
-                        <span>Check Date &amp; Slot Availability</span>
-                      </>
-                    )}
-                  </button>
-                )}
-
                 {/* Availability status */}
                 {availabilityResult === "available" && (
-                  <div className="p-2 bg-emerald-50 border border-emerald-200/60 rounded-lg flex items-center gap-1.5 text-emerald-800 text-[11px] font-normal">
-                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
+                  <div className="py-1 px-2.5 bg-emerald-50 border border-emerald-200/60 rounded-lg flex items-center gap-1.5 text-emerald-800 text-[11px] font-normal">
+                    <CheckCircle2 className="h-3 w-3 shrink-0 text-emerald-600" />
                     <span>
                       Confirmed for {selectedSlot || "chosen slot"} · {totalGuests} guests
                     </span>
                   </div>
                 )}
                 {availabilityResult === "unavailable" && (
-                  <div className="p-2 bg-rose-50 border border-rose-200/60 rounded-lg flex items-center gap-1.5 text-rose-800 text-[11px] font-normal">
-                    <AlertCircle className="h-3.5 w-3.5 shrink-0 text-rose-600" />
+                  <div className="py-1 px-2.5 bg-rose-50 border border-rose-200/60 rounded-lg flex items-center gap-1.5 text-rose-800 text-[11px] font-normal">
+                    <AlertCircle className="h-3 w-3 shrink-0 text-rose-600" />
                     <span>All slots booked for this date. Pick another date or slot.</span>
                   </div>
                 )}
 
                 {/* Price Breakdown */}
                 {selectedDate ? (
-                  <div className="pt-3 border-t border-neutral-100 space-y-1.5 text-xs">
+                  <div className="pt-2 border-t border-neutral-100 space-y-1 text-xs">
                     <div className="flex justify-between text-neutral-500 font-normal">
                       <span>
                         {totalGuests} guest{totalGuests !== 1 ? "s" : ""} x K
@@ -750,21 +728,23 @@ export function ExperienceDetailPage({
                         K{(pricePerPerson * totalGuests).toLocaleString()}
                       </span>
                     </div>
-                    <div className="flex justify-between text-neutral-500 font-normal">
-                      <span>Slot Time: {selectedSlot}</span>
-                      <span className="text-purple font-medium">Reserved</span>
-                    </div>
-                    <div className="flex justify-between text-neutral-900 font-semibold border-t border-neutral-100 pt-2 text-sm">
+                    {selectedSlot && (
+                      <div className="flex justify-between text-neutral-500 font-normal">
+                        <span>Slot: {selectedSlot}</span>
+                        <span className="text-purple font-medium">Reserved</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between text-neutral-900 font-semibold border-t border-neutral-100 pt-1.5 text-sm">
                       <span>Total</span>
                       <span>K{(pricePerPerson * totalGuests).toLocaleString()}</span>
                     </div>
-                    <p className="text-[11px] text-neutral-400 font-normal text-center mt-1">
+                    <p className="text-[10px] text-neutral-400 font-normal text-center">
                       Direct booking · Instant confirmation
                     </p>
                   </div>
                 ) : (
-                  <div className="pt-1 text-xs font-normal text-neutral-400 text-center">
-                    Select a date &amp; slot to view total
+                  <div className="pt-1 text-[11px] font-normal text-neutral-400 text-center">
+                    Select a date &amp; slot to see total
                   </div>
                 )}
               </div>
@@ -774,7 +754,7 @@ export function ExperienceDetailPage({
                 <button
                   type="button"
                   disabled
-                  className="w-full rounded-xl py-3.5 sm:py-4 font-bold text-base transition-all flex items-center justify-center gap-2 bg-neutral-100 text-neutral-400 cursor-not-allowed border border-neutral-200"
+                  className="w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 bg-neutral-100 text-neutral-400 cursor-not-allowed border border-neutral-200"
                 >
                   <span>Select Date to Check Slots</span>
                 </button>
@@ -783,16 +763,16 @@ export function ExperienceDetailPage({
                   type="button"
                   onClick={handleCheckAvailability}
                   disabled={checkingAvailability || isSoldOut}
-                  className="w-full rounded-xl py-3.5 sm:py-4 font-bold text-base transition-all flex items-center justify-center gap-2 bg-purple hover:bg-purple-hover text-white shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35 cursor-pointer"
+                  className="w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 bg-purple hover:bg-purple-hover text-white shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35 cursor-pointer"
                 >
                   {checkingAvailability ? (
                     <>
-                      <Loader2 className="h-5 w-5 animate-spin" />
+                      <Loader2 className="h-4 w-4 animate-spin" />
                       <span>Checking Available Slots...</span>
                     </>
                   ) : (
                     <>
-                      <Search className="h-5 w-5" />
+                      <Search className="h-4 w-4" />
                       <span>Check Slot Availability</span>
                     </>
                   )}
@@ -801,7 +781,7 @@ export function ExperienceDetailPage({
                 <button
                   type="button"
                   disabled
-                  className="w-full rounded-xl py-3.5 sm:py-4 font-bold text-base transition-all flex items-center justify-center gap-2 bg-neutral-200 text-neutral-400 cursor-not-allowed"
+                  className="w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 bg-neutral-200 text-neutral-400 cursor-not-allowed"
                 >
                   <span>Sold Out on This Date</span>
                 </button>
@@ -809,16 +789,16 @@ export function ExperienceDetailPage({
                 <button
                   type="button"
                   onClick={handleProceedToBook}
-                  className="w-full rounded-xl py-3.5 sm:py-4 font-bold text-base transition-all flex items-center justify-center gap-2 bg-purple hover:bg-purple-hover text-white shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35 cursor-pointer transform active:scale-[0.99]"
+                  className="w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 bg-purple hover:bg-purple-hover text-white shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35 cursor-pointer transform active:scale-[0.99]"
                 >
                   <span>Reserve Slot ({selectedSlot})</span>
-                  <ArrowRight className="h-5 w-5" />
+                  <ArrowRight className="h-4 w-4" />
                 </button>
               )}
 
               {/* Cross-sell */}
-              <div className="pt-3 border-t border-neutral-100 flex items-center justify-between text-xs">
-                <span className="text-neutral-500 font-normal">Need transport or lodging?</span>
+              <div className="pt-2 border-t border-neutral-100 flex items-center justify-between text-[11px]">
+                <span className="text-neutral-500 font-normal">Need a stay nearby?</span>
                 <Link href="/stays" className="text-purple font-medium hover:underline">
                   Find stays →
                 </Link>

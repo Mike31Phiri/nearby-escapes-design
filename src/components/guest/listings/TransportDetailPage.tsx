@@ -581,11 +581,11 @@ export function TransportDetailPage({
 
           {/* RIGHT COLUMN: Streamlined Sticky Booking Card */}
           <div className="relative h-full" id="booking-section">
-            <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm sticky top-24 space-y-4">
+            <div className="bg-white border border-neutral-200 rounded-2xl p-4 sm:p-5 shadow-sm sticky top-20 space-y-3 max-h-[calc(100vh-5.5rem)] overflow-y-auto">
               {/* Clear Pricing Header */}
-              <div className="flex items-baseline justify-between border-b border-neutral-100 pb-4">
+              <div className="flex items-baseline justify-between border-b border-neutral-100 pb-2.5">
                 <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-extrabold text-neutral-900 tracking-tight">
+                  <span className="text-2xl sm:text-[26px] font-extrabold text-neutral-900 tracking-tight">
                     {priceDisplay}
                   </span>
                   <span className="text-xs font-normal text-neutral-500">/ {rateUnit}</span>
@@ -597,33 +597,52 @@ export function TransportDetailPage({
                 </div>
               </div>
 
-              <div className="space-y-3">
-                {/* Select Travel Date */}
-                <div>
-                  <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
-                    Travel Date
-                  </label>
-                  <input
-                    type="date"
-                    value={selectedDate}
-                    min={today}
-                    onChange={(e) => {
-                      setSelectedDate(e.target.value);
-                      setAvailabilityResult("idle");
-                    }}
-                    className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
-                  />
+              <div className="space-y-2.5">
+                {/* Select Travel Date & Passengers Side-by-Side */}
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wider">
+                      Travel Date
+                    </label>
+                    <input
+                      type="date"
+                      value={selectedDate}
+                      min={today}
+                      onChange={(e) => {
+                        setSelectedDate(e.target.value);
+                        setAvailabilityResult("idle");
+                      }}
+                      className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wider">
+                      Passengers
+                    </label>
+                    <select
+                      value={passengers}
+                      onChange={(e) => setPassengers(Number(e.target.value))}
+                      className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
+                    >
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                        <option key={n} value={n}>
+                          {n} passenger{n !== 1 ? "s" : ""}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
                 {/* Preferred Departure / Pickup Time Slot */}
                 <div>
-                  <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
+                  <label className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wider">
                     Departure / Pickup Time
                   </label>
                   <select
                     value={selectedPickupTime}
                     onChange={(e) => setSelectedPickupTime(e.target.value)}
-                    className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
+                    className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                   >
                     <option value="07:00 AM">07:00 AM — Early Morning Departure</option>
                     <option value="08:30 AM">08:30 AM — Morning Departure</option>
@@ -634,40 +653,22 @@ export function TransportDetailPage({
                   </select>
                 </div>
 
-                {/* Passenger Selector */}
-                <div>
-                  <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
-                    Passengers
-                  </label>
-                  <select
-                    value={passengers}
-                    onChange={(e) => setPassengers(Number(e.target.value))}
-                    className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
-                  >
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                      <option key={n} value={n}>
-                        {n} passenger{n !== 1 ? "s" : ""}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
                 {/* Check Availability Button if date unverified */}
                 {availabilityResult === "idle" && (
                   <button
                     type="button"
                     onClick={handleCheckAvailability}
                     disabled={checkingAvailability || !selectedDate || isSoldOut}
-                    className="w-full bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded-xl py-2.5 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                    className="w-full bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded-xl py-2 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                   >
                     {checkingAvailability ? (
                       <>
-                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        <Loader2 className="h-4 w-4 animate-spin" />
                         <span>Checking vehicle availability...</span>
                       </>
                     ) : (
                       <>
-                        <Search className="h-3.5 w-3.5 text-purple" />
+                        <Search className="h-4 w-4 text-purple" />
                         <span>Check Date Availability</span>
                       </>
                     )}
@@ -676,27 +677,25 @@ export function TransportDetailPage({
 
                 {/* Availability status */}
                 {availabilityResult === "available" && (
-                  <div className="p-2 bg-emerald-50 border border-emerald-200/60 rounded-lg flex items-center gap-1.5 text-emerald-800 text-[11px] font-normal">
-                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
+                  <div className="py-1 px-2.5 bg-emerald-50 border border-emerald-200/60 rounded-lg flex items-center gap-1.5 text-emerald-800 text-[11px] font-normal">
+                    <CheckCircle2 className="h-3 w-3 shrink-0 text-emerald-600" />
                     <span>
                       {availableVehiclesCount} vehicle{availableVehiclesCount !== 1 ? "s" : ""} ready for dispatch on this date
                     </span>
                   </div>
                 )}
                 {availabilityResult === "unavailable" && (
-                  <div className="p-2 bg-rose-50 border border-rose-200/60 rounded-lg flex items-center gap-1.5 text-rose-800 text-[11px] font-normal">
-                    <AlertCircle className="h-3.5 w-3.5 shrink-0 text-rose-600" />
+                  <div className="py-1 px-2.5 bg-rose-50 border border-rose-200/60 rounded-lg flex items-center gap-1.5 text-rose-800 text-[11px] font-normal">
+                    <AlertCircle className="h-3 w-3 shrink-0 text-rose-600" />
                     <span>No vehicles available for this date. Check other dates.</span>
                   </div>
                 )}
 
                 {/* Price Breakdown */}
                 {selectedDate ? (
-                  <div className="pt-3 border-t border-neutral-100 space-y-1.5 text-xs">
+                  <div className="pt-2 border-t border-neutral-100 space-y-1 text-xs">
                     <div className="flex justify-between text-neutral-500 font-normal">
-                      <span>
-                        Rate ({rateUnit})
-                      </span>
+                      <span>Rate ({rateUnit})</span>
                       <span className="text-neutral-900 font-medium">
                         K{basePrice.toLocaleString()}
                       </span>
@@ -705,16 +704,16 @@ export function TransportDetailPage({
                       <span>Passenger Cover &amp; Fuel</span>
                       <span className="text-emerald-700 font-medium">Included</span>
                     </div>
-                    <div className="flex justify-between text-neutral-900 font-semibold border-t border-neutral-100 pt-2 text-sm">
+                    <div className="flex justify-between text-neutral-900 font-semibold border-t border-neutral-100 pt-1.5 text-sm">
                       <span>Total</span>
                       <span>K{basePrice.toLocaleString()}</span>
                     </div>
-                    <p className="text-[11px] text-neutral-400 font-normal text-center mt-1">
+                    <p className="text-[10px] text-neutral-400 font-normal text-center">
                       Direct booking · Verified vehicle
                     </p>
                   </div>
                 ) : (
-                  <div className="pt-1 text-xs font-normal text-neutral-400 text-center">
+                  <div className="pt-1 text-[11px] font-normal text-neutral-400 text-center">
                     Select a travel date to proceed
                   </div>
                 )}
@@ -726,19 +725,19 @@ export function TransportDetailPage({
                 onClick={handleProceedToBook}
                 disabled={isSoldOut}
                 className={cn(
-                  "w-full rounded-xl py-3.5 sm:py-4 font-bold text-base transition-all flex items-center justify-center gap-2 transform active:scale-[0.99] cursor-pointer",
+                  "w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 transform active:scale-[0.99] cursor-pointer",
                   isSoldOut
                     ? "bg-neutral-200 text-neutral-400 cursor-not-allowed"
                     : "bg-purple hover:bg-purple-hover text-white shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35",
                 )}
               >
                 <span>{isSoldOut ? "Sold Out (0 Available)" : "Reserve Transport"}</span>
-                {!isSoldOut && <ArrowRight className="h-5 w-5" />}
+                {!isSoldOut && <ArrowRight className="h-4 w-4" />}
               </button>
 
               {/* Cross-sell */}
-              <div className="pt-3 border-t border-neutral-100 flex items-center justify-between text-xs">
-                <span className="text-neutral-500 font-normal">Need lodging or tours?</span>
+              <div className="pt-2 border-t border-neutral-100 flex items-center justify-between text-[11px]">
+                <span className="text-neutral-500 font-normal">Need stays or tours?</span>
                 <Link href="/stays" className="text-purple font-medium hover:underline">
                   Find stays →
                 </Link>
