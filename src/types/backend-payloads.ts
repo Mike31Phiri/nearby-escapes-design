@@ -314,6 +314,70 @@ export interface AddSavedListingResponse {
 }
 
 // ============================================================================
+// 2C. HOMEPAGE FEEDS & POPULAR VERTICALS (/api/home/feed & /api/destinations)
+// ============================================================================
+
+export interface FlashDealDTO {
+  id: string;
+  name: string;
+  location: string;
+  originalPriceNgwee: number;
+  dealPriceNgwee: number;
+  discountPercent: number;
+  badge: string;
+  ends: string;
+  image: string;
+}
+
+export interface PopularDestinationProvinceDTO {
+  id: string;
+  name: string;
+  image: string;
+  staysCount: number;
+}
+
+export interface PopularDestinationCityDTO {
+  id: string;
+  provinceId: string;
+  name: string;
+  image: string;
+  staysCount: number;
+}
+
+export interface PopularTransportRouteDTO {
+  id: string;
+  from: string;
+  to: string;
+  operator: string;
+  duration: string;
+  departures: string;
+  priceNgwee: number;
+  image: string;
+}
+
+export interface PopularPackageDTO {
+  id: string;
+  name: string;
+  location: string;
+  duration: string;
+  rating: number;
+  priceNgwee: number;
+  image: string;
+}
+
+/** GET /api/home/feed (Unified homepage feed for fast single-roundtrip load) */
+export interface HomepageFeedResponse {
+  popularStays: ListingSummaryDTO[];
+  recommendedStays: ListingSummaryDTO[];
+  flashDeals: FlashDealDTO[];
+  popularExperiences: ListingSummaryDTO[];
+  popularTransport: PopularTransportRouteDTO[];
+  popularPackages: PopularPackageDTO[];
+  topProvinces: PopularDestinationProvinceDTO[];
+  topCities: PopularDestinationCityDTO[];
+}
+
+// ============================================================================
 // 3. CALENDAR & AVAILABILITY (/api/availability)
 // ============================================================================
 
