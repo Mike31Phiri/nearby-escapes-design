@@ -12,61 +12,89 @@ import {
   Wifi,
   Waves,
   Sparkles,
-  Compass,
   Coffee,
   UtensilsCrossed,
-  Dumbbell,
   CheckCircle2,
-  CalendarDays,
   X,
-  Map,
-  Wine,
-  Fish,
-  Binoculars,
-  Bird,
-  Footprints,
-  Building2,
   ShowerHead,
   Car,
-  Search,
-  AlertCircle,
-  Loader2,
-  MessageSquare,
-  Check,
-  ArrowRight,
   Bed,
-  Users,
+  AlertCircle,
+  MessageSquare,
+  ArrowRight,
   Navigation,
   Star,
+  Wind,
+  Droplets,
+  Laptop,
+  Tv,
+  Shirt,
+  Sun,
+  Flame,
+  Eye,
+  Anchor,
+  ShieldCheck,
+  Lock,
+  HeartPulse,
+  Bell,
+  Key,
+  Zap,
+  Home,
 } from "lucide-react";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useAuth } from "@/lib/store/authStore";
 import { AuthGuardDialog } from "@/components/guest/auth/AuthGuardDialog";
 import { ReviewSection } from "@/components/guest/reviews/ReviewSection";
 import { cn } from "@/lib/utils";
-import type { StayListing, RoomType } from "@/types/listing";
+import type { StayListing } from "@/types/listing";
 import { mockListingReviews } from "@/lib/mock-listing-reviews";
 import { mockStayHosts, type StayHost } from "@/lib/mock-profile-data";
 import { useAvailabilityStore } from "@/store/availabilityStore";
+import { useInventoryStore } from "@/store/inventoryStore";
+import { inventoryCounts } from "@/lib/mock-inventory";
 import { mockStays } from "@/lib/mock-data";
+import {
+  STAY_SUBTYPES,
+  STAY_GUEST_FAVOURITES,
+  STAY_STANDOUTS,
+  STAY_SAFETY,
+  StayAmenityItem,
+} from "@/components/host/create/stay/stayConstants";
 
-const amenityIconMap: Record<string, React.ReactNode> = {
-  WiFi: <Wifi className="h-5 w-5 text-purple" />,
-  Pool: <Waves className="h-5 w-5 text-purple" />,
-  Spa: <Sparkles className="h-5 w-5 text-purple" />,
-  "Guided Tours": <Map className="h-5 w-5 text-purple" />,
-  Breakfast: <Coffee className="h-5 w-5 text-purple" />,
-  "Meals Included": <UtensilsCrossed className="h-5 w-5 text-purple" />,
-  Gym: <Dumbbell className="h-5 w-5 text-purple" />,
-  Restaurant: <UtensilsCrossed className="h-5 w-5 text-purple" />,
-  Bar: <Wine className="h-5 w-5 text-purple" />,
-  "Water Sports": <Waves className="h-5 w-5 text-purple" />,
-  Fishing: <Fish className="h-5 w-5 text-purple" />,
-  "Wildlife Viewing": <Binoculars className="h-5 w-5 text-purple" />,
-  "Boat Safaris": <Waves className="h-5 w-5 text-purple" />,
-  "Bird Watching": <Bird className="h-5 w-5 text-purple" />,
-  "Guided Walks": <Footprints className="h-5 w-5 text-purple" />,
-  "City Views": <Building2 className="h-5 w-5 text-purple" />,
+// Icon lookup for standard and host-created amenities
+const ALL_STAY_AMENITY_SPECS: Record<string, { label: string; icon: React.ReactNode; category: "favourites" | "standouts" | "safety" }> = {
+  // Guest favourites
+  wifi: { label: "Fast Wi-Fi", icon: <Wifi className="h-4 w-4 text-purple" />, category: "favourites" },
+  air_conditioning: { label: "Air Conditioning", icon: <Wind className="h-4 w-4 text-purple" />, category: "favourites" },
+  kitchen: { label: "Kitchen", icon: <UtensilsCrossed className="h-4 w-4 text-purple" />, category: "favourites" },
+  parking: { label: "Free Parking", icon: <Car className="h-4 w-4 text-purple" />, category: "favourites" },
+  hot_water: { label: "Hot Water", icon: <Droplets className="h-4 w-4 text-purple" />, category: "favourites" },
+  workspace: { label: "Dedicated Workspace", icon: <Laptop className="h-4 w-4 text-purple" />, category: "favourites" },
+  tv: { label: "TV / DStv", icon: <Tv className="h-4 w-4 text-purple" />, category: "favourites" },
+  swimming_pool: { label: "Swimming Pool", icon: <Waves className="h-4 w-4 text-purple" />, category: "favourites" },
+  laundry: { label: "Laundry Service", icon: <Shirt className="h-4 w-4 text-purple" />, category: "favourites" },
+  housekeeping: { label: "Daily Housekeeping", icon: <Sparkles className="h-4 w-4 text-purple" />, category: "favourites" },
+
+  // Standouts
+  solar_power: { label: "Solar Backup Power", icon: <Sun className="h-4 w-4 text-purple" />, category: "standouts" },
+  borehole_water: { label: "Borehole Water", icon: <Droplets className="h-4 w-4 text-purple" />, category: "standouts" },
+  private_pool: { label: "Private Pool", icon: <Waves className="h-4 w-4 text-purple" />, category: "standouts" },
+  fire_pit: { label: "Fire Pit / Boma", icon: <Flame className="h-4 w-4 text-purple" />, category: "standouts" },
+  viewing_deck: { label: "Wildlife Viewing Deck", icon: <Eye className="h-4 w-4 text-purple" />, category: "standouts" },
+  braai_area: { label: "Braai / BBQ Grill", icon: <Flame className="h-4 w-4 text-purple" />, category: "standouts" },
+  river_front: { label: "River / Lake Frontage", icon: <Anchor className="h-4 w-4 text-purple" />, category: "standouts" },
+  private_chef: { label: "Private Chef Service", icon: <Coffee className="h-4 w-4 text-purple" />, category: "standouts" },
+  patio_balcony: { label: "Patio / Balcony", icon: <Home className="h-4 w-4 text-purple" />, category: "standouts" },
+  outdoor_shower: { label: "Outdoor Safari Shower", icon: <ShowerHead className="h-4 w-4 text-purple" />, category: "standouts" },
+
+  // Safety
+  security_guard: { label: "24/7 Security Guard", icon: <ShieldCheck className="h-4 w-4 text-purple" />, category: "safety" },
+  electric_fence: { label: "Electric Perimeter Fence", icon: <Lock className="h-4 w-4 text-purple" />, category: "safety" },
+  first_aid: { label: "First Aid Kit", icon: <HeartPulse className="h-4 w-4 text-purple" />, category: "safety" },
+  fire_extinguisher: { label: "Fire Extinguisher", icon: <Flame className="h-4 w-4 text-purple" />, category: "safety" },
+  smoke_detector: { label: "Smoke Detector", icon: <Bell className="h-4 w-4 text-purple" />, category: "safety" },
+  safe_box: { label: "In-room Digital Safe", icon: <Key className="h-4 w-4 text-purple" />, category: "safety" },
+  backup_lighting: { label: "Emergency LED Lights", icon: <Zap className="h-4 w-4 text-purple" />, category: "safety" },
 };
 
 interface StayDetailPageProps {
@@ -88,6 +116,7 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [showReviewsModal, setShowReviewsModal] = useState(false);
   const [showAmenitiesModal, setShowAmenitiesModal] = useState(false);
+  const [showDescriptionModal, setShowDescriptionModal] = useState(false);
   const [showHostContactModal, setShowHostContactModal] = useState(false);
   const [hostQuestion, setHostQuestion] = useState("");
   const [hostQuestionSent, setHostQuestionSent] = useState(false);
@@ -100,6 +129,17 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
       toast.success("Link copied!");
     }
   };
+
+  // Single Listing Room/Chalet Inventory
+  const inventories = useInventoryStore((s) => s.inventories);
+  const getInventory = useInventoryStore((s) => s.getInventory);
+  const listingInventory = useMemo(
+    () => getInventory(stay.id),
+    [stay.id, inventories, getInventory],
+  );
+  const inventoryStats = useMemo(() => inventoryCounts(listingInventory), [listingInventory]);
+  const availableRoomsCount = inventoryStats.available;
+  const isSoldOut = availableRoomsCount === 0;
 
   // Availability state
   const today = new Date().toISOString().split("T")[0];
@@ -125,112 +165,22 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
 
   const totalGuests = adults + children;
 
-  const handleCheckAvailability = () => {
-    if (!checkIn || !checkOut) {
-      toast.error("Please select check-in and check-out dates");
-      return;
-    }
-    if (nights <= 0) {
-      toast.error("Check-out must be after check-in");
-      return;
-    }
-    setCheckingAvailability(true);
-    // Simulate API delay
-    setTimeout(() => {
-      const stayId = stay.id;
-      let hasBlocked = false;
-      const start = new Date(checkIn);
-      const end = new Date(checkOut);
-      for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
-        const dateStr = d.toISOString().split("T")[0];
-        if (isDateBlocked(stayId, dateStr)) {
-          hasBlocked = true;
-          break;
-        }
-      }
-      setAvailabilityResult(hasBlocked ? "unavailable" : "available");
-      setCheckingAvailability(false);
-    }, 800);
-  };
-
-  const baseNightZMW = stay.price || (stay.baseRateNgwee ? stay.baseRateNgwee / 100 : 450);
-
-  const availableRoomTypes: RoomType[] = useMemo(() => {
-    if (stay.roomTypes && stay.roomTypes.length > 0) {
-      return stay.roomTypes;
-    }
-    return [
-      {
-        id: "rt-std",
-        name: "Standard Double Room",
-        count: 4,
-        maxGuests: 2,
-        bedrooms: 1,
-        beds: [{ type: "Queen", count: 1 }],
-        pricePerNightNgwee: baseNightZMW * 100,
-      },
-      {
-        id: "rt-deluxe",
-        name: "Deluxe Safari Chalet",
-        count: 2,
-        maxGuests: 3,
-        bedrooms: 1,
-        beds: [
-          { type: "King", count: 1 },
-          { type: "Daybed", count: 1 },
-        ],
-        pricePerNightNgwee: Math.round(baseNightZMW * 1.35) * 100,
-      },
-      {
-        id: "rt-family",
-        name: "Executive Family Cottage",
-        count: 1,
-        maxGuests: 5,
-        bedrooms: 2,
-        beds: [
-          { type: "King", count: 1 },
-          { type: "Twin", count: 2 },
-        ],
-        pricePerNightNgwee: Math.round(baseNightZMW * 1.8) * 100,
-      },
-    ];
-  }, [stay.roomTypes, baseNightZMW]);
-
-  const [selectedRoomId, setSelectedRoomId] = useState<string>(
-    availableRoomTypes[0]?.id || "rt-std",
-  );
-
-  const selectedRoom = useMemo(() => {
-    return availableRoomTypes.find((r) => r.id === selectedRoomId) || availableRoomTypes[0];
-  }, [availableRoomTypes, selectedRoomId]);
-
-  const currentRoomRate = selectedRoom ? selectedRoom.pricePerNightNgwee / 100 : baseNightZMW;
-  const price = `K${currentRoomRate.toLocaleString()}`;
-
-  const handleSelectRoom = (rt: RoomType) => {
-    setSelectedRoomId(rt.id);
-    if (!checkIn) {
-      setCheckIn(tomorrow);
-      setCheckOut(new Date(Date.now() + 86400000 * 3).toISOString().split("T")[0]);
-    }
-    setAvailabilityResult("available");
-    toast.success(
-      `Selected: ${rt.name} (K${(rt.pricePerNightNgwee / 100).toLocaleString()}/night)`,
-    );
-  };
+  // Single standard nightly price — room types inventory selector removed per instruction
+  const nightlyRate = stay.price || (stay.baseRateNgwee ? stay.baseRateNgwee / 100 : 450);
+  const priceDisplay = `K${nightlyRate.toLocaleString()}`;
 
   const handleProceedToBook = () => {
+    if (isSoldOut) {
+      toast.error("This property is currently sold out with 0 available units.");
+      return;
+    }
     const params = new URLSearchParams({ type: "stay", id: stay.id });
     const effIn = checkIn || tomorrow;
     const effOut = checkOut || new Date(Date.now() + 86400000 * 3).toISOString().split("T")[0];
     params.set("checkIn", effIn);
     params.set("checkOut", effOut);
     params.set("guests", String(totalGuests));
-    if (selectedRoom) {
-      params.set("roomType", selectedRoom.name);
-      params.set("roomId", selectedRoom.id);
-      params.set("price", String(currentRoomRate));
-    }
+    params.set("price", String(nightlyRate));
     router.push(`/checkout/book?${params.toString()}`);
   };
 
@@ -265,12 +215,81 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
     typeof stay.location === "object"
       ? `${stay.location.city}, ${stay.location.province}`
       : stay.location || "Livingstone, Zambia";
-  const type = stay.propertyType || stay.type || "Guest House";
+
+  // Subtype tag for search/discovery
+  const matchedSubtype = STAY_SUBTYPES.find(
+    (s) =>
+      s.id === stay.subtype ||
+      s.id === stay.propertyType ||
+      s.title.toLowerCase() === (stay.propertyType || "").toLowerCase(),
+  );
+  const subtypeLabel = matchedSubtype?.title || stay.propertyType || stay.type || "Stay";
+
+  const descriptionText =
+    stay.description ||
+    "Located just a short walk from local spots and attractions, this property offers clean, comfortable rooms and warm Zambian hospitality. Enjoy peaceful surroundings, comfortable furnishings, and tranquil settings perfect for relaxing after exploring.";
+  const isLongDescription = descriptionText.length > 220;
+
+  // Compile full amenities list categorized
+  const rawAmenitiesList: string[] = useMemo(() => {
+    if (Array.isArray(stay.amenities) && stay.amenities.length > 0) return stay.amenities;
+    if (stay.guestFavourites || stay.standoutAmenities || stay.safetyAmenities) {
+      return [
+        ...(stay.guestFavourites || []),
+        ...(stay.standoutAmenities || []),
+        ...(stay.safetyAmenities || []),
+      ];
+    }
+    return [
+      "Fast Wi-Fi",
+      "Air Conditioning",
+      "Free Parking",
+      "Hot Water",
+      "Swimming Pool",
+      "Solar Backup Power",
+      "24/7 Security Guard",
+      "Fire Pit / Boma",
+    ];
+  }, [stay]);
+
+  const parsedAmenities = useMemo(() => {
+    const favourites: { label: string; icon: React.ReactNode }[] = [];
+    const standouts: { label: string; icon: React.ReactNode }[] = [];
+    const safety: { label: string; icon: React.ReactNode }[] = [];
+    const other: { label: string; icon: React.ReactNode }[] = [];
+
+    rawAmenitiesList.forEach((item) => {
+      // Find matching key by ID or label
+      const lower = item.toLowerCase().replace(/[\s/-]+/g, "_");
+      const matchedKey = Object.keys(ALL_STAY_AMENITY_SPECS).find(
+        (k) =>
+          k === lower ||
+          ALL_STAY_AMENITY_SPECS[k].label.toLowerCase() === item.toLowerCase() ||
+          item.toLowerCase().includes(k.replace(/_/g, " ")),
+      );
+
+      if (matchedKey) {
+        const spec = ALL_STAY_AMENITY_SPECS[matchedKey];
+        if (spec.category === "favourites") favourites.push({ label: spec.label, icon: spec.icon });
+        else if (spec.category === "standouts") standouts.push({ label: spec.label, icon: spec.icon });
+        else safety.push({ label: spec.label, icon: spec.icon });
+      } else {
+        other.push({ label: item, icon: <Sparkles className="h-4 w-4 text-purple" /> });
+      }
+    });
+
+    const allFlat = [...favourites, ...standouts, ...safety, ...other];
+    return { favourites, standouts, safety, other, allFlat };
+  }, [rawAmenitiesList]);
+
+  // Coordinates
+  const lat = typeof stay.lat === "number" ? stay.lat : -15.3875;
+  const lng = typeof stay.lng === "number" ? stay.lng : 28.3228;
 
   return (
     <div className="bg-white-warm text-black font-sans min-h-screen">
       <main className="max-w-[1100px] mx-auto px-4 pt-4 pb-28 lg:pb-8">
-        {/* Breadcrumb */}
+        {/* Breadcrumb Navigation */}
         <nav className="flex flex-wrap items-center text-xs text-black-faint mb-4">
           <Link href="/" className="hover:text-purple transition-colors">
             Home
@@ -280,15 +299,11 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
             Explore
           </Link>{" "}
           <span className="mx-1.5 text-black-muted/50">›</span>
-          <Link href="/" className="hover:text-purple transition-colors">
-            Zambia
-          </Link>{" "}
-          <span className="mx-1.5 text-black-muted/50">›</span>
           <Link href={backHref} className="hover:text-purple transition-colors">
-            {type}s
+            Stays
           </Link>{" "}
           <span className="mx-1.5 text-black-muted/50">›</span>
-          <span className="text-black font-medium">{title}</span>
+          <span className="text-black font-medium truncate max-w-xs">{title}</span>
         </nav>
 
         {/* Hero Gallery */}
@@ -306,26 +321,29 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
             {images.length > 1 && (
               <>
                 <button
+                  type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     prevImg();
                   }}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/70 backdrop-blur-sm text-black flex items-center justify-center hover:bg-white transition-all shadow-sm opacity-100 md:opacity-0 md:group-hover/main:opacity-100 z-10"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/70 backdrop-blur-sm text-black flex items-center justify-center hover:bg-white transition-all shadow-sm opacity-100 md:opacity-0 md:group-hover/main:opacity-100 z-10 cursor-pointer"
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </button>
                 <button
+                  type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     nextImg();
                   }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/70 backdrop-blur-sm text-black flex items-center justify-center hover:bg-white transition-all shadow-sm opacity-100 md:opacity-0 md:group-hover/main:opacity-100 z-10"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/70 backdrop-blur-sm text-black flex items-center justify-center hover:bg-white transition-all shadow-sm opacity-100 md:opacity-0 md:group-hover/main:opacity-100 z-10 cursor-pointer"
                 >
                   <ChevronRight className="h-5 w-5" />
                 </button>
               </>
             )}
           </div>
+
           {/* 4 Small Images */}
           {images.slice(1, 5).map((img: string, idx: number) => (
             <div
@@ -345,8 +363,9 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
           ))}
 
           <button
+            type="button"
             onClick={() => setShowAllPhotos(true)}
-            className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg text-xs font-semibold shadow-lg flex items-center gap-2 hover:bg-white transition-colors text-black"
+            className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg text-xs font-semibold shadow-lg flex items-center gap-2 hover:bg-white transition-colors text-black cursor-pointer"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -354,18 +373,19 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                 strokeLinejoin="round"
                 strokeWidth="2"
                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-              ></path>
+              />
             </svg>
             {images.length} photos
           </button>
 
           <div className="absolute top-4 right-4 md:right-auto md:left-4 flex gap-2">
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 handleToggleFavorite();
               }}
-              className="h-9 w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-md hover:bg-white transition-colors"
+              className="h-9 w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-md hover:bg-white transition-colors cursor-pointer"
               title="Save stay"
             >
               <Heart
@@ -373,11 +393,12 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
               />
             </button>
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 handleShare();
               }}
-              className="h-9 w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-md hover:bg-white text-black transition-colors"
+              className="h-9 w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-md hover:bg-white text-black transition-colors cursor-pointer"
               title="Share stay"
             >
               <Share2 className="h-4 w-4" />
@@ -386,10 +407,10 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
         </div>
 
         {/* Main Info + Booking Sidebar Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_400px] gap-8 lg:gap-10 items-start">
           {/* LEFT COLUMN: Trust & Information */}
           <div className="space-y-8 divide-y divide-neutral-200">
-            {/* Title & Host Business */}
+            {/* Header: Title, Location, Host */}
             <div className="pt-2">
               <h1 className="text-2xl sm:text-[28px] font-semibold tracking-tight text-neutral-900 leading-tight">
                 {title}
@@ -403,8 +424,9 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                 </span>
                 <span className="text-neutral-300">·</span>
                 <button
+                  type="button"
                   onClick={() => setShowReviewsModal(true)}
-                  className="font-normal text-neutral-500 hover:text-neutral-900 underline transition-colors"
+                  className="font-normal text-neutral-500 hover:text-neutral-900 underline transition-colors cursor-pointer"
                 >
                   {reviewCount} reviews
                 </button>
@@ -413,196 +435,113 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                   Hosted by <span className="font-medium text-neutral-800">{hostName}</span>
                 </span>
               </div>
+
+              {/* Mobile Quick-Book Card */}
+              <div className="lg:hidden mt-5 p-4 sm:p-5 rounded-2xl bg-white border border-neutral-200 shadow-sm space-y-3.5">
+                <div className="flex items-baseline justify-between">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-2xl sm:text-3xl font-bold text-neutral-900">
+                      {priceDisplay}
+                    </span>
+                    <span className="text-xs font-normal text-neutral-500">/ night</span>
+                  </div>
+                  <span className="text-xs font-semibold text-purple bg-purple/10 px-2.5 py-1 rounded-full">
+                    Instant Book
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="p-2.5 bg-neutral-50 border border-neutral-200 rounded-xl">
+                    <span className="text-[10px] font-semibold uppercase text-neutral-400 block mb-0.5">
+                      Check-in
+                    </span>
+                    <input
+                      type="date"
+                      value={checkIn}
+                      min={today}
+                      onChange={(e) => {
+                        setCheckIn(e.target.value);
+                        setAvailabilityResult("available");
+                        if (checkOut && e.target.value >= checkOut) setCheckOut("");
+                      }}
+                      className="w-full bg-transparent text-xs font-semibold text-neutral-900 focus:outline-none cursor-pointer"
+                    />
+                  </div>
+                  <div className="p-2.5 bg-neutral-50 border border-neutral-200 rounded-xl">
+                    <span className="text-[10px] font-semibold uppercase text-neutral-400 block mb-0.5">
+                      Check-out
+                    </span>
+                    <input
+                      type="date"
+                      value={checkOut}
+                      min={checkIn || today}
+                      onChange={(e) => {
+                        setCheckOut(e.target.value);
+                        setAvailabilityResult("available");
+                      }}
+                      className="w-full bg-transparent text-xs font-semibold text-neutral-900 focus:outline-none cursor-pointer"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleProceedToBook}
+                  className="w-full bg-purple hover:bg-purple-hover text-white rounded-xl py-3.5 font-bold text-sm sm:text-base transition-all shadow-md shadow-purple/25 flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                >
+                  <span>Reserve Stay</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
             </div>
 
-            {/* The Details */}
+            {/* About the Stay (Truncated with Show More Modal) */}
             <div className="pt-8">
-              <h2 className="text-lg font-semibold text-neutral-900">
-                About the {type.toLowerCase()}
-              </h2>
-              <p className="text-sm font-normal text-neutral-600 leading-relaxed mt-2.5 whitespace-pre-wrap">
-                {stay.description ||
-                  "Located just a short walk from local spots and attractions, this property offers clean, comfortable rooms and warm Zambian hospitality. Enjoy complimentary breakfast every morning and tranquil surroundings perfect for relaxing after exploring."}
+              <h2 className="text-lg font-semibold text-neutral-900">About this place</h2>
+              <p
+                className={cn(
+                  "text-sm font-normal text-neutral-600 leading-relaxed mt-2.5 whitespace-pre-wrap",
+                  isLongDescription && "line-clamp-4",
+                )}
+              >
+                {descriptionText}
               </p>
+              {isLongDescription && (
+                <button
+                  type="button"
+                  onClick={() => setShowDescriptionModal(true)}
+                  className="mt-2 text-xs font-semibold text-purple hover:underline inline-flex items-center gap-1 cursor-pointer"
+                >
+                  <span>Show more</span>
+                  <ChevronRight className="h-3.5 w-3.5" />
+                </button>
+              )}
             </div>
 
-            {/* Amenities */}
+            {/* Amenities Preview + Show All Modal */}
             <div className="pt-8">
               <h2 className="text-lg font-semibold text-neutral-900">What this place offers</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3.5 gap-x-6 mt-3.5 text-sm font-normal text-neutral-700">
-                {stay.amenities?.map((amenity: string) => (
-                  <div key={amenity} className="flex items-center gap-3">
-                    <span className="text-neutral-500">
-                      {amenityIconMap[amenity] || <Sparkles className="h-4 w-4 text-purple" />}
-                    </span>
-                    <span>{amenity}</span>
+                {parsedAmenities.allFlat.slice(0, 8).map((amenity, idx) => (
+                  <div key={idx} className="flex items-center gap-3">
+                    <span className="text-neutral-500 shrink-0">{amenity.icon}</span>
+                    <span>{amenity.label}</span>
                   </div>
                 ))}
-                {!stay.amenities && (
-                  <>
-                    <div className="flex items-center gap-3">
-                      <Coffee className="h-4 w-4 text-purple shrink-0" />
-                      <span>Complimentary Breakfast</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Wifi className="h-4 w-4 text-purple shrink-0" />
-                      <span>High-Speed Wi-Fi</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <ShowerHead className="h-4 w-4 text-purple shrink-0" />
-                      <span>Hot Water & Private Bathroom</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Car className="h-4 w-4 text-purple shrink-0" />
-                      <span>Free Secure Parking</span>
-                    </div>
-                  </>
-                )}
               </div>
-              <button
-                onClick={() => setShowAmenitiesModal(true)}
-                className="mt-5 px-4 py-2 border border-neutral-300 hover:border-neutral-400 rounded-lg text-xs font-medium text-neutral-700 transition-colors inline-flex items-center gap-1.5"
-              >
-                Show all {stay.amenities?.length || 12} amenities
-              </button>
+
+              {parsedAmenities.allFlat.length > 8 && (
+                <button
+                  type="button"
+                  onClick={() => setShowAmenitiesModal(true)}
+                  className="mt-5 px-4 py-2 border border-neutral-300 hover:border-neutral-400 rounded-lg text-xs font-medium text-neutral-700 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+                >
+                  Show all {parsedAmenities.allFlat.length} amenities
+                </button>
+              )}
             </div>
 
-            {/* Rooms & Rates */}
-            <div id="rooms-section" className="pt-8">
-              <div className="flex items-baseline justify-between mb-1">
-                <h2 className="text-lg font-semibold text-neutral-900 flex items-center gap-2">
-                  <Bed className="h-4 w-4 text-purple" />
-                  Select your room
-                </h2>
-                <span className="text-xs font-normal text-neutral-500">
-                  {availableRoomTypes.length} spaces available
-                </span>
-              </div>
-              <p className="text-xs font-normal text-neutral-500 mb-4">
-                Prices include daily breakfast, Wi-Fi, and all taxes.
-              </p>
-
-              <div className="space-y-3">
-                {availableRoomTypes.map((rt, idx) => {
-                  const isSelected = selectedRoomId === rt.id;
-                  const roomPriceZMW = rt.pricePerNightNgwee / 100;
-                  const isSoldOut = rt.count === 0;
-
-                  return (
-                    <div
-                      key={rt.id}
-                      className={cn(
-                        "rounded-xl border p-4 sm:p-5 transition-all duration-200 bg-white",
-                        isSelected
-                          ? "border-purple ring-1 ring-purple/30 shadow-sm"
-                          : "border-neutral-200 hover:border-neutral-300",
-                      )}
-                    >
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <div className="space-y-1 flex-1">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <h3 className="font-semibold text-sm sm:text-base text-neutral-900">
-                              {rt.name}
-                            </h3>
-                            {idx === 0 && (
-                              <span className="text-[11px] font-medium bg-purple/10 text-purple px-2 py-0.5 rounded-full">
-                                Popular
-                              </span>
-                            )}
-                            {idx === 1 && (
-                              <span className="text-[11px] font-medium bg-neutral-100 text-neutral-700 px-2 py-0.5 rounded-full">
-                                Best Value
-                              </span>
-                            )}
-                            {isSelected && (
-                              <span className="text-[11px] font-medium bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full flex items-center gap-0.5">
-                                <Check className="h-3 w-3" /> Selected
-                              </span>
-                            )}
-                          </div>
-
-                          <div className="flex flex-wrap items-center gap-x-2.5 text-xs font-normal text-neutral-500">
-                            <span className="inline-flex items-center gap-1">
-                              <Users className="h-3.5 w-3.5 text-neutral-400" />
-                              Sleeps {rt.maxGuests}
-                            </span>
-                            <span className="text-neutral-300">·</span>
-                            <span>
-                              {rt.bedrooms} Bedroom{rt.bedrooms !== 1 ? "s" : ""}
-                              {rt.beds && rt.beds.length > 0
-                                ? ` (${rt.beds.map((b) => `${b.count} ${b.type}`).join(", ")})`
-                                : ""}
-                            </span>
-                            <span className="text-neutral-300">·</span>
-                            <span className="text-neutral-600">Ensuite bathroom</span>
-                          </div>
-
-                          <div className="pt-1 flex items-center gap-2">
-                            {isSoldOut ? (
-                              <span className="text-[11px] font-medium text-red-600 bg-red-50 px-2 py-0.5 rounded">
-                                Sold Out
-                              </span>
-                            ) : rt.count <= 2 ? (
-                              <span className="text-[11px] font-medium text-amber-800 bg-amber-50 px-2 py-0.5 rounded">
-                                Only {rt.count} left
-                              </span>
-                            ) : (
-                              <span className="text-[11px] font-medium text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded">
-                                {rt.count} available
-                              </span>
-                            )}
-                            <span className="text-[11px] font-normal text-neutral-400">
-                              · Free cancellation
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 pt-3 sm:pt-0 border-neutral-100 gap-2 shrink-0">
-                          <div className="text-left sm:text-right">
-                            <div className="text-base font-semibold text-neutral-900">
-                              K{roomPriceZMW.toLocaleString()}
-                              <span className="text-xs font-normal text-neutral-500"> / night</span>
-                            </div>
-                            {nights > 0 && (
-                              <p className="text-[11px] font-normal text-neutral-400">
-                                K{(roomPriceZMW * nights).toLocaleString()} for {nights} nights
-                              </p>
-                            )}
-                          </div>
-
-                          {isSelected ? (
-                            <button
-                              disabled
-                              className="px-3.5 py-1.5 rounded-lg bg-purple text-white text-xs font-medium inline-flex items-center gap-1 cursor-default"
-                            >
-                              <Check className="h-3.5 w-3.5" />
-                              Selected
-                            </button>
-                          ) : isSoldOut ? (
-                            <button
-                              disabled
-                              className="px-3.5 py-1.5 rounded-lg bg-neutral-100 text-neutral-400 text-xs font-medium cursor-not-allowed"
-                            >
-                              Sold Out
-                            </button>
-                          ) : (
-                            <button
-                              onClick={() => handleSelectRoom(rt)}
-                              className="px-3.5 py-1.5 rounded-lg bg-white border border-neutral-300 hover:border-purple hover:text-purple text-neutral-800 transition-colors text-xs font-medium inline-flex items-center gap-1"
-                            >
-                              Choose room
-                              <ArrowRight className="h-3 w-3" />
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* House Rules */}
+            {/* Things to know / House Rules */}
             <div className="pt-8">
               <h2 className="text-lg font-semibold text-neutral-900">Things to know</h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-3 text-xs">
@@ -625,7 +564,7 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
               </div>
             </div>
 
-            {/* Host's own policies */}
+            {/* Host policies */}
             {(stay.customPolicies || stay.customCancellationPolicy) && (
               <div className="pt-8">
                 <h2 className="text-lg font-semibold text-neutral-900">Host policies</h2>
@@ -648,41 +587,43 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
               </div>
             )}
 
-            {/* Location */}
+            {/* Where you'll be with Google Maps */}
             <div className="pt-8">
               <h2 className="text-lg font-semibold text-neutral-900">Where you&apos;ll be</h2>
               <p className="text-xs font-normal text-neutral-500 leading-relaxed mt-1.5">
-                Nestled in a safe neighborhood in {locationString.split(",")[0]}. Short walk from
-                local spots. Exact location shared after reservation.
+                {stay.address ? `${stay.address}, ` : ""}
+                {locationString}. Pinpointed on Google Maps below.
               </p>
-              <div className="w-full h-44 bg-neutral-100 rounded-xl mt-3 flex items-center justify-center border border-neutral-200 relative overflow-hidden">
+
+              <div className="w-full h-56 sm:h-72 bg-neutral-100 rounded-xl mt-3 overflow-hidden border border-neutral-200 relative shadow-2xs">
                 <iframe
-                  title={`Map for ${title}`}
+                  title={`Google Map for ${title}`}
                   width="100%"
                   height="100%"
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${(stay.lng ?? 28) - 0.05}%2C${(stay.lat ?? -15) - 0.05}%2C${(stay.lng ?? 28) + 0.05}%2C${(stay.lat ?? -15) + 0.05}&layer=mapnik&marker=${stay.lat ?? -15}%2C${stay.lng ?? 28}`}
-                  style={{ border: 0, filter: "contrast(0.9) brightness(0.95)" }}
+                  src={`https://maps.google.com/maps?q=${lat},${lng}&t=m&z=14&ie=UTF8&iwloc=&output=embed`}
+                  className="w-full h-full border-0"
                 />
               </div>
-              <div className="mt-2 flex items-center justify-between text-xs">
-                <span className="text-neutral-400 font-normal">
-                  Coordinates: {stay.lat ?? -15.5}° S, {stay.lng ?? 29.1}° E
+
+              <div className="mt-2.5 flex items-center justify-between text-xs">
+                <span className="text-neutral-500 font-mono">
+                  {lat.toFixed(4)}°, {lng.toFixed(4)}°
                 </span>
                 <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(title + " " + locationString)}`}
+                  href={`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-purple hover:underline inline-flex items-center gap-1"
+                  className="font-semibold text-purple hover:underline inline-flex items-center gap-1.5"
                 >
                   <Navigation className="h-3.5 w-3.5" />
-                  Get directions
+                  <span>Open in Google Maps</span>
                 </a>
               </div>
             </div>
 
-            {/* Reviews Component */}
+            {/* Reviews Section */}
             <ReviewSection
               listingId={stay.id}
               listingName={title}
@@ -727,11 +668,12 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
               </p>
               <div className="mt-3.5">
                 <button
+                  type="button"
                   onClick={() => {
                     setHostQuestionSent(false);
                     setShowHostContactModal(true);
                   }}
-                  className="px-3.5 py-1.5 border border-neutral-300 hover:border-neutral-400 rounded-lg text-xs font-medium text-neutral-700 hover:bg-neutral-50 transition-colors inline-flex items-center gap-1.5"
+                  className="px-3.5 py-1.5 border border-neutral-300 hover:border-neutral-400 rounded-lg text-xs font-medium text-neutral-700 hover:bg-neutral-50 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
                 >
                   <MessageSquare className="h-3.5 w-3.5 text-neutral-400" />
                   Contact host
@@ -740,13 +682,15 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
             </div>
           </div>
 
-          {/* RIGHT COLUMN: The Booking Card */}
-          <div className="relative">
+          {/* RIGHT COLUMN: Streamlined Booking Card */}
+          <div className="relative" id="booking-section">
             <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm sticky top-24 space-y-4">
-              {/* Clear, Honest Pricing */}
+              {/* Clear Nightly Pricing */}
               <div className="flex items-baseline justify-between border-b border-neutral-100 pb-4">
                 <div className="flex items-baseline gap-1">
-                  <span className="text-2xl font-semibold text-neutral-900">{price}</span>
+                  <span className="text-3xl font-extrabold text-neutral-900 tracking-tight">
+                    {priceDisplay}
+                  </span>
                   <span className="text-xs font-normal text-neutral-500">/ night</span>
                 </div>
                 <div className="text-xs font-medium text-neutral-700 flex items-center gap-1">
@@ -755,38 +699,6 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                   <span className="text-neutral-400 font-normal">({reviewCount})</span>
                 </div>
               </div>
-
-              {/* Selected Room Indicator */}
-              <div className="p-3 bg-neutral-50 border border-neutral-200 rounded-xl flex items-center justify-between">
-                <div>
-                  <span className="text-[10px] font-medium uppercase tracking-wider text-purple">
-                    Selected Space
-                  </span>
-                  <p className="text-xs font-semibold text-neutral-900 leading-tight mt-0.5">
-                    {selectedRoom?.name}
-                  </p>
-                  <p className="text-[11px] font-normal text-neutral-500">
-                    Up to {selectedRoom?.maxGuests} guests · {selectedRoom?.count} available
-                  </p>
-                </div>
-                <a
-                  href="#rooms-section"
-                  className="text-xs font-medium text-purple hover:underline"
-                >
-                  Change
-                </a>
-              </div>
-
-              {/* Guest Capacity Warning */}
-              {totalGuests > (selectedRoom?.maxGuests || 2) && (
-                <div className="p-2.5 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-1.5 text-amber-800 text-[11px] font-normal leading-tight">
-                  <AlertCircle className="h-3.5 w-3.5 shrink-0 text-amber-600 mt-0.5" />
-                  <span>
-                    {totalGuests} guests exceeds {selectedRoom?.name}&apos;s limit (
-                    {selectedRoom?.maxGuests}). Choose a larger room below.
-                  </span>
-                </div>
-              )}
 
               <div className="space-y-3">
                 {/* Check-In Date */}
@@ -803,7 +715,7 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                       setAvailabilityResult("available");
                       if (checkOut && e.target.value >= checkOut) setCheckOut("");
                     }}
-                    className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50"
+                    className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                   />
                 </div>
 
@@ -820,7 +732,7 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                       setCheckOut(e.target.value);
                       setAvailabilityResult("available");
                     }}
-                    className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50"
+                    className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                   />
                 </div>
 
@@ -833,9 +745,9 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                     <select
                       value={adults}
                       onChange={(e) => setAdults(Number(e.target.value))}
-                      className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50"
+                      className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                     >
-                      {[1, 2, 3, 4, 5, 6].map((n) => (
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
                         <option key={n} value={n}>
                           {n} adult{n !== 1 ? "s" : ""}
                         </option>
@@ -849,9 +761,9 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                     <select
                       value={children}
                       onChange={(e) => setChildren(Number(e.target.value))}
-                      className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50"
+                      className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                     >
-                      {[0, 1, 2, 3, 4].map((n) => (
+                      {[0, 1, 2, 3, 4, 5].map((n) => (
                         <option key={n} value={n}>
                           {n} child{n !== 1 ? "ren" : ""}
                         </option>
@@ -865,9 +777,15 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                   <div className="p-2 bg-emerald-50 border border-emerald-200/60 rounded-lg flex items-center gap-1.5 text-emerald-800 text-[11px] font-normal">
                     <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
                     <span>
-                      {selectedRoom?.name} available ·{" "}
+                      {availableRoomsCount > 0 ? `${availableRoomsCount} units open` : "Space available"} ·{" "}
                       {nights > 0 ? `${nights} night${nights !== 1 ? "s" : ""}` : "Select dates"}
                     </span>
+                  </div>
+                )}
+                {isSoldOut && (
+                  <div className="p-2 bg-rose-50 border border-rose-200/60 rounded-lg flex items-center gap-1.5 text-rose-800 text-[11px] font-normal">
+                    <AlertCircle className="h-3.5 w-3.5 shrink-0 text-rose-600" />
+                    <span>All units currently booked for this lodge.</span>
                   </div>
                 )}
 
@@ -876,20 +794,19 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                   <div className="pt-3 border-t border-neutral-100 space-y-1.5 text-xs">
                     <div className="flex justify-between text-neutral-500 font-normal">
                       <span>
-                        {nights} night{nights !== 1 ? "s" : ""} x K
-                        {currentRoomRate.toLocaleString()}
+                        {nights} night{nights !== 1 ? "s" : ""} x K{nightlyRate.toLocaleString()}
                       </span>
-                      <span className="text-neutral-900">
-                        K{(currentRoomRate * nights).toLocaleString()}
+                      <span className="text-neutral-900 font-medium">
+                        K{(nightlyRate * nights).toLocaleString()}
                       </span>
                     </div>
                     <div className="flex justify-between text-neutral-500 font-normal">
-                      <span>Breakfast & Wi-Fi</span>
+                      <span>Breakfast &amp; Wi-Fi</span>
                       <span className="text-emerald-700 font-medium">Included</span>
                     </div>
                     <div className="flex justify-between text-neutral-900 font-semibold border-t border-neutral-100 pt-2 text-sm">
                       <span>Total</span>
-                      <span>K{(currentRoomRate * nights).toLocaleString()}</span>
+                      <span>K{(nightlyRate * nights).toLocaleString()}</span>
                     </div>
                     <p className="text-[11px] text-neutral-400 font-normal text-center mt-1">
                       No surprise fees · Taxes included
@@ -904,18 +821,25 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
 
               {/* Main Booking Action Button */}
               <button
+                type="button"
                 onClick={handleProceedToBook}
-                className="w-full bg-neutral-900 text-white hover:bg-neutral-800 rounded-xl py-3 font-medium text-sm transition-colors shadow-sm flex items-center justify-center gap-2"
+                disabled={isSoldOut}
+                className={cn(
+                  "w-full rounded-xl py-3.5 sm:py-4 font-bold text-base transition-all flex items-center justify-center gap-2 transform active:scale-[0.99] cursor-pointer",
+                  isSoldOut
+                    ? "bg-neutral-200 text-neutral-400 cursor-not-allowed"
+                    : "bg-purple hover:bg-purple-hover text-white shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35",
+                )}
               >
-                <span>Reserve {selectedRoom?.name || "Room"}</span>
-                <ArrowRight className="h-4 w-4" />
+                <span>{isSoldOut ? "Sold Out (0 Rooms Available)" : "Reserve Stay"}</span>
+                {!isSoldOut && <ArrowRight className="h-5 w-5" />}
               </button>
 
               {/* Cross-sell */}
               <div className="pt-3 border-t border-neutral-100 flex items-center justify-between text-xs">
-                <span className="text-neutral-500 font-normal">Need transport or safari?</span>
+                <span className="text-neutral-500 font-normal">Need transport or tours?</span>
                 <Link href="/experiences" className="text-purple font-medium hover:underline">
-                  Explore tours →
+                  Explore activities →
                 </Link>
               </div>
             </div>
@@ -927,32 +851,34 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
           <div className="flex items-baseline justify-between mb-5">
             <div>
               <h2 className="text-lg font-semibold text-neutral-900">
-                Similar stays you might like
+                Similar stays in {locationString.split(",")[0]}
               </h2>
-              <p className="text-xs font-normal text-neutral-500 mt-0.5">
-                Explore more authentic Zambian lodges and guest houses
-              </p>
+              <p className="text-xs text-neutral-500 mt-0.5">Explore popular alternative lodges</p>
             </div>
-            <Link href="/stays" className="text-xs font-medium text-purple hover:underline">
-              View all stays →
+            <Link
+              href="/stays"
+              className="text-xs font-medium text-purple hover:underline inline-flex items-center gap-1"
+            >
+              See all stays →
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {mockStays
               .filter((s) => s.id !== stay.id)
-              .slice(0, 3)
+              .slice(0, 4)
               .map((item) => (
-                <Link href={`/stays/${item.id}`} key={item.id} className="group block">
-                  <div className="w-full h-48 rounded-xl bg-neutral-100 overflow-hidden mb-2.5 relative">
+                <Link
+                  key={item.id}
+                  href={`/stays/${item.id}`}
+                  className="group block bg-white rounded-xl overflow-hidden border border-neutral-200/80 p-2.5 hover:shadow-md transition-shadow"
+                >
+                  <div className="relative aspect-4/3 rounded-lg overflow-hidden mb-2.5 bg-neutral-100">
                     <img
                       src={item.image}
                       alt={item.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <div className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm">
-                      <Heart className="h-4 w-4 text-neutral-700 group-hover:text-purple transition-colors" />
-                    </div>
                   </div>
                   <div className="flex justify-between items-baseline gap-2">
                     <h3 className="font-medium text-sm text-neutral-900 group-hover:text-purple transition-colors truncate">
@@ -975,19 +901,18 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
       </main>
 
       {/* MOBILE STICKY BOTTOM BAR */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-white-soft p-4 flex items-center justify-between shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-neutral-200 px-5 py-3.5 flex items-center justify-between shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-50">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xl font-bold text-black">{price}</span>{" "}
-            <span className="text-xs text-black-muted">/ night</span>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-2xl font-black text-neutral-900">{priceDisplay}</span>{" "}
+            <span className="text-xs font-medium text-neutral-500">/ night</span>
           </div>
-          <div className="text-xs text-black-muted flex items-center gap-1">
-            <span className="text-purple font-bold">{selectedRoom?.name || "Available"}</span>
+          <div className="text-xs text-neutral-600 flex items-center gap-1 font-medium mt-0.5">
+            <span className="text-purple font-semibold">{subtypeLabel}</span>
             {nights > 0 && (
               <>
-                {" "}
-                ·{" "}
-                <span>
+                <span>·</span>
+                <span className="text-neutral-500">
                   {nights} night{nights !== 1 ? "s" : ""}
                 </span>
               </>
@@ -995,26 +920,33 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
           </div>
         </div>
         <button
+          type="button"
           onClick={handleProceedToBook}
-          className="bg-purple text-white px-6 py-3 rounded-full font-semibold shadow-md hover:bg-purple-hover transition-colors text-sm flex-1 ml-4 max-w-[140px]"
+          disabled={isSoldOut}
+          className={cn(
+            "px-7 py-3 rounded-xl font-bold text-sm ml-4 cursor-pointer transition-colors",
+            isSoldOut
+              ? "bg-neutral-200 text-neutral-400 cursor-not-allowed"
+              : "bg-purple text-white shadow-md shadow-purple/25 hover:bg-purple-hover",
+          )}
         >
-          Book now
+          {isSoldOut ? "Sold out" : "Book now"}
         </button>
       </div>
 
-      {/* Full-screen photo lightbox */}
+      {/* Full-screen Photo Lightbox */}
       {showAllPhotos && (
         <div
           className="fixed inset-0 z-[100] bg-black flex flex-col animate-in fade-in"
           onClick={() => setShowAllPhotos(false)}
         >
-          {/* Top Bar */}
           <div className="absolute top-0 inset-x-0 p-4 flex items-center justify-between z-10 bg-gradient-to-b from-black/80 to-transparent pb-10">
             <span className="text-white font-medium text-sm px-2">
               {activeImg + 1} / {images.length}
             </span>
             <button
-              className="h-10 w-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors backdrop-blur-sm"
+              type="button"
+              className="h-10 w-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors backdrop-blur-sm cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
                 setShowAllPhotos(false);
@@ -1024,10 +956,10 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
             </button>
           </div>
 
-          {/* Image Container */}
           <div className="flex-1 flex items-center justify-center relative w-full h-full">
             <button
-              className="absolute left-2 md:left-6 z-10 h-12 w-12 rounded-full bg-black/40 text-white flex items-center justify-center hover:bg-white/20 backdrop-blur-sm transition-colors"
+              type="button"
+              className="absolute left-2 md:left-6 z-10 h-12 w-12 rounded-full bg-black/40 text-white flex items-center justify-center hover:bg-white/20 backdrop-blur-sm transition-colors cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
                 prevImg();
@@ -1044,7 +976,8 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
             />
 
             <button
-              className="absolute right-2 md:right-6 z-10 h-12 w-12 rounded-full bg-black/40 text-white flex items-center justify-center hover:bg-white/20 backdrop-blur-sm transition-colors"
+              type="button"
+              className="absolute right-2 md:right-6 z-10 h-12 w-12 rounded-full bg-black/40 text-white flex items-center justify-center hover:bg-white/20 backdrop-blur-sm transition-colors cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
                 nextImg();
@@ -1052,6 +985,133 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
             >
               <ChevronRight className="h-8 w-8" />
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Full Description Modal */}
+      {showDescriptionModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in"
+          onClick={() => setShowDescriptionModal(false)}
+        >
+          <div
+            className="bg-white rounded-3xl max-w-xl w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl animate-in zoom-in-95"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6 border-b border-black/[0.08] flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold text-neutral-900">About this place</h3>
+                <p className="text-xs text-neutral-500 mt-0.5">{title}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowDescriptionModal(false)}
+                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="p-6 overflow-y-auto">
+              <p className="text-sm font-normal text-neutral-700 leading-relaxed whitespace-pre-wrap">
+                {descriptionText}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Categorized All Amenities Modal */}
+      {showAmenitiesModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in"
+          onClick={() => setShowAmenitiesModal(false)}
+        >
+          <div
+            className="bg-white rounded-3xl max-w-lg w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl animate-in zoom-in-95"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6 border-b border-black/[0.08] flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold text-neutral-900">What this stay offers</h3>
+                <p className="text-xs text-neutral-500 mt-0.5">
+                  {parsedAmenities.allFlat.length} amenities available for guests
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAmenitiesModal(false)}
+                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto space-y-6 text-sm text-neutral-800">
+              {parsedAmenities.favourites.length > 0 && (
+                <div>
+                  <h4 className="font-bold text-xs uppercase tracking-wider text-neutral-400 mb-3">
+                    Guest Favourites
+                  </h4>
+                  <div className="space-y-2.5">
+                    {parsedAmenities.favourites.map((item, idx) => (
+                      <div key={idx} className="flex items-center gap-3">
+                        <span className="shrink-0">{item.icon}</span>
+                        <span>{item.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {parsedAmenities.standouts.length > 0 && (
+                <div>
+                  <h4 className="font-bold text-xs uppercase tracking-wider text-neutral-400 mb-3">
+                    Standouts &amp; Surroundings
+                  </h4>
+                  <div className="space-y-2.5">
+                    {parsedAmenities.standouts.map((item, idx) => (
+                      <div key={idx} className="flex items-center gap-3">
+                        <span className="shrink-0">{item.icon}</span>
+                        <span>{item.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {parsedAmenities.safety.length > 0 && (
+                <div>
+                  <h4 className="font-bold text-xs uppercase tracking-wider text-neutral-400 mb-3">
+                    Safety &amp; Security
+                  </h4>
+                  <div className="space-y-2.5">
+                    {parsedAmenities.safety.map((item, idx) => (
+                      <div key={idx} className="flex items-center gap-3">
+                        <span className="shrink-0">{item.icon}</span>
+                        <span>{item.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {parsedAmenities.other.length > 0 && (
+                <div>
+                  <h4 className="font-bold text-xs uppercase tracking-wider text-neutral-400 mb-3">
+                    Additional Amenities
+                  </h4>
+                  <div className="space-y-2.5">
+                    {parsedAmenities.other.map((item, idx) => (
+                      <div key={idx} className="flex items-center gap-3">
+                        <span className="shrink-0">{item.icon}</span>
+                        <span>{item.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -1074,39 +1134,18 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                 <p className="text-xs text-neutral-500">Verified guest reviews for {title}</p>
               </div>
               <button
+                type="button"
                 onClick={() => setShowReviewsModal(false)}
-                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200"
+                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
             <div className="p-6 overflow-y-auto space-y-4">
-              <div className="grid grid-cols-2 gap-2 p-3.5 bg-neutral-50 rounded-2xl text-xs">
-                <div className="flex justify-between text-neutral-600">
-                  <span>Cleanliness</span>
-                  <span className="font-bold text-neutral-900">4.9 ★</span>
-                </div>
-                <div className="flex justify-between text-neutral-600">
-                  <span>Accuracy</span>
-                  <span className="font-bold text-neutral-900">4.8 ★</span>
-                </div>
-                <div className="flex justify-between text-neutral-600">
-                  <span>Communication</span>
-                  <span className="font-bold text-neutral-900">5.0 ★</span>
-                </div>
-                <div className="flex justify-between text-neutral-600">
-                  <span>Location</span>
-                  <span className="font-bold text-neutral-900">4.9 ★</span>
-                </div>
-              </div>
-
               {reviews.map((r: any, idx: number) => (
-                <div
-                  key={idx}
-                  className="p-4 rounded-2xl bg-neutral-50 border border-black/[0.05] space-y-1.5"
-                >
-                  <div className="flex items-center justify-between">
+                <div key={idx} className="p-3.5 bg-neutral-50 rounded-2xl space-y-1">
+                  <div className="flex justify-between items-baseline">
                     <span className="font-bold text-xs text-neutral-900">
                       {r.userName || r.author}
                     </span>
@@ -1118,99 +1157,6 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                   </p>
                 </div>
               ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* All Amenities Modal */}
-      {showAmenitiesModal && (
-        <div
-          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in"
-          onClick={() => setShowAmenitiesModal(false)}
-        >
-          <div
-            className="bg-white rounded-3xl max-w-lg w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl animate-in zoom-in-95"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-6 border-b border-black/[0.08] flex items-center justify-between">
-              <h3 className="text-xl font-bold text-neutral-900">What this stay offers</h3>
-              <button
-                onClick={() => setShowAmenitiesModal(false)}
-                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-
-            <div className="p-6 overflow-y-auto space-y-6 text-sm text-neutral-800">
-              <div>
-                <h4 className="font-bold text-xs uppercase tracking-wider text-neutral-400 mb-3">
-                  Bathroom &amp; Bedroom
-                </h4>
-                <div className="space-y-2.5">
-                  <div className="flex items-center gap-3">
-                    <ShowerHead className="h-4 w-4 text-purple" />
-                    <span>Private bathroom with continuous hot water</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <CheckCircle2 className="h-4 w-4 text-purple" />
-                    <span>Clean bed linens &amp; extra pillows</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <CheckCircle2 className="h-4 w-4 text-purple" />
-                    <span>Towels, soap &amp; toilet paper provided</span>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h4 className="font-bold text-xs uppercase tracking-wider text-neutral-400 mb-3">
-                  Internet &amp; Office
-                </h4>
-                <div className="space-y-2.5">
-                  <div className="flex items-center gap-3">
-                    <Wifi className="h-4 w-4 text-purple" />
-                    <span>High-speed Wi-Fi available throughout property</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <CheckCircle2 className="h-4 w-4 text-purple" />
-                    <span>Dedicated workspace in room</span>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h4 className="font-bold text-xs uppercase tracking-wider text-neutral-400 mb-3">
-                  Food &amp; Dining
-                </h4>
-                <div className="space-y-2.5">
-                  <div className="flex items-center gap-3">
-                    <Coffee className="h-4 w-4 text-purple" />
-                    <span>Complimentary daily hot breakfast</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <UtensilsCrossed className="h-4 w-4 text-purple" />
-                    <span>On-site restaurant &amp; bar serving Zambian dishes</span>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h4 className="font-bold text-xs uppercase tracking-wider text-neutral-400 mb-3">
-                  Parking &amp; Facilities
-                </h4>
-                <div className="space-y-2.5">
-                  <div className="flex items-center gap-3">
-                    <Car className="h-4 w-4 text-purple" />
-                    <span>Free secure parking on premises</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Waves className="h-4 w-4 text-purple" />
-                    <span>Communal swimming pool &amp; gardens</span>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -1232,8 +1178,9 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                 <p className="text-xs text-neutral-500">Typical response time: within 20 mins</p>
               </div>
               <button
+                type="button"
                 onClick={() => setShowHostContactModal(false)}
-                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200"
+                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -1246,12 +1193,12 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                 </div>
                 <h4 className="text-base font-bold text-neutral-900">Message Sent!</h4>
                 <p className="text-xs text-neutral-500 max-w-xs mx-auto">
-                  {hostName} has received your inquiry and will reply to your registered
-                  email/phone.
+                  {hostName} has received your inquiry and will reply to your registered email/phone.
                 </p>
                 <button
+                  type="button"
                   onClick={() => setShowHostContactModal(false)}
-                  className="mt-4 px-6 py-2.5 rounded-xl bg-purple text-white text-xs font-bold"
+                  className="mt-4 px-6 py-2.5 rounded-xl bg-purple text-white text-xs font-bold cursor-pointer"
                 >
                   Done
                 </button>
@@ -1270,7 +1217,7 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                         key={q}
                         type="button"
                         onClick={() => setHostQuestion(q)}
-                        className="text-[11px] bg-neutral-100 hover:bg-neutral-200 text-neutral-800 px-2.5 py-1 rounded-full font-medium transition-colors"
+                        className="text-[11px] bg-neutral-100 hover:bg-neutral-200 text-neutral-800 px-2.5 py-1 rounded-full font-medium transition-colors cursor-pointer"
                       >
                         {q}
                       </button>
@@ -1290,6 +1237,7 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                 </div>
 
                 <button
+                  type="button"
                   onClick={() => {
                     if (!hostQuestion.trim()) {
                       toast.error("Please type a message first");
@@ -1297,7 +1245,7 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                     }
                     setHostQuestionSent(true);
                   }}
-                  className="w-full py-3 bg-purple hover:bg-purple-hover text-white rounded-xl font-bold text-xs transition-colors"
+                  className="w-full py-3 bg-purple hover:bg-purple-hover text-white rounded-xl font-bold text-xs transition-colors cursor-pointer"
                 >
                   Send Message
                 </button>

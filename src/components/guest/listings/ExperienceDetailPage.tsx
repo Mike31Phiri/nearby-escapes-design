@@ -1,116 +1,57 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
-  ChevronLeft,
-  ChevronRight,
-  Clock,
-  Compass,
-  MapPin,
-  ShieldCheck,
-  Star,
-  Users,
-  CheckCircle2,
-  XCircle,
   Heart,
   Share2,
-  Sparkles,
-  MessageCircle,
-  Map,
-  ImageIcon,
+  ChevronLeft,
+  ChevronRight,
+  Compass,
+  CheckCircle2,
+  XCircle,
   X,
   Search,
   AlertCircle,
   Loader2,
+  ArrowRight,
+  Navigation,
+  Star,
+  Clock,
+  Users,
+  ShieldCheck,
+  Sparkles,
+  MapPin,
+  Backpack,
+  Ban,
+  MessageSquare,
 } from "lucide-react";
 import { ReviewSection } from "@/components/guest/reviews/ReviewSection";
 import { cn } from "@/lib/utils";
 import type { Experience, Package } from "@/lib/mock-data";
+import { mockExperiences, mockGems, mockPackages } from "@/lib/mock-data";
 import { mockListingReviews } from "@/lib/mock-listing-reviews";
+import { useInventoryStore } from "@/store/inventoryStore";
+import { inventoryCounts } from "@/lib/mock-inventory";
 import { useAuth } from "@/lib/store/authStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { AuthGuardDialog } from "@/components/guest/auth/AuthGuardDialog";
+import {
+  EXPERIENCE_SUBTYPES,
+  EXPERIENCE_WHATS_INCLUDED,
+  EXPERIENCE_WHAT_TO_BRING,
+  EXPERIENCE_WHAT_NOT_TO_BRING,
+} from "@/components/host/create/experience/experienceConstants";
 
-// Custom premium descriptions for experiences, hidden gems, and packages
+// Rich fallback descriptions if not provided in listing
 const richDescriptions: Record<string, string> = {
   e1: "Witness the sheer scale and raw power of the Victoria Falls from above in a thrilling helicopter flight! Known locally as 'Mosi-oa-Tunya' (The Smoke That Thunders), you will soar directly over the falls, the Zambezi River, and the surrounding national park. Marvel at the dramatic, deep basalt gorges and capture once-in-a-lifetime aerial photographs from custom panoramic view windows. A professional pilot provides complete narration throughout the flight.",
   e2: "Step off the safari vehicle and immerse yourself directly in the African wilderness. South Luangwa is widely celebrated as the birthplace of the walking safari. Accompanied by a highly trained, armed wildlife scout and an expert naturalist guide, you will track animal footprints, learn about medicinal bush plants, and experience direct, thrilling close encounters with giraffes, elephants, and abundant birdlife in their natural habitat.",
   e3: "Plunge into the pristine, crystal-clear turquoise waters of Lake Tanganyika—the longest freshwater lake in the world! Home to over 250 species of vibrant cichlid fish found nowhere else on earth, this snorkeling safari offers unmatched aquatic viewing. Relax on secluded sandy beaches, swim alongside colorful schools of fish, and enjoy a freshly prepared lakeside lunch on the shore.",
   e4: "Embark on an unforgettable game drive through Kafue National Park, Zambia's oldest and largest national park. Traverse diverse habitats, from riverine forests and marshlands to open dambos. Our professional tracking guide will lead you in search of lions, leopards, wild dogs, cheetahs, and massive herds of buffalo. Enjoy a classic African sundowner cocktail drink as the sun sets over the Kafue River.",
-  g1: "Discover the breathtaking beauty and rich history of Shiwa Ngandu, an grand English-style manor estate nestled deep in the northern hills of Mpika. Built in the early 20th century, explore the spectacular stone mansion, historical library, and tranquil manicured gardens. The estate features a private lake, horseback trail rides, and a natural volcanic hot spring (Kapishya Hot Springs) just minutes away.",
-  g2: "Trek through lush woodlands to the spectacular Kundalila Falls in Serenje. Here, the Kaombe River falls over 70 meters down a rugged cliff into a deep, scenic basalt pool. Enjoy a guided hike down the steep gorge to the base of the waterfall, swim in the cold, crystal-clear waters, and marvel at the panoramic views of the Luangwa Valley from the cliff edge.",
-  g3: "Experience one of Africa's most raw, remote wildlife spectacles: the spectacular Liuwa Plain wildebeest migration. Witness thousands of wildebeests migrating across vast golden grasslands, tracked closely by hyenas, cheetahs, and lions. Ideal for serious wildlife enthusiasts, photographers, and travelers looking for an off-the-beaten-path safari adventure.",
-  g4: "Set sail on a peaceful sunset cruise to the historic Chapel Island on Lake Kariba. As the sky turns to shades of vibrant orange and purple, learn about the construction of the Kariba Dam and the folklore of the local Nyami Nyami river god. Enjoy fresh drinks, tasty local snacks, and witness spectacular birdlife nesting along the island shore.",
-  p1: "Escape to Livingstone for an action-packed 3-day weekend! This premium, all-inclusive package covers stay at a luxury riverfront lodge, a guided walking tour of the Victoria Falls, a scenic sunset river cruise on the Zambezi with complimentary drinks, and private airport transfers. Perfectly suited for couples or families looking to experience the adventure capital of Zambia.",
-  p2: "Embark on the ultimate 5-day luxury safari in South Luangwa National Park. This all-inclusive package includes stay in a top-rated luxury safari tent, daily morning and night game drives in custom open-sided vehicles, gourmet meals prepared by a dedicated camp chef, and round-trip transfers from Mfuwe Airport. Uncover the magic of the wild in total comfort.",
-  p3: "Relax and rejuvenate on the tranquil shores of Lake Kariba. This peaceful 2-day getaway features stay in a private lakefront chalet, a guided morning boat safari to spot hippos and crocodiles, fresh tiger fish lunch, and relaxing sun deck access. Unwind away from the city noise under a canopy of stars.",
 };
-
-const packageItineraries: Record<string, { title: string; desc: string }[]> = {
-  p1: [
-    {
-      title: "Day 1: Arrival & Sunset River Cruise",
-      desc: "Arrive at Livingstone Airport and take a private luxury transfer to your riverfront lodge. In the late afternoon, board a classic wooden riverboat for a scenic sunset cruise along the Zambezi River. Enjoy premium local drinks and gourmet appetizers while watching hippos, elephants, and crocodiles.",
-    },
-    {
-      title: "Day 2: Guided Falls Walk & Helicopter Tour",
-      desc: "After breakfast, enjoy a private guided walking tour of the majestic Victoria Falls, exploring key viewpoints including the Knife Edge Bridge and Eastern Cataract. In the afternoon, experience the ultimate thrill with a 15-minute 'Flight of Angels' helicopter tour over the falls.",
-    },
-    {
-      title: "Day 3: Cultural Tour & Departure",
-      desc: "Visit a local Zambian historic village to experience local traditions, crafts, and music. Enjoy a final brunch overlooking the river before your private transfer back to Livingstone Airport for your departure.",
-    },
-  ],
-  p2: [
-    {
-      title: "Day 1: South Luangwa Welcome & Night Safari",
-      desc: "Fly into Mfuwe Airport and transfer to your luxury safari camp. Settled along the Luangwa River, enjoy a hot lunch and embark on your first late-afternoon game drive, transitioning into a night safari using high-powered spotlights to track leopards and lions.",
-    },
-    {
-      title: "Day 2: Morning Walking Safari & River Cruise",
-      desc: "Awake at dawn for coffee and venture out on an exciting walking safari to track tracks and wildlife up close. Return to the lodge for a midday swim, followed by an afternoon safari drive exploring river bends and lagoons.",
-    },
-    {
-      title: "Day 3: Deep Bush Exploration",
-      desc: "Spend the full day exploring the remote northern sectors of the park, stopping for a private bush picnic lunch under a canopy of giant mahogany trees. Spot rare Thornicroft's giraffes and large elephant herds.",
-    },
-    {
-      title: "Day 4: Luxury Lodge Relaxation & Spa",
-      desc: "Enjoy a leisurely morning, followed by a complimentary bush spa massage. In the late afternoon, enjoy a final game drive ending with sundowner drinks overlooking a scenic hippopotamus pool.",
-    },
-    {
-      title: "Day 5: Farewell South Luangwa",
-      desc: "Enjoy a final morning bird-watching walk and a hearty breakfast. Say goodbye to the camp staff as you transfer back to Mfuwe Airport for your flight home.",
-    },
-  ],
-  p3: [
-    {
-      title: "Day 1: Kariba Welcome & Sunset Sailing",
-      desc: "Arrive at your Kariba lakeside chalet. Spend the afternoon swimming in the infinity pool overlooking the lake. In the evening, set sail on a peaceful sunset cruise, enjoying local Zambian drinks as the sun dips below the horizon.",
-    },
-    {
-      title: "Day 2: Morning Boat Safari & Farewell",
-      desc: "Set out on a morning boat safari along the shores of Lake Kariba, spotting crocodiles, elephants, and beautiful fish eagles. Feast on a fresh tiger fish lunch before checking out and departing back to Lusaka.",
-    },
-  ],
-};
-
-function getRatingDistribution(reviews: { rating: number }[]) {
-  const dist = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
-  reviews.forEach((r) => {
-    const key = Math.round(r.rating) as 1 | 2 | 3 | 4 | 5;
-    if (key >= 1 && key <= 5) dist[key]++;
-  });
-  const total = reviews.length || 1;
-  return Object.entries(dist).map(([star, count]) => ({
-    star: Number(star),
-    count,
-    percentage: (count / total) * 100,
-  }));
-}
 
 interface ExperienceDetailPageProps {
   item: Experience | Package | any;
@@ -122,14 +63,28 @@ export function ExperienceDetailPage({
   backHref = "/experiences",
 }: ExperienceDetailPageProps) {
   const router = useRouter();
-  const isPackage = item.id.startsWith("p");
-  const isGem = item.id.startsWith("g");
-  const [showAuthDialog, setShowAuthDialog] = useState(false);
+
+  const [activeImg, setActiveImg] = useState(0);
   const [showAllPhotos, setShowAllPhotos] = useState(false);
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [showReviewsModal, setShowReviewsModal] = useState(false);
-  const { isAuthenticated } = useAuth();
-  const { isSaved, addItem, removeItem } = useWishlistStore();
-  const isFavorited = isSaved(item.id);
+  const [showInclusionsModal, setShowInclusionsModal] = useState(false);
+  const [showDescriptionModal, setShowDescriptionModal] = useState(false);
+  const [showHostContactModal, setShowHostContactModal] = useState(false);
+  const [hostQuestion, setHostQuestion] = useState("");
+  const [hostQuestionSent, setHostQuestionSent] = useState(false);
+
+  const images = useMemo(() => {
+    if (item.images && item.images.length > 0) return item.images;
+    if (item.image) return [item.image, item.image, item.image, item.image, item.image];
+    return [
+      "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1508672019048-805c876b67e2?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=1200",
+    ];
+  }, [item]);
 
   const handleShare = () => {
     if (typeof window !== "undefined" && navigator.clipboard) {
@@ -140,7 +95,26 @@ export function ExperienceDetailPage({
     }
   };
 
-  // Availability state
+  // Single Listing Time Slots & Inventory
+  const inventories = useInventoryStore((s) => s.inventories);
+  const getInventory = useInventoryStore((s) => s.getInventory);
+  const listingInventory = useMemo(
+    () => getInventory(item.id),
+    [item.id, inventories, getInventory],
+  );
+  const inventoryStats = useMemo(() => inventoryCounts(listingInventory), [listingInventory]);
+  const availableSlotsCount = inventoryStats.available;
+  const isSoldOut = availableSlotsCount === 0;
+
+  // Time Slots
+  const timeSlots = useMemo(() => listingInventory.units, [listingInventory]);
+  const defaultSlot = useMemo(() => {
+    const firstAvail = timeSlots.find((u) => u.status === "available");
+    return firstAvail?.timeSlot || timeSlots[0]?.timeSlot || "08:00 AM";
+  }, [timeSlots]);
+  const [selectedSlot, setSelectedSlot] = useState(defaultSlot);
+
+  // Availability & Booking state
   const today = new Date().toISOString().split("T")[0];
   const [selectedDate, setSelectedDate] = useState("");
   const [adults, setAdults] = useState(2);
@@ -151,89 +125,144 @@ export function ExperienceDetailPage({
   >("idle");
 
   const totalGuests = adults + children;
+  const pricePerPerson = Number(item.price) || 850;
+  const priceDisplay = `K${pricePerPerson.toLocaleString()}`;
 
   const handleCheckAvailability = () => {
     if (!selectedDate) {
-      toast.error("Please select a date");
+      toast.error("Please pick a date for your adventure");
       return;
     }
     setCheckingAvailability(true);
     setTimeout(() => {
-      // Experiences are generally available — simulate 90% chance
-      const available = Math.random() > 0.1;
-      setAvailabilityResult(available ? "available" : "unavailable");
-      setCheckingAvailability(false);
-    }, 800);
+      if (isSoldOut) {
+        setAvailabilityResult("unavailable");
+        setCheckingAvailability(false);
+        toast.error("All time slots are booked for this date");
+      } else {
+        setAvailabilityResult("available");
+        setCheckingAvailability(false);
+        toast.success(`${availableSlotsCount} time slot(s) open for this date!`);
+      }
+    }, 600);
   };
 
   const handleProceedToBook = () => {
-    const params = new URLSearchParams({
-      type: isPackage ? "package" : "experience",
-      id: item.id,
-    });
+    if (isSoldOut) {
+      toast.error("This experience has no open time slots right now.");
+      return;
+    }
+    const params = new URLSearchParams({ type: "experience", id: item.id });
     if (selectedDate) params.set("date", selectedDate);
+    if (selectedSlot) params.set("slot", selectedSlot);
     params.set("guests", String(totalGuests));
+    params.set("price", String(pricePerPerson));
     router.push(`/checkout/book?${params.toString()}`);
   };
 
-  let categoryLabel = "Attraction";
-  if (isPackage) categoryLabel = "Curated Package";
-  else if (isGem) categoryLabel = "Hidden Gem";
-
-  const description =
-    richDescriptions[item.id] ||
-    "Join local expert Kapasa on a 4-hour journey along the Zambezi. This isn't just a standard safari—it's an eye-opening dive into the local ecosystem. Spot hippos, crocodiles, and over 30 species of birds while Kapasa shares the cultural significance of the river to the local communities. We end with a breathtaking sunset river cruise.";
+  const { isAuthenticated } = useAuth();
+  const { isSaved, addItem, removeItem } = useWishlistStore();
+  const isFavorited = isSaved(item.id);
 
   const reviews = mockListingReviews[item.id] || [];
-  const avgRating = "rating" in item ? item.rating : 4.9;
-  const reviewCount = "reviews" in item ? item.reviews : 78;
-  const ratingDist = getRatingDistribution(reviews);
+  const avgRating =
+    reviews.length > 0
+      ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+      : item.rating || 4.9;
+  const reviewCount = reviews.length || item.reviews || 84;
 
   const handleToggleFavorite = () => {
     if (isFavorited) {
       removeItem(item.id);
-      toast.success(`Removed from collections`);
+      toast.success("Removed from collections");
     } else {
-      addItem(item);
-      toast.success(`Saved to collections`, {
+      addItem({
+        id: item.id,
+        name: item.name,
+        image: item.image || images[0],
+        price: pricePerPerson,
+        location: item.location || "Zambia",
+        rating: avgRating,
+        reviews: reviewCount,
+        type: "Experience",
+      });
+      toast.success("Saved to collections", {
         icon: <Heart className="h-4 w-4 fill-purple text-purple" />,
       });
     }
   };
 
-  const itineraryToUse = packageItineraries[item.id] || [
-    {
-      title: "2:00 PM — Meet at the Marina",
-      desc: "Greet the group and get a quick safety briefing from Kapasa.",
-    },
-    {
-      title: "2:30 PM — Wildlife Spotting Begins",
-      desc: "Cruise upriver. Spot hippos, crocodiles, and local birdlife. Educational commentary included.",
-    },
-    {
-      title: "5:15 PM — Sunset on the River",
-      desc: "Anchor at a scenic viewpoint. Enjoy complimentary Zambian snacks and drinks as the sun sets.",
-    },
-    {
-      title: "6:00 PM — Return to Marina",
-      desc: "Transfer back to the meeting point with memories and new friends.",
-    },
-  ];
-
-  const [activeImg, setActiveImg] = useState(0);
-  const images = [
-    item.image ||
-      "https://images.unsplash.com/photo-1547721064-da6cfb341d50?auto=format&fit=crop&w=1100&q=80",
-    "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1100&q=80",
-    "https://images.unsplash.com/photo-1534430480872-3498386e7856?auto=format&fit=crop&w=1100&q=80",
-  ];
   const prevImg = () => setActiveImg((i) => (i === 0 ? images.length - 1 : i - 1));
   const nextImg = () => setActiveImg((i) => (i === images.length - 1 ? 0 : i + 1));
+
+  const title = item.name || item.title || "Zambezi Wildlife & River Adventure";
+  const locationString =
+    typeof item.location === "object"
+      ? `${item.location.city}, ${item.location.province}`
+      : item.location || "Livingstone, Zambia";
+
+  // Subtype tag for search/discovery
+  const matchedSubtype = EXPERIENCE_SUBTYPES.find(
+    (s) =>
+      s.id === item.subtype ||
+      s.id === item.category ||
+      s.id === item.activityType ||
+      s.title.toLowerCase().includes((item.category || "").toLowerCase()),
+  );
+  const subtypeLabel = matchedSubtype?.title || item.category || "Experience";
+
+  const descriptionText =
+    item.description ||
+    richDescriptions[item.id] ||
+    "Immerse yourself in this unforgettable guided Zambian experience. Accompanied by experienced guides and certified experts, enjoy unique perspectives of our wilderness, rich culture, and pristine natural landmarks.";
+  const isLongDescription = descriptionText.length > 220;
+
+  // Inclusions & Rules parsing
+  const whatsIncludedList: string[] = useMemo(() => {
+    if (Array.isArray(item.whatsIncluded) && item.whatsIncluded.length > 0) return item.whatsIncluded;
+    if (Array.isArray(item.inclusions) && item.inclusions.length > 0) return item.inclusions;
+    return [
+      "National Park Entry & Conservation Fees",
+      "Professional Certified Safari Guide",
+      "Open 4x4 Safari Vehicle Transport",
+      "Complimentary Chilled Water & Snacks",
+    ];
+  }, [item]);
+
+  const whatToBringList: string[] = useMemo(() => {
+    if (Array.isArray(item.whatToBring) && item.whatToBring.length > 0) return item.whatToBring;
+    if (Array.isArray(item.whatToCarry) && item.whatToCarry.length > 0) return item.whatToCarry;
+    return [
+      "Valid ID or Passport for Gate Clearance",
+      "Comfortable Closed Walking or Hiking Shoes",
+      "Sunscreen, UV Sunglasses, and Safari Hat",
+      "Camera or Smartphone with Extra Battery",
+    ];
+  }, [item]);
+
+  const whatNotToBringList: string[] = useMemo(() => {
+    if (Array.isArray(item.whatNotToBring) && item.whatNotToBring.length > 0) return item.whatNotToBring;
+    return [
+      "Drones (Prohibited in National Parks)",
+      "Single-Use Plastic Bags",
+      "Bright Red / Neon Colored Clothes",
+      "Domestic Pets",
+    ];
+  }, [item]);
+
+  const totalInclusionsCount =
+    whatsIncludedList.length + whatToBringList.length + whatNotToBringList.length;
+
+  // Coordinates
+  const lat = typeof item.lat === "number" ? item.lat : -17.8419;
+  const lng = typeof item.lng === "number" ? item.lng : 25.8543;
+
+  const hostName = item.hostName || item.guideName || "Certified Safari Guide";
 
   return (
     <div className="bg-white-warm text-black font-sans min-h-screen">
       <main className="max-w-[1100px] mx-auto px-4 pt-4 pb-28 lg:pb-8">
-        {/* Breadcrumb */}
+        {/* Breadcrumb Navigation */}
         <nav className="flex flex-wrap items-center text-xs text-black-faint mb-4">
           <Link href="/" className="hover:text-purple transition-colors">
             Home
@@ -243,62 +272,93 @@ export function ExperienceDetailPage({
             Explore
           </Link>{" "}
           <span className="mx-1.5 text-black-muted/50">›</span>
-          <Link href="/" className="hover:text-purple transition-colors">
-            Zambia
-          </Link>{" "}
-          <span className="mx-1.5 text-black-muted/50">›</span>
           <Link href={backHref} className="hover:text-purple transition-colors">
             Experiences
           </Link>{" "}
           <span className="mx-1.5 text-black-muted/50">›</span>
-          <span className="text-black font-medium">
-            {item.name || "Mosi-oa-Tunya Safari & River Cruise"}
-          </span>
+          <span className="text-black font-medium truncate max-w-xs">{title}</span>
         </nav>
 
-        {/* Full-Width Hero Gallery */}
-        <div className="relative w-full h-64 md:h-96 rounded-2xl overflow-hidden mb-6 group">
-          <img src={images[activeImg]} className="w-full h-full object-cover" alt={item.name} />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none"></div>
+        {/* Hero Gallery (Consistent Standard: 1 large + 4 thumbnails on desktop) */}
+        <div className="relative grid grid-cols-1 md:grid-cols-4 gap-2 rounded-2xl overflow-hidden h-auto md:h-[450px] mb-6 group">
+          {/* Main Large Image */}
+          <div className="md:col-span-2 md:row-span-2 h-64 md:h-full relative group/main">
+            <div className="w-full h-full cursor-pointer" onClick={() => setShowAllPhotos(true)}>
+              <img
+                src={images[activeImg]}
+                className="w-full h-full object-cover hover:opacity-90 transition-opacity"
+                alt={title}
+              />
+            </div>
 
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              prevImg();
-            }}
-            className="absolute left-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/70 backdrop-blur-sm text-black flex items-center justify-center hover:bg-white transition-all shadow-sm opacity-100 md:opacity-0 md:group-hover:opacity-100 z-10"
-          >
-            <ChevronLeft className="h-6 w-6" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              nextImg();
-            }}
-            className="absolute right-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/70 backdrop-blur-sm text-black flex items-center justify-center hover:bg-white transition-all shadow-sm opacity-100 md:opacity-0 md:group-hover:opacity-100 z-10"
-          >
-            <ChevronRight className="h-6 w-6" />
-          </button>
-
-          {/* Badges over the image */}
-          <div className="absolute top-4 left-4 flex flex-col gap-2">
-            <span className="bg-purple/90 text-white text-xs px-3 py-1 rounded-full font-medium backdrop-blur-sm flex items-center gap-1.5">
-              <Compass className="h-3.5 w-3.5" /> Expert local guide
-            </span>
+            {images.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    prevImg();
+                  }}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/70 backdrop-blur-sm text-black flex items-center justify-center hover:bg-white transition-all shadow-sm opacity-100 md:opacity-0 md:group-hover/main:opacity-100 z-10 cursor-pointer"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    nextImg();
+                  }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/70 backdrop-blur-sm text-black flex items-center justify-center hover:bg-white transition-all shadow-sm opacity-100 md:opacity-0 md:group-hover/main:opacity-100 z-10 cursor-pointer"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+              </>
+            )}
           </div>
 
-          {/* Action Buttons */}
-          <div className="absolute bottom-4 right-4 flex gap-2">
-            <button
-              onClick={handleShare}
-              className="bg-white/90 backdrop-blur-sm h-9 w-9 rounded-lg shadow-lg flex items-center justify-center hover:bg-white transition-colors text-black"
-              title="Share experience"
+          {/* 4 Small Images */}
+          {images.slice(1, 5).map((img: string, idx: number) => (
+            <div
+              key={idx}
+              className="hidden md:block h-[222px] relative cursor-pointer"
+              onClick={() => {
+                setActiveImg(idx + 1);
+                setShowAllPhotos(true);
+              }}
             >
-              <Share2 className="h-4 w-4" />
-            </button>
+              <img
+                src={img}
+                className="w-full h-full object-cover hover:opacity-90 transition-opacity"
+                alt={`${title} ${idx + 2}`}
+              />
+            </div>
+          ))}
+
+          <button
+            type="button"
+            onClick={() => setShowAllPhotos(true)}
+            className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg text-xs font-semibold shadow-lg flex items-center gap-2 hover:bg-white transition-colors text-black cursor-pointer"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+            {images.length} photos
+          </button>
+
+          <div className="absolute top-4 right-4 md:right-auto md:left-4 flex gap-2">
             <button
-              onClick={handleToggleFavorite}
-              className="bg-white/90 backdrop-blur-sm h-9 w-9 rounded-lg shadow-lg flex items-center justify-center hover:bg-white transition-colors text-black"
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleToggleFavorite();
+              }}
+              className="h-9 w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-md hover:bg-white transition-colors cursor-pointer"
               title="Save experience"
             >
               <Heart
@@ -306,253 +366,323 @@ export function ExperienceDetailPage({
               />
             </button>
             <button
-              onClick={() => setShowAllPhotos(true)}
-              className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg text-xs font-semibold shadow-lg flex items-center gap-2 hover:bg-white transition-colors text-black"
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleShare();
+              }}
+              className="h-9 w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-md hover:bg-white text-black transition-colors cursor-pointer"
+              title="Share experience"
             >
-              <ImageIcon className="w-4 h-4" />
-              {images.length} photos
+              <Share2 className="h-4 w-4" />
             </button>
           </div>
         </div>
 
         {/* Main Info + Booking Sidebar Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8">
-          {/* LEFT COLUMN: Research-backed Trust & Info */}
-          <div className="space-y-6 divide-y divide-white-soft">
-            {/* Title & Host */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_400px] gap-8 lg:gap-10 items-start">
+          {/* LEFT COLUMN: Trust & Information */}
+          <div className="space-y-8 divide-y divide-neutral-200">
+            {/* Header: Title, Location, Host */}
             <div className="pt-2">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h1 className="text-2xl sm:text-[28px] font-semibold tracking-tight text-neutral-900">
-                    {item.name || "Mosi-oa-Tunya Safari & River Cruise"}
-                  </h1>
-                  <div className="mt-2 flex flex-wrap items-center gap-2 text-xs sm:text-sm text-neutral-600">
-                    <span className="flex items-center gap-1 font-medium text-neutral-900">
-                      <Star className="h-3.5 w-3.5 fill-[#f59e0b] text-[#f59e0b]" />
-                      {avgRating.toFixed(1)}
-                    </span>
-                    <span className="text-neutral-300">·</span>
-                    <span className="text-neutral-600 underline cursor-pointer font-normal">
-                      {reviewCount} reviews
-                    </span>
-                    <span className="text-neutral-300">·</span>
-                    <span className="text-neutral-600 font-normal">
-                      {item.location || "Livingstone, Zambia"}
-                    </span>
-                    <span className="text-neutral-300">·</span>
-                    <span className="text-neutral-700 font-medium">Hosted by Guide Kapasa</span>
-                  </div>
-                </div>
-              </div>
+              <h1 className="text-2xl sm:text-[28px] font-semibold tracking-tight text-neutral-900 leading-tight">
+                {title}
+              </h1>
+              <p className="text-sm font-normal text-neutral-500 mt-1">{locationString}</p>
 
-              {/* Quick Facts */}
-              <div className="flex flex-wrap gap-4 mt-4 text-sm text-black-soft bg-white-soft/50 p-3 rounded-xl border border-white-soft">
-                <span className="flex items-center gap-1.5">
-                  <Clock className="h-4 w-4 text-purple" />{" "}
-                  <span className="font-medium">
-                    {"duration" in item ? item.duration : "4 hours"}
-                  </span>
+              <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs sm:text-sm text-neutral-600">
+                <span className="flex items-center gap-1 font-semibold text-neutral-900">
+                  <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                  {avgRating.toFixed(1)}
                 </span>
-                <span className="flex items-center gap-1.5">
-                  <Users className="h-4 w-4 text-purple" />{" "}
-                  <span className="font-medium">Max 8 people</span>
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <MessageCircle className="h-4 w-4 text-purple" />{" "}
-                  <span className="font-medium">Live English guide</span>
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <MapPin className="h-4 w-4 text-purple" />{" "}
-                  <span className="font-medium">{item.location || "Livingstone Marina"}</span>
-                </span>
-              </div>
-            </div>
-
-            {/* The Overview */}
-            <div className="pt-6">
-              <h2 className="font-semibold text-lg text-black">
-                About this {categoryLabel.toLowerCase()}
-              </h2>
-              <p className="text-sm text-black-soft leading-relaxed mt-2">{description}</p>
-              <p className="text-xs text-black-faint mt-2 italic flex items-center gap-1">
-                <Sparkles className="h-3.5 w-3.5 text-gold" /> Educational, immersive, and designed
-                for the next generation of conscious travelers.
-              </p>
-            </div>
-
-            {/* The Itinerary */}
-            <div className="pt-6">
-              <h2 className="font-semibold text-lg text-black">
-                {isPackage ? "Holiday Itinerary" : "What you'll do (Itinerary)"}
-              </h2>
-              <div className="relative mt-4 pl-6 space-y-6 border-l-2 border-purple/30 ml-2">
-                {itineraryToUse.map((day, idx) => (
-                  <div key={idx} className="relative">
-                    <div className="absolute -left-[31px] top-0 w-3 h-3 bg-purple rounded-full ring-4 ring-purple/10"></div>
-                    <p className="font-semibold text-sm text-black">{day.title}</p>
-                    <p className="text-xs text-black-soft mt-1 leading-relaxed">{day.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* What's Included */}
-            <div className="pt-6">
-              <h2 className="font-semibold text-lg text-black">
-                What&apos;s included & what to bring
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 mt-3 text-sm">
-                <div className="bg-green-50 text-green-800 p-2.5 rounded-lg flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0" /> Bottled water & local
-                  snacks
-                </div>
-                <div className="bg-green-50 text-green-800 p-2.5 rounded-lg flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0" /> Life jacket &
-                  binoculars
-                </div>
-                <div className="bg-red-50 text-red-800 p-2.5 rounded-lg flex items-center gap-2">
-                  <XCircle className="h-5 w-5 text-red-600 shrink-0" /> Alcohol & glass bottles
-                </div>
-                <div className="bg-red-50 text-red-800 p-2.5 rounded-lg flex items-center gap-2">
-                  <XCircle className="h-5 w-5 text-red-600 shrink-0" /> High heels (unsafe for boat)
-                </div>
-              </div>
-              <p className="text-xs text-black-faint mt-3 italic">
-                Bring a camera, sunscreen, and a light jacket for the breeze.
-              </p>
-            </div>
-
-            {/* Location & Meeting Point */}
-            <div className="pt-6">
-              <h2 className="font-semibold text-lg text-black">Meeting point & logistics</h2>
-              <p className="text-sm text-black-soft leading-relaxed mt-2">
-                <strong>Address:</strong>{" "}
-                {item.location || "Livingstone Marina, right next to the falls viewing point."}{" "}
-                <br />
-                <span className="text-purple font-medium flex items-center gap-1 mt-1">
-                  <Sparkles className="h-3.5 w-3.5" /> Pro-tip for budget travelers:
-                </span>{" "}
-                Take the local minibus to the Marina for just K15. The guide will send you exact GPS
-                coordinates upon booking.
-              </p>
-              <div className="w-full h-40 bg-white-soft rounded-xl mt-3 flex items-center justify-center border border-white-soft relative overflow-hidden">
-                <Map className="absolute inset-0 w-full h-full text-black-faint opacity-10 object-cover" />
-                <span className="text-black-soft text-sm flex items-center gap-1 z-10 bg-white/80 px-4 py-2 rounded-lg font-medium shadow-sm backdrop-blur-sm">
-                  <MapPin className="h-4 w-4 text-purple" /> View on map (Exact pin shared after
-                  booking)
-                </span>
-              </div>
-            </div>
-
-            {/* Reviews */}
-            <div className="pt-6">
-              <div className="flex items-center justify-between">
-                <h2 className="font-semibold text-lg flex items-center gap-2 text-black">
-                  <span className="bg-gold text-white px-2 py-0.5 rounded text-sm">
-                    {avgRating.toFixed(1)}
-                  </span>{" "}
-                  · {reviewCount} reviews
-                </h2>
+                <span className="text-neutral-300">·</span>
                 <button
+                  type="button"
                   onClick={() => setShowReviewsModal(true)}
-                  className="text-purple text-xs font-semibold hover:underline"
+                  className="font-normal text-neutral-500 hover:text-neutral-900 underline transition-colors cursor-pointer"
                 >
-                  Read all reviews
+                  {reviewCount} reviews
+                </button>
+                <span className="text-neutral-300">·</span>
+                <span className="font-normal text-neutral-500">
+                  Hosted by <span className="font-medium text-neutral-800">{hostName}</span>
+                </span>
+              </div>
+
+              {/* Mobile Quick-Book Card */}
+              <div className="lg:hidden mt-5 p-4 sm:p-5 rounded-2xl bg-white border border-neutral-200 shadow-sm space-y-3.5">
+                <div className="flex items-baseline justify-between">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-2xl sm:text-3xl font-bold text-neutral-900">
+                      {priceDisplay}
+                    </span>
+                    <span className="text-xs font-normal text-neutral-500">/ person</span>
+                  </div>
+                  <span className="text-xs font-semibold text-purple bg-purple/10 px-2.5 py-1 rounded-full">
+                    Instant Book
+                  </span>
+                </div>
+
+                <div className="space-y-2.5">
+                  <div>
+                    <label className="text-[10px] font-semibold uppercase text-neutral-400 block mb-0.5">
+                      Select Date
+                    </label>
+                    <input
+                      type="date"
+                      value={selectedDate}
+                      min={today}
+                      onChange={(e) => {
+                        setSelectedDate(e.target.value);
+                        setAvailabilityResult("idle");
+                      }}
+                      className="w-full bg-neutral-50 border border-neutral-200 rounded-xl p-2.5 text-xs font-semibold text-neutral-900 focus:outline-none"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-[10px] font-semibold uppercase text-neutral-400 block mb-0.5">
+                        Adults
+                      </label>
+                      <select
+                        value={adults}
+                        onChange={(e) => setAdults(Number(e.target.value))}
+                        className="w-full bg-neutral-50 border border-neutral-200 rounded-xl p-2 text-xs font-semibold text-neutral-900 focus:outline-none"
+                      >
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                          <option key={n} value={n}>
+                            {n}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-semibold uppercase text-neutral-400 block mb-0.5">
+                        Children
+                      </label>
+                      <select
+                        value={children}
+                        onChange={(e) => setChildren(Number(e.target.value))}
+                        className="w-full bg-neutral-50 border border-neutral-200 rounded-xl p-2 text-xs font-semibold text-neutral-900 focus:outline-none"
+                      >
+                        {[0, 1, 2, 3, 4, 5].map((n) => (
+                          <option key={n} value={n}>
+                            {n}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleProceedToBook}
+                  className="w-full bg-purple hover:bg-purple-hover text-white rounded-xl py-3.5 font-bold text-sm sm:text-base transition-all shadow-md shadow-purple/25 flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                >
+                  <span>Reserve Experience</span>
+                  <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
-              <div className="mt-4 space-y-4">
-                {reviews.slice(0, 2).map((rev: any, i: number) => (
-                  <div key={i} className="bg-white p-4 rounded-xl border border-white-soft">
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold text-sm text-black">{rev.userName}</span>
-                      <span className="text-xs text-black-faint">{rev.date}</span>
-                    </div>
-                    <p className="text-sm text-black-soft mt-1">&quot;{rev.comment}&quot;</p>
+            </div>
+
+            {/* About the Experience (Truncated with Show More Modal) */}
+            <div className="pt-8">
+              <h2 className="text-lg font-semibold text-neutral-900">About this experience</h2>
+              <p
+                className={cn(
+                  "text-sm font-normal text-neutral-600 leading-relaxed mt-2.5 whitespace-pre-wrap",
+                  isLongDescription && "line-clamp-4",
+                )}
+              >
+                {descriptionText}
+              </p>
+              {isLongDescription && (
+                <button
+                  type="button"
+                  onClick={() => setShowDescriptionModal(true)}
+                  className="mt-2 text-xs font-semibold text-purple hover:underline inline-flex items-center gap-1 cursor-pointer"
+                >
+                  <span>Show more</span>
+                  <ChevronRight className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
+
+            {/* Inclusions & What to Bring (Preview + Show All Modal) */}
+            <div className="pt-8">
+              <h2 className="text-lg font-semibold text-neutral-900">
+                What&apos;s included &amp; requirements
+              </h2>
+              <p className="text-xs text-neutral-500 mt-0.5">
+                Key equipment provided and packing suggestions
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 mt-4 text-sm font-normal">
+                {/* Top Included items */}
+                {whatsIncludedList.slice(0, 3).map((item, idx) => (
+                  <div key={`inc-${idx}`} className="flex items-center gap-3 text-neutral-800">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                    <span>{item}</span>
                   </div>
                 ))}
-                {reviews.length === 0 && (
-                  <>
-                    <div className="bg-white p-4 rounded-xl border border-white-soft">
-                      <div className="flex items-center justify-between">
-                        <span className="font-semibold text-sm text-black">
-                          Sipho (Student, 23)
-                        </span>
-                        <span className="text-xs text-black-faint">Jan 2026</span>
-                      </div>
-                      <p className="text-sm text-black-soft mt-1">
-                        &quot;Kapasa is a legend! He made the history of the Zambezi so interesting.
-                        The boat was comfortable, and the price was unbeatable for a full 4-hour
-                        safari. Definitely recommend to all my friends.&quot;
-                      </p>
-                    </div>
-                    <div className="bg-white p-4 rounded-xl border border-white-soft">
-                      <div className="flex items-center justify-between">
-                        <span className="font-semibold text-sm text-black">Grace</span>
-                        <span className="text-xs text-black-faint">Dec 2025</span>
-                      </div>
-                      <p className="text-sm text-black-soft mt-1">
-                        &quot;Went on this with a group of 6. We had the boat to ourselves! Saw a
-                        huge pod of hippos. The sunset was magical. A must-do for any young
-                        adventurer.&quot;
-                      </p>
-                    </div>
-                  </>
-                )}
+
+                {/* Top What to Bring items */}
+                {whatToBringList.slice(0, 3).map((item, idx) => (
+                  <div key={`bring-${idx}`} className="flex items-center gap-3 text-neutral-800">
+                    <Backpack className="h-4 w-4 text-purple shrink-0" />
+                    <span>Bring: {item}</span>
+                  </div>
+                ))}
+              </div>
+
+              {totalInclusionsCount > 6 && (
+                <button
+                  type="button"
+                  onClick={() => setShowInclusionsModal(true)}
+                  className="mt-5 px-4 py-2 border border-neutral-300 hover:border-neutral-400 rounded-lg text-xs font-medium text-neutral-700 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+                >
+                  Show all {totalInclusionsCount} inclusions &amp; guidelines
+                </button>
+              )}
+            </div>
+
+            {/* Things to know / Activity Highlights */}
+            <div className="pt-8">
+              <h2 className="text-lg font-semibold text-neutral-900">Things to know</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-3 text-xs">
+                <div>
+                  <p className="font-medium text-neutral-800">Duration</p>
+                  <p className="text-neutral-500 font-normal mt-0.5">
+                    {item.duration || "Approx. 3-4 hours"}
+                  </p>
+                </div>
+                <div>
+                  <p className="font-medium text-neutral-800">Group setting</p>
+                  <p className="text-neutral-500 font-normal mt-0.5">
+                    {item.groupSize || "Small group (up to 10 guests)"}
+                  </p>
+                </div>
+                <div>
+                  <p className="font-medium text-neutral-800">Cancellation</p>
+                  <p className="text-neutral-500 font-normal mt-0.5">Free up to 24 hrs before</p>
+                </div>
               </div>
             </div>
 
-            {/* Meet the Guide */}
-            <div className="pt-6">
-              <h2 className="font-semibold text-lg text-black">Meet your local guide</h2>
-              <div className="flex items-center gap-4 mt-4">
-                <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80"
-                  className="w-14 h-14 rounded-full object-cover border-2 border-gold"
-                  alt="Guide"
+            {/* Meeting Point & Location with Google Maps */}
+            <div className="pt-8">
+              <h2 className="text-lg font-semibold text-neutral-900">Meeting point &amp; location</h2>
+              <p className="text-xs font-normal text-neutral-500 leading-relaxed mt-1.5">
+                {item.address ? `${item.address}, ` : ""}
+                {locationString}. Exact pin location on Google Maps below.
+              </p>
+
+              <div className="w-full h-56 sm:h-72 bg-neutral-100 rounded-xl mt-3 overflow-hidden border border-neutral-200 relative shadow-2xs">
+                <iframe
+                  title={`Google Map for ${title}`}
+                  width="100%"
+                  height="100%"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  src={`https://maps.google.com/maps?q=${lat},${lng}&t=m&z=14&ie=UTF8&iwloc=&output=embed`}
+                  className="w-full h-full border-0"
                 />
+              </div>
+
+              <div className="mt-2.5 flex items-center justify-between text-xs">
+                <span className="text-neutral-500 font-mono">
+                  {lat.toFixed(4)}°, {lng.toFixed(4)}°
+                </span>
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-purple hover:underline inline-flex items-center gap-1.5"
+                >
+                  <Navigation className="h-3.5 w-3.5" />
+                  <span>Open in Google Maps</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Reviews Section */}
+            <ReviewSection
+              listingId={item.id}
+              listingName={title}
+              listingType="Experience"
+              reviews={reviews.map((r: any) => ({
+                id: r.id,
+                author: r.author || r.userName || "Guest",
+                rating: r.rating || 5,
+                content: r.content || r.comment || "",
+                date: r.date || "Recent",
+                authorLocation: r.authorLocation || "Verified Traveler",
+                avatar: r.avatar,
+              }))}
+              avgRating={avgRating}
+              reviewCount={reviewCount}
+              onViewAllReviews={() => setShowReviewsModal(true)}
+            />
+
+            {/* Meet the Guide */}
+            <div className="pt-8">
+              <h2 className="text-lg font-semibold text-neutral-900">Meet your host &amp; guide</h2>
+              <div className="flex items-center gap-3.5 mt-3.5">
+                <div className="w-11 h-11 rounded-full flex items-center justify-center font-medium text-white text-base shrink-0 shadow-sm bg-purple">
+                  {hostName.slice(0, 2).toUpperCase()}
+                </div>
                 <div>
-                  <p className="font-semibold text-sm text-black">Kapasa Mwansa</p>
-                  <p className="text-xs text-black-muted flex items-center gap-1">
-                    <span className="bg-green-500 w-2 h-2 rounded-full inline-block"></span>{" "}
+                  <p className="font-semibold text-sm text-neutral-900">{hostName}</p>
+                  <p className="text-xs font-normal text-neutral-500 flex items-center gap-1.5 mt-0.5">
+                    <span className="bg-emerald-500 w-1.5 h-1.5 rounded-full inline-block"></span>
                     Responds within 30 minutes
                   </p>
-                  <p className="text-xs text-black-muted mt-0.5">
-                    Licensed Tour Guide · Speaks English & Nyanja
-                  </p>
-                  <span className="inline-flex items-center gap-1 mt-1.5 text-[10px] bg-purple-muted text-purple px-2 py-0.5 rounded-full font-bold border border-purple-border/20">
-                    <Compass className="h-3 w-3" /> Community Trained Guide
-                  </span>
                 </div>
               </div>
-              <p className="text-sm text-black-soft mt-3 italic">
-                &quot;I&apos;ve been guiding on the Zambezi for 5 years. My goal is to show young
-                Zambians the beauty of our own backyard. Every booking directly supports my family
-                and local youth training programs.&quot;
+              <p className="text-xs font-normal text-neutral-600 leading-relaxed mt-3 italic">
+                &quot;Passionate about showcasing the beauty, wildlife, and heritage of Zambia. Safety
+                and genuine memories are our top priorities.&quot;
               </p>
+              <div className="mt-3.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setHostQuestionSent(false);
+                    setShowHostContactModal(true);
+                  }}
+                  className="px-3.5 py-1.5 border border-neutral-300 hover:border-neutral-400 rounded-lg text-xs font-medium text-neutral-700 hover:bg-neutral-50 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+                >
+                  <MessageSquare className="h-3.5 w-3.5 text-neutral-400" />
+                  Contact guide
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* RIGHT COLUMN: The Booking Card */}
-          <div className="relative">
-            <div className="bg-white border border-white-soft rounded-2xl p-6 shadow-lg sticky top-24">
-              <div className="flex items-center justify-between border-b border-white-soft pb-4">
-                <div>
-                  <span className="text-2xl font-bold text-black">K{item.price || "850"}</span>{" "}
-                  <span className="text-xs text-black-muted font-medium">/ per person</span>
+          {/* RIGHT COLUMN: Streamlined Sticky Booking Card */}
+          <div className="relative" id="booking-section">
+            <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm sticky top-24 space-y-4">
+              {/* Clear Pricing Header */}
+              <div className="flex items-baseline justify-between border-b border-neutral-100 pb-4">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-extrabold text-neutral-900 tracking-tight">
+                    {priceDisplay}
+                  </span>
+                  <span className="text-xs font-normal text-neutral-500">/ person</span>
                 </div>
-                <div className="text-sm text-black-soft font-medium flex items-center gap-1">
-                  <span className="bg-gold text-white px-1.5 py-0.5 rounded text-xs font-bold">
-                    {avgRating.toFixed(1)}
-                  </span>{" "}
-                  Exceptional
+                <div className="text-xs font-medium text-neutral-700 flex items-center gap-1">
+                  <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                  <span>{avgRating.toFixed(1)}</span>
+                  <span className="text-neutral-400 font-normal">({reviewCount})</span>
                 </div>
               </div>
 
-              <div className="py-4 space-y-3">
-                {/* Date Picker */}
+              <div className="space-y-3">
+                {/* Select Date */}
                 <div>
-                  <label className="text-[10px] text-black-faint block font-medium mb-1">
-                    SELECT DATE
+                  <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
+                    Experience Date
                   </label>
                   <input
                     type="date"
@@ -562,231 +692,425 @@ export function ExperienceDetailPage({
                       setSelectedDate(e.target.value);
                       setAvailabilityResult("idle");
                     }}
-                    className="w-full bg-white-warm rounded-lg p-2.5 border border-white-soft text-sm font-semibold text-black focus:outline-none focus:ring-2 focus:ring-purple/30 focus:border-purple/40"
+                    className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                   />
                 </div>
 
-                {/* Group Size */}
+                {/* Select Time Slot */}
+                {timeSlots.length > 0 && (
+                  <div>
+                    <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
+                      Time Slot
+                    </label>
+                    <select
+                      value={selectedSlot}
+                      onChange={(e) => setSelectedSlot(e.target.value)}
+                      className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
+                    >
+                      {timeSlots.map((slot) => (
+                        <option
+                          key={slot.id}
+                          value={slot.timeSlot || slot.label}
+                          disabled={slot.status !== "available"}
+                        >
+                          {slot.timeSlot || slot.label} — {slot.label} (
+                          {slot.status === "available"
+                            ? `${slot.capacity ?? 4} spots open`
+                            : "Sold Out"}
+                          )
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {/* Guest Selectors */}
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="text-[10px] text-black-faint block font-medium mb-1">
-                      ADULTS
+                    <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
+                      Adults
                     </label>
                     <select
                       value={adults}
                       onChange={(e) => setAdults(Number(e.target.value))}
-                      className="w-full bg-white-warm rounded-lg p-2.5 border border-white-soft text-sm font-semibold text-black focus:outline-none focus:ring-2 focus:ring-purple/30"
+                      className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                     >
-                      {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15].map((n) => (
                         <option key={n} value={n}>
-                          {n}
+                          {n} adult{n !== 1 ? "s" : ""}
                         </option>
                       ))}
                     </select>
                   </div>
                   <div>
-                    <label className="text-[10px] text-black-faint block font-medium mb-1">
-                      CHILDREN
+                    <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
+                      Children
                     </label>
                     <select
                       value={children}
                       onChange={(e) => setChildren(Number(e.target.value))}
-                      className="w-full bg-white-warm rounded-lg p-2.5 border border-white-soft text-sm font-semibold text-black focus:outline-none focus:ring-2 focus:ring-purple/30"
+                      className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                     >
-                      {[0, 1, 2, 3, 4].map((n) => (
+                      {[0, 1, 2, 3, 4, 5].map((n) => (
                         <option key={n} value={n}>
-                          {n}
+                          {n} child{n !== 1 ? "ren" : ""}
                         </option>
                       ))}
                     </select>
                   </div>
                 </div>
 
-                {/* Check Availability Button */}
-                <button
-                  onClick={handleCheckAvailability}
-                  disabled={checkingAvailability || !selectedDate}
-                  className="w-full bg-purple text-white rounded-xl py-3 font-semibold hover:bg-purple-hover transition-colors text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
-                >
-                  {checkingAvailability ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Checking availability...
-                    </>
-                  ) : (
-                    <>
-                      <Search className="h-4 w-4" />
-                      Check availability
-                    </>
-                  )}
-                </button>
+                {/* Check Availability Button if date unverified */}
+                {availabilityResult === "idle" && (
+                  <button
+                    type="button"
+                    onClick={handleCheckAvailability}
+                    disabled={checkingAvailability || !selectedDate || isSoldOut}
+                    className="w-full bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded-xl py-2.5 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  >
+                    {checkingAvailability ? (
+                      <>
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        <span>Checking availability...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Search className="h-3.5 w-3.5 text-purple" />
+                        <span>Check Date &amp; Slot Availability</span>
+                      </>
+                    )}
+                  </button>
+                )}
 
-                {/* Availability Result */}
+                {/* Availability status */}
                 {availabilityResult === "available" && (
-                  <div className="p-2.5 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2 text-green-700 text-xs font-semibold">
-                    <CheckCircle2 className="h-4 w-4 shrink-0" />
-                    Available! {totalGuests} spot{totalGuests !== 1 ? "s" : ""} remaining
+                  <div className="p-2 bg-emerald-50 border border-emerald-200/60 rounded-lg flex items-center gap-1.5 text-emerald-800 text-[11px] font-normal">
+                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
+                    <span>
+                      Confirmed for {selectedSlot || "chosen slot"} · {totalGuests} guests
+                    </span>
                   </div>
                 )}
                 {availabilityResult === "unavailable" && (
-                  <div className="p-2.5 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700 text-xs font-semibold">
-                    <AlertCircle className="h-4 w-4 shrink-0" />
-                    Sold out for this date. Try another date.
+                  <div className="p-2 bg-rose-50 border border-rose-200/60 rounded-lg flex items-center gap-1.5 text-rose-800 text-[11px] font-normal">
+                    <AlertCircle className="h-3.5 w-3.5 shrink-0 text-rose-600" />
+                    <span>All slots booked for this date. Pick another date or slot.</span>
                   </div>
                 )}
 
-                {/* Price Breakdown (show when available) */}
-                {availabilityResult === "available" && (
-                  <div className="pt-3 border-t border-white-soft space-y-1.5 text-sm">
-                    <div className="flex justify-between text-black-soft">
+                {/* Price Breakdown */}
+                {selectedDate ? (
+                  <div className="pt-3 border-t border-neutral-100 space-y-1.5 text-xs">
+                    <div className="flex justify-between text-neutral-500 font-normal">
                       <span>
-                        {totalGuests} people x K{item.price || "850"}
+                        {totalGuests} guest{totalGuests !== 1 ? "s" : ""} x K
+                        {pricePerPerson.toLocaleString()}
                       </span>
-                      <span>K{((item.price || 850) * totalGuests).toLocaleString()}</span>
+                      <span className="text-neutral-900 font-medium">
+                        K{(pricePerPerson * totalGuests).toLocaleString()}
+                      </span>
                     </div>
-                    <div className="flex justify-between text-black-soft">
-                      <span>Gear & refreshments</span>
-                      <span className="text-green-600 font-medium">Included</span>
+                    <div className="flex justify-between text-neutral-500 font-normal">
+                      <span>Slot Time: {selectedSlot}</span>
+                      <span className="text-purple font-medium">Reserved</span>
                     </div>
-                    <div className="flex justify-between text-black font-bold border-t border-white-soft pt-2 mt-1">
-                      <span>Total (ZMW)</span>
-                      <span>K{((item.price || 850) * totalGuests).toLocaleString()}</span>
+                    <div className="flex justify-between text-neutral-900 font-semibold border-t border-neutral-100 pt-2 text-sm">
+                      <span>Total</span>
+                      <span>K{(pricePerPerson * totalGuests).toLocaleString()}</span>
                     </div>
-                    <p className="text-[10px] text-purple font-bold text-center mt-1">
-                      Direct booking. No platform service fees!
+                    <p className="text-[11px] text-neutral-400 font-normal text-center mt-1">
+                      Direct booking · Instant confirmation
                     </p>
                   </div>
+                ) : (
+                  <div className="pt-1 text-xs font-normal text-neutral-400 text-center">
+                    Select a date &amp; slot to view total
+                  </div>
                 )}
               </div>
 
-              {/* Cancellation policy */}
-              <div className="mb-4 text-center">
-                <span className="text-[10px] text-black-muted bg-white-warm px-2 py-1.5 rounded-full inline-flex items-center gap-1 font-medium">
-                  <Clock className="w-3 h-3" /> Free cancellation up to 24 hours before
-                </span>
-              </div>
+              {/* Main Booking Action Button */}
+              <button
+                type="button"
+                onClick={handleProceedToBook}
+                disabled={isSoldOut}
+                className={cn(
+                  "w-full rounded-xl py-3.5 sm:py-4 font-bold text-base transition-all flex items-center justify-center gap-2 transform active:scale-[0.99] cursor-pointer",
+                  isSoldOut
+                    ? "bg-neutral-200 text-neutral-400 cursor-not-allowed"
+                    : "bg-purple hover:bg-purple-hover text-white shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35",
+                )}
+              >
+                <span>{isSoldOut ? "Sold Out (0 Slots Available)" : "Reserve Experience"}</span>
+                {!isSoldOut && <ArrowRight className="h-5 w-5" />}
+              </button>
 
-              {availabilityResult === "available" ? (
-                <button
-                  onClick={handleProceedToBook}
-                  className="w-full bg-purple text-white rounded-xl py-3.5 font-semibold hover:bg-purple-hover transition-colors text-base shadow-md shadow-purple/20"
-                >
-                  Book your adventure
-                </button>
-              ) : (
-                <button
-                  disabled
-                  className="w-full bg-black/10 text-black-faint rounded-xl py-3.5 font-semibold text-base cursor-not-allowed"
-                >
-                  Select date to book
-                </button>
-              )}
+              {/* Cross-sell */}
+              <div className="pt-3 border-t border-neutral-100 flex items-center justify-between text-xs">
+                <span className="text-neutral-500 font-normal">Need transport or lodging?</span>
+                <Link href="/stays" className="text-purple font-medium hover:underline">
+                  Find stays →
+                </Link>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Similar Experiences Section */}
-        <section className="mt-16 pt-8 border-t border-white-soft">
-          <h2 className="text-xl font-bold text-black mb-6">
-            More {categoryLabel.toLowerCase()}s you might like
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                id: "sim-e1",
-                name: "Helicopter Flight of Angels",
-                location: "Livingstone",
-                price: "K3,500",
-                rating: 5.0,
-                img: "https://images.unsplash.com/photo-1547721064-da6cfb341d50?auto=format&fit=crop&w=600&q=80",
-              },
-              {
-                id: "sim-e2",
-                name: "South Luangwa Walking Safari",
-                location: "South Luangwa",
-                price: "K1,200",
-                rating: 4.9,
-                img: "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=600&q=80",
-              },
-              {
-                id: "sim-e3",
-                name: "Kafue River Canoe Safari",
-                location: "Kafue NP",
-                price: "K750",
-                rating: 4.7,
-                img: "https://images.unsplash.com/photo-1534430480872-3498386e7856?auto=format&fit=crop&w=600&q=80",
-              },
-            ].map((simItem) => (
-              <Link href={`/experiences/${simItem.id}`} key={simItem.id} className="group block">
-                <div className="w-full h-48 rounded-xl bg-white-soft overflow-hidden mb-3 relative">
-                  <img
-                    src={simItem.img}
-                    alt={simItem.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <button className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm">
-                    <Heart className="h-4 w-4 text-black hover:text-purple transition-colors" />
-                  </button>
-                </div>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-semibold text-black group-hover:text-purple transition-colors truncate">
-                      {simItem.name}
+        <section className="mt-16 pt-8 border-t border-neutral-200">
+          <div className="flex items-baseline justify-between mb-5">
+            <div>
+              <h2 className="text-lg font-semibold text-neutral-900">
+                Similar experiences you might like
+              </h2>
+              <p className="text-xs text-neutral-500 mt-0.5">Explore popular adventures in Zambia</p>
+            </div>
+            <Link
+              href="/experiences"
+              className="text-xs font-medium text-purple hover:underline inline-flex items-center gap-1"
+            >
+              See all experiences →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {mockExperiences
+              .filter((e) => e.id !== item.id)
+              .slice(0, 4)
+              .map((exp) => (
+                <Link
+                  key={exp.id}
+                  href={`/experiences/${exp.id}`}
+                  className="group block bg-white rounded-xl overflow-hidden border border-neutral-200/80 p-2.5 hover:shadow-md transition-shadow"
+                >
+                  <div className="relative aspect-4/3 rounded-lg overflow-hidden mb-2.5 bg-neutral-100">
+                    <img
+                      src={exp.image}
+                      alt={exp.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <div className="flex justify-between items-baseline gap-2">
+                    <h3 className="font-medium text-sm text-neutral-900 group-hover:text-purple transition-colors truncate">
+                      {exp.name}
                     </h3>
-                    <p className="text-sm text-black-muted">{simItem.location}</p>
+                    <div className="flex items-center gap-0.5 text-xs font-medium text-neutral-700 shrink-0">
+                      <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                      <span>{exp.rating}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1 text-sm font-semibold text-black shrink-0">
-                    <span className="bg-gold text-white px-1.5 py-0.5 rounded text-[10px]">
-                      {simItem.rating}
-                    </span>
-                  </div>
-                </div>
-                <p className="text-sm text-black font-semibold mt-1">
-                  {simItem.price} <span className="font-normal text-black-faint">/ person</span>
-                </p>
-              </Link>
-            ))}
+                  <p className="text-xs font-normal text-neutral-500 mt-0.5">{exp.location}</p>
+                  <p className="text-sm font-semibold text-neutral-900 mt-1">
+                    K{exp.price}{" "}
+                    <span className="font-normal text-xs text-neutral-500">/ person</span>
+                  </p>
+                </Link>
+              ))}
           </div>
         </section>
       </main>
 
       {/* MOBILE STICKY BOTTOM BAR */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-white-soft p-4 flex items-center justify-between shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-neutral-200 px-5 py-3.5 flex items-center justify-between shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-50">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xl font-bold text-black">K{item.price || "850"}</span>{" "}
-            <span className="text-xs text-black-muted">/ person</span>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-2xl font-black text-neutral-900">{priceDisplay}</span>{" "}
+            <span className="text-xs font-medium text-neutral-500">/ person</span>
           </div>
-          <div className="text-xs text-black-muted flex items-center gap-1">
-            {availabilityResult === "available" ? (
-              <span className="text-green-600 font-bold">Available</span>
-            ) : (
+          <div className="text-xs text-neutral-600 flex items-center gap-1 font-medium mt-0.5">
+            <span className="text-purple font-semibold">{subtypeLabel}</span>
+            {selectedDate && (
               <>
-                <span className="text-red-700 font-bold">Only 4 spots left!</span> ·{" "}
-                <span className="bg-gold text-white px-1 py-0.5 rounded text-[10px] font-bold">
-                  {avgRating.toFixed(1)}
-                </span>
+                <span>·</span>
+                <span className="text-neutral-500">{totalGuests} guests</span>
               </>
             )}
           </div>
         </div>
-        {availabilityResult === "available" ? (
-          <button
-            onClick={handleProceedToBook}
-            className="bg-purple text-white px-6 py-3 rounded-full font-semibold shadow-md hover:bg-purple-hover transition-colors text-sm flex-1 ml-4 max-w-[140px]"
-          >
-            Book now
-          </button>
-        ) : (
-          <button
-            onClick={handleCheckAvailability}
-            disabled={checkingAvailability || !selectedDate}
-            className="bg-purple text-white px-6 py-3 rounded-full font-semibold shadow-md hover:bg-purple-hover transition-colors text-sm flex-1 ml-4 max-w-[140px] disabled:opacity-50"
-          >
-            {checkingAvailability ? "Checking..." : "Check dates"}
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={handleProceedToBook}
+          disabled={isSoldOut}
+          className={cn(
+            "px-7 py-3 rounded-xl font-bold text-sm ml-4 cursor-pointer transition-colors",
+            isSoldOut
+              ? "bg-neutral-200 text-neutral-400 cursor-not-allowed"
+              : "bg-purple text-white shadow-md shadow-purple/25 hover:bg-purple-hover",
+          )}
+        >
+          {isSoldOut ? "Sold out" : "Book now"}
+        </button>
       </div>
+
+      {/* Full-screen Photo Lightbox */}
+      {showAllPhotos && (
+        <div
+          className="fixed inset-0 z-[100] bg-black flex flex-col animate-in fade-in"
+          onClick={() => setShowAllPhotos(false)}
+        >
+          <div className="absolute top-0 inset-x-0 p-4 flex items-center justify-between z-10 bg-gradient-to-b from-black/80 to-transparent pb-10">
+            <span className="text-white font-medium text-sm px-2">
+              {activeImg + 1} / {images.length}
+            </span>
+            <button
+              type="button"
+              className="h-10 w-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors backdrop-blur-sm cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowAllPhotos(false);
+              }}
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <div className="flex-1 flex items-center justify-center relative w-full h-full">
+            <button
+              type="button"
+              className="absolute left-2 md:left-6 z-10 h-12 w-12 rounded-full bg-black/40 text-white flex items-center justify-center hover:bg-white/20 backdrop-blur-sm transition-colors cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                prevImg();
+              }}
+            >
+              <ChevronLeft className="h-8 w-8" />
+            </button>
+
+            <img
+              src={images[activeImg]}
+              alt={title}
+              className="w-full max-h-screen object-contain"
+              onClick={(e) => e.stopPropagation()}
+            />
+
+            <button
+              type="button"
+              className="absolute right-2 md:right-6 z-10 h-12 w-12 rounded-full bg-black/40 text-white flex items-center justify-center hover:bg-white/20 backdrop-blur-sm transition-colors cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                nextImg();
+              }}
+            >
+              <ChevronRight className="h-8 w-8" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Full Description Modal */}
+      {showDescriptionModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in"
+          onClick={() => setShowDescriptionModal(false)}
+        >
+          <div
+            className="bg-white rounded-3xl max-w-xl w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl animate-in zoom-in-95"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6 border-b border-black/[0.08] flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold text-neutral-900">About this experience</h3>
+                <p className="text-xs text-neutral-500 mt-0.5">{title}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowDescriptionModal(false)}
+                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="p-6 overflow-y-auto">
+              <p className="text-sm font-normal text-neutral-700 leading-relaxed whitespace-pre-wrap">
+                {descriptionText}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Full Inclusions & Guidelines Modal */}
+      {showInclusionsModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in"
+          onClick={() => setShowInclusionsModal(false)}
+        >
+          <div
+            className="bg-white rounded-3xl max-w-lg w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl animate-in zoom-in-95"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6 border-b border-black/[0.08] flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold text-neutral-900">Inclusions &amp; Guidelines</h3>
+                <p className="text-xs text-neutral-500 mt-0.5">{title}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowInclusionsModal(false)}
+                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto space-y-6 text-sm text-neutral-800">
+              {/* What's Included */}
+              {whatsIncludedList.length > 0 && (
+                <div>
+                  <h4 className="font-bold text-xs uppercase tracking-wider text-emerald-700 mb-3 flex items-center gap-1.5">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                    <span>What&apos;s Included</span>
+                  </h4>
+                  <div className="space-y-2.5">
+                    {whatsIncludedList.map((item, idx) => (
+                      <div key={idx} className="flex items-center gap-3">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* What to Bring */}
+              {whatToBringList.length > 0 && (
+                <div>
+                  <h4 className="font-bold text-xs uppercase tracking-wider text-purple mb-3 flex items-center gap-1.5">
+                    <Backpack className="h-4 w-4 text-purple" />
+                    <span>What to Bring / Packing Suggestions</span>
+                  </h4>
+                  <div className="space-y-2.5">
+                    {whatToBringList.map((item, idx) => (
+                      <div key={idx} className="flex items-center gap-3">
+                        <Backpack className="h-4 w-4 text-purple shrink-0" />
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* What NOT to Bring */}
+              {whatNotToBringList.length > 0 && (
+                <div>
+                  <h4 className="font-bold text-xs uppercase tracking-wider text-rose-700 mb-3 flex items-center gap-1.5">
+                    <Ban className="h-4 w-4 text-rose-600" />
+                    <span>What NOT to Bring / Restrictions</span>
+                  </h4>
+                  <div className="space-y-2.5">
+                    {whatNotToBringList.map((item, idx) => (
+                      <div key={idx} className="flex items-center gap-3 text-neutral-700">
+                        <XCircle className="h-4 w-4 text-rose-500 shrink-0" />
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* All Reviews Modal */}
       {showReviewsModal && (
@@ -803,44 +1127,21 @@ export function ExperienceDetailPage({
                 <h3 className="text-xl font-bold text-neutral-900">
                   {avgRating.toFixed(1)} ★ ({reviewCount} reviews)
                 </h3>
-                <p className="text-xs text-neutral-500">
-                  Verified traveler reviews for {item.name}
-                </p>
+                <p className="text-xs text-neutral-500">Verified guest reviews for {title}</p>
               </div>
               <button
+                type="button"
                 onClick={() => setShowReviewsModal(false)}
-                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200"
+                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
             <div className="p-6 overflow-y-auto space-y-4">
-              <div className="grid grid-cols-2 gap-2 p-3.5 bg-neutral-50 rounded-2xl text-xs">
-                <div className="flex justify-between text-neutral-600">
-                  <span>Guide Knowledge</span>
-                  <span className="font-bold text-neutral-900">5.0 ★</span>
-                </div>
-                <div className="flex justify-between text-neutral-600">
-                  <span>Safety Standards</span>
-                  <span className="font-bold text-neutral-900">4.9 ★</span>
-                </div>
-                <div className="flex justify-between text-neutral-600">
-                  <span>Value for Money</span>
-                  <span className="font-bold text-neutral-900">4.9 ★</span>
-                </div>
-                <div className="flex justify-between text-neutral-600">
-                  <span>Scenic Experience</span>
-                  <span className="font-bold text-neutral-900">5.0 ★</span>
-                </div>
-              </div>
-
               {reviews.map((r: any, idx: number) => (
-                <div
-                  key={idx}
-                  className="p-4 rounded-2xl bg-neutral-50 border border-black/[0.05] space-y-1.5"
-                >
-                  <div className="flex items-center justify-between">
+                <div key={idx} className="p-3.5 bg-neutral-50 rounded-2xl space-y-1">
+                  <div className="flex justify-between items-baseline">
                     <span className="font-bold text-xs text-neutral-900">
                       {r.userName || r.author}
                     </span>
@@ -857,54 +1158,95 @@ export function ExperienceDetailPage({
         </div>
       )}
 
-      {/* Full-Screen Photo Lightbox */}
-      {showAllPhotos && (
+      {/* Contact Host Modal */}
+      {showHostContactModal && (
         <div
-          className="fixed inset-0 z-50 bg-black flex flex-col animate-in fade-in"
-          onClick={() => setShowAllPhotos(false)}
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in"
+          onClick={() => setShowHostContactModal(false)}
         >
-          <div className="absolute top-0 inset-x-0 p-5 flex items-center justify-between z-10 bg-gradient-to-b from-black/80 to-transparent">
-            <span className="text-white font-bold text-sm">
-              {activeImg + 1} / {images.length} — {item.name}
-            </span>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowAllPhotos(false);
-              }}
-              className="h-9 w-9 rounded-full bg-white/20 text-white flex items-center justify-center hover:bg-white/30 transition-colors"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
+          <div
+            className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl animate-in zoom-in-95"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-4 border-b border-black/[0.08]">
+              <div>
+                <h3 className="text-lg font-bold text-neutral-900">Message {hostName}</h3>
+                <p className="text-xs text-neutral-500">Typical response time: within 30 mins</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowHostContactModal(false)}
+                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
 
-          <div className="flex-1 flex items-center justify-center relative p-4">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                prevImg();
-              }}
-              className="absolute left-4 z-10 h-12 w-12 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70"
-            >
-              <ChevronLeft className="h-6 w-6" />
-            </button>
+            {hostQuestionSent ? (
+              <div className="py-8 text-center space-y-2">
+                <div className="h-12 w-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+                  <CheckCircle2 className="h-6 w-6" />
+                </div>
+                <h4 className="text-base font-bold text-neutral-900">Message Sent!</h4>
+                <p className="text-xs text-neutral-500 max-w-xs mx-auto">
+                  {hostName} has received your inquiry and will reply to your registered email/phone.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setShowHostContactModal(false)}
+                  className="mt-4 px-6 py-2.5 rounded-xl bg-purple text-white text-xs font-bold cursor-pointer"
+                >
+                  Done
+                </button>
+              </div>
+            ) : (
+              <div className="py-4 space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-neutral-700">Quick question</label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {[
+                      "Can you pick up from our hotel?",
+                      "Is this suitable for young children?",
+                      "Are dietary requests accommodated?",
+                    ].map((q) => (
+                      <button
+                        key={q}
+                        type="button"
+                        onClick={() => setHostQuestion(q)}
+                        className="text-[11px] bg-neutral-100 hover:bg-neutral-200 text-neutral-800 px-2.5 py-1 rounded-full font-medium transition-colors cursor-pointer"
+                      >
+                        {q}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-            <img
-              src={images[activeImg]}
-              alt={item.name}
-              className="max-h-[85vh] max-w-full object-contain rounded-xl"
-              onClick={(e) => e.stopPropagation()}
-            />
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-neutral-700">Your message</label>
+                  <textarea
+                    rows={4}
+                    value={hostQuestion}
+                    onChange={(e) => setHostQuestion(e.target.value)}
+                    placeholder="Hi! I have a question about this tour..."
+                    className="w-full rounded-xl border border-neutral-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple/20 focus:border-purple"
+                  />
+                </div>
 
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                nextImg();
-              }}
-              className="absolute right-4 z-10 h-12 w-12 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70"
-            >
-              <ChevronRight className="h-6 w-6" />
-            </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!hostQuestion.trim()) {
+                      toast.error("Please type a message first");
+                      return;
+                    }
+                    setHostQuestionSent(true);
+                  }}
+                  className="w-full py-3 bg-purple hover:bg-purple-hover text-white rounded-xl font-bold text-xs transition-colors cursor-pointer"
+                >
+                  Send Message
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

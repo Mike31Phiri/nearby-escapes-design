@@ -1,94 +1,172 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
   Heart,
+  Share2,
   ChevronLeft,
   ChevronRight,
   Clock,
   Timer,
   Wifi,
   MapPin,
-  Snowflake,
-  Plug,
-  Briefcase,
-  MonitorPlay,
+  Wind,
+  Fuel,
+  Droplets,
+  Zap,
+  Luggage,
+  ShieldCheck,
   HeartPulse,
-  Lightbulb,
-  RefreshCcw,
-  Bus,
+  Navigation,
+  FileText,
+  Ban,
+  CheckCircle2,
+  XCircle,
+  X,
   Search,
   AlertCircle,
-  CheckCircle2,
   Loader2,
-  Share2,
-  X,
+  ArrowRight,
   Star,
   Sparkles,
-  ShieldCheck,
+  MessageSquare,
+  CarFront,
+  Bus,
+  Plane,
+  Key,
+  Anchor,
 } from "lucide-react";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useAuth } from "@/lib/store/authStore";
 import { AuthGuardDialog } from "@/components/guest/auth/AuthGuardDialog";
+import { ReviewSection } from "@/components/guest/reviews/ReviewSection";
 import { cn } from "@/lib/utils";
 import type { Transport } from "@/lib/mock-data";
+import { mockTransport } from "@/lib/mock-data";
 import { mockListingReviews } from "@/lib/mock-listing-reviews";
+import { useInventoryStore } from "@/store/inventoryStore";
+import { inventoryCounts } from "@/lib/mock-inventory";
+import {
+  TRANSPORT_SUBTYPES,
+  TRANSPORT_FEATURES,
+  TRANSPORT_WHAT_TO_CARRY,
+  TRANSPORT_GUIDELINES,
+} from "@/components/host/create/transport/transportConstants";
+
+const ALL_TRANSPORT_FEATURE_SPECS: Record<string, { label: string; icon: React.ReactNode }> = {
+  ac: { label: "Dual Cabin Air Conditioning", icon: <Wind className="h-4 w-4 text-purple" /> },
+  pro_driver: { label: "Licensed Professional Chauffeur", icon: <Navigation className="h-4 w-4 text-purple" /> },
+  fuel_included: { label: "Fuel Included in Rate", icon: <Fuel className="h-4 w-4 text-purple" /> },
+  chilled_water: { label: "Complimentary Chilled Water", icon: <Droplets className="h-4 w-4 text-purple" /> },
+  usb_charging: { label: "Fast USB & 12V Phone Charging", icon: <Zap className="h-4 w-4 text-purple" /> },
+  wifi: { label: "High-Speed Mobile Onboard Wi-Fi", icon: <Wifi className="h-4 w-4 text-purple" /> },
+  luggage_capacity: { label: "Luggage Trailer / Roof Rack", icon: <Luggage className="h-4 w-4 text-purple" /> },
+  passenger_insurance: { label: "Full Passenger Liability Cover", icon: <ShieldCheck className="h-4 w-4 text-purple" /> },
+  child_seat: { label: "Infant / Child Booster Seat", icon: <HeartPulse className="h-4 w-4 text-purple" /> },
+};
 
 interface TransportDetailPageProps {
-  route: Transport;
+  route: Transport & any;
   backHref?: string;
 }
 
-export function TransportDetailPage({ route, backHref = "/transport" }: TransportDetailPageProps) {
+export function TransportDetailPage({
+  route,
+  backHref = "/transport",
+}: TransportDetailPageProps) {
   const router = useRouter();
 
   const [activeImg, setActiveImg] = useState(0);
-  const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [showAllPhotos, setShowAllPhotos] = useState(false);
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [showReviewsModal, setShowReviewsModal] = useState(false);
+  const [showFeaturesModal, setShowFeaturesModal] = useState(false);
+  const [showDescriptionModal, setShowDescriptionModal] = useState(false);
+  const [showHostContactModal, setShowHostContactModal] = useState(false);
+  const [hostQuestion, setHostQuestion] = useState("");
+  const [hostQuestionSent, setHostQuestionSent] = useState(false);
 
-  // Availability & Booking state
-  const today = new Date().toISOString().split("T")[0];
-  const [selectedDate, setSelectedDate] = useState("2026-07-18");
-  const [selectedDeparture, setSelectedDeparture] = useState(route.departureTime || "06:00 AM");
-  const [travelClass, setTravelClass] = useState<"standard" | "vip">("standard");
-  const [seatPreference, setSeatPreference] = useState<"window" | "aisle" | "any">("window");
-  const [passengers, setPassengers] = useState(1);
-  const [checkingAvailability, setCheckingAvailability] = useState(false);
-  const [availabilityResult, setAvailabilityResult] = useState<
-    "idle" | "available" | "unavailable"
-  >("available");
+  // Gallery images matching standard 5-photo grid
+  const images = useMemo(() => {
+    if (route.images && route.images.length > 0) return route.images;
+    if (route.image) return [route.image, route.image, route.image, route.image, route.image];
+    return [
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80",
+    ];
+  }, [route]);
 
   const handleShare = () => {
     if (typeof window !== "undefined" && navigator.clipboard) {
       navigator.clipboard.writeText(window.location.href);
-      toast.success("Route link copied to clipboard!");
+      toast.success("Transport link copied to clipboard!");
     } else {
       toast.success("Link copied!");
     }
   };
 
+  // Single Listing Inventory & Fleet availability
+  const inventories = useInventoryStore((s) => s.inventories);
+  const getInventory = useInventoryStore((s) => s.getInventory);
+  const listingInventory = useMemo(
+    () => getInventory(route.id),
+    [route.id, inventories, getInventory],
+  );
+  const inventoryStats = useMemo(() => inventoryCounts(listingInventory), [listingInventory]);
+  const availableVehiclesCount = inventoryStats.available;
+  const isSoldOut = availableVehiclesCount === 0;
+
+  // Availability & Booking state
+  const today = new Date().toISOString().split("T")[0];
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedPickupTime, setSelectedPickupTime] = useState(
+    route.departureTime || "08:30 AM",
+  );
+  const [passengers, setPassengers] = useState(1);
+  const [checkingAvailability, setCheckingAvailability] = useState(false);
+  const [availabilityResult, setAvailabilityResult] = useState<
+    "idle" | "available" | "unavailable"
+  >("idle");
+
+  const basePrice = Number(route.price) || 250;
+  const rateUnit = route.rateUnit === "day" ? "day" : "trip";
+  const priceDisplay = `K${basePrice.toLocaleString()}`;
+
   const handleCheckAvailability = () => {
     if (!selectedDate) {
-      toast.error("Please select a travel date");
+      toast.error("Please pick a travel date");
       return;
     }
     setCheckingAvailability(true);
     setTimeout(() => {
-      // Transport is generally available
-      const available = Math.random() > 0.15;
-      setAvailabilityResult(available ? "available" : "unavailable");
-      setCheckingAvailability(false);
-    }, 800);
+      if (isSoldOut) {
+        setAvailabilityResult("unavailable");
+        setCheckingAvailability(false);
+        toast.error("All vehicles of this type are currently booked out");
+      } else {
+        setAvailabilityResult("available");
+        setCheckingAvailability(false);
+        toast.success(`${availableVehiclesCount} vehicle(s) ready for this date!`);
+      }
+    }, 600);
   };
 
   const handleProceedToBook = () => {
+    if (isSoldOut) {
+      toast.error("This transport listing is currently sold out (0 available in fleet).");
+      return;
+    }
     const params = new URLSearchParams({ type: "transport", id: route.id });
     if (selectedDate) params.set("date", selectedDate);
+    if (selectedPickupTime) params.set("pickupTime", selectedPickupTime);
     params.set("guests", String(passengers));
+    params.set("price", String(basePrice));
     router.push(`/checkout/book?${params.toString()}`);
   };
 
@@ -101,46 +179,98 @@ export function TransportDetailPage({ route, backHref = "/transport" }: Transpor
     reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : 4.8;
   const reviewCount = reviews.length || 98;
 
-  // Set up mock gallery images for transport
-  const images = [
-    route.image ||
-      "https://images.unsplash.com/photo-1570125909232-eb2be79ff63d?auto=format&fit=crop&w=1100&q=80",
-    "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1100&q=80",
-    "https://images.unsplash.com/photo-1464219789935-c2d9d9aba644?auto=format&fit=crop&w=1100&q=80",
-  ];
-
-  const prevImg = () => setActiveImg((i) => (i === 0 ? images.length - 1 : i - 1));
-  const nextImg = () => setActiveImg((i) => (i === images.length - 1 ? 0 : i + 1));
-
   const handleToggleFavorite = () => {
     if (isFavorited) {
       removeItem(route.id);
-      toast.success(`Removed from collections`);
+      toast.success("Removed from collections");
     } else {
       addItem({
         id: route.id,
-        name: `${route.from} to ${route.to}`,
-        image: route.image,
-        price: route.price,
-        location: route.from,
+        name: route.name || `${route.from} to ${route.to} Transport`,
+        image: route.image || images[0],
+        price: basePrice,
+        location: route.from || "Zambia",
         rating: avgRating,
         reviews: reviewCount,
         type: "Transport",
       });
-      toast.success(`Saved to collections`, {
+      toast.success("Saved to collections", {
         icon: <Heart className="h-4 w-4 fill-purple text-purple" />,
       });
     }
   };
 
-  const title = `${route.from} to ${route.to} Express`;
-  const hostName = route.operator || "Chisanga Transport";
-  const priceDisplay = `K${route.price || 180}`;
+  const prevImg = () => setActiveImg((i) => (i === 0 ? images.length - 1 : i - 1));
+  const nextImg = () => setActiveImg((i) => (i === images.length - 1 ? 0 : i + 1));
+
+  const title =
+    route.title ||
+    route.name ||
+    (route.from && route.to ? `${route.from} to ${route.to} Express` : "Zambia Chauffeur & Transfer");
+  const hostName = route.operator || route.hostName || "Professional Transport Partner";
+  const locationString =
+    route.location || (route.from ? `${route.from} (Depot), Zambia` : "Lusaka, Zambia");
+
+  // Subtype tag for search/discovery
+  const matchedSubtype = TRANSPORT_SUBTYPES.find(
+    (s) =>
+      s.id === route.subtype ||
+      s.id === route.vehicleType ||
+      s.id === route.serviceType ||
+      s.title.toLowerCase().includes((route.type || "").toLowerCase()),
+  );
+  const subtypeLabel = matchedSubtype?.title || route.subtype || "Transport";
+
+  const descriptionText =
+    route.description ||
+    `Operating with high reliability and comfort, ${hostName} provides scheduled and private passenger transport across Zambia. Features air conditioning, luggage storage, and licensed professional drivers with comprehensive passenger cover.`;
+  const isLongDescription = descriptionText.length > 220;
+
+  // Features, What to Carry, Guidelines parsing
+  const vehicleFeaturesList: string[] = useMemo(() => {
+    if (Array.isArray(route.features) && route.features.length > 0) return route.features;
+    if (Array.isArray(route.vehicleFeatures) && route.vehicleFeatures.length > 0)
+      return route.vehicleFeatures;
+    return [
+      "Dual Cabin Air Conditioning",
+      "Licensed Professional Chauffeur",
+      "Fuel Included in Rate",
+      "Complimentary Chilled Water",
+      "Fast USB & 12V Phone Charging",
+      "Full Passenger Liability Cover",
+    ];
+  }, [route]);
+
+  const whatToCarryList: string[] = useMemo(() => {
+    if (Array.isArray(route.whatToCarry) && route.whatToCarry.length > 0) return route.whatToCarry;
+    if (Array.isArray(route.whatToBring) && route.whatToBring.length > 0) return route.whatToBring;
+    return [
+      "Lead Passenger Passport or National ID",
+      "Digital Booking Confirmation Voucher",
+      "Personal Audio AUX / Charging Cable",
+    ];
+  }, [route]);
+
+  const guidelinesList: string[] = useMemo(() => {
+    if (Array.isArray(route.guidelines) && route.guidelines.length > 0) return route.guidelines;
+    return [
+      "Strictly No Smoking / Vaping inside vehicle",
+      "No Open Alcoholic Beverages",
+      "No Overloading beyond licensed seat capacity",
+    ];
+  }, [route]);
+
+  const totalFeaturesCount =
+    vehicleFeaturesList.length + whatToCarryList.length + guidelinesList.length;
+
+  // Coordinates
+  const lat = typeof route.lat === "number" ? route.lat : -15.3875;
+  const lng = typeof route.lng === "number" ? route.lng : 28.3228;
 
   return (
     <div className="bg-white-warm text-black font-sans min-h-screen">
       <main className="max-w-[1100px] mx-auto px-4 pt-4 pb-28 lg:pb-8">
-        {/* Breadcrumb */}
+        {/* Breadcrumb Navigation */}
         <nav className="flex flex-wrap items-center text-xs text-black-faint mb-4">
           <Link href="/" className="hover:text-purple transition-colors">
             Home
@@ -150,341 +280,405 @@ export function TransportDetailPage({ route, backHref = "/transport" }: Transpor
             Explore
           </Link>{" "}
           <span className="mx-1.5 text-black-muted/50">›</span>
-          <Link href="/" className="hover:text-purple transition-colors">
-            Zambia
-          </Link>{" "}
-          <span className="mx-1.5 text-black-muted/50">›</span>
           <Link href={backHref} className="hover:text-purple transition-colors">
-            Local Transport
+            Transport
           </Link>{" "}
           <span className="mx-1.5 text-black-muted/50">›</span>
-          <span className="text-black font-medium">{title}</span>
+          <span className="text-black font-medium truncate max-w-xs">{title}</span>
         </nav>
 
-        {/* Hero Gallery */}
-        <div className="relative w-full h-56 md:h-72 rounded-2xl overflow-hidden mb-6 group">
-          <img
-            src={images[activeImg]}
-            className="w-full h-full object-cover"
-            alt="Bus on the road"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none"></div>
+        {/* Hero Gallery (Standard: 1 large + 4 small thumbnails on desktop) */}
+        <div className="relative grid grid-cols-1 md:grid-cols-4 gap-2 rounded-2xl overflow-hidden h-auto md:h-[450px] mb-6 group">
+          {/* Main Large Image */}
+          <div className="md:col-span-2 md:row-span-2 h-64 md:h-full relative group/main">
+            <div className="w-full h-full cursor-pointer" onClick={() => setShowAllPhotos(true)}>
+              <img
+                src={images[activeImg]}
+                className="w-full h-full object-cover hover:opacity-90 transition-opacity"
+                alt={title}
+              />
+            </div>
 
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              prevImg();
-            }}
-            className="absolute left-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/70 backdrop-blur-sm text-black flex items-center justify-center hover:bg-white transition-all shadow-sm opacity-100 md:opacity-0 md:group-hover:opacity-100 z-10"
-          >
-            <ChevronLeft className="h-6 w-6" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              nextImg();
-            }}
-            className="absolute right-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/70 backdrop-blur-sm text-black flex items-center justify-center hover:bg-white transition-all shadow-sm opacity-100 md:opacity-0 md:group-hover:opacity-100 z-10"
-          >
-            <ChevronRight className="h-6 w-6" />
-          </button>
-
-          <div className="absolute bottom-4 left-4 flex flex-col gap-2">
-            <span className="bg-purple/90 text-white text-xs px-3 py-1 rounded-full font-medium backdrop-blur-sm flex items-center gap-1.5">
-              <Bus className="w-3.5 h-3.5" /> Bus • 40 seats
-            </span>
+            {images.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    prevImg();
+                  }}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/70 backdrop-blur-sm text-black flex items-center justify-center hover:bg-white transition-all shadow-sm opacity-100 md:opacity-0 md:group-hover/main:opacity-100 z-10 cursor-pointer"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    nextImg();
+                  }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/70 backdrop-blur-sm text-black flex items-center justify-center hover:bg-white transition-all shadow-sm opacity-100 md:opacity-0 md:group-hover/main:opacity-100 z-10 cursor-pointer"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+              </>
+            )}
           </div>
 
-          <div className="absolute bottom-4 right-4 flex gap-2">
-            <button
-              onClick={handleShare}
-              className="bg-white/90 backdrop-blur-sm h-9 w-9 rounded-lg shadow-lg flex items-center justify-center hover:bg-white transition-colors text-black"
-              title="Share route"
+          {/* 4 Small Images */}
+          {images.slice(1, 5).map((img: string, idx: number) => (
+            <div
+              key={idx}
+              className="hidden md:block h-[222px] relative cursor-pointer"
+              onClick={() => {
+                setActiveImg(idx + 1);
+                setShowAllPhotos(true);
+              }}
             >
-              <Share2 className="h-4 w-4" />
-            </button>
+              <img
+                src={img}
+                className="w-full h-full object-cover hover:opacity-90 transition-opacity"
+                alt={`${title} ${idx + 2}`}
+              />
+            </div>
+          ))}
+
+          <button
+            type="button"
+            onClick={() => setShowAllPhotos(true)}
+            className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg text-xs font-semibold shadow-lg flex items-center gap-2 hover:bg-white transition-colors text-black cursor-pointer"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+            {images.length} photos
+          </button>
+
+          <div className="absolute top-4 right-4 md:right-auto md:left-4 flex gap-2">
             <button
-              onClick={handleToggleFavorite}
-              className="bg-white/90 backdrop-blur-sm h-9 w-9 rounded-lg shadow-lg flex items-center justify-center hover:bg-white transition-colors text-black"
-              title="Save route"
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleToggleFavorite();
+              }}
+              className="h-9 w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-md hover:bg-white transition-colors cursor-pointer"
+              title="Save transport"
             >
               <Heart
                 className={cn("h-4 w-4", isFavorited ? "fill-purple text-purple" : "text-black")}
               />
             </button>
             <button
-              onClick={() => setShowAllPhotos(true)}
-              className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg text-xs font-semibold shadow-lg flex items-center gap-1.5 hover:bg-white transition-colors text-black"
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleShare();
+              }}
+              className="h-9 w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-md hover:bg-white text-black transition-colors cursor-pointer"
+              title="Share transport"
             >
-              <span>{images.length} photos</span>
+              <Share2 className="h-4 w-4" />
             </button>
           </div>
         </div>
 
         {/* Main Info + Booking Sidebar Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8">
-          {/* LEFT COLUMN: Trust & Logistics */}
-          <div className="space-y-6 divide-y divide-white-soft">
-            {/* Title & Host */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_400px] gap-8 lg:gap-10 items-start">
+          {/* LEFT COLUMN: Trust & Information */}
+          <div className="space-y-8 divide-y divide-neutral-200">
+            {/* Header: Title, Location, Operator */}
             <div className="pt-2">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h1 className="text-2xl sm:text-[28px] font-semibold tracking-tight text-neutral-900 leading-tight">
-                    {title}
-                  </h1>
-                  <div className="mt-2 flex flex-wrap items-center gap-2 text-xs sm:text-sm text-neutral-600">
-                    <span className="flex items-center gap-1 font-medium text-neutral-900">
-                      <Star className="h-3.5 w-3.5 fill-[#f59e0b] text-[#f59e0b]" />
-                      {avgRating.toFixed(1)}
+              <h1 className="text-2xl sm:text-[28px] font-semibold tracking-tight text-neutral-900 leading-tight">
+                {title}
+              </h1>
+              <p className="text-sm font-normal text-neutral-500 mt-1">{locationString}</p>
+
+              <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs sm:text-sm text-neutral-600">
+                <span className="flex items-center gap-1 font-semibold text-neutral-900">
+                  <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                  {avgRating.toFixed(1)}
+                </span>
+                <span className="text-neutral-300">·</span>
+                <button
+                  type="button"
+                  onClick={() => setShowReviewsModal(true)}
+                  className="font-normal text-neutral-500 hover:text-neutral-900 underline transition-colors cursor-pointer"
+                >
+                  {reviewCount} reviews
+                </button>
+                <span className="text-neutral-300">·</span>
+                <span className="font-normal text-neutral-500">
+                  Operated by <span className="font-medium text-neutral-800">{hostName}</span>
+                </span>
+              </div>
+
+              {/* Mobile Quick-Book Card */}
+              <div className="lg:hidden mt-5 p-4 sm:p-5 rounded-2xl bg-white border border-neutral-200 shadow-sm space-y-3.5">
+                <div className="flex items-baseline justify-between">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-2xl sm:text-3xl font-bold text-neutral-900">
+                      {priceDisplay}
                     </span>
-                    <span className="text-neutral-300">·</span>
-                    <span className="text-neutral-600 underline cursor-pointer font-normal">
-                      {reviewCount} reviews
-                    </span>
-                    <span className="text-neutral-300">·</span>
-                    <span className="text-neutral-600 font-normal">Zambia Scheduled Route</span>
-                    <span className="text-neutral-300">·</span>
-                    <span className="text-neutral-700 font-medium">Operator: {hostName}</span>
+                    <span className="text-xs font-normal text-neutral-500">/ {rateUnit}</span>
+                  </div>
+                  <span className="text-xs font-semibold text-purple bg-purple/10 px-2.5 py-1 rounded-full">
+                    Instant Book
+                  </span>
+                </div>
+
+                <div className="space-y-2.5">
+                  <div>
+                    <label className="text-[10px] font-semibold uppercase text-neutral-400 block mb-0.5">
+                      Travel Date
+                    </label>
+                    <input
+                      type="date"
+                      value={selectedDate}
+                      min={today}
+                      onChange={(e) => {
+                        setSelectedDate(e.target.value);
+                        setAvailabilityResult("idle");
+                      }}
+                      className="w-full bg-neutral-50 border border-neutral-200 rounded-xl p-2.5 text-xs font-semibold text-neutral-900 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-semibold uppercase text-neutral-400 block mb-0.5">
+                      Passengers
+                    </label>
+                    <select
+                      value={passengers}
+                      onChange={(e) => setPassengers(Number(e.target.value))}
+                      className="w-full bg-neutral-50 border border-neutral-200 rounded-xl p-2 text-xs font-semibold text-neutral-900 focus:outline-none"
+                    >
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                        <option key={n} value={n}>
+                          {n} passenger{n > 1 ? "s" : ""}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
-              </div>
 
-              {/* Quick Facts */}
-              <div className="flex flex-wrap gap-4 mt-4 text-sm text-black-soft bg-white-soft p-3 rounded-xl border border-white-soft">
-                <span className="flex items-center gap-1.5">
-                  <Clock className="w-4 h-4 text-purple" />
-                  <span className="font-medium">{route.departureTime || "6:00 AM"} departure</span>
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Timer className="w-4 h-4 text-purple" />
-                  <span className="font-medium">{route.duration || "8 hours"} duration</span>
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Wifi className="w-4 h-4 text-purple" />
-                  <span className="font-medium">Free Wi-Fi onboard</span>
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <MapPin className="w-4 h-4 text-purple" />
-                  <span className="font-medium">Intercity Terminal</span>
-                </span>
+                <button
+                  type="button"
+                  onClick={handleProceedToBook}
+                  className="w-full bg-purple hover:bg-purple-hover text-white rounded-xl py-3.5 font-bold text-sm sm:text-base transition-all shadow-md shadow-purple/25 flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                >
+                  <span>Reserve Transport</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
               </div>
             </div>
 
-            {/* The Overview */}
-            <div className="pt-6">
-              <h2 className="font-semibold text-lg text-black">About this ride</h2>
-              <p className="text-sm text-black-soft leading-relaxed mt-2 whitespace-pre-wrap">
-                Operating daily for over 7 years, {hostName} is a locally-owned family business
-                providing reliable and comfortable road travel between Zambia&apos;s two biggest
-                cities. Our coaches are equipped with modern AC, free high-speed Wi-Fi, and USB
-                charging ports at every seat. We make two scheduled rest stops for food and restroom
-                breaks.
+            {/* About this Transport (Truncated with Show More Modal) */}
+            <div className="pt-8">
+              <h2 className="text-lg font-semibold text-neutral-900">About this transport</h2>
+              <p
+                className={cn(
+                  "text-sm font-normal text-neutral-600 leading-relaxed mt-2.5 whitespace-pre-wrap",
+                  isLongDescription && "line-clamp-4",
+                )}
+              >
+                {descriptionText}
               </p>
+              {isLongDescription && (
+                <button
+                  type="button"
+                  onClick={() => setShowDescriptionModal(true)}
+                  className="mt-2 text-xs font-semibold text-purple hover:underline inline-flex items-center gap-1 cursor-pointer"
+                >
+                  <span>Show more</span>
+                  <ChevronRight className="h-3.5 w-3.5" />
+                </button>
+              )}
             </div>
 
-            {/* Route & Schedule Timeline */}
-            <div className="pt-6">
-              <h2 className="font-semibold text-lg text-black">Route & schedule</h2>
-              <div className="relative mt-4 pl-6 space-y-6 border-l-2 border-purple/30">
-                <div>
-                  <div className="absolute -left-[5px] top-1 w-2.5 h-2.5 bg-purple rounded-full ring-4 ring-purple/10"></div>
-                  <p className="font-semibold text-sm text-black">
-                    {route.departureTime || "6:00 AM"} — Depart {route.from}
-                  </p>
-                  <p className="text-xs text-black-muted mt-1">Intercity Bus Terminal (Gate 4)</p>
-                </div>
-                <div>
-                  <div className="absolute -left-[5px] top-1 w-2.5 h-2.5 bg-purple rounded-full ring-4 ring-purple/10"></div>
-                  <p className="font-semibold text-sm text-black">
-                    7:45 AM — Rest Stop: Kafue Town
-                  </p>
-                  <p className="text-xs text-black-muted mt-1">
-                    30-minute break for food, restrooms, and stretching.
-                  </p>
-                </div>
-                <div>
-                  <div className="absolute -left-[5px] top-1 w-2.5 h-2.5 bg-purple rounded-full ring-4 ring-purple/10"></div>
-                  <p className="font-semibold text-sm text-black">
-                    {route.arrivalTime || "2:00 PM"} — Arrival in {route.to}
-                  </p>
-                  <p className="text-xs text-black-muted mt-1">
-                    Main Bus Station. Transfer to your lodge is available upon request.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Onboard Amenities */}
-            <div className="pt-6">
-              <h2 className="font-semibold text-lg text-black">Onboard amenities</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6 mt-4 text-sm text-black-soft">
-                <div className="flex items-center gap-3">
-                  <Wifi className="w-5 h-5 text-purple shrink-0" /> Complimentary Wi-Fi
-                </div>
-                <div className="flex items-center gap-3">
-                  <Snowflake className="w-5 h-5 text-purple shrink-0" /> Air Conditioning
-                </div>
-                <div className="flex items-center gap-3">
-                  <Plug className="w-5 h-5 text-purple shrink-0" /> USB Charging Ports (Every seat)
-                </div>
-                <div className="flex items-center gap-3">
-                  <Briefcase className="w-5 h-5 text-purple shrink-0" /> Under-bus & overhead
-                  luggage
-                </div>
-                <div className="flex items-center gap-3">
-                  <MonitorPlay className="w-5 h-5 text-purple shrink-0" /> In-bus Entertainment
-                  screens
-                </div>
-                <div className="flex items-center gap-3">
-                  <HeartPulse className="w-5 h-5 text-purple shrink-0" /> Sanitizer & emergency
-                  first aid
-                </div>
-              </div>
-            </div>
-
-            {/* Meeting Point & Logistics */}
-            <div className="pt-6">
-              <h2 className="font-semibold text-lg text-black">Meeting point & logistics</h2>
-              <p className="text-sm text-black-soft leading-relaxed mt-2">
-                <strong>Departure point:</strong> {route.from} Intercity Bus Terminal, Gate 4 (Look
-                for the purple booth).
+            {/* Vehicle Features & Guidelines (Preview + Show All Modal) */}
+            <div className="pt-8">
+              <h2 className="text-lg font-semibold text-neutral-900">
+                Vehicle features &amp; guidelines
+              </h2>
+              <p className="text-xs text-neutral-500 mt-0.5">
+                Onboard equipment, passenger recommendations, and safety rules
               </p>
-              <div className="mt-3 p-3 bg-purple-muted rounded-xl flex gap-3 text-sm text-black-soft">
-                <Lightbulb className="w-5 h-5 text-purple shrink-0 mt-0.5" />
-                <p>
-                  <strong className="text-purple">Student tip:</strong> Arrive 30 minutes early to
-                  secure your preferred seat and store your luggage. Buses depart exactly on time.
-                </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3.5 gap-x-6 mt-4 text-sm font-normal text-neutral-700">
+                {vehicleFeaturesList.slice(0, 6).map((feat, idx) => {
+                  const lower = feat.toLowerCase().replace(/[\s/-]+/g, "_");
+                  const matchedKey = Object.keys(ALL_TRANSPORT_FEATURE_SPECS).find(
+                    (k) =>
+                      k === lower ||
+                      ALL_TRANSPORT_FEATURE_SPECS[k].label.toLowerCase() === feat.toLowerCase() ||
+                      feat.toLowerCase().includes(k.replace(/_/g, " ")),
+                  );
+                  const icon = matchedKey ? (
+                    ALL_TRANSPORT_FEATURE_SPECS[matchedKey].icon
+                  ) : (
+                    <CarFront className="h-4 w-4 text-purple" />
+                  );
+
+                  return (
+                    <div key={idx} className="flex items-center gap-3">
+                      <span className="shrink-0">{icon}</span>
+                      <span>{feat}</span>
+                    </div>
+                  );
+                })}
               </div>
-              <div className="w-full h-40 bg-white-soft rounded-xl mt-4 flex items-center justify-center border border-white-soft relative overflow-hidden">
+
+              {totalFeaturesCount > 6 && (
+                <button
+                  type="button"
+                  onClick={() => setShowFeaturesModal(true)}
+                  className="mt-5 px-4 py-2 border border-neutral-300 hover:border-neutral-400 rounded-lg text-xs font-medium text-neutral-700 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+                >
+                  Show all {totalFeaturesCount} features &amp; guidelines
+                </button>
+              )}
+            </div>
+
+            {/* Service Highlights / Things to know */}
+            <div className="pt-8">
+              <h2 className="text-lg font-semibold text-neutral-900">Things to know</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-3 text-xs">
+                <div>
+                  <p className="font-medium text-neutral-800">Rate basis</p>
+                  <p className="text-neutral-500 font-normal mt-0.5 capitalize">
+                    Charged {rateUnit === "day" ? "per calendar day" : "per one-way trip"}
+                  </p>
+                </div>
+                <div>
+                  <p className="font-medium text-neutral-800">Luggage allowance</p>
+                  <p className="text-neutral-500 font-normal mt-0.5">
+                    Standard baggage + hand carry
+                  </p>
+                </div>
+                <div>
+                  <p className="font-medium text-neutral-800">Cancellation</p>
+                  <p className="text-neutral-500 font-normal mt-0.5">Free up to 24 hrs before</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Depot & Pickup Location with Google Maps */}
+            <div className="pt-8">
+              <h2 className="text-lg font-semibold text-neutral-900">Depot &amp; pickup location</h2>
+              <p className="text-xs font-normal text-neutral-500 leading-relaxed mt-1.5">
+                {route.address ? `${route.address}, ` : ""}
+                {locationString}. Base depot and pickup point on Google Maps below.
+              </p>
+
+              <div className="w-full h-56 sm:h-72 bg-neutral-100 rounded-xl mt-3 overflow-hidden border border-neutral-200 relative shadow-2xs">
                 <iframe
-                  title="Bus Terminal Map"
+                  title={`Google Map for ${title}`}
                   width="100%"
                   height="100%"
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  src={`https://www.openstreetmap.org/export/embed.html?bbox=28.2,-15.4,28.3,-15.3&layer=mapnik`}
-                  style={{ border: 0, filter: "contrast(0.9) brightness(0.95)" }}
+                  src={`https://maps.google.com/maps?q=${lat},${lng}&t=m&z=14&ie=UTF8&iwloc=&output=embed`}
+                  className="w-full h-full border-0"
                 />
               </div>
-            </div>
 
-            {/* Reviews */}
-            <div className="pt-6">
-              <div className="flex items-center justify-between">
-                <h2 className="font-semibold text-lg flex items-center gap-2 text-black">
-                  <span className="bg-gold text-white px-2 py-0.5 rounded text-sm">
-                    {avgRating.toFixed(1)}
-                  </span>{" "}
-                  · {reviewCount} reviews
-                </h2>
-                <button
-                  onClick={() => setShowReviewsModal(true)}
-                  className="text-purple text-xs font-semibold hover:underline"
+              <div className="mt-2.5 flex items-center justify-between text-xs">
+                <span className="text-neutral-500 font-mono">
+                  {lat.toFixed(4)}°, {lng.toFixed(4)}°
+                </span>
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-purple hover:underline inline-flex items-center gap-1.5"
                 >
-                  Read all reviews
-                </button>
-              </div>
-              <div className="mt-4 space-y-4">
-                <div className="bg-white p-4 rounded-xl border border-white-soft">
-                  <div className="flex items-center justify-between">
-                    <span className="font-semibold text-sm text-black">Mutale (Student, 22)</span>
-                    <span className="text-xs text-black-faint">Dec 2025</span>
-                  </div>
-                  <p className="text-sm text-black-soft mt-2">
-                    &quot;Super reliable! The bus left exactly on time, the Wi-Fi worked the whole
-                    trip, and the AC was ice-cold. Best value for money on this route.&quot;
-                  </p>
-                </div>
-                <div className="bg-white p-4 rounded-xl border border-white-soft">
-                  <div className="flex items-center justify-between">
-                    <span className="font-semibold text-sm text-black">The Journey Crew</span>
-                    <span className="text-xs text-black-faint">Nov 2025</span>
-                  </div>
-                  <p className="text-sm text-black-soft mt-2">
-                    &quot;We took this bus for our group trip. The drivers were super friendly, they
-                    helped us load our gear, and we made it to Livingstone right on time. Highly
-                    recommend!&quot;
-                  </p>
-                </div>
+                  <Navigation className="h-3.5 w-3.5" />
+                  <span>Open in Google Maps</span>
+                </a>
               </div>
             </div>
 
-            {/* Meet the Host */}
-            <div className="pt-6">
-              <h2 className="font-semibold text-lg text-black">Meet the hosts</h2>
-              <div className="flex items-center gap-4 mt-3">
-                <div className="w-12 h-12 rounded-full bg-purple text-white flex items-center justify-center font-bold text-lg shrink-0 shadow-sm">
-                  CT
+            {/* Reviews Section */}
+            <ReviewSection
+              listingId={route.id}
+              listingName={title}
+              listingType="Transport"
+              reviews={reviews.map((r: any) => ({
+                id: r.id,
+                author: r.author || r.userName || "Traveler",
+                rating: r.rating || 5,
+                content: r.content || r.comment || "",
+                date: r.date || "Recent",
+                authorLocation: r.authorLocation || "Verified Passenger",
+                avatar: r.avatar,
+              }))}
+              avgRating={avgRating}
+              reviewCount={reviewCount}
+              onViewAllReviews={() => setShowReviewsModal(true)}
+            />
+
+            {/* Meet the Operator */}
+            <div className="pt-8">
+              <h2 className="text-lg font-semibold text-neutral-900">Meet your operator</h2>
+              <div className="flex items-center gap-3.5 mt-3.5">
+                <div className="w-11 h-11 rounded-full flex items-center justify-center font-medium text-white text-base shrink-0 shadow-sm bg-purple">
+                  {hostName.slice(0, 2).toUpperCase()}
                 </div>
                 <div>
-                  <p className="font-semibold text-sm text-black">The Chisanga Family</p>
-                  <p className="text-xs text-black-muted flex items-center gap-1">
-                    <span className="bg-green-500 w-2 h-2 rounded-full inline-block"></span>{" "}
-                    Responds within 15 minutes
+                  <p className="font-semibold text-sm text-neutral-900">{hostName}</p>
+                  <p className="text-xs font-normal text-neutral-500 flex items-center gap-1.5 mt-0.5">
+                    <span className="bg-emerald-500 w-1.5 h-1.5 rounded-full inline-block"></span>
+                    Professional licensed fleet operator
                   </p>
-                  <p className="text-xs text-black-muted">Family-owned transport since 2018.</p>
                 </div>
               </div>
-              <p className="text-sm text-black-soft mt-3 italic">
-                &quot;We are proud to offer the youth of Zambia reliable, comfortable travel at a
-                price their pockets can handle. We reinvest everything we make to keep our buses in
-                top condition and our drivers well-paid.&quot;
+              <p className="text-xs font-normal text-neutral-600 leading-relaxed mt-3 italic">
+                &quot;We take pride in delivering safe, punctual, and comfortable travel across Zambia.
+                Clean vehicles and experienced drivers guaranteed.&quot;
               </p>
+              <div className="mt-3.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setHostQuestionSent(false);
+                    setShowHostContactModal(true);
+                  }}
+                  className="px-3.5 py-1.5 border border-neutral-300 hover:border-neutral-400 rounded-lg text-xs font-medium text-neutral-700 hover:bg-neutral-50 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+                >
+                  <MessageSquare className="h-3.5 w-3.5 text-neutral-400" />
+                  Contact operator
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* RIGHT COLUMN: The Booking Card */}
-          <div className="relative">
-            <div className="bg-white border border-white-soft rounded-2xl p-6 shadow-lg sticky top-24">
-              <div className="flex items-center justify-between border-b border-white-soft pb-4">
-                <div>
-                  <span className="text-2xl font-bold text-black">{priceDisplay}</span>{" "}
-                  <span className="text-xs text-black-muted font-medium">/ per seat</span>
+          {/* RIGHT COLUMN: Streamlined Sticky Booking Card */}
+          <div className="relative" id="booking-section">
+            <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm sticky top-24 space-y-4">
+              {/* Clear Pricing Header */}
+              <div className="flex items-baseline justify-between border-b border-neutral-100 pb-4">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-extrabold text-neutral-900 tracking-tight">
+                    {priceDisplay}
+                  </span>
+                  <span className="text-xs font-normal text-neutral-500">/ {rateUnit}</span>
                 </div>
-                <div className="text-sm text-black-soft font-medium flex items-center gap-1">
-                  <span className="bg-gold text-white px-1.5 py-0.5 rounded text-xs font-bold">
-                    {avgRating.toFixed(1)}
-                  </span>{" "}
-                  Highly rated
+                <div className="text-xs font-medium text-neutral-700 flex items-center gap-1">
+                  <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                  <span>{avgRating.toFixed(1)}</span>
+                  <span className="text-neutral-400 font-normal">({reviewCount})</span>
                 </div>
               </div>
 
-              {/* FOMO / Seat Scarcity */}
-              <div className="mt-4 p-3 bg-purple-muted border border-purple-border rounded-lg flex items-center gap-2 text-purple text-xs font-semibold">
-                <span className="w-2 h-2 bg-purple rounded-full inline-block animate-pulse shrink-0"></span>
-                Only 12 seats left for this departure!
-              </div>
-
-              <div className="py-4 space-y-4">
-                {/* Departure Time Slots */}
+              <div className="space-y-3">
+                {/* Select Travel Date */}
                 <div>
-                  <label className="text-[10px] text-black-faint block font-bold uppercase tracking-wider mb-1.5">
-                    DEPARTURE TIME
-                  </label>
-                  <div className="grid grid-cols-3 gap-1.5">
-                    {["06:00 AM", "11:30 AM", "15:00 PM"].map((t) => (
-                      <button
-                        key={t}
-                        type="button"
-                        onClick={() => setSelectedDeparture(t)}
-                        className={cn(
-                          "py-2 px-1 rounded-xl text-xs font-bold border transition-all text-center",
-                          selectedDeparture === t
-                            ? "border-purple bg-purple/10 text-purple"
-                            : "border-black/10 bg-white text-neutral-600 hover:border-black/20",
-                        )}
-                      >
-                        {t}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Travel Date */}
-                <div>
-                  <label className="text-[10px] text-black-faint block font-bold uppercase tracking-wider mb-1.5">
-                    TRAVEL DATE
+                  <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
+                    Travel Date
                   </label>
                   <input
                     type="date"
@@ -492,273 +686,399 @@ export function TransportDetailPage({ route, backHref = "/transport" }: Transpor
                     min={today}
                     onChange={(e) => {
                       setSelectedDate(e.target.value);
-                      setAvailabilityResult("available");
+                      setAvailabilityResult("idle");
                     }}
-                    className="w-full bg-white-warm rounded-xl p-2.5 border border-white-soft text-sm font-semibold text-black focus:outline-none focus:ring-2 focus:ring-purple/30"
+                    className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                   />
                 </div>
 
-                {/* Travel Class */}
+                {/* Preferred Departure / Pickup Time Slot */}
                 <div>
-                  <label className="text-[10px] text-black-faint block font-bold uppercase tracking-wider mb-1.5">
-                    SEAT CLASS
+                  <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
+                    Departure / Pickup Time
                   </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setTravelClass("standard")}
-                      className={cn(
-                        "p-2.5 rounded-xl border text-xs font-bold text-center transition-all",
-                        travelClass === "standard"
-                          ? "border-purple bg-purple/10 text-purple"
-                          : "border-neutral-200 text-neutral-600",
-                      )}
-                    >
-                      Standard (K{route.price})
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setTravelClass("vip")}
-                      className={cn(
-                        "p-2.5 rounded-xl border text-xs font-bold text-center transition-all",
-                        travelClass === "vip"
-                          ? "border-purple bg-purple/10 text-purple"
-                          : "border-neutral-200 text-neutral-600",
-                      )}
-                    >
-                      VIP First (+K70)
-                    </button>
-                  </div>
+                  <select
+                    value={selectedPickupTime}
+                    onChange={(e) => setSelectedPickupTime(e.target.value)}
+                    className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
+                  >
+                    <option value="07:00 AM">07:00 AM — Early Morning Departure</option>
+                    <option value="08:30 AM">08:30 AM — Morning Departure</option>
+                    <option value="11:00 AM">11:00 AM — Midday Departure</option>
+                    <option value="14:00 PM">14:00 PM — Afternoon Departure</option>
+                    <option value="16:30 PM">16:30 PM — Late Afternoon Departure</option>
+                    <option value="Flexible">Flexible / On-Demand Timing</option>
+                  </select>
                 </div>
 
-                {/* Seat Preference */}
+                {/* Passenger Selector */}
                 <div>
-                  <label className="text-[10px] text-black-faint block font-bold uppercase tracking-wider mb-1.5">
-                    SEAT PREFERENCE
-                  </label>
-                  <div className="grid grid-cols-3 gap-1.5 text-xs">
-                    {(["window", "aisle", "any"] as const).map((pref) => (
-                      <button
-                        key={pref}
-                        type="button"
-                        onClick={() => setSeatPreference(pref)}
-                        className={cn(
-                          "py-2 rounded-xl border font-bold capitalize transition-all",
-                          seatPreference === pref
-                            ? "border-purple bg-purple/10 text-purple"
-                            : "border-neutral-200 text-neutral-600",
-                        )}
-                      >
-                        {pref}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Seat Selector */}
-                <div>
-                  <label className="text-[10px] text-black-faint block font-medium mb-1">
-                    SEATS
+                  <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
+                    Passengers
                   </label>
                   <select
                     value={passengers}
                     onChange={(e) => setPassengers(Number(e.target.value))}
-                    className="w-full bg-white-warm rounded-lg p-2.5 border border-white-soft text-sm font-semibold text-black focus:outline-none focus:ring-2 focus:ring-purple/30"
+                    className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                   >
-                    {[1, 2, 3, 4, 5, 6].map((n) => (
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
                       <option key={n} value={n}>
-                        {n} seat{n !== 1 ? "s" : ""}
+                        {n} passenger{n !== 1 ? "s" : ""}
                       </option>
                     ))}
                   </select>
                 </div>
 
-                {/* Check Availability Button */}
-                <button
-                  onClick={handleCheckAvailability}
-                  disabled={checkingAvailability || !selectedDate}
-                  className="w-full bg-purple text-white rounded-xl py-3 font-semibold hover:bg-purple-hover transition-colors text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
-                >
-                  {checkingAvailability ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Checking availability...
-                    </>
-                  ) : (
-                    <>
-                      <Search className="h-4 w-4" />
-                      Check availability
-                    </>
-                  )}
-                </button>
+                {/* Check Availability Button if date unverified */}
+                {availabilityResult === "idle" && (
+                  <button
+                    type="button"
+                    onClick={handleCheckAvailability}
+                    disabled={checkingAvailability || !selectedDate || isSoldOut}
+                    className="w-full bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded-xl py-2.5 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  >
+                    {checkingAvailability ? (
+                      <>
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        <span>Checking vehicle availability...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Search className="h-3.5 w-3.5 text-purple" />
+                        <span>Check Date Availability</span>
+                      </>
+                    )}
+                  </button>
+                )}
 
-                {/* Availability Result */}
+                {/* Availability status */}
                 {availabilityResult === "available" && (
-                  <div className="p-2.5 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2 text-green-700 text-xs font-semibold">
-                    <CheckCircle2 className="h-4 w-4 shrink-0" />
-                    Seats available! {passengers} seat{passengers !== 1 ? "s" : ""} remaining
+                  <div className="p-2 bg-emerald-50 border border-emerald-200/60 rounded-lg flex items-center gap-1.5 text-emerald-800 text-[11px] font-normal">
+                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
+                    <span>
+                      {availableVehiclesCount} vehicle{availableVehiclesCount !== 1 ? "s" : ""} ready for dispatch on this date
+                    </span>
                   </div>
                 )}
                 {availabilityResult === "unavailable" && (
-                  <div className="p-2.5 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700 text-xs font-semibold">
-                    <AlertCircle className="h-4 w-4 shrink-0" />
-                    Sold out for this date. Try another date.
+                  <div className="p-2 bg-rose-50 border border-rose-200/60 rounded-lg flex items-center gap-1.5 text-rose-800 text-[11px] font-normal">
+                    <AlertCircle className="h-3.5 w-3.5 shrink-0 text-rose-600" />
+                    <span>No vehicles available for this date. Check other dates.</span>
                   </div>
                 )}
 
-                {/* Price Breakdown (show when available) */}
-                {availabilityResult === "available" && (
-                  <div className="pt-3 border-t border-white-soft space-y-2 text-sm">
-                    <div className="flex justify-between text-black-soft">
+                {/* Price Breakdown */}
+                {selectedDate ? (
+                  <div className="pt-3 border-t border-neutral-100 space-y-1.5 text-xs">
+                    <div className="flex justify-between text-neutral-500 font-normal">
                       <span>
-                        {passengers} seat{passengers !== 1 ? "s" : ""} x {priceDisplay}
+                        Rate ({rateUnit})
                       </span>
-                      <span>{`K${(route.price * passengers).toLocaleString()}`}</span>
+                      <span className="text-neutral-900 font-medium">
+                        K{basePrice.toLocaleString()}
+                      </span>
                     </div>
-                    <div className="flex justify-between text-black-soft">
-                      <span>Luggage allowance</span>
-                      <span className="text-green-600 font-medium">Included</span>
+                    <div className="flex justify-between text-neutral-500 font-normal">
+                      <span>Passenger Cover &amp; Fuel</span>
+                      <span className="text-emerald-700 font-medium">Included</span>
                     </div>
-                    <div className="flex justify-between text-black font-bold border-t border-white-soft pt-3 mt-2">
-                      <span>Total (ZMW)</span>
-                      <span>{`K${(route.price * passengers).toLocaleString()}`}</span>
+                    <div className="flex justify-between text-neutral-900 font-semibold border-t border-neutral-100 pt-2 text-sm">
+                      <span>Total</span>
+                      <span>K{basePrice.toLocaleString()}</span>
                     </div>
+                    <p className="text-[11px] text-neutral-400 font-normal text-center mt-1">
+                      Direct booking · Verified vehicle
+                    </p>
+                  </div>
+                ) : (
+                  <div className="pt-1 text-xs font-normal text-neutral-400 text-center">
+                    Select a travel date to proceed
                   </div>
                 )}
               </div>
 
-              {/* Cancellation policy */}
-              <div className="mb-5 text-center">
-                <span className="text-[10px] text-black-muted bg-white-warm px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 font-medium">
-                  <RefreshCcw className="w-3 h-3" /> Free cancellation up to 2 hours before
-                </span>
-              </div>
+              {/* Main Booking Action Button */}
+              <button
+                type="button"
+                onClick={handleProceedToBook}
+                disabled={isSoldOut}
+                className={cn(
+                  "w-full rounded-xl py-3.5 sm:py-4 font-bold text-base transition-all flex items-center justify-center gap-2 transform active:scale-[0.99] cursor-pointer",
+                  isSoldOut
+                    ? "bg-neutral-200 text-neutral-400 cursor-not-allowed"
+                    : "bg-purple hover:bg-purple-hover text-white shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35",
+                )}
+              >
+                <span>{isSoldOut ? "Sold Out (0 Available)" : "Reserve Transport"}</span>
+                {!isSoldOut && <ArrowRight className="h-5 w-5" />}
+              </button>
 
-              {availabilityResult === "available" ? (
-                <button
-                  onClick={handleProceedToBook}
-                  className="w-full bg-purple text-white rounded-xl py-3.5 font-semibold hover:bg-purple-hover transition-colors text-base shadow-md shadow-purple/20"
-                >
-                  Book your seat
-                </button>
-              ) : (
-                <button
-                  disabled
-                  className="w-full bg-black/10 text-black-faint rounded-xl py-3.5 font-semibold text-base cursor-not-allowed"
-                >
-                  Select date to book
-                </button>
-              )}
+              {/* Cross-sell */}
+              <div className="pt-3 border-t border-neutral-100 flex items-center justify-between text-xs">
+                <span className="text-neutral-500 font-normal">Need lodging or tours?</span>
+                <Link href="/stays" className="text-purple font-medium hover:underline">
+                  Find stays →
+                </Link>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Similar Routes Section */}
-        <section className="mt-16 pt-8 border-t border-white-soft">
-          <h2 className="text-xl font-bold text-black mb-6">
-            More transport routes you might like
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                id: "sim-t1",
-                name: "Lusaka to Ndola Express",
-                type: "Bus",
-                price: "K150",
-                rating: 4.7,
-                img: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80",
-              },
-              {
-                id: "sim-t2",
-                name: "Livingstone to Sesheke Shuttle",
-                type: "Minibus",
-                price: "K120",
-                rating: 4.5,
-                img: "https://images.unsplash.com/photo-1464219789935-c2d9d9aba644?auto=format&fit=crop&w=600&q=80",
-              },
-              {
-                id: "sim-t3",
-                name: "Lusaka to Chipata VIP Coach",
-                type: "Luxury Bus",
-                price: "K220",
-                rating: 4.9,
-                img: "https://images.unsplash.com/photo-1570125909232-eb2be79ff63d?auto=format&fit=crop&w=600&q=80",
-              },
-            ].map((simItem) => (
-              <Link href={`/transport/${simItem.id}`} key={simItem.id} className="group block">
-                <div className="w-full h-48 rounded-xl bg-white-soft overflow-hidden mb-3 relative">
-                  <img
-                    src={simItem.img}
-                    alt={simItem.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <button className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm">
-                    <Heart className="h-4 w-4 text-black hover:text-purple transition-colors" />
-                  </button>
-                  <div className="absolute bottom-2 left-2">
-                    <span className="bg-purple/90 text-white text-[10px] px-2 py-0.5 rounded-full font-medium backdrop-blur-sm">
-                      {simItem.type}
-                    </span>
+        {/* Similar Transport Section */}
+        <section className="mt-16 pt-8 border-t border-neutral-200">
+          <div className="flex items-baseline justify-between mb-5">
+            <div>
+              <h2 className="text-lg font-semibold text-neutral-900">
+                Similar transport options in Zambia
+              </h2>
+              <p className="text-xs text-neutral-500 mt-0.5">Explore popular connections and vehicles</p>
+            </div>
+            <Link
+              href="/transport"
+              className="text-xs font-medium text-purple hover:underline inline-flex items-center gap-1"
+            >
+              See all transport →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {mockTransport
+              .filter((t) => t.id !== route.id)
+              .slice(0, 4)
+              .map((item) => (
+                <Link
+                  key={item.id}
+                  href={`/transport/${item.id}`}
+                  className="group block bg-white rounded-xl overflow-hidden border border-neutral-200/80 p-2.5 hover:shadow-md transition-shadow"
+                >
+                  <div className="relative aspect-4/3 rounded-lg overflow-hidden mb-2.5 bg-neutral-100">
+                    <img
+                      src={item.image}
+                      alt={`${item.from} to ${item.to}`}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
                   </div>
-                </div>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-semibold text-black group-hover:text-purple transition-colors truncate">
-                      {simItem.name}
+                  <div className="flex justify-between items-baseline gap-2">
+                    <h3 className="font-medium text-sm text-neutral-900 group-hover:text-purple transition-colors truncate">
+                      {item.from} to {item.to}
                     </h3>
+                    <div className="flex items-center gap-0.5 text-xs font-medium text-neutral-700 shrink-0">
+                      <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                      <span>4.8</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1 text-sm font-semibold text-black shrink-0">
-                    <span className="bg-gold text-white px-1.5 py-0.5 rounded text-[10px]">
-                      {simItem.rating}
-                    </span>
-                  </div>
-                </div>
-                <p className="text-sm text-black font-semibold mt-1">
-                  {simItem.price} <span className="font-normal text-black-faint">/ seat</span>
-                </p>
-              </Link>
-            ))}
+                  <p className="text-xs font-normal text-neutral-500 mt-0.5">{item.operator}</p>
+                  <p className="text-sm font-semibold text-neutral-900 mt-1">
+                    K{item.price}{" "}
+                    <span className="font-normal text-xs text-neutral-500">/ trip</span>
+                  </p>
+                </Link>
+              ))}
           </div>
         </section>
       </main>
 
       {/* MOBILE STICKY BOTTOM BAR */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-white-soft p-4 flex items-center justify-between shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-neutral-200 px-5 py-3.5 flex items-center justify-between shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-50">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xl font-bold text-black">{priceDisplay}</span>{" "}
-            <span className="text-xs text-black-muted">/ seat</span>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-2xl font-black text-neutral-900">{priceDisplay}</span>{" "}
+            <span className="text-xs font-medium text-neutral-500">/ {rateUnit}</span>
           </div>
-          <div className="text-xs text-black-muted flex items-center gap-1">
-            {availabilityResult === "available" ? (
-              <span className="text-green-600 font-bold">Available</span>
-            ) : (
+          <div className="text-xs text-neutral-600 flex items-center gap-1 font-medium mt-0.5">
+            <span className="text-purple font-semibold">{subtypeLabel}</span>
+            {selectedDate && (
               <>
-                <span className="text-red-700 font-bold">12 seats left!</span> ·{" "}
-                <span className="bg-gold text-white px-1 py-0.5 rounded text-[10px] font-bold">
-                  {avgRating.toFixed(1)}
-                </span>
+                <span>·</span>
+                <span className="text-neutral-500">{passengers} passengers</span>
               </>
             )}
           </div>
         </div>
-        {availabilityResult === "available" ? (
-          <button
-            onClick={handleProceedToBook}
-            className="bg-purple text-white px-6 py-3 rounded-full font-semibold shadow-md hover:bg-purple-hover transition-colors text-sm flex-1 ml-4 max-w-[140px]"
-          >
-            Book now
-          </button>
-        ) : (
-          <button
-            onClick={handleCheckAvailability}
-            disabled={checkingAvailability || !selectedDate}
-            className="bg-purple text-white px-6 py-3 rounded-full font-semibold shadow-md hover:bg-purple-hover transition-colors text-sm flex-1 ml-4 max-w-[140px] disabled:opacity-50"
-          >
-            {checkingAvailability ? "Checking..." : "Check dates"}
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={handleProceedToBook}
+          disabled={isSoldOut}
+          className={cn(
+            "px-7 py-3 rounded-xl font-bold text-sm ml-4 cursor-pointer transition-colors",
+            isSoldOut
+              ? "bg-neutral-200 text-neutral-400 cursor-not-allowed"
+              : "bg-purple text-white shadow-md shadow-purple/25 hover:bg-purple-hover",
+          )}
+        >
+          {isSoldOut ? "Sold out" : "Book now"}
+        </button>
       </div>
+
+      {/* Full-screen Photo Lightbox */}
+      {showAllPhotos && (
+        <div
+          className="fixed inset-0 z-[100] bg-black flex flex-col animate-in fade-in"
+          onClick={() => setShowAllPhotos(false)}
+        >
+          <div className="absolute top-0 inset-x-0 p-4 flex items-center justify-between z-10 bg-gradient-to-b from-black/80 to-transparent pb-10">
+            <span className="text-white font-medium text-sm px-2">
+              {activeImg + 1} / {images.length}
+            </span>
+            <button
+              type="button"
+              className="h-10 w-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors backdrop-blur-sm cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowAllPhotos(false);
+              }}
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <div className="flex-1 flex items-center justify-center relative w-full h-full">
+            <button
+              type="button"
+              className="absolute left-2 md:left-6 z-10 h-12 w-12 rounded-full bg-black/40 text-white flex items-center justify-center hover:bg-white/20 backdrop-blur-sm transition-colors cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                prevImg();
+              }}
+            >
+              <ChevronLeft className="h-8 w-8" />
+            </button>
+
+            <img
+              src={images[activeImg]}
+              alt={title}
+              className="w-full max-h-screen object-contain"
+              onClick={(e) => e.stopPropagation()}
+            />
+
+            <button
+              type="button"
+              className="absolute right-2 md:right-6 z-10 h-12 w-12 rounded-full bg-black/40 text-white flex items-center justify-center hover:bg-white/20 backdrop-blur-sm transition-colors cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                nextImg();
+              }}
+            >
+              <ChevronRight className="h-8 w-8" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Full Description Modal */}
+      {showDescriptionModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in"
+          onClick={() => setShowDescriptionModal(false)}
+        >
+          <div
+            className="bg-white rounded-3xl max-w-xl w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl animate-in zoom-in-95"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6 border-b border-black/[0.08] flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold text-neutral-900">About this transport</h3>
+                <p className="text-xs text-neutral-500 mt-0.5">{title}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowDescriptionModal(false)}
+                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="p-6 overflow-y-auto">
+              <p className="text-sm font-normal text-neutral-700 leading-relaxed whitespace-pre-wrap">
+                {descriptionText}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Full Features & Guidelines Modal */}
+      {showFeaturesModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in"
+          onClick={() => setShowFeaturesModal(false)}
+        >
+          <div
+            className="bg-white rounded-3xl max-w-lg w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl animate-in zoom-in-95"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6 border-b border-black/[0.08] flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold text-neutral-900">Features &amp; Guidelines</h3>
+                <p className="text-xs text-neutral-500 mt-0.5">{title}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowFeaturesModal(false)}
+                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto space-y-6 text-sm text-neutral-800">
+              {/* Vehicle Features */}
+              {vehicleFeaturesList.length > 0 && (
+                <div>
+                  <h4 className="font-bold text-xs uppercase tracking-wider text-purple mb-3 flex items-center gap-1.5">
+                    <CarFront className="h-4 w-4 text-purple" />
+                    <span>Vehicle Features &amp; Equipment</span>
+                  </h4>
+                  <div className="space-y-2.5">
+                    {vehicleFeaturesList.map((feat, idx) => (
+                      <div key={idx} className="flex items-center gap-3">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                        <span>{feat}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* What to Bring / Carry */}
+              {whatToCarryList.length > 0 && (
+                <div>
+                  <h4 className="font-bold text-xs uppercase tracking-wider text-neutral-700 mb-3 flex items-center gap-1.5">
+                    <FileText className="h-4 w-4 text-purple" />
+                    <span>Passenger Requirements &amp; What to Carry</span>
+                  </h4>
+                  <div className="space-y-2.5">
+                    {whatToCarryList.map((item, idx) => (
+                      <div key={idx} className="flex items-center gap-3">
+                        <Navigation className="h-4 w-4 text-purple shrink-0" />
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Guidelines & Safety Rules */}
+              {guidelinesList.length > 0 && (
+                <div>
+                  <h4 className="font-bold text-xs uppercase tracking-wider text-rose-700 mb-3 flex items-center gap-1.5">
+                    <Ban className="h-4 w-4 text-rose-600" />
+                    <span>Passenger Safety Guidelines &amp; Policies</span>
+                  </h4>
+                  <div className="space-y-2.5">
+                    {guidelinesList.map((rule, idx) => (
+                      <div key={idx} className="flex items-center gap-3 text-neutral-700">
+                        <XCircle className="h-4 w-4 text-rose-500 shrink-0" />
+                        <span>{rule}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* All Reviews Modal */}
       {showReviewsModal && (
@@ -778,39 +1098,18 @@ export function TransportDetailPage({ route, backHref = "/transport" }: Transpor
                 <p className="text-xs text-neutral-500">Verified passenger reviews for {title}</p>
               </div>
               <button
+                type="button"
                 onClick={() => setShowReviewsModal(false)}
-                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200"
+                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
             <div className="p-6 overflow-y-auto space-y-4">
-              <div className="grid grid-cols-2 gap-2 p-3.5 bg-neutral-50 rounded-2xl text-xs">
-                <div className="flex justify-between text-neutral-600">
-                  <span>Punctuality</span>
-                  <span className="font-bold text-neutral-900">4.9 ★</span>
-                </div>
-                <div className="flex justify-between text-neutral-600">
-                  <span>Seat Comfort</span>
-                  <span className="font-bold text-neutral-900">4.8 ★</span>
-                </div>
-                <div className="flex justify-between text-neutral-600">
-                  <span>Driver Safety</span>
-                  <span className="font-bold text-neutral-900">5.0 ★</span>
-                </div>
-                <div className="flex justify-between text-neutral-600">
-                  <span>AC &amp; Wi-Fi</span>
-                  <span className="font-bold text-neutral-900">4.7 ★</span>
-                </div>
-              </div>
-
               {reviews.map((r: any, idx: number) => (
-                <div
-                  key={idx}
-                  className="p-4 rounded-2xl bg-neutral-50 border border-black/[0.05] space-y-1.5"
-                >
-                  <div className="flex items-center justify-between">
+                <div key={idx} className="p-3.5 bg-neutral-50 rounded-2xl space-y-1">
+                  <div className="flex justify-between items-baseline">
                     <span className="font-bold text-xs text-neutral-900">
                       {r.userName || r.author}
                     </span>
@@ -827,54 +1126,95 @@ export function TransportDetailPage({ route, backHref = "/transport" }: Transpor
         </div>
       )}
 
-      {/* Full-Screen Photo Lightbox */}
-      {showAllPhotos && (
+      {/* Contact Operator Modal */}
+      {showHostContactModal && (
         <div
-          className="fixed inset-0 z-50 bg-black flex flex-col animate-in fade-in"
-          onClick={() => setShowAllPhotos(false)}
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in"
+          onClick={() => setShowHostContactModal(false)}
         >
-          <div className="absolute top-0 inset-x-0 p-5 flex items-center justify-between z-10 bg-gradient-to-b from-black/80 to-transparent">
-            <span className="text-white font-bold text-sm">
-              {activeImg + 1} / {images.length} — {title}
-            </span>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowAllPhotos(false);
-              }}
-              className="h-9 w-9 rounded-full bg-white/20 text-white flex items-center justify-center hover:bg-white/30 transition-colors"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
+          <div
+            className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl animate-in zoom-in-95"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-4 border-b border-black/[0.08]">
+              <div>
+                <h3 className="text-lg font-bold text-neutral-900">Message {hostName}</h3>
+                <p className="text-xs text-neutral-500">Typical response time: within 20 mins</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowHostContactModal(false)}
+                className="h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
 
-          <div className="flex-1 flex items-center justify-center relative p-4">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                prevImg();
-              }}
-              className="absolute left-4 z-10 h-12 w-12 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70"
-            >
-              <ChevronLeft className="h-6 w-6" />
-            </button>
+            {hostQuestionSent ? (
+              <div className="py-8 text-center space-y-2">
+                <div className="h-12 w-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+                  <CheckCircle2 className="h-6 w-6" />
+                </div>
+                <h4 className="text-base font-bold text-neutral-900">Message Sent!</h4>
+                <p className="text-xs text-neutral-500 max-w-xs mx-auto">
+                  {hostName} has received your inquiry and will reply to your registered contact info.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setShowHostContactModal(false)}
+                  className="mt-4 px-6 py-2.5 rounded-xl bg-purple text-white text-xs font-bold cursor-pointer"
+                >
+                  Done
+                </button>
+              </div>
+            ) : (
+              <div className="py-4 space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-neutral-700">Quick question</label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {[
+                      "Can you pick up from our hotel?",
+                      "Do you have a child booster seat?",
+                      "Is extra luggage permitted?",
+                    ].map((q) => (
+                      <button
+                        key={q}
+                        type="button"
+                        onClick={() => setHostQuestion(q)}
+                        className="text-[11px] bg-neutral-100 hover:bg-neutral-200 text-neutral-800 px-2.5 py-1 rounded-full font-medium transition-colors cursor-pointer"
+                      >
+                        {q}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-            <img
-              src={images[activeImg]}
-              alt={title}
-              className="max-h-[85vh] max-w-full object-contain rounded-xl"
-              onClick={(e) => e.stopPropagation()}
-            />
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-neutral-700">Your message</label>
+                  <textarea
+                    rows={4}
+                    value={hostQuestion}
+                    onChange={(e) => setHostQuestion(e.target.value)}
+                    placeholder="Hi! I have a question about this vehicle or route..."
+                    className="w-full rounded-xl border border-neutral-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple/20 focus:border-purple"
+                  />
+                </div>
 
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                nextImg();
-              }}
-              className="absolute right-4 z-10 h-12 w-12 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70"
-            >
-              <ChevronRight className="h-6 w-6" />
-            </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!hostQuestion.trim()) {
+                      toast.error("Please type a message first");
+                      return;
+                    }
+                    setHostQuestionSent(true);
+                  }}
+                  className="w-full py-3 bg-purple hover:bg-purple-hover text-white rounded-xl font-bold text-xs transition-colors cursor-pointer"
+                >
+                  Send Message
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -883,7 +1223,7 @@ export function TransportDetailPage({ route, backHref = "/transport" }: Transpor
         isOpen={showAuthDialog}
         onClose={() => setShowAuthDialog(false)}
         title="Save to your collections"
-        description="Sign in to save this transport route and access it from any device."
+        description="Sign in to save this transport option and access it from any device."
       />
     </div>
   );

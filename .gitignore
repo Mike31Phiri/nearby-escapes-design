@@ -42,10 +42,12 @@ Thumbs.db
 # Requirements, internal planning docs & agent rules
 requirements/
 .agents/
+/devpost/learner-profile.md
 
 # Junk / temp files
 nul
 find-lucide.cjs
 lucide-files.json
 reference-host.html
+.data/
 scripts/
