@@ -148,13 +148,26 @@ export function ExperienceDetailPage({
   };
 
   const handleProceedToBook = () => {
+    if (!selectedDate) {
+      toast.error("Please select a date for your experience first.");
+      return;
+    }
+    if (!selectedSlot) {
+      toast.error("Please pick a time slot for this experience.");
+      return;
+    }
+    if (availabilityResult !== "available") {
+      toast.info("Checking availability for your selected date and slot...");
+      handleCheckAvailability();
+      return;
+    }
     if (isSoldOut) {
       toast.error("This experience has no open time slots right now.");
       return;
     }
     const params = new URLSearchParams({ type: "experience", id: item.id });
-    if (selectedDate) params.set("date", selectedDate);
-    if (selectedSlot) params.set("slot", selectedSlot);
+    params.set("date", selectedDate);
+    params.set("slot", selectedSlot);
     params.set("guests", String(totalGuests));
     params.set("price", String(pricePerPerson));
     router.push(`/checkout/book?${params.toString()}`);
@@ -696,31 +709,53 @@ export function ExperienceDetailPage({
                   />
                 </div>
 
-                {/* Select Time Slot */}
+                {/* Select Time Slot (Interactive Pills) */}
                 {timeSlots.length > 0 && (
                   <div>
-                    <label className="text-[11px] font-medium text-neutral-500 block mb-1 uppercase tracking-wider">
-                      Time Slot
-                    </label>
-                    <select
-                      value={selectedSlot}
-                      onChange={(e) => setSelectedSlot(e.target.value)}
-                      className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
-                    >
-                      {timeSlots.map((slot) => (
-                        <option
-                          key={slot.id}
-                          value={slot.timeSlot || slot.label}
-                          disabled={slot.status !== "available"}
-                        >
-                          {slot.timeSlot || slot.label} — {slot.label} (
-                          {slot.status === "available"
-                            ? `${slot.capacity ?? 4} spots open`
-                            : "Sold Out"}
-                          )
-                        </option>
-                      ))}
-                    </select>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider">
+                        Available Time Slots
+                      </label>
+                      <span className="text-[10px] text-neutral-400">Pick preferred time</span>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {timeSlots.map((slot) => {
+                        const slotVal = slot.timeSlot || slot.label;
+                        const isSelected = selectedSlot === slotVal;
+                        const isAvail = slot.status === "available";
+                        return (
+                          <button
+                            key={slot.id}
+                            type="button"
+                            disabled={!isAvail}
+                            onClick={() => {
+                              setSelectedSlot(slotVal);
+                              if (selectedDate && availabilityResult !== "available") {
+                                setAvailabilityResult("available");
+                              }
+                            }}
+                            className={cn(
+                              "p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between cursor-pointer",
+                              isSelected && isAvail
+                                ? "border-purple bg-purple/5 ring-1 ring-purple text-neutral-900"
+                                : isAvail
+                                  ? "border-neutral-200 hover:border-purple/50 bg-neutral-50/50 hover:bg-white text-neutral-800"
+                                  : "border-neutral-200/60 bg-neutral-100 text-neutral-400 cursor-not-allowed opacity-60",
+                            )}
+                          >
+                            <span className="font-semibold text-xs flex items-center justify-between">
+                              <span>{slot.timeSlot || slot.label}</span>
+                              {isSelected && isAvail && (
+                                <CheckCircle2 className="h-3.5 w-3.5 text-purple" />
+                              )}
+                            </span>
+                            <span className="text-[10px] text-neutral-500 mt-1">
+                              {isAvail ? `${slot.capacity ?? 4} spots open` : "Sold Out"}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
                 )}
 
@@ -830,20 +865,51 @@ export function ExperienceDetailPage({
               </div>
 
               {/* Main Booking Action Button */}
-              <button
-                type="button"
-                onClick={handleProceedToBook}
-                disabled={isSoldOut}
-                className={cn(
-                  "w-full rounded-xl py-3.5 sm:py-4 font-bold text-base transition-all flex items-center justify-center gap-2 transform active:scale-[0.99] cursor-pointer",
-                  isSoldOut
-                    ? "bg-neutral-200 text-neutral-400 cursor-not-allowed"
-                    : "bg-purple hover:bg-purple-hover text-white shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35",
-                )}
-              >
-                <span>{isSoldOut ? "Sold Out (0 Slots Available)" : "Reserve Experience"}</span>
-                {!isSoldOut && <ArrowRight className="h-5 w-5" />}
-              </button>
+              {!selectedDate ? (
+                <button
+                  type="button"
+                  disabled
+                  className="w-full rounded-xl py-3.5 sm:py-4 font-bold text-base transition-all flex items-center justify-center gap-2 bg-neutral-100 text-neutral-400 cursor-not-allowed border border-neutral-200"
+                >
+                  <span>Select Date to Check Slots</span>
+                </button>
+              ) : availabilityResult === "idle" ? (
+                <button
+                  type="button"
+                  onClick={handleCheckAvailability}
+                  disabled={checkingAvailability || isSoldOut}
+                  className="w-full rounded-xl py-3.5 sm:py-4 font-bold text-base transition-all flex items-center justify-center gap-2 bg-purple hover:bg-purple-hover text-white shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35 cursor-pointer"
+                >
+                  {checkingAvailability ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      <span>Checking Available Slots...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Search className="h-5 w-5" />
+                      <span>Check Slot Availability</span>
+                    </>
+                  )}
+                </button>
+              ) : availabilityResult === "unavailable" || isSoldOut ? (
+                <button
+                  type="button"
+                  disabled
+                  className="w-full rounded-xl py-3.5 sm:py-4 font-bold text-base transition-all flex items-center justify-center gap-2 bg-neutral-200 text-neutral-400 cursor-not-allowed"
+                >
+                  <span>Sold Out on This Date</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleProceedToBook}
+                  className="w-full rounded-xl py-3.5 sm:py-4 font-bold text-base transition-all flex items-center justify-center gap-2 bg-purple hover:bg-purple-hover text-white shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35 cursor-pointer transform active:scale-[0.99]"
+                >
+                  <span>Reserve Slot ({selectedSlot})</span>
+                  <ArrowRight className="h-5 w-5" />
+                </button>
+              )}
 
               {/* Cross-sell */}
               <div className="pt-3 border-t border-neutral-100 flex items-center justify-between text-xs">
@@ -929,16 +995,20 @@ export function ExperienceDetailPage({
         </div>
         <button
           type="button"
-          onClick={handleProceedToBook}
-          disabled={isSoldOut}
+          onClick={availabilityResult === "available" ? handleProceedToBook : handleCheckAvailability}
+          disabled={isSoldOut || (Boolean(selectedDate) && availabilityResult === "unavailable")}
           className={cn(
             "px-7 py-3 rounded-xl font-bold text-sm ml-4 cursor-pointer transition-colors",
-            isSoldOut
+            isSoldOut || (Boolean(selectedDate) && availabilityResult === "unavailable")
               ? "bg-neutral-200 text-neutral-400 cursor-not-allowed"
               : "bg-purple text-white shadow-md shadow-purple/25 hover:bg-purple-hover",
           )}
         >
-          {isSoldOut ? "Sold out" : "Book now"}
+          {isSoldOut || (Boolean(selectedDate) && availabilityResult === "unavailable")
+            ? "Sold out"
+            : availabilityResult === "available"
+            ? "Book slot"
+            : "Check slots"}
         </button>
       </div>
 
