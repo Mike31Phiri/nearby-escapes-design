@@ -13,7 +13,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props) {
   const { id } = await params;
-  const stay = mockStays.find((s) => s.id === id);
+  const stay = mockStays.find((s) => s.id === id || s.id === id.replace(/^s/, ""));
   if (!stay) return { title: "Stay not found" };
   return {
     title: `${stay.name} — Nearby Escapes`,
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props) {
 export default async function StayRoutePage({ params, searchParams }: Props) {
   const { id } = await params;
   const sp = await searchParams;
-  const stay = mockStays.find((s) => s.id === id);
+  const stay = mockStays.find((s) => s.id === id || s.id === id.replace(/^s/, ""));
 
   if (!stay) notFound();
 
