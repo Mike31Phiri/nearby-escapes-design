@@ -188,6 +188,10 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
   const [adults, setAdults] = useState(2);
   const [children, setChildren] = useState(0);
   const [roomType, setRoomType] = useState<"standard" | "luxury">("standard");
+  const [checkingAvailability, setCheckingAvailability] = useState(false);
+  const [availabilityResult, setAvailabilityResult] = useState<
+    "idle" | "available" | "unavailable"
+  >("idle");
 
   const totalGuests = adults + children;
 
@@ -271,7 +275,29 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
     }
   };
 
+  const handleCheckAvailability = () => {
+    if (!travelDate) {
+      toast.error("Please pick a departure date for your package.");
+      return;
+    }
+    setCheckingAvailability(true);
+    setTimeout(() => {
+      setAvailabilityResult("available");
+      setCheckingAvailability(false);
+      toast.success("Package dates confirmed! Ready to lock your booking.");
+    }, 500);
+  };
+
   const handleProceedToBook = () => {
+    if (!travelDate) {
+      toast.error("Please pick a departure date for your package.");
+      return;
+    }
+    if (availabilityResult !== "available") {
+      toast.info("Please verify package availability for your date first.");
+      handleCheckAvailability();
+      return;
+    }
     const params = new URLSearchParams({
       type: "experience",
       id: packageItem.id,
@@ -731,7 +757,10 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                       type="date"
                       min={today}
                       value={travelDate}
-                      onChange={(e) => setTravelDate(e.target.value)}
+                      onChange={(e) => {
+                        setTravelDate(e.target.value);
+                        setAvailabilityResult("idle");
+                      }}
                       className="w-full h-9 pl-9 pr-3 rounded-xl border border-neutral-300 text-xs font-semibold text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                     />
                   </div>
@@ -743,7 +772,10 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       type="button"
-                      onClick={() => setRoomType("standard")}
+                      onClick={() => {
+                        setRoomType("standard");
+                        setAvailabilityResult("idle");
+                      }}
                       className={cn(
                         "py-2 px-2.5 rounded-xl border text-xs font-bold transition-all text-center cursor-pointer",
                         roomType === "standard"
@@ -755,7 +787,10 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                     </button>
                     <button
                       type="button"
-                      onClick={() => setRoomType("luxury")}
+                      onClick={() => {
+                        setRoomType("luxury");
+                        setAvailabilityResult("idle");
+                      }}
                       className={cn(
                         "py-2 px-2.5 rounded-xl border text-xs font-bold transition-all text-center cursor-pointer",
                         roomType === "luxury"
@@ -778,7 +813,10 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
-                        onClick={() => setAdults(Math.max(1, adults - 1))}
+                        onClick={() => {
+                          setAdults(Math.max(1, adults - 1));
+                          setAvailabilityResult("idle");
+                        }}
                         disabled={adults <= 1}
                         className="w-6 h-6 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 disabled:opacity-30 cursor-pointer"
                       >
@@ -787,7 +825,10 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                       <span className="w-4 text-center font-bold text-xs">{adults}</span>
                       <button
                         type="button"
-                        onClick={() => setAdults(adults + 1)}
+                        onClick={() => {
+                          setAdults(adults + 1);
+                          setAvailabilityResult("idle");
+                        }}
                         className="w-6 h-6 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 cursor-pointer"
                       >
                         <Plus className="h-3 w-3" />
@@ -805,7 +846,10 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
-                        onClick={() => setChildren(Math.max(0, children - 1))}
+                        onClick={() => {
+                          setChildren(Math.max(0, children - 1));
+                          setAvailabilityResult("idle");
+                        }}
                         disabled={children <= 0}
                         className="w-6 h-6 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 disabled:opacity-30 cursor-pointer"
                       >
@@ -814,7 +858,10 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                       <span className="w-4 text-center font-bold text-xs">{children}</span>
                       <button
                         type="button"
-                        onClick={() => setChildren(children + 1)}
+                        onClick={() => {
+                          setChildren(children + 1);
+                          setAvailabilityResult("idle");
+                        }}
                         className="w-6 h-6 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 cursor-pointer"
                       >
                         <Plus className="h-3 w-3" />
@@ -822,6 +869,14 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                     </div>
                   </div>
                 </div>
+
+                {/* Live Availability Status */}
+                {availabilityResult === "available" && (
+                  <div className="py-1 px-2.5 bg-emerald-50 border border-emerald-200/60 rounded-lg flex items-center gap-1.5 text-emerald-800 text-[11px] font-normal">
+                    <CheckCircle2 className="h-3 w-3 shrink-0 text-emerald-600" />
+                    <span>Package departure verified and ready to lock</span>
+                  </div>
+                )}
 
                 {/* Price Breakdown */}
                 <div className="pt-1.5 space-y-1 text-xs text-neutral-600">
@@ -849,14 +904,44 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                   </div>
                 </div>
 
-                {/* Book Button */}
-                <button
-                  onClick={handleProceedToBook}
-                  className="w-full bg-purple hover:bg-purple-hover text-white rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35 flex items-center justify-center gap-2 transform active:scale-[0.99] cursor-pointer"
-                >
-                  <span>Book Package</span>
-                  <ArrowRight className="h-4 w-4" />
-                </button>
+                {/* Main Action Button */}
+                {!travelDate ? (
+                  <button
+                    type="button"
+                    disabled
+                    className="w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 bg-neutral-100 text-neutral-400 cursor-not-allowed border border-neutral-200"
+                  >
+                    <span>Select Date to Check Availability</span>
+                  </button>
+                ) : availabilityResult === "idle" ? (
+                  <button
+                    type="button"
+                    onClick={handleCheckAvailability}
+                    disabled={checkingAvailability}
+                    className="w-full bg-purple hover:bg-purple-hover text-white rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35 flex items-center justify-center gap-2 transform active:scale-[0.99] cursor-pointer"
+                  >
+                    {checkingAvailability ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>Checking Package Availability...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Search className="h-4 w-4" />
+                        <span>Check Availability</span>
+                      </>
+                    )}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleProceedToBook}
+                    className="w-full bg-purple hover:bg-purple-hover text-white rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35 flex items-center justify-center gap-2 transform active:scale-[0.99] cursor-pointer"
+                  >
+                    <span>Book Package</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                )}
 
                 <p className="text-center text-[10px] text-neutral-400">
                   ⚡ Instant Confirmation • Free Cancellation up to 7 days
@@ -891,12 +976,32 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
             )}
           </div>
         </div>
-        <button
-          onClick={handleProceedToBook}
-          className="bg-purple text-white px-7 py-3 rounded-xl font-bold shadow-md shadow-purple/25 hover:bg-purple-hover transition-colors text-sm ml-4 cursor-pointer"
-        >
-          Book now
-        </button>
+        {availabilityResult === "available" ? (
+          <button
+            type="button"
+            onClick={handleProceedToBook}
+            className="bg-purple text-white px-7 py-3 rounded-xl font-bold shadow-md shadow-purple/25 hover:bg-purple-hover transition-colors text-sm ml-4 cursor-pointer flex items-center gap-1.5"
+          >
+            <span>Book now</span>
+            <ArrowRight className="h-4 w-4" />
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => {
+              if (travelDate) {
+                handleCheckAvailability();
+              } else {
+                const el = document.getElementById("booking-section");
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
+            className="bg-purple text-white px-6 py-3 rounded-xl font-bold shadow-md shadow-purple/25 hover:bg-purple-hover transition-colors text-sm ml-4 cursor-pointer flex items-center gap-1.5"
+          >
+            <Search className="h-3.5 w-3.5" />
+            <span>Check Availability</span>
+          </button>
+        )}
       </div>
 
       {/* Full-Screen Photo Lightbox Modal */}

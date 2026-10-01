@@ -635,9 +635,7 @@ export function ExperienceDetailPage({
                             disabled={!isAvail}
                             onClick={() => {
                               setSelectedSlot(slotVal);
-                              if (selectedDate && availabilityResult !== "available") {
-                                setAvailabilityResult("available");
-                              }
+                              setAvailabilityResult("idle");
                             }}
                             className={cn(
                               "p-2 rounded-xl border text-left transition-all flex flex-col justify-between cursor-pointer",
@@ -672,7 +670,10 @@ export function ExperienceDetailPage({
                     </label>
                     <select
                       value={adults}
-                      onChange={(e) => setAdults(Number(e.target.value))}
+                      onChange={(e) => {
+                        setAdults(Number(e.target.value));
+                        setAvailabilityResult("idle");
+                      }}
                       className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                     >
                       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15].map((n) => (
@@ -688,7 +689,10 @@ export function ExperienceDetailPage({
                     </label>
                     <select
                       value={children}
-                      onChange={(e) => setChildren(Number(e.target.value))}
+                      onChange={(e) => {
+                        setChildren(Number(e.target.value));
+                        setAvailabilityResult("idle");
+                      }}
                       className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                     >
                       {[0, 1, 2, 3, 4, 5].map((n) => (

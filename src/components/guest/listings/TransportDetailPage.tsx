@@ -171,12 +171,21 @@ export function TransportDetailPage({
   };
 
   const handleProceedToBook = () => {
+    if (!selectedDate) {
+      toast.error("Please pick a travel date first.");
+      return;
+    }
+    if (availabilityResult !== "available") {
+      toast.info("Please verify vehicle availability for your date first.");
+      handleCheckAvailability();
+      return;
+    }
     if (isSoldOut) {
       toast.error("This transport listing is currently sold out (0 available in fleet).");
       return;
     }
     const params = new URLSearchParams({ type: "transport", id: route.id });
-    if (selectedDate) params.set("date", selectedDate);
+    params.set("date", selectedDate);
     if (selectedPickupTime) params.set("pickupTime", selectedPickupTime);
     params.set("guests", String(passengers));
     params.set("price", String(basePrice));
@@ -622,7 +631,10 @@ export function TransportDetailPage({
                     </label>
                     <select
                       value={passengers}
-                      onChange={(e) => setPassengers(Number(e.target.value))}
+                      onChange={(e) => {
+                        setPassengers(Number(e.target.value));
+                        setAvailabilityResult("idle");
+                      }}
                       className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                     >
                       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
@@ -641,7 +653,10 @@ export function TransportDetailPage({
                   </label>
                   <select
                     value={selectedPickupTime}
-                    onChange={(e) => setSelectedPickupTime(e.target.value)}
+                    onChange={(e) => {
+                      setSelectedPickupTime(e.target.value);
+                      setAvailabilityResult("idle");
+                    }}
                     className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                   >
                     <option value="07:00 AM">07:00 AM — Early Morning Departure</option>
@@ -652,28 +667,6 @@ export function TransportDetailPage({
                     <option value="Flexible">Flexible / On-Demand Timing</option>
                   </select>
                 </div>
-
-                {/* Check Availability Button if date unverified */}
-                {availabilityResult === "idle" && (
-                  <button
-                    type="button"
-                    onClick={handleCheckAvailability}
-                    disabled={checkingAvailability || !selectedDate || isSoldOut}
-                    className="w-full bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded-xl py-2 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
-                  >
-                    {checkingAvailability ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span>Checking vehicle availability...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Search className="h-4 w-4 text-purple" />
-                        <span>Check Date Availability</span>
-                      </>
-                    )}
-                  </button>
-                )}
 
                 {/* Availability status */}
                 {availabilityResult === "available" && (
@@ -720,20 +713,51 @@ export function TransportDetailPage({
               </div>
 
               {/* Main Booking Action Button */}
-              <button
-                type="button"
-                onClick={handleProceedToBook}
-                disabled={isSoldOut}
-                className={cn(
-                  "w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 transform active:scale-[0.99] cursor-pointer",
-                  isSoldOut
-                    ? "bg-neutral-200 text-neutral-400 cursor-not-allowed"
-                    : "bg-purple hover:bg-purple-hover text-white shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35",
-                )}
-              >
-                <span>{isSoldOut ? "Sold Out (0 Available)" : "Reserve Transport"}</span>
-                {!isSoldOut && <ArrowRight className="h-4 w-4" />}
-              </button>
+              {!selectedDate ? (
+                <button
+                  type="button"
+                  disabled
+                  className="w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 bg-neutral-100 text-neutral-400 cursor-not-allowed border border-neutral-200"
+                >
+                  <span>Select Date to Check Availability</span>
+                </button>
+              ) : availabilityResult === "idle" ? (
+                <button
+                  type="button"
+                  onClick={handleCheckAvailability}
+                  disabled={checkingAvailability || isSoldOut}
+                  className="w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 bg-purple hover:bg-purple-hover text-white shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35 cursor-pointer transform active:scale-[0.99]"
+                >
+                  {checkingAvailability ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>Checking Vehicle Availability...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Search className="h-4 w-4" />
+                      <span>Check Availability</span>
+                    </>
+                  )}
+                </button>
+              ) : availabilityResult === "unavailable" || isSoldOut ? (
+                <button
+                  type="button"
+                  disabled
+                  className="w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 bg-neutral-200 text-neutral-400 cursor-not-allowed"
+                >
+                  <span>Sold Out on Selected Date</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleProceedToBook}
+                  className="w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 bg-purple hover:bg-purple-hover text-white shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35 cursor-pointer transform active:scale-[0.99]"
+                >
+                  <span>Reserve Transport</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              )}
 
               {/* Cross-sell */}
               <div className="pt-2 border-t border-neutral-100 flex items-center justify-between text-[11px]">
@@ -822,19 +846,38 @@ export function TransportDetailPage({
             )}
           </div>
         </div>
-        <button
-          type="button"
-          onClick={handleProceedToBook}
-          disabled={isSoldOut}
-          className={cn(
-            "px-7 py-3 rounded-xl font-bold text-sm ml-4 cursor-pointer transition-colors",
-            isSoldOut
-              ? "bg-neutral-200 text-neutral-400 cursor-not-allowed"
-              : "bg-purple text-white shadow-md shadow-purple/25 hover:bg-purple-hover",
-          )}
-        >
-          {isSoldOut ? "Sold out" : "Book now"}
-        </button>
+        {availabilityResult === "available" ? (
+          <button
+            type="button"
+            onClick={handleProceedToBook}
+            className="px-7 py-3 rounded-xl font-bold text-sm ml-4 cursor-pointer transition-colors bg-purple text-white shadow-md shadow-purple/25 hover:bg-purple-hover flex items-center gap-1.5"
+          >
+            <span>Reserve</span>
+            <ArrowRight className="h-4 w-4" />
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => {
+              if (selectedDate) {
+                handleCheckAvailability();
+              } else {
+                const el = document.getElementById("booking-section");
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
+            disabled={isSoldOut}
+            className={cn(
+              "px-6 py-3 rounded-xl font-bold text-sm ml-4 cursor-pointer transition-colors flex items-center gap-1.5",
+              isSoldOut
+                ? "bg-neutral-200 text-neutral-400 cursor-not-allowed"
+                : "bg-purple text-white shadow-md shadow-purple/25 hover:bg-purple-hover",
+            )}
+          >
+            <Search className="h-3.5 w-3.5" />
+            <span>Check Availability</span>
+          </button>
+        )}
       </div>
 
       {/* Full-screen Photo Lightbox */}

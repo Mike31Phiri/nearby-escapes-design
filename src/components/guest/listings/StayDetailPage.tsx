@@ -40,6 +40,8 @@ import {
   Key,
   Zap,
   Home,
+  Search,
+  Loader2,
 } from "lucide-react";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useAuth } from "@/lib/store/authStore";
@@ -182,16 +184,49 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
   const nightlyRate = stay.price || (stay.baseRateNgwee ? stay.baseRateNgwee / 100 : 450);
   const priceDisplay = `K${nightlyRate.toLocaleString()}`;
 
+  const handleCheckAvailability = () => {
+    if (!checkIn || !checkOut) {
+      toast.error("Please pick both check-in and check-out dates.");
+      return;
+    }
+    if (checkIn >= checkOut) {
+      toast.error("Check-out date must be after check-in date.");
+      return;
+    }
+    setCheckingAvailability(true);
+    setTimeout(() => {
+      const blocked = isDateBlocked(stay.id, checkIn) || isDateBlocked(stay.id, checkOut);
+      if (isSoldOut || blocked) {
+        setAvailabilityResult("unavailable");
+        setCheckingAvailability(false);
+        toast.error("These dates are fully booked for this lodge.");
+      } else {
+        setAvailabilityResult("available");
+        setCheckingAvailability(false);
+        toast.success(
+          `Dates verified! ${availableRoomsCount > 0 ? `${availableRoomsCount} units available` : "Rooms ready"}. Ready to reserve.`,
+        );
+      }
+    }, 500);
+  };
+
   const handleProceedToBook = () => {
+    if (!checkIn || !checkOut) {
+      toast.error("Please select your check-in and check-out dates first.");
+      return;
+    }
+    if (availabilityResult !== "available") {
+      toast.info("Please verify date availability before reserving.");
+      handleCheckAvailability();
+      return;
+    }
     if (isSoldOut) {
       toast.error("This property is currently sold out with 0 available units.");
       return;
     }
     const params = new URLSearchParams({ type: "stay", id: stay.id });
-    const effIn = checkIn || tomorrow;
-    const effOut = checkOut || new Date(Date.now() + 86400000 * 3).toISOString().split("T")[0];
-    params.set("checkIn", effIn);
-    params.set("checkOut", effOut);
+    params.set("checkIn", checkIn);
+    params.set("checkOut", checkOut);
     params.set("guests", String(totalGuests));
     params.set("price", String(nightlyRate));
     router.push(`/checkout/book?${params.toString()}`);
@@ -631,7 +666,7 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                       min={today}
                       onChange={(e) => {
                         setCheckIn(e.target.value);
-                        setAvailabilityResult("available");
+                        setAvailabilityResult("idle");
                         if (checkOut && e.target.value >= checkOut) setCheckOut("");
                       }}
                       className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
@@ -648,7 +683,7 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                       min={checkIn || today}
                       onChange={(e) => {
                         setCheckOut(e.target.value);
-                        setAvailabilityResult("available");
+                        setAvailabilityResult("idle");
                       }}
                       className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                     />
@@ -663,7 +698,10 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                     </label>
                     <select
                       value={adults}
-                      onChange={(e) => setAdults(Number(e.target.value))}
+                      onChange={(e) => {
+                        setAdults(Number(e.target.value));
+                        setAvailabilityResult("idle");
+                      }}
                       className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                     >
                       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
@@ -679,7 +717,10 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                     </label>
                     <select
                       value={children}
-                      onChange={(e) => setChildren(Number(e.target.value))}
+                      onChange={(e) => {
+                        setChildren(Number(e.target.value));
+                        setAvailabilityResult("idle");
+                      }}
                       className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                     >
                       {[0, 1, 2, 3, 4, 5].map((n) => (
@@ -697,8 +738,14 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                     <CheckCircle2 className="h-3 w-3 shrink-0 text-emerald-600" />
                     <span>
                       {availableRoomsCount > 0 ? `${availableRoomsCount} units open` : "Space available"} ·{" "}
-                      {nights > 0 ? `${nights} night${nights !== 1 ? "s" : ""}` : "Select dates"}
+                      {nights > 0 ? `${nights} night${nights !== 1 ? "s" : ""}` : "Select dates"} (Ready to lock)
                     </span>
+                  </div>
+                )}
+                {availabilityResult === "unavailable" && (
+                  <div className="py-1 px-2.5 bg-rose-50 border border-rose-200/60 rounded-lg flex items-center gap-1.5 text-rose-800 text-[11px] font-normal">
+                    <AlertCircle className="h-3 w-3 shrink-0 text-rose-600" />
+                    <span>Selected dates are fully booked for this lodge.</span>
                   </div>
                 )}
                 {isSoldOut && (
@@ -739,20 +786,51 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
               </div>
 
               {/* Main Booking Action Button */}
-              <button
-                type="button"
-                onClick={handleProceedToBook}
-                disabled={isSoldOut}
-                className={cn(
-                  "w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 transform active:scale-[0.99] cursor-pointer",
-                  isSoldOut
-                    ? "bg-neutral-200 text-neutral-400 cursor-not-allowed"
-                    : "bg-purple hover:bg-purple-hover text-white shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35",
-                )}
-              >
-                <span>{isSoldOut ? "Sold Out (0 Rooms Available)" : "Reserve Stay"}</span>
-                {!isSoldOut && <ArrowRight className="h-4 w-4" />}
-              </button>
+              {!checkIn || !checkOut ? (
+                <button
+                  type="button"
+                  disabled
+                  className="w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 bg-neutral-100 text-neutral-400 cursor-not-allowed border border-neutral-200"
+                >
+                  <span>Select Dates to Check Availability</span>
+                </button>
+              ) : availabilityResult === "idle" ? (
+                <button
+                  type="button"
+                  onClick={handleCheckAvailability}
+                  disabled={checkingAvailability || isSoldOut}
+                  className="w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 bg-purple hover:bg-purple-hover text-white shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35 cursor-pointer transform active:scale-[0.99]"
+                >
+                  {checkingAvailability ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>Checking Availability...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Search className="h-4 w-4" />
+                      <span>Check Availability</span>
+                    </>
+                  )}
+                </button>
+              ) : availabilityResult === "unavailable" || isSoldOut ? (
+                <button
+                  type="button"
+                  disabled
+                  className="w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 bg-neutral-200 text-neutral-400 cursor-not-allowed"
+                >
+                  <span>Sold Out on Selected Dates</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleProceedToBook}
+                  className="w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 bg-purple hover:bg-purple-hover text-white shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35 cursor-pointer transform active:scale-[0.99]"
+                >
+                  <span>Reserve Stay</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              )}
 
               {/* Cross-sell */}
               <div className="pt-2 border-t border-neutral-100 flex items-center justify-between text-[11px]">
@@ -843,19 +921,38 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
             )}
           </div>
         </div>
-        <button
-          type="button"
-          onClick={handleProceedToBook}
-          disabled={isSoldOut}
-          className={cn(
-            "px-7 py-3 rounded-xl font-bold text-sm ml-4 cursor-pointer transition-colors",
-            isSoldOut
-              ? "bg-neutral-200 text-neutral-400 cursor-not-allowed"
-              : "bg-purple text-white shadow-md shadow-purple/25 hover:bg-purple-hover",
-          )}
-        >
-          {isSoldOut ? "Sold out" : "Book now"}
-        </button>
+        {availabilityResult === "available" ? (
+          <button
+            type="button"
+            onClick={handleProceedToBook}
+            className="px-7 py-3 rounded-xl font-bold text-sm ml-4 cursor-pointer transition-colors bg-purple text-white shadow-md shadow-purple/25 hover:bg-purple-hover flex items-center gap-1.5"
+          >
+            <span>Reserve</span>
+            <ArrowRight className="h-4 w-4" />
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => {
+              if (checkIn && checkOut) {
+                handleCheckAvailability();
+              } else {
+                const el = document.getElementById("booking-section");
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
+            disabled={isSoldOut}
+            className={cn(
+              "px-6 py-3 rounded-xl font-bold text-sm ml-4 cursor-pointer transition-colors flex items-center gap-1.5",
+              isSoldOut
+                ? "bg-neutral-200 text-neutral-400 cursor-not-allowed"
+                : "bg-purple text-white shadow-md shadow-purple/25 hover:bg-purple-hover",
+            )}
+          >
+            <Search className="h-3.5 w-3.5" />
+            <span>Check Availability</span>
+          </button>
+        )}
       </div>
 
       {/* Full-screen Photo Lightbox */}

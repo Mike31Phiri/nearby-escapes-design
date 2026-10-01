@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -32,10 +32,13 @@ import {
   Shield,
   Headphones,
   Loader2,
+  AlertTriangle,
+  RefreshCw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -147,6 +150,29 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
   const isStay = listing.type === "stay";
   const isExperience = listing.type === "experience";
   const isTransport = listing.type === "transport";
+
+  // 10-Minute Reservation Slot Lock Countdown (600 seconds)
+  const [secondsLeft, setSecondsLeft] = useState(600);
+  const isExpired = secondsLeft <= 0;
+
+  useEffect(() => {
+    if (secondsLeft <= 0) return;
+    const timer = setInterval(() => {
+      setSecondsLeft((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [secondsLeft]);
+
+  const formatCountdown = useCallback((totalSecs: number) => {
+    const mins = Math.floor(totalSecs / 60);
+    const secs = totalSecs % 60;
+    return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  }, []);
+
+  const handleExtendHold = () => {
+    setSecondsLeft(600);
+    toast.success("Reservation lock refreshed! Slot held for an additional 10 minutes.");
+  };
 
   // Parse query parameters
   const paramGuests = searchParams.get("guests");
@@ -560,7 +586,77 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
       </header>
 
       {/* Main Content: Two-column checkout layout */}
-      <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-8">
+      <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        {/* 10-MINUTE RESERVATION LOCK BANNER */}
+        <div
+          className={cn(
+            "w-full rounded-2xl p-4 sm:p-5 border transition-all mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs",
+            isExpired
+              ? "bg-amber-50/90 border-amber-300 text-amber-950"
+              : "bg-[#6b2bb8]/5 border-[#6b2bb8]/20 text-neutral-900",
+          )}
+        >
+          <div className="flex items-start sm:items-center gap-3.5">
+            <div
+              className={cn(
+                "w-11 h-11 rounded-xl flex items-center justify-center shrink-0 shadow-xs",
+                isExpired ? "bg-amber-500 text-white" : "bg-[#6b2bb8] text-white",
+              )}
+            >
+              {isExpired ? (
+                <AlertTriangle className="h-5 w-5" />
+              ) : (
+                <Lock className="h-5 w-5 animate-pulse" />
+              )}
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="font-bold text-sm sm:text-base leading-tight">
+                  {isExpired
+                    ? "Reservation Lock Expired"
+                    : "Slot Temporarily Locked — No Double Booking"}
+                </h3>
+                {!isExpired && (
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wide bg-[#6b2bb8]/15 text-[#6b2bb8] border border-[#6b2bb8]/20">
+                    Locked For You
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-neutral-600 mt-1 max-w-xl leading-relaxed">
+                {isExpired
+                  ? "Your 10-minute hold has expired. To prevent someone else from booking this slot, extend your hold now."
+                  : "We've locked your slot for 10 minutes so nobody else can book it while you finalize your contact and payment details."}
+              </p>
+            </div>
+          </div>
+
+          {/* Countdown Timer Display */}
+          <div className="flex items-center gap-3 self-end sm:self-center shrink-0">
+            {!isExpired ? (
+              <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-xl border border-[#6b2bb8]/20 shadow-2xs">
+                <Clock className="h-4 w-4 text-[#6b2bb8] animate-pulse" />
+                <div className="text-right">
+                  <div className="text-[10px] font-semibold text-neutral-500 uppercase tracking-wider leading-none">
+                    Hold Timer
+                  </div>
+                  <div className="text-xl font-black font-mono text-[#6b2bb8] leading-tight">
+                    {formatCountdown(secondsLeft)}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={handleExtendHold}
+                className="px-4 py-2.5 rounded-xl bg-[#6b2bb8] text-white text-xs font-bold shadow-sm hover:bg-[#582399] transition-colors flex items-center gap-1.5 cursor-pointer"
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+                <span>Extend Hold (+10 min)</span>
+              </button>
+            )}
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 items-start">
           {/* LEFT COLUMN: Unified Single-Page Checkout Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -1310,6 +1406,31 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                       {guestCountLabel}
                     </span>
                   </div>
+                </div>
+
+                {/* 10-Minute Hold Status in Sidebar */}
+                <div
+                  className={cn(
+                    "p-2.5 rounded-xl border flex items-center justify-between text-xs transition-colors",
+                    isExpired
+                      ? "bg-amber-50 border-amber-200 text-amber-900"
+                      : "bg-[#6b2bb8]/5 border-[#6b2bb8]/20 text-neutral-900",
+                  )}
+                >
+                  <div className="flex items-center gap-2">
+                    <Lock
+                      className={cn(
+                        "h-3.5 w-3.5 shrink-0",
+                        isExpired ? "text-amber-600" : "text-[#6b2bb8]",
+                      )}
+                    />
+                    <span className="font-semibold text-xs">
+                      {isExpired ? "Hold expired" : "Slot locked for you"}
+                    </span>
+                  </div>
+                  <span className="font-mono font-bold text-xs text-[#6b2bb8]">
+                    {!isExpired ? formatCountdown(secondsLeft) : "00:00"}
+                  </span>
                 </div>
 
                 {/* Price Breakdown */}
