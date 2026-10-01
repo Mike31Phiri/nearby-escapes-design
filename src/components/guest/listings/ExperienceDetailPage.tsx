@@ -1102,10 +1102,11 @@ export function ExperienceDetailPage({
             className="bg-white rounded-3xl max-w-xl w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl animate-in zoom-in-95"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-6 border-b border-black/[0.08] flex items-center justify-between">
+            <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
               <div>
                 <h3 className="text-xl font-bold text-neutral-900">
-                  {avgRating.toFixed(1)} ★ ({reviewCount} reviews)
+                  <span className="text-purple">{avgRating.toFixed(1)} ★</span>{" "}
+                  <span className="text-neutral-500 font-normal text-sm">({reviewCount} reviews)</span>
                 </h3>
                 <p className="text-xs text-neutral-500">Verified guest reviews for {title}</p>
               </div>

@@ -144,7 +144,7 @@ export function ReviewSection({
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowWriteModal(true)}
-            className="px-3.5 py-1.5 bg-neutral-900 text-white hover:bg-neutral-800 rounded-lg text-xs font-medium transition-colors inline-flex items-center gap-1.5"
+            className="px-3.5 py-1.5 bg-purple text-white hover:bg-purple-hover rounded-xl text-xs font-semibold shadow-xs transition-colors inline-flex items-center gap-1.5 cursor-pointer"
           >
             <PlusCircle className="h-3.5 w-3.5" />
             Write review
@@ -152,7 +152,7 @@ export function ReviewSection({
           {onViewAllReviews && (
             <button
               onClick={onViewAllReviews}
-              className="px-3.5 py-1.5 border border-neutral-300 hover:border-neutral-400 text-neutral-700 rounded-lg text-xs font-medium transition-colors"
+              className="px-3.5 py-1.5 border border-purple/30 hover:border-purple text-purple hover:bg-purple/5 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
             >
               See all
             </button>
@@ -165,37 +165,37 @@ export function ReviewSection({
         <div>
           <div className="flex justify-between text-xs text-neutral-600 mb-1.5">
             <span className="font-normal">Cleanliness</span>
-            <span className="font-medium text-neutral-900">4.9</span>
+            <span className="font-semibold text-purple">4.9</span>
           </div>
-          <div className="h-1 w-full bg-neutral-100 rounded-full overflow-hidden">
-            <div className="h-full bg-neutral-800 rounded-full w-[98%]" />
+          <div className="h-1.5 w-full bg-purple/10 rounded-full overflow-hidden">
+            <div className="h-full bg-purple rounded-full w-[98%]" />
           </div>
         </div>
         <div>
           <div className="flex justify-between text-xs text-neutral-600 mb-1.5">
             <span className="font-normal">Accuracy</span>
-            <span className="font-medium text-neutral-900">4.8</span>
+            <span className="font-semibold text-purple">4.8</span>
           </div>
-          <div className="h-1 w-full bg-neutral-100 rounded-full overflow-hidden">
-            <div className="h-full bg-neutral-800 rounded-full w-[96%]" />
+          <div className="h-1.5 w-full bg-purple/10 rounded-full overflow-hidden">
+            <div className="h-full bg-purple rounded-full w-[96%]" />
           </div>
         </div>
         <div>
           <div className="flex justify-between text-xs text-neutral-600 mb-1.5">
             <span className="font-normal">Communication</span>
-            <span className="font-medium text-neutral-900">4.9</span>
+            <span className="font-semibold text-purple">4.9</span>
           </div>
-          <div className="h-1 w-full bg-neutral-100 rounded-full overflow-hidden">
-            <div className="h-full bg-neutral-800 rounded-full w-[98%]" />
+          <div className="h-1.5 w-full bg-purple/10 rounded-full overflow-hidden">
+            <div className="h-full bg-purple rounded-full w-[98%]" />
           </div>
         </div>
         <div>
           <div className="flex justify-between text-xs text-neutral-600 mb-1.5">
             <span className="font-normal">Location</span>
-            <span className="font-medium text-neutral-900">4.8</span>
+            <span className="font-semibold text-purple">4.8</span>
           </div>
-          <div className="h-1 w-full bg-neutral-100 rounded-full overflow-hidden">
-            <div className="h-full bg-neutral-800 rounded-full w-[96%]" />
+          <div className="h-1.5 w-full bg-purple/10 rounded-full overflow-hidden">
+            <div className="h-full bg-purple rounded-full w-[96%]" />
           </div>
         </div>
       </div>
@@ -205,9 +205,9 @@ export function ReviewSection({
         <button
           onClick={() => setActiveFilter("all")}
           className={cn(
-            "px-3 py-1 rounded-full font-medium transition-colors",
+            "px-3 py-1 rounded-full font-medium transition-colors cursor-pointer",
             activeFilter === "all"
-              ? "bg-neutral-900 text-white"
+              ? "bg-purple text-white shadow-xs shadow-purple/20"
               : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200",
           )}
         >
@@ -216,9 +216,9 @@ export function ReviewSection({
         <button
           onClick={() => setActiveFilter("5")}
           className={cn(
-            "px-3 py-1 rounded-full font-medium transition-colors inline-flex items-center gap-1",
+            "px-3 py-1 rounded-full font-medium transition-colors inline-flex items-center gap-1 cursor-pointer",
             activeFilter === "5"
-              ? "bg-neutral-900 text-white"
+              ? "bg-purple text-white shadow-xs shadow-purple/20"
               : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200",
           )}
         >
@@ -227,9 +227,9 @@ export function ReviewSection({
         <button
           onClick={() => setActiveFilter("4")}
           className={cn(
-            "px-3 py-1 rounded-full font-medium transition-colors",
+            "px-3 py-1 rounded-full font-medium transition-colors cursor-pointer",
             activeFilter === "4"
-              ? "bg-neutral-900 text-white"
+              ? "bg-purple text-white shadow-xs shadow-purple/20"
               : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200",
           )}
         >
@@ -246,7 +246,7 @@ export function ReviewSection({
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-full bg-neutral-100 text-neutral-700 flex items-center justify-center font-medium text-xs shrink-0">
+                <div className="w-8 h-8 rounded-full bg-purple/10 text-purple flex items-center justify-center font-bold text-xs shrink-0">
                   {review.author
                     .split(" ")
                     .map((n) => n[0])
@@ -256,7 +256,7 @@ export function ReviewSection({
                 <div>
                   <div className="flex items-center gap-1.5">
                     <span className="font-medium text-sm text-neutral-900">{review.author}</span>
-                    <ShieldCheck className="h-3 w-3 text-neutral-400" />
+                    <ShieldCheck className="h-3.5 w-3.5 text-purple" />
                   </div>
                   <p className="text-[11px] font-normal text-neutral-400">
                     {review.authorLocation && `${review.authorLocation} · `}
@@ -279,10 +279,10 @@ export function ReviewSection({
               <button
                 onClick={() => handleToggleHelpful(review.id)}
                 className={cn(
-                  "inline-flex items-center gap-1 text-[11px] font-normal transition-colors px-1.5 py-0.5 rounded",
+                  "inline-flex items-center gap-1 text-[11px] font-normal transition-colors px-1.5 py-0.5 rounded cursor-pointer",
                   userVoted[review.id]
                     ? "text-purple font-medium"
-                    : "text-neutral-400 hover:text-neutral-700",
+                    : "text-neutral-400 hover:text-purple",
                 )}
               >
                 <ThumbsUp className="h-3 w-3" />
@@ -304,7 +304,7 @@ export function ReviewSection({
               </div>
               <button
                 onClick={() => setShowWriteModal(false)}
-                className="w-7 h-7 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-500 transition-colors"
+                className="w-7 h-7 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-500 transition-colors cursor-pointer"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -319,7 +319,7 @@ export function ReviewSection({
                       key={s}
                       type="button"
                       onClick={() => setNewRating(s)}
-                      className="p-0.5 hover:scale-110 transition-transform"
+                      className="p-0.5 hover:scale-110 transition-transform cursor-pointer"
                     >
                       <Star
                         className={cn(
@@ -329,7 +329,7 @@ export function ReviewSection({
                       />
                     </button>
                   ))}
-                  <span className="text-xs font-normal text-neutral-500 ml-2">
+                  <span className="text-xs font-semibold text-purple ml-2">
                     {newRating}/5 rating
                   </span>
                 </div>
@@ -344,7 +344,7 @@ export function ReviewSection({
                     value={newAuthor}
                     onChange={(e) => setNewAuthor(e.target.value)}
                     placeholder="e.g. Mike Phiri"
-                    className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal focus:outline-none focus:ring-1 focus:ring-neutral-400"
+                    className="w-full bg-neutral-50 rounded-lg p-2.5 border border-neutral-200 text-xs font-normal focus:outline-none focus:ring-2 focus:ring-purple/30 focus:border-purple transition-all"
                   />
                 </div>
                 <div>
@@ -356,7 +356,7 @@ export function ReviewSection({
                     value={newLocation}
                     onChange={(e) => setNewLocation(e.target.value)}
                     placeholder="e.g. Lusaka, Zambia"
-                    className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal focus:outline-none focus:ring-1 focus:ring-neutral-400"
+                    className="w-full bg-neutral-50 rounded-lg p-2.5 border border-neutral-200 text-xs font-normal focus:outline-none focus:ring-2 focus:ring-purple/30 focus:border-purple transition-all"
                   />
                 </div>
               </div>
@@ -369,7 +369,7 @@ export function ReviewSection({
                   value={newContent}
                   onChange={(e) => setNewContent(e.target.value)}
                   placeholder="Share details of your stay, the hosts, the rooms, or things future travelers should know..."
-                  className="w-full bg-neutral-50 rounded-lg p-2 border border-neutral-200 text-xs font-normal leading-relaxed focus:outline-none focus:ring-1 focus:ring-neutral-400"
+                  className="w-full bg-neutral-50 rounded-lg p-2.5 border border-neutral-200 text-xs font-normal leading-relaxed focus:outline-none focus:ring-2 focus:ring-purple/30 focus:border-purple transition-all"
                 />
               </div>
 
@@ -377,13 +377,13 @@ export function ReviewSection({
                 <button
                   type="button"
                   onClick={() => setShowWriteModal(false)}
-                  className="px-3.5 py-1.5 rounded-lg text-neutral-600 hover:bg-neutral-100 font-medium text-xs"
+                  className="px-3.5 py-2 rounded-xl text-neutral-600 hover:bg-neutral-100 font-medium text-xs cursor-pointer transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 rounded-lg bg-neutral-900 text-white hover:bg-neutral-800 font-medium text-xs"
+                  className="px-5 py-2 rounded-xl bg-purple text-white hover:bg-purple-hover font-bold text-xs shadow-md shadow-purple/20 transition-all cursor-pointer"
                 >
                   Submit Review
                 </button>
