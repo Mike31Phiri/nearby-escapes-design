@@ -42,7 +42,7 @@ Thumbs.db
 # Requirements, internal planning docs & agent rules
 requirements/
 .agents/
-/devpost/learner-profile.md
+devpost/
 
 # Junk / temp files
 nul
