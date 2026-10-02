@@ -50,8 +50,13 @@ nul
 find-lucide.cjs
 lucide-files.json
 reference-host.html
+remove_motion.cjs
+remove_zoom.cjs
 .data/
 scripts/
 .claude/
 agent/
 skills-lock.json
+coverage/
+.turbo/
+
