@@ -8,11 +8,12 @@ import { cn } from "@/lib/utils";
 import { mockHostProfile } from "@/lib/mock-profile-data";
 import { HostPageHeader } from "@/components/layout/HostPageHeader";
 import { useAvailabilityStore } from "@/store/availabilityStore";
+import { useInventoryStore } from "@/store/inventoryStore";
 import { PricingRulesModal } from "@/components/host/availability/PricingRulesModal";
 import { toast } from "sonner";
-import { Lock, Boxes, CircleCheck, Users, ArrowRight } from "lucide-react";
+import { Lock, Boxes, CircleCheck, Users, ArrowRight, RotateCcw, Clock, Sparkles, AlertCircle } from "lucide-react";
 import Link from "next/link";
-import { getInventoryForListing, inventoryCounts } from "@/lib/mock-inventory";
+import { inventoryCounts } from "@/lib/mock-inventory";
 
 function toKey(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
@@ -44,6 +45,7 @@ export function HostAvailabilityPage() {
 
   const [rangeFrom, setRangeFrom] = useState("");
   const [rangeTo, setRangeTo] = useState("");
+  const [unitsToBlock, setUnitsToBlock] = useState<number>(1);
 
   const hostListings = mockHostProfile.listings;
   const [selectedId, setSelectedId] = useState(hostListings[0]?.id || "");
@@ -53,11 +55,18 @@ export function HostAvailabilityPage() {
   const availability = useAvailabilityStore((s) => s.availability);
   const toggleDateBlock = useAvailabilityStore((s) => s.toggleDateBlock);
   const blockDateRange = useAvailabilityStore((s) => s.blockDateRange);
+  const unblockDateRange = useAvailabilityStore((s) => s.unblockDateRange);
+  const autoRestoreElapsedBlocks = useAvailabilityStore((s) => s.autoRestoreElapsedBlocks);
+  const getDateInventory = useAvailabilityStore((s) => s.getDateInventory);
+  const getActiveBlockedSummary = useAvailabilityStore((s) => s.getActiveBlockedSummary);
   const getPricingRulesForListing = useAvailabilityStore((s) => s.getPricingRulesForListing);
   const updatePricingRulesForListing = useAvailabilityStore((s) => s.updatePricingRulesForListing);
   const pricingRulesMap = useAvailabilityStore((s) => s.pricingRules);
 
-  const inventory = useMemo(() => getInventoryForListing(selectedId), [selectedId]);
+  // Dynamic reactive inventory from inventoryStore
+  const getInventory = useInventoryStore((s) => s.getInventory);
+  const inventories = useInventoryStore((s) => s.inventories);
+  const inventory = useMemo(() => getInventory(selectedId), [selectedId, inventories, getInventory]);
   const inventoryStats = useMemo(() => (inventory ? inventoryCounts(inventory) : null), [inventory]);
 
   const currentListing = useMemo(
@@ -71,6 +80,26 @@ export function HostAvailabilityPage() {
   );
 
   const todayStr = useMemo(() => toKey(new Date()), []);
+
+  // Auto-restore any blocked dates where time has elapsed (date < todayStr)
+  useEffect(() => {
+    const restored = autoRestoreElapsedBlocks(selectedId);
+    if (restored > 0) {
+      toast.info(`Time elapsed: ${restored} blocked unit(s) automatically returned to available inventory.`);
+    }
+  }, [selectedId, autoRestoreElapsedBlocks]);
+
+  const totalUnitsCount = inventoryStats ? inventoryStats.total : 1;
+
+  const blockedSummary = useMemo(
+    () => getActiveBlockedSummary(selectedId, totalUnitsCount),
+    [selectedId, totalUnitsCount, availability, getActiveBlockedSummary],
+  );
+
+  const todayInventory = useMemo(
+    () => getDateInventory(selectedId, todayStr, totalUnitsCount),
+    [selectedId, todayStr, totalUnitsCount, availability, getDateInventory],
+  );
 
   const statusMap = useMemo(() => {
     const m: Record<string, "available" | "blocked" | "booked"> = {};
@@ -111,19 +140,43 @@ export function HostAvailabilityPage() {
     [todayStr, statusMap],
   );
 
-  // Day render (number + status dot)
+  // Day render (number + live remaining inventory count pill)
   const renderDay = useCallback(
     (day: number, date: Date) => {
-      const status = statusMap[toKey(date)];
+      const key = toKey(date);
+      const isPast = key < todayStr;
+      const dayInv = getDateInventory(selectedId, key, totalUnitsCount);
+      const isBlocked = dayInv.blocked > 0;
+      const isBooked = dayInv.booked > 0;
+
       return (
-        <span className="rdp-cell">
-          <span className={cn(status === "blocked" && "rdp-num-blocked")}>{day}</span>
-          {status === "booked" && <span className="rdp-dot rdp-dot-booked" />}
-          {status === "blocked" && <span className="rdp-dot rdp-dot-blocked" />}
+        <span className="rdp-cell flex flex-col items-center justify-center relative w-full h-full">
+          <span className={cn(isBlocked && "rdp-num-blocked font-bold text-rose-700", isPast && "opacity-50 text-neutral-400")}>
+            {day}
+          </span>
+          {!isPast && (
+            <span
+              className={cn(
+                "text-[9px] font-bold leading-tight px-1 py-0.5 rounded-sm mt-0.5 whitespace-nowrap",
+                isBlocked
+                  ? "bg-rose-100 text-rose-700"
+                  : isBooked
+                    ? "bg-amber-100 text-amber-800"
+                    : "bg-emerald-100 text-emerald-800",
+              )}
+            >
+              {dayInv.available} left
+            </span>
+          )}
+          {isPast && (
+            <span className="text-[8px] font-medium text-neutral-400 mt-0.5">
+              {isBlocked ? "Elapsed" : ""}
+            </span>
+          )}
         </span>
       );
     },
-    [statusMap],
+    [selectedId, totalUnitsCount, todayStr, getDateInventory],
   );
 
   // Selectable filter
@@ -149,10 +202,17 @@ export function HostAvailabilityPage() {
       if (!date) return;
       const key = toKey(date);
       if (!isDaySelectable(date)) return;
-      toggleDateBlock(selectedId, key);
-      toast.success(statusMap[key] === "blocked" ? "Date unblocked" : "Date blocked");
+      const isCurrentlyBlocked = statusMap[key] === "blocked";
+      toggleDateBlock(selectedId, key, unitsToBlock);
+      if (isCurrentlyBlocked) {
+        toast.success(`Date unblocked — inventory restored back to ${totalUnitsCount}`);
+      } else {
+        toast.success(
+          `Date blocked — inventory reduced by ${unitsToBlock}. Automatically adds back after date elapses.`,
+        );
+      }
     },
-    [isDaySelectable, selectedId, statusMap, toggleDateBlock],
+    [isDaySelectable, selectedId, statusMap, unitsToBlock, totalUnitsCount, toggleDateBlock],
   );
 
   // Block range
@@ -161,11 +221,22 @@ export function HostAvailabilityPage() {
       toast.error("Select both start and end dates");
       return;
     }
-    blockDateRange(selectedId, rangeFrom, rangeTo);
-    toast.success("Date range blocked");
+    blockDateRange(selectedId, rangeFrom, rangeTo, unitsToBlock);
+    toast.success(
+      `Blocked ${unitsToBlock} unit(s) from ${rangeFrom} to ${rangeTo}. Inventory reduced and automatically adds back when time elapses.`,
+    );
     setRangeFrom("");
     setRangeTo("");
-  }, [rangeFrom, rangeTo, selectedId, blockDateRange]);
+  }, [rangeFrom, rangeTo, selectedId, unitsToBlock, blockDateRange]);
+
+  const handleManualAutoRestore = useCallback(() => {
+    const restored = autoRestoreElapsedBlocks(selectedId);
+    if (restored > 0) {
+      toast.success(`${restored} unit(s) from elapsed dates restored back to available inventory.`);
+    } else {
+      toast.info("All elapsed dates are already restored. No expired blocks pending.");
+    }
+  }, [selectedId, autoRestoreElapsedBlocks]);
 
   const openToDate = useMemo(() => new Date(firstMonth.year, firstMonth.month, 1), [firstMonth]);
 
@@ -179,7 +250,7 @@ export function HostAvailabilityPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="w-full sm:max-w-md">
             <label className="block text-xs font-semibold uppercase tracking-wide text-black-muted mb-1.5">
-              Select Listing
+              Select Listing/Property
             </label>
             <select
               value={selectedId}
@@ -188,7 +259,7 @@ export function HostAvailabilityPage() {
             >
               {hostListings.map((l) => (
                 <option key={l.id} value={l.id}>
-                  {l.name} — K{l.price}/night
+                  {l.name}
                 </option>
               ))}
             </select>
@@ -205,7 +276,6 @@ export function HostAvailabilityPage() {
 
         {/* Inventory Breakdown Section */}
         <section className="space-y-3">
-
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5">
             {/* Total Units */}
             <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 sm:p-5 shadow-2xs flex items-center gap-3.5">
@@ -214,7 +284,7 @@ export function HostAvailabilityPage() {
               </div>
               <div className="min-w-0">
                 <p className="text-2xl font-bold tracking-tight leading-none text-black">
-                  {inventoryStats ? inventoryStats.total : 0}
+                  {totalUnitsCount}
                 </p>
                 <p className="text-[11px] font-semibold uppercase tracking-wide text-black-muted mt-1 truncate">
                   Total {inventory?.unitLabelPlural || "Units"}
@@ -222,17 +292,17 @@ export function HostAvailabilityPage() {
               </div>
             </div>
 
-            {/* Available Units */}
+            {/* Available Units (Live Today) */}
             <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 sm:p-5 shadow-2xs flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl border border-purple/20 bg-purple/10 text-purple flex items-center justify-center shrink-0">
                 <CircleCheck className="h-5 w-5" />
               </div>
               <div className="min-w-0">
-                <p className="text-2xl font-bold tracking-tight leading-none text-emerald-700">
-                  {inventoryStats ? inventoryStats.available : 0}
+                <p className="text-2xl font-bold tracking-tight leading-none text-black">
+                  {todayInventory.available}
                 </p>
                 <p className="text-[11px] font-semibold uppercase tracking-wide text-black-muted mt-1 truncate">
-                  Available
+                  Available Today
                 </p>
               </div>
             </div>
@@ -243,78 +313,30 @@ export function HostAvailabilityPage() {
                 <Users className="h-5 w-5" />
               </div>
               <div className="min-w-0">
-                <p className="text-2xl font-bold tracking-tight leading-none text-purple">
-                  {inventoryStats ? inventoryStats.occupied : 0}
+                <p className="text-2xl font-bold tracking-tight leading-none text-black">
+                  {todayInventory.booked}
                 </p>
                 <p className="text-[11px] font-semibold uppercase tracking-wide text-black-muted mt-1 truncate">
-                  Occupied
+                  Occupied Today
                 </p>
               </div>
             </div>
 
-            {/* Blocked Units */}
+            {/* Blocked Units (Active Dates) */}
             <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 sm:p-5 shadow-2xs flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-xl border border-neutral-200 bg-neutral-100 text-neutral-600 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl border border-purple/25 bg-purple/10 text-purple flex items-center justify-center shrink-0">
                 <Lock className="h-5 w-5" />
               </div>
               <div className="min-w-0">
                 <p className="text-2xl font-bold tracking-tight leading-none text-black">
-                  {inventoryStats ? inventoryStats.blocked : 0}
+                  {blockedSummary.activeBlockedUnits}
                 </p>
                 <p className="text-[11px] font-semibold uppercase tracking-wide text-black-muted mt-1 truncate">
-                  Blocked
+                  Held / Blocked
                 </p>
               </div>
             </div>
           </div>
-
-          {/* Unit Chips Breakdown */}
-          {inventory && inventory.units.length > 0 && (
-            <div className="bg-white border border-neutral-200/80 rounded-2xl p-3.5 sm:p-4 shadow-2xs">
-              <div className="flex items-center justify-between mb-2.5">
-                <span className="text-xs font-semibold text-black uppercase tracking-wider">
-                  {inventory.unitLabel} Inventory Status
-                </span>
-                <span className="text-xs text-black-muted">
-                  {inventoryStats?.available ?? 0} of {inventory.units.length} ready to book
-                </span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {inventory.units.map((unit) => {
-                  const isAvail = unit.status === "available";
-                  const isOcc = unit.status === "occupied";
-                  return (
-                    <div
-                      key={unit.id}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold border border-neutral-200/80 bg-neutral-50/60"
-                    >
-                      <span
-                        className={`w-2 h-2 rounded-full ${
-                          isAvail
-                            ? "bg-emerald-500"
-                            : isOcc
-                              ? "bg-purple"
-                              : "bg-neutral-400"
-                        }`}
-                      />
-                      <span className="text-black font-medium">{unit.label}</span>
-                      <span
-                        className={`text-[11px] font-semibold tracking-wide uppercase px-1.5 py-0.2 rounded-md ${
-                          isAvail
-                            ? "text-emerald-700 bg-emerald-50 border border-emerald-200"
-                            : isOcc
-                              ? "text-purple bg-purple/10 border border-purple/20"
-                              : "text-neutral-600 bg-neutral-100 border border-neutral-200"
-                        }`}
-                      >
-                        {unit.status}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
         </section>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -359,7 +381,7 @@ export function HostAvailabilityPage() {
                 </div>
                 <div className="flex items-center gap-2 text-xs text-neutral-600 font-medium">
                   <span className="w-3.5 h-3.5 rounded-md bg-neutral-100 border border-neutral-200 opacity-60"></span>
-                  Past
+                  Past (Elapsed)
                 </div>
                 <div className="flex items-center gap-2 text-xs text-neutral-600 font-medium">
                   <span className="w-3.5 h-3.5 rounded-md bg-white border-2 border-purple"></span>
@@ -374,9 +396,36 @@ export function HostAvailabilityPage() {
             {/* Block dates card */}
             <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-2xs space-y-4">
               <div>
-                <h3 className="text-base font-bold text-neutral-900">Block Dates</h3>
+                <h3 className="text-base font-bold text-neutral-900">Block Dates & Hold Units</h3>
                 <p className="text-xs text-neutral-500 mt-0.5">
-                  Temporarily prevent guests from booking specific dates.
+                  Temporarily hold inventory. Available units reduce and automatically add back after the date elapses.
+                </p>
+              </div>
+
+              {/* Units count to block */}
+              <div>
+                <div className="flex items-center justify-between text-xs font-semibold text-neutral-700 mb-1.5">
+                  <span>Units to hold / block</span>
+                  <span className="text-purple font-bold">
+                    {unitsToBlock} of {totalUnitsCount} {inventory?.unitLabelPlural || "units"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="range"
+                    min={1}
+                    max={totalUnitsCount}
+                    value={unitsToBlock}
+                    onChange={(e) => setUnitsToBlock(Number(e.target.value))}
+                    className="flex-1 accent-purple cursor-pointer h-2 bg-neutral-100 rounded-lg"
+                  />
+                  <span className="text-xs font-bold text-neutral-900 w-8 text-center bg-neutral-50 border border-neutral-200 rounded-lg py-1">
+                    {unitsToBlock}
+                  </span>
+                </div>
+                <p className="text-[11px] text-neutral-400 mt-1">
+                  Remaining available for blocked dates:{" "}
+                  <strong className="text-neutral-700">{Math.max(0, totalUnitsCount - unitsToBlock)} units</strong>
                 </p>
               </div>
 
@@ -394,7 +443,7 @@ export function HostAvailabilityPage() {
                 </div>
                 <div className="bg-neutral-50/80 rounded-xl p-3 border border-neutral-200/80">
                   <span className="text-[11px] text-black-muted font-semibold uppercase tracking-wide block mb-1">
-                    To
+                    To (Elapse date)
                   </span>
                   <input
                     type="date"
@@ -406,12 +455,47 @@ export function HostAvailabilityPage() {
               </div>
 
               <button
+                type="button"
                 onClick={handleBlockRange}
-                className="w-full h-11 rounded-xl bg-purple hover:bg-purple-hover text-white text-xs font-bold transition-colors shadow-xs flex items-center justify-center gap-2"
+                className="w-full h-11 rounded-xl bg-purple hover:bg-purple-hover text-white text-xs font-bold transition-colors shadow-xs flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Lock className="h-3.5 w-3.5" />
-                Block these dates
+                Block & Reduce Inventory
               </button>
+
+              {/* Active blocked list with auto-restore status */}
+              {blockedSummary.activeBlockedList.length > 0 && (
+                <div className="pt-3 border-t border-neutral-100 space-y-2">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-500 block">
+                    Active Blocked Dates ({blockedSummary.activeBlockedList.length})
+                  </span>
+                  <div className="max-h-44 overflow-y-auto space-y-1.5 pr-1">
+                    {blockedSummary.activeBlockedList.slice(0, 8).map((entry) => (
+                      <div
+                        key={entry.date}
+                        className="flex items-center justify-between text-xs p-2.5 rounded-xl bg-neutral-50 border border-neutral-200/70"
+                      >
+                        <div>
+                          <span className="font-semibold text-neutral-900">{entry.date}</span>
+                          <span className="text-[10px] text-neutral-500 block">
+                            Held: {entry.blockedUnits ?? 1} unit(s) · Restores after date
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            unblockDateRange(selectedId, entry.date, entry.date);
+                            toast.success(`Unblocked ${entry.date} — inventory restored.`);
+                          }}
+                          className="text-[11px] font-semibold text-purple hover:text-purple-hover px-2.5 py-1 rounded-lg border border-purple/20 bg-white cursor-pointer"
+                        >
+                          Restore
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Pricing rules overview */}

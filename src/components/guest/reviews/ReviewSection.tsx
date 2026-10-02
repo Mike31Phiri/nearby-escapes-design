@@ -160,46 +160,6 @@ export function ReviewSection({
         </div>
       </div>
 
-      {/* Category Rating Breakdown Bars */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4 border-y border-neutral-100">
-        <div>
-          <div className="flex justify-between text-xs text-neutral-600 mb-1.5">
-            <span className="font-normal">Cleanliness</span>
-            <span className="font-semibold text-purple">4.9</span>
-          </div>
-          <div className="h-1.5 w-full bg-purple/10 rounded-full overflow-hidden">
-            <div className="h-full bg-purple rounded-full w-[98%]" />
-          </div>
-        </div>
-        <div>
-          <div className="flex justify-between text-xs text-neutral-600 mb-1.5">
-            <span className="font-normal">Accuracy</span>
-            <span className="font-semibold text-purple">4.8</span>
-          </div>
-          <div className="h-1.5 w-full bg-purple/10 rounded-full overflow-hidden">
-            <div className="h-full bg-purple rounded-full w-[96%]" />
-          </div>
-        </div>
-        <div>
-          <div className="flex justify-between text-xs text-neutral-600 mb-1.5">
-            <span className="font-normal">Communication</span>
-            <span className="font-semibold text-purple">4.9</span>
-          </div>
-          <div className="h-1.5 w-full bg-purple/10 rounded-full overflow-hidden">
-            <div className="h-full bg-purple rounded-full w-[98%]" />
-          </div>
-        </div>
-        <div>
-          <div className="flex justify-between text-xs text-neutral-600 mb-1.5">
-            <span className="font-normal">Location</span>
-            <span className="font-semibold text-purple">4.8</span>
-          </div>
-          <div className="h-1.5 w-full bg-purple/10 rounded-full overflow-hidden">
-            <div className="h-full bg-purple rounded-full w-[96%]" />
-          </div>
-        </div>
-      </div>
-
       {/* Filter Chips */}
       <div className="flex items-center gap-2 text-xs">
         <button

@@ -149,52 +149,33 @@ export function HostReviewsPage() {
             </div>
           </div>
 
-          {/* Sub-criteria progress bars */}
+          {/* Rating Breakdown */}
           <div className="bg-white border border-neutral-200/80 rounded-2xl p-6 shadow-2xs flex flex-col justify-between">
             <div>
-              <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 block mb-4">
-                Hospitality Standards
+              <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 block mb-3">
+                Rating Breakdown
               </span>
-              <div className="space-y-3">
-                <div>
-                  <div className="flex justify-between text-xs text-neutral-600 mb-1">
-                    <span className="font-medium">Cleanliness</span>
-                    <span className="font-bold text-neutral-900">4.9</span>
-                  </div>
-                  <div className="h-1.5 w-full bg-neutral-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-purple rounded-full w-[98%]" />
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex justify-between text-xs text-neutral-600 mb-1">
-                    <span className="font-medium">Accuracy & Amenities</span>
-                    <span className="font-bold text-neutral-900">4.8</span>
-                  </div>
-                  <div className="h-1.5 w-full bg-neutral-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-purple rounded-full w-[96%]" />
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex justify-between text-xs text-neutral-600 mb-1">
-                    <span className="font-medium">Communication</span>
-                    <span className="font-bold text-neutral-900">5.0</span>
-                  </div>
-                  <div className="h-1.5 w-full bg-neutral-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-purple rounded-full w-full" />
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex justify-between text-xs text-neutral-600 mb-1">
-                    <span className="font-medium">Location & Check-in</span>
-                    <span className="font-bold text-neutral-900">4.9</span>
-                  </div>
-                  <div className="h-1.5 w-full bg-neutral-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-purple rounded-full w-[98%]" />
-                  </div>
-                </div>
+              <div className="space-y-2.5">
+                {[5, 4, 3, 2, 1].map((stars) => {
+                  const count = reviews.filter((r) => r.rating === stars).length;
+                  const pct = reviews.length > 0 ? (count / reviews.length) * 100 : 0;
+                  return (
+                    <div key={stars} className="flex items-center gap-2.5 text-xs">
+                      <span className="font-medium text-neutral-600 w-12 flex items-center gap-1">
+                        {stars} <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                      </span>
+                      <div className="flex-1 h-2 bg-neutral-100 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-purple rounded-full transition-all duration-300"
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+                      <span className="font-semibold text-neutral-900 w-6 text-right">
+                        {count}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>

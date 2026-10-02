@@ -8,6 +8,10 @@ import { safeLocalStorage } from "@/lib/safeStorage";
 export interface AvailabilityEntry {
   date: string; // ISO date "YYYY-MM-DD"
   status: "available" | "blocked" | "booked";
+  /** How many units are blocked on this date (defaults to 1 or full count) */
+  blockedUnits?: number;
+  /** Date after which this block elapses and inventory is added back automatically */
+  autoRestoreDate?: string;
 }
 
 /** A seasonal pricing override for a date range */
@@ -38,17 +42,44 @@ interface AvailabilityStore {
   /** Custom pricing & stay rules per listing */
   pricingRules: Record<string, PricingRules>;
 
-  // --- Date blocking ---
-  /** Set the availability for a single date (toggle) */
-  toggleDateBlock: (listingId: string, date: string) => void;
-  /** Block a range of dates */
-  blockDateRange: (listingId: string, from: string, to: string) => void;
+  // --- Date blocking & Inventory Elapse ---
+  /** Set the availability for a single date (toggle) with optional unit count */
+  toggleDateBlock: (listingId: string, date: string, blockedUnits?: number) => void;
+  /** Block a range of dates with optional unit count */
+  blockDateRange: (listingId: string, from: string, to: string, blockedUnits?: number) => void;
   /** Unblock a range of dates (set to available) */
   unblockDateRange: (listingId: string, from: string, to: string) => void;
   /** Check if a specific date is blocked */
   isDateBlocked: (listingId: string, date: string) => boolean;
   /** Get all availability entries for a listing in a month */
   getAvailabilityForMonth: (listingId: string, year: number, month: number) => AvailabilityEntry[];
+  /** Auto-restores any blocked dates that have elapsed (past today) */
+  autoRestoreElapsedBlocks: (listingId?: string) => number;
+  /** Get calculated inventory counts for a date taking blocks & time elapse into account */
+  getDateInventory: (
+    listingId: string,
+    date: string,
+    baseTotalUnits?: number,
+  ) => {
+    total: number;
+    available: number;
+    blocked: number;
+    booked: number;
+    isElapsed: boolean;
+  };
+  /** Get active vs elapsed summary for a listing */
+  getActiveBlockedSummary: (
+    listingId: string,
+    baseTotalUnits?: number,
+  ) => {
+    totalUnits: number;
+    activeBlockedDatesCount: number;
+    activeBlockedUnits: number;
+    elapsedRestoredUnits: number;
+    nextRestoreDate?: string;
+    activeBlockedList: AvailabilityEntry[];
+    elapsedList: AvailabilityEntry[];
+  };
 
   // --- Seasonal pricing ---
   addSeasonalPricing: (entry: Omit<SeasonalPricingEntry, "id">) => void;
@@ -147,9 +178,9 @@ export const useAvailabilityStore = create<AvailabilityStore>()(
       seasonalPricing: generateInitialSeasonalPricing(),
       pricingRules: generateInitialPricingRules(),
 
-      // Date Blocking
+      // Date Blocking & Inventory Elapse
 
-      toggleDateBlock: (listingId, date) =>
+      toggleDateBlock: (listingId, date, blockedUnits) =>
         set((state) => {
           const entries = state.availability[listingId] ?? [];
           const existingIdx = entries.findIndex((e) => e.date === date);
@@ -157,9 +188,12 @@ export const useAvailabilityStore = create<AvailabilityStore>()(
             const current = entries[existingIdx];
             if (current.status === "booked") return state; // Can't toggle booked dates
             const updated = [...entries];
+            const nextStatus = current.status === "available" ? "blocked" : "available";
             updated[existingIdx] = {
               ...current,
-              status: current.status === "available" ? "blocked" : "available",
+              status: nextStatus,
+              blockedUnits: nextStatus === "blocked" ? (blockedUnits ?? current.blockedUnits ?? 1) : 0,
+              autoRestoreDate: nextStatus === "blocked" ? date : undefined,
             };
             return {
               availability: { ...state.availability, [listingId]: updated },
@@ -169,12 +203,20 @@ export const useAvailabilityStore = create<AvailabilityStore>()(
           return {
             availability: {
               ...state.availability,
-              [listingId]: [...entries, { date, status: "blocked" }],
+              [listingId]: [
+                ...entries,
+                {
+                  date,
+                  status: "blocked",
+                  blockedUnits: blockedUnits ?? 1,
+                  autoRestoreDate: date,
+                },
+              ],
             },
           };
         }),
 
-      blockDateRange: (listingId, from, to) =>
+      blockDateRange: (listingId, from, to, blockedUnits) =>
         set((state) => {
           const entries = [...(state.availability[listingId] ?? [])];
           const start = new Date(from);
@@ -185,10 +227,20 @@ export const useAvailabilityStore = create<AvailabilityStore>()(
             const existingIdx = entries.findIndex((e) => e.date === dateStr);
             if (existingIdx >= 0) {
               if (entries[existingIdx].status !== "booked") {
-                entries[existingIdx] = { ...entries[existingIdx], status: "blocked" };
+                entries[existingIdx] = {
+                  ...entries[existingIdx],
+                  status: "blocked",
+                  blockedUnits: blockedUnits ?? entries[existingIdx].blockedUnits ?? 1,
+                  autoRestoreDate: to,
+                };
               }
             } else {
-              newEntries.push({ date: dateStr, status: "blocked" });
+              newEntries.push({
+                date: dateStr,
+                status: "blocked",
+                blockedUnits: blockedUnits ?? 1,
+                autoRestoreDate: to,
+              });
             }
           }
           return {
@@ -208,7 +260,11 @@ export const useAvailabilityStore = create<AvailabilityStore>()(
             const dateStr = d.toISOString().split("T")[0];
             const existingIdx = entries.findIndex((e) => e.date === dateStr);
             if (existingIdx >= 0 && entries[existingIdx].status !== "booked") {
-              entries[existingIdx] = { ...entries[existingIdx], status: "available" };
+              entries[existingIdx] = {
+                ...entries[existingIdx],
+                status: "available",
+                blockedUnits: 0,
+              };
             }
           }
           return {
@@ -223,6 +279,103 @@ export const useAvailabilityStore = create<AvailabilityStore>()(
         const entries = get().availability[listingId] ?? [];
         const entry = entries.find((e) => e.date === date);
         return entry?.status === "blocked";
+      },
+
+      autoRestoreElapsedBlocks: (listingId) => {
+        const today = new Date().toISOString().split("T")[0];
+        let restoredCount = 0;
+        set((state) => {
+          const nextAvail = { ...state.availability };
+          const targetIds = listingId ? [listingId] : Object.keys(nextAvail);
+
+          for (const id of targetIds) {
+            const entries = nextAvail[id] ?? [];
+            let modified = false;
+            const updated = entries.map((entry) => {
+              if (entry.status === "blocked" && entry.date < today) {
+                restoredCount += entry.blockedUnits || 1;
+                modified = true;
+                return { ...entry, status: "available" as const, blockedUnits: 0 };
+              }
+              return entry;
+            });
+            if (modified) {
+              nextAvail[id] = updated;
+            }
+          }
+
+          return { availability: nextAvail };
+        });
+        return restoredCount;
+      },
+
+      getDateInventory: (listingId, date, baseTotalUnits = 1) => {
+        const today = new Date().toISOString().split("T")[0];
+        const entries = get().availability[listingId] ?? [];
+        const entry = entries.find((e) => e.date === date);
+        const isElapsed = date < today;
+
+        if (!entry || isElapsed) {
+          return {
+            total: baseTotalUnits,
+            available: baseTotalUnits,
+            blocked: 0,
+            booked: 0,
+            isElapsed,
+          };
+        }
+
+        if (entry.status === "booked") {
+          return {
+            total: baseTotalUnits,
+            available: Math.max(0, baseTotalUnits - 1),
+            blocked: 0,
+            booked: 1,
+            isElapsed: false,
+          };
+        }
+
+        if (entry.status === "blocked") {
+          const blockedCount = entry.blockedUnits && entry.blockedUnits > 0 ? entry.blockedUnits : baseTotalUnits;
+          return {
+            total: baseTotalUnits,
+            available: Math.max(0, baseTotalUnits - blockedCount),
+            blocked: blockedCount,
+            booked: 0,
+            isElapsed: false,
+          };
+        }
+
+        return {
+          total: baseTotalUnits,
+          available: baseTotalUnits,
+          blocked: 0,
+          booked: 0,
+          isElapsed: false,
+        };
+      },
+
+      getActiveBlockedSummary: (listingId, baseTotalUnits = 1) => {
+        const today = new Date().toISOString().split("T")[0];
+        const entries = get().availability[listingId] ?? [];
+        const activeBlocked = entries.filter((e) => e.status === "blocked" && e.date >= today);
+        const elapsed = entries.filter((e) => e.date < today && (e.blockedUnits || 0) > 0);
+
+        const activeBlockedUnits = activeBlocked.reduce((acc, cur) => acc + (cur.blockedUnits ?? 1), 0);
+        const elapsedRestoredUnits = elapsed.reduce((acc, cur) => acc + (cur.blockedUnits ?? 1), 0);
+
+        const sortedDates = activeBlocked.map((e) => e.date).sort();
+        const nextRestoreDate = sortedDates[sortedDates.length - 1];
+
+        return {
+          totalUnits: baseTotalUnits,
+          activeBlockedDatesCount: activeBlocked.length,
+          activeBlockedUnits,
+          elapsedRestoredUnits,
+          nextRestoreDate,
+          activeBlockedList: activeBlocked,
+          elapsedList: elapsed,
+        };
       },
 
       getAvailabilityForMonth: (listingId, year, month) => {

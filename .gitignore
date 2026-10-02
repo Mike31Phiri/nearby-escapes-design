@@ -45,6 +45,7 @@ requirements/
 devpost/
 
 # Junk / temp files
+scratch/
 nul
 find-lucide.cjs
 lucide-files.json

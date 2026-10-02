@@ -18,8 +18,7 @@ export function SortBar({ total, sortValue, onSortChange, locationLabel }: SortB
   return (
     <div className="flex items-center justify-between gap-4">
       <p className="text-base text-gray-500 font-medium">
-        <span className="text-[#1f1433] font-bold">{total}</span>{" "}
-        {locationLabel ? `stays in ${locationLabel}` : "stays"}
+        <span className="text-[#1f1433] font-bold">{total}</span> stays
       </p>
       <select
         value={sortValue}

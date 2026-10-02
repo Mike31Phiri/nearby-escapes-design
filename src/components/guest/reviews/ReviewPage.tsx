@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
@@ -19,18 +19,12 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useBookingStore } from "@/store/bookingStore";
+import { useReviewStore } from "@/store/reviewStore";
 import { toast } from "sonner";
 
 interface ReviewPageProps {
   bookingRef: string;
 }
-
-const categoryLabels = [
-  { key: "cleanliness", label: "Cleanliness" },
-  { key: "communication", label: "Communication" },
-  { key: "value", label: "Value for money" },
-  { key: "location", label: "Location" },
-];
 
 // Success tips shown after submission
 const successTips = [
@@ -45,17 +39,10 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
 
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
-  const [categoryRatings, setCategoryRatings] = useState<Record<string, number>>({});
   const [content, setContent] = useState("");
   const [nickname, setNickname] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-
-  const avgCategoryRating = useMemo(() => {
-    const vals = Object.values(categoryRatings);
-    if (vals.length === 0) return 0;
-    return vals.reduce((a, b) => a + b, 0) / vals.length;
-  }, [categoryRatings]);
 
   if (!booking) {
     return (
@@ -82,19 +69,26 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
     );
   }
 
-  const setCategoryRating = (key: string, val: number) => {
-    setCategoryRatings((prev) => ({ ...prev, [key]: val }));
-  };
-
   const canSubmit = rating > 0 && content.trim().length >= 10;
 
   const handleSubmit = async () => {
     setSubmitting(true);
-    // Simulate API call
-    await new Promise((r) => setTimeout(r, 1200));
-    setSubmitted(true);
-    setSubmitting(false);
-    toast.success("Review submitted! Thank you for sharing your experience.");
+    try {
+      useReviewStore.getState().addReview({
+        listingId: booking.listingId,
+        listingName: booking.listingName,
+        listingType: (booking.type as any) || "stay",
+        bookingRef: booking.bookingRef,
+        rating,
+        text: content.trim(),
+        guestName: nickname.trim() || booking.customerName || "Guest",
+      });
+      await new Promise((r) => setTimeout(r, 600));
+      setSubmitted(true);
+      toast.success("Review submitted! Thank you for sharing your experience.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   // Submitted state
@@ -247,48 +241,6 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
               {rating > 0 ? `${rating}/5` : ""}
             </span>
           </div>
-        </div>
-
-        {/* Category Ratings */}
-        <div className="bg-white border border-[#E0DBD0] rounded-2xl p-6 shadow-sm mb-4">
-          <h2 className="font-bold text-[#334155] text-base mb-3">Rate specific aspects</h2>
-          <div className="space-y-4">
-            {categoryLabels.map(({ key, label }) => (
-              <div key={key}>
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-sm font-medium text-[#64748B]">{label}</span>
-                  <span className="text-[10px] font-bold text-[#334155]">
-                    {categoryRatings[key] ? `${categoryRatings[key]}/5` : "—"}
-                  </span>
-                </div>
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      type="button"
-                      onClick={() => setCategoryRating(key, star)}
-                      className="transition-transform duration-150"
-                      aria-label={`${label}: ${star} star${star > 1 ? "s" : ""}`}
-                    >
-                      <Star
-                        className={cn(
-                          "h-6 w-6 transition-all duration-150",
-                          (categoryRatings[key] || 0) >= star
-                            ? "fill-[#1f1433] text-[#1f1433]"
-                            : "fill-gray-200 text-gray-200",
-                        )}
-                      />
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-          {avgCategoryRating > 0 && (
-            <p className="text-sm text-[#64748B] mt-3 text-center">
-              Average: <strong className="text-[#334155]">{avgCategoryRating.toFixed(1)}</strong>/5
-            </p>
-          )}
         </div>
 
         {/* Written Review */}

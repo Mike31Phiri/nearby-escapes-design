@@ -208,7 +208,7 @@ export interface ListingDetailDTO extends ListingSummaryDTO {
   };
 }
 
-/** POST /api/listings (Host create listing) */
+/** POST /api/properties or /api/listings (Host create listing) */
 export interface CreateListingRequest {
   vertical: ListingVertical;
   title: string;
@@ -260,7 +260,7 @@ export interface CreateListingRequest {
   };
 }
 
-/** PATCH /api/listings/:id/status */
+/** PATCH /api/properties/:id/status (also supports /api/listings/:id/status) */
 export interface UpdateListingStatusRequest {
   status: ListingStatus;
 }
@@ -394,18 +394,32 @@ export interface CalendarDayDTO {
 
 /** POST /api/availability/block-dates */
 export interface BlockDatesRequest {
-  listingId: string;
+  propertyId?: string; // Canonical master property identifier
+  listingId?: string; // Legacy alias
   startDate: string; // YYYY-MM-DD
   endDate: string; // YYYY-MM-DD
+  count?: number; // Number of units to block/decrement (defaults to 1 or all)
   reason?: string;
   unitId?: string; // Optional unit specification for multi-unit lodges
 }
 
+export interface BlockDatesResponse {
+  success: boolean;
+  blockedRangeId: string;
+  listingId?: string;
+  propertyId?: string;
+  startDate: string;
+  endDate: string;
+  reason?: string;
+}
+
 /** POST /api/availability/unblock-dates */
 export interface UnblockDatesRequest {
-  listingId: string;
+  propertyId?: string;
+  listingId?: string;
   startDate: string; // YYYY-MM-DD
   endDate: string; // YYYY-MM-DD
+  count?: number;
   unitId?: string;
 }
 
@@ -465,6 +479,54 @@ export interface BookingResponseDTO {
   qrCodeUrl?: string;
   createdAt: string;
 }
+
+/** GET /api/bookings/:bookingRef (or GET /api/bookings/:id) — Guest Trip Receipt (5A) */
+export interface BookingReceiptDTO {
+  id: string;
+  bookingRef: string;
+  status: "CONFIRMED" | "CANCELLED" | "COMPLETED" | BookingStatus;
+  property: {
+    id: string;
+    name: string;
+    vertical: string;
+    location: string;
+    address: string;
+    image: string;
+  };
+  host: {
+    id: string;
+    name: string;
+    phone: string;
+    whatsapp: string;
+  };
+  dates: {
+    checkIn: string;
+    checkOut: string;
+    nights: number;
+  };
+  guests: {
+    total: number;
+    adults: number;
+    children: number;
+  };
+  financials: {
+    currency: Currency;
+    nightlyRateNgwee: number;
+    accommodationTotalNgwee: number;
+    cleaningFeeNgwee: number;
+    serviceFeeNgwee: number;
+    taxesNgwee: number;
+    grandTotalNgwee: number;
+    paymentStatus: "PAID" | "PENDING" | "FAILED" | "REFUNDED" | PaymentStatus;
+  };
+  instructions: {
+    checkInProcedure: string;
+    directions: string;
+    houseRules: string[];
+  };
+  createdAt: string;
+}
+
 
 /** POST /api/bookings/:bookingRef/cancel */
 export interface CancelBookingRequest {
@@ -670,18 +732,12 @@ export interface AddPayoutMethodRequest {
 
 /** POST /api/reviews (Guest submits review) */
 export interface CreateReviewRequest {
-  bookingRef: string;
-  listingId: string;
-  overallRating: number; // 1-5
-  categoryRatings: {
-    cleanliness: number;
-    accuracy: number;
-    communication: number;
-    location: number;
-    value: number;
-  };
-  reviewText: string;
-  publicName: string;
+  propertyId?: string;
+  listingId?: string;
+  bookingRef?: string; // Optional — verified against completed/confirmed booking
+  rating: number; // 1-5 integer
+  text?: string;
+  publicName?: string;
 }
 
 export interface ReviewResponseDTO {

@@ -20,6 +20,8 @@ import {
   Users,
   ChevronDown,
   Search,
+  Loader2,
+  CheckCircle2,
 } from "lucide-react";
 import { mockStays, type Stay } from "@/lib/mock-data";
 import {
@@ -30,8 +32,9 @@ import { FilterChips } from "@/components/shared/FilterChips";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { type ResolvedLocation, buildStaysHeadline } from "@/lib/utils/locationSlug";
+import { type ResolvedLocation } from "@/lib/utils/locationSlug";
 import { StayCard } from "@/components/shared/ListingCards";
+import { SearchListingSkeleton } from "@/components/shared/SearchListingSkeleton";
 
 // Filter configuration for "Filters" drawer
 const DRAWER_FILTER_CONFIG: FilterConfig[] = [
@@ -143,7 +146,6 @@ export function StaysPage({ location }: StaysPageProps) {
   const [whereInput, setWhereInput] = useState(initialWhere);
   const [whenInput, setWhenInput] = useState("");
   const [guests, setGuests] = useState(2);
-  const [rooms, setRooms] = useState(1);
 
   useEffect(() => {
     const resolved = qParam || location?.city?.name || location?.province?.name || "";
@@ -231,6 +233,44 @@ export function StaysPage({ location }: StaysPageProps) {
     return result;
   }, [whereInput, selectedPropertyTypes, drawerFilters, sortValue, location]);
 
+  // Pagination for search results & next database requests
+  const PAGE_SIZE = 6;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Scroll to top immediately on mount & simulate skeleton loading state
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 280);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Reset pagination when search parameters or filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [whereInput, selectedPropertyTypes, drawerFilters, sortValue, location]);
+
+  const totalCount = filteredStays.length;
+  const visibleStays = useMemo(() => {
+    return filteredStays.slice(0, currentPage * PAGE_SIZE);
+  }, [filteredStays, currentPage]);
+
+  const hasMore = visibleStays.length < totalCount;
+  const remainingCount = Math.max(0, totalCount - visibleStays.length);
+
+  const handleLoadMore = () => {
+    if (isLoadingMore || !hasMore) return;
+    setIsLoadingMore(true);
+    // Simulates next database request batch
+    setTimeout(() => {
+      setCurrentPage((prev) => prev + 1);
+      setIsLoadingMore(false);
+    }, 450);
+  };
+
   const chips = useMemo(() => {
     const c: { label: string; onRemove: () => void }[] = [];
 
@@ -279,17 +319,11 @@ export function StaysPage({ location }: StaysPageProps) {
 
   return (
     <div className="min-h-screen bg-[#faf8f4] font-sans">
-      {/* HERO TITLE SECTION */}
+      {/* SEARCH HEADER SECTION */}
       <div className="bg-white border-b border-neutral-100 py-3.5">
         <div className="max-w-[1400px] mx-auto px-3 md:px-6">
-          {/* Title */}
-          <h1 className="text-xl md:text-2xl font-semibold text-neutral-900 text-center tracking-tight leading-snug">
-            {dynamicHeadline}
-          </h1>
-
-{/* Search Bar — compact inline row on mobile, full grid on desktop */}
-          {/* Mobile: flex row with Where | When | Search */}
-          <div className="mt-3 max-w-4xl mx-auto">
+          {/* Search Bar — compact inline row on mobile, full grid on desktop */}
+          <div className="max-w-4xl mx-auto">
             {/* MOBILE (< md): single pill-row */}
             <div className="grid md:hidden grid-cols-[1fr_auto_1fr_auto] items-center bg-white border border-neutral-200 shadow-[0_4px_20px_rgba(31,20,51,0.08)] rounded-full pl-3.5 pr-1.5 py-1.5 min-h-[48px] gap-1.5">
               {/* Where (1fr equal column) */}
@@ -363,16 +397,16 @@ export function StaysPage({ location }: StaysPageProps) {
                 </div>
               </div>
 
-              {/* GUESTS / ROOMS */}
+              {/* GUESTS */}
               <div className="md:col-span-3 bg-neutral-50/80 hover:bg-neutral-50 border border-neutral-100 rounded-xl px-3 py-1.5 transition-colors flex flex-col justify-center">
                 <p className="text-[9px] font-medium uppercase tracking-wider text-neutral-500 leading-none mb-1">
-                  Guests &amp; Rooms
+                  Guests
                 </p>
                 <div className="flex items-center justify-between gap-1">
-                  <div className="flex items-center gap-1 shrink-0">
+                  <div className="flex items-center gap-1.5 shrink-0">
                     <Users className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
-                    <span className="text-xs font-medium text-neutral-800">
-                      {rooms} Rm, {guests} Gst
+                    <span className="text-xs font-semibold text-neutral-800">
+                      {guests} {guests === 1 ? "Guest" : "Guests"}
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5">
@@ -464,8 +498,7 @@ export function StaysPage({ location }: StaysPageProps) {
         {/* Title bar + sort */}
         <div className="flex items-center justify-between mb-3.5 gap-4">
           <div>
-            <h2 className="text-base font-semibold text-neutral-900">{dynamicHeadline}</h2>
-            <p className="text-xs text-neutral-500 mt-0.5">
+            <p className="text-xs text-neutral-500">
               <span className="font-medium text-neutral-700">{filteredStays.length}</span>{" "}
               properties found
             </p>
@@ -493,7 +526,9 @@ export function StaysPage({ location }: StaysPageProps) {
         <FilterChips chips={chips} onClearAll={handleResetAll} />
 
         {/* Cards grid: 3 larger columns */}
-        {filteredStays.length === 0 ? (
+        {isLoading ? (
+          <SearchListingSkeleton count={6} />
+        ) : filteredStays.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 bg-white rounded-2xl border border-neutral-100 mt-3">
             <Bed className="h-10 w-10 text-neutral-200 mb-2" />
             <h3 className="font-bold text-base text-neutral-800">No stays found</h3>
@@ -509,11 +544,44 @@ export function StaysPage({ location }: StaysPageProps) {
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-3">
-            {filteredStays.map((stay) => (
-              <StayCard key={stay.id} stay={stay} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-3">
+              {visibleStays.map((stay) => (
+                <StayCard key={stay.id} stay={stay} />
+              ))}
+            </div>
+
+            {/* Pagination / Database Next Page Request Section */}
+            <div className="mt-10 mb-8 flex flex-col items-center justify-center gap-3">
+              {hasMore ? (
+                <button
+                  type="button"
+                  onClick={handleLoadMore}
+                  disabled={isLoadingMore}
+                  className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-white border border-neutral-300 text-xs font-semibold text-neutral-800 hover:bg-neutral-50 hover:border-neutral-400 transition-all shadow-xs disabled:opacity-60 cursor-pointer active:scale-98"
+                >
+                  {isLoadingMore ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin text-purple" />
+                      <span>Loading more stays from database...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Load More Stays</span>
+                      <span className="px-2 py-0.5 rounded-full bg-purple/10 text-purple text-[10px] font-bold">
+                        +{Math.min(PAGE_SIZE, remainingCount)}
+                      </span>
+                    </>
+                  )}
+                </button>
+              ) : (
+                <div className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-neutral-100/90 border border-neutral-200/80 text-xs text-neutral-600 font-medium shadow-2xs">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                  <span>No more stays to load — You&apos;ve reached the end of the results</span>
+                </div>
+              )}
+            </div>
+          </>
         )}
       </main>
 

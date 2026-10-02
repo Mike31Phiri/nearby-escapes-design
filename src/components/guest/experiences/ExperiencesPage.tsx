@@ -14,9 +14,12 @@ import {
   ChevronDown,
   CalendarDays,
   Search,
+  Loader2,
+  CheckCircle2,
 } from "lucide-react";
-import { mockExperiences, type Experience } from "@/lib/mock-data";
+import { mockExperiences } from "@/lib/mock-data";
 import { ExperienceCard } from "@/components/shared/ListingCards";
+import { SearchListingSkeleton } from "@/components/shared/SearchListingSkeleton";
 import {
   VerticalFilterSidebar,
   type FilterConfig,
@@ -230,6 +233,43 @@ export function ExperiencesPage() {
     return result;
   }, [whereInput, selectedCategories, drawerFilters, sortValue, province, city, attraction, q]);
 
+  // Pagination for search results & next database requests
+  const PAGE_SIZE = 6;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Scroll to top immediately on mount & simulate skeleton loading state
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 280);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Reset pagination when search parameters or filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [whereInput, selectedCategories, drawerFilters, sortValue, province, city, attraction, q]);
+
+  const totalCount = filteredExperiences.length;
+  const visibleExperiences = useMemo(() => {
+    return filteredExperiences.slice(0, currentPage * PAGE_SIZE);
+  }, [filteredExperiences, currentPage]);
+
+  const hasMore = visibleExperiences.length < totalCount;
+  const remainingCount = Math.max(0, totalCount - visibleExperiences.length);
+
+  const handleLoadMore = () => {
+    if (isLoadingMore || !hasMore) return;
+    setIsLoadingMore(true);
+    setTimeout(() => {
+      setCurrentPage((prev) => prev + 1);
+      setIsLoadingMore(false);
+    }, 450);
+  };
+
   const chips = useMemo(() => {
     const c: { label: string; onRemove: () => void }[] = [];
 
@@ -275,16 +315,11 @@ export function ExperiencesPage() {
 
   return (
     <div className="min-h-screen bg-[#faf8f4] font-sans">
-      {/* HERO TITLE SECTION */}
+      {/* SEARCH HEADER SECTION */}
       <div className="bg-white border-b border-neutral-100 py-3.5">
         <div className="max-w-[1400px] mx-auto px-3 md:px-6">
-          {/* Title */}
-          <h1 className="text-xl md:text-2xl font-semibold text-neutral-900 text-center tracking-tight leading-snug">
-            {dynamicTitle}
-          </h1>
-
           {/* Search Bar — compact inline row on mobile, full grid on desktop */}
-          <div className="mt-3 max-w-4xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             {/* MOBILE (< md): single pill-row */}
             <div className="grid md:hidden grid-cols-[1fr_auto_1fr_auto] items-center bg-white border border-neutral-200 shadow-[0_4px_20px_rgba(31,20,51,0.08)] rounded-full pl-3.5 pr-1.5 py-1.5 min-h-[48px] gap-1.5">
               {/* Where (1fr equal column) */}
@@ -459,8 +494,7 @@ export function ExperiencesPage() {
         {/* Title bar + sort */}
         <div className="flex items-center justify-between mb-3.5 gap-4">
           <div>
-            <h2 className="text-base font-semibold text-neutral-900">{dynamicTitle}</h2>
-            <p className="text-xs text-neutral-500 mt-0.5">
+            <p className="text-xs text-neutral-500">
               <span className="font-medium text-neutral-700">{filteredExperiences.length}</span>{" "}
               experiences found
             </p>
@@ -488,7 +522,9 @@ export function ExperiencesPage() {
         <FilterChips chips={chips} onClearAll={handleResetAll} />
 
         {/* Cards grid: 3 larger columns */}
-        {filteredExperiences.length === 0 ? (
+        {isLoading ? (
+          <SearchListingSkeleton count={6} />
+        ) : filteredExperiences.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 bg-white rounded-2xl border border-neutral-100 mt-3">
             <Compass className="h-10 w-10 text-neutral-200 mb-2" />
             <h3 className="font-bold text-base text-neutral-800">No experiences found</h3>
@@ -504,11 +540,44 @@ export function ExperiencesPage() {
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-3">
-            {filteredExperiences.map((exp) => (
-              <ExperienceCard key={exp.id} exp={exp} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-3">
+              {visibleExperiences.map((exp) => (
+                <ExperienceCard key={exp.id} exp={exp} />
+              ))}
+            </div>
+
+            {/* Pagination / Database Next Page Request Section */}
+            <div className="mt-10 mb-8 flex flex-col items-center justify-center gap-3">
+              {hasMore ? (
+                <button
+                  type="button"
+                  onClick={handleLoadMore}
+                  disabled={isLoadingMore}
+                  className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-white border border-neutral-300 text-xs font-semibold text-neutral-800 hover:bg-neutral-50 hover:border-neutral-400 transition-all shadow-xs disabled:opacity-60 cursor-pointer active:scale-98"
+                >
+                  {isLoadingMore ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin text-purple" />
+                      <span>Loading more experiences from database...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Load More Experiences</span>
+                      <span className="px-2 py-0.5 rounded-full bg-purple/10 text-purple text-[10px] font-bold">
+                        +{Math.min(PAGE_SIZE, remainingCount)}
+                      </span>
+                    </>
+                  )}
+                </button>
+              ) : (
+                <div className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-neutral-100/90 border border-neutral-200/80 text-xs text-neutral-600 font-medium shadow-2xs">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                  <span>No more experiences to load — You&apos;ve reached the end of the results</span>
+                </div>
+              )}
+            </div>
+          </>
         )}
       </main>
 

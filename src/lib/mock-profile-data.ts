@@ -3,7 +3,7 @@ export interface HostListing {
   name: string;
   type: "stay" | "experience" | "transport" | "gem";
   location: string;
-  status: "active" | "pending" | "draft";
+  status: "active" | "pending" | "draft" | "inactive" | "paused";
   image: string;
   price: number;
   bookings: number;

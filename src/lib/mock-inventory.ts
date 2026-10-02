@@ -60,22 +60,25 @@ function buildSeats(rows: number, cols: number, availableEvery = 3): InventoryUn
   return units;
 }
 
-/** Build room units with a mix of availability. */
+/** Build room units with a mix of availability (numbered units only, no individual names). */
 function buildRooms(
-  names: string[],
+  countOrNames: number | string[],
   price: number,
   occupiedIdx: number[] = [],
   blockedIdx: number[] = [],
+  unitLabel: string = "Chalet",
 ): InventoryUnit[] {
-  return names.map((label, i) => {
+  const count = typeof countOrNames === "number" ? countOrNames : countOrNames.length;
+  const units: InventoryUnit[] = [];
+  for (let i = 0; i < count; i++) {
     const status: InventoryUnitStatus = occupiedIdx.includes(i)
       ? "occupied"
       : blockedIdx.includes(i)
         ? "blocked"
         : "available";
-    return {
+    units.push({
       id: `room-${i + 1}`,
-      label,
+      label: `${unitLabel} ${i + 1}`,
       status,
       price,
       ...(status === "occupied"
@@ -83,8 +86,9 @@ function buildRooms(
         : status === "blocked"
           ? { note: "Closed · maintenance & service" }
           : { note: "Ready for check-in" }),
-    };
-  });
+    });
+  }
+  return units;
 }
 
 /** Build activity / experience time slots. */
@@ -126,21 +130,7 @@ export const mockInventories: ListingInventory[] = [
     unitLabel: "Chalet",
     unitLabelPlural: "Chalets",
     total: 8,
-    units: buildRooms(
-      [
-        "Chalet 1 — Savanna Suite",
-        "Chalet 2 — River View Suite",
-        "Chalet 3 — Baobab Suite",
-        "Chalet 4 — Zambezi View",
-        "Chalet 5 — Bush Chalet",
-        "Chalet 6 — Acacia Suite",
-        "Chalet 7 — Sunset Room",
-        "Chalet 8 — Elephant Room",
-      ],
-      450,
-      [0, 4],
-      [6],
-    ),
+    units: buildRooms(8, 450, [0, 4], [6], "Chalet"),
   },
   {
     listingId: "h2",
@@ -148,18 +138,7 @@ export const mockInventories: ListingInventory[] = [
     unitLabel: "Chalet",
     unitLabelPlural: "Chalets",
     total: 6,
-    units: buildRooms(
-      [
-        "Chalet 1 — River Lodge Twin",
-        "Chalet 2 — River Lodge King",
-        "Chalet 3 — Family Chalet",
-        "Chalet 4 — Waterfront Cabin",
-        "Chalet 5 — Bushview Room",
-        "Chalet 6 — Garden Room",
-      ],
-      380,
-      [1, 2],
-    ),
+    units: buildRooms(6, 380, [1, 2], [], "Chalet"),
   },
   {
     listingId: "h3",
@@ -167,16 +146,7 @@ export const mockInventories: ListingInventory[] = [
     unitLabel: "Safari Tent",
     unitLabelPlural: "Safari Tents",
     total: 4,
-    units: buildRooms(
-      [
-        "Tent 1 — Wetlands Meru",
-        "Tent 2 — Birders' Meru",
-        "Tent 3 — Family Meru",
-        "Tent 4 — Lakeside Meru",
-      ],
-      420,
-      [0, 3],
-    ),
+    units: buildRooms(4, 420, [0, 3], [], "Safari Tent"),
   },
 
   // --- HOST PROFILE EXPERIENCE LISTINGS ---
@@ -262,18 +232,7 @@ export const mockInventories: ListingInventory[] = [
     unitLabel: "Chalet",
     unitLabelPlural: "Chalets",
     total: 6,
-    units: buildRooms(
-      [
-        "Chalet 1 — Presidential River Suite",
-        "Chalet 2 — Luxury Safari Villa",
-        "Chalet 3 — Elephant Valley Chalet",
-        "Chalet 4 — Zambezi Sunset View",
-        "Chalet 5 — Leopard Ridge Suite",
-        "Chalet 6 — Hippo Pool Chalet",
-      ],
-      450,
-      [0, 1],
-    ),
+    units: buildRooms(6, 450, [0, 1], [], "Chalet"),
   },
   {
     listingId: "2",
@@ -281,21 +240,7 @@ export const mockInventories: ListingInventory[] = [
     unitLabel: "Chalet",
     unitLabelPlural: "Chalets",
     total: 8,
-    units: buildRooms(
-      [
-        "Chalet 1 — Lagoon Suite",
-        "Chalet 2 — Wildlife View Chalet",
-        "Chalet 3 — Acacia Family Suite",
-        "Chalet 4 — Mfuwe Bush Villa",
-        "Chalet 5 — Riverfront Chalet",
-        "Chalet 6 — Woodland Chalet",
-        "Chalet 7 — Safari Hideaway",
-        "Chalet 8 — Baobab Boma",
-      ],
-      380,
-      [1, 3],
-      [7],
-    ),
+    units: buildRooms(8, 380, [1, 3], [7], "Chalet"),
   },
   {
     listingId: "3",
@@ -303,17 +248,7 @@ export const mockInventories: ListingInventory[] = [
     unitLabel: "Chalet",
     unitLabelPlural: "Chalets",
     total: 5,
-    units: buildRooms(
-      [
-        "Chalet 1 — Riverside Cottage",
-        "Chalet 2 — Stilted Zambezi Chalet",
-        "Chalet 3 — Garden Hideaway",
-        "Chalet 4 — Island View Suite",
-        "Chalet 5 — Family Riverside Suite",
-      ],
-      340,
-      [2],
-    ),
+    units: buildRooms(5, 340, [2], [], "Chalet"),
   },
 
   // --- GUEST EXPERIENCE TIME SLOTS ---

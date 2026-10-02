@@ -10,9 +10,11 @@ import type { ListingVertical } from "@/types/listing";
 import type {
   CreateBookingRequest,
   BookingResponseDTO,
+  BookingReceiptDTO,
   CancelBookingRequest,
   CancelBookingResponse,
 } from "@/types/backend-payloads";
+
 
 export interface CreateBookingPayload {
   listingId: string;
@@ -171,6 +173,63 @@ export const getBooking = async (bookingRef: string): Promise<BookingDTO> => {
       hostId: "host-1",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+    };
+  }
+};
+
+/**
+  * Fetch itemized guest trip receipt (5A).
+  * GET /api/bookings/:bookingRef (or GET /api/bookings/:id)
+  */
+export const getBookingReceipt = async (bookingRef: string): Promise<BookingReceiptDTO> => {
+  try {
+    const { data } = await apiClient.get<BookingReceiptDTO>(`/bookings/${bookingRef}`);
+    return data;
+  } catch {
+    return {
+      id: `book_${bookingRef}`,
+      bookingRef,
+      status: "CONFIRMED",
+      property: {
+        id: "prop_88e49f2b-11c2-49d7-8bc1-209e86ba2021",
+        name: "Mukuni River Chalets",
+        vertical: "stay",
+        location: "Livingstone, Southern Province",
+        address: "Plot 45, Riverfront Road",
+        image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80",
+      },
+      host: {
+        id: "host_11223344-5566-7788-9900-aabbccddeeff",
+        name: "Mwamba Chali",
+        phone: "+260 97 1234567",
+        whatsapp: "+260 97 1234567",
+      },
+      dates: {
+        checkIn: "2026-10-15T14:00:00.000Z",
+        checkOut: "2026-10-18T10:00:00.000Z",
+        nights: 3,
+      },
+      guests: {
+        total: 2,
+        adults: 2,
+        children: 0,
+      },
+      financials: {
+        currency: "ZMW",
+        nightlyRateNgwee: 450000,
+        accommodationTotalNgwee: 1350000,
+        cleaningFeeNgwee: 50000,
+        serviceFeeNgwee: 140000,
+        taxesNgwee: 0,
+        grandTotalNgwee: 1540000,
+        paymentStatus: "successful",
+      },
+      instructions: {
+        checkInProcedure: "Self check-in with keypad. Code will be sent on morning of arrival.",
+        directions: "Follow Riverfront Road 4km past the main junction. Gate is on the left.",
+        houseRules: ["No smoking inside chalets", "Quiet hours after 22:00"],
+      },
+      createdAt: new Date().toISOString(),
     };
   }
 };
