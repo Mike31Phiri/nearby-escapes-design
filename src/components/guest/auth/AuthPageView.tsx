@@ -16,6 +16,9 @@ import {
   Phone,
   Sparkles,
   HelpCircle,
+  CheckCircle2,
+  RefreshCw,
+  MailCheck,
 } from "lucide-react";
 import { EnvelopeSimple as MessageSquare } from "@phosphor-icons/react";
 import { Label } from "@/components/ui/label";
@@ -26,7 +29,7 @@ import * as authApi from "@/lib/api/auth";
 import { cn } from "@/lib/utils";
 
 interface AuthPageViewProps {
-  defaultTab?: "login" | "register" | "otp" | "reset";
+  defaultTab?: "login" | "register" | "otp" | "reset" | "verify-email";
 }
 
 // Password strength
@@ -203,6 +206,23 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  // Email verification state
+  const queryEmail = searchParams.get("email") || "";
+  const queryToken = searchParams.get("token") || "";
+  const queryCode = searchParams.get("code") || "";
+  const [verifyEmailAddress, setVerifyEmailAddress] = useState(queryEmail);
+  const [verifyOtp, setVerifyOtp] = useState(["", "", "", "", "", ""]);
+  const [verifySecs, setVerifySecs] = useState(59);
+  const [isEditingEmail, setIsEditingEmail] = useState(false);
+  const [emailEditValue, setEmailEditValue] = useState(queryEmail);
+
+  useEffect(() => {
+    if (queryEmail) {
+      setVerifyEmailAddress(queryEmail);
+      setEmailEditValue(queryEmail);
+    }
+  }, [queryEmail]);
+
   useEffect(() => {
     if (activeTab === "otp" && secs > 0) {
       const timer = setInterval(() => setSecs((s) => s - 1), 1000);
@@ -210,12 +230,45 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
     }
   }, [activeTab, secs]);
 
+  useEffect(() => {
+    if (activeTab === "verify-email" && verifySecs > 0) {
+      const timer = setInterval(() => setVerifySecs((s) => s - 1), 1000);
+      return () => clearInterval(timer);
+    }
+  }, [activeTab, verifySecs]);
+
+  // Auto-verify if token or 6-digit code is provided in query params
+  useEffect(() => {
+    if (activeTab === "verify-email") {
+      if (queryToken) {
+        handleVerifyEmailSubmit(undefined, queryToken);
+      } else if (queryCode && queryCode.length === 6) {
+        setVerifyOtp(queryCode.split(""));
+        handleVerifyEmailSubmit(undefined, undefined, queryCode);
+      }
+    }
+  }, [activeTab, queryToken, queryCode]);
+
   const handleOtpChange = (index: number, val: string, fieldId: string) => {
-    const isMainOtp = fieldId === "otp";
-    const current = isMainOtp ? [...otp] : [...resetOtp];
-    current[index] = val;
-    if (isMainOtp) setOtp(current);
-    else setResetOtp(current);
+    if (fieldId === "verifyEmail") {
+      const current = [...verifyOtp];
+      current[index] = val;
+      setVerifyOtp(current);
+      // Auto submit when 6th digit entered
+      if (val && index === 5 && current.every((d) => d !== "")) {
+        setTimeout(() => {
+          handleVerifyEmailSubmit(undefined, undefined, current.join(""));
+        }, 150);
+      }
+    } else if (fieldId === "otp") {
+      const current = [...otp];
+      current[index] = val;
+      setOtp(current);
+    } else {
+      const current = [...resetOtp];
+      current[index] = val;
+      setResetOtp(current);
+    }
 
     if (val && index < 5) {
       const nextInput = document.getElementById(`${fieldId}-${index + 1}`);
@@ -228,8 +281,12 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
     e: React.KeyboardEvent<HTMLInputElement>,
     fieldId: string,
   ) => {
-    const isMainOtp = fieldId === "otp";
-    const current = isMainOtp ? otp : resetOtp;
+    const current =
+      fieldId === "verifyEmail"
+        ? verifyOtp
+        : fieldId === "otp"
+          ? otp
+          : resetOtp;
 
     if (e.key === "Backspace" && !current[index] && index > 0) {
       const prevInput = document.getElementById(`${fieldId}-${index - 1}`);
@@ -293,16 +350,18 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
     }
     setLoading(true);
     try {
-      const { user } = await authApi.register({
+      const res = await authApi.register({
         name: `${firstName.trim()} ${lastName.trim()}`,
         email: email.trim(),
         password,
         phone: `+260${phone.trim().replace(/\s/g, "")}`,
       });
-      setUser(user);
-      toast.success("Account created! Welcome to Nearby Escapes.");
-      const dest = redirectTarget === "/" ? "/profile" : redirectTarget;
-      setTimeout(() => router.push(dest), 600);
+      if (res.user) {
+        setUser(res.user);
+      }
+      toast.success("Account created! Please verify your email.");
+      const nextParam = redirectTarget !== "/" ? `&next=${encodeURIComponent(redirectTarget)}` : "";
+      router.push(`/auth/verify-email?email=${encodeURIComponent(email.trim())}${nextParam}`);
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Registration failed. Please try again.");
     } finally {
@@ -366,6 +425,63 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
       } finally {
         setLoading(false);
       }
+    }
+  };
+
+  const handleVerifyEmailSubmit = async (
+    e?: React.FormEvent,
+    customToken?: string,
+    customCode?: string,
+  ) => {
+    if (e) e.preventDefault();
+    const tokenToUse = customToken || searchParams.get("token") || undefined;
+    const codeToUse = customCode || verifyOtp.join("") || undefined;
+
+    if (!tokenToUse && (!codeToUse || codeToUse.length < 6)) {
+      toast.error("Please enter the complete 6-digit code.");
+      return;
+    }
+    if (!verifyEmailAddress.trim()) {
+      toast.error("Please enter your email address.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await authApi.verifyEmail({
+        email: verifyEmailAddress.trim(),
+        code: codeToUse,
+        token: tokenToUse,
+      });
+
+      if (res.user) {
+        setUser(res.user);
+      }
+      toast.success("Email verified successfully! Welcome to Nearby Escapes.");
+      const dest = redirectTarget === "/" ? "/profile" : redirectTarget;
+      setTimeout(() => router.push(dest), 700);
+    } catch (err: any) {
+      toast.error(
+        err.response?.data?.message || "Verification failed. The code may be invalid or expired.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendVerification = async () => {
+    if (!verifyEmailAddress.trim()) {
+      toast.error("Please provide an email address.");
+      return;
+    }
+    try {
+      await authApi.resendVerificationEmail({ email: verifyEmailAddress.trim() });
+      setVerifySecs(59);
+      toast.success("Verification code re-sent! Please check your inbox.");
+    } catch (err: any) {
+      toast.error(
+        err.response?.data?.message || "Could not resend verification code. Please try again.",
+      );
     }
   };
 
@@ -849,6 +965,107 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                   >
                     <ArrowLeft className="h-3 w-3" /> Back to Sign In
                   </button>
+                </div>
+              </form>
+            )}
+
+            {/* 5. VERIFY EMAIL TAB */}
+            {activeTab === "verify-email" && (
+              <form onSubmit={handleVerifyEmailSubmit} className="space-y-6 text-center">
+                <div>
+                  <div className="h-16 w-16 rounded-2xl bg-[#6b2bb8]/10 text-[#6b2bb8] flex items-center justify-center mx-auto mb-4 relative shadow-sm">
+                    <MailCheck className="h-8 w-8" />
+                  </div>
+                  <h1 className="text-2xl font-bold text-neutral-900 tracking-tight">
+                    Verify your email
+                  </h1>
+                  <p className="text-xs text-neutral-500 mt-2 leading-relaxed max-w-sm mx-auto">
+                    We sent a 6-digit confirmation code to:
+                  </p>
+                  
+                  {isEditingEmail ? (
+                    <div className="mt-3 flex items-center gap-2 max-w-xs mx-auto">
+                      <InputField
+                        type="email"
+                        value={emailEditValue}
+                        onChange={(e) => setEmailEditValue(e.target.value)}
+                        placeholder="you@example.com"
+                        className="text-xs py-2"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (emailEditValue.trim()) {
+                            setVerifyEmailAddress(emailEditValue.trim());
+                            setIsEditingEmail(false);
+                            toast.success("Email updated.");
+                          }
+                        }}
+                        className="px-3 py-2 bg-neutral-900 text-white rounded-xl text-xs font-bold shrink-0 hover:bg-neutral-800 transition-colors"
+                      >
+                        Save
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="mt-1 flex items-center justify-center gap-2">
+                      <span className="font-semibold text-neutral-900 text-sm bg-neutral-100 px-3 py-1 rounded-full">
+                        {verifyEmailAddress || "your email"}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setIsEditingEmail(true)}
+                        className="text-[11px] font-bold text-[#6b2bb8] hover:underline"
+                      >
+                        Change
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-3">
+                  <FieldLabel>Enter 6-digit code</FieldLabel>
+                  <OtpInputs
+                    value={verifyOtp}
+                    onChange={(i, v) => handleOtpChange(i, v, "verifyEmail")}
+                    onKeyDown={(i, e) => handleOtpKeyDown(i, e, "verifyEmail")}
+                    fieldId="verifyEmail"
+                  />
+                </div>
+
+                <div className="text-xs text-neutral-500">
+                  Didn&apos;t receive the code?{" "}
+                  {verifySecs > 0 ? (
+                    <span className="font-semibold text-neutral-600">
+                      Resend in <span className="font-bold text-neutral-900">{formatTimer(verifySecs)}</span>
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleResendVerification}
+                      className="font-bold text-[#6b2bb8] hover:underline cursor-pointer inline-flex items-center gap-1"
+                    >
+                      <RefreshCw className="h-3 w-3" /> Resend code
+                    </button>
+                  )}
+                </div>
+
+                <SubmitButton loading={loading}>Verify Email</SubmitButton>
+
+                <div className="pt-2 flex flex-col gap-2">
+                  <button
+                    type="button"
+                    onClick={() => router.push("/auth/login")}
+                    className="text-xs text-neutral-500 hover:text-neutral-900 font-semibold inline-flex items-center justify-center gap-1 transition-colors"
+                  >
+                    <ArrowLeft className="h-3 w-3" /> Return to Sign In
+                  </button>
+                  <p className="text-[11px] text-neutral-400">
+                    Need help?{" "}
+                    <Link href="/help" className="text-[#6b2bb8] hover:underline">
+                      Contact Support
+                    </Link>
+                  </p>
                 </div>
               </form>
             )}

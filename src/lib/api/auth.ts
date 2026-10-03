@@ -6,6 +6,8 @@ import type {
   ResetPasswordDto,
   SendOtpDto,
   VerifyOtpDto,
+  VerifyEmailDto,
+  ResendVerificationDto,
 } from "./dto/auth.dto";
 
 export const login = async (
@@ -112,3 +114,34 @@ export const refreshSession = async (): Promise<{ user: User; accessToken: strin
   }
   return data;
 };
+
+export const verifyEmail = async (
+  dto: VerifyEmailDto,
+): Promise<{
+  success: boolean;
+  message: string;
+  user?: User;
+  accessToken?: string;
+}> => {
+  const { data } = await apiClient.post<{
+    success: boolean;
+    message: string;
+    user?: User;
+    accessToken?: string;
+  }>("/auth/verify-email", dto);
+  if (data.accessToken && typeof window !== "undefined") {
+    localStorage.setItem("nearby_access_token", data.accessToken);
+  }
+  return data;
+};
+
+export const resendVerificationEmail = async (
+  dto: ResendVerificationDto,
+): Promise<{ success: boolean; message: string }> => {
+  const { data } = await apiClient.post<{ success: boolean; message: string }>(
+    "/auth/resend-verification",
+    dto,
+  );
+  return data;
+};
+

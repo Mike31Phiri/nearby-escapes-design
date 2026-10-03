@@ -31,3 +31,14 @@ export interface VerifyOtpDto {
   email?: string;
   otp: string;
 }
+
+export interface VerifyEmailDto {
+  email: string;
+  code?: string;
+  token?: string;
+}
+
+export interface ResendVerificationDto {
+  email: string;
+}
+

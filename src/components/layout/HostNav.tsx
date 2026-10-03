@@ -23,6 +23,7 @@ import {
 import { BACKDROP_CLASS, cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle } from "@/components/ui/sheet";
 import { HostNotificationsPopover } from "@/components/host/HostNotificationsPopover";
+import { useAuthStore } from "@/lib/store/authStore";
 
 const hostRoutes = [
   "/host",
@@ -61,6 +62,7 @@ export function HostNav() {
   const rawPathname = usePathname();
   const pathname = rawPathname || "";
   const [sheetOpen, setSheetOpen] = useState(false);
+  const logout = useAuthStore((s) => s.logout);
 
   const isHostRoute = Boolean(pathname && (pathname.startsWith("/host") || hostRoutes.includes(pathname)));
   const isActive = (href: string) => {
@@ -311,13 +313,17 @@ export function HostNav() {
                     {/* Log out */}
                     <div className="border-t border-neutral-100 pt-3">
                       <SheetClose asChild>
-                        <Link
-                          href="/auth/login"
-                          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium text-rose-600 hover:bg-rose-50 transition-colors w-full text-left"
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSheetOpen(false);
+                            logout();
+                          }}
+                          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium text-rose-600 hover:bg-rose-50 transition-colors w-full text-left cursor-pointer"
                         >
                           <LogOut className="h-4 w-4 shrink-0" />
                           <span>Log Out</span>
-                        </Link>
+                        </button>
                       </SheetClose>
                     </div>
                   </div>

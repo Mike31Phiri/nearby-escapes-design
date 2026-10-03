@@ -170,10 +170,26 @@ export function Navbar() {
             <HelpCircle className="h-5 w-5" strokeWidth={1.8} />
           </Link>
 
-          {/* Saved / Wishlist Popover */}
-          <WishlistPopover />
+          {/* Saved / Wishlist Popover (only when unauthenticated) */}
+          {!isAuthenticated && !isHydrating && <WishlistPopover />}
 
-          {/* Auth links / Loading skeleton */}
+          {/* Notifications bell icon — authenticated users (desktop & mobile) */}
+          {!isHydrating && isAuthenticated && (
+            <Link
+              href="/notifications"
+              className="flex items-center justify-center text-purple cursor-pointer relative h-9 w-9 rounded-full hover:bg-purple/10 transition-colors"
+              aria-label="Notifications"
+            >
+              <Bell className="h-5 w-5" strokeWidth={1.8} />
+              {unreadCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-gold text-black text-[9px] font-bold flex items-center justify-center shadow-xs">
+                  {unreadCount}
+                </span>
+              )}
+            </Link>
+          )}
+
+          {/* Auth links / Loading skeleton (unauthenticated only) */}
           {isHydrating ? (
             <div className="hidden md:flex items-center gap-2 ml-1 border-l border-neutral-200 pl-3">
               <div className="w-16 h-8 rounded-full bg-neutral-100 animate-pulse" />
@@ -196,22 +212,6 @@ export function Navbar() {
                 </Link>
               </div>
             )
-          )}
-
-          {/* Notification icon — mobile & tablet authenticated */}
-          {!isHydrating && isAuthenticated && (
-            <Link
-              href="/notifications"
-              className="lg:hidden flex items-center justify-center text-purple cursor-pointer relative h-8 w-8 rounded-full border border-purple/20 hover:bg-neutral-100 transition-colors"
-              aria-label="Notifications"
-            >
-              <Bell className="h-4 w-4" strokeWidth={2} />
-              {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1.5 h-3.5 w-3.5 rounded-full bg-gold text-black text-[8px] font-bold flex items-center justify-center shadow-sm">
-                  {unreadCount}
-                </span>
-              )}
-            </Link>
           )}
 
           {/* Profile Dropdown / Nav Menu */}
@@ -259,7 +259,7 @@ export function Navbar() {
               {/* Scrollable Content Body */}
               <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
                 {/* 1. Auth Card */}
-                {isAuthenticated ? (
+                {!isHydrating && isAuthenticated ? (
                   <div className="flex items-center gap-3 bg-[#f8f5fc] border border-purple/15 rounded-2xl p-3.5">
                     <SheetClose asChild>
                       <Link
@@ -290,13 +290,13 @@ export function Navbar() {
                     <SheetClose asChild>
                       <button
                         onClick={logout}
-                        className="text-xs font-medium text-purple hover:text-purple-hover px-2 py-1 rounded-lg hover:bg-purple/10 transition-colors shrink-0"
+                        className="text-xs font-semibold text-purple hover:text-purple-hover px-2.5 py-1.5 rounded-lg hover:bg-purple/10 transition-colors shrink-0 cursor-pointer"
                       >
                         Sign out
                       </button>
                     </SheetClose>
                   </div>
-                ) : (
+                ) : !isHydrating ? (
                   <div className="bg-[#f8f5fc] border border-purple/10 rounded-2xl p-4">
                     <p className="font-semibold text-sm text-neutral-900 mb-1">
                       Welcome to Nearby Escapes
@@ -323,95 +323,101 @@ export function Navbar() {
                       </SheetClose>
                     </div>
                   </div>
+                ) : null}
+
+                {/* 2. My Account (Authenticated Only) */}
+                {isAuthenticated && (
+                  <div>
+                    <p className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 px-3 mb-1.5">
+                      My Account
+                    </p>
+                    <div className="space-y-0.5">
+                      <SheetClose asChild>
+                        <Link
+                          href="/profile"
+                          className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150"
+                        >
+                          <User className="h-4 w-4 text-neutral-400 shrink-0" />
+                          Profile
+                        </Link>
+                      </SheetClose>
+
+                      {user?.roles?.includes("host") && (
+                        <SheetClose asChild>
+                          <Link
+                            href="/host/listings"
+                            className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150"
+                          >
+                            <Building2 className="h-4 w-4 text-neutral-400 shrink-0" />
+                            My Listings
+                          </Link>
+                        </SheetClose>
+                      )}
+
+                      <SheetClose asChild>
+                        <Link
+                          href="/trips"
+                          className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150"
+                        >
+                          <CalendarDays className="h-4 w-4 text-neutral-400 shrink-0" />
+                          Bookings &amp; Trips
+                        </Link>
+                      </SheetClose>
+
+                      <SheetClose asChild>
+                        <Link
+                          href="/wishlist"
+                          className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150"
+                        >
+                          <Heart className="h-4 w-4 text-neutral-400 shrink-0" />
+                          Wishlist
+                        </Link>
+                      </SheetClose>
+
+                      <SheetClose asChild>
+                        <Link
+                          href="/notifications"
+                          className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150"
+                        >
+                          <Bell className="h-4 w-4 text-neutral-400 shrink-0" />
+                          Notifications
+                          {unreadCount > 0 && (
+                            <span className="ml-auto text-[10px] font-semibold bg-[#6b2bb8] text-white px-1.5 py-0.5 rounded-full">
+                              {unreadCount}
+                            </span>
+                          )}
+                        </Link>
+                      </SheetClose>
+                    </div>
+                  </div>
                 )}
 
-                {/* 2. My Account — primary action section */}
-                <div>
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 px-3 mb-1.5">
-                    My Account
-                  </p>
-                  <div className="space-y-0.5">
+                {/* 3. List Your Property Feature Card — ONLY for unauthenticated visitors, REMOVED for authenticated users */}
+                {!isAuthenticated && (
+                  <div className="pt-1">
                     <SheetClose asChild>
                       <Link
-                        href="/profile"
-                        className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150"
+                        href="/become-host"
+                        className="group flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-br from-[#f8f5fc] via-[#f3eafb]/60 to-[#f8f5fc] border border-[#6b2bb8]/20 hover:border-[#6b2bb8]/45 hover:shadow-xs transition-all duration-200"
                       >
-                        <User className="h-4 w-4 text-neutral-400 shrink-0" />
-                        Profile
-                      </Link>
-                    </SheetClose>
-
-                    <SheetClose asChild>
-                      <Link
-                        href="/host/listings"
-                        className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150"
-                      >
-                        <Building2 className="h-4 w-4 text-neutral-400 shrink-0" />
-                        My Listings
-                      </Link>
-                    </SheetClose>
-
-                    <SheetClose asChild>
-                      <Link
-                        href="/trips"
-                        className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150"
-                      >
-                        <CalendarDays className="h-4 w-4 text-neutral-400 shrink-0" />
-                        Bookings &amp; Trips
-                      </Link>
-                    </SheetClose>
-
-                    <SheetClose asChild>
-                      <Link
-                        href="/wishlist"
-                        className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150"
-                      >
-                        <Heart className="h-4 w-4 text-neutral-400 shrink-0" />
-                        Wishlist
-                      </Link>
-                    </SheetClose>
-
-                    <SheetClose asChild>
-                      <Link
-                        href="/notifications"
-                        className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150"
-                      >
-                        <Bell className="h-4 w-4 text-neutral-400 shrink-0" />
-                        Notifications
-                        {unreadCount > 0 && (
-                          <span className="ml-auto text-[10px] font-semibold bg-[#6b2bb8] text-white px-1.5 py-0.5 rounded-full">
-                            {unreadCount}
-                          </span>
-                        )}
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="h-9 w-9 rounded-xl bg-[#6b2bb8] text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                            <Building2 className="h-4 w-4" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="font-bold text-sm text-[#1a1a1f] group-hover:text-[#6b2bb8] transition-colors leading-tight">
+                              List Your Property
+                            </p>
+                            <p className="text-[11px] text-neutral-500 font-medium leading-tight mt-0.5">
+                              Earn as a host with Nearby Escapes
+                            </p>
+                          </div>
+                        </div>
+                        <ChevronRight className="h-4 w-4 text-[#6b2bb8] shrink-0 group-hover:translate-x-0.5 transition-transform" />
                       </Link>
                     </SheetClose>
                   </div>
-                </div>
-
-                {/* 3. List Your Property Feature Card (Explicit User Request) */}
-                <div className="pt-1">
-                  <SheetClose asChild>
-                    <Link
-                      href="/become-host"
-                      className="group flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-br from-[#f8f5fc] via-[#f3eafb]/60 to-[#f8f5fc] border border-[#6b2bb8]/20 hover:border-[#6b2bb8]/45 hover:shadow-xs transition-all duration-200"
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="h-9 w-9 rounded-xl bg-[#6b2bb8] text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
-                          <Building2 className="h-4 w-4" />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="font-bold text-sm text-[#1a1a1f] group-hover:text-[#6b2bb8] transition-colors leading-tight">
-                            List Your Property
-                          </p>
-                          <p className="text-[11px] text-neutral-500 font-medium leading-tight mt-0.5">
-                            Earn as a host with Nearby Escapes
-                          </p>
-                        </div>
-                      </div>
-                      <ChevronRight className="h-4 w-4 text-[#6b2bb8] shrink-0 group-hover:translate-x-0.5 transition-transform" />
-                    </Link>
-                  </SheetClose>
-                </div>
+                )}
 
                 {/* 5. Support (Least Important / Bottom) */}
                 <div>
