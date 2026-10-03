@@ -181,7 +181,23 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
   const setUser = useAuthStore((s) => s.setUser);
 
   const activeTab = defaultTab;
-  const redirectTarget = searchParams.get("next") || "/";
+  // Where to send the user after auth: the page they came from, else home.
+  // Only allow internal paths (blocks open-redirects) and never loop back into /auth.
+  const redirectTarget = (() => {
+    const raw = searchParams.get("next") || searchParams.get("redirect") || "";
+    if (!raw.startsWith("/") || raw.startsWith("//") || raw.startsWith("/auth")) return "/";
+    return raw;
+  })();
+  const nextQuery = redirectTarget !== "/" ? `?next=${encodeURIComponent(redirectTarget)}` : "";
+
+  // Role-based landing page after sign-in:
+  //   admin → admin home, host → host home, guest → last page (or home)
+  const destinationFor = (user?: { role?: string; roles?: string[] } | null) => {
+    const roles = user?.roles ?? (user?.role ? [user.role] : []);
+    if (roles.includes("admin")) return "/admin";
+    if (roles.includes("host")) return "/host";
+    return redirectTarget;
+  };
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -311,14 +327,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
       const { user } = await authApi.login({ email, password });
       setUser(user);
       toast.success(`Welcome back, ${user.name.split(" ")[0]}!`);
-      const dest = user.roles?.includes("host")
-        ? "/host"
-        : user.roles?.includes("admin")
-          ? "/admin/dashboard"
-          : redirectTarget === "/"
-            ? "/profile"
-            : redirectTarget;
-      setTimeout(() => router.push(dest), 600);
+      router.replace(destinationFor(user));
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Invalid email or password.");
     } finally {
@@ -419,7 +428,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
           newPassword,
         });
         toast.success("Password reset! Please sign in.");
-        setTimeout(() => router.push("/auth/login"), 800);
+        setTimeout(() => router.push(`/auth/login${nextQuery}`), 800);
       } catch (err: any) {
         toast.error(err.response?.data?.message || "Failed to reset password.");
       } finally {
@@ -458,8 +467,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
         setUser(res.user);
       }
       toast.success("Email verified successfully! Welcome to Nearby Escapes.");
-      const dest = redirectTarget === "/" ? "/profile" : redirectTarget;
-      setTimeout(() => router.push(dest), 700);
+      router.replace(destinationFor(res.user));
     } catch (err: any) {
       toast.error(
         err.response?.data?.message || "Verification failed. The code may be invalid or expired.",
@@ -511,7 +519,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
               <div className="grid grid-cols-2 p-1 bg-black/[0.04] rounded-2xl mb-7">
                 <button
                   type="button"
-                  onClick={() => router.push("/auth/login")}
+                  onClick={() => router.push(`/auth/login${nextQuery}`)}
                   className={cn(
                     "py-2 text-sm font-bold rounded-xl transition-all duration-200",
                     activeTab === "login"
@@ -523,7 +531,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                 </button>
                 <button
                   type="button"
-                  onClick={() => router.push("/auth/register")}
+                  onClick={() => router.push(`/auth/register${nextQuery}`)}
                   className={cn(
                     "py-2 text-sm font-bold rounded-xl transition-all duration-200",
                     activeTab === "register"
@@ -596,7 +604,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                   Don&apos;t have an account?{" "}
                   <button
                     type="button"
-                    onClick={() => router.push("/auth/register")}
+                    onClick={() => router.push(`/auth/register${nextQuery}`)}
                     className="font-bold text-[#6b2bb8] hover:underline"
                   >
                     Sign up now
@@ -723,7 +731,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                   Already have an account?{" "}
                   <button
                     type="button"
-                    onClick={() => router.push("/auth/login")}
+                    onClick={() => router.push(`/auth/login${nextQuery}`)}
                     className="font-bold text-[#6b2bb8] hover:underline"
                   >
                     Sign in
@@ -760,8 +768,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                       setUser(res.user);
                     }
                     toast.success("Verification successful! Logging you in...");
-                    const dest = redirectTarget === "/" ? "/profile" : redirectTarget;
-                    setTimeout(() => router.push(dest), 600);
+                    router.replace(destinationFor(res.user));
                   } catch (err: any) {
                     toast.error(err.response?.data?.message || "Invalid or expired verification code.");
                   } finally {
@@ -818,7 +825,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
 
                 <button
                   type="button"
-                  onClick={() => router.push("/auth/register")}
+                  onClick={() => router.push(`/auth/register${nextQuery}`)}
                   className="text-xs text-neutral-500 hover:text-neutral-900 font-semibold flex items-center justify-center gap-1 mx-auto transition-colors"
                 >
                   <ArrowLeft className="h-3 w-3" /> Change phone number
@@ -960,7 +967,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                 <div className="text-center">
                   <button
                     type="button"
-                    onClick={() => router.push("/auth/login")}
+                    onClick={() => router.push(`/auth/login${nextQuery}`)}
                     className="text-xs text-neutral-500 hover:text-neutral-900 font-semibold inline-flex items-center gap-1"
                   >
                     <ArrowLeft className="h-3 w-3" /> Back to Sign In
@@ -1055,7 +1062,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                 <div className="pt-2 flex flex-col gap-2">
                   <button
                     type="button"
-                    onClick={() => router.push("/auth/login")}
+                    onClick={() => router.push(`/auth/login${nextQuery}`)}
                     className="text-xs text-neutral-500 hover:text-neutral-900 font-semibold inline-flex items-center justify-center gap-1 transition-colors"
                   >
                     <ArrowLeft className="h-3 w-3" /> Return to Sign In

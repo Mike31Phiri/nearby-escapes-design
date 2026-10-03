@@ -11,22 +11,17 @@ interface AuthProviderProps {
 export function AuthProvider({ children, initialIsAuthenticated }: AuthProviderProps) {
   const initialized = useRef(false);
 
-  // Synchronously seed the store during the very first render before children mount.
+  // If server confirmed authentication via cookie, seed the store immediately
   if (!initialized.current) {
-    useAuthStore.setState({
-      isAuthenticated: initialIsAuthenticated,
-      isHydrating: true, // Keep true during SSR to ensure server/client match
-    });
+    if (initialIsAuthenticated) {
+      useAuthStore.setState({ isAuthenticated: true });
+    }
     initialized.current = true;
   }
 
   useEffect(() => {
-    // Once mounted, resolve the hydration state
-    if (initialIsAuthenticated) {
-      useAuthStore.getState().initialize(); // This will eventually set isHydrating to false
-    } else {
-      useAuthStore.setState({ isAuthenticated: false, isHydrating: false });
-    }
+    // Reconcile and initialize auth state on client mount
+    useAuthStore.getState().initialize();
   }, [initialIsAuthenticated]);
 
   return <>{children}</>;

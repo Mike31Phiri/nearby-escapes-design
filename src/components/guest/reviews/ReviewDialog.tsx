@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
+import { createGuestReview } from "@/lib/api/reviews";
 
 interface ReviewDialogProps {
   isOpen: boolean;
@@ -23,13 +25,34 @@ export function ReviewDialog({
 }: ReviewDialogProps) {
   const [rating, setRating] = useState(5);
   const [content, setContent] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Submit review logic
-    onClose();
+    if (!content.trim()) {
+      toast.error("Please provide some feedback in your review.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await createGuestReview({
+        propertyId: listingId,
+        bookingRef,
+        rating,
+        text: content.trim(),
+      });
+      toast.success("Thank you! Your review has been submitted.");
+      onClose();
+    } catch (err: any) {
+      toast.error(
+        err?.response?.data?.message || "Failed to submit review. Please try again.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

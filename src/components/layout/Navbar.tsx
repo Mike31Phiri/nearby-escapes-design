@@ -34,6 +34,11 @@ export function Navbar() {
 
   const router = useRouter();
   const pathname = usePathname();
+  // Return the user to this page after they log in / sign up
+  const authNext =
+    pathname && pathname !== "/" && !pathname.startsWith("/auth")
+      ? `?next=${encodeURIComponent(pathname)}`
+      : "";
 
   // Show compact header search only on search results pages (NOT individual listing detail pages)
   const isSearchPage = Boolean(
@@ -182,9 +187,7 @@ export function Navbar() {
             >
               <Bell className="h-5 w-5" strokeWidth={1.8} />
               {unreadCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-gold text-black text-[9px] font-bold flex items-center justify-center shadow-xs">
-                  {unreadCount}
-                </span>
+                <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white shadow-2xs" />
               )}
             </Link>
           )}
@@ -199,13 +202,13 @@ export function Navbar() {
             !isAuthenticated && (
               <div className="hidden md:flex items-center gap-2 ml-1 border-l border-neutral-200 pl-3">
                 <Link
-                  href="/auth/login"
+                  href={`/auth/login${authNext}`}
                   className="text-[13px] font-semibold text-neutral-800 hover:text-purple hover:bg-neutral-100 px-3.5 py-1.5 rounded-full transition-colors"
                 >
                   Log in
                 </Link>
                 <Link
-                  href="/auth/register"
+                  href={`/auth/register${authNext}`}
                   className="text-[13px] font-bold text-neutral-900 bg-gold hover:bg-gold-hover px-4 py-1.5 rounded-full transition-colors shadow-xs"
                 >
                   Sign up
@@ -218,7 +221,7 @@ export function Navbar() {
           <Sheet>
             <SheetTrigger asChild>
               <button
-                className="flex items-center gap-2 p-1.5 rounded-lg text-neutral-800 hover:text-purple hover:bg-neutral-100 transition-colors cursor-pointer outline-none focus-visible:outline-none"
+                className="flex items-center md:gap-2 p-1.5 rounded-lg text-neutral-800 hover:text-purple hover:bg-neutral-100 transition-colors cursor-pointer outline-none focus-visible:outline-none"
                 aria-label="Menu"
               >
                 <Menu className="h-6 w-6 shrink-0" strokeWidth={2.2} />
@@ -228,10 +231,10 @@ export function Navbar() {
                     <img
                       src={user.avatar}
                       alt={user.name ?? ""}
-                      className="h-7 w-7 rounded-full object-cover border border-purple/50"
+                      className="hidden md:block h-7 w-7 rounded-full object-cover border border-purple/50"
                     />
                   ) : (
-                    <div className="h-7 w-7 rounded-full bg-gold flex items-center justify-center">
+                    <div className="hidden md:flex h-7 w-7 rounded-full bg-gold items-center justify-center">
                       <User className="h-4 w-4 text-black" strokeWidth={2} />
                     </div>
                   ))}
@@ -307,7 +310,7 @@ export function Navbar() {
                     <div className="flex gap-2">
                       <SheetClose asChild>
                         <Link
-                          href="/auth/login"
+                          href={`/auth/login${authNext}`}
                           className="flex-1 bg-white hover:bg-neutral-50 border border-neutral-200 text-neutral-900 rounded-xl py-2 text-center text-xs font-semibold transition-all shadow-2xs"
                         >
                           Log in
@@ -315,7 +318,7 @@ export function Navbar() {
                       </SheetClose>
                       <SheetClose asChild>
                         <Link
-                          href="/auth/register"
+                          href={`/auth/register${authNext}`}
                           className="flex-1 bg-gold hover:bg-gold-hover text-neutral-900 rounded-xl py-2 text-center text-xs font-semibold transition-all shadow-xs"
                         >
                           Sign up
@@ -380,11 +383,9 @@ export function Navbar() {
                           className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150"
                         >
                           <Bell className="h-4 w-4 text-neutral-400 shrink-0" />
-                          Notifications
+                          <span>Notifications</span>
                           {unreadCount > 0 && (
-                            <span className="ml-auto text-[10px] font-semibold bg-[#6b2bb8] text-white px-1.5 py-0.5 rounded-full">
-                              {unreadCount}
-                            </span>
+                            <span className="ml-auto h-2 w-2 rounded-full bg-[#6b2bb8]" />
                           )}
                         </Link>
                       </SheetClose>

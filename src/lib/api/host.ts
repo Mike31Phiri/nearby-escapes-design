@@ -607,67 +607,13 @@ export const fetchHostApplicationStatus = async (): Promise<HostApplicationStatu
   }
 };
 
-export interface ReviewItemDto {
-  id: string;
-  propertyId: string;
-  listingId?: string;
-  bookingRef?: string | null;
-  guestId: string;
-  guestName: string;
-  rating: number;
-  text?: string;
-  createdAt: string;
-  propertyName?: string;
-  listingName?: string;
-}
-
-export interface CreateReviewInput {
-  propertyId?: string;
-  listingId?: string;
-  bookingRef?: string;
-  rating: number;
-  text?: string;
-}
-
-/**
- * Submit guest review
- * POST /api/reviews
- */
-export const createReview = async (payload: CreateReviewInput): Promise<ReviewItemDto> => {
-  const { data } = await apiClient.post<ReviewItemDto>("/reviews", payload);
-  return data;
-};
-
-/**
- * Fetch reviews for a property/listing (Public)
- * GET /api/reviews/property/:propertyId (or /api/reviews/listing/:listingId)
- */
-export const getPropertyReviews = async (propertyId: string): Promise<ReviewItemDto[]> => {
-  try {
-    const { data } = await apiClient.get<ReviewItemDto[]>(`/reviews/property/${propertyId}`);
-    return data;
-  } catch {
-    try {
-      const { data } = await apiClient.get<ReviewItemDto[]>(`/reviews/listing/${propertyId}`);
-      return data;
-    } catch {
-      return [];
-    }
-  }
-};
-
-/**
- * Fetch reviews submitted by currently authenticated user
- * GET /api/reviews/user
- */
-export const getMyReviews = async (): Promise<ReviewItemDto[]> => {
-  try {
-    const { data } = await apiClient.get<ReviewItemDto[]>("/reviews/user");
-    return data;
-  } catch {
-    return [];
-  }
-};
+export {
+  type ReviewItemDto,
+  type CreateReviewInput,
+  createGuestReview as createReview,
+  getPropertyReviews,
+  getMyGuestReviews as getMyReviews,
+} from "./reviews";
 
 export interface HostPropertyItemDto {
   id: string;

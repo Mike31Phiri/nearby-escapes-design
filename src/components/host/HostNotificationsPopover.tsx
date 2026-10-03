@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
@@ -85,9 +85,7 @@ export function HostNotificationsPopover() {
         >
           <Bell className="h-[18px] w-[18px]" />
           {mounted && unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1.5 h-3.5 w-3.5 rounded-full bg-rose-500 text-white text-[11px] font-semibold flex items-center justify-center shadow-sm">
-              {unreadCount > 9 ? "9+" : unreadCount}
-            </span>
+            <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white shadow-2xs" />
           )}
         </button>
       </PopoverTrigger>

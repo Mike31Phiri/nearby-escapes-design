@@ -1,6 +1,7 @@
 "use client";
 
-import { MessageCircle, PhoneCall, HelpCircle, ShieldCheck } from "lucide-react";
+import Link from "next/link";
+import { MessageCircle, PhoneCall, HelpCircle, ShieldCheck, AlertTriangle, Mail } from "lucide-react";
 import { ProfileSubpageHeader } from "./ProfileSubpageHeader";
 
 export function SupportSafetyPage() {
@@ -16,7 +17,7 @@ export function SupportSafetyPage() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <a
-              href="https://wa.me/260971234567"
+              href="https://wa.me/260971234567?text=Hello%20Nearby%20Escapes%20Support"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-white border border-neutral-200/80 rounded-2xl p-4 flex items-center gap-3.5 hover:border-emerald-300 hover:shadow-xs transition"
@@ -40,7 +41,7 @@ export function SupportSafetyPage() {
               <div>
                 <p className="text-sm font-medium text-neutral-900">Emergency Line</p>
                 <p className="text-xs text-neutral-500 mt-0.5">
-                  Direct security &amp; safety dispatch
+                  Direct safety &amp; security dispatch
                 </p>
               </div>
             </a>
@@ -59,7 +60,7 @@ export function SupportSafetyPage() {
               <p className="font-medium text-neutral-900 mb-0.5">Host &amp; Guide Verification</p>
               <p className="text-neutral-500">
                 Every host on Nearby Escapes verifies their national identity (NRC or passport) and
-                accommodation license.
+                accommodation license before publishing listings.
               </p>
             </div>
 
@@ -77,17 +78,29 @@ export function SupportSafetyPage() {
 
         {/* Report an Issue */}
         <div className="bg-rose-50/70 border border-rose-200/80 rounded-2xl p-5">
-          <h3 className="text-sm font-semibold text-rose-900 mb-1">Report an issue</h3>
-          <p className="text-xs text-rose-700/90 mb-3.5 leading-relaxed">
-            If an experience or accommodation did not match what was advertised, our guest relations
-            team is ready to step in.
+          <div className="flex items-center gap-2 mb-1 text-rose-900">
+            <AlertTriangle className="w-4 h-4 text-rose-600" />
+            <h3 className="text-sm font-semibold">Report an issue or incident</h3>
+          </div>
+          <p className="text-xs text-rose-700/90 mb-4 leading-relaxed">
+            If an experience or accommodation did not match what was advertised, or if you faced a safety concern, our guest relations team is ready to step in.
           </p>
-          <a
-            href="/help#contact"
-            className="inline-block bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-full text-xs font-semibold transition shadow-xs"
-          >
-            Submit an incident report
-          </a>
+          <div className="flex flex-wrap items-center gap-3">
+            <a
+              href="mailto:support@nearbyescapes.com?subject=Incident%20Report%20-%20Nearby%20Escapes"
+              className="inline-flex items-center gap-1.5 bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-semibold transition shadow-xs"
+            >
+              <Mail className="w-3.5 h-3.5" />
+              <span>Submit incident report</span>
+            </a>
+            <Link
+              href="/help"
+              className="inline-flex items-center gap-1.5 bg-white hover:bg-neutral-50 text-neutral-700 border border-neutral-200 px-4 py-2 rounded-xl text-xs font-semibold transition shadow-2xs"
+            >
+              <HelpCircle className="w-3.5 h-3.5" />
+              <span>Visit Help Center</span>
+            </Link>
+          </div>
         </div>
       </main>
     </div>

@@ -1,13 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Star, MapPin, Calendar, User, ChevronRight, CheckCircle2, Clock, X, Pencil } from "lucide-react";
+import {
+  Star,
+  MapPin,
+  Calendar,
+  User,
+  ChevronRight,
+  CheckCircle2,
+  Clock,
+  Pencil,
+  Compass,
+  MessageSquare,
+  ShieldCheck,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AccountSettingsMenu } from "./AccountSettingsMenu";
 import { useAuth } from "@/lib/store/authStore";
 import { useBookingStore } from "@/store/bookingStore";
+import { getMyBookings } from "@/lib/api/bookings";
+import { getMyGuestReviews, type ReviewItemDto } from "@/lib/api/reviews";
 import {
   Dialog,
   DialogContent,
@@ -31,62 +45,226 @@ interface TripItem {
   hostName?: string;
 }
 
+function TripCard({ trip, onOpen }: { trip: TripItem; onOpen: () => void }) {
+  const isUpcoming = trip.status === "upcoming";
+
+  return (
+    <div className="bg-[#faf9fc]/40 hover:bg-white border border-neutral-100 hover:border-[#6b2bb8]/30 rounded-xl p-3.5 sm:p-4 transition-all flex flex-col sm:flex-row gap-3 sm:gap-4 items-start sm:items-center justify-between shadow-2xs w-full overflow-hidden">
+      <div className="flex items-start gap-3 w-full sm:w-auto flex-1 min-w-0">
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-neutral-100 shrink-0 relative border border-black/5">
+          <img
+            src={trip.image}
+            alt={trip.title}
+            className="w-full h-full object-cover"
+          />
+          <span className="absolute bottom-1 left-1 text-[8px] sm:text-[9px] font-semibold bg-black/70 text-white px-1 py-0.5 rounded capitalize leading-none">
+            {trip.type}
+          </span>
+        </div>
+        <div className="flex-1 min-w-0 space-y-1">
+          <div className="flex items-center justify-between gap-2 min-w-0">
+            <h4 className="font-semibold text-sm text-neutral-900 truncate">
+              {trip.title}
+            </h4>
+            <span
+              className={cn(
+                "inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full border shrink-0",
+                isUpcoming
+                  ? "text-[#6b2bb8] bg-[#6b2bb8]/10 border-[#6b2bb8]/25"
+                  : trip.status === "completed"
+                    ? "text-emerald-700 bg-emerald-50 border-emerald-200"
+                    : "text-neutral-600 bg-neutral-100 border-neutral-200",
+              )}
+            >
+              {isUpcoming ? "Upcoming" : "Completed"}
+            </span>
+          </div>
+
+          <p className="text-xs text-neutral-500 flex items-center gap-1 min-w-0">
+            <MapPin className="w-3 h-3 text-neutral-400 shrink-0" />
+            <span className="truncate">{trip.location}</span>
+          </p>
+
+          <p className="text-xs text-neutral-500 flex items-center gap-1 min-w-0 flex-wrap">
+            <Calendar className="w-3 h-3 text-neutral-400 shrink-0" />
+            <span className="truncate">{trip.dates}</span>
+            <span className="text-neutral-300">·</span>
+            <span className="shrink-0">{trip.guests}</span>
+          </p>
+
+          <p className="text-xs font-bold text-[#6b2bb8] pt-0.5">
+            {trip.price}
+          </p>
+        </div>
+      </div>
+
+      <div className="w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-neutral-100/80">
+        <button
+          type="button"
+          onClick={onOpen}
+          className="text-xs font-semibold text-[#6b2bb8] hover:text-white bg-[#6b2bb8]/8 hover:bg-[#6b2bb8] border border-[#6b2bb8]/20 px-3.5 py-1.5 sm:py-2 rounded-xl transition-all flex items-center justify-center gap-1 w-full sm:w-auto text-center cursor-pointer"
+        >
+          <span>See details</span>
+          <ChevronRight className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function GuestProfilePage() {
   const router = useRouter();
-  const { user, isAuthenticated } = useAuth();
-  const { bookings } = useBookingStore();
+  const { user, isAuthenticated, isHydrating } = useAuth();
+  const { bookings: localBookings } = useBookingStore();
+
+  const [trips, setTrips] = useState<TripItem[]>([]);
+  const [reviews, setReviews] = useState<ReviewItemDto[]>([]);
+  const [isLoadingData, setIsLoadingData] = useState(true);
   const [activeTab, setActiveTab] = useState<"trips" | "reviews">("trips");
   const [selectedTrip, setSelectedTrip] = useState<TripItem | null>(null);
 
-  // Display user details with sensible fallbacks
-  const displayName = user?.name || (isAuthenticated ? "Guest Traveler" : "Alex Smith");
-  const displayEmail = user?.email || (isAuthenticated ? "" : "alex.smith@example.com");
-  const displayRole = user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : "Guest";
+  // Guard route: Only accessible when user is authenticated and DB data is loaded
+  useEffect(() => {
+    if (isHydrating) return;
+
+    if (!isAuthenticated || !user) {
+      router.replace("/auth/login?next=/profile");
+      return;
+    }
+
+    let isMounted = true;
+
+    async function loadDatabaseData() {
+      setIsLoadingData(true);
+      try {
+        const [apiBookings, apiReviews] = await Promise.all([
+          getMyBookings().catch(() => []),
+          getMyGuestReviews().catch(() => []),
+        ]);
+
+        if (!isMounted) return;
+
+        // Map backend bookings
+        const mappedApiTrips: TripItem[] = (apiBookings || []).map((b) => {
+          const checkIn = b.checkIn || b.date;
+          const isUpcoming =
+            b.status === "confirmed" && checkIn
+              ? new Date(checkIn) >= new Date()
+              : false;
+
+          return {
+            id: b.id || b.bookingRef,
+            bookingRef: b.bookingRef,
+            type: b.vertical || "stay",
+            title: b.listingTitle || "Reservation",
+            location: "Zambia",
+            image:
+              "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80",
+            dates: checkIn || "Scheduled",
+            guests: `${b.guests} Guest${b.guests > 1 ? "s" : ""}`,
+            price: `ZMW ${(b.totalNgwee / 100).toLocaleString()}`,
+            status: isUpcoming
+              ? "upcoming"
+              : b.status === "completed"
+                ? "completed"
+                : b.status === "cancelled"
+                  ? "cancelled"
+                  : "completed",
+          };
+        });
+
+        // Merge with locally stored bookings (if any)
+        const mappedLocalTrips: TripItem[] = (localBookings || []).map((b) => {
+          const checkIn = b.details?.checkIn;
+          const isUpcoming =
+            b.status === "confirmed" && checkIn
+              ? new Date(checkIn) >= new Date()
+              : false;
+
+          return {
+            id: b.bookingRef || b.id,
+            bookingRef: b.bookingRef || "NE-CONFIRMED",
+            type: b.type || "stay",
+            title: b.listingName || "Booking",
+            location: b.location || "Zambia",
+            image:
+              b.image ||
+              "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80",
+            dates: checkIn || b.details?.date || "Recent booking",
+            guests: b.details?.guests
+              ? `${b.details.guests} Guest${b.details.guests > 1 ? "s" : ""}`
+              : "1 Guest",
+            price: `${b.currency || "ZMW"} ${(b.amount || 0).toLocaleString()}`,
+            status: isUpcoming
+              ? "upcoming"
+              : b.status === "cancelled"
+                ? "cancelled"
+                : "completed",
+            customerName: b.customerName,
+            hostName: b.hostName,
+          };
+        });
+
+        // Deduplicate trips by booking reference
+        const mergedTrips = [...mappedApiTrips];
+        for (const localTrip of mappedLocalTrips) {
+          if (!mergedTrips.some((t) => t.bookingRef === localTrip.bookingRef)) {
+            mergedTrips.push(localTrip);
+          }
+        }
+
+        setTrips(mergedTrips);
+        setReviews(apiReviews || []);
+      } catch (err) {
+        console.error("Failed to load profile database data", err);
+      } finally {
+        if (isMounted) {
+          setIsLoadingData(false);
+        }
+      }
+    }
+
+    loadDatabaseData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isAuthenticated, isHydrating, user, router, localBookings]);
+
+  // Average rating calculated strictly from actual reviews
+  const averageRating = useMemo(() => {
+    if (!reviews || reviews.length === 0) return null;
+    const sum = reviews.reduce((acc, curr) => acc + (curr.rating || 0), 0);
+    return (sum / reviews.length).toFixed(1);
+  }, [reviews]);
+
+  // Loading skeleton while authenticating or fetching database records
+  if (isHydrating || !isAuthenticated || !user || isLoadingData) {
+    return (
+      <div className="min-h-screen bg-[#fbfafc] flex flex-col items-center justify-center p-6">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 border-3 border-[#6b2bb8]/25 border-t-[#6b2bb8] rounded-full animate-spin" />
+          <p className="text-xs font-semibold text-neutral-600 tracking-wide">
+            Loading your profile &amp; data...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Live user properties from DB
+  const displayName = user.name || user.email.split("@")[0];
+  const displayEmail = user.email;
+  const displayRole = user.role
+    ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
+    : "Guest";
   const userInitial = displayName.charAt(0).toUpperCase();
+  const isHost = user.role === "host" || user.roles?.includes("host");
+  const isVerified = user.isVerified || user.verificationStatus === "VERIFIED";
 
-  // Booking stats
-  const confirmedBookings = bookings.filter((b) => b.status === "confirmed");
-  const tripsCount = confirmedBookings.length > 0 ? confirmedBookings.length : 12;
-
-  // Rich demo trips with all required details
-  const demoTrips: TripItem[] = [
-    {
-      id: "demo-1",
-      bookingRef: "NE-82914",
-      type: "stay",
-      title: "Chisanga's Lakeside Lodge",
-      location: "Livingstone, Southern Province",
-      image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80",
-      dates: "12 Aug 2025",
-      guests: "2 Guests",
-      price: "ZMW 3,450",
-      status: "completed",
-    },
-    {
-      id: "demo-2",
-      bookingRef: "NE-90412",
-      type: "experience",
-      title: "Mosi-oa-Tunya Safari & River Cruise",
-      location: "Livingstone, Southern Province",
-      image: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=600&q=80",
-      dates: "18 Jan 2026",
-      guests: "1 Guest",
-      price: "ZMW 1,800",
-      status: "upcoming",
-    },
-    {
-      id: "demo-3",
-      bookingRef: "NE-61904",
-      type: "transport",
-      title: "Lusaka to Livingstone Express Coach",
-      location: "Intercity Bus Terminal, Lusaka",
-      image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80",
-      dates: "28 Dec 2025",
-      guests: "2 Passengers",
-      price: "ZMW 750",
-      status: "completed",
-    },
-  ];
+  const memberSince = user.createdAt
+    ? new Date(user.createdAt).getFullYear()
+    : new Date().getFullYear();
 
   return (
     <div className="min-h-screen bg-[#fbfafc] font-sans">
@@ -111,7 +289,7 @@ export function GuestProfilePage() {
               <div className="flex flex-col items-center">
                 <div className="relative mb-3">
                   <div className="w-24 h-24 rounded-full p-0.5 bg-white border border-neutral-200 shadow-xs flex items-center justify-center overflow-hidden">
-                    {user?.avatar ? (
+                    {user.avatar ? (
                       <img
                         src={user.avatar}
                         className="w-full h-full rounded-full object-cover"
@@ -125,58 +303,108 @@ export function GuestProfilePage() {
                   </div>
                 </div>
 
-                <h2 className="text-xl font-bold text-neutral-900 tracking-tight">{displayName}</h2>
+                <h2 className="text-xl font-bold text-neutral-900 tracking-tight">
+                  {displayName}
+                </h2>
 
-                <div className="mt-1.5 flex items-center justify-center gap-2">
-                  <span className="bg-[#6b2bb8]/10 text-[#6b2bb8] text-xs font-medium px-3 py-0.5 rounded-full border border-[#6b2bb8]/20">
+                <div className="mt-2 flex items-center justify-center gap-2 flex-wrap">
+                  <span className="bg-[#6b2bb8]/10 text-[#6b2bb8] text-xs font-semibold px-3 py-0.5 rounded-full border border-[#6b2bb8]/20">
                     {displayRole}
                   </span>
+
+                  {isVerified ? (
+                    <span className="bg-emerald-50 text-emerald-700 text-xs font-medium px-2.5 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                      Verified
+                    </span>
+                  ) : (
+                    <span className="bg-amber-50 text-amber-700 text-xs font-medium px-2.5 py-0.5 rounded-full border border-amber-200 flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-amber-600" />
+                      Pending Verification
+                    </span>
+                  )}
                 </div>
 
-                {displayEmail && <p className="text-xs text-neutral-500 mt-1.5">{displayEmail}</p>}
+                {displayEmail && (
+                  <p className="text-xs text-neutral-500 mt-2">{displayEmail}</p>
+                )}
 
                 <p className="text-xs text-neutral-400 mt-1">
-                  Member since {user?.createdAt ? new Date(user.createdAt).getFullYear() : "2024"} ·
-                  Verified Guest
+                  Member since {memberSince}
                 </p>
               </div>
 
-              {/* Stats Strip */}
+              {/* Stats Strip - strictly live database data */}
               <div className="grid grid-cols-3 divide-x divide-neutral-100 border-t border-neutral-100 mt-6 pt-5 text-center">
                 <div>
-                  <span className="text-lg font-bold text-neutral-900">{tripsCount}</span>
-                  <p className="text-[11px] font-medium text-neutral-500 mt-0.5">Trips</p>
+                  <span className="text-lg font-bold text-neutral-900">
+                    {trips.length}
+                  </span>
+                  <p className="text-[11px] font-medium text-neutral-500 mt-0.5">
+                    Trips
+                  </p>
                 </div>
                 <div>
                   <span className="text-lg font-bold text-neutral-900 flex items-center justify-center gap-1">
-                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" /> 4.9
+                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                    {averageRating ?? "—"}
                   </span>
-                  <p className="text-[11px] font-medium text-neutral-500 mt-0.5">Rating</p>
+                  <p className="text-[11px] font-medium text-neutral-500 mt-0.5">
+                    Rating
+                  </p>
                 </div>
                 <div>
-                  <span className="text-lg font-bold text-neutral-900">8</span>
-                  <p className="text-[11px] font-medium text-neutral-500 mt-0.5">Reviews</p>
+                  <span className="text-lg font-bold text-neutral-900">
+                    {reviews.length}
+                  </span>
+                  <p className="text-[11px] font-medium text-neutral-500 mt-0.5">
+                    Reviews
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Become a Host Banner */}
-            <div className="bg-gradient-to-r from-[#f9f5fd] to-[#f3ebfa] border border-[#6b2bb8]/15 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div>
-                <p className="font-semibold text-neutral-900 text-sm">
-                  Share your space, earn extra income
-                </p>
-                <p className="text-xs text-neutral-500 mt-0.5">
-                  List your guest house, safari lodge, tour, or transport on Nearby Escapes.
-                </p>
+            {/* Host Banner: Tailored by actual role */}
+            {!isHost ? (
+              <div className="bg-gradient-to-r from-[#f9f5fd] to-[#f3ebfa] border border-[#6b2bb8]/15 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                  <p className="font-semibold text-neutral-900 text-sm">
+                    Share your space, earn extra income
+                  </p>
+                  <p className="text-xs text-neutral-500 mt-0.5">
+                    List your guest house, safari lodge, tour, or transport on Nearby Escapes.
+                  </p>
+                </div>
+                <Link
+                  href="/become-host"
+                  className="bg-[#6b2bb8] hover:bg-[#5a22a0] text-white px-4 py-2 rounded-full text-xs font-medium transition shadow-xs whitespace-nowrap"
+                >
+                  Become a host
+                </Link>
               </div>
-              <Link
-                href="/become-host"
-                className="bg-[#6b2bb8] hover:bg-[#5a22a0] text-white px-4 py-2 rounded-full text-xs font-medium transition shadow-xs whitespace-nowrap"
-              >
-                Become a host
-              </Link>
-            </div>
+            ) : (
+              <div className="bg-gradient-to-r from-purple-50/50 to-purple-100/30 border border-[#6b2bb8]/15 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[#6b2bb8]/10 text-[#6b2bb8] flex items-center justify-center shrink-0">
+                    <ShieldCheck className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-neutral-900 text-sm">
+                      Host Dashboard
+                    </p>
+                    <p className="text-xs text-neutral-500 mt-0.5">
+                      Manage your listings, calendar, reservations, and payouts.
+                    </p>
+                  </div>
+                </div>
+                <Link
+                  href="/host"
+                  className="bg-[#6b2bb8] hover:bg-[#5a22a0] text-white px-4 py-2 rounded-full text-xs font-medium transition shadow-xs whitespace-nowrap"
+                >
+                  Go to Dashboard
+                </Link>
+              </div>
+            )}
 
             {/* Activity Tabs */}
             <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-2xs">
@@ -190,7 +418,7 @@ export function GuestProfilePage() {
                       : "text-neutral-500 hover:text-neutral-800",
                   )}
                 >
-                  Recent trips
+                  Recent trips ({trips.length})
                 </button>
                 <button
                   onClick={() => setActiveTab("reviews")}
@@ -201,234 +429,103 @@ export function GuestProfilePage() {
                       : "text-neutral-500 hover:text-neutral-800",
                   )}
                 >
-                  Reviews (2)
+                  Reviews ({reviews.length})
                 </button>
               </div>
 
-              {/* Content: Trips */}
+              {/* Content: Real Trips */}
               {activeTab === "trips" && (
                 <div className="space-y-3">
-                  {bookings.length > 0
-                    ? bookings.slice(0, 3).map((b) => {
-                        const tripType = b.type || "stay";
-                        const checkIn = b.details?.checkIn;
-                        const dateStr = checkIn || b.details?.date || "Recent booking";
-                        const guestsStr = b.details?.guests
-                          ? `${b.details.guests} Guest${b.details.guests > 1 ? "s" : ""}`
-                          : "1 Guest";
-                        const priceStr = `${b.currency || "ZMW"} ${(b.amount || 0).toLocaleString()}`;
-                        const isUpcoming =
-                          b.status === "confirmed" && checkIn
-                            ? new Date(checkIn) >= new Date()
-                            : false;
-
-                        const tripData: TripItem = {
-                          id: b.bookingRef || b.id,
-                          bookingRef: b.bookingRef || "NE-CONFIRMED",
-                          type: tripType,
-                          title: b.listingName || "Booking",
-                          location: b.location || "Zambia",
-                          image:
-                            b.image ||
-                            "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80",
-                          dates: dateStr,
-                          guests: guestsStr,
-                          price: priceStr,
-                          status: isUpcoming
-                            ? "upcoming"
-                            : b.status === "confirmed"
-                              ? "completed"
-                              : "completed",
-                          customerName: b.customerName,
-                          hostName: b.hostName,
-                        };
-
-                        return (
-                          <div
-                            key={b.bookingRef || b.id}
-                            className="bg-white border border-neutral-200/80 rounded-xl p-3.5 sm:p-4 hover:border-[#6b2bb8]/30 transition-all flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between shadow-2xs"
-                          >
-                            <div className="flex items-start gap-3.5 min-w-0">
-                              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-neutral-100 shrink-0 relative">
-                                <img
-                                  src={tripData.image}
-                                  alt={tripData.title}
-                                  className="w-full h-full object-cover"
-                                />
-                                <span className="absolute bottom-1 left-1 text-[9px] font-semibold bg-black/65 text-white px-1.5 py-0.5 rounded capitalize">
-                                  {tripType}
-                                </span>
-                              </div>
-                              <div className="min-w-0 space-y-1">
-                                <p className="font-semibold text-sm text-neutral-900 truncate">
-                                  {tripData.title}
-                                </p>
-                                <div>
-                                  <span
-                                    className={cn(
-                                      "inline-block text-[10px] font-medium px-2 py-0.5 rounded-full border",
-                                      isUpcoming
-                                        ? "text-[#6b2bb8] bg-[#6b2bb8]/10 border-[#6b2bb8]/25"
-                                        : b.status === "confirmed"
-                                          ? "text-emerald-700 bg-emerald-50 border-emerald-200"
-                                          : "text-neutral-600 bg-neutral-100 border-neutral-200",
-                                    )}
-                                  >
-                                    {isUpcoming
-                                      ? "Upcoming"
-                                      : b.status === "confirmed"
-                                        ? "Completed"
-                                        : b.status}
-                                  </span>
-                                </div>
-                                <p className="text-xs text-neutral-500 flex items-center gap-1">
-                                  <MapPin className="w-3 h-3 text-neutral-400 shrink-0" />
-                                  <span className="truncate">{tripData.location}</span>
-                                </p>
-                                <p className="text-xs text-neutral-500 flex items-center gap-1">
-                                  <Calendar className="w-3 h-3 text-neutral-400 shrink-0" />
-                                  <span>{dateStr}</span>
-                                  <span>·</span>
-                                  <span>{guestsStr}</span>
-                                </p>
-                                <div className="flex items-center gap-2 text-[11px] text-neutral-400 pt-0.5">
-                                  <span className="font-medium text-neutral-700">{priceStr}</span>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* See Details opens popup modal */}
-                            <div className="w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-neutral-100">
-                              <button
-                                type="button"
-                                onClick={() => setSelectedTrip(tripData)}
-                                className="text-xs font-semibold text-[#6b2bb8] hover:text-white bg-[#6b2bb8]/8 hover:bg-[#6b2bb8] border border-[#6b2bb8]/20 px-3.5 py-2 rounded-xl transition-all flex items-center justify-center gap-1 w-full sm:w-auto text-center"
-                              >
-                                <span>See details</span>
-                                <ChevronRight className="w-3.5 h-3.5" />
-                              </button>
-                            </div>
-                          </div>
-                        );
-                      })
-                    : demoTrips.map((trip) => (
-                        <div
+                  {trips.length > 0 ? (
+                    <>
+                      {trips.slice(0, 5).map((trip) => (
+                        <TripCard
                           key={trip.id}
-                          className="bg-white border border-neutral-200/80 rounded-xl p-3.5 sm:p-4 hover:border-[#6b2bb8]/30 transition-all flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between shadow-2xs"
-                        >
-                          <div className="flex items-start gap-3.5 min-w-0">
-                            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-neutral-100 shrink-0 relative">
-                              <img
-                                src={trip.image}
-                                alt={trip.title}
-                                className="w-full h-full object-cover"
-                              />
-                              <span className="absolute bottom-1 left-1 text-[9px] font-semibold bg-black/65 text-white px-1.5 py-0.5 rounded capitalize">
-                                {trip.type}
-                              </span>
-                            </div>
-                            <div className="min-w-0 space-y-1">
-                              <p className="font-semibold text-sm text-neutral-900 truncate">
-                                  {trip.title}
-                                </p>
-                                <div>
-                                  <span
-                                    className={cn(
-                                      "inline-block text-[10px] font-medium px-2 py-0.5 rounded-full border",
-                                      trip.status === "completed"
-                                        ? "text-emerald-700 bg-emerald-50 border-emerald-200"
-                                        : "text-[#6b2bb8] bg-[#6b2bb8]/10 border-[#6b2bb8]/25",
-                                    )}
-                                  >
-                                    {trip.status === "completed" ? "Completed" : "Upcoming"}
-                                  </span>
-                                </div>
-                              <p className="text-xs text-neutral-500 flex items-center gap-1">
-                                <MapPin className="w-3 h-3 text-neutral-400 shrink-0" />
-                                <span className="truncate">{trip.location}</span>
-                              </p>
-                              <p className="text-xs text-neutral-500 flex items-center gap-1">
-                                <Calendar className="w-3 h-3 text-neutral-400 shrink-0" />
-                                <span>{trip.dates}</span>
-                                <span>·</span>
-                                <span>{trip.guests}</span>
-                              </p>
-                              <div className="flex items-center gap-2 text-[11px] text-neutral-400 pt-0.5">
-                                <span className="font-medium text-neutral-700">{trip.price}</span>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* See Details opens popup modal */}
-                          <div className="w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-neutral-100">
-                            <button
-                              type="button"
-                              onClick={() => setSelectedTrip(trip)}
-                              className="text-xs font-semibold text-[#6b2bb8] hover:text-white bg-[#6b2bb8]/8 hover:bg-[#6b2bb8] border border-[#6b2bb8]/20 px-3.5 py-2 rounded-xl transition-all flex items-center justify-center gap-1 w-full sm:w-auto text-center"
-                            >
-                              <span>See details</span>
-                              <ChevronRight className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        </div>
+                          trip={trip}
+                          onOpen={() => setSelectedTrip(trip)}
+                        />
                       ))}
 
-                  {/* See all button for trips */}
-                  <Link
-                    href="/settings/history"
-                    className="flex items-center justify-center gap-1.5 w-full py-2.5 mt-4 border border-neutral-200 rounded-xl text-xs font-medium text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 transition"
-                  >
-                    <span>See all trips</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </Link>
+                      {trips.length > 5 && (
+                        <Link
+                          href="/settings/history"
+                          className="flex items-center justify-center gap-1.5 w-full py-2.5 mt-4 border border-neutral-200 rounded-xl text-xs font-medium text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 transition"
+                        >
+                          <span>See all {trips.length} trips</span>
+                          <ChevronRight className="w-3.5 h-3.5" />
+                        </Link>
+                      )}
+                    </>
+                  ) : (
+                    <div className="py-10 text-center px-4 rounded-xl border border-dashed border-neutral-200 bg-neutral-50/50">
+                      <div className="w-12 h-12 rounded-full bg-[#6b2bb8]/8 text-[#6b2bb8] flex items-center justify-center mx-auto mb-3">
+                        <Compass className="w-6 h-6" />
+                      </div>
+                      <p className="text-sm font-semibold text-neutral-900">
+                        No trips booked yet
+                      </p>
+                      <p className="text-xs text-neutral-500 mt-1 max-w-sm mx-auto">
+                        Your booked stays, experiences, and transfers will appear here once confirmed.
+                      </p>
+                      <Link
+                        href="/stays"
+                        className="inline-flex items-center gap-1.5 mt-4 px-4 py-2 rounded-xl bg-[#6b2bb8] hover:bg-[#5a22a0] text-white text-xs font-semibold transition shadow-xs"
+                      >
+                        <span>Explore Stays &amp; Escapes</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
+                  )}
                 </div>
               )}
 
-              {/* Content: Reviews */}
+              {/* Content: Real Reviews */}
               {activeTab === "reviews" && (
                 <div className="space-y-3">
-                  <div className="border border-neutral-100 rounded-xl p-3.5 sm:p-4 bg-[#faf9fc]/40 hover:border-[#6b2bb8]/30 transition">
-                    <div className="flex justify-between items-start mb-1.5">
-                      <p className="font-medium text-sm text-neutral-900">
-                        Chisanga&apos;s Lakeside Lodge
+                  {reviews.length > 0 ? (
+                    reviews.map((rev) => (
+                      <div
+                        key={rev.id}
+                        className="border border-neutral-100 rounded-xl p-3.5 sm:p-4 bg-[#faf9fc]/40 hover:border-[#6b2bb8]/30 transition"
+                      >
+                        <div className="flex justify-between items-start mb-1.5">
+                          <p className="font-medium text-sm text-neutral-900">
+                            {rev.propertyName || rev.listingName || "Verified Booking"}
+                          </p>
+                          <span className="text-xs font-semibold text-neutral-900 flex items-center gap-1">
+                            <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                            {rev.rating ? rev.rating.toFixed(1) : "5.0"}
+                          </span>
+                        </div>
+                        {rev.text && (
+                          <p className="text-xs text-neutral-600 leading-relaxed">
+                            &ldquo;{rev.text}&rdquo;
+                          </p>
+                        )}
+                        <p className="text-[10px] text-neutral-400 mt-2">
+                          {rev.createdAt
+                            ? new Date(rev.createdAt).toLocaleDateString("en-US", {
+                                month: "long",
+                                year: "numeric",
+                              })
+                            : "Recent Review"}{" "}
+                          · Verified Stay
+                        </p>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="py-10 text-center px-4 rounded-xl border border-dashed border-neutral-200 bg-neutral-50/50">
+                      <div className="w-12 h-12 rounded-full bg-[#6b2bb8]/8 text-[#6b2bb8] flex items-center justify-center mx-auto mb-3">
+                        <MessageSquare className="w-6 h-6" />
+                      </div>
+                      <p className="text-sm font-semibold text-neutral-900">
+                        No reviews submitted yet
                       </p>
-                      <span className="text-xs font-semibold text-neutral-900 flex items-center gap-1">
-                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" /> 5.0
-                      </span>
-                    </div>
-                    <p className="text-xs text-neutral-600 leading-relaxed">
-                      &ldquo;The chalet was spotless, right by the water, and the staff made sure we
-                      had everything we needed for an amazing sunset.&rdquo;
-                    </p>
-                    <p className="text-[10px] text-neutral-400 mt-2">August 2025 · Verified Stay</p>
-                  </div>
-
-                  <div className="border border-neutral-100 rounded-xl p-3.5 sm:p-4 bg-[#faf9fc]/40 hover:border-[#6b2bb8]/30 transition">
-                    <div className="flex justify-between items-start mb-1.5">
-                      <p className="font-medium text-sm text-neutral-900">
-                        Mosi-oa-Tunya Guided Safari
+                      <p className="text-xs text-neutral-500 mt-1 max-w-sm mx-auto">
+                        Once you complete a trip and submit a review for your host, it will be listed here.
                       </p>
-                      <span className="text-xs font-semibold text-neutral-900 flex items-center gap-1">
-                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" /> 4.8
-                      </span>
                     </div>
-                    <p className="text-xs text-neutral-600 leading-relaxed">
-                      &ldquo;Kapasa was an exceptional guide! We were able to see white rhinos up
-                      close and got great photos.&rdquo;
-                    </p>
-                    <p className="text-[10px] text-neutral-400 mt-2">
-                      January 2026 · Verified Tour
-                    </p>
-                  </div>
-
-                  {/* See all button for reviews */}
-                  <Link
-                    href="/trips"
-                    className="flex items-center justify-center gap-1.5 w-full py-2.5 mt-4 border border-neutral-200 rounded-xl text-xs font-medium text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 transition"
-                  >
-                    <span>See all reviews</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </Link>
+                  )}
                 </div>
               )}
             </div>
@@ -448,7 +545,11 @@ export function GuestProfilePage() {
         </div>
       </main>
 
-      <Dialog open={!!selectedTrip} onOpenChange={(open) => !open && setSelectedTrip(null)}>
+      {/* Trip Details Dialog */}
+      <Dialog
+        open={!!selectedTrip}
+        onOpenChange={(open) => !open && setSelectedTrip(null)}
+      >
         <DialogContent
           overlayClassName="backdrop-blur-sm bg-black/50"
           className="sm:max-w-lg p-0 overflow-hidden bg-white border border-neutral-200 rounded-2xl shadow-xl"
@@ -484,7 +585,9 @@ export function GuestProfilePage() {
                           : "bg-[#6b2bb8]/35 text-purple-200 border-purple-300/40",
                       )}
                     >
-                      {selectedTrip.status === "completed" ? "Completed" : "Upcoming"}
+                      {selectedTrip.status === "completed"
+                        ? "Completed"
+                        : "Upcoming"}
                     </span>
                   </div>
                   <h3 className="text-lg font-bold text-white leading-snug">
@@ -498,14 +601,20 @@ export function GuestProfilePage() {
                 {/* Reference and price summary box */}
                 <div className="grid grid-cols-2 gap-3 p-3.5 bg-neutral-50 rounded-xl border border-neutral-100 text-xs">
                   <div>
-                    <p className="text-neutral-400 text-[11px] font-medium">Booking Reference</p>
+                    <p className="text-neutral-400 text-[11px] font-medium">
+                      Booking Reference
+                    </p>
                     <p className="font-semibold text-neutral-900 mt-0.5">
                       {selectedTrip.bookingRef}
                     </p>
                   </div>
                   <div>
-                    <p className="text-neutral-400 text-[11px] font-medium">Total Amount</p>
-                    <p className="font-semibold text-[#6b2bb8] mt-0.5">{selectedTrip.price}</p>
+                    <p className="text-neutral-400 text-[11px] font-medium">
+                      Total Amount
+                    </p>
+                    <p className="font-semibold text-[#6b2bb8] mt-0.5">
+                      {selectedTrip.price}
+                    </p>
                   </div>
                 </div>
 
@@ -515,23 +624,33 @@ export function GuestProfilePage() {
                     <MapPin className="w-4 h-4 text-neutral-400 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-neutral-400 text-[11px]">Location</p>
-                      <p className="text-neutral-900 font-medium">{selectedTrip.location}</p>
+                      <p className="text-neutral-900 font-medium">
+                        {selectedTrip.location}
+                      </p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-3">
                     <Calendar className="w-4 h-4 text-neutral-400 shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-neutral-400 text-[11px]">Dates &amp; Schedule</p>
-                      <p className="text-neutral-900 font-medium">{selectedTrip.dates}</p>
+                      <p className="text-neutral-400 text-[11px]">
+                        Dates &amp; Schedule
+                      </p>
+                      <p className="text-neutral-900 font-medium">
+                        {selectedTrip.dates}
+                      </p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-3">
                     <User className="w-4 h-4 text-neutral-400 shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-neutral-400 text-[11px]">Party / Guests</p>
-                      <p className="text-neutral-900 font-medium">{selectedTrip.guests}</p>
+                      <p className="text-neutral-400 text-[11px]">
+                        Party / Guests
+                      </p>
+                      <p className="text-neutral-900 font-medium">
+                        {selectedTrip.guests}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -549,7 +668,7 @@ export function GuestProfilePage() {
                   <button
                     type="button"
                     onClick={() => setSelectedTrip(null)}
-                    className="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 text-xs font-medium rounded-xl transition"
+                    className="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 text-xs font-medium rounded-xl transition cursor-pointer"
                   >
                     Close
                   </button>
