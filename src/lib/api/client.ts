@@ -1,10 +1,12 @@
 import axios, { AxiosError } from "axios";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
-  ? `${process.env.NEXT_PUBLIC_API_URL}/api`
-  : typeof window === "undefined"
-    ? "http://127.0.0.1:3000/api"
-    : "/api";
+const API_ORIGIN = (
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://01a100f6-3a8a-7cc3-9776-12e246c72bef-3000.eur-1.aiven.app"
+).replace(/\/+$/, "");
+
+// Direct backend URL for all requests (browser and server)
+const API_BASE_URL = `${API_ORIGIN}/api`;
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,

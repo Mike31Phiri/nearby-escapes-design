@@ -52,7 +52,11 @@ interface RequestConfig {
 
 // Configuration
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
+const PROD_API_BASE_URL =
+  "https://01a100f6-3a8a-7cc3-9776-12e246c72bef-3000.eur-1.aiven.app/api";
+
+const BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || PROD_API_BASE_URL;
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
 // Internal State (non-reactive, for coordination)
@@ -281,7 +285,7 @@ export async function serverFetch<T>(
   options?: { baseUrl?: string; revalidate?: number },
 ) {
   const base =
-    options?.baseUrl || process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
+    options?.baseUrl || process.env.NEXT_PUBLIC_API_BASE_URL || PROD_API_BASE_URL;
   const url = `${base}${path.startsWith("/") ? path : `/${path}`}`;
 
   const res = await fetch(url, {
