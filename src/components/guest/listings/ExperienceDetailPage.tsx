@@ -9,6 +9,7 @@ import {
   Share2,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Compass,
   CheckCircle2,
   XCircle,
@@ -126,6 +127,7 @@ export function ExperienceDetailPage({
     return firstAvail?.timeSlot || timeSlots[0]?.timeSlot || "08:00 AM";
   }, [timeSlots]);
   const [selectedSlot, setSelectedSlot] = useState(defaultSlot);
+  const [isSlotDropdownOpen, setIsSlotDropdownOpen] = useState(false);
 
   // Availability & Booking state
   const today = new Date().toISOString().split("T")[0];
@@ -143,7 +145,9 @@ export function ExperienceDetailPage({
 
   const handleCheckAvailability = () => {
     if (!selectedDate) {
-      toast.error("Please pick a date for your adventure");
+      toast.error("Please pick a date for your adventure first.");
+      const el = document.getElementById("booking-date-input");
+      if (el) el.focus();
       return;
     }
     setCheckingAvailability(true);
@@ -155,9 +159,19 @@ export function ExperienceDetailPage({
       } else {
         setAvailabilityResult("available");
         setCheckingAvailability(false);
-        toast.success(`${availableSlotsCount} time slot(s) open for this date!`);
+        // Ensure selectedSlot is an available one
+        const currentSlotObj = timeSlots.find((s) => (s.timeSlot || s.label) === selectedSlot);
+        if (!currentSlotObj || currentSlotObj.status !== "available") {
+          const firstAvail = timeSlots.find((s) => s.status === "available");
+          if (firstAvail) {
+            setSelectedSlot(firstAvail.timeSlot || firstAvail.label || "08:00 AM");
+          }
+        }
+        toast.success(
+          `${availableSlotsCount} time slot(s) open for this date! Unavailable slots are grayed out.`,
+        );
       }
-    }, 600);
+    }, 450);
   };
 
   const handleProceedToBook = () => {
@@ -597,7 +611,7 @@ export function ExperienceDetailPage({
               </div>
 
               <div className="space-y-2.5">
-                {/* Guest Selectors (At Top of Card) */}
+                {/* 1. Guest Selectors (At Top of Card) */}
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <label className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wider">
@@ -639,49 +653,172 @@ export function ExperienceDetailPage({
                   </div>
                 </div>
 
-                {/* Date & Time Slot Dropdown */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <div>
-                    <label className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wider">
-                      Experience Date
+                {/* 2. Experience Date */}
+                <div>
+                  <label className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wider">
+                    Experience Date
+                  </label>
+                  <input
+                    id="booking-date-input"
+                    type="date"
+                    value={selectedDate}
+                    min={today}
+                    onChange={(e) => {
+                      setSelectedDate(e.target.value);
+                      setAvailabilityResult("idle");
+                    }}
+                    className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
+                  />
+                </div>
+
+                {/* 3. Time Selection as Dropdown (Unavailable Slots Fainted) */}
+                <div className="relative">
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[10px] font-semibold text-neutral-500 uppercase tracking-wider">
+                      Time (Slot)
                     </label>
-                    <input
-                      type="date"
-                      value={selectedDate}
-                      min={today}
-                      onChange={(e) => {
-                        setSelectedDate(e.target.value);
-                        setAvailabilityResult("idle");
-                      }}
-                      className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
-                    />
+                    <span className="text-[10px] text-neutral-400">
+                      {!selectedDate ? "Select date first" : availabilityResult === "available" ? "Slots verified" : "Select preferred time"}
+                    </span>
                   </div>
 
-                  <div>
-                    <label className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wider">
-                      Time Slot
-                    </label>
-                    <select
-                      value={selectedSlot}
-                      onChange={(e) => {
-                        setSelectedSlot(e.target.value);
-                        setAvailabilityResult("idle");
-                      }}
-                      className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
-                    >
-                      {(timeSlots.length > 0 ? timeSlots : [
-                        { id: "slot-default", label: "08:00 AM", timeSlot: "08:00 AM", status: "available" as const, capacity: 6 }
-                      ]).map((slot) => {
+                  <button
+                    type="button"
+                    onClick={() => setIsSlotDropdownOpen((prev) => !prev)}
+                    className={cn(
+                      "w-full bg-neutral-50 rounded-lg py-2 px-2.5 border text-xs font-normal text-left flex items-center justify-between transition-all cursor-pointer",
+                      isSlotDropdownOpen
+                        ? "border-purple ring-1 ring-purple/30 bg-white text-neutral-900 shadow-2xs"
+                        : "border-neutral-200 text-neutral-900 hover:border-neutral-300 hover:bg-neutral-100/50"
+                    )}
+                  >
+                    <div className="flex items-center gap-2 truncate">
+                      <Clock className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
+                      <span className="truncate font-medium">
+                        {selectedSlot ? (
+                          <>
+                            <span>{selectedSlot}</span>
+                            {timeSlots.find((s) => (s.timeSlot || s.label) === selectedSlot)?.status === "available" ? (
+                              <span className="text-emerald-700 ml-1.5 font-normal text-[11px]">· Open</span>
+                            ) : (
+                              <span className="text-neutral-400 ml-1.5 font-normal text-[11px] line-through">· Unavailable</span>
+                            )}
+                          </>
+                        ) : (
+                          "Select time slot"
+                        )}
+                      </span>
+                    </div>
+                    <ChevronDown className={cn("h-3.5 w-3.5 text-neutral-400 transition-transform duration-200", isSlotDropdownOpen && "rotate-180")} />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {isSlotDropdownOpen && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-20"
+                        onClick={() => setIsSlotDropdownOpen(false)}
+                      />
+                      <div className="absolute left-0 right-0 top-full mt-1 z-30 bg-white border border-neutral-200 rounded-xl shadow-lg p-1.5 space-y-1 max-h-56 overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
+                        {(timeSlots.length > 0
+                          ? timeSlots
+                          : [
+                              { id: "slot-default", label: "08:00 AM", timeSlot: "08:00 AM", status: "available" as const, capacity: 6 },
+                            ]
+                        ).map((slot) => {
+                          const slotVal = slot.timeSlot || slot.label || "08:00 AM";
+                          const isAvail = slot.status === "available";
+                          const isSelected = selectedSlot === slotVal;
+                          return (
+                            <button
+                              key={slot.id}
+                              type="button"
+                              disabled={!isAvail}
+                              onClick={() => {
+                                if (isAvail) {
+                                  setSelectedSlot(slotVal);
+                                  setIsSlotDropdownOpen(false);
+                                }
+                              }}
+                              className={cn(
+                                "w-full text-left px-2.5 py-2 rounded-lg text-xs flex items-center justify-between transition-all",
+                                // Unavailable ones become fainted in color
+                                !isAvail
+                                  ? "opacity-35 bg-neutral-100/80 text-neutral-400 cursor-not-allowed select-none"
+                                  : isSelected
+                                  ? "bg-purple/10 text-purple font-semibold"
+                                  : "text-neutral-800 hover:bg-neutral-100 cursor-pointer"
+                              )}
+                            >
+                              <div className="flex items-center gap-2">
+                                <Clock className={cn("h-3.5 w-3.5", !isAvail ? "text-neutral-300" : isSelected ? "text-purple" : "text-neutral-400")} />
+                                <span className={cn(!isAvail && "line-through")}>{slotVal}</span>
+                                {slot.label && slot.label !== slotVal && (
+                                  <span className="text-[10px] text-neutral-400 truncate max-w-[90px]">
+                                    · {slot.label}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-1.5">
+                                <span
+                                  className={cn(
+                                    "text-[10px] px-1.5 py-0.5 rounded font-medium",
+                                    !isAvail
+                                      ? "text-neutral-400 bg-neutral-200/50"
+                                      : "text-emerald-700 bg-emerald-50"
+                                  )}
+                                >
+                                  {!isAvail ? "Sold out" : `${slot.capacity ?? 4} spots`}
+                                </span>
+                                {isSelected && isAvail && <CheckCircle2 className="h-3.5 w-3.5 text-purple shrink-0" />}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </>
+                  )}
+
+                  {/* Quick Select Slot Chips (with fainted unavailable slots) */}
+                  {timeSlots.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 pt-1.5">
+                      {timeSlots.map((slot) => {
                         const slotVal = slot.timeSlot || slot.label || "08:00 AM";
                         const isAvail = slot.status === "available";
+                        const isSelected = selectedSlot === slotVal;
                         return (
-                          <option key={slot.id} value={slotVal} disabled={!isAvail}>
-                            {slotVal} {isAvail ? `(${slot.capacity ?? 4} spots)` : "(Sold out)"}
-                          </option>
+                          <button
+                            key={slot.id}
+                            type="button"
+                            disabled={!isAvail}
+                            onClick={() => {
+                              if (isAvail) {
+                                setSelectedSlot(slotVal);
+                              }
+                            }}
+                            className={cn(
+                              "px-2.5 py-1 rounded-lg text-[11px] font-medium border transition-all flex items-center gap-1",
+                              !isAvail
+                                ? "opacity-35 bg-neutral-100 border-neutral-200 text-neutral-400 line-through cursor-not-allowed"
+                                : isSelected
+                                ? "border-purple bg-purple/10 text-purple font-semibold ring-1 ring-purple/50"
+                                : "border-neutral-200 text-neutral-700 hover:border-purple/40 hover:bg-neutral-50 cursor-pointer"
+                            )}
+                          >
+                            <span>{slotVal}</span>
+                            <span
+                              className={cn(
+                                "text-[9px] px-1 py-0.2 rounded font-normal",
+                                !isAvail ? "text-neutral-400" : isSelected ? "text-purple font-bold" : "text-emerald-700"
+                              )}
+                            >
+                              {!isAvail ? "Full" : `${slot.capacity ?? 4}`}
+                            </span>
+                          </button>
                         );
                       })}
-                    </select>
-                  </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Availability status */}
