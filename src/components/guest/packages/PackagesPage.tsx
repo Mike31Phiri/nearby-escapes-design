@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Package, MapPin, Star, Clock, ArrowRight, Sparkles, Loader2 } from "lucide-react";
