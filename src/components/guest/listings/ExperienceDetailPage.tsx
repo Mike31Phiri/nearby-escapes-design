@@ -597,72 +597,7 @@ export function ExperienceDetailPage({
               </div>
 
               <div className="space-y-2.5">
-                {/* Select Date */}
-                <div>
-                  <label className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wider">
-                    Experience Date
-                  </label>
-                  <input
-                    type="date"
-                    value={selectedDate}
-                    min={today}
-                    onChange={(e) => {
-                      setSelectedDate(e.target.value);
-                      setAvailabilityResult("idle");
-                    }}
-                    className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
-                  />
-                </div>
-
-                {/* Select Time Slot (Interactive Pills) */}
-                {timeSlots.length > 0 && (
-                  <div>
-                    <div className="flex items-center justify-between mb-1">
-                      <label className="text-[10px] font-semibold text-neutral-500 uppercase tracking-wider">
-                        Available Time Slots
-                      </label>
-                      <span className="text-[10px] text-neutral-400">Pick preferred time</span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-1.5">
-                      {timeSlots.map((slot) => {
-                        const slotVal = slot.timeSlot || slot.label;
-                        const isSelected = selectedSlot === slotVal;
-                        const isAvail = slot.status === "available";
-                        return (
-                          <button
-                            key={slot.id}
-                            type="button"
-                            disabled={!isAvail}
-                            onClick={() => {
-                              setSelectedSlot(slotVal);
-                              setAvailabilityResult("idle");
-                            }}
-                            className={cn(
-                              "p-2 rounded-xl border text-left transition-all flex flex-col justify-between cursor-pointer",
-                              isSelected && isAvail
-                                ? "border-purple bg-purple/5 ring-1 ring-purple text-neutral-900"
-                                : isAvail
-                                  ? "border-neutral-200 hover:border-purple/50 bg-neutral-50/50 hover:bg-white text-neutral-800"
-                                  : "border-neutral-200/60 bg-neutral-100 text-neutral-400 cursor-not-allowed opacity-60",
-                            )}
-                          >
-                            <span className="font-semibold text-xs flex items-center justify-between">
-                              <span>{slot.timeSlot || slot.label}</span>
-                              {isSelected && isAvail && (
-                                <CheckCircle2 className="h-3.5 w-3.5 text-purple" />
-                              )}
-                            </span>
-                            <span className="text-[10px] text-neutral-500 mt-0.5">
-                              {isAvail ? `${slot.capacity ?? 4} spots open` : "Sold Out"}
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {/* Guest Selectors */}
+                {/* Guest Selectors (At Top of Card) */}
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <label className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wider">
@@ -700,6 +635,51 @@ export function ExperienceDetailPage({
                           {n} child{n !== 1 ? "ren" : ""}
                         </option>
                       ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Date & Time Slot Dropdown */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wider">
+                      Experience Date
+                    </label>
+                    <input
+                      type="date"
+                      value={selectedDate}
+                      min={today}
+                      onChange={(e) => {
+                        setSelectedDate(e.target.value);
+                        setAvailabilityResult("idle");
+                      }}
+                      className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wider">
+                      Time Slot
+                    </label>
+                    <select
+                      value={selectedSlot}
+                      onChange={(e) => {
+                        setSelectedSlot(e.target.value);
+                        setAvailabilityResult("idle");
+                      }}
+                      className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
+                    >
+                      {(timeSlots.length > 0 ? timeSlots : [
+                        { id: "slot-default", label: "08:00 AM", timeSlot: "08:00 AM", status: "available" as const, capacity: 6 }
+                      ]).map((slot) => {
+                        const slotVal = slot.timeSlot || slot.label || "08:00 AM";
+                        const isAvail = slot.status === "available";
+                        return (
+                          <option key={slot.id} value={slotVal} disabled={!isAvail}>
+                            {slotVal} {isAvail ? `(${slot.capacity ?? 4} spots)` : "(Sold out)"}
+                          </option>
+                        );
+                      })}
                     </select>
                   </div>
                 </div>
