@@ -175,8 +175,8 @@ export function Navbar() {
             <HelpCircle className="h-5 w-5" strokeWidth={1.8} />
           </Link>
 
-          {/* Saved / Wishlist Popover (only when unauthenticated) */}
-          {!isAuthenticated && !isHydrating && <WishlistPopover />}
+          {/* Saved / Wishlist Popover (shows for all users including authenticated) */}
+          {!isHydrating && <WishlistPopover />}
 
           {/* Notifications bell icon — authenticated users (desktop & mobile) */}
           {!isHydrating && isAuthenticated && (

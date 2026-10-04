@@ -26,7 +26,12 @@ export function WishlistPopover() {
           className="relative flex items-center justify-center h-9 w-9 rounded-full border border-neutral-200 bg-white text-neutral-600 hover:text-purple hover:border-purple/40 transition-colors outline-none"
           aria-label="Saved items"
         >
-          <Heart className="h-[18px] w-[18px]" />
+          <Heart className={`h-[18px] w-[18px] transition-colors ${items.length > 0 ? "fill-rose-500 text-rose-500" : ""}`} />
+          {items.length > 0 && (
+            <span className="absolute -top-1 -right-1 flex h-4 min-w-4 px-1 items-center justify-center rounded-full bg-rose-500 text-[9px] font-bold text-white ring-2 ring-white">
+              {items.length}
+            </span>
+          )}
         </button>
       </PopoverTrigger>
 

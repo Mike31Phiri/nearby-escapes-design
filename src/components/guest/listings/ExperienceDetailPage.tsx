@@ -16,6 +16,10 @@ import {
   X,
   Search,
   AlertCircle,
+  AlertTriangle,
+  Accessibility,
+  Footprints,
+  Info,
   Loader2,
   ArrowRight,
   Navigation,
@@ -143,23 +147,21 @@ export function ExperienceDetailPage({
   const pricePerPerson = Number(item.price) || 850;
   const priceDisplay = `K${pricePerPerson.toLocaleString()}`;
 
-  const handleCheckAvailability = () => {
-    if (!selectedDate) {
-      toast.error("Please pick a date for your adventure first.");
-      const el = document.getElementById("booking-date-input");
-      if (el) el.focus();
+  const handleDateChange = (newDate: string) => {
+    setSelectedDate(newDate);
+    if (!newDate) {
+      setAvailabilityResult("idle");
       return;
     }
     setCheckingAvailability(true);
+    setAvailabilityResult("idle");
     setTimeout(() => {
+      setCheckingAvailability(false);
       if (isSoldOut) {
         setAvailabilityResult("unavailable");
-        setCheckingAvailability(false);
-        toast.error("All time slots are booked for this date");
+        toast.error("No times available for this date");
       } else {
         setAvailabilityResult("available");
-        setCheckingAvailability(false);
-        // Ensure selectedSlot is an available one
         const currentSlotObj = timeSlots.find((s) => (s.timeSlot || s.label) === selectedSlot);
         if (!currentSlotObj || currentSlotObj.status !== "available") {
           const firstAvail = timeSlots.find((s) => s.status === "available");
@@ -167,29 +169,38 @@ export function ExperienceDetailPage({
             setSelectedSlot(firstAvail.timeSlot || firstAvail.label || "08:00 AM");
           }
         }
-        toast.success(
-          `${availableSlotsCount} time slot(s) open for this date! Unavailable slots are grayed out.`,
-        );
       }
-    }, 450);
+    }, 350);
+  };
+
+  const handleCheckAvailability = () => {
+    if (!selectedDate) {
+      toast.error("Please pick a date for your adventure first.");
+      const el = document.getElementById("booking-date-input");
+      if (el) el.focus();
+      return;
+    }
+    handleDateChange(selectedDate);
   };
 
   const handleProceedToBook = () => {
     if (!selectedDate) {
       toast.error("Please select a date for your experience first.");
+      const el = document.getElementById("booking-date-input");
+      if (el) el.focus();
       return;
     }
     if (!selectedSlot) {
-      toast.error("Please pick a time slot for this experience.");
+      toast.error("Please select a time for this experience.");
       return;
     }
-    if (availabilityResult !== "available") {
-      toast.info("Checking availability for your selected date and slot...");
-      handleCheckAvailability();
+    const currentSlotObj = timeSlots.find((s) => (s.timeSlot || s.label) === selectedSlot);
+    if (currentSlotObj && currentSlotObj.status !== "available") {
+      toast.error("The selected time is unavailable. Please choose another time.");
       return;
     }
-    if (isSoldOut) {
-      toast.error("This experience has no open time slots right now.");
+    if (isSoldOut || availabilityResult === "unavailable") {
+      toast.error("No times available for this date.");
       return;
     }
     const params = new URLSearchParams({ type: "experience", id: item.id });
@@ -257,6 +268,154 @@ export function ExperienceDetailPage({
     "Immerse yourself in this unforgettable guided Zambian experience. Accompanied by experienced guides and certified experts, enjoy unique perspectives of our wilderness, rich culture, and pristine natural landmarks.";
   const isLongDescription = descriptionText.length > 220;
 
+  // Itinerary Stops
+  const itineraryStops = useMemo(() => {
+    if (Array.isArray(item.itinerary) && item.itinerary.length > 0) {
+      return item.itinerary;
+    }
+    const lowerTitle = title.toLowerCase();
+    const lowerCategory = (item.category || "").toLowerCase();
+    if (lowerTitle.includes("flight") || lowerTitle.includes("helicopter") || lowerTitle.includes("falls") || lowerCategory.includes("vic_falls")) {
+      return [
+        {
+          time: "08:00 AM",
+          title: "Hotel Pick-up & Helipad Welcome",
+          description: "Convenient pick-up from your lodge followed by safety orientation, flight headset fitting, and pilot briefing.",
+          duration: "30 mins",
+        },
+        {
+          time: "08:45 AM",
+          title: "Scenic Flight Over Victoria Falls & Gorge",
+          description: "Take to the skies directly over the Batoka Gorge and Victoria Falls. Enjoy continuous 360-degree panoramic viewpoints and aerial photography.",
+          duration: "45 mins",
+        },
+        {
+          time: "09:45 AM",
+          title: "Zambezi National Park Low-Level Sweep",
+          description: "Low-altitude pass along the upper Zambezi River spotting elephants, hippos, and buffalo herds in their natural habitat.",
+          duration: "30 mins",
+        },
+        {
+          time: "10:30 AM",
+          title: "Touchdown, Route Certificate & Refreshments",
+          description: "Land back at the helipad, receive your personalized flight route certificate, enjoy chilled drinks, and return transfer to your hotel.",
+          duration: "45 mins",
+        },
+      ];
+    }
+    if (lowerTitle.includes("boat") || lowerTitle.includes("cruise") || lowerTitle.includes("river") || lowerCategory.includes("water")) {
+      return [
+        {
+          time: "15:30 PM",
+          title: "Boarding & Welcome Refreshment",
+          description: "Board our spacious river vessel with comfortable seating and safety life jackets. Introduction to the river captain.",
+          duration: "30 mins",
+        },
+        {
+          time: "16:00 PM",
+          title: "Zambezi Islands & Hippo Pods Cruise",
+          description: "Navigate upstream along palm-fringed islands observing hippo pods, sunbathing crocodiles, and exotic water birds.",
+          duration: "1.5 hours",
+        },
+        {
+          time: "17:30 PM",
+          title: "African Sunset & Gourmet Canapés",
+          description: "Anchor in quiet calm waters to witness the legendary golden African sunset over the water while enjoying drinks and local snacks.",
+          duration: "45 mins",
+        },
+        {
+          time: "18:30 PM",
+          title: "Disembarkation & Transfer",
+          description: "Return to the jetty as twilight settles. Transfer back to your accommodation.",
+          duration: "30 mins",
+        },
+      ];
+    }
+    if (lowerTitle.includes("village") || lowerTitle.includes("cultural") || lowerTitle.includes("art")) {
+      return [
+        {
+          time: "09:00 AM",
+          title: "Village Welcome & Chief Greeting",
+          description: "Arrive at the community gates, welcome greetings with local community elders, and historical background of the area.",
+          duration: "45 mins",
+        },
+        {
+          time: "10:00 AM",
+          title: "Traditional Crafts & Artisan Demonstrations",
+          description: "Hands-on participation in authentic basket weaving, pottery shaping, and traditional tool making.",
+          duration: "1 hour",
+        },
+        {
+          time: "11:15 AM",
+          title: "Community Tour & Folk Music",
+          description: "Experience community traditions, local instruments, folk songs, and educational projects.",
+          duration: "45 mins",
+        },
+        {
+          time: "12:15 PM",
+          title: "Traditional Feast & Farewell",
+          description: "Taste authentic Zambian Nshima, seasonal vegetables, and wild relish before concluding the cultural tour.",
+          duration: "1 hour",
+        },
+      ];
+    }
+    if (lowerTitle.includes("farm") || lowerCategory.includes("farm")) {
+      return [
+        {
+          time: "08:30 AM",
+          title: "Farm Welcome & Dairy Barn Tour",
+          description: "Arrival at the farmhouse, morning orientation, and hands-on participation in organic dairy care and milking.",
+          duration: "1 hour",
+        },
+        {
+          time: "09:45 AM",
+          title: "Orchard & Crop Fields Walk",
+          description: "Walk through seasonal organic vegetable gardens and fruit orchards with tips on sustainable Zambian farming.",
+          duration: "1 hour",
+        },
+        {
+          time: "11:00 AM",
+          title: "Harvesting & Farm-to-Table Workshop",
+          description: "Pick fresh produce and learn traditional bread baking and cheese making techniques in the outdoor kitchen.",
+          duration: "1 hour",
+        },
+        {
+          time: "12:15 PM",
+          title: "Country Lunch & Tasting",
+          description: "Relaxed family-style farm lunch with ingredients picked fresh from the fields, fresh juice, and local honey.",
+          duration: "1.5 hours",
+        },
+      ];
+    }
+    // Default Wildlife Safari & General Adventure
+    return [
+      {
+        time: "06:00 AM",
+        title: "Sunrise Bush Departure & Gate Entry",
+        description: "Meet your licensed safari ranger in a custom open 4x4 vehicle. Enter the park as the morning light activates wildlife.",
+        duration: "45 mins",
+      },
+      {
+        time: "07:00 AM",
+        title: "Predator & Big Game Tracking",
+        description: "Navigate river loops and waterholes tracking lions, leopards, and large elephant herds during peak activity hours.",
+        duration: "2 hours",
+      },
+      {
+        time: "09:30 AM",
+        title: "Bush Coffee & Traditional Snacks Break",
+        description: "Scenic stop along the riverbank for fresh Zambian coffee, tea, homemade rusks, and bird identification.",
+        duration: "30 mins",
+      },
+      {
+        time: "10:30 AM",
+        title: "Late Morning Wildlife Circuit & Return",
+        description: "Secondary wildlife circuit focusing on plains game and raptors before returning to the safari base camp.",
+        duration: "1 hour",
+      },
+    ];
+  }, [item, title]);
+
   // Inclusions & Rules parsing
   const whatsIncludedList: string[] = useMemo(() => {
     if (Array.isArray(item.whatsIncluded) && item.whatsIncluded.length > 0) return item.whatsIncluded;
@@ -266,6 +425,20 @@ export function ExperienceDetailPage({
       "Professional Certified Safari Guide",
       "Open 4x4 Safari Vehicle Transport",
       "Complimentary Chilled Water & Snacks",
+      "Safety Equipment & First Aid Coverage",
+      "Hotel Pick-up & Drop-off (Within 10km)",
+    ];
+  }, [item]);
+
+  const whatsNotIncludedList: string[] = useMemo(() => {
+    if (Array.isArray(item.whatsNotIncluded) && item.whatsNotIncluded.length > 0) return item.whatsNotIncluded;
+    if (Array.isArray(item.exclusions) && item.exclusions.length > 0) return item.exclusions;
+    return [
+      "Gratuities & tips for guides and drivers (discretionary)",
+      "Alcoholic beverages & premium wine selections",
+      "Personal travel, medical, or evacuation insurance",
+      "Souvenirs, artisan crafts, and personal shopping expenses",
+      "Specialized camera gear and lens rental fees",
     ];
   }, [item]);
 
@@ -277,21 +450,25 @@ export function ExperienceDetailPage({
       "Comfortable Closed Walking or Hiking Shoes",
       "Sunscreen, UV Sunglasses, and Safari Hat",
       "Camera or Smartphone with Extra Battery",
+      "Insect Repellent Spray or Cream",
+      "Warm Fleece or Light Jacket for Early Mornings",
     ];
   }, [item]);
 
   const whatNotToBringList: string[] = useMemo(() => {
     if (Array.isArray(item.whatNotToBring) && item.whatNotToBring.length > 0) return item.whatNotToBring;
     return [
-      "Drones (Prohibited in National Parks)",
-      "Single-Use Plastic Bags",
-      "Bright Red / Neon Colored Clothes",
-      "Domestic Pets",
+      "Drones (Strictly Prohibited in National Parks)",
+      "Single-Use Plastic Bags & Wrappers",
+      "Bright Red / Neon Colored Clothes (Spooks Wildlife)",
+      "Domestic Pets or Companion Animals",
+      "Firearms, Hunting Knives, or Weapons",
+      "Hard-shell or Oversized Heavy Luggage",
     ];
   }, [item]);
 
   const totalInclusionsCount =
-    whatsIncludedList.length + whatToBringList.length + whatNotToBringList.length;
+    whatsIncludedList.length + whatsNotIncludedList.length + whatToBringList.length + whatNotToBringList.length;
 
   // Coordinates
   const lat = typeof item.lat === "number" ? item.lat : -17.8419;
@@ -473,63 +650,229 @@ export function ExperienceDetailPage({
               )}
             </div>
 
-            {/* Inclusions & What to Bring (Preview + Show All Modal) */}
+            {/* Experience Itinerary */}
             <div className="pt-8">
-              <h2 className="text-lg font-semibold text-neutral-900">
-                What&apos;s included &amp; requirements
-              </h2>
-              <p className="text-xs text-neutral-500 mt-0.5">
-                Key equipment provided and packing suggestions
-              </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold text-neutral-900">Experience Itinerary</h2>
+                  <p className="text-xs text-neutral-500 mt-0.5">
+                    Planned schedule and key stops for this adventure
+                  </p>
+                </div>
+                <span className="text-xs font-medium text-purple bg-purple/10 px-2.5 py-1 rounded-full">
+                  {item.duration || "Approx. 3-4 hours"}
+                </span>
+              </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 mt-4 text-sm font-normal">
-                {/* Top Included items */}
-                {whatsIncludedList.slice(0, 3).map((item, idx) => (
-                  <div key={`inc-${idx}`} className="flex items-center gap-3 text-neutral-800">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
-                    <span>{item}</span>
-                  </div>
-                ))}
+              <div className="mt-5 relative pl-6 space-y-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-neutral-200">
+                {itineraryStops.map((stop: any, idx: number) => (
+                  <div key={`stop-${idx}`} className="relative group">
+                    <div className="absolute -left-6 top-1 w-5 h-5 rounded-full border-2 border-purple bg-white flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 rounded-full bg-purple" />
+                    </div>
 
-                {/* Top What to Bring items */}
-                {whatToBringList.slice(0, 3).map((item, idx) => (
-                  <div key={`bring-${idx}`} className="flex items-center gap-3 text-neutral-800">
-                    <Backpack className="h-4 w-4 text-purple shrink-0" />
-                    <span>Bring: {item}</span>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-semibold text-purple font-mono">
+                          {stop.time}
+                        </span>
+                        {stop.duration && (
+                          <span className="text-[10px] text-neutral-400 bg-neutral-100 px-1.5 py-0.5 rounded">
+                            {stop.duration}
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="text-sm font-semibold text-neutral-900 mt-0.5">
+                        {stop.title}
+                      </h3>
+                      <p className="text-xs text-neutral-600 mt-1 leading-relaxed">
+                        {stop.description}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>
-
-              {totalInclusionsCount > 6 && (
-                <button
-                  type="button"
-                  onClick={() => setShowInclusionsModal(true)}
-                  className="mt-5 px-4 py-2 border border-neutral-300 hover:border-neutral-400 rounded-lg text-xs font-medium text-neutral-700 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
-                >
-                  Show all {totalInclusionsCount} inclusions &amp; guidelines
-                </button>
-              )}
             </div>
 
-            {/* Things to know / Activity Highlights */}
+            {/* What's Included & What's Not Included */}
             <div className="pt-8">
-              <h2 className="text-lg font-semibold text-neutral-900">Things to know</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-3 text-xs">
-                <div>
-                  <p className="font-medium text-neutral-800">Duration</p>
-                  <p className="text-neutral-500 font-normal mt-0.5">
-                    {item.duration || "Approx. 3-4 hours"}
+              <h2 className="text-lg font-semibold text-neutral-900">What&apos;s included &amp; not included</h2>
+              <p className="text-xs text-neutral-500 mt-0.5">
+                Everything provided by your host vs what you should budget for separately
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                {/* What's Included */}
+                <div className="bg-emerald-50/40 border border-emerald-200/70 rounded-2xl p-4 sm:p-5">
+                  <div className="flex items-center gap-2 text-emerald-900 font-semibold text-xs uppercase tracking-wider mb-3">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                    <span>What&apos;s included</span>
+                  </div>
+                  <ul className="space-y-2.5 text-xs text-neutral-800">
+                    {whatsIncludedList.map((inc, idx) => (
+                      <li key={`inc-${idx}`} className="flex items-start gap-2.5">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 mt-0.5 shrink-0" />
+                        <span className="leading-snug">{inc}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* What's NOT Included */}
+                <div className="bg-neutral-50 border border-neutral-200/80 rounded-2xl p-4 sm:p-5">
+                  <div className="flex items-center gap-2 text-neutral-700 font-semibold text-xs uppercase tracking-wider mb-3">
+                    <X className="h-4 w-4 text-neutral-400" />
+                    <span>What&apos;s not included</span>
+                  </div>
+                  <ul className="space-y-2.5 text-xs text-neutral-600">
+                    {whatsNotIncludedList.map((notInc, idx) => (
+                      <li key={`not-inc-${idx}`} className="flex items-start gap-2.5">
+                        <X className="h-3.5 w-3.5 text-neutral-400 mt-0.5 shrink-0" />
+                        <span className="leading-snug">{notInc}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* What to Bring & What's Not Allowed / What NOT to Bring */}
+            <div className="pt-8">
+              <h2 className="text-lg font-semibold text-neutral-900">What to bring &amp; what&apos;s not allowed</h2>
+              <p className="text-xs text-neutral-500 mt-0.5">
+                Essential packing recommendations and forbidden items
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                {/* What to Bring */}
+                <div className="bg-purple/5 border border-purple/20 rounded-2xl p-4 sm:p-5">
+                  <div className="flex items-center gap-2 text-purple font-semibold text-xs uppercase tracking-wider mb-3">
+                    <Backpack className="h-4 w-4 text-purple" />
+                    <span>What to bring</span>
+                  </div>
+                  <ul className="space-y-2.5 text-xs text-neutral-800">
+                    {whatToBringList.map((bring, idx) => (
+                      <li key={`bring-${idx}`} className="flex items-start gap-2.5">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-purple mt-0.5 shrink-0" />
+                        <span className="leading-snug">{bring}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* What NOT to Bring / Forbidden */}
+                <div className="bg-rose-50/40 border border-rose-200/70 rounded-2xl p-4 sm:p-5">
+                  <div className="flex items-center gap-2 text-rose-900 font-semibold text-xs uppercase tracking-wider mb-3">
+                    <Ban className="h-4 w-4 text-rose-600" />
+                    <span>What not to bring (Not allowed)</span>
+                  </div>
+                  <ul className="space-y-2.5 text-xs text-neutral-700">
+                    {whatNotToBringList.map((nobring, idx) => (
+                      <li key={`nobring-${idx}`} className="flex items-start gap-2.5">
+                        <Ban className="h-3.5 w-3.5 text-rose-500 mt-0.5 shrink-0" />
+                        <span className="leading-snug">{nobring}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* Important Information & Suitability ("Not Suitable For") */}
+            <div className="pt-8">
+              <h2 className="text-lg font-semibold text-neutral-900">Important information &amp; suitability</h2>
+              <p className="text-xs text-neutral-500 mt-0.5">
+                Accessibility details, physical fitness requirements, and health guidance
+              </p>
+
+              {/* Dedicated "Not Suitable For" Card */}
+              <div className="mt-4 bg-amber-50/70 border border-amber-200/80 rounded-2xl p-4 sm:p-5">
+                <div className="flex items-center gap-2 text-amber-900 font-semibold text-xs uppercase tracking-wider mb-3">
+                  <AlertTriangle className="h-4 w-4 text-amber-700" />
+                  <span>Not suitable for</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
+                  <div className="flex items-start gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-amber-100/80 flex items-center justify-center shrink-0 text-amber-900">
+                      <Accessibility className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-neutral-900">Wheelchair users</p>
+                      <p className="text-neutral-600 text-[11px] mt-0.5 leading-relaxed">
+                        Not wheelchair accessible due to unpaved natural dirt tracks, rocky trails, and high step-up vehicle chassis.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-amber-100/80 flex items-center justify-center shrink-0 text-amber-900">
+                      <Footprints className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-neutral-900">People with mobility impairments</p>
+                      <p className="text-neutral-600 text-[11px] mt-0.5 leading-relaxed">
+                        Requires moderate walking, boarding open safari vehicles, and navigating uneven wilderness trails.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-amber-100/80 flex items-center justify-center shrink-0 text-amber-900">
+                      <Heart className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-neutral-900">Pregnant women</p>
+                      <p className="text-neutral-600 text-[11px] mt-0.5 leading-relaxed">
+                        Not recommended for pregnant guests past their second trimester due to bumpy unpaved wilderness paths.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-amber-100/80 flex items-center justify-center shrink-0 text-amber-900">
+                      <Users className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-neutral-900">Children under 6 years</p>
+                      <p className="text-neutral-600 text-[11px] mt-0.5 leading-relaxed">
+                        Children under 6 are not permitted on open game vehicles or active trails due to park safety regulations.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Key Guidelines Strip */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mt-3.5">
+                <div className="bg-neutral-50 border border-neutral-200/80 rounded-xl p-3.5">
+                  <div className="flex items-center gap-1.5 text-neutral-800 font-semibold text-xs mb-1">
+                    <Clock className="h-3.5 w-3.5 text-purple" />
+                    <span>Duration &amp; Arrival</span>
+                  </div>
+                  <p className="text-[11px] text-neutral-600 leading-relaxed">
+                    {item.duration || "Approx. 3-4 hours"}. Please arrive 15 minutes before scheduled start time.
                   </p>
                 </div>
-                <div>
-                  <p className="font-medium text-neutral-800">Group setting</p>
-                  <p className="text-neutral-500 font-normal mt-0.5">
-                    {item.groupSize || "Small group (up to 10 guests)"}
+
+                <div className="bg-neutral-50 border border-neutral-200/80 rounded-xl p-3.5">
+                  <div className="flex items-center gap-1.5 text-neutral-800 font-semibold text-xs mb-1">
+                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+                    <span>Safety &amp; First Aid</span>
+                  </div>
+                  <p className="text-[11px] text-neutral-600 leading-relaxed">
+                    Certified Wilderness First Responder on site. Emergency medical kit carried on all excursions.
                   </p>
                 </div>
-                <div>
-                  <p className="font-medium text-neutral-800">Cancellation</p>
-                  <p className="text-neutral-500 font-normal mt-0.5">Free up to 24 hrs before</p>
+
+                <div className="bg-neutral-50 border border-neutral-200/80 rounded-xl p-3.5">
+                  <div className="flex items-center gap-1.5 text-neutral-800 font-semibold text-xs mb-1">
+                    <Sparkles className="h-3.5 w-3.5 text-amber-600" />
+                    <span>Cancellation Policy</span>
+                  </div>
+                  <p className="text-[11px] text-neutral-600 leading-relaxed">
+                    Free cancellation up to 24 hours before the experience start time for a full refund.
+                  </p>
                 </div>
               </div>
             </div>
@@ -663,72 +1006,73 @@ export function ExperienceDetailPage({
                     type="date"
                     value={selectedDate}
                     min={today}
-                    onChange={(e) => {
-                      setSelectedDate(e.target.value);
-                      setAvailabilityResult("idle");
-                    }}
+                    onChange={(e) => handleDateChange(e.target.value)}
                     className="w-full bg-neutral-50 rounded-lg py-1.5 px-2 border border-neutral-200 text-xs font-normal text-neutral-900 focus:outline-none focus:ring-1 focus:ring-purple/50 cursor-pointer"
                   />
                 </div>
 
-                {/* 3. Time Selection as Dropdown (Unavailable Slots Fainted) */}
+                {/* 3. Time Selection as Dropdown (Times Only, Unavailable Times Fainted) */}
                 <div className="relative">
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="text-[10px] font-semibold text-neutral-500 uppercase tracking-wider">
-                      Time (Slot)
-                    </label>
-                    <span className="text-[10px] text-neutral-400">
-                      {!selectedDate ? "Select date first" : availabilityResult === "available" ? "Slots verified" : "Select preferred time"}
-                    </span>
-                  </div>
+                  <label className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wider">
+                    Time
+                  </label>
 
                   <button
                     type="button"
+                    disabled={!selectedDate || checkingAvailability || isSoldOut}
                     onClick={() => setIsSlotDropdownOpen((prev) => !prev)}
                     className={cn(
-                      "w-full bg-neutral-50 rounded-lg py-2 px-2.5 border text-xs font-normal text-left flex items-center justify-between transition-all cursor-pointer",
-                      isSlotDropdownOpen
-                        ? "border-purple ring-1 ring-purple/30 bg-white text-neutral-900 shadow-2xs"
-                        : "border-neutral-200 text-neutral-900 hover:border-neutral-300 hover:bg-neutral-100/50"
+                      "w-full bg-neutral-50 rounded-lg py-2 px-2.5 border text-xs font-normal text-left flex items-center justify-between transition-all",
+                      !selectedDate || isSoldOut
+                        ? "border-neutral-200 text-neutral-400 cursor-not-allowed bg-neutral-100/60"
+                        : isSlotDropdownOpen
+                        ? "border-purple ring-1 ring-purple/30 bg-white text-neutral-900 shadow-2xs cursor-pointer"
+                        : "border-neutral-200 text-neutral-900 hover:border-neutral-300 hover:bg-neutral-100/50 cursor-pointer"
                     )}
                   >
                     <div className="flex items-center gap-2 truncate">
                       <Clock className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
                       <span className="truncate font-medium">
-                        {selectedSlot ? (
-                          <>
-                            <span>{selectedSlot}</span>
-                            {timeSlots.find((s) => (s.timeSlot || s.label) === selectedSlot)?.status === "available" ? (
-                              <span className="text-emerald-700 ml-1.5 font-normal text-[11px]">· Open</span>
-                            ) : (
-                              <span className="text-neutral-400 ml-1.5 font-normal text-[11px] line-through">· Unavailable</span>
-                            )}
-                          </>
+                        {checkingAvailability ? (
+                          "Loading available times..."
+                        ) : !selectedDate ? (
+                          "Select date to view times"
+                        ) : selectedSlot ? (
+                          selectedSlot
                         ) : (
-                          "Select time slot"
+                          "Select time"
                         )}
                       </span>
                     </div>
-                    <ChevronDown className={cn("h-3.5 w-3.5 text-neutral-400 transition-transform duration-200", isSlotDropdownOpen && "rotate-180")} />
+                    {checkingAvailability ? (
+                      <Loader2 className="h-3.5 w-3.5 text-neutral-400 animate-spin" />
+                    ) : (
+                      <ChevronDown
+                        className={cn(
+                          "h-3.5 w-3.5 text-neutral-400 transition-transform duration-200",
+                          isSlotDropdownOpen && "rotate-180"
+                        )}
+                      />
+                    )}
                   </button>
 
-                  {/* Dropdown Menu */}
-                  {isSlotDropdownOpen && (
+                  {/* Dropdown Menu (Times Only) */}
+                  {isSlotDropdownOpen && !checkingAvailability && (
                     <>
                       <div
                         className="fixed inset-0 z-20"
                         onClick={() => setIsSlotDropdownOpen(false)}
                       />
-                      <div className="absolute left-0 right-0 top-full mt-1 z-30 bg-white border border-neutral-200 rounded-xl shadow-lg p-1.5 space-y-1 max-h-56 overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
+                      <div className="absolute left-0 right-0 top-full mt-1 z-30 bg-white border border-neutral-200 rounded-xl shadow-lg p-1 space-y-0.5 max-h-52 overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
                         {(timeSlots.length > 0
                           ? timeSlots
                           : [
                               { id: "slot-default", label: "08:00 AM", timeSlot: "08:00 AM", status: "available" as const, capacity: 6 },
                             ]
                         ).map((slot) => {
-                          const slotVal = slot.timeSlot || slot.label || "08:00 AM";
+                          const timeText = slot.timeSlot || slot.label || "08:00 AM";
                           const isAvail = slot.status === "available";
-                          const isSelected = selectedSlot === slotVal;
+                          const isSelected = selectedSlot === timeText;
                           return (
                             <button
                               key={slot.id}
@@ -736,104 +1080,37 @@ export function ExperienceDetailPage({
                               disabled={!isAvail}
                               onClick={() => {
                                 if (isAvail) {
-                                  setSelectedSlot(slotVal);
+                                  setSelectedSlot(timeText);
                                   setIsSlotDropdownOpen(false);
                                 }
                               }}
                               className={cn(
-                                "w-full text-left px-2.5 py-2 rounded-lg text-xs flex items-center justify-between transition-all",
-                                // Unavailable ones become fainted in color
+                                "w-full text-left px-3 py-2 rounded-lg text-xs font-medium transition-all flex items-center justify-between",
+                                // Unavailable times become fainted in color
                                 !isAvail
-                                  ? "opacity-35 bg-neutral-100/80 text-neutral-400 cursor-not-allowed select-none"
+                                  ? "opacity-35 bg-neutral-100/70 text-neutral-400 cursor-not-allowed select-none line-through"
                                   : isSelected
                                   ? "bg-purple/10 text-purple font-semibold"
                                   : "text-neutral-800 hover:bg-neutral-100 cursor-pointer"
                               )}
                             >
-                              <div className="flex items-center gap-2">
-                                <Clock className={cn("h-3.5 w-3.5", !isAvail ? "text-neutral-300" : isSelected ? "text-purple" : "text-neutral-400")} />
-                                <span className={cn(!isAvail && "line-through")}>{slotVal}</span>
-                                {slot.label && slot.label !== slotVal && (
-                                  <span className="text-[10px] text-neutral-400 truncate max-w-[90px]">
-                                    · {slot.label}
-                                  </span>
-                                )}
-                              </div>
-                              <div className="flex items-center gap-1.5">
-                                <span
-                                  className={cn(
-                                    "text-[10px] px-1.5 py-0.5 rounded font-medium",
-                                    !isAvail
-                                      ? "text-neutral-400 bg-neutral-200/50"
-                                      : "text-emerald-700 bg-emerald-50"
-                                  )}
-                                >
-                                  {!isAvail ? "Sold out" : `${slot.capacity ?? 4} spots`}
-                                </span>
-                                {isSelected && isAvail && <CheckCircle2 className="h-3.5 w-3.5 text-purple shrink-0" />}
-                              </div>
+                              <span>{timeText}</span>
+                              {isSelected && isAvail && (
+                                <CheckCircle2 className="h-3.5 w-3.5 text-purple shrink-0" />
+                              )}
                             </button>
                           );
                         })}
                       </div>
                     </>
                   )}
-
-                  {/* Quick Select Slot Chips (with fainted unavailable slots) */}
-                  {timeSlots.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 pt-1.5">
-                      {timeSlots.map((slot) => {
-                        const slotVal = slot.timeSlot || slot.label || "08:00 AM";
-                        const isAvail = slot.status === "available";
-                        const isSelected = selectedSlot === slotVal;
-                        return (
-                          <button
-                            key={slot.id}
-                            type="button"
-                            disabled={!isAvail}
-                            onClick={() => {
-                              if (isAvail) {
-                                setSelectedSlot(slotVal);
-                              }
-                            }}
-                            className={cn(
-                              "px-2.5 py-1 rounded-lg text-[11px] font-medium border transition-all flex items-center gap-1",
-                              !isAvail
-                                ? "opacity-35 bg-neutral-100 border-neutral-200 text-neutral-400 line-through cursor-not-allowed"
-                                : isSelected
-                                ? "border-purple bg-purple/10 text-purple font-semibold ring-1 ring-purple/50"
-                                : "border-neutral-200 text-neutral-700 hover:border-purple/40 hover:bg-neutral-50 cursor-pointer"
-                            )}
-                          >
-                            <span>{slotVal}</span>
-                            <span
-                              className={cn(
-                                "text-[9px] px-1 py-0.2 rounded font-normal",
-                                !isAvail ? "text-neutral-400" : isSelected ? "text-purple font-bold" : "text-emerald-700"
-                              )}
-                            >
-                              {!isAvail ? "Full" : `${slot.capacity ?? 4}`}
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
                 </div>
 
                 {/* Availability status */}
-                {availabilityResult === "available" && (
-                  <div className="py-1 px-2.5 bg-emerald-50 border border-emerald-200/60 rounded-lg flex items-center gap-1.5 text-emerald-800 text-[11px] font-normal">
-                    <CheckCircle2 className="h-3 w-3 shrink-0 text-emerald-600" />
-                    <span>
-                      Confirmed for {selectedSlot || "chosen slot"} · {totalGuests} guests
-                    </span>
-                  </div>
-                )}
                 {availabilityResult === "unavailable" && (
                   <div className="py-1 px-2.5 bg-rose-50 border border-rose-200/60 rounded-lg flex items-center gap-1.5 text-rose-800 text-[11px] font-normal">
                     <AlertCircle className="h-3 w-3 shrink-0 text-rose-600" />
-                    <span>All slots booked for this date. Pick another date or slot.</span>
+                    <span>No times available for this date. Pick another date.</span>
                   </div>
                 )}
 
@@ -851,8 +1128,8 @@ export function ExperienceDetailPage({
                     </div>
                     {selectedSlot && (
                       <div className="flex justify-between text-neutral-500 font-normal">
-                        <span>Slot: {selectedSlot}</span>
-                        <span className="text-purple font-medium">Reserved</span>
+                        <span>Time: {selectedSlot}</span>
+                        <span className="text-emerald-700 font-medium">Confirmed</span>
                       </div>
                     )}
                     <div className="flex justify-between text-neutral-900 font-semibold border-t border-neutral-100 pt-1.5 text-sm">
@@ -865,7 +1142,7 @@ export function ExperienceDetailPage({
                   </div>
                 ) : (
                   <div className="pt-1 text-[11px] font-normal text-neutral-400 text-center">
-                    Select a date &amp; slot to see total
+                    Select a date to see times &amp; total
                   </div>
                 )}
               </div>
@@ -877,26 +1154,16 @@ export function ExperienceDetailPage({
                   disabled
                   className="w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 bg-neutral-100 text-neutral-400 cursor-not-allowed border border-neutral-200"
                 >
-                  <span>Select Date to Check Slots</span>
+                  <span>Select Date to See Times</span>
                 </button>
-              ) : availabilityResult === "idle" ? (
+              ) : checkingAvailability ? (
                 <button
                   type="button"
-                  onClick={handleCheckAvailability}
-                  disabled={checkingAvailability || isSoldOut}
-                  className="w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 bg-purple hover:bg-purple-hover text-white shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35 cursor-pointer"
+                  disabled
+                  className="w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 bg-purple/70 text-white cursor-wait"
                 >
-                  {checkingAvailability ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      <span>Checking Available Slots...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Search className="h-4 w-4" />
-                      <span>Check Slot Availability</span>
-                    </>
-                  )}
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Loading Times...</span>
                 </button>
               ) : availabilityResult === "unavailable" || isSoldOut ? (
                 <button
@@ -904,7 +1171,7 @@ export function ExperienceDetailPage({
                   disabled
                   className="w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 bg-neutral-200 text-neutral-400 cursor-not-allowed"
                 >
-                  <span>Sold Out on This Date</span>
+                  <span>No Times Available</span>
                 </button>
               ) : (
                 <button
@@ -912,7 +1179,7 @@ export function ExperienceDetailPage({
                   onClick={handleProceedToBook}
                   className="w-full rounded-xl py-2.5 sm:py-3 font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 bg-purple hover:bg-purple-hover text-white shadow-md shadow-purple/25 hover:shadow-lg hover:shadow-purple/35 cursor-pointer transform active:scale-[0.99]"
                 >
-                  <span>Reserve Slot ({selectedSlot})</span>
+                  <span>Book {selectedSlot}</span>
                   <ArrowRight className="h-4 w-4" />
                 </button>
               )}
@@ -1017,9 +1284,11 @@ export function ExperienceDetailPage({
         >
           {isSoldOut || (Boolean(selectedDate) && availabilityResult === "unavailable")
             ? "Sold out"
-            : availabilityResult === "available"
-            ? "Book slot"
-            : "Check slots"}
+            : !selectedDate
+            ? "Select date"
+            : selectedSlot
+            ? `Book ${selectedSlot}`
+            : "Book now"}
         </button>
       </div>
 
