@@ -112,6 +112,125 @@ function TripCard({ trip, onOpen }: { trip: TripItem; onOpen: () => void }) {
   );
 }
 
+function ProfileSkeletonLoading() {
+  return (
+    <div className="min-h-screen bg-[#fbfafc] font-sans">
+      <main className="max-w-5xl mx-auto w-full px-4 md:px-6 pt-8 md:pt-10 pb-16">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 items-start">
+          {/* LEFT COLUMN */}
+          <div className="w-full lg:w-2/3 space-y-6">
+            {/* Overview Card Skeleton */}
+            <div className="relative bg-white border border-neutral-200/80 rounded-2xl p-6 sm:p-8 shadow-2xs text-center">
+              <div className="flex flex-col items-center">
+                {/* Avatar skeleton */}
+                <div className="w-24 h-24 rounded-full bg-neutral-200/70 animate-pulse mb-3.5 border border-neutral-200/80" />
+
+                {/* Name */}
+                <div className="h-6 w-44 bg-neutral-200/80 rounded-lg animate-pulse mb-2.5" />
+
+                {/* Role and Verified Badges */}
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <div className="h-5 w-20 rounded-full bg-neutral-200/70 animate-pulse" />
+                  <div className="h-5 w-24 rounded-full bg-neutral-200/70 animate-pulse" />
+                </div>
+
+                {/* Email */}
+                <div className="h-3.5 w-48 bg-neutral-200/60 rounded animate-pulse mb-1.5" />
+
+                {/* Member since */}
+                <div className="h-3 w-32 bg-neutral-200/50 rounded animate-pulse" />
+              </div>
+
+              {/* Stats Strip Skeleton */}
+              <div className="grid grid-cols-3 divide-x divide-neutral-100 border-t border-neutral-100 mt-6 pt-5 text-center">
+                <div className="flex flex-col items-center gap-1.5">
+                  <div className="h-5 w-8 bg-neutral-200/80 rounded animate-pulse" />
+                  <div className="h-3 w-10 bg-neutral-200/50 rounded animate-pulse" />
+                </div>
+                <div className="flex flex-col items-center gap-1.5">
+                  <div className="h-5 w-12 bg-neutral-200/80 rounded animate-pulse" />
+                  <div className="h-3 w-12 bg-neutral-200/50 rounded animate-pulse" />
+                </div>
+                <div className="flex flex-col items-center gap-1.5">
+                  <div className="h-5 w-8 bg-neutral-200/80 rounded animate-pulse" />
+                  <div className="h-3 w-12 bg-neutral-200/50 rounded animate-pulse" />
+                </div>
+              </div>
+            </div>
+
+            {/* Host Banner Skeleton */}
+            <div className="bg-neutral-100/70 border border-neutral-200/80 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="space-y-2 flex-1">
+                <div className="h-4 w-44 bg-neutral-200/80 rounded animate-pulse" />
+                <div className="h-3 w-72 max-w-full bg-neutral-200/60 rounded animate-pulse" />
+              </div>
+              <div className="h-8 w-28 rounded-full bg-neutral-200/80 animate-pulse shrink-0" />
+            </div>
+
+            {/* Activity Tabs & Content Skeleton */}
+            <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-2xs">
+              {/* Tab Header Skeleton */}
+              <div className="flex items-center gap-6 border-b border-neutral-100 pb-3 mb-4">
+                <div className="h-5 w-28 bg-neutral-200/80 rounded animate-pulse" />
+                <div className="h-5 w-24 bg-neutral-200/50 rounded animate-pulse" />
+              </div>
+
+              {/* Trip Cards Skeletons */}
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="bg-[#faf9fc]/40 border border-neutral-100 rounded-xl p-3.5 sm:p-4 flex flex-col sm:flex-row gap-3 sm:gap-4 items-start sm:items-center justify-between"
+                  >
+                    <div className="flex items-start gap-3 w-full sm:w-auto flex-1 min-w-0">
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-neutral-200/80 animate-pulse shrink-0" />
+                      <div className="flex-1 space-y-2 py-0.5 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="h-4 w-40 bg-neutral-200/80 rounded animate-pulse" />
+                          <div className="h-4 w-16 rounded-full bg-neutral-200/60 animate-pulse shrink-0" />
+                        </div>
+                        <div className="h-3 w-28 bg-neutral-200/60 rounded animate-pulse" />
+                        <div className="h-3 w-36 bg-neutral-200/60 rounded animate-pulse" />
+                        <div className="h-3.5 w-20 bg-neutral-200/80 rounded animate-pulse pt-0.5" />
+                      </div>
+                    </div>
+                    <div className="w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-neutral-100/80">
+                      <div className="h-8 w-24 rounded-xl bg-neutral-200/70 animate-pulse ml-auto sm:ml-0" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN (Settings Menu Skeleton) */}
+          <div className="w-full lg:w-1/3">
+            <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-2xs sticky top-24">
+              <div className="mb-4 pb-2 border-b border-neutral-100">
+                <div className="h-3.5 w-28 bg-neutral-200/70 rounded animate-pulse" />
+              </div>
+              <div className="space-y-2">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="flex items-center justify-between p-3 rounded-xl">
+                    <div className="flex items-center gap-3.5 flex-1 min-w-0">
+                      <div className="w-9 h-9 rounded-lg bg-neutral-200/70 animate-pulse shrink-0" />
+                      <div className="space-y-1.5 flex-1 min-w-0">
+                        <div className="h-3.5 w-28 bg-neutral-200/80 rounded animate-pulse" />
+                        <div className="h-2.5 w-44 bg-neutral-200/50 rounded animate-pulse" />
+                      </div>
+                    </div>
+                    <div className="w-4 h-4 rounded bg-neutral-200/40 animate-pulse ml-2 shrink-0" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
 export function GuestProfilePage() {
   const router = useRouter();
   const { user, isAuthenticated, isHydrating } = useAuth();
@@ -240,16 +359,7 @@ export function GuestProfilePage() {
 
   // Loading skeleton while authenticating or fetching database records
   if (isHydrating || !isAuthenticated || !user || isLoadingData) {
-    return (
-      <div className="min-h-screen bg-[#fbfafc] flex flex-col items-center justify-center p-6">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-3 border-[#6b2bb8]/25 border-t-[#6b2bb8] rounded-full animate-spin" />
-          <p className="text-xs font-semibold text-neutral-600 tracking-wide">
-            Loading your profile &amp; data...
-          </p>
-        </div>
-      </div>
-    );
+    return <ProfileSkeletonLoading />;
   }
 
   // Live user properties from DB
