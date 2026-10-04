@@ -246,7 +246,10 @@ export function HostNav() {
                           {/* Profile */}
                           <Link
                             href="/host/account"
-                            onClick={() => setSheetOpen(false)}
+                            onClick={() => {
+                              setSheetOpen(false);
+                              useAuthStore.getState().fetchProfile();
+                            }}
                             className={cn(
                               "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors cursor-pointer",
                               pathname === "/host/account"

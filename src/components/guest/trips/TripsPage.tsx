@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useCallback, useState } from "react";
+import { useMemo, useCallback, useState, useEffect } from "react";
 import Link from "next/link";
 import {
   CalendarDays,
@@ -318,9 +318,13 @@ function BookingSection({
 // Main Trips Page
 
 export function TripsPage() {
-  const { bookings, cancelBooking } = useBookingStore();
+  const { bookings, cancelBooking, fetchMyBookings } = useBookingStore();
   const { user } = useAuth();
   const [reviewBooking, setReviewBooking] = useState<ConfirmedBooking | null>(null);
+
+  useEffect(() => {
+    fetchMyBookings();
+  }, [fetchMyBookings]);
 
   const now = useMemo(() => new Date(), []);
 

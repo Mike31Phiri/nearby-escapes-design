@@ -22,6 +22,8 @@ import {
 import { EnvelopeSimple as MessageSquare } from "@phosphor-icons/react";
 import { useAuth, useAuthStore } from "@/lib/store/authStore";
 import { useNotificationStore } from "@/store/notificationStore";
+import { useBookingStore } from "@/store/bookingStore";
+import { useWishlistStore } from "@/store/wishlistStore";
 import { WishlistPopover } from "@/components/guest/wishlist/WishlistPopover";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
@@ -366,7 +368,10 @@ export function Navbar() {
 
                       <Link
                         href="/trips"
-                        onClick={() => setIsSheetOpen(false)}
+                        onClick={() => {
+                          setIsSheetOpen(false);
+                          useBookingStore.getState().fetchMyBookings();
+                        }}
                         className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150 cursor-pointer"
                       >
                         <CalendarDays className="h-4 w-4 text-neutral-400 shrink-0" />
@@ -375,7 +380,10 @@ export function Navbar() {
 
                       <Link
                         href="/wishlist"
-                        onClick={() => setIsSheetOpen(false)}
+                        onClick={() => {
+                          setIsSheetOpen(false);
+                          useWishlistStore.getState().fetchFromBackend();
+                        }}
                         className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150 cursor-pointer"
                       >
                         <Heart className="h-4 w-4 text-neutral-400 shrink-0" />

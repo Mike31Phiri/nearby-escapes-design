@@ -1,6 +1,6 @@
-﻿"use client";
+"use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Bell,
   CreditCard,
@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { cn, BACKDROP_CLASS } from "@/lib/utils";
-import { useAuth } from "@/lib/store/authStore";
+import { useAuth, useAuthStore } from "@/lib/store/authStore";
 import { mockHostProfile } from "@/lib/mock-profile-data";
 import { toast } from "sonner";
 
@@ -199,6 +199,16 @@ export function HostAccountPage() {
   const [responseTime, setResponseTime] = useState("within 1 hour");
   const [avatar, setAvatar] = useState(mockHostProfile.avatar);
   const [editOpen, setEditOpen] = useState(false);
+
+  useEffect(() => {
+    useAuthStore.getState().fetchProfile().catch(() => null);
+  }, []);
+
+  useEffect(() => {
+    if (user?.name) setName(user.name);
+    if (user?.email) setEmail(user.email);
+    if (user?.avatar) setAvatar(user.avatar);
+  }, [user]);
 
   // Notification State
   const [notifyBookings, setNotifyBookings] = useState(true);
