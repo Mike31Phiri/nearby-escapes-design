@@ -34,8 +34,7 @@ export interface VerifyOtpDto {
 
 export interface VerifyEmailDto {
   email: string;
-  code?: string;
-  token?: string;
+  code: string;
 }
 
 export interface ResendVerificationDto {

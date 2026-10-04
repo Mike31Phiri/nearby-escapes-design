@@ -253,14 +253,27 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
     }
   }, [activeTab, verifySecs]);
 
-  // Auto-verify if token or 6-digit code is provided in query params
+  // Helper for extracting clean NestJS / class-validator error messages
+  const getErrorMessage = (err: any, fallback: string): string => {
+    const data = err.response?.data;
+    if (data?.message) {
+      if (Array.isArray(data.message)) {
+        return data.message.join(". ");
+      }
+      if (typeof data.message === "string" && data.message.trim()) {
+        return data.message;
+      }
+    }
+    return fallback;
+  };
+
+  // Auto-verify if 6-digit code (or token) is provided in query params
   useEffect(() => {
     if (activeTab === "verify-email") {
-      if (queryToken) {
-        handleVerifyEmailSubmit(undefined, queryToken);
-      } else if (queryCode && queryCode.length === 6) {
-        setVerifyOtp(queryCode.split(""));
-        handleVerifyEmailSubmit(undefined, undefined, queryCode);
+      const codeParam = queryCode || queryToken;
+      if (codeParam && codeParam.length === 6) {
+        setVerifyOtp(codeParam.split(""));
+        handleVerifyEmailSubmit(undefined, codeParam);
       }
     }
   }, [activeTab, queryToken, queryCode]);
@@ -273,7 +286,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
       // Auto submit when 6th digit entered
       if (val && index === 5 && current.every((d) => d !== "")) {
         setTimeout(() => {
-          handleVerifyEmailSubmit(undefined, undefined, current.join(""));
+          handleVerifyEmailSubmit(undefined, current.join(""));
         }, 150);
       }
     } else if (fieldId === "otp") {
@@ -324,12 +337,21 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
     }
     setLoading(true);
     try {
-      const { user } = await authApi.login({ email, password });
+      const { user } = await authApi.login({ email: email.trim(), password });
       setUser(user);
+
+      // Prompt guest if email is pending verification
+      if (!user.isVerified || user.verificationStatus === "PENDING") {
+        toast.info("Please verify your email address to continue.");
+        const nextParam = redirectTarget !== "/" ? `&next=${encodeURIComponent(redirectTarget)}` : "";
+        router.push(`/auth/verify-email?email=${encodeURIComponent(user.email)}${nextParam}`);
+        return;
+      }
+
       toast.success(`Welcome back, ${user.name.split(" ")[0]}!`);
       router.replace(destinationFor(user));
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Invalid email or password.");
+      toast.error(getErrorMessage(err, "Invalid email or password."));
     } finally {
       setLoading(false);
     }
@@ -345,10 +367,6 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
       toast.error("Please enter your email address.");
       return;
     }
-    if (!phone.trim()) {
-      toast.error("Please enter your phone number.");
-      return;
-    }
     if (!password.trim() || password.length < 6) {
       toast.error("Password must be at least 6 characters.");
       return;
@@ -357,22 +375,32 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
       toast.error("You must agree to the Terms of Service.");
       return;
     }
+
     setLoading(true);
     try {
+      const cleanedPhone = phone.trim()
+        ? phone.trim().startsWith("+")
+          ? phone.trim()
+          : `+260${phone.trim().replace(/^0/, "").replace(/\s/g, "")}`
+        : undefined;
+
       const res = await authApi.register({
-        name: `${firstName.trim()} ${lastName.trim()}`,
+        name: `${firstName.trim()} ${lastName.trim()}`.trim(),
         email: email.trim(),
         password,
-        phone: `+260${phone.trim().replace(/\s/g, "")}`,
+        phone: cleanedPhone,
       });
+
       if (res.user) {
         setUser(res.user);
       }
-      toast.success("Account created! Please verify your email.");
+      toast.success(
+        res.message || "Registration successful! A 6-digit verification code has been sent to your email.",
+      );
       const nextParam = redirectTarget !== "/" ? `&next=${encodeURIComponent(redirectTarget)}` : "";
       router.push(`/auth/verify-email?email=${encodeURIComponent(email.trim())}${nextParam}`);
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Registration failed. Please try again.");
+      toast.error(getErrorMessage(err, "Registration failed. Please try again."));
     } finally {
       setLoading(false);
     }
@@ -391,7 +419,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
         toast.success("Reset link sent! Check your inbox.");
         setResetStep(2);
       } catch (err: any) {
-        toast.error(err.response?.data?.message || "Something went wrong.");
+        toast.error(getErrorMessage(err, "Something went wrong."));
       } finally {
         setLoading(false);
       }
@@ -407,7 +435,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
         toast.success("Code verified! Set your new password.");
         setResetStep(3);
       } catch (err: any) {
-        toast.error(err.response?.data?.message || "Invalid or expired code.");
+        toast.error(getErrorMessage(err, "Invalid or expired code."));
       } finally {
         setLoading(false);
       }
@@ -430,7 +458,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
         toast.success("Password reset! Please sign in.");
         setTimeout(() => router.push(`/auth/login${nextQuery}`), 800);
       } catch (err: any) {
-        toast.error(err.response?.data?.message || "Failed to reset password.");
+        toast.error(getErrorMessage(err, "Failed to reset password."));
       } finally {
         setLoading(false);
       }
@@ -439,14 +467,12 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
 
   const handleVerifyEmailSubmit = async (
     e?: React.FormEvent,
-    customToken?: string,
     customCode?: string,
   ) => {
     if (e) e.preventDefault();
-    const tokenToUse = customToken || searchParams.get("token") || undefined;
     const codeToUse = customCode || verifyOtp.join("") || undefined;
 
-    if (!tokenToUse && (!codeToUse || codeToUse.length < 6)) {
+    if (!codeToUse || codeToUse.length < 6) {
       toast.error("Please enter the complete 6-digit code.");
       return;
     }
@@ -460,17 +486,16 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
       const res = await authApi.verifyEmail({
         email: verifyEmailAddress.trim(),
         code: codeToUse,
-        token: tokenToUse,
       });
 
       if (res.user) {
         setUser(res.user);
       }
-      toast.success("Email verified successfully! Welcome to Nearby Escapes.");
+      toast.success(res.message || "Email verified successfully! Welcome to Nearby Escapes.");
       router.replace(destinationFor(res.user));
     } catch (err: any) {
       toast.error(
-        err.response?.data?.message || "Verification failed. The code may be invalid or expired.",
+        getErrorMessage(err, "Verification failed. The code may be invalid or expired."),
       );
     } finally {
       setLoading(false);
@@ -483,12 +508,12 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
       return;
     }
     try {
-      await authApi.resendVerificationEmail({ email: verifyEmailAddress.trim() });
+      const res = await authApi.resendVerificationEmail({ email: verifyEmailAddress.trim() });
       setVerifySecs(59);
-      toast.success("Verification code re-sent! Please check your inbox.");
+      toast.success(res.message || "A new verification code has been sent to your email.");
     } catch (err: any) {
       toast.error(
-        err.response?.data?.message || "Could not resend verification code. Please try again.",
+        getErrorMessage(err, "Could not resend verification code. Please try again."),
       );
     }
   };
@@ -664,7 +689,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                 </div>
 
                 <div className="space-y-1.5">
-                  <FieldLabel>Phone number</FieldLabel>
+                  <FieldLabel>Phone number (optional)</FieldLabel>
                   <div className="flex gap-2">
                     <div className="flex items-center gap-1 px-3 py-3 rounded-xl border border-black/[0.15] bg-neutral-50 text-xs font-bold text-black shrink-0">
                       🇿🇲 +260
@@ -676,7 +701,6 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       autoComplete="tel"
-                      required
                     />
                   </div>
                 </div>
