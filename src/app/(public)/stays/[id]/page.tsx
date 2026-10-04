@@ -1,19 +1,20 @@
 import { notFound } from "next/navigation";
 import { mockStays } from "@/lib/mock-data";
+import { fetchStayById } from "@/lib/api/discovery";
 import { StayDetailPage } from "@/components/guest/listings/StayDetailPage";
+
+export const dynamic = "force-dynamic";
 
 interface Props {
   params: Promise<{ id: string }>;
   searchParams: Promise<Record<string, string>>;
 }
 
-export async function generateStaticParams() {
-  return mockStays.map((s) => ({ id: s.id }));
-}
-
 export async function generateMetadata({ params }: Props) {
   const { id } = await params;
-  const stay = mockStays.find((s) => s.id === id || s.id === id.replace(/^s/, ""));
+  const stay =
+    (await fetchStayById(id)) ||
+    mockStays.find((s) => s.id === id || s.id === id.replace(/^s/, ""));
   if (!stay) return { title: "Stay not found" };
   return {
     title: `${stay.name} — Nearby Escapes`,
@@ -24,7 +25,9 @@ export async function generateMetadata({ params }: Props) {
 export default async function StayRoutePage({ params, searchParams }: Props) {
   const { id } = await params;
   const sp = await searchParams;
-  const stay = mockStays.find((s) => s.id === id || s.id === id.replace(/^s/, ""));
+  const stay =
+    (await fetchStayById(id)) ||
+    mockStays.find((s) => s.id === id || s.id === id.replace(/^s/, ""));
 
   if (!stay) notFound();
 

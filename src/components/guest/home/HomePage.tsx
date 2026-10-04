@@ -8,8 +8,10 @@ import { Home, ArrowRight, Star } from "lucide-react";
 import { Tent, Buildings, SealCheck, MapPin } from "@phosphor-icons/react";
 import { SearchBar } from "@/components/shared/SearchBar";
 import { ListingCard } from "@/components/guest/ListingCard";
-import { mockStays, mockExperiences, mockTransport, mockPackages } from "@/lib/mock-data";
+import type { Stay, Experience, Transport, Package } from "@/lib/mock-data";
+import { fetchAllListings } from "@/lib/api/discovery";
 import { cn } from "@/lib/utils";
+import { useEffect, useMemo } from "react";
 
 // Data
 
@@ -166,6 +168,45 @@ function MobileSeeAll({ href, label }: { href: string; label: string }) {
 export function HomePage() {
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState("stays");
+
+  const [stays, setStays] = useState<Stay[]>([]);
+  const [experiences, setExperiences] = useState<Experience[]>([]);
+  const [transports, setTransports] = useState<Transport[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchAllListings()
+      .then((data) => {
+        if (isMounted) {
+          setStays(data.stays);
+          setExperiences(data.experiences);
+          setTransports(data.transports);
+          setIsLoading(false);
+        }
+      })
+      .catch(() => {
+        if (isMounted) setIsLoading(false);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const dynamicDeals = useMemo(() => {
+    if (stays.length === 0) return [];
+    return stays.slice(0, 5).map((stay, idx) => ({
+      id: stay.id,
+      name: stay.name,
+      location: stay.location,
+      originalPrice: Math.round(stay.price * 1.25),
+      dealPrice: stay.price,
+      discount: 20 + ((idx * 5) % 15),
+      badge: idx % 2 === 0 ? "Flash Sale" : "Weekend Deal",
+      ends: `${(idx % 4) + 1} days left`,
+      image: stay.image,
+    }));
+  }, [stays]);
 
   const handleSearch = (term: string, _dates: DateRange, _guests: number) => {
     const targetRoute = activeCategory === "explore" ? "stays" : activeCategory;
@@ -422,7 +463,7 @@ export function HomePage() {
                   hideDescOnMobile
                 />
                 <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 -mx-4 md:-mx-8 px-4 md:px-8 snap-x snap-mandatory">
-                  {mockStays.slice(0, 6).map((listing) => (
+                  {stays.slice(0, 6).map((listing) => (
                     <div
                       key={listing.id}
                       className="w-[260px] sm:w-[280px] md:w-[300px] shrink-0 snap-start"
@@ -430,6 +471,9 @@ export function HomePage() {
                       <ListingCard listing={listing} />
                     </div>
                   ))}
+                  {stays.length === 0 && !isLoading && (
+                    <div className="py-8 px-4 text-neutral-500 text-sm">No stays currently available.</div>
+                  )}
                 </div>
                 <MobileSeeAll href="/stays" label="See all stays" />
 
@@ -444,7 +488,7 @@ export function HomePage() {
                     hideDescOnMobile
                   />
                   <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 -mx-4 md:-mx-8 px-4 md:px-8 snap-x snap-mandatory">
-                    {mockStays.slice(6, 12).map((listing) => (
+                    {(stays.length > 6 ? stays.slice(6, 12) : stays.slice(0, 6)).map((listing) => (
                       <div
                         key={listing.id}
                         className="w-[260px] sm:w-[280px] md:w-[300px] shrink-0 snap-start"
@@ -465,10 +509,10 @@ export function HomePage() {
                     seeAllLabel="See all deals"
                   />
                   <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 -mx-4 md:-mx-8 px-4 md:px-8 snap-x snap-mandatory">
-                    {flashDeals.map((deal) => (
+                    {dynamicDeals.map((deal) => (
                       <Link
                         key={deal.id}
-                        href={`/listings/stays/${deal.id.replace("deal-", "")}`}
+                        href={`/listings/stays/${deal.id}`}
                         className="group relative block overflow-hidden rounded-2xl w-[260px] sm:w-[280px] shrink-0 aspect-[4/3] bg-white-bone shadow-xs border border-neutral-200/80 snap-start"
                         style={{ WebkitMaskImage: "-webkit-radial-gradient(white, black)" }}
                       >
@@ -522,7 +566,7 @@ export function HomePage() {
                   hideDescOnMobile
                 />
                 <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 -mx-4 md:-mx-8 px-4 md:px-8 snap-x snap-mandatory">
-                  {mockExperiences.slice(0, 6).map((exp) => (
+                  {experiences.slice(0, 6).map((exp) => (
                     <Link
                       key={exp.id}
                       href={`/listings/experiences/${exp.id}`}
@@ -557,6 +601,9 @@ export function HomePage() {
                       </div>
                     </Link>
                   ))}
+                  {experiences.length === 0 && !isLoading && (
+                    <div className="py-8 px-4 text-neutral-500 text-sm">No experiences currently available.</div>
+                  )}
                 </div>
                 <MobileSeeAll href="/experiences" label="See all experiences" />
               </div>
@@ -574,7 +621,7 @@ export function HomePage() {
                   hideDescOnMobile
                 />
                 <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 -mx-4 md:-mx-8 px-4 md:px-8 snap-x snap-mandatory">
-                  {mockTransport.slice(0, 6).map((t) => (
+                  {transports.slice(0, 6).map((t) => (
                     <Link
                       key={t.id}
                       href={`/listings/transport/${t.id}`}
@@ -610,6 +657,9 @@ export function HomePage() {
                       </div>
                     </Link>
                   ))}
+                  {transports.length === 0 && !isLoading && (
+                    <div className="py-8 px-4 text-neutral-500 text-sm">No transport routes currently available.</div>
+                  )}
                 </div>
                 <MobileSeeAll href="/transport" label="See all routes" />
               </div>
@@ -627,7 +677,7 @@ export function HomePage() {
                   hideDescOnMobile
                 />
                 <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 -mx-4 md:-mx-8 px-4 md:px-8 snap-x snap-mandatory">
-                  {mockPackages.slice(0, 6).map((pkg) => (
+                  {experiences.slice(0, 6).map((pkg) => (
                     <Link
                       key={pkg.id}
                       href={`/listings/experiences/${pkg.id}`}
@@ -661,6 +711,9 @@ export function HomePage() {
                       </div>
                     </Link>
                   ))}
+                  {experiences.length === 0 && !isLoading && (
+                    <div className="py-8 px-4 text-neutral-500 text-sm">No packages currently available.</div>
+                  )}
                 </div>
                 <MobileSeeAll href="/packages" label="See all packages" />
               </div>

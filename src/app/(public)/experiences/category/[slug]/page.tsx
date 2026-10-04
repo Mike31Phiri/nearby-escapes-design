@@ -1,8 +1,11 @@
 import { notFound, redirect } from "next/navigation";
+import { fetchExperiences } from "@/lib/api/discovery";
 import { mockExperiences, mockGems } from "@/lib/mock-data";
 import type { Experience, ExperienceCategory } from "@/lib/mock-data";
 import { categoryLabels } from "@/lib/mock-data";
 import { ExperienceCategoryPage } from "@/components/guest/experiences/ExperienceCategoryPage";
+
+export const dynamic = "force-dynamic";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -37,7 +40,7 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
-function getExperiencesByCategory(category: ExperienceCategory): Experience[] {
+function getMockExperiencesByCategory(category: ExperienceCategory): Experience[] {
   const allExperiences = [...mockExperiences, ...mockGems];
   if (category === "general") return allExperiences;
   return allExperiences.filter((e) => e.category === category);
@@ -71,7 +74,29 @@ export default async function CategoryPage({ params }: Props) {
   }
 
   const category = slug as ExperienceCategory;
-  const experiences = getExperiencesByCategory(category);
+
+  let experiences: any[] = [];
+  try {
+    const liveListings = await fetchExperiences({ limit: 50 });
+    if (liveListings && liveListings.length > 0) {
+      if (category === "general") {
+        experiences = liveListings;
+      } else {
+        experiences = liveListings.filter((e) => {
+          const cat = e.category?.toLowerCase() || "";
+          const target = category.toLowerCase();
+          return cat === target || cat.includes(target);
+        });
+      }
+    }
+  } catch (err) {
+    console.error("Failed to load category experiences from API:", err);
+  }
+
+  // Fallback to mock data if API returned no matching results
+  if (experiences.length === 0) {
+    experiences = getMockExperiencesByCategory(category);
+  }
 
   return <ExperienceCategoryPage category={category} experiences={experiences} />;
 }

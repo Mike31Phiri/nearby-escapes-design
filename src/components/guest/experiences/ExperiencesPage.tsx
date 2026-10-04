@@ -19,7 +19,8 @@ import {
   Loader2,
   CheckCircle2,
 } from "lucide-react";
-import { mockExperiences } from "@/lib/mock-data";
+import type { Experience } from "@/lib/mock-data";
+import { fetchExperiences } from "@/lib/api/discovery";
 import { ExperienceCard } from "@/components/shared/ListingCards";
 import { SearchListingSkeleton } from "@/components/shared/SearchListingSkeleton";
 import {
@@ -160,6 +161,10 @@ export function ExperiencesPage() {
   const [sortValue, setSortValue] = useState("recommended");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
+  // Live Backend Data
+  const [experiences, setExperiences] = useState<Experience[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   // Harmonized Search Inputs: Where, When, Guests
   const initialWhere = city || province || attraction || q || "";
   const [whereInput, setWhereInput] = useState(initialWhere);
@@ -169,6 +174,28 @@ export function ExperiencesPage() {
   const [groupSizeInput, setGroupSizeInput] = useState<number>(() =>
     guestsParam ? Math.max(1, Number(guestsParam) || 2) : 2,
   );
+
+  useEffect(() => {
+    let isMounted = true;
+    setIsLoading(true);
+    fetchExperiences({ q: whereInput.trim() || undefined })
+      .then((data) => {
+        if (isMounted) {
+          setExperiences(data);
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error("fetchExperiences error:", err);
+        if (isMounted) {
+          setExperiences([]);
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [whereInput]);
 
   useEffect(() => {
     if (datesParam) {
@@ -196,14 +223,14 @@ export function ExperiencesPage() {
   };
 
   const filteredExperiences = useMemo(() => {
-    let result = [...mockExperiences];
+    let result = [...experiences];
 
     if (whereInput.trim()) {
       const search = whereInput.toLowerCase();
-      result = result.filter(
+      const matched = result.filter(
         (e) => e.location.toLowerCase().includes(search) || e.name.toLowerCase().includes(search),
       );
-      if (result.length === 0) result = [...mockExperiences];
+      if (matched.length > 0) result = matched;
     } else {
       const locationCtx = [attraction, city, province, q].filter(Boolean);
       if (locationCtx.length > 0) {
@@ -246,21 +273,16 @@ export function ExperiencesPage() {
     else if (sortValue === "rating") result.sort((a, b) => b.rating - a.rating);
 
     return result;
-  }, [whereInput, selectedCategories, drawerFilters, sortValue, province, city, attraction, q]);
+  }, [experiences, whereInput, selectedCategories, drawerFilters, sortValue, province, city, attraction, q]);
 
   // Pagination for search results & next database requests
   const PAGE_SIZE = 6;
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
-  // Scroll to top immediately on mount & simulate skeleton loading state
+  // Scroll to top immediately on mount
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 280);
-    return () => clearTimeout(timer);
   }, []);
 
   // Reset pagination when search parameters or filters change

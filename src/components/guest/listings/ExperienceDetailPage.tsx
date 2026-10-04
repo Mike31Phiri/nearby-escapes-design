@@ -36,6 +36,7 @@ import {
 import { ReviewSection } from "@/components/guest/reviews/ReviewSection";
 import { cn } from "@/lib/utils";
 import type { Experience, Package } from "@/lib/mock-data";
+import { fetchExperiences } from "@/lib/api/discovery";
 import { mockExperiences, mockGems, mockPackages } from "@/lib/mock-data";
 import { mockListingReviews } from "@/lib/mock-listing-reviews";
 import { useInventoryStore } from "@/store/inventoryStore";
@@ -132,6 +133,21 @@ export function ExperienceDetailPage({
   }, [timeSlots]);
   const [selectedSlot, setSelectedSlot] = useState(defaultSlot);
   const [isSlotDropdownOpen, setIsSlotDropdownOpen] = useState(false);
+  const [similarExperiences, setSimilarExperiences] = useState<any[]>([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchExperiences({ limit: 8 })
+      .then((items) => {
+        if (isMounted && items && items.length > 0) {
+          setSimilarExperiences(items);
+        }
+      })
+      .catch((err) => console.error("Failed to load similar experiences:", err));
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Availability & Booking state
   const today = new Date().toISOString().split("T")[0];
@@ -1205,38 +1221,44 @@ export function ExperienceDetailPage({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {mockExperiences
+            {(similarExperiences.length > 0 ? similarExperiences : mockExperiences)
               .filter((e) => e.id !== item.id)
               .slice(0, 4)
-              .map((exp) => (
-                <Link
-                  key={exp.id}
-                  href={`/experiences/${exp.id}`}
-                  className="group block bg-white rounded-xl overflow-hidden border border-neutral-200/80 p-2.5 hover:shadow-md transition-shadow"
-                >
-                  <div className="relative aspect-4/3 rounded-lg overflow-hidden mb-2.5 bg-neutral-100">
-                    <img
-                      src={exp.image}
-                      alt={exp.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="flex justify-between items-baseline gap-2">
-                    <h3 className="font-medium text-sm text-neutral-900 group-hover:text-purple transition-colors truncate">
-                      {exp.name}
-                    </h3>
-                    <div className="flex items-center gap-0.5 text-xs font-medium text-neutral-700 shrink-0">
-                      <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                      <span>{exp.rating}</span>
+              .map((exp) => {
+                const img = exp.images?.[0] || exp.image || "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=70";
+                const title = exp.title || exp.name || "Experience";
+                const ratingNum = typeof exp.rating === "number" ? exp.rating : 5.0;
+
+                return (
+                  <Link
+                    key={exp.id}
+                    href={`/experiences/${exp.id}`}
+                    className="group block bg-white rounded-xl overflow-hidden border border-neutral-200/80 p-2.5 hover:shadow-md transition-shadow"
+                  >
+                    <div className="relative aspect-4/3 rounded-lg overflow-hidden mb-2.5 bg-neutral-100">
+                      <img
+                        src={img}
+                        alt={title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
                     </div>
-                  </div>
-                  <p className="text-xs font-normal text-neutral-500 mt-0.5">{exp.location}</p>
-                  <p className="text-sm font-semibold text-neutral-900 mt-1">
-                    K{exp.price}{" "}
-                    <span className="font-normal text-xs text-neutral-500">/ person</span>
-                  </p>
-                </Link>
-              ))}
+                    <div className="flex justify-between items-baseline gap-2">
+                      <h3 className="font-medium text-sm text-neutral-900 group-hover:text-purple transition-colors truncate">
+                        {title}
+                      </h3>
+                      <div className="flex items-center gap-0.5 text-xs font-medium text-neutral-700 shrink-0">
+                        <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                        <span>{ratingNum}</span>
+                      </div>
+                    </div>
+                    <p className="text-xs font-normal text-neutral-500 mt-0.5">{exp.location}</p>
+                    <p className="text-sm font-semibold text-neutral-900 mt-1">
+                      K{exp.price}{" "}
+                      <span className="font-normal text-xs text-neutral-500">/ person</span>
+                    </p>
+                  </Link>
+                );
+              })}
           </div>
         </section>
       </main>

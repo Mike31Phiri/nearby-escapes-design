@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -32,6 +32,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ListingCard } from "@/components/guest/ListingCard";
+import { fetchAllListings } from "@/lib/api/discovery";
+import type { Stay, Experience, Transport } from "@/lib/mock-data";
 import { mockStays, mockExperiences, mockTransport } from "@/lib/mock-data";
 
 // Static curated destination data
@@ -869,9 +871,13 @@ function ExperienceItemCard({
   exp,
   isGrid = false,
 }: {
-  exp: (typeof mockExperiences)[0];
+  exp: any;
   isGrid?: boolean;
 }) {
+  const image = exp.images?.[0] || exp.image || "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=70";
+  const title = exp.title || exp.name || "Experience";
+  const ratingNum = typeof exp.rating === "number" ? exp.rating : 5.0;
+
   return (
     <Link
       href={`/listings/experiences/${exp.id}`}
@@ -882,22 +888,22 @@ function ExperienceItemCard({
     >
       <div className="relative aspect-[16/10] bg-white-bone rounded-xl overflow-hidden transition-shadow group-hover:shadow-sm">
         <img
-          src={exp.image}
-          alt={exp.name}
+          src={image}
+          alt={title}
           loading="lazy"
-          className="h-full w-full object-cover "
+          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
       </div>
       <div className="pt-2.5 px-0.5">
         <div className="flex items-start justify-between gap-3">
           <h3 className="card-title line-clamp-1 flex-1">
-            {exp.name}
+            {title}
           </h3>
           <div className="flex items-center gap-1 shrink-0">
             <Star className="h-3 w-3 fill-purple text-purple" strokeWidth={1.5} />
             <span className="card-rating font-semibold">
-              {exp.rating.toFixed(1)}
+              {ratingNum.toFixed(1)}
             </span>
           </div>
         </div>
@@ -915,9 +921,13 @@ function TransportItemCard({
   route,
   isGrid = false,
 }: {
-  route: (typeof mockTransport)[0];
+  route: any;
   isGrid?: boolean;
 }) {
+  const image = route.images?.[0] || route.image || "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=70";
+  const fromCity = route.fromCity || route.from || "Lusaka";
+  const toCity = route.toCity || route.to || "Livingstone";
+
   return (
     <Link
       href={`/listings/transport/${route.id}`}
@@ -928,18 +938,18 @@ function TransportItemCard({
     >
       <div className="relative aspect-[16/9] bg-white-bone">
         <img
-          src={route.image}
-          alt={`${route.from} to ${route.to}`}
+          src={image}
+          alt={`${fromCity} to ${toCity}`}
           loading="lazy"
-          className="h-full w-full object-cover "
+          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
       </div>
       <div className="p-3.5 flex flex-col gap-2">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 text-black font-bold text-sm sm:text-base">
-            <span>{route.from}</span>
+            <span>{fromCity}</span>
             <span className="text-black-muted text-xs">→</span>
-            <span>{route.to}</span>
+            <span>{toCity}</span>
           </div>
           <span className="card-price text-purple shrink-0">ZMW {route.price}</span>
         </div>
@@ -947,8 +957,12 @@ function TransportItemCard({
           <p className="font-semibold text-black-soft truncate">{route.operator}</p>
           <div className="flex items-center gap-1.5 text-black-muted text-[11px] shrink-0">
             <span>{route.duration}</span>
-            <span>·</span>
-            <span>{route.departures}</span>
+            {route.departures && (
+              <>
+                <span>·</span>
+                <span>{route.departures}</span>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -1252,6 +1266,29 @@ function ProvinceGrid() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+  const [liveStays, setLiveStays] = useState<Stay[]>([]);
+  const [liveExperiences, setLiveExperiences] = useState<Experience[]>([]);
+  const [liveTransport, setLiveTransport] = useState<Transport[]>([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchAllListings()
+      .then(({ stays, experiences, transports }) => {
+        if (isMounted) {
+          if (stays && stays.length > 0) setLiveStays(stays);
+          if (experiences && experiences.length > 0) setLiveExperiences(experiences);
+          if (transports && transports.length > 0) setLiveTransport(transports);
+        }
+      })
+      .catch((err) => console.error("Failed to load live explore listings:", err));
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const popularExperiences = liveExperiences.length > 0 ? liveExperiences : (mockExperiences as any[]);
+  const popularStays = liveStays.length > 0 ? liveStays : mockStays;
+  const popularTransport = liveTransport.length > 0 ? liveTransport : (mockTransport as any[]);
 
   // Filter suggestions as the user types
   const suggestions = useMemo(() => {
@@ -1409,7 +1446,7 @@ function ProvinceGrid() {
             cta="See all experiences"
           />
           <Carousel seeAllHref="/experiences?cat=popular">
-            {mockExperiences.slice(0, 8).map((exp) => (
+            {popularExperiences.slice(0, 8).map((exp) => (
               <ExperienceItemCard key={exp.id} exp={exp} />
             ))}
           </Carousel>
@@ -1424,7 +1461,7 @@ function ProvinceGrid() {
             cta="See all stays"
           />
           <Carousel seeAllHref="/stays?type=Popular">
-            {mockStays.slice(0, 8).map((stay) => (
+            {popularStays.slice(0, 8).map((stay) => (
               <div
                 key={stay.id}
                 className="w-[260px] sm:w-[280px] md:w-[300px] shrink-0 snap-start"
@@ -1515,7 +1552,7 @@ function ProvinceGrid() {
             cta="See all routes"
           />
           <Carousel seeAllHref="/transport">
-            {mockTransport.slice(0, 6).map((route) => (
+            {popularTransport.slice(0, 6).map((route) => (
               <TransportItemCard key={route.id} route={route} />
             ))}
           </Carousel>
@@ -1629,7 +1666,26 @@ function LocationHub({
   const [experienceFilter, setExperienceFilter] = useState<string>("popular");
   const [packageFilter, setPackageFilter] = useState<string>("all");
   const [transportFilter, setTransportFilter] = useState<string>("all");
+  const [liveStays, setLiveStays] = useState<Stay[]>([]);
+  const [liveExperiences, setLiveExperiences] = useState<Experience[]>([]);
+  const [liveTransport, setLiveTransport] = useState<Transport[]>([]);
   const tabsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchAllListings()
+      .then(({ stays, experiences, transports }) => {
+        if (isMounted) {
+          if (stays && stays.length > 0) setLiveStays(stays);
+          if (experiences && experiences.length > 0) setLiveExperiences(experiences);
+          if (transports && transports.length > 0) setLiveTransport(transports);
+        }
+      })
+      .catch((err) => console.error("Failed to load live listings in LocationHub:", err));
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const locationName = city?.name ?? province.name;
 
@@ -1666,13 +1722,14 @@ function LocationHub({
   // Stays in this destination
   const destinationStays = useMemo(() => {
     const locLower = (city?.name ?? province.name).toLowerCase().replace("province", "").trim();
-    const matched = mockStays.filter(
+    const sourceStays = liveStays.length > 0 ? liveStays : mockStays;
+    const matched = sourceStays.filter(
       (s) =>
         (s.location?.toLowerCase().includes(locLower) ?? false) ||
         (s.name?.toLowerCase().includes(locLower) ?? false),
     );
-    return matched.length > 0 ? matched : mockStays;
-  }, [province, city]);
+    return matched.length > 0 ? matched : sourceStays;
+  }, [province, city, liveStays]);
 
   const filteredStays = useMemo(() => {
     if (!stayFilter) return destinationStays;
@@ -1692,20 +1749,21 @@ function LocationHub({
   // Experiences in this destination
   const destinationExperiences = useMemo(() => {
     const locLower = (city?.name ?? province.name).toLowerCase().replace("province", "").trim();
-    const matched = mockExperiences.filter(
+    const sourceExp = liveExperiences.length > 0 ? liveExperiences : (mockExperiences as any[]);
+    const matched = sourceExp.filter(
       (e) =>
         (e.location?.toLowerCase().includes(locLower) ?? false) ||
-        (e.name?.toLowerCase().includes(locLower) ?? false),
+        ((e.title || (e as any).name)?.toLowerCase().includes(locLower) ?? false),
     );
-    return matched.length > 0 ? matched : mockExperiences;
-  }, [province, city]);
+    return matched.length > 0 ? matched : sourceExp;
+  }, [province, city, liveExperiences]);
 
   const filteredExperiences = useMemo(() => {
     if (!experienceFilter) return destinationExperiences;
     if (experienceFilter === "popular")
-      return destinationExperiences.filter((e) => e.rating >= 4.8);
+      return destinationExperiences.filter((e) => Number(e.rating) >= 4.8);
     if (experienceFilter === "unique")
-      return destinationExperiences.filter((e) => e.rating >= 4.9 || e.category === "cultural");
+      return destinationExperiences.filter((e) => Number(e.rating) >= 4.9 || e.category === "cultural");
     const matched = destinationExperiences.filter((e) => e.category === experienceFilter);
     return matched.length > 0 ? matched : destinationExperiences;
   }, [destinationExperiences, experienceFilter]);
@@ -1770,13 +1828,14 @@ function LocationHub({
   // Transport connections
   const destinationTransport = useMemo(() => {
     const locLower = (city?.name ?? province.name).toLowerCase().replace("province", "").trim();
-    const matched = mockTransport.filter(
+    const sourceTransport = liveTransport.length > 0 ? liveTransport : (mockTransport as any[]);
+    const matched = sourceTransport.filter(
       (t) =>
         (t.from?.toLowerCase().includes(locLower) ?? false) ||
         (t.to?.toLowerCase().includes(locLower) ?? false),
     );
-    return matched.length > 0 ? matched : mockTransport;
-  }, [province, city]);
+    return matched.length > 0 ? matched : sourceTransport;
+  }, [province, city, liveTransport]);
 
   const filteredTransport = useMemo(() => {
     if (!transportFilter || transportFilter === "all") return destinationTransport;

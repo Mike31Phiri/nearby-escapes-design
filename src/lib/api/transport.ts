@@ -71,7 +71,7 @@ export const searchTransport = async (
 
 /** Fetch a single transport listing by ID or slug. */
 export const getTransport = async (idOrSlug: string): Promise<TransportListing> => {
-  const { data } = await apiClient.get<TransportListing>(`/listings/transport/${idOrSlug}`);
+  const { data } = await apiClient.get<TransportListing>(`/listings/${idOrSlug}`);
   return data;
 };
 

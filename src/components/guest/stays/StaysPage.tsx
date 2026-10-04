@@ -25,7 +25,8 @@ import {
   Loader2,
   CheckCircle2,
 } from "lucide-react";
-import { mockStays, type Stay } from "@/lib/mock-data";
+import type { Stay } from "@/lib/mock-data";
+import { fetchStays } from "@/lib/api/discovery";
 import {
   VerticalFilterSidebar,
   type FilterConfig,
@@ -146,6 +147,10 @@ export function StaysPage({ location }: StaysPageProps) {
   const [sortValue, setSortValue] = useState("recommended");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
+  // Live Backend Data
+  const [stays, setStays] = useState<Stay[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   // Harmonized Search Inputs: Where, When, Guests
   const initialWhere = qParam || location?.city?.name || location?.province?.name || "";
   const [whereInput, setWhereInput] = useState(initialWhere);
@@ -160,6 +165,28 @@ export function StaysPage({ location }: StaysPageProps) {
     const resolved = qParam || location?.city?.name || location?.province?.name || "";
     setWhereInput(resolved);
   }, [qParam, location]);
+
+  useEffect(() => {
+    let isMounted = true;
+    setIsLoading(true);
+    fetchStays({ q: whereInput.trim() || undefined })
+      .then((data) => {
+        if (isMounted) {
+          setStays(data);
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error("fetchStays error:", err);
+        if (isMounted) {
+          setStays([]);
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [whereInput]);
 
   useEffect(() => {
     if (datesParam) {
@@ -193,14 +220,14 @@ export function StaysPage({ location }: StaysPageProps) {
   };
 
   const filteredStays = useMemo(() => {
-    let result = [...mockStays];
+    let result = [...stays];
 
     if (whereInput.trim()) {
       const q = whereInput.toLowerCase();
-      result = result.filter(
+      const matched = result.filter(
         (s) => s.location.toLowerCase().includes(q) || s.name.toLowerCase().includes(q),
       );
-      if (result.length === 0) result = [...mockStays];
+      if (matched.length > 0) result = matched;
     } else if (location) {
       if (location.type === "attraction" && location.attraction) {
         const ids = new Set(location.attraction.nearbyStayIds);
@@ -209,14 +236,14 @@ export function StaysPage({ location }: StaysPageProps) {
           result = nearby;
         }
       } else if (location.type === "city" && location.city) {
-        result = result.filter((s) =>
+        const matched = result.filter((s) =>
           s.location.toLowerCase().includes(location.city!.name.toLowerCase()),
         );
-        if (result.length === 0) result = [...mockStays];
+        if (matched.length > 0) result = matched;
       } else if (location.type === "province" && location.province) {
         const provinceName = location.province.name.toLowerCase().replace("province", "");
-        result = result.filter((s) => s.location.toLowerCase().includes(provinceName));
-        if (result.length === 0) result = [...mockStays];
+        const matched = result.filter((s) => s.location.toLowerCase().includes(provinceName));
+        if (matched.length > 0) result = matched;
       }
     }
 
@@ -252,21 +279,16 @@ export function StaysPage({ location }: StaysPageProps) {
     else if (sortValue === "rating") result.sort((a, b) => b.rating - a.rating);
 
     return result;
-  }, [whereInput, selectedPropertyTypes, drawerFilters, sortValue, location]);
+  }, [stays, whereInput, selectedPropertyTypes, drawerFilters, sortValue, location]);
 
   // Pagination for search results & next database requests
   const PAGE_SIZE = 6;
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
-  // Scroll to top immediately on mount & simulate skeleton loading state
+  // Scroll to top immediately on mount
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 280);
-    return () => clearTimeout(timer);
   }, []);
 
   // Reset pagination when search parameters or filters change

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { useMemo } from "react";
@@ -176,69 +176,78 @@ export function ExperienceCategoryPage({ category, experiences }: ExperienceCate
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {experiences.map((exp) => (
-                <Link
-                  key={exp.id}
-                  href={`/listings/experiences/${exp.id}`}
-                  className="group block rounded-2xl bg-white overflow-hidden transition-all shadow-[0_2px_16px_rgba(0,0,0,0.07)] hover:shadow-[0_8px_32px_rgba(42,27,61,0.14)] ring-1 ring-black/[0.04]"
-                  style={{ WebkitMaskImage: "-webkit-radial-gradient(white, black)" }}
-                >
-                  <div className="relative aspect-[16/10] bg-muted overflow-hidden">
-                    <img
-                      src={exp.image}
-                      alt={exp.name}
-                      loading="lazy"
-                      className="h-full w-full object-cover"
-                    />
-                    <div className="absolute top-3 left-3">
-                      <span className="inline-flex items-center gap-1 bg-[#f2ba0d]/80 text-white text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-md backdrop-blur-sm">
-                        {categoryIcons[exp.category]} {categoryLabels[exp.category]}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-display font-semibold text-[15px] tracking-tight text-[#334155] line-clamp-1 mb-1">
-                      {exp.name}
-                    </h3>
-                    <div className="flex items-center gap-1 text-[13px] text-[#64748B] mb-3">
-                      <MapPin className="h-3.5 w-3.5 text-[#1f1433] shrink-0" />
-                      <span className="line-clamp-1">{exp.location}</span>
-                    </div>
+              {experiences.map((exp: any) => {
+                const img = exp.images?.[0] || exp.image || "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=70";
+                const title = exp.title || exp.name || "Experience";
+                const ratingNum = typeof exp.rating === "number" ? exp.rating : 5.0;
+                const cat = exp.category || "general";
+                const catLabel = categoryLabels[cat as ExperienceCategory] || cat;
+                const catIcon = categoryIcons[cat as ExperienceCategory] || "📍";
 
-                    {/* Duration + Group size chips */}
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      {exp.duration && (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-medium text-[#64748B] bg-[#F9F7F2] px-2 py-1 rounded-full">
-                          <Clock className="h-3 w-3" />
-                          {exp.duration}
-                        </span>
-                      )}
-                      {exp.groupSize && (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-medium text-[#64748B] bg-[#F9F7F2] px-2 py-1 rounded-full">
-                          <Users className="h-3 w-3" />
-                          {exp.groupSize}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Price + Rating */}
-                    <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                      <div className="flex items-baseline gap-0.5">
-                        <span className="text-[15px] font-bold text-[#1f1433]">
-                          ZMW {exp.price}
-                        </span>
-                        <span className="text-[12px] text-[#64748B]">/ person</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Star className="h-3 w-3 fill-[#1f1433] text-[#1f1433]" />
-                        <span className="text-[13px] font-semibold text-[#64748B]">
-                          {exp.rating.toFixed(1)}
+                return (
+                  <Link
+                    key={exp.id}
+                    href={`/listings/experiences/${exp.id}`}
+                    className="group block rounded-2xl bg-white overflow-hidden transition-all shadow-[0_2px_16px_rgba(0,0,0,0.07)] hover:shadow-[0_8px_32px_rgba(42,27,61,0.14)] ring-1 ring-black/[0.04]"
+                    style={{ WebkitMaskImage: "-webkit-radial-gradient(white, black)" }}
+                  >
+                    <div className="relative aspect-[16/10] bg-muted overflow-hidden">
+                      <img
+                        src={img}
+                        alt={title}
+                        loading="lazy"
+                        className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute top-3 left-3">
+                        <span className="inline-flex items-center gap-1 bg-[#f2ba0d]/80 text-white text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-md backdrop-blur-sm">
+                          {catIcon} {catLabel}
                         </span>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+                    <div className="p-4">
+                      <h3 className="font-display font-semibold text-[15px] tracking-tight text-[#334155] line-clamp-1 mb-1">
+                        {title}
+                      </h3>
+                      <div className="flex items-center gap-1 text-[13px] text-[#64748B] mb-3">
+                        <MapPin className="h-3.5 w-3.5 text-[#1f1433] shrink-0" />
+                        <span className="line-clamp-1">{exp.location}</span>
+                      </div>
+
+                      {/* Duration + Group size chips */}
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {exp.duration && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-medium text-[#64748B] bg-[#F9F7F2] px-2 py-1 rounded-full">
+                            <Clock className="h-3 w-3" />
+                            {exp.duration}
+                          </span>
+                        )}
+                        {(exp.groupSize || exp.maxGuests) && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-medium text-[#64748B] bg-[#F9F7F2] px-2 py-1 rounded-full">
+                            <Users className="h-3 w-3" />
+                            {exp.groupSize || `Up to ${exp.maxGuests} guests`}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Price + Rating */}
+                      <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                        <div className="flex items-baseline gap-0.5">
+                          <span className="text-[15px] font-bold text-[#1f1433]">
+                            ZMW {exp.price}
+                          </span>
+                          <span className="text-[12px] text-[#64748B]">/ person</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Star className="h-3 w-3 fill-[#1f1433] text-[#1f1433]" />
+                          <span className="text-[13px] font-semibold text-[#64748B]">
+                            {ratingNum.toFixed(1)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </>
         )}

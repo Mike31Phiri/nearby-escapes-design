@@ -1,12 +1,31 @@
-"use client";
-
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Package, MapPin, Star, Clock, ArrowRight, Sparkles } from "lucide-react";
+import { Package, MapPin, Star, Clock, ArrowRight, Sparkles, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { mockPackages } from "@/lib/mock-data";
+import { fetchExperiences } from "@/lib/api/discovery";
 
 export function PackagesPage() {
+  const [packages, setPackages] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchExperiences({ limit: 20 })
+      .then((items) => {
+        if (isMounted) {
+          setPackages(items);
+          setIsLoading(false);
+        }
+      })
+      .catch(() => {
+        if (isMounted) setIsLoading(false);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-muted font-sans">
       <main className="flex-1">
@@ -31,8 +50,18 @@ export function PackagesPage() {
 
         {/* Content */}
         <div className="mx-auto max-w-6xl px-4 md:px-6 -mt-6 pb-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-            {mockPackages.map((pkg) => (
+          {isLoading ? (
+            <div className="flex items-center justify-center py-20 text-muted-foreground gap-2">
+              <Loader2 className="h-5 w-5 animate-spin text-primary" />
+              <span>Loading packages...</span>
+            </div>
+          ) : packages.length === 0 ? (
+            <div className="text-center py-20 text-muted-foreground">
+              No travel packages currently available.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+              {packages.map((pkg) => (
               <div
                 key={pkg.id}
                 className="group relative rounded-2xl border border-border/50 bg-card shadow-sm card-shadow transition-all hover:shadow-lg"
@@ -88,7 +117,8 @@ export function PackagesPage() {
                 </div>
               </div>
             ))}
-          </div>
+            </div>
+          )}
         </div>
       </main>
     </div>

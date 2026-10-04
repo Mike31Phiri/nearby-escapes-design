@@ -74,7 +74,7 @@ export const searchExperiences = async (
 
 /** Fetch a single experience by ID or slug. */
 export const getExperience = async (idOrSlug: string): Promise<ExperienceListing> => {
-  const { data } = await apiClient.get<ExperienceListing>(`/listings/experiences/${idOrSlug}`);
+  const { data } = await apiClient.get<ExperienceListing>(`/listings/${idOrSlug}`);
   return data;
 };
 

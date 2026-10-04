@@ -45,6 +45,7 @@ import { AuthGuardDialog } from "@/components/guest/auth/AuthGuardDialog";
 import { ReviewSection } from "@/components/guest/reviews/ReviewSection";
 import { cn } from "@/lib/utils";
 import type { Transport } from "@/lib/mock-data";
+import { fetchTransports } from "@/lib/api/discovery";
 import { mockTransport } from "@/lib/mock-data";
 import { mockListingReviews } from "@/lib/mock-listing-reviews";
 import { useInventoryStore } from "@/store/inventoryStore";
@@ -134,6 +135,22 @@ export function TransportDetailPage({
   const inventoryStats = useMemo(() => inventoryCounts(listingInventory), [listingInventory]);
   const availableVehiclesCount = inventoryStats.available;
   const isSoldOut = availableVehiclesCount === 0;
+
+  const [similarRoutes, setSimilarRoutes] = useState<any[]>([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchTransports({ limit: 8 })
+      .then((items) => {
+        if (isMounted && items && items.length > 0) {
+          setSimilarRoutes(items);
+        }
+      })
+      .catch((err) => console.error("Failed to load similar routes:", err));
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Availability & Booking state
   const today = new Date().toISOString().split("T")[0];
@@ -792,38 +809,45 @@ export function TransportDetailPage({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {mockTransport
+            {(similarRoutes.length > 0 ? similarRoutes : mockTransport)
               .filter((t) => t.id !== route.id)
               .slice(0, 4)
-              .map((item) => (
-                <Link
-                  key={item.id}
-                  href={`/transport/${item.id}`}
-                  className="group block bg-white rounded-xl overflow-hidden border border-neutral-200/80 p-2.5 hover:shadow-md transition-shadow"
-                >
-                  <div className="relative aspect-4/3 rounded-lg overflow-hidden mb-2.5 bg-neutral-100">
-                    <img
-                      src={item.image}
-                      alt={`${item.from} to ${item.to}`}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="flex justify-between items-baseline gap-2">
-                    <h3 className="font-medium text-sm text-neutral-900 group-hover:text-purple transition-colors truncate">
-                      {item.from} to {item.to}
-                    </h3>
-                    <div className="flex items-center gap-0.5 text-xs font-medium text-neutral-700 shrink-0">
-                      <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                      <span>4.8</span>
+              .map((item) => {
+                const img = item.images?.[0] || item.image || "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=70";
+                const fromCity = item.fromCity || item.from || "Lusaka";
+                const toCity = item.toCity || item.to || "Livingstone";
+                const operatorName = item.operator || "Express Transport";
+
+                return (
+                  <Link
+                    key={item.id}
+                    href={`/transport/${item.id}`}
+                    className="group block bg-white rounded-xl overflow-hidden border border-neutral-200/80 p-2.5 hover:shadow-md transition-shadow"
+                  >
+                    <div className="relative aspect-4/3 rounded-lg overflow-hidden mb-2.5 bg-neutral-100">
+                      <img
+                        src={img}
+                        alt={`${fromCity} to ${toCity}`}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
                     </div>
-                  </div>
-                  <p className="text-xs font-normal text-neutral-500 mt-0.5">{item.operator}</p>
-                  <p className="text-sm font-semibold text-neutral-900 mt-1">
-                    K{item.price}{" "}
-                    <span className="font-normal text-xs text-neutral-500">/ trip</span>
-                  </p>
-                </Link>
-              ))}
+                    <div className="flex justify-between items-baseline gap-2">
+                      <h3 className="font-medium text-sm text-neutral-900 group-hover:text-purple transition-colors truncate">
+                        {fromCity} to {toCity}
+                      </h3>
+                      <div className="flex items-center gap-0.5 text-xs font-medium text-neutral-700 shrink-0">
+                        <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                        <span>4.8</span>
+                      </div>
+                    </div>
+                    <p className="text-xs font-normal text-neutral-500 mt-0.5">{operatorName}</p>
+                    <p className="text-sm font-semibold text-neutral-900 mt-1">
+                      K{item.price}{" "}
+                      <span className="font-normal text-xs text-neutral-500">/ trip</span>
+                    </p>
+                  </Link>
+                );
+              })}
           </div>
         </section>
       </main>

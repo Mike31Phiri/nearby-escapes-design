@@ -1,19 +1,18 @@
 import { notFound } from "next/navigation";
 import { mockTransport } from "@/lib/mock-data";
+import { fetchTransportById } from "@/lib/api/discovery";
 import { TransportDetailPage } from "@/components/guest/listings/TransportDetailPage";
+
+export const dynamic = "force-dynamic";
 
 interface Props {
   params: Promise<{ id: string }>;
   searchParams: Promise<Record<string, string>>;
 }
 
-export async function generateStaticParams() {
-  return mockTransport.map((t) => ({ id: t.id }));
-}
-
 export async function generateMetadata({ params }: Props) {
   const { id } = await params;
-  const route = mockTransport.find((t) => t.id === id);
+  const route = (await fetchTransportById(id)) || mockTransport.find((t) => t.id === id);
   if (!route) return { title: "Route not found" };
   return {
     title: `${route.from} to ${route.to} Transport — Nearby Escapes`,
@@ -24,7 +23,7 @@ export async function generateMetadata({ params }: Props) {
 export default async function TransportRoutePage({ params, searchParams }: Props) {
   const { id } = await params;
   const sp = await searchParams;
-  const route = mockTransport.find((t) => t.id === id);
+  const route = (await fetchTransportById(id)) || mockTransport.find((t) => t.id === id);
 
   if (!route) notFound();
 

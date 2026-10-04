@@ -1,22 +1,19 @@
 import { notFound } from "next/navigation";
 import { mockExperiences, mockGems, mockPackages } from "@/lib/mock-data";
+import { fetchExperienceById } from "@/lib/api/discovery";
 import { ExperienceDetailPage } from "@/components/guest/listings/ExperienceDetailPage";
+
+export const dynamic = "force-dynamic";
 
 interface Props {
   params: Promise<{ id: string }>;
   searchParams: Promise<Record<string, string>>;
 }
 
-export async function generateStaticParams() {
-  const experiences = mockExperiences.map((e) => ({ id: e.id }));
-  const gems = mockGems.map((g) => ({ id: g.id }));
-  const packages = mockPackages.map((p) => ({ id: p.id }));
-  return [...experiences, ...gems, ...packages];
-}
-
 export async function generateMetadata({ params }: Props) {
   const { id } = await params;
   const item =
+    (await fetchExperienceById(id)) ||
     mockExperiences.find((e) => e.id === id) ||
     mockGems.find((g) => g.id === id) ||
     mockPackages.find((p) => p.id === id);
@@ -34,6 +31,7 @@ export default async function ExperienceRoutePage({ params, searchParams }: Prop
   const sp = await searchParams;
 
   const item =
+    (await fetchExperienceById(id)) ||
     mockExperiences.find((e) => e.id === id) ||
     mockGems.find((g) => g.id === id) ||
     mockPackages.find((p) => p.id === id);

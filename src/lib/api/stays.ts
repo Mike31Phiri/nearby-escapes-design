@@ -83,7 +83,7 @@ export const searchStays = async (query: StaySearchQuery): Promise<StaySearchRes
 
 /** Fetch a single stay listing by ID or slug. */
 export const getStay = async (idOrSlug: string): Promise<StayListing> => {
-  const { data } = await apiClient.get<StayListing>(`/listings/stays/${idOrSlug}`);
+  const { data } = await apiClient.get<StayListing>(`/listings/${idOrSlug}`);
   return data;
 };
 

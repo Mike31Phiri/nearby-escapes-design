@@ -20,7 +20,8 @@ import {
   Loader2,
   CheckCircle2,
 } from "lucide-react";
-import { mockTransport } from "@/lib/mock-data";
+import type { Transport } from "@/lib/mock-data";
+import { fetchTransports } from "@/lib/api/discovery";
 import { TransportCard } from "@/components/shared/ListingCards";
 import { SearchListingSkeleton } from "@/components/shared/SearchListingSkeleton";
 import {
@@ -146,6 +147,32 @@ export function TransportPage() {
     }
   }, [passengersParam]);
 
+  // Live Backend Data
+  const [transports, setTransports] = useState<Transport[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    setIsLoading(true);
+    fetchTransports({ q: (goingTo || leavingFrom || qParam || "").trim() || undefined })
+      .then((data) => {
+        if (isMounted) {
+          setTransports(data);
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error("fetchTransports error:", err);
+        if (isMounted) {
+          setTransports([]);
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [leavingFrom, goingTo, qParam]);
+
   const toggleVehicleType = (type: string) => {
     setSelectedVehicleTypes((prev) => (prev.includes(type) ? [] : [type]));
   };
@@ -160,20 +187,20 @@ export function TransportPage() {
   };
 
   const filteredTransport = useMemo(() => {
-    let result = [...mockTransport];
+    let result = [...transports];
 
     const f = leavingFrom.trim().toLowerCase();
     const t = goingTo.trim().toLowerCase();
 
     if (f || t) {
-      result = result.filter((item) => {
+      const matched = result.filter((item) => {
         const matchFrom = !f || item.from.toLowerCase().includes(f);
         const matchTo = !t || item.to.toLowerCase().includes(t);
         return matchFrom && matchTo;
       });
-      if (result.length === 0) result = [...mockTransport];
+      if (matched.length > 0) result = matched;
     } else if (fromParam || toParam || qParam) {
-      result = result.filter((item) => {
+      const matched = result.filter((item) => {
         const text = `${item.from} ${item.to} ${item.operator}`.toLowerCase();
         return (
           (!fromParam || item.from.toLowerCase().includes(fromParam.toLowerCase())) &&
@@ -181,20 +208,19 @@ export function TransportPage() {
           (!qParam || text.includes(qParam.toLowerCase()))
         );
       });
-      if (result.length === 0) result = [...mockTransport];
+      if (matched.length > 0) result = matched;
     }
 
     if (selectedVehicleTypes.length > 0) {
       result = result.filter((item) => {
         const isPrivate =
           item.operator.toLowerCase().includes("tour") ||
-          item.operator.toLowerCase().includes("transfer");
-        const isMinivan = item.id === "t3";
+          item.operator.toLowerCase().includes("transfer") ||
+          item.operator.toLowerCase().includes("safari");
+        const isMinivan = item.id.includes("mini") || item.operator.toLowerCase().includes("van");
         const vType = isPrivate ? "private" : isMinivan ? "minivan" : "bus";
         return selectedVehicleTypes.some((type) => {
-          // Seat estimates mirror the capacity labels shown on TransportCard.
-          const seats = isPrivate ? 4 : isMinivan ? 8 : 40;
-          if (type === "popular") return seats <= 14;
+          if (type === "popular") return true;
           if (type === "unique") return isPrivate || isMinivan;
           return type === vType;
         });
@@ -208,7 +234,7 @@ export function TransportPage() {
     else if (sortValue === "price_desc") result.sort((a, b) => b.price - a.price);
 
     return result;
-  }, [leavingFrom, goingTo, selectedVehicleTypes, drawerFilters, sortValue, fromParam, toParam, qParam]);
+  }, [transports, leavingFrom, goingTo, selectedVehicleTypes, drawerFilters, sortValue, fromParam, toParam, qParam]);
 
   const chips = useMemo(() => {
     const c: { label: string; onRemove: () => void }[] = [];
@@ -239,15 +265,10 @@ export function TransportPage() {
   const PAGE_SIZE = 6;
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
-  // Scroll to top immediately on mount & simulate skeleton loading state
+  // Scroll to top immediately on mount
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 280);
-    return () => clearTimeout(timer);
   }, []);
 
   // Reset pagination when search parameters or filters change
