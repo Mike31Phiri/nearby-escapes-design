@@ -157,7 +157,7 @@ export function SearchBar({
           ? `–${dateRange.checkOut.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}`
           : ""
       }`
-    : "Add dates";
+    : "Dates";
 
   return (
     <form
@@ -257,9 +257,17 @@ export function SearchBar({
                     setDateRange(r);
                     notifyChange({ dates: r });
                   }}
+                  placeholder="Dates"
                   variant="compact"
                 >
-                  <span className="text-[13px] text-neutral-800 truncate block cursor-pointer font-semibold">
+                  <span
+                    className={cn(
+                      "text-[13px] truncate block cursor-pointer select-none",
+                      dateLabel === "Dates"
+                        ? "text-neutral-400 font-medium"
+                        : "text-neutral-900 font-semibold",
+                    )}
+                  >
                     {dateLabel}
                   </span>
                 </DateRangePicker>
@@ -305,17 +313,18 @@ export function SearchBar({
                     setDateRange(r);
                     notifyChange({ dates: r });
                   }}
+                  placeholder="Dates"
                   variant="compact"
                 >
                   <span
                     className={cn(
-                      "text-xs truncate block cursor-pointer transition-colors",
-                      dateLabel === "Add dates"
+                      "text-xs truncate block cursor-pointer transition-colors select-none",
+                      dateLabel === "Dates"
                         ? "text-neutral-400 font-medium"
                         : "text-neutral-900 font-semibold",
                     )}
                   >
-                    {dateLabel === "Add dates" ? "When?" : dateLabel}
+                    {dateLabel}
                   </span>
                 </DateRangePicker>
               </div>
@@ -394,6 +403,7 @@ export function SearchBar({
                     setDateRange(r);
                     notifyChange({ dates: r });
                   }}
+                  placeholder="Dates"
                   variant="compact"
                 />
               </div>
@@ -455,6 +465,7 @@ export function SearchBar({
                     setDateRange(r);
                     notifyChange({ dates: r });
                   }}
+                  placeholder="Dates"
                   variant="compact"
                 />
               </div>

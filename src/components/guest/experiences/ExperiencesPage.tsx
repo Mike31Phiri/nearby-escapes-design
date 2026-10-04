@@ -363,52 +363,56 @@ export function ExperiencesPage() {
         </div>
       </div>
 
-      {/* STICKY FILTER BAR (Filters button + Category pills) */}
+      {/* STICKY FILTER BAR (Pinned Filters button + Scrolling Category pills) */}
       <div className="sticky top-[64px] z-20 bg-white border-b border-neutral-200 shadow-xs">
         <div className="max-w-[1400px] mx-auto px-3 md:px-6">
-          <div
-            className="flex items-center gap-1.5 py-2.5 overflow-x-auto scrollbar-none"
-            style={{ scrollbarWidth: "none" }}
-          >
-            {/* Filters Button */}
-            <button
-              onClick={() => setFiltersOpen(true)}
-              className={cn(
-                "flex-none flex items-center gap-2 border rounded-full px-5 py-2 text-sm font-medium transition-all duration-150 active:scale-95 whitespace-nowrap shadow-2xs",
-                chips.length > 0
-                  ? "bg-purple/10 border-purple text-purple hover:bg-purple/15"
-                  : "bg-white border-neutral-300 text-neutral-800 hover:border-neutral-400 hover:bg-neutral-50",
-              )}
-            >
-              <SlidersHorizontal className="h-4 w-4 shrink-0" />
-              <span>Filters</span>
-              {chips.length > 0 && (
-                <span className="flex items-center justify-center bg-purple text-white text-[11px] font-medium h-4.5 min-w-[18px] px-1 rounded-full leading-none">
-                  {chips.length}
-                </span>
-              )}
-            </button>
-
-            <div className="h-5 w-px bg-neutral-200 flex-none" />
-
-            {/* Category Pills (Clean Text Only) */}
-            {CATEGORY_PILLS.map((item) => {
-              const active = selectedCategories.includes(item.cat);
-              return (
-                <button
-                  key={item.cat}
-                  onClick={() => toggleCategory(item.cat)}
-                  className={cn(
-                    "flex-none whitespace-nowrap px-5 py-2 rounded-full border text-sm transition-all duration-150 active:scale-95 select-none font-medium cursor-pointer",
-                    active
-                      ? "bg-purple text-white border-purple shadow-xs"
-                      : "bg-white border-neutral-200 text-neutral-600 hover:border-purple/50 hover:text-purple hover:bg-purple/[0.03]",
+          <div className="flex items-center py-2.5 relative">
+            {/* Pinned Static Filters Button */}
+            <div className="flex-none flex items-center pr-3 z-10 bg-white">
+              <button
+                type="button"
+                onClick={() => setFiltersOpen(true)}
+                className={cn(
+                  "flex items-center gap-2 border rounded-full px-4 sm:px-5 py-2 text-sm font-medium transition-all duration-150 active:scale-95 whitespace-nowrap shadow-2xs cursor-pointer",
+                  chips.length > 0
+                    ? "bg-purple/10 border-purple text-purple hover:bg-purple/15"
+                    : "bg-white border-neutral-300 text-neutral-800 hover:border-neutral-400 hover:bg-neutral-50",
+                )}
+              >
+                <div className="relative flex items-center">
+                  <SlidersHorizontal className="h-4 w-4 shrink-0" />
+                  {chips.length > 0 && (
+                    <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-purple ring-2 ring-white" />
                   )}
-                >
-                  {item.label}
-                </button>
-              );
-            })}
+                </div>
+                <span>Filters</span>
+              </button>
+              <div className="h-5 w-px bg-neutral-200 ml-3 shrink-0" />
+            </div>
+
+            {/* Scrolling Category Pills */}
+            <div
+              className="flex-1 flex items-center gap-2.5 overflow-x-auto scrollbar-none pl-1 py-0.5"
+              style={{ scrollbarWidth: "none" }}
+            >
+              {CATEGORY_PILLS.map((item) => {
+                const active = selectedCategories.includes(item.cat);
+                return (
+                  <button
+                    key={item.cat}
+                    onClick={() => toggleCategory(item.cat)}
+                    className={cn(
+                      "flex-none whitespace-nowrap px-5 py-2 rounded-full border text-sm transition-all duration-150 active:scale-95 select-none font-medium cursor-pointer",
+                      active
+                        ? "bg-purple text-white border-purple shadow-xs"
+                        : "bg-white border-neutral-200 text-neutral-600 hover:border-purple/50 hover:text-purple hover:bg-purple/[0.03]",
+                    )}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
@@ -441,9 +445,6 @@ export function ExperiencesPage() {
             </div>
           </div>
         </div>
-
-        {/* Active filter chips */}
-        <FilterChips chips={chips} onClearAll={handleResetAll} />
 
         {/* Cards grid: 3 larger columns */}
         {isLoading ? (
