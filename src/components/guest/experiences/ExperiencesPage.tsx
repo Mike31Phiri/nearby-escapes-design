@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { SearchBar } from "@/components/shared/SearchBar";
+import { serializeDates, deserializeDates, type DateRange } from "@/components/ui/DateRangePicker";
 import {
   Compass,
   Star,
@@ -140,12 +142,15 @@ function matchGroupSize(expGroupSize: string | undefined, filter: string): boole
 
 // Main Page
 export function ExperiencesPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const province = searchParams.get("province") ?? "";
   const city = searchParams.get("city") ?? "";
   const attraction = searchParams.get("attraction") ?? "";
   const q = searchParams.get("q") ?? "";
   const catParam = searchParams.get("cat") ?? searchParams.get("category") ?? "";
+  const datesParam = searchParams.get("dates") ?? "";
+  const guestsParam = searchParams.get("guests") ?? "";
 
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     catParam ? [catParam] : [],
@@ -155,17 +160,27 @@ export function ExperiencesPage() {
   const [sortValue, setSortValue] = useState("recommended");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
-  useEffect(() => {
-    if (catParam) {
-      setSelectedCategories([catParam]);
-    }
-  }, [catParam]);
-
   // Harmonized Search Inputs: Where, When, Guests
   const initialWhere = city || province || attraction || q || "";
   const [whereInput, setWhereInput] = useState(initialWhere);
-  const [whenInput, setWhenInput] = useState("");
-  const [groupSizeInput, setGroupSizeInput] = useState(2);
+  const [dateRange, setDateRange] = useState<DateRange>(() =>
+    datesParam ? deserializeDates(datesParam) : { checkIn: null, checkOut: null },
+  );
+  const [groupSizeInput, setGroupSizeInput] = useState<number>(() =>
+    guestsParam ? Math.max(1, Number(guestsParam) || 2) : 2,
+  );
+
+  useEffect(() => {
+    if (datesParam) {
+      setDateRange(deserializeDates(datesParam));
+    }
+  }, [datesParam]);
+
+  useEffect(() => {
+    if (guestsParam) {
+      setGroupSizeInput(Math.max(1, Number(guestsParam) || 2));
+    }
+  }, [guestsParam]);
 
   const toggleCategory = (cat: string) => {
     setSelectedCategories((prev) => (prev.includes(cat) ? [] : [cat]));
@@ -318,123 +333,32 @@ export function ExperiencesPage() {
       {/* SEARCH HEADER SECTION */}
       <div className="bg-white border-b border-neutral-100 py-3.5">
         <div className="max-w-[1400px] mx-auto px-3 md:px-6">
-          {/* Search Bar — compact inline row on mobile, full grid on desktop */}
-          <div className="max-w-4xl mx-auto">
-            {/* MOBILE (< md): single pill-row */}
-            <div className="grid md:hidden grid-cols-[1fr_auto_1fr_auto] items-center bg-white border border-neutral-200 shadow-[0_4px_20px_rgba(31,20,51,0.08)] rounded-full pl-3.5 pr-1.5 py-1.5 min-h-[48px] gap-1.5">
-              {/* Where (1fr equal column) */}
-              <div className="flex items-center gap-1.5 min-w-0 px-1">
-                <MapPin className="h-4 w-4 text-neutral-400 shrink-0" strokeWidth={1.8} />
-                <input
-                  type="text"
-                  value={whereInput}
-                  onChange={(e) => setWhereInput(e.target.value)}
-                  placeholder="Where to?"
-                  className="w-full bg-transparent text-xs font-medium text-neutral-700 focus:outline-none placeholder:text-neutral-400 truncate"
-                />
-              </div>
-
-              {/* Middle Divider (Centered at exact midpoint) */}
-              <div className="h-5 w-px bg-neutral-200 shrink-0" />
-
-              {/* When (1fr equal column) */}
-              <div className="flex items-center gap-1.5 min-w-0 px-1">
-                <CalendarDays className="h-4 w-4 text-neutral-400 shrink-0" strokeWidth={1.8} />
-                <input
-                  type="date"
-                  value={whenInput}
-                  onChange={(e) => setWhenInput(e.target.value)}
-                  className="w-full bg-transparent text-xs font-medium text-neutral-700 focus:outline-none cursor-pointer placeholder:text-neutral-400"
-                />
-              </div>
-
-              {/* Search button (unshrinked) */}
-              <button
-                type="button"
-                className="bg-neutral-900 text-white rounded-full h-9 w-9 hover:bg-neutral-800 transition-colors shrink-0 flex items-center justify-center shadow-xs active:scale-95 cursor-pointer ml-0.5"
-                aria-label="Search"
-              >
-                <Search className="h-4 w-4" strokeWidth={2.5} />
-              </button>
-            </div>
-
-            {/* DESKTOP (md+): full grid */}
-            <div className="hidden md:grid md:grid-cols-12 bg-white border border-neutral-200 shadow-sm rounded-2xl p-1.5 gap-1.5">
-              {/* WHERE */}
-              <div className="md:col-span-4 bg-neutral-50/80 hover:bg-neutral-50 border border-neutral-100 rounded-xl px-3 py-1.5 transition-colors flex flex-col justify-center">
-                <p className="text-[9px] font-medium uppercase tracking-wider text-neutral-500 leading-none mb-1">
-                  Where
-                </p>
-                <div className="flex items-center gap-1.5">
-                  <MapPin className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
-                  <input
-                    type="text"
-                    value={whereInput}
-                    onChange={(e) => setWhereInput(e.target.value)}
-                    placeholder="Destination, activity, or tour"
-                    className="w-full bg-transparent text-xs font-medium text-neutral-800 focus:outline-none placeholder:text-neutral-400 truncate"
-                  />
-                </div>
-              </div>
-
-              {/* WHEN */}
-              <div className="md:col-span-3 bg-neutral-50/80 hover:bg-neutral-50 border border-neutral-100 rounded-xl px-3 py-1.5 transition-colors flex flex-col justify-center">
-                <p className="text-[9px] font-medium uppercase tracking-wider text-neutral-500 leading-none mb-1">
-                  When
-                </p>
-                <div className="flex items-center gap-1.5">
-                  <CalendarDays className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
-                  <input
-                    type="date"
-                    value={whenInput}
-                    onChange={(e) => setWhenInput(e.target.value)}
-                    className="w-full bg-transparent text-xs font-medium text-neutral-800 focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* GUESTS */}
-              <div className="md:col-span-3 bg-neutral-50/80 hover:bg-neutral-50 border border-neutral-100 rounded-xl px-3 py-1.5 transition-colors flex flex-col justify-center">
-                <p className="text-[9px] font-medium uppercase tracking-wider text-neutral-500 leading-none mb-1">
-                  Guests
-                </p>
-                <div className="flex items-center justify-between gap-1">
-                  <div className="flex items-center gap-1 shrink-0">
-                    <Users className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
-                    <span className="text-xs font-medium text-neutral-800">
-                      {groupSizeInput} {groupSizeInput === 1 ? "Person" : "People"}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => setGroupSizeInput((g) => Math.max(1, g - 1))}
-                      className="h-4 w-4 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 hover:border-purple hover:text-purple text-[10px] font-bold"
-                    >
-                      −
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setGroupSizeInput((g) => g + 1)}
-                      className="h-4 w-4 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 hover:border-purple hover:text-purple text-[10px] font-bold"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* SEARCH BUTTON */}
-              <div className="md:col-span-2 flex items-center">
-                <Button
-                  type="button"
-                  className="w-full h-full min-h-[38px] bg-purple hover:bg-purple-hover text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center gap-1.5 transition-colors"
-                >
-                  <Search className="h-3.5 w-3.5" />
-                  Search
-                </Button>
-              </div>
-            </div>
+          {/* Search Bar — identical floating pill capsule to Home Page */}
+          <div className="max-w-md sm:max-w-2xl lg:max-w-3xl mx-auto">
+            <SearchBar
+              activeCategory="experiences"
+              initialDestination={whereInput}
+              initialDates={dateRange}
+              initialGuests={groupSizeInput}
+              onChange={(st) => {
+                setWhereInput(st.destination);
+                setDateRange(st.dates);
+                setGroupSizeInput(st.guests);
+              }}
+              onSearch={(term, dates, g) => {
+                setWhereInput(term);
+                setDateRange(dates);
+                setGroupSizeInput(g);
+                const params = new URLSearchParams(searchParams.toString());
+                if (term) params.set("q", term);
+                else params.delete("q");
+                const dStr = serializeDates(dates);
+                if (dStr) params.set("dates", dStr);
+                else params.delete("dates");
+                params.set("guests", String(g));
+                router.replace(`/experiences?${params.toString()}`, { scroll: false });
+              }}
+            />
           </div>
         </div>
       </div>

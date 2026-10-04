@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
+import { SearchBar } from "@/components/shared/SearchBar";
+import { serializeDates, deserializeDates, type DateRange } from "@/components/ui/DateRangePicker";
 import {
   Bus,
   Clock,
@@ -89,10 +91,14 @@ const SORT_OPTIONS = [
 
 // Main Page
 export function TransportPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const fromParam = searchParams.get("from") ?? "";
   const toParam = searchParams.get("to") ?? "";
   const qParam = searchParams.get("q") ?? "";
+  const tripParam = (searchParams.get("trip") as "one_way" | "round_trip" | null) ?? "one_way";
+  const datesParam = searchParams.get("dates") ?? "";
+  const passengersParam = searchParams.get("passengers") || searchParams.get("guests") || "";
 
   const [selectedVehicleTypes, setSelectedVehicleTypes] = useState<string[]>([]);
   const [drawerFilters, setDrawerFilters] = useState<Record<string, any>>(DEFAULT_DRAWER_FILTERS);
@@ -100,12 +106,45 @@ export function TransportPage() {
   const [sortValue, setSortValue] = useState("recommended");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
-  // Harmonized Search Inputs: Where, When, Passengers
-  const initialWhere =
-    fromParam && toParam ? `${fromParam} to ${toParam}` : fromParam || toParam || qParam || "";
-  const [whereInput, setWhereInput] = useState(initialWhere);
-  const [whenInput, setWhenInput] = useState("");
-  const [passengers, setPassengers] = useState(1);
+  // Search state matching SearchBar inputs: Leaving from, Going to, Dates, Passengers, Trip Type
+  const [leavingFrom, setLeavingFrom] = useState(fromParam);
+  const [goingTo, setGoingTo] = useState(toParam || qParam);
+  const [tripType, setTripType] = useState<"one_way" | "round_trip">(
+    tripParam === "round_trip" ? "round_trip" : "one_way",
+  );
+  const [dateRange, setDateRange] = useState<DateRange>(() =>
+    datesParam ? deserializeDates(datesParam) : { checkIn: null, checkOut: null },
+  );
+  const [passengers, setPassengers] = useState<number>(() =>
+    passengersParam ? Math.max(1, Number(passengersParam) || 1) : 1,
+  );
+
+  // Synchronize when searchParams update
+  useEffect(() => {
+    setLeavingFrom(fromParam);
+  }, [fromParam]);
+
+  useEffect(() => {
+    setGoingTo(toParam || qParam);
+  }, [toParam, qParam]);
+
+  useEffect(() => {
+    if (tripParam) {
+      setTripType(tripParam === "round_trip" ? "round_trip" : "one_way");
+    }
+  }, [tripParam]);
+
+  useEffect(() => {
+    if (datesParam) {
+      setDateRange(deserializeDates(datesParam));
+    }
+  }, [datesParam]);
+
+  useEffect(() => {
+    if (passengersParam) {
+      setPassengers(Math.max(1, Number(passengersParam) || 1));
+    }
+  }, [passengersParam]);
 
   const toggleVehicleType = (type: string) => {
     setSelectedVehicleTypes((prev) => (prev.includes(type) ? [] : [type]));
@@ -123,21 +162,22 @@ export function TransportPage() {
   const filteredTransport = useMemo(() => {
     let result = [...mockTransport];
 
-    if (whereInput.trim()) {
-      const q = whereInput.toLowerCase();
-      result = result.filter(
-        (t) =>
-          t.from.toLowerCase().includes(q) ||
-          t.to.toLowerCase().includes(q) ||
-          t.operator.toLowerCase().includes(q),
-      );
+    const f = leavingFrom.trim().toLowerCase();
+    const t = goingTo.trim().toLowerCase();
+
+    if (f || t) {
+      result = result.filter((item) => {
+        const matchFrom = !f || item.from.toLowerCase().includes(f);
+        const matchTo = !t || item.to.toLowerCase().includes(t);
+        return matchFrom && matchTo;
+      });
       if (result.length === 0) result = [...mockTransport];
     } else if (fromParam || toParam || qParam) {
-      result = result.filter((t) => {
-        const text = `${t.from} ${t.to} ${t.operator}`.toLowerCase();
+      result = result.filter((item) => {
+        const text = `${item.from} ${item.to} ${item.operator}`.toLowerCase();
         return (
-          (!fromParam || t.from.toLowerCase().includes(fromParam.toLowerCase())) &&
-          (!toParam || t.to.toLowerCase().includes(toParam.toLowerCase())) &&
+          (!fromParam || item.from.toLowerCase().includes(fromParam.toLowerCase())) &&
+          (!toParam || item.to.toLowerCase().includes(toParam.toLowerCase())) &&
           (!qParam || text.includes(qParam.toLowerCase()))
         );
       });
@@ -145,11 +185,11 @@ export function TransportPage() {
     }
 
     if (selectedVehicleTypes.length > 0) {
-      result = result.filter((t) => {
+      result = result.filter((item) => {
         const isPrivate =
-          t.operator.toLowerCase().includes("tour") ||
-          t.operator.toLowerCase().includes("transfer");
-        const isMinivan = t.id === "t3";
+          item.operator.toLowerCase().includes("tour") ||
+          item.operator.toLowerCase().includes("transfer");
+        const isMinivan = item.id === "t3";
         const vType = isPrivate ? "private" : isMinivan ? "minivan" : "bus";
         return selectedVehicleTypes.some((type) => {
           // Seat estimates mirror the capacity labels shown on TransportCard.
@@ -162,13 +202,13 @@ export function TransportPage() {
     }
 
     const pr = drawerFilters.priceRange;
-    if (pr) result = result.filter((t) => t.price >= pr.min && t.price <= pr.max);
+    if (pr) result = result.filter((item) => item.price >= pr.min && item.price <= pr.max);
 
     if (sortValue === "price_asc") result.sort((a, b) => a.price - b.price);
     else if (sortValue === "price_desc") result.sort((a, b) => b.price - a.price);
 
     return result;
-  }, [whereInput, selectedVehicleTypes, drawerFilters, sortValue, fromParam, toParam, qParam]);
+  }, [leavingFrom, goingTo, selectedVehicleTypes, drawerFilters, sortValue, fromParam, toParam, qParam]);
 
   const chips = useMemo(() => {
     const c: { label: string; onRemove: () => void }[] = [];
@@ -184,13 +224,16 @@ export function TransportPage() {
   }, [selectedVehicleTypes, drawerFilters]);
 
   const dynamicTitle = useMemo(() => {
+    if (leavingFrom && goingTo) {
+      return `Transport & Rides from ${leavingFrom} to ${goingTo}`;
+    }
     if (fromParam && toParam) {
       return `Transport & Rides from ${fromParam} to ${toParam}`;
     }
-    const raw = qParam || fromParam || toParam || "Zambia";
+    const raw = goingTo || leavingFrom || qParam || fromParam || toParam || "Zambia";
     const area = raw.charAt(0).toUpperCase() + raw.slice(1);
     return `Transport & Rides in ${area}`;
-  }, [qParam, fromParam, toParam]);
+  }, [leavingFrom, goingTo, qParam, fromParam, toParam]);
 
   // Pagination for search results & next database requests
   const PAGE_SIZE = 6;
@@ -210,7 +253,7 @@ export function TransportPage() {
   // Reset pagination when search parameters or filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [whereInput, selectedVehicleTypes, drawerFilters, fromParam, toParam, qParam]);
+  }, [leavingFrom, goingTo, selectedVehicleTypes, drawerFilters, fromParam, toParam, qParam]);
 
   const totalCount = filteredTransport.length;
   const visibleTransport = useMemo(() => {
@@ -234,123 +277,46 @@ export function TransportPage() {
       {/* SEARCH HEADER SECTION */}
       <div className="bg-white border-b border-neutral-100 py-3.5">
         <div className="max-w-[1400px] mx-auto px-3 md:px-6">
-          {/* Search Bar — compact inline row on mobile, full grid on desktop */}
-          <div className="max-w-4xl mx-auto">
-            {/* MOBILE (< md): single pill-row */}
-            <div className="grid md:hidden grid-cols-[1fr_auto_1fr_auto] items-center bg-white border border-neutral-200 shadow-[0_4px_20px_rgba(31,20,51,0.08)] rounded-full pl-3.5 pr-1.5 py-1.5 min-h-[48px] gap-1.5">
-              {/* Where (1fr equal column) */}
-              <div className="flex items-center gap-1.5 min-w-0 px-1">
-                <MapPin className="h-4 w-4 text-neutral-400 shrink-0" strokeWidth={1.8} />
-                <input
-                  type="text"
-                  value={whereInput}
-                  onChange={(e) => setWhereInput(e.target.value)}
-                  placeholder="Where to?"
-                  className="w-full bg-transparent text-xs font-medium text-neutral-700 focus:outline-none placeholder:text-neutral-400 truncate"
-                />
-              </div>
+          {/* Search Bar — identical floating pill capsule to Home Page */}
+          <div className="max-w-md sm:max-w-2xl lg:max-w-3xl mx-auto">
+            <SearchBar
+              activeCategory="transport"
+              initialLeavingFrom={leavingFrom}
+              initialGoingTo={goingTo}
+              initialTripType={tripType}
+              initialDates={dateRange}
+              initialGuests={passengers}
+              onChange={(st) => {
+                if (st.leavingFrom !== undefined) setLeavingFrom(st.leavingFrom);
+                if (st.goingTo !== undefined) setGoingTo(st.goingTo);
+                if (st.tripType) setTripType(st.tripType);
+                setDateRange(st.dates);
+                setPassengers(st.guests);
+              }}
+              onSearch={(_term, dates, g, extra) => {
+                const nextFrom = extra?.leavingFrom !== undefined ? extra.leavingFrom : leavingFrom;
+                const nextTo = extra?.goingTo !== undefined ? extra.goingTo : goingTo;
+                const nextTrip = extra?.tripType || tripType;
+                setLeavingFrom(nextFrom);
+                setGoingTo(nextTo);
+                setTripType(nextTrip);
+                setDateRange(dates);
+                setPassengers(g);
 
-              {/* Middle Divider (Centered at exact midpoint) */}
-              <div className="h-5 w-px bg-neutral-200 shrink-0" />
+                const params = new URLSearchParams(searchParams.toString());
+                if (nextFrom) params.set("from", nextFrom);
+                else params.delete("from");
+                if (nextTo) params.set("to", nextTo);
+                else params.delete("to");
+                params.set("trip", nextTrip);
+                const dStr = serializeDates(dates);
+                if (dStr) params.set("dates", dStr);
+                else params.delete("dates");
+                params.set("guests", String(g));
 
-              {/* When (1fr equal column) */}
-              <div className="flex items-center gap-1.5 min-w-0 px-1">
-                <CalendarDays className="h-4 w-4 text-neutral-400 shrink-0" strokeWidth={1.8} />
-                <input
-                  type="date"
-                  value={whenInput}
-                  onChange={(e) => setWhenInput(e.target.value)}
-                  className="w-full bg-transparent text-xs font-medium text-neutral-700 focus:outline-none cursor-pointer placeholder:text-neutral-400"
-                />
-              </div>
-
-              {/* Search button (unshrinked) */}
-              <button
-                type="button"
-                className="bg-neutral-900 text-white rounded-full h-9 w-9 hover:bg-neutral-800 transition-colors shrink-0 flex items-center justify-center shadow-xs active:scale-95 cursor-pointer ml-0.5"
-                aria-label="Search"
-              >
-                <Search className="h-4 w-4" strokeWidth={2.5} />
-              </button>
-            </div>
-
-            {/* DESKTOP (md+): full grid */}
-            <div className="hidden md:grid md:grid-cols-12 bg-white border border-neutral-200 shadow-sm rounded-2xl p-1.5 gap-1.5">
-              {/* WHERE */}
-              <div className="md:col-span-4 bg-neutral-50/80 hover:bg-neutral-50 border border-neutral-100 rounded-xl px-3 py-1.5 transition-colors flex flex-col justify-center">
-                <p className="text-[9px] font-medium uppercase tracking-wider text-neutral-500 leading-none mb-1">
-                  Where
-                </p>
-                <div className="flex items-center gap-1.5">
-                  <MapPin className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
-                  <input
-                    type="text"
-                    value={whereInput}
-                    onChange={(e) => setWhereInput(e.target.value)}
-                    placeholder="Origin or destination city"
-                    className="w-full bg-transparent text-xs font-medium text-neutral-800 focus:outline-none placeholder:text-neutral-400 truncate"
-                  />
-                </div>
-              </div>
-
-              {/* WHEN */}
-              <div className="md:col-span-3 bg-neutral-50/80 hover:bg-neutral-50 border border-neutral-100 rounded-xl px-3 py-1.5 transition-colors flex flex-col justify-center">
-                <p className="text-[9px] font-medium uppercase tracking-wider text-neutral-500 leading-none mb-1">
-                  When
-                </p>
-                <div className="flex items-center gap-1.5">
-                  <CalendarDays className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
-                  <input
-                    type="date"
-                    value={whenInput}
-                    onChange={(e) => setWhenInput(e.target.value)}
-                    className="w-full bg-transparent text-xs font-medium text-neutral-800 focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* PASSENGERS */}
-              <div className="md:col-span-3 bg-neutral-50/80 hover:bg-neutral-50 border border-neutral-100 rounded-xl px-3 py-1.5 transition-colors flex flex-col justify-center">
-                <p className="text-[9px] font-medium uppercase tracking-wider text-neutral-500 leading-none mb-1">
-                  Passengers
-                </p>
-                <div className="flex items-center justify-between gap-1">
-                  <div className="flex items-center gap-1 shrink-0">
-                    <Users className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
-                    <span className="text-xs font-medium text-neutral-800">
-                      {passengers} {passengers === 1 ? "Passenger" : "Passengers"}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => setPassengers((p) => Math.max(1, p - 1))}
-                      className="h-4 w-4 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 hover:border-purple hover:text-purple text-[10px] font-bold"
-                    >
-                      −
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setPassengers((p) => p + 1)}
-                      className="h-4 w-4 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 hover:border-purple hover:text-purple text-[10px] font-bold"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* SEARCH BUTTON */}
-              <div className="md:col-span-2 flex items-center">
-                <Button
-                  type="button"
-                  className="w-full h-full min-h-[38px] bg-purple hover:bg-purple-hover text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center gap-1.5 transition-colors"
-                >
-                  <Search className="h-3.5 w-3.5" />
-                  Search
-                </Button>
-              </div>
-            </div>
+                router.replace(`/transport?${params.toString()}`, { scroll: false });
+              }}
+            />
           </div>
         </div>
       </div>
