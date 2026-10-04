@@ -264,21 +264,30 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
     receiveSms: true,
   });
 
-  // Payment Options
-  const [paymentMethod, setPaymentMethod] = useState<"card" | "momo" | "dpo">("card");
-  const [cardInfo, setCardInfo] = useState({
-    number: "",
-    expiry: "",
-    cvv: "",
-    name: "",
-    postal: "",
-  });
-  const [momoProvider, setMomoProvider] = useState<"airtel" | "mtn" | "zamtel">("airtel");
-  const [momoPhone, setMomoPhone] = useState(savedPhone || "");
+  // DPO Payment Options
+  const [dpoIframeUrl, setDpoIframeUrl] = useState<string | null>(null);
+  const [dpoBookingRef, setDpoBookingRef] = useState<string | null>(null);
   const [promoCode, setPromoCode] = useState("");
   const [promoApplied, setPromoApplied] = useState(false);
   const [promoDiscount, setPromoDiscount] = useState(0);
   const [showPromoInput, setShowPromoInput] = useState(false);
+
+  // Listen for DPO iframe postMessage events
+  useEffect(() => {
+    const handleDpoMessage = (event: MessageEvent) => {
+      if (event.data?.type === "DPO_PAYMENT_SUCCESS") {
+        const ref = event.data.ref || dpoBookingRef;
+        if (ref) {
+          toast.success("Payment confirmed by DPO! Finalizing booking...");
+          setTimeout(() => {
+            router.push(`/checkout/confirmation?ref=${encodeURIComponent(ref)}&status=success`);
+          }, 500);
+        }
+      }
+    };
+    window.addEventListener("message", handleDpoMessage);
+    return () => window.removeEventListener("message", handleDpoMessage);
+  }, [dpoBookingRef, router]);
 
   // Price Calculation
   const priceBreakdown = useMemo(() => {
@@ -591,8 +600,16 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
         console.warn("Could not decrement inventory unit:", e);
       }
 
-      // Redirect to confirmation or payment url
-      window.location.href = result.paymentUrl;
+      // Mount DPO Pay iframe in Section 3
+      setDpoIframeUrl(result.paymentUrl);
+      setDpoBookingRef(bookingRef);
+      setIsSubmitting(false);
+      toast.success("DPO Pay session ready. Complete your payment below.");
+
+      setTimeout(() => {
+        const el = document.getElementById("dpo-payment-section");
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
     } catch (err) {
       toast.error("Something went wrong. Please try again.");
       setIsSubmitting(false);
@@ -1003,295 +1020,204 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
               </div>
             </section>
 
-            {/* SECTION 3: Payment Details */}
-            <section className="bg-white rounded-2xl border border-black/[0.08] shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-6 md:p-7">
+            {/* SECTION 3: Payment with DPO Pay */}
+            <section id="dpo-payment-section" className="bg-white rounded-2xl border border-black/[0.08] shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-6 md:p-7">
               <div className="flex items-center gap-3.5 mb-5">
-                <div className="w-8 h-8 rounded-full bg-[#6b2bb8] text-white font-bold text-sm flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-full bg-purple text-white font-bold text-sm flex items-center justify-center shrink-0">
                   3
                 </div>
                 <div>
-                  <h2 className="font-bold text-lg text-neutral-900 leading-none">Payment</h2>
+                  <h2 className="font-bold text-lg text-neutral-900 leading-none">Payment with DPO Pay</h2>
                   <p className="text-xs text-neutral-500 mt-1">
-                    All payment transactions are encrypted and processed securely.
+                    Transactions are processed securely via DPO Pay (Direct Pay Online Africa).
                   </p>
                 </div>
               </div>
 
-              {/* Payment Methods Tabs */}
-              <div className="space-y-4">
-                <div className="grid grid-cols-3 gap-2 p-1 bg-neutral-100/80 rounded-2xl">
-                  <button
-                    type="button"
-                    onClick={() => setPaymentMethod("card")}
-                    className={`py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
-                      paymentMethod === "card"
-                        ? "bg-white text-neutral-900 shadow-sm"
-                        : "text-neutral-500 hover:text-neutral-900"
-                    }`}
-                  >
-                    <CardIcon className="h-3.5 w-3.5" />
-                    <span>Credit Card</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setPaymentMethod("momo")}
-                    className={`py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
-                      paymentMethod === "momo"
-                        ? "bg-white text-neutral-900 shadow-sm"
-                        : "text-neutral-500 hover:text-neutral-900"
-                    }`}
-                  >
-                    <Smartphone className="h-3.5 w-3.5" />
-                    <span>Mobile Money</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setPaymentMethod("dpo")}
-                    className={`py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
-                      paymentMethod === "dpo"
-                        ? "bg-white text-neutral-900 shadow-sm"
-                        : "text-neutral-500 hover:text-neutral-900"
-                    }`}
-                  >
-                    <Lock className="h-3.5 w-3.5" />
-                    <span>DPO Pay</span>
-                  </button>
-                </div>
-
-                {/* Card Fields */}
-                {paymentMethod === "card" && (
-                  <div className="space-y-3.5 pt-2 animate-in fade-in duration-200">
-                    <div className="space-y-1.5">
-                      <Label className="text-xs font-bold text-neutral-700">Cardholder Name</Label>
-                      <Input
-                        placeholder="Name as it appears on card"
-                        value={cardInfo.name}
-                        onChange={(e) => setCardInfo((c) => ({ ...c, name: e.target.value }))}
-                        className="h-11 rounded-xl border-neutral-300 text-sm"
-                      />
+              {dpoIframeUrl ? (
+                /* Active DPO Pay Embedded Iframe View */
+                <div className="space-y-4 animate-in fade-in duration-300">
+                  <div className="flex items-center justify-between p-3.5 rounded-xl bg-purple/5 border border-purple/20">
+                    <div className="flex items-center gap-2">
+                      <ShieldCheck className="h-4 w-4 text-purple shrink-0" />
+                      <div className="text-xs font-bold text-neutral-900">
+                        DPO Pay Secure Checkout • Ref: {dpoBookingRef}
+                      </div>
                     </div>
+                    <button
+                      type="button"
+                      onClick={() => setDpoIframeUrl(null)}
+                      className="text-xs font-semibold text-neutral-500 hover:text-neutral-800 hover:underline cursor-pointer"
+                    >
+                      ← Cancel / Edit details
+                    </button>
+                  </div>
 
-                    <div className="space-y-1.5">
-                      <Label className="text-xs font-bold text-neutral-700">Card Number</Label>
-                      <div className="relative">
-                        <Input
-                          placeholder="1234 •••• •••• 5678"
-                          value={cardInfo.number}
-                          onChange={(e) => setCardInfo((c) => ({ ...c, number: e.target.value }))}
-                          className="h-11 rounded-xl border-neutral-300 text-sm pr-20"
-                        />
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-neutral-400">
-                          <span className="text-[10px] font-bold tracking-wider text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
-                            VISA
-                          </span>
-                          <span className="text-[10px] font-bold tracking-wider text-red-600 bg-red-50 px-1.5 py-0.5 rounded">
-                            MC
-                          </span>
+                  <div className="w-full rounded-2xl overflow-hidden border border-neutral-200 bg-neutral-50 shadow-xs relative">
+                    <iframe
+                      src={dpoIframeUrl}
+                      title="DPO Pay Secure Payment"
+                      className="w-full h-[640px] border-0 bg-white"
+                      allow="payment"
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-center gap-2 text-[11px] text-neutral-500 font-medium pt-1">
+                    <Lock className="h-3.5 w-3.5 text-emerald-600" />
+                    <span>256-Bit SSL Encrypted Connection • Powered by Direct Pay Online (DPO Group)</span>
+                  </div>
+                </div>
+              ) : (
+                /* Initial DPO Pay Overview View */
+                <div className="space-y-4">
+                  {/* DPO Pay Showcase Card */}
+                  <div className="p-4 sm:p-5 rounded-2xl border border-purple/20 bg-gradient-to-br from-purple/5 via-neutral-50 to-white space-y-3.5">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-[#002f6c] text-white flex items-center justify-center font-bold text-sm tracking-wider shadow-xs">
+                          DPO
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-sm text-neutral-900">Direct Pay Online</span>
+                            <span className="text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                              DPO Pay
+                            </span>
+                          </div>
+                          <p className="text-xs text-neutral-500 mt-0.5">
+                            Official Secure Payment Gateway for Africa &amp; Zambia
+                          </p>
                         </div>
                       </div>
+                      <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-neutral-500 font-medium">
+                        <ShieldCheck className="h-4 w-4 text-emerald-600" />
+                        <span>PCI-DSS Level 1</span>
+                      </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3.5">
-                      <div className="space-y-1.5">
-                        <Label className="text-xs font-bold text-neutral-700">
-                          Expiration (MM/YY)
-                        </Label>
-                        <Input
-                          placeholder="MM/YY"
-                          value={cardInfo.expiry}
-                          onChange={(e) => setCardInfo((c) => ({ ...c, expiry: e.target.value }))}
-                          className="h-11 rounded-xl border-neutral-300 text-sm"
-                        />
+                    <p className="text-xs text-neutral-600 leading-relaxed">
+                      Complete your booking securely using our embedded DPO Pay gateway. You can pay with any major credit or debit card, or your preferred Zambian mobile money wallet.
+                    </p>
+
+                    {/* Supported Methods Badges */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 text-xs">
+                      <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white border border-neutral-200/80">
+                        <CardIcon className="h-4 w-4 text-purple shrink-0" />
+                        <span className="font-semibold text-neutral-800">Cards:</span>
+                        <span className="text-neutral-500">Visa, Mastercard, Amex</span>
                       </div>
-                      <div className="space-y-1.5">
-                        <Label className="text-xs font-bold text-neutral-700">
-                          Security Code (CVV)
-                        </Label>
-                        <Input
-                          type="password"
-                          maxLength={4}
-                          placeholder="CVC"
-                          value={cardInfo.cvv}
-                          onChange={(e) => setCardInfo((c) => ({ ...c, cvv: e.target.value }))}
-                          className="h-11 rounded-xl border-neutral-300 text-sm"
-                        />
+                      <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white border border-neutral-200/80">
+                        <Smartphone className="h-4 w-4 text-purple shrink-0" />
+                        <span className="font-semibold text-neutral-800">Mobile Money:</span>
+                        <span className="text-neutral-500">Airtel, MTN, Zamtel</span>
                       </div>
                     </div>
                   </div>
-                )}
 
-                {/* Mobile Money Fields */}
-                {paymentMethod === "momo" && (
-                  <div className="space-y-3.5 pt-2 animate-in fade-in duration-200">
-                    <div className="space-y-1.5">
-                      <Label className="text-xs font-bold text-neutral-700">Mobile Network</Label>
-                      <div className="grid grid-cols-3 gap-2">
-                        {[
-                          { id: "airtel" as const, name: "Airtel Money", color: "text-red-600" },
-                          { id: "mtn" as const, name: "MTN MoMo", color: "text-amber-500" },
-                          {
-                            id: "zamtel" as const,
-                            name: "Zamtel Kwacha",
-                            color: "text-emerald-600",
-                          },
-                        ].map((m) => (
-                          <button
-                            key={m.id}
-                            type="button"
-                            onClick={() => setMomoProvider(m.id)}
-                            className={`p-3 rounded-xl border text-center font-bold text-xs transition-all ${
-                              momoProvider === m.id
-                                ? "border-[#6b2bb8] bg-[#6b2bb8]/5 text-neutral-900 shadow-sm"
-                                : "border-neutral-200 text-neutral-600 hover:border-neutral-300"
-                            }`}
-                          >
-                            <div className={`font-bold text-xs ${m.color}`}>{m.name}</div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
+                  {/* Promo Code Accordion */}
+                  <div className="pt-2 border-t border-black/[0.06]">
+                    {!showPromoInput && !promoApplied && (
+                      <button
+                        type="button"
+                        onClick={() => setShowPromoInput(true)}
+                        className="text-xs font-bold text-purple hover:underline inline-flex items-center gap-1 cursor-pointer"
+                      >
+                        <Tag className="h-3 w-3" /> Have a promo code or gift card?
+                      </button>
+                    )}
 
-                    <div className="space-y-1.5">
-                      <Label className="text-xs font-bold text-neutral-700">
-                        Registered Mobile Number
-                      </Label>
-                      <div className="flex gap-2">
-                        <div className="flex items-center px-3 rounded-xl border border-neutral-300 bg-neutral-50 text-xs font-bold text-neutral-700 shrink-0">
-                          🇿🇲 +260
-                        </div>
+                    {showPromoInput && !promoApplied && (
+                      <div className="flex gap-2 items-center pt-1">
                         <Input
-                          type="tel"
-                          placeholder="97 123 4567"
-                          value={momoPhone}
-                          onChange={(e) => setMomoPhone(e.target.value)}
-                          className="h-11 rounded-xl border-neutral-300 text-sm font-medium"
+                          placeholder="Enter code (e.g. ESCAPE10)"
+                          value={promoCode}
+                          onChange={(e) => setPromoCode(e.target.value)}
+                          className="h-10 rounded-xl border-neutral-300 text-xs font-bold uppercase tracking-wider"
                         />
+                        <Button
+                          type="button"
+                          onClick={handleApplyPromo}
+                          className="h-10 px-4 rounded-xl bg-purple text-white hover:bg-purple-hover font-bold text-xs shrink-0 cursor-pointer"
+                        >
+                          Apply
+                        </Button>
                       </div>
-                      <p className="text-[11px] text-neutral-400">
-                        An instant USSD prompt will be sent to your phone to approve the
-                        transaction.
+                    )}
+
+                    {promoApplied && (
+                      <div className="flex items-center justify-between p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 font-bold">
+                        <span>✓ Promo Code Applied (-K{promoDiscount})</span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setPromoApplied(false);
+                            setPromoDiscount(0);
+                            setPromoCode("");
+                          }}
+                          className="text-neutral-500 hover:text-neutral-800 text-[11px] cursor-pointer"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Free cancellation guarantee banner */}
+                  <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-bold text-xs text-emerald-950">
+                        Free Cancellation up to 24 hours in advance
+                      </div>
+                      <p className="text-[11px] text-emerald-900/80 leading-relaxed mt-0.5">
+                        Cancel before {activeDateLabel} for a 100% full refund with zero questions asked.
                       </p>
                     </div>
                   </div>
-                )}
 
-                {/* DPO Paypage note */}
-                {paymentMethod === "dpo" && (
-                  <div className="p-4 bg-neutral-50 rounded-xl border border-neutral-200 text-xs text-neutral-600 leading-relaxed animate-in fade-in duration-200">
-                    <p className="font-bold text-neutral-900 mb-1">
-                      Direct Pay Online (DPO) Gateway
-                    </p>
-                    You will be securely redirected to DPO&apos;s hosted checkout page to complete
-                    your payment with Visa, Mastercard, AMEX, or international travel cards.
-                  </div>
-                )}
+                  {/* Terms Agreement */}
+                  <label className="flex items-start gap-2.5 pt-2 text-xs text-neutral-500 cursor-pointer leading-relaxed select-none">
+                    <input
+                      type="checkbox"
+                      checked={agreedToTerms}
+                      onChange={(e) => setAgreedToTerms(e.target.checked)}
+                      className="mt-0.5 h-4 w-4 rounded border-neutral-300 text-purple focus:ring-purple cursor-pointer"
+                    />
+                    <span>
+                      I acknowledge and agree to Nearby Escapes{" "}
+                      <Link href="/terms" className="text-purple underline font-medium">
+                        Terms of Service
+                      </Link>
+                      ,{" "}
+                      <Link href="/privacy" className="text-purple underline font-medium">
+                        Privacy Policy
+                      </Link>
+                      , and the cancellation policy.
+                    </span>
+                  </label>
 
-                {/* Promo Code Accordion */}
-                <div className="pt-2 border-t border-black/[0.06]">
-                  {!showPromoInput && !promoApplied && (
-                    <button
-                      type="button"
-                      onClick={() => setShowPromoInput(true)}
-                      className="text-xs font-bold text-[#6b2bb8] hover:underline inline-flex items-center gap-1"
+                  {/* Complete Payment Button */}
+                  <div className="pt-3">
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full h-12 rounded-xl bg-purple hover:bg-purple-hover active:scale-[0.99] text-white font-semibold text-sm shadow-md shadow-purple/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      <Tag className="h-3 w-3" /> Have a promo code or gift card?
-                    </button>
-                  )}
-
-                  {showPromoInput && !promoApplied && (
-                    <div className="flex gap-2 items-center pt-1">
-                      <Input
-                        placeholder="Enter code (e.g. ESCAPE10)"
-                        value={promoCode}
-                        onChange={(e) => setPromoCode(e.target.value)}
-                        className="h-10 rounded-xl border-neutral-300 text-xs font-bold uppercase tracking-wider"
-                      />
-                      <Button
-                        type="button"
-                        onClick={handleApplyPromo}
-                        className="h-10 px-4 rounded-xl bg-[#6b2bb8] text-white hover:bg-[#5a22a0] font-bold text-xs shrink-0"
-                      >
-                        Apply
-                      </Button>
-                    </div>
-                  )}
-
-                  {promoApplied && (
-                    <div className="flex items-center justify-between p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 font-bold">
-                      <span>✓ Promo Code Applied (-K{promoDiscount})</span>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setPromoApplied(false);
-                          setPromoDiscount(0);
-                          setPromoCode("");
-                        }}
-                        className="text-neutral-500 hover:text-neutral-800 text-[11px]"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                {/* Free cancellation guarantee banner */}
-                <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-start gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
-                  <div>
-                    <div className="font-bold text-xs text-emerald-950">
-                      Free Cancellation up to 24 hours in advance
-                    </div>
-                    <p className="text-[11px] text-emerald-900/80 leading-relaxed mt-0.5">
-                      Cancel before {activeDateLabel} for a 100% full refund with zero questions
-                      asked.
+                      {isSubmitting ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Lock className="h-3.5 w-3.5" />
+                      )}
+                      {isSubmitting
+                        ? "Opening DPO Pay..."
+                        : `Complete payment with DPO Pay • K${priceBreakdown.total.toLocaleString()}`}
+                    </Button>
+                    <p className="text-center text-[11px] text-neutral-400 mt-2 font-medium">
+                      🔒 Secure checkout • Powered by DPO Pay.
                     </p>
                   </div>
                 </div>
-
-                {/* Terms Agreement */}
-                <label className="flex items-start gap-2.5 pt-2 text-xs text-neutral-500 cursor-pointer leading-relaxed">
-                  <input
-                    type="checkbox"
-                    checked={agreedToTerms}
-                    onChange={(e) => setAgreedToTerms(e.target.checked)}
-                    className="mt-0.5 h-4 w-4 rounded border-neutral-300 text-[#6b2bb8] focus:ring-[#6b2bb8]"
-                  />
-                  <span>
-                    I acknowledge and agree to Nearby Escapes{" "}
-                    <Link href="/terms" className="text-purple underline font-medium">
-                      Terms of Service
-                    </Link>
-                    ,{" "}
-                    <Link href="/privacy" className="text-purple underline font-medium">
-                      Privacy Policy
-                    </Link>
-                    , and the tour operator&apos;s cancellation policy.
-                  </span>
-                </label>
-
-                {/* Complete Booking Button */}
-                <div className="pt-3">
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full h-12 rounded-xl bg-purple hover:bg-purple-hover active:scale-[0.99] text-white font-semibold text-sm shadow-md shadow-purple/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    {isSubmitting ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Lock className="h-3.5 w-3.5" />
-                    )}
-                    {isSubmitting
-                      ? "Processing payment..."
-                      : `Complete booking • K${priceBreakdown.total.toLocaleString()}`}
-                  </Button>
-                  <p className="text-center text-[11px] text-neutral-400 mt-2 font-medium">
-                    🔒 Secure checkout • No surprise fees.
-                  </p>
-                </div>
-              </div>
+              )}
             </section>
           </form>
 

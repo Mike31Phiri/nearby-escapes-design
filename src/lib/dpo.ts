@@ -118,10 +118,12 @@ export async function createPaymentToken(
     callbackUrl.searchParams.set("status", "success");
     callbackUrl.searchParams.set("token", transToken);
 
+    const paymentUrl = `/checkout/dpo-paypage?token=${transToken}&ref=${encodeURIComponent(transaction.bookingRef)}&amount=${transaction.amount}&currency=${transaction.currency}&callback=${encodeURIComponent(callbackUrl.toString())}`;
+
     return {
       success: true,
       transToken,
-      paymentUrl: callbackUrl.toString(),
+      paymentUrl,
       bookingRef: transaction.bookingRef,
       message: "Payment token created successfully (mock mode).",
     };
@@ -156,7 +158,7 @@ export async function createPaymentToken(
       return {
         success: true,
         transToken: data.transToken,
-        paymentUrl: `${config.paymentBaseUrl}/pay/${data.transToken}`,
+        paymentUrl: `https://secure.directpay.online/payv3.php?ID=${data.transToken}`,
         bookingRef: transaction.bookingRef,
         message: "Payment token created successfully.",
       };
