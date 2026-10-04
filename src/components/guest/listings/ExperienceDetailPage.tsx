@@ -447,6 +447,37 @@ export function ExperienceDetailPage({
     ];
   }, [item]);
 
+  const importantInformationList: string[] = useMemo(() => {
+    if (Array.isArray(item.importantInformation) && item.importantInformation.length > 0) {
+      return item.importantInformation;
+    }
+    if (Array.isArray(item.guidelines) && item.guidelines.length > 0) {
+      return item.guidelines;
+    }
+    return [
+      "Please arrive 15 minutes before scheduled start time at meeting point",
+      "A valid physical government ID or passport is required for park clearance",
+      "Wear neutral-colored, comfortable clothing and sturdy walking shoes",
+      "Certified Wilderness First Responder and first aid emergency kit on site",
+      "Free cancellation up to 24 hours before the experience start time",
+    ];
+  }, [item]);
+
+  const notSuitableForList: string[] = useMemo(() => {
+    if (Array.isArray(item.notSuitableFor) && item.notSuitableFor.length > 0) {
+      return item.notSuitableFor;
+    }
+    if (Array.isArray(item.suitability) && item.suitability.length > 0) {
+      return item.suitability;
+    }
+    return [
+      "Wheelchair users (due to unpaved natural tracks and high step-up vehicle chassis)",
+      "People with mobility impairments or back problems",
+      "Pregnant women past second trimester",
+      "Children under 6 years of age",
+    ];
+  }, [item]);
+
   const totalInclusionsCount =
     whatsIncludedList.length + whatsNotIncludedList.length + whatToBringList.length + whatNotToBringList.length;
 
@@ -746,101 +777,44 @@ export function ExperienceDetailPage({
               </div>
             </div>
 
-            {/* Important Information & Suitability ("Not Suitable For") */}
+            {/* Important Information & Suitability */}
             <div className="pt-8">
               <h2 className="text-lg font-semibold text-neutral-900">Important information &amp; suitability</h2>
               <p className="text-xs text-neutral-500 mt-0.5">
-                Accessibility details, physical fitness requirements, and health guidance
+                Key guidelines, health recommendations, and accessibility notes
               </p>
 
-              {/* Dedicated "Not Suitable For" Card */}
-              <div className="mt-4 bg-amber-50/70 border border-amber-200/80 rounded-2xl p-4 sm:p-5">
-                <div className="flex items-center gap-2 text-amber-900 font-semibold text-xs uppercase tracking-wider mb-3">
-                  <AlertTriangle className="h-4 w-4 text-amber-700" />
-                  <span>Not suitable for</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                {/* Important Information */}
+                <div className="bg-neutral-50 border border-neutral-200/80 rounded-2xl p-4 sm:p-5">
+                  <div className="flex items-center gap-2 text-neutral-900 font-semibold text-xs uppercase tracking-wider mb-3">
+                    <Info className="h-4 w-4 text-purple" />
+                    <span>Important information</span>
+                  </div>
+                  <ul className="space-y-2.5 text-xs text-neutral-700">
+                    {importantInformationList.map((info, idx) => (
+                      <li key={`info-${idx}`} className="flex items-start gap-2.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-purple mt-1.5 shrink-0" />
+                        <span className="leading-snug">{info}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
-                  <div className="flex items-start gap-2.5">
-                    <div className="w-7 h-7 rounded-lg bg-amber-100/80 flex items-center justify-center shrink-0 text-amber-900">
-                      <Accessibility className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-neutral-900">Wheelchair users</p>
-                      <p className="text-neutral-600 text-[11px] mt-0.5 leading-relaxed">
-                        Not wheelchair accessible due to unpaved natural dirt tracks, rocky trails, and high step-up vehicle chassis.
-                      </p>
-                    </div>
+                {/* Not Suitable For */}
+                <div className="bg-amber-50/50 border border-amber-200/80 rounded-2xl p-4 sm:p-5">
+                  <div className="flex items-center gap-2 text-amber-900 font-semibold text-xs uppercase tracking-wider mb-3">
+                    <AlertTriangle className="h-4 w-4 text-amber-700" />
+                    <span>Not suitable for</span>
                   </div>
-
-                  <div className="flex items-start gap-2.5">
-                    <div className="w-7 h-7 rounded-lg bg-amber-100/80 flex items-center justify-center shrink-0 text-amber-900">
-                      <Footprints className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-neutral-900">People with mobility impairments</p>
-                      <p className="text-neutral-600 text-[11px] mt-0.5 leading-relaxed">
-                        Requires moderate walking, boarding open safari vehicles, and navigating uneven wilderness trails.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2.5">
-                    <div className="w-7 h-7 rounded-lg bg-amber-100/80 flex items-center justify-center shrink-0 text-amber-900">
-                      <Heart className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-neutral-900">Pregnant women</p>
-                      <p className="text-neutral-600 text-[11px] mt-0.5 leading-relaxed">
-                        Not recommended for pregnant guests past their second trimester due to bumpy unpaved wilderness paths.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2.5">
-                    <div className="w-7 h-7 rounded-lg bg-amber-100/80 flex items-center justify-center shrink-0 text-amber-900">
-                      <Users className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-neutral-900">Children under 6 years</p>
-                      <p className="text-neutral-600 text-[11px] mt-0.5 leading-relaxed">
-                        Children under 6 are not permitted on open game vehicles or active trails due to park safety regulations.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Key Guidelines Strip */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mt-3.5">
-                <div className="bg-neutral-50 border border-neutral-200/80 rounded-xl p-3.5">
-                  <div className="flex items-center gap-1.5 text-neutral-800 font-semibold text-xs mb-1">
-                    <Clock className="h-3.5 w-3.5 text-purple" />
-                    <span>Duration &amp; Arrival</span>
-                  </div>
-                  <p className="text-[11px] text-neutral-600 leading-relaxed">
-                    {item.duration || "Approx. 3-4 hours"}. Please arrive 15 minutes before scheduled start time.
-                  </p>
-                </div>
-
-                <div className="bg-neutral-50 border border-neutral-200/80 rounded-xl p-3.5">
-                  <div className="flex items-center gap-1.5 text-neutral-800 font-semibold text-xs mb-1">
-                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-                    <span>Safety &amp; First Aid</span>
-                  </div>
-                  <p className="text-[11px] text-neutral-600 leading-relaxed">
-                    Certified Wilderness First Responder on site. Emergency medical kit carried on all excursions.
-                  </p>
-                </div>
-
-                <div className="bg-neutral-50 border border-neutral-200/80 rounded-xl p-3.5">
-                  <div className="flex items-center gap-1.5 text-neutral-800 font-semibold text-xs mb-1">
-                    <Sparkles className="h-3.5 w-3.5 text-amber-600" />
-                    <span>Cancellation Policy</span>
-                  </div>
-                  <p className="text-[11px] text-neutral-600 leading-relaxed">
-                    Free cancellation up to 24 hours before the experience start time for a full refund.
-                  </p>
+                  <ul className="space-y-2.5 text-xs text-neutral-700">
+                    {notSuitableForList.map((itemStr, idx) => (
+                      <li key={`not-suit-${idx}`} className="flex items-start gap-2.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-600 mt-1.5 shrink-0" />
+                        <span className="leading-snug">{itemStr}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </div>
