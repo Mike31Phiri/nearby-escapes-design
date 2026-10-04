@@ -137,11 +137,11 @@ function InputField({
   return (
     <div className="relative">
       {Icon && (
-        <Icon className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-black-faint" />
+        <Icon className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-600" />
       )}
       <input
         className={cn(
-          "w-full py-3 rounded-xl border border-black/[0.12] bg-white text-[15px] font-medium text-black outline-none transition-all focus:border-purple focus:ring-2 focus:ring-purple/10 placeholder:text-black-faint/60",
+          "w-full py-3 rounded-xl border border-black/[0.15] bg-white text-[15px] font-medium text-black outline-none transition-all focus:border-purple focus:ring-2 focus:ring-purple/10 placeholder:text-neutral-400",
           Icon ? "pl-10" : "pl-4",
           rightSlot ? "pr-11" : "pr-4",
           className,
@@ -155,7 +155,7 @@ function InputField({
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
-    <Label className="text-[10px] font-bold uppercase tracking-widest text-black-faint">
+    <Label className="text-xs sm:text-[13px] font-bold text-black tracking-normal">
       {children}
     </Label>
   );
@@ -167,7 +167,7 @@ function EyeToggle({ show, onToggle }: { show: boolean; onToggle: () => void }) 
     <button
       type="button"
       onClick={onToggle}
-      className="text-black-faint hover:text-black transition-colors p-1"
+      className="text-neutral-600 hover:text-black transition-colors p-1"
     >
       {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
     </button>
@@ -666,7 +666,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                 <div className="space-y-1.5">
                   <FieldLabel>Phone number</FieldLabel>
                   <div className="flex gap-2">
-                    <div className="flex items-center gap-1 px-3 py-3 rounded-xl border border-black/[0.12] bg-neutral-50 text-xs font-bold text-neutral-700 shrink-0">
+                    <div className="flex items-center gap-1 px-3 py-3 rounded-xl border border-black/[0.15] bg-neutral-50 text-xs font-bold text-black shrink-0">
                       🇿🇲 +260
                     </div>
                     <InputField

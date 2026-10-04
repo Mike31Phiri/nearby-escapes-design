@@ -207,7 +207,15 @@ export function ExperienceDetailPage({
     params.set("date", selectedDate);
     params.set("slot", selectedSlot);
     params.set("guests", String(totalGuests));
+    params.set("adults", String(adults));
+    params.set("children", String(children));
     params.set("price", String(pricePerPerson));
+    const hostMeetingPoint =
+      item.meetingPoint ||
+      item.address ||
+      (typeof item.location === "object" ? `${item.location.city}, ${item.location.province}` : item.location) ||
+      "Lusaka Showgrounds, Great East Road";
+    params.set("meetingPoint", hostMeetingPoint);
     router.push(`/checkout/book?${params.toString()}`);
   };
 

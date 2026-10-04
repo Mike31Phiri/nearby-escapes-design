@@ -72,6 +72,7 @@ export interface ListingData {
   from?: string;
   to?: string;
   operator?: string;
+  meetingPoint?: string;
 }
 
 interface BookingFormPageProps {
@@ -174,17 +175,54 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
 
   // Parse query parameters
   const paramGuests = searchParams.get("guests");
+  const paramAdults = searchParams.get("adults");
+  const paramChildren = searchParams.get("children");
   const paramTransport = searchParams.get("transport");
   const paramCheckIn = searchParams.get("checkIn");
   const paramCheckOut = searchParams.get("checkOut");
+  const paramDate = searchParams.get("date");
+  const paramSlot = searchParams.get("slot") || searchParams.get("timeSlot");
+  const paramMeetingPoint = searchParams.get("meetingPoint");
 
-  const parsedCheckIn = useMemo(() => parseDateParam(paramCheckIn), [paramCheckIn]);
+  const parsedCheckIn = useMemo(() => {
+    if (paramCheckIn) return parseDateParam(paramCheckIn);
+    if (paramDate && /^\d{4}-\d{2}-\d{2}$/.test(paramDate)) return paramDate;
+    return "";
+  }, [paramCheckIn, paramDate]);
+
   const parsedCheckOut = useMemo(() => parseDateParam(paramCheckOut), [paramCheckOut]);
+
   const parsedAdults = useMemo(() => {
-    if (!paramGuests) return 2;
-    const g = parseInt(paramGuests);
-    return g >= 1 ? g : 1;
-  }, [paramGuests]);
+    if (paramAdults) {
+      const a = parseInt(paramAdults);
+      if (!isNaN(a) && a >= 1) return a;
+    }
+    if (paramGuests) {
+      const g = parseInt(paramGuests);
+      if (!isNaN(g) && g >= 1) return g;
+    }
+    return 2;
+  }, [paramAdults, paramGuests]);
+
+  const parsedChildren = useMemo(() => {
+    if (paramChildren) {
+      const c = parseInt(paramChildren);
+      if (!isNaN(c) && c >= 0) return c;
+    }
+    return 0;
+  }, [paramChildren]);
+
+  const initialSlot = useMemo(() => {
+    if (paramSlot) return paramSlot;
+    return "09:00 AM";
+  }, [paramSlot]);
+
+  const meetingPointDisplay = useMemo(() => {
+    if (paramMeetingPoint) return paramMeetingPoint;
+    if (listing.meetingPoint) return listing.meetingPoint;
+    if (listing.location) return listing.location;
+    return "Lusaka Showgrounds, Great East Road";
+  }, [paramMeetingPoint, listing.meetingPoint, listing.location]);
 
   const { saveCheckoutInfo, phone: savedPhone, homeCity: savedHomeCity } = useProfileStore();
 
@@ -193,7 +231,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
     checkIn: parsedCheckIn || "2026-07-18",
     checkOut: parsedCheckOut || "2026-07-20",
     adults: parsedAdults,
-    children: 0,
+    children: parsedChildren,
     roomType: "standard",
     rooms: 1,
     addTransport: false,
@@ -202,10 +240,10 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
   });
 
   const [expOptions, setExpOptions] = useState({
-    date: parsedCheckIn || "2026-07-18",
-    timeSlot: "morning",
+    date: paramDate && /^\d{4}-\d{2}-\d{2}$/.test(paramDate) ? paramDate : (parsedCheckIn || "2026-07-18"),
+    timeSlot: initialSlot,
     adults: parsedAdults,
-    children: 0,
+    children: parsedChildren,
   });
 
   const [transportOptions, setTransportOptions] = useState({
@@ -787,34 +825,38 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                 )}
 
                 {isExperience && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div className="space-y-1.5">
-                      <Label className="text-xs font-bold text-neutral-700">Date *</Label>
-                      <Input
-                        type="date"
-                        min={minDate}
-                        value={expOptions.date}
-                        onChange={(e) => setExpOptions((s) => ({ ...s, date: e.target.value }))}
-                        className="h-11 rounded-xl border-neutral-300 text-sm font-semibold"
-                        required
-                      />
+                  <div className="space-y-3.5">
+                    {/* Preset Date & Slot Information */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                      <div className="space-y-1.5">
+                        <Label className="text-xs font-bold text-neutral-700">Date</Label>
+                        <div className="flex items-center gap-2.5 h-11 px-3.5 rounded-xl border border-neutral-200 bg-neutral-50/70 text-sm font-semibold text-neutral-800">
+                          <CalendarDays className="h-4 w-4 text-purple shrink-0" />
+                          <span>{activeDateLabel}</span>
+                        </div>
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-xs font-bold text-neutral-700">Time Slot</Label>
+                        <div className="flex items-center gap-2.5 h-11 px-3.5 rounded-xl border border-neutral-200 bg-neutral-50/70 text-sm font-semibold text-neutral-800">
+                          <Clock className="h-4 w-4 text-purple shrink-0" />
+                          <span>{expOptions.timeSlot}</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="space-y-1.5">
-                      <Label className="text-xs font-bold text-neutral-700">Departure Time *</Label>
-                      <Select
-                        value={expOptions.timeSlot}
-                        onValueChange={(v) => setExpOptions((s) => ({ ...s, timeSlot: v }))}
-                      >
-                        <SelectTrigger className="h-11 rounded-xl border-neutral-300 text-sm font-medium">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="morning">🌅 Morning Tour (8:00 AM)</SelectItem>
-                          <SelectItem value="midday">☀️ Midday Tour (12:00 PM)</SelectItem>
-                          <SelectItem value="afternoon">🌤 Afternoon Tour (3:00 PM)</SelectItem>
-                          <SelectItem value="sunset">🌇 Sunset Safari (5:30 PM)</SelectItem>
-                        </SelectContent>
-                      </Select>
+
+                    {/* Host-set Meeting Point Display */}
+                    <div className="rounded-xl border border-neutral-200/80 bg-neutral-50/70 p-3.5 sm:p-4">
+                      <div className="flex items-start gap-2.5">
+                        <MapPin className="h-4 w-4 text-purple mt-0.5 shrink-0" />
+                        <div>
+                          <div className="text-xs font-bold text-neutral-900">
+                            Meeting Point
+                          </div>
+                          <p className="text-xs text-neutral-600 mt-0.5 leading-relaxed">
+                            {meetingPointDisplay}
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -923,24 +965,23 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   )}
                 </div>
 
-                {/* Hotel Pickup / Meeting Point */}
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-bold text-neutral-700 flex items-center gap-1.5">
-                    <MapPin className="h-3.5 w-3.5 text-neutral-400" />
-                    Pickup Location / Meeting Point
-                  </Label>
-                  <Input
-                    placeholder="e.g. Royal Livingstone Hotel, or Lusaka CBD hotel, or 'Meet at site'"
-                    value={personalInfo.pickupLocation}
-                    onChange={(e) =>
-                      setPersonalInfo((p) => ({ ...p, pickupLocation: e.target.value }))
-                    }
-                    className="h-11 rounded-xl border-neutral-300 text-sm"
-                  />
-                  <p className="text-[11px] text-neutral-400">
-                    If you don&apos;t know yet, you can provide this later to the local operator.
-                  </p>
-                </div>
+                {/* Pickup Location for Transport */}
+                {isTransport && (
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-bold text-neutral-700 flex items-center gap-1.5">
+                      <MapPin className="h-3.5 w-3.5 text-neutral-400" />
+                      Pickup Address / Departure Station
+                    </Label>
+                    <Input
+                      placeholder="e.g. Hotel lobby, airport terminal, or address"
+                      value={personalInfo.pickupLocation}
+                      onChange={(e) =>
+                        setPersonalInfo((p) => ({ ...p, pickupLocation: e.target.value }))
+                      }
+                      className="h-11 rounded-xl border-neutral-300 text-sm"
+                    />
+                  </div>
+                )}
 
 
                 {/* Special Requests */}
@@ -1230,21 +1271,21 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   </span>
                 </label>
 
-                {/* Complete Payment Button */}
+                {/* Complete Booking Button */}
                 <div className="pt-3">
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full h-14 rounded-2xl bg-purple hover:bg-purple-hover active:scale-[0.99] text-white font-bold text-base uppercase tracking-wider shadow-lg shadow-purple/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full h-12 rounded-xl bg-purple hover:bg-purple-hover active:scale-[0.99] text-white font-semibold text-sm shadow-md shadow-purple/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     {isSubmitting ? (
-                      <Loader2 className="h-5 w-5 animate-spin" />
+                      <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
-                      <Lock className="h-4 w-4" />
+                      <Lock className="h-3.5 w-3.5" />
                     )}
                     {isSubmitting
                       ? "Processing payment..."
-                      : `Complete Payment • K${priceBreakdown.total.toLocaleString()}`}
+                      : `Complete booking • K${priceBreakdown.total.toLocaleString()}`}
                   </Button>
                   <p className="text-center text-[11px] text-neutral-400 mt-2 font-medium">
                     🔒 Secure checkout • No surprise fees.
@@ -1309,13 +1350,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                       {isStay
                         ? `${priceBreakdown.nights} nights`
                         : isExperience
-                          ? expOptions.timeSlot === "morning"
-                            ? "8:00 AM"
-                            : expOptions.timeSlot === "midday"
-                              ? "12:00 PM"
-                              : expOptions.timeSlot === "sunset"
-                                ? "5:30 PM"
-                                : "3:00 PM"
+                          ? expOptions.timeSlot
                           : transportOptions.departureTime === "morning"
                             ? "6:00 AM"
                             : "12:00 PM"}
@@ -1328,6 +1363,18 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                     </span>
                     <span className="font-bold text-neutral-900 truncate max-w-[150px]">
                       {guestCountLabel}
+                    </span>
+                  </div>
+
+                  <div className="flex items-start justify-between gap-2 pt-1 border-t border-black/[0.04]">
+                    <span className="font-semibold text-neutral-900 flex items-center gap-1.5 shrink-0">
+                      <MapPin className="h-3.5 w-3.5 text-neutral-400" /> Meeting Point
+                    </span>
+                    <span
+                      className="font-bold text-neutral-900 text-right truncate max-w-[170px]"
+                      title={meetingPointDisplay}
+                    >
+                      {meetingPointDisplay}
                     </span>
                   </div>
                 </div>

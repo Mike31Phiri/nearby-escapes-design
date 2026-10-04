@@ -397,7 +397,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                  <Label className="text-xs sm:text-[13px] font-bold text-black tracking-normal">
                     Email address
                   </Label>
                   <div className="relative">
@@ -415,7 +415,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                  <Label className="text-xs sm:text-[13px] font-bold text-black tracking-normal">
                     Password
                   </Label>
                   <div className="relative">
@@ -489,7 +489,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                 {/* Name */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                    <Label className="text-xs sm:text-[13px] font-bold text-black tracking-normal">
                       First name
                     </Label>
                     <input
@@ -503,7 +503,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                    <Label className="text-xs sm:text-[13px] font-bold text-black tracking-normal">
                       Last name
                     </Label>
                     <input
@@ -520,7 +520,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
 
                 {/* Email */}
                 <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                  <Label className="text-xs sm:text-[13px] font-bold text-black tracking-normal">
                     Email address
                   </Label>
                   <div className="relative">
@@ -539,7 +539,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
 
                 {/* Phone */}
                 <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                  <Label className="text-xs sm:text-[13px] font-bold text-black tracking-normal">
                     Phone number
                   </Label>
                   <div className="flex gap-2">
@@ -567,7 +567,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
 
                 {/* Password */}
                 <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                  <Label className="text-xs sm:text-[13px] font-bold text-black tracking-normal">
                     Password
                   </Label>
                   <div className="relative">
@@ -772,7 +772,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
 
                 {resetStep === 1 && (
                   <div className="space-y-1.5">
-                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                    <Label className="text-xs sm:text-[13px] font-bold text-black tracking-normal">
                       Enter your email
                     </Label>
                     <div className="relative">
@@ -791,7 +791,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
 
                 {resetStep === 2 && (
                   <div className="space-y-3">
-                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                    <Label className="text-xs sm:text-[13px] font-bold text-black tracking-normal">
                       Verification code
                     </Label>
                     <p className="text-sm text-[#64748B]">
@@ -810,7 +810,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                 {resetStep === 3 && (
                   <>
                     <div className="space-y-1.5">
-                      <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                      <Label className="text-xs sm:text-[13px] font-bold text-black tracking-normal">
                         New password
                       </Label>
                       <div className="relative">
@@ -840,7 +840,7 @@ export function AuthPageView({ defaultTab = "login" }: AuthPageViewProps) {
                     </div>
 
                     <div className="space-y-1.5">
-                      <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+                      <Label className="text-xs sm:text-[13px] font-bold text-black tracking-normal">
                         Confirm new password
                       </Label>
                       <input

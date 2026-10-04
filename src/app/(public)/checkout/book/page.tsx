@@ -34,6 +34,7 @@ export default async function BookPage({ searchParams }: Props) {
         guests: stay.guests,
         beds: stay.beds,
         baths: stay.baths,
+        meetingPoint: sp.meetingPoint || stay.location,
       };
     }
   } else if (type === "experience") {
@@ -53,6 +54,13 @@ export default async function BookPage({ searchParams }: Props) {
         reviews: "reviews" in experience ? experience.reviews : undefined,
         duration: "duration" in experience ? experience.duration : undefined,
         isPackage: experience.id.startsWith("p"),
+        meetingPoint:
+          sp.meetingPoint ||
+          ("meetingPoint" in experience && typeof experience.meetingPoint === "string"
+            ? experience.meetingPoint
+            : experience.location
+              ? `${experience.location}, Zambia`
+              : "Lusaka Showgrounds, Great East Road"),
       };
     }
   } else if (type === "transport") {
@@ -69,6 +77,7 @@ export default async function BookPage({ searchParams }: Props) {
         from: transport.from,
         to: transport.to,
         operator: transport.operator,
+        meetingPoint: sp.meetingPoint || `${transport.from} Departure Station`,
       };
     }
   }
