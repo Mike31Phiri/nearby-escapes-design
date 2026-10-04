@@ -57,11 +57,12 @@ function NotificationCard({
 
 export function NotificationsPage() {
   const [mounted, setMounted] = useState(false);
-  const { notifications, getUnreadCount, markAsRead, markAllAsRead } = useNotificationStore();
+  const { notifications, getUnreadCount, markAsRead, markAllAsRead, fetchNotifications } = useNotificationStore();
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    fetchNotifications();
+  }, [fetchNotifications]);
 
   const unreadCount = mounted ? getUnreadCount() : 0;
   const list = mounted ? notifications : [];

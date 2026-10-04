@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import {
   resolveLocationSlug,
@@ -5,6 +6,7 @@ import {
   buildStaysHeadline,
 } from "@/lib/utils/locationSlug";
 import { StaysPage } from "@/components/guest/stays/StaysPage";
+import { SearchListingSkeleton } from "@/components/shared/SearchListingSkeleton";
 
 interface Props {
   params: Promise<{ location: string }>;
@@ -31,5 +33,9 @@ export default async function LocationStaysRoute({ params }: Props) {
 
   if (!resolved) notFound();
 
-  return <StaysPage location={resolved} />;
+  return (
+    <Suspense fallback={<div className="max-w-7xl mx-auto px-4 md:px-8 py-8"><SearchListingSkeleton count={8} /></div>}>
+      <StaysPage location={resolved} />
+    </Suspense>
+  );
 }

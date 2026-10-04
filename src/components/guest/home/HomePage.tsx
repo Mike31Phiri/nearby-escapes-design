@@ -463,14 +463,24 @@ export function HomePage() {
                   hideDescOnMobile
                 />
                 <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 -mx-4 md:-mx-8 px-4 md:px-8 snap-x snap-mandatory">
-                  {stays.slice(0, 6).map((listing) => (
-                    <div
-                      key={listing.id}
-                      className="w-[260px] sm:w-[280px] md:w-[300px] shrink-0 snap-start"
-                    >
-                      <ListingCard listing={listing} />
-                    </div>
-                  ))}
+                  {isLoading ? (
+                    Array.from({ length: 4 }).map((_, i) => (
+                      <div key={i} className="w-[260px] sm:w-[280px] md:w-[300px] shrink-0">
+                        <div className="aspect-[16/10] bg-neutral-100 rounded-xl animate-pulse mb-3" />
+                        <div className="h-4 bg-neutral-100 rounded w-3/4 animate-pulse mb-1.5" />
+                        <div className="h-3 bg-neutral-100 rounded w-1/2 animate-pulse" />
+                      </div>
+                    ))
+                  ) : (
+                    stays.slice(0, 6).map((listing) => (
+                      <div
+                        key={listing.id}
+                        className="w-[260px] sm:w-[280px] md:w-[300px] shrink-0 snap-start"
+                      >
+                        <ListingCard listing={listing} />
+                      </div>
+                    ))
+                  )}
                   {stays.length === 0 && !isLoading && (
                     <div className="py-8 px-4 text-neutral-500 text-sm">No stays currently available.</div>
                   )}
@@ -488,14 +498,24 @@ export function HomePage() {
                     hideDescOnMobile
                   />
                   <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 -mx-4 md:-mx-8 px-4 md:px-8 snap-x snap-mandatory">
-                    {(stays.length > 6 ? stays.slice(6, 12) : stays.slice(0, 6)).map((listing) => (
-                      <div
-                        key={listing.id}
-                        className="w-[260px] sm:w-[280px] md:w-[300px] shrink-0 snap-start"
-                      >
-                        <ListingCard listing={listing} />
-                      </div>
-                    ))}
+                    {isLoading ? (
+                      Array.from({ length: 4 }).map((_, i) => (
+                        <div key={i} className="w-[260px] sm:w-[280px] md:w-[300px] shrink-0">
+                          <div className="aspect-[16/10] bg-neutral-100 rounded-xl animate-pulse mb-3" />
+                          <div className="h-4 bg-neutral-100 rounded w-3/4 animate-pulse mb-1.5" />
+                          <div className="h-3 bg-neutral-100 rounded w-1/2 animate-pulse" />
+                        </div>
+                      ))
+                    ) : (
+                      (stays.length > 6 ? stays.slice(6, 12) : stays.slice(0, 6)).map((listing) => (
+                        <div
+                          key={listing.id}
+                          className="w-[260px] sm:w-[280px] md:w-[300px] shrink-0 snap-start"
+                        >
+                          <ListingCard listing={listing} />
+                        </div>
+                      ))
+                    )}
                   </div>
                   <MobileSeeAll href="/stays" label="See recommendations" />
                 </div>
@@ -566,41 +586,51 @@ export function HomePage() {
                   hideDescOnMobile
                 />
                 <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 -mx-4 md:-mx-8 px-4 md:px-8 snap-x snap-mandatory">
-                  {experiences.slice(0, 6).map((exp) => (
-                    <Link
-                      key={exp.id}
-                      href={`/listings/experiences/${exp.id}`}
-                      className="group w-[260px] sm:w-[280px] md:w-[300px] shrink-0 snap-start"
-                    >
-                      <div className="relative aspect-[16/10] bg-white-bone rounded-xl overflow-hidden shadow-xs">
-                        <img
-                          src={exp.image}
-                          alt={exp.name}
-                          loading="lazy"
-                          className="h-full w-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  {isLoading ? (
+                    Array.from({ length: 4 }).map((_, i) => (
+                      <div key={i} className="w-[260px] sm:w-[280px] md:w-[300px] shrink-0">
+                        <div className="aspect-[16/10] bg-neutral-100 rounded-xl animate-pulse mb-3" />
+                        <div className="h-4 bg-neutral-100 rounded w-3/4 animate-pulse mb-1.5" />
+                        <div className="h-3 bg-neutral-100 rounded w-1/2 animate-pulse" />
                       </div>
-                      <div className="pt-2.5 px-0.5">
-                        <div className="flex items-start justify-between gap-3">
-                          <h3 className="text-[14px] font-semibold text-black-soft leading-snug line-clamp-1 flex-1">
-                            {exp.name}
-                          </h3>
-                          <div className="flex items-center gap-1 shrink-0">
-                            <Star className="h-3 w-3 fill-white text-white" strokeWidth={1.5} />
-                            <span className="text-[12px] font-semibold text-black-muted">
-                              {exp.rating.toFixed(1)}
-                            </span>
+                    ))
+                  ) : (
+                    experiences.slice(0, 6).map((exp) => (
+                      <Link
+                        key={exp.id}
+                        href={`/listings/experiences/${exp.id}`}
+                        className="group w-[260px] sm:w-[280px] md:w-[300px] shrink-0 snap-start"
+                      >
+                        <div className="relative aspect-[16/10] bg-white-bone rounded-xl overflow-hidden shadow-xs">
+                          <img
+                            src={exp.image}
+                            alt={exp.name}
+                            loading="lazy"
+                            className="h-full w-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </div>
+                        <div className="pt-2.5 px-0.5">
+                          <div className="flex items-start justify-between gap-3">
+                            <h3 className="text-[14px] font-semibold text-black-soft leading-snug line-clamp-1 flex-1">
+                              {exp.name}
+                            </h3>
+                            <div className="flex items-center gap-1 shrink-0">
+                              <Star className="h-3 w-3 fill-white text-white" strokeWidth={1.5} />
+                              <span className="text-[12px] font-semibold text-black-muted">
+                                {exp.rating.toFixed(1)}
+                              </span>
+                            </div>
+                          </div>
+                          <p className="text-[11px] text-black-muted mt-1">{exp.location}</p>
+                          <div className="flex items-baseline gap-0.5 mt-1.5">
+                            <span className="text-[14px] font-bold text-white">ZMW {exp.price}</span>
+                            <span className="text-[11px] text-black-muted">/ person</span>
                           </div>
                         </div>
-                        <p className="text-[11px] text-black-muted mt-1">{exp.location}</p>
-                        <div className="flex items-baseline gap-0.5 mt-1.5">
-                          <span className="text-[14px] font-bold text-white">ZMW {exp.price}</span>
-                          <span className="text-[11px] text-black-muted">/ person</span>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
+                      </Link>
+                    ))
+                  )}
                   {experiences.length === 0 && !isLoading && (
                     <div className="py-8 px-4 text-neutral-500 text-sm">No experiences currently available.</div>
                   )}

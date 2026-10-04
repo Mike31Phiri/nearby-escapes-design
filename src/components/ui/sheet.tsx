@@ -63,12 +63,12 @@ const SheetContent = React.forwardRef<
 >(({ side = "right", overlayClassName, className, children, ...props }, ref) => {
   const innerRef = React.useRef<HTMLDivElement | null>(null);
 
-  // Every time the sheet mounts/updates, reset its own scroll to top
-  React.useLayoutEffect(() => {
+  // Reset sheet scroll to top on mount
+  React.useEffect(() => {
     if (innerRef.current) {
       innerRef.current.scrollTop = 0;
     }
-  });
+  }, []);
 
   return (
     // Portal always renders into document.body — never inside the page scroll container

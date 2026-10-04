@@ -11,11 +11,16 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useWishlistStore, getListingHref } from "@/store/wishlistStore";
 
 export function WishlistPage() {
-  const { items, removeItem } = useWishlistStore();
+  const { items, removeItem, fetchFromBackend } = useWishlistStore();
+
+  useEffect(() => {
+    fetchFromBackend();
+  }, [fetchFromBackend]);
 
   return (
     <div className="min-h-screen flex flex-col bg-muted font-sans">

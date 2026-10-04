@@ -14,8 +14,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     if (!initialized.current) {
       initialized.current = true;
-      // Reconcile and verify auth state with server on mount
-      useAuthStore.getState().initialize();
+      // Sync local auth state synchronously without firing blocking network requests
+      useAuthStore.getState().syncLocalSession();
     }
   }, []);
 

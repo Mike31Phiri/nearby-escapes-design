@@ -1,8 +1,9 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import {
   LayoutDashboard,
   Users,
@@ -162,15 +163,21 @@ export function AdminSidebar({ isCollapsed = false, onToggle }: AdminSidebarProp
 
 export function MobileAdminNav() {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="md:hidden h-9 w-9 text-neutral-600 hover:bg-neutral-100 rounded-xl">
+        <Button variant="ghost" size="icon" className="md:hidden h-9 w-9 text-neutral-600 hover:bg-neutral-100 rounded-xl cursor-pointer">
           <Menu className="h-5 w-5" />
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="w-[260px] p-4 bg-white flex flex-col">
+        <SheetTitle className="sr-only">Admin Navigation</SheetTitle>
         <div className="flex items-center gap-2 mb-6 pb-4 border-b border-neutral-100">
           <span className="font-bold text-base text-neutral-900">Nearby Escapes</span>
           <span className="text-[10px] font-semibold text-purple bg-purple/10 border border-purple/15 px-1.5 py-0.5 rounded">
@@ -186,7 +193,8 @@ export function MobileAdminNav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-colors ${
+                onClick={() => setOpen(false)}
+                className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-colors cursor-pointer ${
                   isActive
                     ? "bg-purple/10 text-purple font-semibold"
                     : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 font-medium"
@@ -207,14 +215,16 @@ export function MobileAdminNav() {
         <div className="pt-4 border-t border-neutral-100 space-y-1">
           <Link
             href="/host"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-neutral-500 hover:text-neutral-900 hover:bg-neutral-50 transition-colors"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-neutral-500 hover:text-neutral-900 hover:bg-neutral-50 transition-colors cursor-pointer"
           >
             <Building2 className="h-3.5 w-3.5 shrink-0" />
             Host Portal
           </Link>
           <Link
             href="/"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-neutral-500 hover:text-neutral-900 hover:bg-neutral-50 transition-colors"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-neutral-500 hover:text-neutral-900 hover:bg-neutral-50 transition-colors cursor-pointer"
           >
             <LayoutDashboard className="h-3.5 w-3.5 shrink-0" />
             Public Marketplace

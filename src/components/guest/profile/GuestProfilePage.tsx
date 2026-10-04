@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AccountSettingsMenu } from "./AccountSettingsMenu";
-import { useAuth } from "@/lib/store/authStore";
+import { useAuth, useAuthStore } from "@/lib/store/authStore";
 import { useBookingStore } from "@/store/bookingStore";
 import { getMyBookings } from "@/lib/api/bookings";
 import { getMyGuestReviews, type ReviewItemDto } from "@/lib/api/reviews";
@@ -256,7 +256,8 @@ export function GuestProfilePage() {
     async function loadDatabaseData() {
       setIsLoadingData(true);
       try {
-        const [apiBookings, apiReviews] = await Promise.all([
+        const [, apiBookings, apiReviews] = await Promise.all([
+          useAuthStore.getState().fetchProfile().catch(() => null),
           getMyBookings().catch(() => []),
           getMyGuestReviews().catch(() => []),
         ]);

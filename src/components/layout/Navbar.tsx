@@ -20,11 +20,11 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { EnvelopeSimple as MessageSquare } from "@phosphor-icons/react";
-import { useAuth } from "@/lib/store/authStore";
+import { useAuth, useAuthStore } from "@/lib/store/authStore";
 import { useNotificationStore } from "@/store/notificationStore";
 import { WishlistPopover } from "@/components/guest/wishlist/WishlistPopover";
 import { cn } from "@/lib/utils";
-import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { DateRangePicker, serializeDates, type DateRange } from "@/components/ui/DateRangePicker";
 
 export function Navbar() {
@@ -60,6 +60,12 @@ export function Navbar() {
   const [showCompactSearch, setShowCompactSearch] = useState(false);
   const [headerWhere, setHeaderWhere] = useState("");
   const [headerDates, setHeaderDates] = useState<DateRange>({ checkIn: null, checkOut: null });
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+
+  // Automatically close sheet on route transition
+  useEffect(() => {
+    setIsSheetOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     if (!isSearchPage) {
@@ -176,12 +182,15 @@ export function Navbar() {
           </Link>
 
           {/* Saved / Wishlist Popover (shows for all users including authenticated) */}
-          {!isHydrating && <WishlistPopover />}
+          <WishlistPopover />
 
           {/* Notifications bell icon — authenticated users (desktop & mobile) */}
-          {!isHydrating && isAuthenticated && (
+          {isAuthenticated && (
             <Link
               href="/notifications"
+              onClick={() => {
+                useNotificationStore.getState().fetchNotifications();
+              }}
               className="flex items-center justify-center text-purple cursor-pointer relative h-9 w-9 rounded-full hover:bg-purple/10 transition-colors"
               aria-label="Notifications"
             >
@@ -192,41 +201,33 @@ export function Navbar() {
             </Link>
           )}
 
-          {/* Auth links / Loading skeleton (unauthenticated only) */}
-          {isHydrating ? (
+          {/* Auth links (unauthenticated only) */}
+          {!isAuthenticated && (
             <div className="hidden md:flex items-center gap-2 ml-1 border-l border-neutral-200 pl-3">
-              <div className="w-16 h-8 rounded-full bg-neutral-100 animate-pulse" />
-              <div className="w-20 h-8 rounded-full bg-neutral-100 animate-pulse" />
+              <Link
+                href={`/auth/login${authNext}`}
+                className="text-[13px] font-semibold text-neutral-800 hover:text-purple hover:bg-neutral-100 px-3.5 py-1.5 rounded-full transition-colors"
+              >
+                Log in
+              </Link>
+              <Link
+                href={`/auth/register${authNext}`}
+                className="text-[13px] font-bold text-neutral-900 bg-gold hover:bg-gold-hover px-4 py-1.5 rounded-full transition-colors shadow-xs"
+              >
+                Sign up
+              </Link>
             </div>
-          ) : (
-            !isAuthenticated && (
-              <div className="hidden md:flex items-center gap-2 ml-1 border-l border-neutral-200 pl-3">
-                <Link
-                  href={`/auth/login${authNext}`}
-                  className="text-[13px] font-semibold text-neutral-800 hover:text-purple hover:bg-neutral-100 px-3.5 py-1.5 rounded-full transition-colors"
-                >
-                  Log in
-                </Link>
-                <Link
-                  href={`/auth/register${authNext}`}
-                  className="text-[13px] font-bold text-neutral-900 bg-gold hover:bg-gold-hover px-4 py-1.5 rounded-full transition-colors shadow-xs"
-                >
-                  Sign up
-                </Link>
-              </div>
-            )
           )}
 
           {/* Profile Dropdown / Nav Menu */}
-          <Sheet>
+          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
               <button
                 className="flex items-center md:gap-2 p-1.5 rounded-lg text-neutral-800 hover:text-purple hover:bg-neutral-100 transition-colors cursor-pointer outline-none focus-visible:outline-none"
                 aria-label="Menu"
               >
                 <Menu className="h-6 w-6 shrink-0" strokeWidth={2.2} />
-                {!isHydrating &&
-                  isAuthenticated &&
+                {isAuthenticated &&
                   (user?.avatar ? (
                     <img
                       src={user.avatar}
@@ -249,7 +250,11 @@ export function Navbar() {
 
               {/* Sheet Top Header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-100 pr-12">
-                <Link href="/" className="flex items-center gap-1.5 group">
+                <Link
+                  href="/"
+                  onClick={() => setIsSheetOpen(false)}
+                  className="flex items-center gap-1.5 group cursor-pointer"
+                >
                   <span className="text-[20px] font-semibold text-black tracking-tight">
                     Nearby
                   </span>
@@ -262,44 +267,47 @@ export function Navbar() {
               {/* Scrollable Content Body */}
               <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
                 {/* 1. Auth Card */}
-                {!isHydrating && isAuthenticated ? (
+                {isAuthenticated ? (
                   <div className="flex items-center gap-3 bg-[#f8f5fc] border border-purple/15 rounded-2xl p-3.5">
-                    <SheetClose asChild>
-                      <Link
-                        href="/profile"
-                        className="flex items-center gap-3 flex-1 min-w-0 group cursor-pointer"
-                      >
-                        <div className="h-10 w-10 rounded-full bg-gold/20 border border-purple/30 flex items-center justify-center overflow-hidden shrink-0 group-hover:ring-2 group-hover:ring-purple/40 transition-all">
-                          {user?.avatar ? (
-                            <img
-                              src={user.avatar}
-                              alt={user.name ?? ""}
-                              className="h-full w-full object-cover"
-                            />
-                          ) : (
-                            <User className="h-5 w-5 text-purple" />
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm truncate text-neutral-900 group-hover:text-[#6b2bb8] transition-colors">
-                            {user?.name ?? "My Account"}
-                          </p>
-                          {user?.email && (
-                            <p className="text-xs text-neutral-500 truncate">{user.email}</p>
-                          )}
-                        </div>
-                      </Link>
-                    </SheetClose>
-                    <SheetClose asChild>
-                      <button
-                        onClick={logout}
-                        className="text-xs font-semibold text-purple hover:text-purple-hover px-2.5 py-1.5 rounded-lg hover:bg-purple/10 transition-colors shrink-0 cursor-pointer"
-                      >
-                        Sign out
-                      </button>
-                    </SheetClose>
+                    <Link
+                      href="/profile"
+                      onClick={() => {
+                        setIsSheetOpen(false);
+                        useAuthStore.getState().fetchProfile();
+                      }}
+                      className="flex items-center gap-3 flex-1 min-w-0 group cursor-pointer"
+                    >
+                      <div className="h-10 w-10 rounded-full bg-gold/20 border border-purple/30 flex items-center justify-center overflow-hidden shrink-0 group-hover:ring-2 group-hover:ring-purple/40 transition-all">
+                        {user?.avatar ? (
+                          <img
+                            src={user.avatar}
+                            alt={user.name ?? ""}
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <User className="h-5 w-5 text-purple" />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm truncate text-neutral-900 group-hover:text-[#6b2bb8] transition-colors">
+                          {user?.name ?? "My Account"}
+                        </p>
+                        {user?.email && (
+                          <p className="text-xs text-neutral-500 truncate">{user.email}</p>
+                        )}
+                      </div>
+                    </Link>
+                    <button
+                      onClick={async () => {
+                        setIsSheetOpen(false);
+                        await logout();
+                      }}
+                      className="text-xs font-semibold text-purple hover:text-purple-hover px-2.5 py-1.5 rounded-lg hover:bg-purple/10 transition-colors shrink-0 cursor-pointer"
+                    >
+                      Sign out
+                    </button>
                   </div>
-                ) : !isHydrating ? (
+                ) : (
                   <div className="bg-[#f8f5fc] border border-purple/10 rounded-2xl p-4">
                     <p className="font-semibold text-sm text-neutral-900 mb-1">
                       Welcome to Nearby Escapes
@@ -308,25 +316,23 @@ export function Navbar() {
                       Sign in to book stays, tours &amp; transfers across Zambia
                     </p>
                     <div className="flex gap-2">
-                      <SheetClose asChild>
-                        <Link
-                          href={`/auth/login${authNext}`}
-                          className="flex-1 bg-white hover:bg-neutral-50 border border-neutral-200 text-neutral-900 rounded-xl py-2 text-center text-xs font-semibold transition-all shadow-2xs"
-                        >
-                          Log in
-                        </Link>
-                      </SheetClose>
-                      <SheetClose asChild>
-                        <Link
-                          href={`/auth/register${authNext}`}
-                          className="flex-1 bg-gold hover:bg-gold-hover text-neutral-900 rounded-xl py-2 text-center text-xs font-semibold transition-all shadow-xs"
-                        >
-                          Sign up
-                        </Link>
-                      </SheetClose>
+                      <Link
+                        href={`/auth/login${authNext}`}
+                        onClick={() => setIsSheetOpen(false)}
+                        className="flex-1 bg-white hover:bg-neutral-50 border border-neutral-200 text-neutral-900 rounded-xl py-2 text-center text-xs font-semibold transition-all shadow-2xs cursor-pointer"
+                      >
+                        Log in
+                      </Link>
+                      <Link
+                        href={`/auth/register${authNext}`}
+                        onClick={() => setIsSheetOpen(false)}
+                        className="flex-1 bg-gold hover:bg-gold-hover text-neutral-900 rounded-xl py-2 text-center text-xs font-semibold transition-all shadow-xs cursor-pointer"
+                      >
+                        Sign up
+                      </Link>
                     </div>
                   </div>
-                ) : null}
+                )}
 
                 {/* 2. My Account (Authenticated Only) */}
                 {isAuthenticated && (
@@ -335,92 +341,92 @@ export function Navbar() {
                       My Account
                     </p>
                     <div className="space-y-0.5">
-                      <SheetClose asChild>
-                        <Link
-                          href="/profile"
-                          className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150"
-                        >
-                          <User className="h-4 w-4 text-neutral-400 shrink-0" />
-                          Profile
-                        </Link>
-                      </SheetClose>
+                      <Link
+                        href="/profile"
+                        onClick={() => {
+                          setIsSheetOpen(false);
+                          useAuthStore.getState().fetchProfile();
+                        }}
+                        className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150 cursor-pointer"
+                      >
+                        <User className="h-4 w-4 text-neutral-400 shrink-0" />
+                        Profile
+                      </Link>
 
                       {user?.roles?.includes("host") && (
-                        <SheetClose asChild>
-                          <Link
-                            href="/host/listings"
-                            className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150"
-                          >
-                            <Building2 className="h-4 w-4 text-neutral-400 shrink-0" />
-                            My Listings
-                          </Link>
-                        </SheetClose>
+                        <Link
+                          href="/host/listings"
+                          onClick={() => setIsSheetOpen(false)}
+                          className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150 cursor-pointer"
+                        >
+                          <Building2 className="h-4 w-4 text-neutral-400 shrink-0" />
+                          My Listings
+                        </Link>
                       )}
 
-                      <SheetClose asChild>
-                        <Link
-                          href="/trips"
-                          className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150"
-                        >
-                          <CalendarDays className="h-4 w-4 text-neutral-400 shrink-0" />
-                          Bookings &amp; Trips
-                        </Link>
-                      </SheetClose>
+                      <Link
+                        href="/trips"
+                        onClick={() => setIsSheetOpen(false)}
+                        className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150 cursor-pointer"
+                      >
+                        <CalendarDays className="h-4 w-4 text-neutral-400 shrink-0" />
+                        Bookings &amp; Trips
+                      </Link>
 
-                      <SheetClose asChild>
-                        <Link
-                          href="/wishlist"
-                          className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150"
-                        >
-                          <Heart className="h-4 w-4 text-neutral-400 shrink-0" />
-                          Wishlist
-                        </Link>
-                      </SheetClose>
+                      <Link
+                        href="/wishlist"
+                        onClick={() => setIsSheetOpen(false)}
+                        className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150 cursor-pointer"
+                      >
+                        <Heart className="h-4 w-4 text-neutral-400 shrink-0" />
+                        Wishlist
+                      </Link>
 
-                      <SheetClose asChild>
-                        <Link
-                          href="/notifications"
-                          className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150"
-                        >
-                          <Bell className="h-4 w-4 text-neutral-400 shrink-0" />
-                          <span>Notifications</span>
-                          {unreadCount > 0 && (
-                            <span className="ml-auto h-2 w-2 rounded-full bg-[#6b2bb8]" />
-                          )}
-                        </Link>
-                      </SheetClose>
+                      <Link
+                        href="/notifications"
+                        onClick={() => {
+                          setIsSheetOpen(false);
+                          useNotificationStore.getState().fetchNotifications();
+                        }}
+                        className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#6b2bb8] transition-colors duration-150 cursor-pointer"
+                      >
+                        <Bell className="h-4 w-4 text-neutral-400 shrink-0" />
+                        <span>Notifications</span>
+                        {unreadCount > 0 && (
+                          <span className="ml-auto h-2 w-2 rounded-full bg-[#6b2bb8]" />
+                        )}
+                      </Link>
                     </div>
                   </div>
                 )}
 
-                {/* 3. List Your Property Feature Card — ONLY for unauthenticated visitors, REMOVED for authenticated users */}
+                {/* 3. List Your Property Feature Card — ONLY for unauthenticated visitors */}
                 {!isAuthenticated && (
                   <div className="pt-1">
-                    <SheetClose asChild>
-                      <Link
-                        href="/become-host"
-                        className="group flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-br from-[#f8f5fc] via-[#f3eafb]/60 to-[#f8f5fc] border border-[#6b2bb8]/20 hover:border-[#6b2bb8]/45 hover:shadow-xs transition-all duration-200"
-                      >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <div className="h-9 w-9 rounded-xl bg-[#6b2bb8] text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
-                            <Building2 className="h-4 w-4" />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="font-bold text-sm text-[#1a1a1f] group-hover:text-[#6b2bb8] transition-colors leading-tight">
-                              List Your Property
-                            </p>
-                            <p className="text-[11px] text-neutral-500 font-medium leading-tight mt-0.5">
-                              Earn as a host with Nearby Escapes
-                            </p>
-                          </div>
+                    <Link
+                      href="/become-host"
+                      onClick={() => setIsSheetOpen(false)}
+                      className="group flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-br from-[#f8f5fc] via-[#f3eafb]/60 to-[#f8f5fc] border border-[#6b2bb8]/20 hover:border-[#6b2bb8]/45 hover:shadow-xs transition-all duration-200 cursor-pointer"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="h-9 w-9 rounded-xl bg-[#6b2bb8] text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                          <Building2 className="h-4 w-4" />
                         </div>
-                        <ChevronRight className="h-4 w-4 text-[#6b2bb8] shrink-0 group-hover:translate-x-0.5 transition-transform" />
-                      </Link>
-                    </SheetClose>
+                        <div className="min-w-0">
+                          <p className="font-bold text-sm text-[#1a1a1f] group-hover:text-[#6b2bb8] transition-colors leading-tight">
+                            List Your Property
+                          </p>
+                          <p className="text-[11px] text-neutral-500 font-medium leading-tight mt-0.5">
+                            Earn as a host with Nearby Escapes
+                          </p>
+                        </div>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-[#6b2bb8] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                    </Link>
                   </div>
                 )}
 
-                {/* 5. Support (Least Important / Bottom) */}
+                {/* 4. Support */}
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 px-3 mb-1.5">
                     Support
@@ -436,35 +442,32 @@ export function Navbar() {
                       </span>
                     </div>
 
-                    <SheetClose asChild>
-                      <Link
-                        href="/help"
-                        className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:text-black transition-colors"
-                      >
-                        <HelpCircle className="h-4 w-4 text-neutral-400" />
-                        <span>Help Center</span>
-                      </Link>
-                    </SheetClose>
+                    <Link
+                      href="/help"
+                      onClick={() => setIsSheetOpen(false)}
+                      className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:text-black transition-colors cursor-pointer"
+                    >
+                      <HelpCircle className="h-4 w-4 text-neutral-400" />
+                      <span>Help Center</span>
+                    </Link>
 
-                    <SheetClose asChild>
-                      <Link
-                        href="/help#contact"
-                        className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:text-black transition-colors"
-                      >
-                        <MessageSquare className="h-4 w-4 text-neutral-400" />
-                        <span>Contact Support</span>
-                      </Link>
-                    </SheetClose>
+                    <Link
+                      href="/help#contact"
+                      onClick={() => setIsSheetOpen(false)}
+                      className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:text-black transition-colors cursor-pointer"
+                    >
+                      <MessageSquare className="h-4 w-4 text-neutral-400" />
+                      <span>Contact Support</span>
+                    </Link>
 
-                    <SheetClose asChild>
-                      <Link
-                        href="/legal/privacy"
-                        className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:text-black transition-colors"
-                      >
-                        <Shield className="h-4 w-4 text-neutral-400" />
-                        <span>Privacy & Terms</span>
-                      </Link>
-                    </SheetClose>
+                    <Link
+                      href="/legal/privacy"
+                      onClick={() => setIsSheetOpen(false)}
+                      className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:text-black transition-colors cursor-pointer"
+                    >
+                      <Shield className="h-4 w-4 text-neutral-400" />
+                      <span>Privacy & Terms</span>
+                    </Link>
                   </div>
                 </div>
               </div>

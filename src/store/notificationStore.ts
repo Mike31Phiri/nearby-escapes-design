@@ -144,18 +144,36 @@ const mockNotifications: AppNotification[] = [
 
 interface NotificationStore {
   notifications: AppNotification[];
+  isLoading: boolean;
   addNotification: (notification: Omit<AppNotification, "id" | "timestamp" | "read">) => void;
   markAsRead: (id: string) => void;
   markAllAsRead: () => void;
   getUnreadCount: () => number;
   getNotificationsByType: (type?: NotificationType | "all") => AppNotification[];
   getRecentNotifications: (limit?: number) => AppNotification[];
+  fetchNotifications: () => Promise<void>;
 }
 
 export const useNotificationStore = create<NotificationStore>()(
   persist(
     (set, get) => ({
       notifications: mockNotifications,
+      isLoading: false,
+
+      fetchNotifications: async () => {
+        set({ isLoading: true });
+        try {
+          const { getNotifications } = await import("@/lib/api/notifications");
+          const remote = await getNotifications();
+          if (remote && remote.length > 0) {
+            set({ notifications: remote, isLoading: false });
+          } else {
+            set({ isLoading: false });
+          }
+        } catch {
+          set({ isLoading: false });
+        }
+      },
 
       addNotification: (data) =>
         set((state) => ({

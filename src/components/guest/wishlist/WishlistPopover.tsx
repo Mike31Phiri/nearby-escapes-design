@@ -20,7 +20,15 @@ export function WishlistPopover() {
   const visible = useMemo(() => items.slice(0, MAX_VISIBLE), [items]);
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover
+      open={open}
+      onOpenChange={(nextOpen) => {
+        setOpen(nextOpen);
+        if (nextOpen) {
+          useWishlistStore.getState().fetchFromBackend();
+        }
+      }}
+    >
       <PopoverTrigger asChild>
         <button
           className="relative flex items-center justify-center h-9 w-9 rounded-full border border-neutral-200 bg-white text-neutral-600 hover:text-purple hover:border-purple/40 transition-colors outline-none"

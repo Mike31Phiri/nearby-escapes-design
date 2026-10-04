@@ -6,7 +6,6 @@ import type { Stay } from "@/types/stay";
 import { cn } from "@/lib/utils";
 import { memo } from "react";
 import { toast } from "sonner";
-import { useSearchParams } from "next/navigation";
 import { useWishlistStore } from "@/store/wishlistStore";
 
 interface ListingCardProps {
@@ -16,9 +15,9 @@ interface ListingCardProps {
 }
 
 export const ListingCard = memo(function ListingCard({ listing, className }: ListingCardProps) {
-  const searchParams = useSearchParams();
   const { isSaved, addItem, removeItem } = useWishlistStore();
   const isFavorited = isSaved(listing.id);
+  const query = typeof window !== "undefined" ? window.location.search : "";
 
   const toggleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -50,8 +49,8 @@ export const ListingCard = memo(function ListingCard({ listing, className }: Lis
   return (
     <Link
       href={
-        searchParams.toString()
-          ? `/listings/stays/${listing.id}?${searchParams.toString()}`
+        query
+          ? `/listings/stays/${listing.id}${query}`
           : `/listings/stays/${listing.id}`
       }
       className={cn("group block", className)}

@@ -172,7 +172,7 @@ export function DiscoveryDirectory() {
         {/* Section Header */}
         <div className="mb-6 md:mb-8">
           <h2 className="text-xl md:text-2xl font-bold tracking-tight text-neutral-900 font-display">
-            Inspiration for future getaways
+            Exploration directory for all your needs
           </h2>
           <p className="mt-1 text-sm text-neutral-500">
             Explore curated stays, adventures, and top destinations across Zambia

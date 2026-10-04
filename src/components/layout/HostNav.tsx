@@ -21,7 +21,7 @@ import {
   LucideIcon,
 } from "lucide-react";
 import { BACKDROP_CLASS, cn } from "@/lib/utils";
-import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { HostNotificationsPopover } from "@/components/host/HostNotificationsPopover";
 import { useAuthStore } from "@/lib/store/authStore";
 
@@ -63,6 +63,10 @@ export function HostNav() {
   const pathname = rawPathname || "";
   const [sheetOpen, setSheetOpen] = useState(false);
   const logout = useAuthStore((s) => s.logout);
+
+  useEffect(() => {
+    setSheetOpen(false);
+  }, [pathname]);
 
   const isHostRoute = Boolean(pathname && (pathname.startsWith("/host") || hostRoutes.includes(pathname)));
   const isActive = (href: string) => {
@@ -172,68 +176,64 @@ export function HostNav() {
                         </p>
                         <div className="flex flex-col gap-1">
                           {/* Listings */}
-                          <SheetClose asChild>
-                            <Link
-                              href="/host/listings"
-                              className={cn(
-                                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
-                                pathname === "/host/listings" || pathname.startsWith("/host/listings")
-                                  ? "bg-purple/10 text-purple font-semibold"
-                                  : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
-                              )}
-                            >
-                              <Building2 className="h-4 w-4 shrink-0 text-neutral-500" />
-                              <span>My Listings</span>
-                            </Link>
-                          </SheetClose>
+                          <Link
+                            href="/host/listings"
+                            onClick={() => setSheetOpen(false)}
+                            className={cn(
+                              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors cursor-pointer",
+                              pathname === "/host/listings" || pathname.startsWith("/host/listings")
+                                ? "bg-purple/10 text-purple font-semibold"
+                                : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
+                            )}
+                          >
+                            <Building2 className="h-4 w-4 shrink-0 text-neutral-500" />
+                            <span>My Listings</span>
+                          </Link>
 
                           {/* Bookings */}
-                          <SheetClose asChild>
-                            <Link
-                              href="/host/bookings"
-                              className={cn(
-                                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
-                                pathname === "/host/bookings" || pathname.startsWith("/host/bookings")
-                                  ? "bg-purple/10 text-purple font-semibold"
-                                  : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
-                              )}
-                            >
-                              <CalendarCheck className="h-4 w-4 shrink-0 text-neutral-500" />
-                              <span>Bookings</span>
-                            </Link>
-                          </SheetClose>
+                          <Link
+                            href="/host/bookings"
+                            onClick={() => setSheetOpen(false)}
+                            className={cn(
+                              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors cursor-pointer",
+                              pathname === "/host/bookings" || pathname.startsWith("/host/bookings")
+                                ? "bg-purple/10 text-purple font-semibold"
+                                : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
+                            )}
+                          >
+                            <CalendarCheck className="h-4 w-4 shrink-0 text-neutral-500" />
+                            <span>Bookings</span>
+                          </Link>
 
                           {/* Inventory */}
-                          <SheetClose asChild>
-                            <Link
-                              href="/host/inventory"
-                              className={cn(
-                                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
-                                pathname === "/host/inventory" || pathname.startsWith("/host/inventory")
-                                  ? "bg-purple/10 text-purple font-semibold"
-                                  : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
-                              )}
-                            >
-                              <Boxes className="h-4 w-4 shrink-0 text-neutral-500" />
-                              <span>Inventory</span>
-                            </Link>
-                          </SheetClose>
+                          <Link
+                            href="/host/inventory"
+                            onClick={() => setSheetOpen(false)}
+                            className={cn(
+                              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors cursor-pointer",
+                              pathname === "/host/inventory" || pathname.startsWith("/host/inventory")
+                                ? "bg-purple/10 text-purple font-semibold"
+                                : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
+                            )}
+                          >
+                            <Boxes className="h-4 w-4 shrink-0 text-neutral-500" />
+                            <span>Inventory</span>
+                          </Link>
 
                           {/* Reviews */}
-                          <SheetClose asChild>
-                            <Link
-                              href="/host/reviews"
-                              className={cn(
-                                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
-                                pathname === "/host/reviews" || pathname.startsWith("/host/reviews")
-                                  ? "bg-purple/10 text-purple font-semibold"
-                                  : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
-                              )}
-                            >
-                              <Star className="h-4 w-4 shrink-0 text-neutral-500" />
-                              <span>Reviews</span>
-                            </Link>
-                          </SheetClose>
+                          <Link
+                            href="/host/reviews"
+                            onClick={() => setSheetOpen(false)}
+                            className={cn(
+                              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors cursor-pointer",
+                              pathname === "/host/reviews" || pathname.startsWith("/host/reviews")
+                                ? "bg-purple/10 text-purple font-semibold"
+                                : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
+                            )}
+                          >
+                            <Star className="h-4 w-4 shrink-0 text-neutral-500" />
+                            <span>Reviews</span>
+                          </Link>
                         </div>
                       </div>
 
@@ -244,87 +244,81 @@ export function HostNav() {
                         </p>
                         <div className="flex flex-col gap-1">
                           {/* Profile */}
-                          <SheetClose asChild>
-                            <Link
-                              href="/host/account"
-                              className={cn(
-                                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
-                                pathname === "/host/account"
-                                  ? "bg-purple/10 text-purple font-semibold"
-                                  : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
-                              )}
-                            >
-                              <CircleUserRound className="h-4 w-4 shrink-0 text-neutral-500" />
-                              <span>Profile</span>
-                            </Link>
-                          </SheetClose>
+                          <Link
+                            href="/host/account"
+                            onClick={() => setSheetOpen(false)}
+                            className={cn(
+                              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors cursor-pointer",
+                              pathname === "/host/account"
+                                ? "bg-purple/10 text-purple font-semibold"
+                                : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
+                            )}
+                          >
+                            <CircleUserRound className="h-4 w-4 shrink-0 text-neutral-500" />
+                            <span>Profile</span>
+                          </Link>
 
                           {/* Settings */}
-                          <SheetClose asChild>
-                            <Link
-                              href="/host/settings"
-                              className={cn(
-                                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
-                                pathname === "/host/settings"
-                                  ? "bg-purple/10 text-purple font-semibold"
-                                  : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
-                              )}
-                            >
-                              <Settings2 className="h-4 w-4 shrink-0 text-neutral-500" />
-                              <span>Settings</span>
-                            </Link>
-                          </SheetClose>
+                          <Link
+                            href="/host/settings"
+                            onClick={() => setSheetOpen(false)}
+                            className={cn(
+                              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors cursor-pointer",
+                              pathname === "/host/settings"
+                                ? "bg-purple/10 text-purple font-semibold"
+                                : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
+                            )}
+                          >
+                            <Settings2 className="h-4 w-4 shrink-0 text-neutral-500" />
+                            <span>Settings</span>
+                          </Link>
 
                           {/* Help */}
-                          <SheetClose asChild>
-                            <Link
-                              href="/host/help"
-                              className={cn(
-                                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
-                                pathname === "/host/help"
-                                  ? "bg-purple/10 text-purple font-semibold"
-                                  : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
-                              )}
-                            >
-                              <HelpCircle className="h-4 w-4 shrink-0 text-neutral-500" />
-                              <span>Host Help Center</span>
-                            </Link>
-                          </SheetClose>
+                          <Link
+                            href="/host/help"
+                            onClick={() => setSheetOpen(false)}
+                            className={cn(
+                              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors cursor-pointer",
+                              pathname === "/host/help"
+                                ? "bg-purple/10 text-purple font-semibold"
+                                : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
+                            )}
+                          >
+                            <HelpCircle className="h-4 w-4 shrink-0 text-neutral-500" />
+                            <span>Host Help Center</span>
+                          </Link>
 
                           {/* Privacy Policy */}
-                          <SheetClose asChild>
-                            <Link
-                              href="/privacy"
-                              className={cn(
-                                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors",
-                                pathname === "/privacy"
-                                  ? "bg-purple/10 text-purple font-semibold"
-                                  : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
-                              )}
-                            >
-                              <ShieldCheck className="h-4 w-4 shrink-0 text-neutral-500" />
-                              <span>Privacy Policy</span>
-                            </Link>
-                          </SheetClose>
+                          <Link
+                            href="/privacy"
+                            onClick={() => setSheetOpen(false)}
+                            className={cn(
+                              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors cursor-pointer",
+                              pathname === "/privacy"
+                                ? "bg-purple/10 text-purple font-semibold"
+                                : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
+                            )}
+                          >
+                            <ShieldCheck className="h-4 w-4 shrink-0 text-neutral-500" />
+                            <span>Privacy Policy</span>
+                          </Link>
                         </div>
                       </div>
                     </div>
 
                     {/* Log out */}
                     <div className="border-t border-neutral-100 pt-3">
-                      <SheetClose asChild>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setSheetOpen(false);
-                            logout();
-                          }}
-                          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium text-rose-600 hover:bg-rose-50 transition-colors w-full text-left cursor-pointer"
-                        >
-                          <LogOut className="h-4 w-4 shrink-0" />
-                          <span>Log Out</span>
-                        </button>
-                      </SheetClose>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSheetOpen(false);
+                          logout();
+                        }}
+                        className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium text-rose-600 hover:bg-rose-50 transition-colors w-full text-left cursor-pointer"
+                      >
+                        <LogOut className="h-4 w-4 shrink-0" />
+                        <span>Log Out</span>
+                      </button>
                     </div>
                   </div>
                 </SheetContent>
