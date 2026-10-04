@@ -68,30 +68,25 @@ export function HostNotificationsPopover() {
     [notifications],
   );
 
-  const handleItemClick = (id: string, actionUrl?: string) => {
+  const handleItemClick = (id: string) => {
     markAsRead(id);
-    if (actionUrl) {
-      setOpen(false);
-      router.push(actionUrl);
-    }
   };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
-          className="relative flex items-center justify-center h-9 w-9 rounded-full border border-neutral-200 bg-white text-neutral-600 hover:text-purple hover:border-purple/40 transition-colors outline-none"
+          className="relative flex items-center justify-center h-9 w-9 rounded-full border border-neutral-200 bg-white text-neutral-600 hover:text-purple hover:border-purple/40 transition-colors outline-none cursor-pointer"
           aria-label="Notifications"
         >
           <Bell className="h-[18px] w-[18px]" />
           {mounted && unreadCount > 0 && (
-            <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white shadow-2xs" />
+            <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-purple ring-2 ring-white shadow-2xs" />
           )}
         </button>
       </PopoverTrigger>
 
-      {/* Full-screen dimmed + blurred backdrop for hierarchy (same as the
-          booking details dialog). Clicking it dismisses the popover. */}
+      {/* Full-screen dimmed + blurred backdrop for hierarchy */}
       {open &&
         createPortal(
           <div
@@ -115,7 +110,7 @@ export function HostNotificationsPopover() {
               Notifications
             </h3>
             {unreadCount > 0 && (
-              <span className="bg-rose-500 text-white text-[11px] font-semibold px-2 py-0.5 rounded-full tracking-wide">
+              <span className="bg-purple text-white text-[11px] font-semibold px-2 py-0.5 rounded-full tracking-wide">
                 {unreadCount}
               </span>
             )}
@@ -123,7 +118,7 @@ export function HostNotificationsPopover() {
           {unreadCount > 0 && (
             <button
               onClick={markAllAsRead}
-              className="text-[11px] font-bold text-purple hover:text-purple transition-colors flex items-center gap-1 outline-none"
+              className="text-[11px] font-bold text-purple hover:text-purple transition-colors flex items-center gap-1 outline-none cursor-pointer"
             >
               <CheckCheck className="h-3.5 w-3.5" />
               Mark all read
@@ -140,59 +135,49 @@ export function HostNotificationsPopover() {
               </div>
               <p className="text-sm font-bold text-neutral-900">All caught up!</p>
               <p className="text-xs text-neutral-500 mt-1 leading-relaxed">
-                We&apos;ll pop a notification here when something needs your attention.
+                We&apos;ll notify you here when new updates arrive.
               </p>
             </div>
           ) : (
-            <ul className="divide-y divide-neutral-200">
+            <ul className="divide-y divide-neutral-100">
               {visible.map((n) => {
-                const style = TYPE_STYLES[n.type] ?? TYPE_STYLES.system;
-                const Icon = style.icon;
                 return (
                   <li key={n.id}>
                     <button
-                      onClick={() => handleItemClick(n.id, n.actionUrl)}
+                      onClick={() => handleItemClick(n.id)}
                       className={cn(
-                        "w-full flex gap-3 px-4 py-3 text-left transition-colors hover:bg-neutral-50 outline-none",
-                        !n.read && "bg-[#f3eafb]/25",
+                        "w-full flex items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-neutral-50 outline-none cursor-pointer",
+                        !n.read && "bg-purple/[0.03]",
                       )}
                     >
-                      <div
-                        className={cn(
-                          "h-9 w-9 shrink-0 rounded-full flex items-center justify-center mt-0.5",
-                          style.bg,
-                        )}
-                      >
-                        <Icon className={cn("h-4 w-4", style.fg)} />
+                      <div className="pt-1 shrink-0">
+                        <div
+                          className={cn(
+                            "h-2 w-2 rounded-full transition-colors",
+                            n.read ? "bg-transparent" : "bg-purple ring-2 ring-purple/20",
+                          )}
+                        />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-baseline justify-between gap-2">
                           <p
                             className={cn(
                               "text-[13px] leading-snug",
                               n.read
-                                ? "text-neutral-700 font-semibold"
+                                ? "text-neutral-700 font-medium"
                                 : "text-neutral-900 font-bold",
                             )}
                           >
                             {n.title}
                           </p>
-                          <span className="text-xs text-black-muted whitespace-nowrap mt-0.5 shrink-0">
+                          <span className="text-[11px] text-neutral-400 whitespace-nowrap shrink-0">
                             {formatTimestamp(n.timestamp)}
                           </span>
                         </div>
-                        <p className="text-[12px] text-neutral-600 leading-relaxed mt-0.5 line-clamp-2">
+                        <p className="text-[12px] text-neutral-500 leading-relaxed mt-0.5 line-clamp-2">
                           {n.description}
                         </p>
-                        {n.actionLabel && (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-purple mt-1.5 hover:text-purple">
-                            {n.actionLabel} →
-                          </span>
-                        )}
                       </div>
-                      {!n.read && (
-                        <span className="h-2 w-2 rounded-full bg-rose-500 shrink-0 mt-1.5" />
-                      )}
                     </button>
                   </li>
                 );
@@ -200,14 +185,6 @@ export function HostNotificationsPopover() {
             </ul>
           )}
         </div>
-
-        {/* Footer hint */}
-        {visible.length > 0 && (
-          <div className="flex items-center justify-center gap-1.5 px-4 py-2.5 border-t border-neutral-200 bg-neutral-50 text-xs text-black-muted">
-            <X className="h-3 w-3" />
-            Tap a notification to open it
-          </div>
-        )}
       </PopoverContent>
     </Popover>
   );
