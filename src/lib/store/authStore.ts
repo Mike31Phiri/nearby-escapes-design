@@ -3,6 +3,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { safeLocalStorage } from "@/lib/safeStorage";
 import type { User } from "@/types/user";
 import * as authApi from "../api/auth";
+import { clearAuthCookies, getAuthCookie } from "@/lib/auth/cookies";
 
 interface AuthState {
   user: User | null;
@@ -32,6 +33,7 @@ export const useAuthStore = create<AuthState>()(
           user,
           isAuthenticated: !!user,
           isHydrating: false,
+          isLoading: false,
         }),
 
       setHydrating: (hydrating: boolean) =>
@@ -41,26 +43,30 @@ export const useAuthStore = create<AuthState>()(
         const token =
           typeof window !== "undefined"
             ? localStorage.getItem("nearby_access_token") ||
-              localStorage.getItem("token")
+              localStorage.getItem("token") ||
+              getAuthCookie()
             : null;
 
-        // If there's neither a cached user nor a token, mark hydrated & unauthenticated immediately
-        if (!get().user && !token) {
-          set({ isAuthenticated: false, isHydrating: false });
+        // If there is no token anywhere, user is definitively not authenticated
+        if (!token) {
+          clearAuthCookies();
+          set({
+            user: null,
+            isAuthenticated: false,
+            isHydrating: false,
+            isLoading: false,
+          });
           return;
         }
 
-        // If we already have a cached user, we can unblock rendering immediately
-        if (get().user) {
-          set({ isAuthenticated: true, isHydrating: false });
-        }
+        // Token exists — keep isHydrating: true while verifying with the server
+        // to prevent premature "auth true" rendering glitches
+        set({ isLoading: true, isHydrating: true });
 
-        set({ isLoading: true });
-
-        // Silent background revalidation / sync with server
         const attempt = async (retriesLeft: number): Promise<void> => {
           try {
             const freshUser = await authApi.fetchCurrentUser();
+            // Server verified session!
             set({
               user: freshUser,
               isAuthenticated: true,
@@ -74,6 +80,7 @@ export const useAuthStore = create<AuthState>()(
               if (typeof window !== "undefined") {
                 localStorage.removeItem("nearby_access_token");
                 localStorage.removeItem("token");
+                clearAuthCookies();
               }
               set({
                 user: null,
@@ -84,22 +91,22 @@ export const useAuthStore = create<AuthState>()(
               return;
             }
 
-            // Server restarting or network hiccup — retry before giving up
+            // Server restarting or temporary network hiccup — retry once
             if (retriesLeft > 0) {
-              await new Promise((r) => setTimeout(r, 2000));
+              await new Promise((r) => setTimeout(r, 1500));
               return attempt(retriesLeft - 1);
             }
 
-            // Do NOT log the user out on network/connectivity issues; keep cached user
+            // Backend unreachable / offline fallback
             set({
               isLoading: false,
               isHydrating: false,
-              isAuthenticated: Boolean(get().user),
+              isAuthenticated: Boolean(get().user && token),
             });
           }
         };
 
-        await attempt(2);
+        await attempt(1);
       },
 
       logout: async () => {
@@ -110,6 +117,7 @@ export const useAuthStore = create<AuthState>()(
           if (typeof window !== "undefined") {
             localStorage.removeItem("nearby_access_token");
             localStorage.removeItem("token");
+            clearAuthCookies();
           }
           set({
             user: null,
@@ -126,13 +134,13 @@ export const useAuthStore = create<AuthState>()(
     {
       name: "nearby_auth_store",
       storage: createJSONStorage(() => safeLocalStorage),
+      // Only cache user metadata for offline/optimistic display.
+      // Do NOT persist isAuthenticated: true so we never render auth true before verification!
       partialize: (state) => ({
         user: state.user,
-        isAuthenticated: state.isAuthenticated,
       }),
-      onRehydrateStorage: () => (state) => {
-        // Once persisted state is rehydrated from localStorage, unblock hydration
-        state?.setHydrating(false);
+      onRehydrateStorage: () => () => {
+        // Hydration from local storage complete
       },
     },
   ),

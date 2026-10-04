@@ -1,5 +1,6 @@
 import apiClient from "./client";
 import type { User } from "@/types/user";
+import { setAuthCookies, clearAuthCookies } from "@/lib/auth/cookies";
 import type {
   LoginDto,
   RegisterDto,
@@ -20,6 +21,7 @@ export const login = async (
   }>("/auth/login", dto);
   if (data.accessToken && typeof window !== "undefined") {
     localStorage.setItem("nearby_access_token", data.accessToken);
+    setAuthCookies(data.accessToken);
   }
   return data;
 };
@@ -35,6 +37,7 @@ export const register = async (
   }>("/auth/register", dto);
   if (data.accessToken && typeof window !== "undefined") {
     localStorage.setItem("nearby_access_token", data.accessToken);
+    setAuthCookies(data.accessToken);
   }
   return data;
 };
@@ -51,6 +54,7 @@ export const logout = async (): Promise<void> => {
     if (typeof window !== "undefined") {
       localStorage.removeItem("nearby_access_token");
       localStorage.removeItem("token");
+      clearAuthCookies();
     }
   }
 };
@@ -103,6 +107,7 @@ export const verifyOtp = async (
   }>("/auth/verify-otp", dto);
   if (data.accessToken && typeof window !== "undefined") {
     localStorage.setItem("nearby_access_token", data.accessToken);
+    setAuthCookies(data.accessToken);
   }
   return data;
 };
@@ -111,6 +116,7 @@ export const refreshSession = async (): Promise<{ user: User; accessToken: strin
   const { data } = await apiClient.post<{ user: User; accessToken: string }>("/auth/refresh");
   if (data.accessToken && typeof window !== "undefined") {
     localStorage.setItem("nearby_access_token", data.accessToken);
+    setAuthCookies(data.accessToken);
   }
   return data;
 };
@@ -131,6 +137,7 @@ export const verifyEmail = async (
   }>("/auth/verify-email", dto);
   if (data.accessToken && typeof window !== "undefined") {
     localStorage.setItem("nearby_access_token", data.accessToken);
+    setAuthCookies(data.accessToken);
   }
   return data;
 };

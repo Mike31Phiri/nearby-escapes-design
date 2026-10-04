@@ -1,4 +1,5 @@
 import axios, { AxiosError } from "axios";
+import { clearAuthCookies } from "@/lib/auth/cookies";
 
 const API_ORIGIN = (
   process.env.NEXT_PUBLIC_API_URL ||
@@ -58,6 +59,7 @@ async function endSession() {
   if (typeof window === "undefined") return;
   localStorage.removeItem("nearby_access_token");
   localStorage.removeItem("token");
+  clearAuthCookies();
 
   // Clear auth state without a circular import at module load
   const { useAuthStore } = await import("@/lib/store/authStore");
