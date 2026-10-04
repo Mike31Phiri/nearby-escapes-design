@@ -281,25 +281,21 @@ export function ExperienceDetailPage({
           time: "08:00 AM",
           title: "Hotel Pick-up & Helipad Welcome",
           description: "Convenient pick-up from your lodge followed by safety orientation, flight headset fitting, and pilot briefing.",
-          duration: "30 mins",
         },
         {
           time: "08:45 AM",
           title: "Scenic Flight Over Victoria Falls & Gorge",
           description: "Take to the skies directly over the Batoka Gorge and Victoria Falls. Enjoy continuous 360-degree panoramic viewpoints and aerial photography.",
-          duration: "45 mins",
         },
         {
           time: "09:45 AM",
           title: "Zambezi National Park Low-Level Sweep",
           description: "Low-altitude pass along the upper Zambezi River spotting elephants, hippos, and buffalo herds in their natural habitat.",
-          duration: "30 mins",
         },
         {
           time: "10:30 AM",
           title: "Touchdown, Route Certificate & Refreshments",
           description: "Land back at the helipad, receive your personalized flight route certificate, enjoy chilled drinks, and return transfer to your hotel.",
-          duration: "45 mins",
         },
       ];
     }
@@ -309,25 +305,21 @@ export function ExperienceDetailPage({
           time: "15:30 PM",
           title: "Boarding & Welcome Refreshment",
           description: "Board our spacious river vessel with comfortable seating and safety life jackets. Introduction to the river captain.",
-          duration: "30 mins",
         },
         {
           time: "16:00 PM",
           title: "Zambezi Islands & Hippo Pods Cruise",
           description: "Navigate upstream along palm-fringed islands observing hippo pods, sunbathing crocodiles, and exotic water birds.",
-          duration: "1.5 hours",
         },
         {
           time: "17:30 PM",
           title: "African Sunset & Gourmet Canapés",
           description: "Anchor in quiet calm waters to witness the legendary golden African sunset over the water while enjoying drinks and local snacks.",
-          duration: "45 mins",
         },
         {
           time: "18:30 PM",
           title: "Disembarkation & Transfer",
           description: "Return to the jetty as twilight settles. Transfer back to your accommodation.",
-          duration: "30 mins",
         },
       ];
     }
@@ -337,25 +329,21 @@ export function ExperienceDetailPage({
           time: "09:00 AM",
           title: "Village Welcome & Chief Greeting",
           description: "Arrive at the community gates, welcome greetings with local community elders, and historical background of the area.",
-          duration: "45 mins",
         },
         {
           time: "10:00 AM",
           title: "Traditional Crafts & Artisan Demonstrations",
           description: "Hands-on participation in authentic basket weaving, pottery shaping, and traditional tool making.",
-          duration: "1 hour",
         },
         {
           time: "11:15 AM",
           title: "Community Tour & Folk Music",
           description: "Experience community traditions, local instruments, folk songs, and educational projects.",
-          duration: "45 mins",
         },
         {
           time: "12:15 PM",
           title: "Traditional Feast & Farewell",
           description: "Taste authentic Zambian Nshima, seasonal vegetables, and wild relish before concluding the cultural tour.",
-          duration: "1 hour",
         },
       ];
     }
@@ -365,25 +353,21 @@ export function ExperienceDetailPage({
           time: "08:30 AM",
           title: "Farm Welcome & Dairy Barn Tour",
           description: "Arrival at the farmhouse, morning orientation, and hands-on participation in organic dairy care and milking.",
-          duration: "1 hour",
         },
         {
           time: "09:45 AM",
           title: "Orchard & Crop Fields Walk",
           description: "Walk through seasonal organic vegetable gardens and fruit orchards with tips on sustainable Zambian farming.",
-          duration: "1 hour",
         },
         {
           time: "11:00 AM",
           title: "Harvesting & Farm-to-Table Workshop",
           description: "Pick fresh produce and learn traditional bread baking and cheese making techniques in the outdoor kitchen.",
-          duration: "1 hour",
         },
         {
           time: "12:15 PM",
           title: "Country Lunch & Tasting",
           description: "Relaxed family-style farm lunch with ingredients picked fresh from the fields, fresh juice, and local honey.",
-          duration: "1.5 hours",
         },
       ];
     }
@@ -393,25 +377,21 @@ export function ExperienceDetailPage({
         time: "06:00 AM",
         title: "Sunrise Bush Departure & Gate Entry",
         description: "Meet your licensed safari ranger in a custom open 4x4 vehicle. Enter the park as the morning light activates wildlife.",
-        duration: "45 mins",
       },
       {
         time: "07:00 AM",
         title: "Predator & Big Game Tracking",
         description: "Navigate river loops and waterholes tracking lions, leopards, and large elephant herds during peak activity hours.",
-        duration: "2 hours",
       },
       {
         time: "09:30 AM",
         title: "Bush Coffee & Traditional Snacks Break",
         description: "Scenic stop along the riverbank for fresh Zambian coffee, tea, homemade rusks, and bird identification.",
-        duration: "30 mins",
       },
       {
         time: "10:30 AM",
         title: "Late Morning Wildlife Circuit & Return",
         description: "Secondary wildlife circuit focusing on plains game and raptors before returning to the safari base camp.",
-        duration: "1 hour",
       },
     ];
   }, [item, title]);
@@ -652,16 +632,11 @@ export function ExperienceDetailPage({
 
             {/* Experience Itinerary */}
             <div className="pt-8">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-lg font-semibold text-neutral-900">Experience Itinerary</h2>
-                  <p className="text-xs text-neutral-500 mt-0.5">
-                    Planned schedule and key stops for this adventure
-                  </p>
-                </div>
-                <span className="text-xs font-medium text-purple bg-purple/10 px-2.5 py-1 rounded-full">
-                  {item.duration || "Approx. 3-4 hours"}
-                </span>
+              <div>
+                <h2 className="text-lg font-semibold text-neutral-900">Experience Itinerary</h2>
+                <p className="text-xs text-neutral-500 mt-0.5">
+                  Planned schedule and key stops for this adventure
+                </p>
               </div>
 
               <div className="mt-5 relative pl-6 space-y-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-neutral-200">
@@ -672,16 +647,9 @@ export function ExperienceDetailPage({
                     </div>
 
                     <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-semibold text-purple font-mono">
-                          {stop.time}
-                        </span>
-                        {stop.duration && (
-                          <span className="text-[10px] text-neutral-400 bg-neutral-100 px-1.5 py-0.5 rounded">
-                            {stop.duration}
-                          </span>
-                        )}
-                      </div>
+                      <span className="text-xs font-medium text-neutral-500">
+                        {stop.time}
+                      </span>
                       <h3 className="text-sm font-semibold text-neutral-900 mt-0.5">
                         {stop.title}
                       </h3>
