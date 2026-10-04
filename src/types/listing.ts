@@ -128,6 +128,13 @@ export interface ExperienceListing extends BaseListing {
   minGroupSize: number;
   inclusions: string[];
   exclusions: string[];
+  whatsIncluded?: string[];
+  whatsNotIncluded?: string[];
+  whatToBring?: string[];
+  whatNotToBring?: string[];
+  importantInformation?: string[];
+  notSuitableFor?: string[];
+  meetingPoint?: string;
   /** Per-adult price in Ngwee (integer). Never float. */
   pricePerAdultNgwee: number;
   /** Per-child price in Ngwee (integer). Never float. */

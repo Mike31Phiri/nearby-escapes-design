@@ -3,6 +3,7 @@ export interface LocationState {
   city: string;
   district: string;
   address: string;
+  meetingPoint?: string;
   coordinates: { lat: number; lng: number };
 }
 

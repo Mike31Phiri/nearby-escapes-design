@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Clock, Plus, Minus, CheckCircle2 } from "lucide-react";
-import { ExperienceInventoryState } from "./experienceTypes";
+import { ExperienceInventoryState, ExperienceSlotUnit } from "./experienceTypes";
 import { cn } from "@/lib/utils";
 
 interface ExperienceStepInventoryProps {
@@ -31,20 +31,36 @@ export function ExperienceStepInventory({
   onNext,
   submitting = false,
 }: ExperienceStepInventoryProps) {
-  const count = Math.max(1, inventory.slots?.length || 2);
+  const currentSlots: ExperienceSlotUnit[] = inventory.slots?.length
+    ? inventory.slots
+    : [
+        { id: "slot-1", label: "Morning Departure", timeSlot: "08:30 AM", capacity: 8 },
+        { id: "slot-2", label: "Midday Tour", timeSlot: "11:30 AM", capacity: 8 },
+      ];
+  const count = currentSlots.length;
 
   const handleSetCount = (newCount: number) => {
     const valid = Math.max(1, Math.min(10, newCount));
-    const autoSlots = Array.from({ length: valid }, (_, i) => ({
-      id: `slot-${i + 1}`,
-      label: `Session ${i + 1}`,
-      timeSlot: DEFAULT_TIME_SLOTS[i % DEFAULT_TIME_SLOTS.length],
-      capacity: 8,
-    }));
+    let nextSlots = [...currentSlots];
+    if (valid > currentSlots.length) {
+      for (let i = currentSlots.length; i < valid; i++) {
+        nextSlots.push({
+          id: `slot-${i + 1}`,
+          label: `Session ${i + 1}`,
+          timeSlot: DEFAULT_TIME_SLOTS[i % DEFAULT_TIME_SLOTS.length],
+          capacity: 8,
+        });
+      }
+    } else {
+      nextSlots = nextSlots.slice(0, valid);
+    }
 
-    onInventoryChange({
-      slots: autoSlots,
-    });
+    onInventoryChange({ slots: nextSlots });
+  };
+
+  const handleUpdateSlot = (index: number, field: keyof ExperienceSlotUnit, val: any) => {
+    const updated = currentSlots.map((s, i) => (i === index ? { ...s, [field]: val } : s));
+    onInventoryChange({ slots: updated });
   };
 
   return (
@@ -56,11 +72,10 @@ export function ExperienceStepInventory({
           <span>Session Inventory</span>
         </div>
         <h2 className="text-2xl font-bold tracking-tight text-neutral-900">
-          How many daily departure sessions do you offer?
+          Departure sessions &amp; available times
         </h2>
         <p className="text-sm text-neutral-500 mt-1 max-w-2xl">
-          Enter the number of bookable departure slots per day for this experience.
-          Your activity stays available on search as long as at least one slot has remaining spots.
+          Enter the daily departure start times for this experience. These start times will appear directly on your experience detail page dropdown for guests to select.
         </p>
       </div>
 
@@ -72,7 +87,7 @@ export function ExperienceStepInventory({
               Daily Departure Slots
             </div>
             <p className="text-xs text-neutral-500 max-w-sm">
-              Guests choose from your daily sessions when booking this activity.
+              Guests choose from these departure times when booking this activity.
             </p>
           </div>
 
@@ -137,14 +152,58 @@ export function ExperienceStepInventory({
             ))}
           </div>
         </div>
+
+        {/* Individual Slot Departure Times & Capacity Configuration */}
+        <div className="pt-4 border-t border-neutral-200/80 space-y-3">
+          <div className="text-[11px] font-bold text-neutral-700 uppercase tracking-wider">
+            Configure Slot Departure Times
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {currentSlots.map((slot, idx) => (
+              <div
+                key={slot.id}
+                className="flex items-center justify-between gap-3 p-3 rounded-xl bg-white border border-neutral-200 shadow-2xs"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="w-6 h-6 rounded-lg bg-purple/10 text-purple text-xs font-bold flex items-center justify-center shrink-0">
+                    {idx + 1}
+                  </span>
+                  <div>
+                    <input
+                      type="text"
+                      value={slot.timeSlot}
+                      onChange={(e) => handleUpdateSlot(idx, "timeSlot", e.target.value)}
+                      placeholder="e.g. 08:30 AM"
+                      className="text-xs font-bold text-neutral-900 border-b border-dashed border-neutral-300 focus:border-purple focus:outline-none w-24 py-0.5"
+                    />
+                    <div className="text-[10px] text-neutral-400 mt-0.5">Start time</div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1.5 text-xs text-neutral-600">
+                  <span className="text-[11px] text-neutral-400">Cap:</span>
+                  <input
+                    type="number"
+                    min={1}
+                    max={50}
+                    value={slot.capacity}
+                    onChange={(e) => handleUpdateSlot(idx, "capacity", parseInt(e.target.value, 10) || 8)}
+                    className="w-12 h-7 text-center rounded-lg border border-neutral-200 text-xs font-semibold focus:outline-none focus:border-purple"
+                  />
+                  <span className="text-[11px] text-neutral-400">spots</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Explanatory Banner */}
       <div className="flex items-start gap-3.5 p-4 rounded-xl bg-emerald-50/80 border border-emerald-200/80 text-emerald-900 text-xs sm:text-sm">
         <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
         <div className="leading-relaxed">
-          <span className="font-semibold">Per-Slot Booking Management: </span>
-          With <strong className="underline">{count} {count === 1 ? "departure slot" : "departure slots"}</strong> per day, guests can choose their preferred time. When one fills up, remaining slots continue to accept bookings automatically.
+          <span className="font-semibold">Departure Dropdown: </span>
+          Guests booking this activity on the detail page will see these exact start times in a clean dropdown to pick their preferred session.
         </div>
       </div>
 

@@ -13,6 +13,8 @@ interface SharedLocationStepProps {
   city?: string;
   district?: string;
   address?: string;
+  meetingPoint?: string;
+  showMeetingPoint?: boolean;
   coordinates?: { lat: number; lng: number };
   title?: string;
   subtitle?: string;
@@ -21,6 +23,7 @@ interface SharedLocationStepProps {
   onCityChange?: (city: string) => void;
   onDistrictChange?: (district: string) => void;
   onAddressChange?: (address: string) => void;
+  onMeetingPointChange?: (meetingPoint: string) => void;
   onCoordinatesChange?: (coords: { lat: number; lng: number }) => void;
   onBack: () => void;
   onNext: () => void;
@@ -33,6 +36,8 @@ export function SharedLocationStep({
   city,
   district,
   address,
+  meetingPoint,
+  showMeetingPoint = false,
   coordinates,
   title = "Location details",
   subtitle = "Specify the town and pinpoint the map coordinates.",
@@ -41,6 +46,7 @@ export function SharedLocationStep({
   onCityChange,
   onDistrictChange,
   onAddressChange,
+  onMeetingPointChange,
   onCoordinatesChange,
   onBack,
   onNext,
@@ -49,6 +55,7 @@ export function SharedLocationStep({
   const effectiveCity = location ? location.city : (city || "Lusaka City");
   const effectiveDistrict = location ? location.district : (district || "");
   const effectiveAddress = location ? location.address : (address || "");
+  const effectiveMeetingPoint = location ? (location.meetingPoint || "") : (meetingPoint || "");
   const effectiveCoordinates = location ? location.coordinates : (coordinates || { lat: -15.3875, lng: 28.3228 });
 
   const currentProvinceData =
@@ -89,6 +96,14 @@ export function SharedLocationStep({
       onAddressChange(newAddress);
     } else if (location && onLocationChange) {
       onLocationChange({ ...location, address: newAddress });
+    }
+  };
+
+  const handleMeetingPointChangeInternal = (newMeetingPoint: string) => {
+    if (onMeetingPointChange) {
+      onMeetingPointChange(newMeetingPoint);
+    } else if (location && onLocationChange) {
+      onLocationChange({ ...location, meetingPoint: newMeetingPoint });
     }
   };
 
@@ -182,6 +197,30 @@ export function SharedLocationStep({
               className="w-full h-10 px-3 rounded-xl border border-neutral-200 bg-white text-xs font-medium text-neutral-900 focus:outline-none focus:border-purple focus:ring-1 focus:ring-purple/20 transition-all"
             />
           </div>
+
+          {/* Host-Set Meeting Point (Crucial for Experiences) */}
+          {showMeetingPoint && (
+            <div className="space-y-1 sm:col-span-2 bg-purple/5 border border-purple/20 p-3.5 rounded-xl">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-neutral-900">
+                  Meeting Point / Rendezvous Location (Set by Host)
+                </label>
+                <span className="text-[10px] uppercase font-bold tracking-wider text-purple">
+                  Shown to guests
+                </span>
+              </div>
+              <input
+                type="text"
+                value={effectiveMeetingPoint}
+                onChange={(e) => handleMeetingPointChangeInternal(e.target.value)}
+                placeholder="e.g. Lusaka Showgrounds - Main Gate 2, Royal Livingstone Jetty, or Hotel Lobby"
+                className="w-full h-10 px-3 rounded-xl border border-purple/30 bg-white text-xs font-medium text-neutral-900 focus:outline-none focus:border-purple focus:ring-1 focus:ring-purple/20 transition-all"
+              />
+              <p className="text-[11px] text-neutral-500 mt-1 leading-snug">
+                This exact meeting point is passed to checkout and displayed prominently on the experience detail page so guests know where to gather.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Interactive Google Map Marker Picker */}

@@ -71,6 +71,12 @@ export const categoryIcons: Record<ExperienceCategory, string> = {
   general: "📍",
 };
 
+export interface ExperienceItineraryStop {
+  time: string;
+  title: string;
+  description: string;
+}
+
 export interface Experience {
   id: string;
   name: string;
@@ -83,6 +89,35 @@ export interface Experience {
   duration?: string;
   groupSize?: string;
   description?: string;
+  meetingPoint?: string;
+  meetingPointAddress?: string;
+  address?: string;
+  lat?: number;
+  lng?: number;
+  whatsIncluded?: string[];
+  whatsNotIncluded?: string[];
+  whatToBring?: string[];
+  whatNotToBring?: string[];
+  importantInformation?: string[];
+  notSuitableFor?: string[];
+  inclusions?: string[];
+  exclusions?: string[];
+  guidelines?: string[];
+  suitability?: string[];
+  itinerary?: ExperienceItineraryStop[];
+  slots?: { id: string; label: string; timeSlot: string; capacity: number }[];
+  experienceDetails?: {
+    activityType?: string;
+    meetingPoint?: string;
+    whatsIncluded?: string[];
+    whatsNotIncluded?: string[];
+    whatToBring?: string[];
+    whatNotToBring?: string[];
+    importantInformation?: string[];
+    notSuitableFor?: string[];
+    itinerary?: ExperienceItineraryStop[];
+    slots?: { id: string; label: string; timeSlot: string; capacity: number }[];
+  };
 }
 
 export interface Package {

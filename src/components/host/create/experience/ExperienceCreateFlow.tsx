@@ -13,21 +13,23 @@ import { useInventoryStore } from "@/store/inventoryStore";
 import {
   EXPERIENCE_STORAGE_KEY,
   EXPERIENCE_SAMPLE_PHOTOS,
+  DEFAULT_EXPERIENCE_ITINERARY,
 } from "./experienceConstants";
 import {
   ExperienceItemsState,
   ExperiencePricingState,
   ExperienceFormState,
   ExperienceInventoryState,
+  ExperienceItineraryStop,
 } from "./experienceTypes";
 import { ExperienceStepSubtype } from "./ExperienceStepSubtype";
 import { ExperienceStepInclusions } from "./ExperienceStepInclusions";
+import { ExperienceStepDetails } from "./ExperienceStepDetails";
 import { ExperienceStepInventory } from "./ExperienceStepInventory";
 import { ExperienceStepPricing } from "./ExperienceStepPricing";
 import {
   SharedLocationStep,
   SharedMediaStep,
-  SharedDetailsStep,
   LocationState,
   DetailsState,
 } from "../shared";
@@ -37,6 +39,7 @@ const INITIAL_LOCATION: LocationState = {
   city: "Livingstone",
   district: "",
   address: "",
+  meetingPoint: "Livingstone Waterfront Reception & Pier",
   coordinates: { lat: -17.8419, lng: 25.8543 },
 };
 
@@ -68,12 +71,16 @@ export function ExperienceCreateFlow() {
   const [subtype, setSubtype] = useState<string>("");
   const [items, setItems] = useState<ExperienceItemsState>({
     whatsIncluded: [],
+    whatsNotIncluded: [],
     whatToCarry: [],
     whatNotToBring: [],
+    importantInformation: [],
+    notSuitableFor: [],
   });
   const [location, setLocation] = useState<LocationState>(INITIAL_LOCATION);
   const [images, setImages] = useState<string[]>([]);
   const [details, setDetails] = useState<DetailsState>({ title: "", description: "" });
+  const [itinerary, setItinerary] = useState<ExperienceItineraryStop[]>(DEFAULT_EXPERIENCE_ITINERARY);
   const [inventory, setInventory] = useState<ExperienceInventoryState>(INITIAL_INVENTORY);
   const [pricing, setPricing] = useState<ExperiencePricingState>(INITIAL_PRICING);
 
@@ -89,6 +96,9 @@ export function ExperienceCreateFlow() {
         if (parsed.location) setLocation(parsed.location);
         if (parsed.images) setImages(parsed.images);
         if (parsed.details) setDetails(parsed.details);
+        if (parsed.itinerary && Array.isArray(parsed.itinerary) && parsed.itinerary.length > 0) {
+          setItinerary(parsed.itinerary);
+        }
         if (parsed.inventory) setInventory(parsed.inventory);
         if (parsed.pricing) setPricing(parsed.pricing);
         if (parsed.draftId) setDraftId(parsed.draftId);
@@ -108,6 +118,7 @@ export function ExperienceCreateFlow() {
         location,
         images,
         details,
+        itinerary,
         inventory,
         pricing,
         draftId,
@@ -116,9 +127,9 @@ export function ExperienceCreateFlow() {
     } catch (e) {
       console.error("Failed to save experience draft to localStorage:", e);
     }
-  }, [subtype, items, location, images, details, inventory, pricing, draftId]);
+  }, [subtype, items, location, images, details, itinerary, inventory, pricing, draftId]);
 
-  // Step 2 Next: Save Inclusions
+  // Step 2 Next: Save Inclusions, Guidelines & Suitability
   const handleSaveInclusionsStep = async () => {
     if (submitting) return;
     setSubmitting(true);
@@ -130,14 +141,23 @@ export function ExperienceCreateFlow() {
         category: subtype,
         activityType: subtype,
         whatsIncluded: items.whatsIncluded,
+        whatsNotIncluded: items.whatsNotIncluded,
         whatToBring: items.whatToCarry,
         whatNotToBring: items.whatNotToBring,
+        importantInformation: items.importantInformation,
+        notSuitableFor: items.notSuitableFor,
         inclusions: items.whatsIncluded,
+        exclusions: items.whatsNotIncluded,
+        guidelines: items.importantInformation,
+        suitability: items.notSuitableFor,
         experienceDetails: {
           activityType: subtype,
           whatsIncluded: items.whatsIncluded,
+          whatsNotIncluded: items.whatsNotIncluded,
           whatToBring: items.whatToCarry,
           whatNotToBring: items.whatNotToBring,
+          importantInformation: items.importantInformation,
+          notSuitableFor: items.notSuitableFor,
         },
       };
 
@@ -148,7 +168,7 @@ export function ExperienceCreateFlow() {
         await updateDraftListing(draftId, { form: payload });
       }
 
-      toast.success("Inclusions saved! Next, set your meeting point location.");
+      toast.success("Inclusions & guidelines saved! Next, set your location.");
       setCurrentStep(3);
     } catch (err) {
       console.error("Failed to save experience inclusions:", err);
@@ -163,6 +183,11 @@ export function ExperienceCreateFlow() {
     if (submitting) return;
     setSubmitting(true);
     try {
+      const resolvedMeetingPoint =
+        location.meetingPoint?.trim() ||
+        location.address?.trim() ||
+        `${location.district ? `${location.district}, ` : ""}${location.city}, ${location.province}`;
+
       const locationPayload = {
         country: "Zambia",
         province: location.province,
@@ -171,8 +196,15 @@ export function ExperienceCreateFlow() {
         address:
           location.address.trim() ||
           `${location.district ? `${location.district}, ` : ""}${location.city}, ${location.province}, Zambia`,
+        meetingPoint: resolvedMeetingPoint,
+        meetingPointAddress: resolvedMeetingPoint,
         latitude: location.coordinates.lat,
         longitude: location.coordinates.lng,
+        experienceDetails: {
+          meetingPoint: resolvedMeetingPoint,
+          meetingLatitude: location.coordinates.lat,
+          meetingLongitude: location.coordinates.lng,
+        },
       };
 
       if (draftId) {
@@ -212,7 +244,7 @@ export function ExperienceCreateFlow() {
         await updateDraftListing(draftId, { form: mediaPayload, currentStep: 2 });
       }
 
-      toast.success("Photos saved! Next, add title and description.");
+      toast.success("Photos saved! Next, add description and itinerary.");
       setCurrentStep(5);
     } catch (err) {
       console.error("Failed to save experience media:", err);
@@ -222,7 +254,7 @@ export function ExperienceCreateFlow() {
     }
   };
 
-  // Step 5 Next: Save Details
+  // Step 5 Next: Save Details & Itinerary
   const handleSaveDetailsStep = async () => {
     if (submitting) return;
     setSubmitting(true);
@@ -231,13 +263,17 @@ export function ExperienceCreateFlow() {
         title: details.title.trim(),
         name: details.title.trim(),
         description: details.description.trim(),
+        itinerary,
+        experienceDetails: {
+          itinerary,
+        },
       };
 
       if (draftId) {
         await updateDraftListing(draftId, { form: detailsPayload, currentStep: 3 });
       }
 
-      toast.success("Description saved! Next, configure your departure time slots.");
+      toast.success("Details & itinerary saved! Next, configure sessions.");
       setCurrentStep(6);
     } catch (err) {
       console.error("Failed to save experience details:", err);
@@ -247,7 +283,7 @@ export function ExperienceCreateFlow() {
     }
   };
 
-  // Step 6 Next: Save Inventory
+  // Step 6 Next: Save Inventory & Sessions
   const handleSaveInventoryStep = async () => {
     if (submitting) return;
     setSubmitting(true);
@@ -261,6 +297,9 @@ export function ExperienceCreateFlow() {
         inventory: {
           count,
           slotCount: count,
+        },
+        experienceDetails: {
+          slots: inventory.slots,
         },
       };
 
@@ -289,10 +328,29 @@ export function ExperienceCreateFlow() {
           ? Math.round(pricing.basePrice * (1 - pricing.groupDiscountPercent / 100))
           : pricing.groupDiscountCustomPrice;
 
+      const resolvedMeetingPoint =
+        location.meetingPoint?.trim() ||
+        location.address?.trim() ||
+        `${location.district ? `${location.district}, ` : ""}${location.city}, ${location.province}`;
+
       const pricingPayload = {
         pricePerUnitNgwee: Math.round(pricing.basePrice * 100),
         currency: "ZMW",
         basePrice: pricing.basePrice,
+        meetingPoint: resolvedMeetingPoint,
+        meetingPointAddress: resolvedMeetingPoint,
+        whatsIncluded: items.whatsIncluded,
+        whatsNotIncluded: items.whatsNotIncluded,
+        whatToBring: items.whatToCarry,
+        whatNotToBring: items.whatNotToBring,
+        importantInformation: items.importantInformation,
+        notSuitableFor: items.notSuitableFor,
+        inclusions: items.whatsIncluded,
+        exclusions: items.whatsNotIncluded,
+        guidelines: items.importantInformation,
+        suitability: items.notSuitableFor,
+        itinerary,
+        slots: inventory.slots,
         inventoryCount: count,
         unitsCount: count,
         slotCount: count,
@@ -326,6 +384,18 @@ export function ExperienceCreateFlow() {
                 promoPrice: effectiveGroupPrice,
               }
             : null,
+        },
+        experienceDetails: {
+          activityType: subtype,
+          meetingPoint: resolvedMeetingPoint,
+          whatsIncluded: items.whatsIncluded,
+          whatsNotIncluded: items.whatsNotIncluded,
+          whatToBring: items.whatToCarry,
+          whatNotToBring: items.whatNotToBring,
+          importantInformation: items.importantInformation,
+          notSuitableFor: items.notSuitableFor,
+          itinerary,
+          slots: inventory.slots,
         },
       };
 
@@ -431,6 +501,9 @@ export function ExperienceCreateFlow() {
               <SharedLocationStep
                 location={location}
                 onLocationChange={setLocation}
+                showMeetingPoint={true}
+                title="Meeting point & location"
+                subtitle="Specify the town and designated meeting point location for attendees."
                 onBack={() => setCurrentStep(2)}
                 onNext={handleSaveLocationStep}
                 submitting={submitting}
@@ -449,12 +522,13 @@ export function ExperienceCreateFlow() {
             )}
 
             {currentStep === 5 && (
-              <SharedDetailsStep
-                verticalName="experience"
+              <ExperienceStepDetails
                 title={details.title}
                 description={details.description}
+                itinerary={itinerary}
                 onTitleChange={(t) => setDetails((prev) => ({ ...prev, title: t }))}
                 onDescriptionChange={(d) => setDetails((prev) => ({ ...prev, description: d }))}
+                onItineraryChange={setItinerary}
                 onBack={() => setCurrentStep(4)}
                 onNext={handleSaveDetailsStep}
                 submitting={submitting}

@@ -277,9 +277,13 @@ export function ExperienceDetailPage({
   const isLongDescription = descriptionText.length > 220;
 
   // Itinerary Stops
+  // Itinerary Stops
   const itineraryStops = useMemo(() => {
     if (Array.isArray(item.itinerary) && item.itinerary.length > 0) {
       return item.itinerary;
+    }
+    if (Array.isArray(item.experienceDetails?.itinerary) && item.experienceDetails.itinerary.length > 0) {
+      return item.experienceDetails.itinerary;
     }
     const lowerTitle = title.toLowerCase();
     const lowerCategory = (item.category || "").toLowerCase();
@@ -408,6 +412,7 @@ export function ExperienceDetailPage({
   const whatsIncludedList: string[] = useMemo(() => {
     if (Array.isArray(item.whatsIncluded) && item.whatsIncluded.length > 0) return item.whatsIncluded;
     if (Array.isArray(item.inclusions) && item.inclusions.length > 0) return item.inclusions;
+    if (Array.isArray(item.experienceDetails?.whatsIncluded) && item.experienceDetails.whatsIncluded.length > 0) return item.experienceDetails.whatsIncluded;
     return [
       "National Park Entry & Conservation Fees",
       "Professional Certified Safari Guide",
@@ -421,6 +426,7 @@ export function ExperienceDetailPage({
   const whatsNotIncludedList: string[] = useMemo(() => {
     if (Array.isArray(item.whatsNotIncluded) && item.whatsNotIncluded.length > 0) return item.whatsNotIncluded;
     if (Array.isArray(item.exclusions) && item.exclusions.length > 0) return item.exclusions;
+    if (Array.isArray(item.experienceDetails?.whatsNotIncluded) && item.experienceDetails.whatsNotIncluded.length > 0) return item.experienceDetails.whatsNotIncluded;
     return [
       "Gratuities & tips for guides and drivers (discretionary)",
       "Alcoholic beverages & premium wine selections",
@@ -433,6 +439,7 @@ export function ExperienceDetailPage({
   const whatToBringList: string[] = useMemo(() => {
     if (Array.isArray(item.whatToBring) && item.whatToBring.length > 0) return item.whatToBring;
     if (Array.isArray(item.whatToCarry) && item.whatToCarry.length > 0) return item.whatToCarry;
+    if (Array.isArray(item.experienceDetails?.whatToBring) && item.experienceDetails.whatToBring.length > 0) return item.experienceDetails.whatToBring;
     return [
       "Valid ID or Passport for Gate Clearance",
       "Comfortable Closed Walking or Hiking Shoes",
@@ -445,6 +452,7 @@ export function ExperienceDetailPage({
 
   const whatNotToBringList: string[] = useMemo(() => {
     if (Array.isArray(item.whatNotToBring) && item.whatNotToBring.length > 0) return item.whatNotToBring;
+    if (Array.isArray(item.experienceDetails?.whatNotToBring) && item.experienceDetails.whatNotToBring.length > 0) return item.experienceDetails.whatNotToBring;
     return [
       "Drones (Strictly Prohibited in National Parks)",
       "Single-Use Plastic Bags & Wrappers",
@@ -462,6 +470,9 @@ export function ExperienceDetailPage({
     if (Array.isArray(item.guidelines) && item.guidelines.length > 0) {
       return item.guidelines;
     }
+    if (Array.isArray(item.experienceDetails?.importantInformation) && item.experienceDetails.importantInformation.length > 0) {
+      return item.experienceDetails.importantInformation;
+    }
     return [
       "Please arrive 15 minutes before scheduled start time at meeting point",
       "A valid physical government ID or passport is required for park clearance",
@@ -477,6 +488,9 @@ export function ExperienceDetailPage({
     }
     if (Array.isArray(item.suitability) && item.suitability.length > 0) {
       return item.suitability;
+    }
+    if (Array.isArray(item.experienceDetails?.notSuitableFor) && item.experienceDetails.notSuitableFor.length > 0) {
+      return item.experienceDetails.notSuitableFor;
     }
     return [
       "Wheelchair users (due to unpaved natural tracks and high step-up vehicle chassis)",
@@ -830,7 +844,31 @@ export function ExperienceDetailPage({
             {/* Meeting Point & Location with Google Maps */}
             <div className="pt-8">
               <h2 className="text-lg font-semibold text-neutral-900">Meeting point &amp; location</h2>
-              <p className="text-xs font-normal text-neutral-500 leading-relaxed mt-1.5">
+
+              {/* Host-Designated Rendezvous Banner */}
+              <div className="mt-3.5 p-4 rounded-2xl bg-purple/5 border border-purple/20 flex items-start gap-3">
+                <MapPin className="h-5 w-5 text-purple shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <div className="text-[10px] font-bold text-purple uppercase tracking-wider">
+                    Host Designated Meeting Point
+                  </div>
+                  <div className="text-sm font-bold text-neutral-900">
+                    {item.meetingPoint ||
+                      item.experienceDetails?.meetingPoint ||
+                      item.meetingPointAddress ||
+                      item.address ||
+                      (typeof item.location === "object"
+                        ? `${item.location.city}, ${item.location.province}`
+                        : item.location) ||
+                      "Lusaka Showgrounds, Great East Road"}
+                  </div>
+                  <p className="text-xs text-neutral-600 leading-relaxed">
+                    Meet your host/guide at this location 15 minutes before departure. This meeting point is preset on your checkout and booking voucher.
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-xs font-normal text-neutral-500 leading-relaxed mt-3">
                 {item.address ? `${item.address}, ` : ""}
                 {locationString}. Exact pin location on Google Maps below.
               </p>

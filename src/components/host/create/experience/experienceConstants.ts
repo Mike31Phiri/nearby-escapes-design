@@ -99,6 +99,61 @@ export const EXPERIENCE_WHAT_NOT_TO_BRING: ExperienceItemOption[] = [
   { id: "heavy_suitcases", label: "Hard-shell or Oversized Luggage" },
 ];
 
+export const EXPERIENCE_WHATS_NOT_INCLUDED: ExperienceItemOption[] = [
+  { id: "tips_gratuities", label: "Gratuities & tips for guides and drivers (discretionary)" },
+  { id: "alcoholic_drinks", label: "Alcoholic beverages & premium wine selections" },
+  { id: "travel_insurance", label: "Personal travel, medical, or evacuation insurance" },
+  { id: "souvenirs", label: "Souvenirs, artisan crafts, and personal shopping expenses" },
+  { id: "camera_rentals", label: "Specialized camera gear and lens rental fees" },
+  { id: "visa_fees", label: "Border clearance or visa entry fees" },
+];
+
+export const EXPERIENCE_IMPORTANT_INFO: ExperienceItemOption[] = [
+  { id: "arrive_early", label: "Please arrive 15 minutes before scheduled start time at meeting point" },
+  { id: "id_required", label: "A valid physical government ID or passport is required for clearance" },
+  { id: "neutral_clothing", label: "Wear neutral-colored, comfortable clothing and sturdy walking shoes" },
+  { id: "first_aid", label: "Certified Wilderness First Responder and first aid emergency kit on site" },
+  { id: "cancellation_24h", label: "Free cancellation up to 24 hours before the experience start time" },
+  { id: "weather_notice", label: "Activity runs subject to safe weather conditions" },
+];
+
+export const EXPERIENCE_NOT_SUITABLE_FOR: ExperienceItemOption[] = [
+  { id: "wheelchair", label: "Wheelchair users (due to unpaved natural tracks & step-up vehicle chassis)" },
+  { id: "mobility", label: "People with severe mobility impairments or back problems" },
+  { id: "pregnancy", label: "Pregnant women past second trimester" },
+  { id: "young_children", label: "Children under 6 years of age" },
+  { id: "heart_condition", label: "Guests with serious cardiovascular conditions" },
+];
+
+export interface DefaultItineraryStop {
+  time: string;
+  title: string;
+  description: string;
+}
+
+export const DEFAULT_EXPERIENCE_ITINERARY: DefaultItineraryStop[] = [
+  {
+    time: "06:00 AM",
+    title: "Sunrise Bush Departure & Gate Entry",
+    description: "Meet your licensed safari ranger in a custom open 4x4 vehicle. Enter the park as the morning light activates wildlife.",
+  },
+  {
+    time: "07:00 AM",
+    title: "Predator & Big Game Tracking",
+    description: "Navigate river loops and waterholes tracking lions, leopards, and large elephant herds during peak activity hours.",
+  },
+  {
+    time: "09:30 AM",
+    title: "Bush Coffee & Traditional Snacks Break",
+    description: "Scenic stop along the riverbank for fresh Zambian coffee, tea, homemade rusks, and bird identification.",
+  },
+  {
+    time: "10:30 AM",
+    title: "Late Morning Wildlife Circuit & Return",
+    description: "Secondary wildlife circuit focusing on plains game and raptors before returning to the safari base camp.",
+  },
+];
+
 export const EXPERIENCE_SAMPLE_PHOTOS: string[] = [
   "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&q=80&w=1200",
   "https://images.unsplash.com/photo-1508672019048-805c876b67e2?auto=format&fit=crop&q=80&w=1200",
