@@ -201,24 +201,28 @@ export function TransportDetailPage({
     reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : 4.8;
   const reviewCount = reviews.length || 98;
 
-  const handleToggleFavorite = () => {
-    if (isFavorited) {
-      removeItem(route.id);
-      toast.success("Removed from collections");
-    } else {
-      addItem({
-        id: route.id,
-        name: route.name || `${route.from} to ${route.to} Transport`,
-        image: route.image || images[0],
-        price: basePrice,
-        location: route.from || "Zambia",
-        rating: avgRating,
-        reviews: reviewCount,
-        type: "Transport",
-      });
-      toast.success("Saved to collections", {
-        icon: <Heart className="h-4 w-4 fill-purple text-purple" />,
-      });
+  const handleToggleFavorite = async () => {
+    try {
+      if (isFavorited) {
+        await removeItem(route.id);
+        toast.success("Removed from collections");
+      } else {
+        await addItem({
+          id: route.id,
+          name: route.name || `${route.from} to ${route.to} Transport`,
+          image: route.image || images[0],
+          price: basePrice,
+          location: route.from || "Zambia",
+          rating: avgRating,
+          reviews: reviewCount,
+          type: "Transport",
+        });
+        toast.success("Saved to collections", {
+          icon: <Heart className="h-4 w-4 fill-purple text-purple" />,
+        });
+      }
+    } catch {
+      toast.error("Could not update saved collection. Please try again.");
     }
   };
 

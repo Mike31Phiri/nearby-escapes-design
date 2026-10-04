@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Heart, MapPin, Star, Trash2, ArrowRight, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { useWishlistStore, type WishlistItem } from "@/store/wishlistStore";
+import { useWishlistStore, getListingHref, type WishlistItem } from "@/store/wishlistStore";
 import { BACKDROP_CLASS } from "@/lib/utils";
 
 const MAX_VISIBLE = 5;
@@ -93,7 +93,7 @@ export function WishlistPopover() {
                   <div className="flex items-center gap-4 px-5 py-4 hover:bg-neutral-50/70 transition-colors sm:gap-5 sm:px-6 sm:py-5">
                     {/* Thumbnail */}
                     <Link
-                      href={`/listings/stays/${item.id}`}
+                      href={getListingHref(item)}
                       onClick={() => setOpen(false)}
                       className="shrink-0 h-[72px] w-[72px] sm:h-[84px] sm:w-[84px] rounded-xl overflow-hidden bg-neutral-100"
                     >
@@ -108,7 +108,7 @@ export function WishlistPopover() {
                     {/* Info */}
                     <div className="flex-1 min-w-0">
                       <Link
-                        href={`/listings/stays/${item.id}`}
+                        href={getListingHref(item)}
                         onClick={() => setOpen(false)}
                         className="text-[14px] sm:text-[15px] font-medium text-neutral-900 line-clamp-1 hover:text-purple transition-colors"
                       >

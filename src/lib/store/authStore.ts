@@ -28,13 +28,19 @@ export const useAuthStore = create<AuthState>()(
       setAuthenticated: (isAuth: boolean) =>
         set({ isAuthenticated: isAuth, isHydrating: false }),
 
-      setUser: (user) =>
+      setUser: (user) => {
         set({
           user,
           isAuthenticated: !!user,
           isHydrating: false,
           isLoading: false,
-        }),
+        });
+        if (user) {
+          import("@/store/wishlistStore").then(({ useWishlistStore }) => {
+            useWishlistStore.getState().fetchFromBackend();
+          });
+        }
+      },
 
       setHydrating: (hydrating: boolean) =>
         set({ isHydrating: hydrating }),
@@ -72,6 +78,10 @@ export const useAuthStore = create<AuthState>()(
               isAuthenticated: true,
               isLoading: false,
               isHydrating: false,
+            });
+            // Sync saved listings from backend PostgreSQL
+            import("@/store/wishlistStore").then(({ useWishlistStore }) => {
+              useWishlistStore.getState().fetchFromBackend();
             });
           } catch (err: any) {
             const status = err?.response?.status;
@@ -124,6 +134,9 @@ export const useAuthStore = create<AuthState>()(
             isAuthenticated: false,
             isLoading: false,
             isHydrating: false,
+          });
+          import("@/store/wishlistStore").then(({ useWishlistStore }) => {
+            useWishlistStore.getState().clearWishlist();
           });
           if (typeof window !== "undefined") {
             window.location.href = "/auth/login";

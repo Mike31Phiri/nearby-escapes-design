@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import {
@@ -12,7 +12,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useWishlistStore } from "@/store/wishlistStore";
+import { useWishlistStore, getListingHref } from "@/store/wishlistStore";
 
 export function WishlistPage() {
   const { items, removeItem } = useWishlistStore();
@@ -93,7 +93,7 @@ export function WishlistPage() {
                     >
                       <div className="group relative rounded-2xl border border-border/50 bg-card shadow-sm card-shadow transition-all hover:shadow-lg h-full">
                         {/* Image */}
-                        <Link href={`/listings/stays/${item.id}`} className="block">
+                        <Link href={getListingHref(item)} className="block">
                           <div className="relative h-52 overflow-hidden rounded-t-2xl bg-muted">
                             <img
                               src={item.image}
@@ -115,7 +115,7 @@ export function WishlistPage() {
                         {/* Info */}
                         <div className="p-4">
                           <Link
-                            href={`/listings/stays/${item.id}`}
+                            href={getListingHref(item)}
                             className="font-bold text-base text-foreground hover:text-primary transition-colors line-clamp-1"
                           >
                             {item.name}

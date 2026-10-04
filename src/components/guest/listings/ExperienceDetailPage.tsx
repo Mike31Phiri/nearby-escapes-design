@@ -230,24 +230,28 @@ export function ExperienceDetailPage({
       : item.rating || 4.9;
   const reviewCount = reviews.length || item.reviews || 84;
 
-  const handleToggleFavorite = () => {
-    if (isFavorited) {
-      removeItem(item.id);
-      toast.success("Removed from collections");
-    } else {
-      addItem({
-        id: item.id,
-        name: item.name,
-        image: item.image || images[0],
-        price: pricePerPerson,
-        location: item.location || "Zambia",
-        rating: avgRating,
-        reviews: reviewCount,
-        type: "Experience",
-      });
-      toast.success("Saved to collections", {
-        icon: <Heart className="h-4 w-4 fill-purple text-purple" />,
-      });
+  const handleToggleFavorite = async () => {
+    try {
+      if (isFavorited) {
+        await removeItem(item.id);
+        toast.success("Removed from collections");
+      } else {
+        await addItem({
+          id: item.id,
+          name: item.name,
+          image: item.image || images[0],
+          price: pricePerPerson,
+          location: item.location || "Zambia",
+          rating: avgRating,
+          reviews: reviewCount,
+          type: "Experience",
+        });
+        toast.success("Saved to collections", {
+          icon: <Heart className="h-4 w-4 fill-purple text-purple" />,
+        });
+      }
+    } catch {
+      toast.error("Could not update saved collection. Please try again.");
     }
   };
 

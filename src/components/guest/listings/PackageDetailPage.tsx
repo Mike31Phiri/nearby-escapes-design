@@ -245,24 +245,28 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
   const pricePerChild = Math.round(pricePerAdult * 0.5);
   const totalPackageCost = pricePerAdult * adults + pricePerChild * children;
 
-  const handleToggleFavorite = () => {
-    if (isFavorited) {
-      removeItem(packageItem.id);
-      toast.success("Removed from wishlist");
-    } else {
-      addItem({
-        id: packageItem.id,
-        name: packageItem.name,
-        location: packageItem.location,
-        image: packageItem.image,
-        price: packageItem.price,
-        rating: packageItem.rating,
-        reviews: 48,
-        type: "Package",
-      });
-      toast.success("Saved to your wishlist!", {
-        icon: <Heart className="h-4 w-4 fill-purple text-purple" />,
-      });
+  const handleToggleFavorite = async () => {
+    try {
+      if (isFavorited) {
+        await removeItem(packageItem.id);
+        toast.success("Removed from wishlist");
+      } else {
+        await addItem({
+          id: packageItem.id,
+          name: packageItem.name,
+          location: packageItem.location,
+          image: packageItem.image,
+          price: packageItem.price,
+          rating: packageItem.rating,
+          reviews: 48,
+          type: "Package",
+        });
+        toast.success("Saved to your wishlist!", {
+          icon: <Heart className="h-4 w-4 fill-purple text-purple" />,
+        });
+      }
+    } catch {
+      toast.error("Could not update your wishlist. Please try again.");
     }
   };
 

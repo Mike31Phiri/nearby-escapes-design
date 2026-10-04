@@ -210,15 +210,28 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
       : stay.rating || 4.8;
   const reviewCount = reviews.length || stay.reviews || 134;
 
-  const handleToggleFavorite = () => {
-    if (isFavorited) {
-      removeItem(stay.id);
-      toast.success("Removed from collections");
-    } else {
-      addItem(stay);
-      toast.success("Saved to collections", {
-        icon: <Heart className="h-4 w-4 fill-purple text-purple" />,
-      });
+  const handleToggleFavorite = async () => {
+    try {
+      if (isFavorited) {
+        await removeItem(stay.id);
+        toast.success("Removed from collections");
+      } else {
+        await addItem({
+          id: stay.id,
+          name: title,
+          image: images[0] || "",
+          price: nightlyRate,
+          location: locationString,
+          rating: avgRating,
+          reviews: reviewCount,
+          type: "stay",
+        });
+        toast.success("Saved to collections", {
+          icon: <Heart className="h-4 w-4 fill-purple text-purple" />,
+        });
+      }
+    } catch {
+      toast.error("Could not update saved collection. Please try again.");
     }
   };
 

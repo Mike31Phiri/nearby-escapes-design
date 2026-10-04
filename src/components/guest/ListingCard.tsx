@@ -20,18 +20,30 @@ export const ListingCard = memo(function ListingCard({ listing, className }: Lis
   const { isSaved, addItem, removeItem } = useWishlistStore();
   const isFavorited = isSaved(listing.id);
 
-  const toggleFavorite = (e: React.MouseEvent) => {
+  const toggleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (isFavorited) {
-      removeItem(listing.id);
-      toast.success(`Removed ${listing.name} from your collections`);
-    } else {
-      addItem(listing);
-      toast.success(`Added ${listing.name} to your collections`, {
-        icon: <Heart className="h-4 w-4 fill-primary text-primary" />,
-      });
+    try {
+      if (isFavorited) {
+        await removeItem(listing.id);
+        toast.success(`Removed ${listing.name} from your collections`);
+      } else {
+        await addItem({
+          id: listing.id,
+          name: listing.name,
+          image: listing.image,
+          price: listing.price,
+          location: listing.location,
+          rating: listing.rating,
+          type: "stay",
+        });
+        toast.success(`Added ${listing.name} to your collections`, {
+          icon: <Heart className="h-4 w-4 fill-primary text-primary" />,
+        });
+      }
+    } catch {
+      toast.error("Could not update your saved collection. Please try again.");
     }
   };
 
