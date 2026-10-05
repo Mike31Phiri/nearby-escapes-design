@@ -144,13 +144,15 @@ export const useAuthStore = create<AuthState>()(
     {
       name: "nearby_auth_store",
       storage: createJSONStorage(() => safeLocalStorage),
-      // Only cache user metadata for offline/optimistic display.
-      // Do NOT persist isAuthenticated: true so we never render auth true before verification!
       partialize: (state) => ({
         user: state.user,
+        isAuthenticated: !!state.user,
       }),
-      onRehydrateStorage: () => () => {
-        // Hydration from local storage complete
+      onRehydrateStorage: () => (state) => {
+        if (state?.user) {
+          state.isAuthenticated = true;
+          state.isHydrating = false;
+        }
       },
     },
   ),

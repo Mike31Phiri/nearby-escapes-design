@@ -43,8 +43,13 @@ export const register = async (
 };
 
 export const fetchCurrentUser = async (): Promise<User> => {
-  const { data } = await apiClient.get<{ user: User }>("/auth/me");
-  return data.user;
+  const res = await apiClient.get<{ user: User }>("/auth/me");
+  if (res.status === 304 || !res.data?.user) {
+    const { useAuthStore } = await import("@/lib/store/authStore");
+    const existing = useAuthStore.getState().user;
+    if (existing) return existing;
+  }
+  return res.data?.user;
 };
 
 export const logout = async (): Promise<void> => {

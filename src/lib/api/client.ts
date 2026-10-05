@@ -14,6 +14,7 @@ export const apiClient = axios.create({
   headers: { "Content-Type": "application/json" },
   withCredentials: true, // Automatically attach HttpOnly cookies
   timeout: 15000,
+  validateStatus: (status) => (status >= 200 && status < 300) || status === 304,
 });
 
 // Request interceptor — attach Bearer token if stored in client storage
@@ -27,6 +28,14 @@ apiClient.interceptors.request.use((config) => {
       config.headers.Authorization = `Bearer ${token}`;
     }
   }
+
+  // Prevent browser caching on auth endpoints
+  if (config.url?.includes("/auth/")) {
+    config.headers = config.headers || {};
+    config.headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+    config.headers["Pragma"] = "no-cache";
+  }
+
   return config;
 });
 

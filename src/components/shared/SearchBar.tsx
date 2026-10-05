@@ -38,13 +38,15 @@ export interface SearchBarProps {
   initialTripType?: "one_way" | "round_trip";
 }
 
+const DEFAULT_DATES: DateRange = { checkIn: null, checkOut: null };
+
 export function SearchBar({
   className,
   onSearch,
   onChange,
   activeCategory = "stays",
   initialDestination = "",
-  initialDates = { checkIn: null, checkOut: null },
+  initialDates = DEFAULT_DATES,
   initialGuests = 2,
   initialLeavingFrom = "",
   initialGoingTo = "",
@@ -64,8 +66,19 @@ export function SearchBar({
   }, [initialDestination]);
 
   useEffect(() => {
-    if (initialDates !== undefined) setDateRange(initialDates);
-  }, [initialDates]);
+    if (initialDates !== undefined) {
+      setDateRange((prev) => {
+        const prevIn = prev?.checkIn ? new Date(prev.checkIn).getTime() : null;
+        const nextIn = initialDates?.checkIn ? new Date(initialDates.checkIn).getTime() : null;
+        const prevOut = prev?.checkOut ? new Date(prev.checkOut).getTime() : null;
+        const nextOut = initialDates?.checkOut ? new Date(initialDates.checkOut).getTime() : null;
+        if (prevIn === nextIn && prevOut === nextOut) {
+          return prev;
+        }
+        return initialDates;
+      });
+    }
+  }, [initialDates?.checkIn, initialDates?.checkOut]);
 
   useEffect(() => {
     if (initialGuests !== undefined) setGuests(initialGuests);

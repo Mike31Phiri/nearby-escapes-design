@@ -31,8 +31,13 @@ export function YourInfoPage() {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (!isHydrating && !isAuthenticated) {
+      router.replace("/auth/login?next=/settings/info");
+    }
+  }, [isHydrating, isAuthenticated, router]);
+
   if (!isHydrating && !isAuthenticated) {
-    router.replace("/auth/login?next=/settings/info");
     return null;
   }
 

@@ -22,6 +22,7 @@ import { useAuth, useAuthStore } from "@/lib/store/authStore";
 import { useBookingStore } from "@/store/bookingStore";
 import { getMyBookings } from "@/lib/api/bookings";
 import { getMyGuestReviews, type ReviewItemDto } from "@/lib/api/reviews";
+import { getAuthCookie } from "@/lib/auth/cookies";
 import {
   Dialog,
   DialogContent,
@@ -246,9 +247,17 @@ export function GuestProfilePage() {
   useEffect(() => {
     if (isHydrating) return;
 
-    if (!isAuthenticated || !user) {
-      router.replace("/auth/login?next=/profile");
-      return;
+    if (!isAuthenticated && !user) {
+      const token =
+        typeof window !== "undefined"
+          ? localStorage.getItem("nearby_access_token") ||
+            localStorage.getItem("token") ||
+            getAuthCookie()
+          : null;
+      if (!token) {
+        router.replace("/auth/login?next=/profile");
+        return;
+      }
     }
 
     let isMounted = true;

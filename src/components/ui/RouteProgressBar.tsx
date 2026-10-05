@@ -8,11 +8,13 @@ export function RouteProgressBar() {
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
 
+  const searchString = searchParams?.toString();
+
   useEffect(() => {
     setLoading(true);
     const timeout = setTimeout(() => setLoading(false), 500);
     return () => clearTimeout(timeout);
-  }, [pathname, searchParams]);
+  }, [pathname, searchString]);
 
   if (!loading) return null;
 
