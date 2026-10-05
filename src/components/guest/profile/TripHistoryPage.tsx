@@ -46,7 +46,6 @@ interface HistoryTripItem {
 export function TripHistoryPage() {
   const router = useRouter();
   const { isAuthenticated, isHydrating } = useAuth();
-  const { bookings: localBookings } = useBookingStore();
 
   const [trips, setTrips] = useState<HistoryTripItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -97,7 +96,8 @@ export function TripHistoryPage() {
           };
         });
 
-        const mappedLocalTrips: HistoryTripItem[] = (localBookings || []).map((b) => {
+        const currentLocalBookings = useBookingStore.getState().bookings || [];
+        const mappedLocalTrips: HistoryTripItem[] = currentLocalBookings.map((b) => {
           const checkIn = b.details?.checkIn;
           const isUpcoming =
             b.status === "confirmed" && checkIn
@@ -149,7 +149,7 @@ export function TripHistoryPage() {
     return () => {
       isMounted = false;
     };
-  }, [isAuthenticated, isHydrating, router, localBookings]);
+  }, [isAuthenticated, isHydrating, router]);
 
   const filteredTrips = useMemo(() => {
     if (filter === "all") return trips;

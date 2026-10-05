@@ -243,7 +243,12 @@ export function GuestProfilePage() {
   const [activeTab, setActiveTab] = useState<"trips" | "reviews">("trips");
   const [selectedTrip, setSelectedTrip] = useState<TripItem | null>(null);
 
-  // Guard route: Only accessible when user is authenticated and DB data is loaded
+  // 1. Refresh user profile once on mount
+  useEffect(() => {
+    useAuthStore.getState().fetchProfile().catch(() => null);
+  }, []);
+
+  // 2. Guard route: Only accessible when user is authenticated
   useEffect(() => {
     if (isHydrating) return;
 
@@ -256,17 +261,19 @@ export function GuestProfilePage() {
           : null;
       if (!token) {
         router.replace("/auth/login?next=/profile");
-        return;
       }
     }
+  }, [isAuthenticated, isHydrating, !!user, router]);
 
+  // 3. Load trips and reviews once per authenticated user
+  useEffect(() => {
+    if (isHydrating) return;
     let isMounted = true;
 
     async function loadDatabaseData() {
       setIsLoadingData(true);
       try {
-        const [, apiBookings, apiReviews] = await Promise.all([
-          useAuthStore.getState().fetchProfile().catch(() => null),
+        const [apiBookings, apiReviews] = await Promise.all([
           getMyBookings().catch(() => []),
           getMyGuestReviews().catch(() => []),
         ]);
@@ -303,7 +310,8 @@ export function GuestProfilePage() {
         });
 
         // Merge with locally stored bookings (if any)
-        const mappedLocalTrips: TripItem[] = (localBookings || []).map((b) => {
+        const currentLocalBookings = useBookingStore.getState().bookings || [];
+        const mappedLocalTrips: TripItem[] = currentLocalBookings.map((b) => {
           const checkIn = b.details?.checkIn;
           const isUpcoming =
             b.status === "confirmed" && checkIn
@@ -358,7 +366,7 @@ export function GuestProfilePage() {
     return () => {
       isMounted = false;
     };
-  }, [isAuthenticated, isHydrating, user, router, localBookings]);
+  }, [user?.id, isHydrating]);
 
   // Average rating calculated strictly from actual reviews
   const averageRating = useMemo(() => {
