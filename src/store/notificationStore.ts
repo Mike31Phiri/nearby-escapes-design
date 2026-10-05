@@ -18,6 +18,7 @@ export type NotificationType =
 
 export interface AppNotification {
   id: string;
+  userId?: string;
   type: NotificationType;
   title: string;
   description: string;
@@ -25,6 +26,19 @@ export interface AppNotification {
   read: boolean;
   actionUrl?: string;
   actionLabel?: string;
+  guestId?: string;
+  hostId?: string;
+  metadata?: {
+    bookingRef?: string;
+    listingId?: string;
+    guestId?: string;
+    guestUserId?: string;
+    hostId?: string;
+    hostUserId?: string;
+    amountZMW?: number;
+    senderName?: string;
+    [key: string]: any;
+  };
 }
 
 const mockNotifications: AppNotification[] = [

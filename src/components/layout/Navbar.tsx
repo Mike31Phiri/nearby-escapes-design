@@ -64,9 +64,12 @@ export function Navbar() {
   const [headerDates, setHeaderDates] = useState<DateRange>({ checkIn: null, checkOut: null });
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-  // Automatically close sheet on route transition
+  // Automatically close sheet and release any stuck pointer locks on route transition
   useEffect(() => {
     setIsSheetOpen(false);
+    if (typeof document !== "undefined") {
+      document.body.style.pointerEvents = "";
+    }
   }, [pathname]);
 
   useEffect(() => {

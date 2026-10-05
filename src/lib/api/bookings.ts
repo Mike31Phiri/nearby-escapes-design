@@ -38,7 +38,7 @@ export interface BookingDTO {
   listingId: string;
   listingTitle: string;
   vertical: ListingVertical;
-  status: "confirmed" | "cancelled" | "completed";
+  status: "confirmed" | "checked_in" | "completed" | "cancelled" | "pending";
   checkIn: string | null;
   checkOut: string | null;
   date: string | null;
@@ -61,12 +61,22 @@ export interface CancelBookingPayload {
  * POST /api/bookings
  */
 export const createBooking = async (payload: CreateBookingPayload): Promise<BookingDTO> => {
-  const reqBody: CreateBookingRequest = {
+  // Matches NestJS CreateBookingDto exactly with backwards-compatible fallbacks
+  const reqBody = {
     listingId: payload.listingId,
+    propertyId: payload.listingId,
+    listingType: payload.vertical,
     vertical: payload.vertical,
+    checkIn: payload.checkIn || (payload.date ? undefined : new Date().toISOString().split("T")[0]),
+    checkOut: payload.checkOut,
+    date: payload.date || payload.checkIn,
     checkInDate: payload.checkIn || payload.date || new Date().toISOString().split("T")[0],
     checkOutDate: payload.checkOut,
+    guests: payload.guests,
     guestCount: payload.guests,
+    customerName: payload.customerName,
+    customerPhone: payload.customerPhone,
+    customerEmail: payload.customerEmail || "",
     specialRequests: payload.specialRequests,
     guestDetails: {
       fullName: payload.customerName,
@@ -82,25 +92,25 @@ export const createBooking = async (payload: CreateBookingPayload): Promise<Book
   };
 
   try {
-    const { data } = await apiClient.post<BookingResponseDTO>("/bookings", reqBody);
+    const { data } = await apiClient.post<any>("/bookings", reqBody);
     return {
-      id: data.bookingId,
+      id: data.id || data.bookingId,
       bookingRef: data.bookingRef,
       tripId: `trip-${data.bookingRef}`,
-      listingId: data.listingId,
-      listingTitle: data.listingTitle,
-      vertical: data.vertical,
-      status: data.status,
-      checkIn: data.checkInDate,
-      checkOut: data.checkOutDate || null,
-      date: data.checkInDate,
-      guests: data.guestCount,
-      totalNgwee: data.totalAmountNgwee,
+      listingId: data.listingId || data.propertyId || payload.listingId,
+      listingTitle: data.listingTitle || data.name || "Reservation",
+      vertical: (data.vertical || data.listingType || payload.vertical) as ListingVertical,
+      status: data.status || "confirmed",
+      checkIn: data.checkIn || data.checkInDate || payload.checkIn || null,
+      checkOut: data.checkOut || data.checkOutDate || payload.checkOut || null,
+      date: data.date || data.checkInDate || payload.date || null,
+      guests: data.guests || data.guestsCount || data.guestCount || payload.guests,
+      totalNgwee: data.totalNgwee || data.totalAmountNgwee || payload.totalNgwee,
       serviceFeeNgwee: payload.serviceFeeNgwee,
-      guestId: "guest-current",
-      hostId: "host-assigned",
-      createdAt: data.createdAt,
-      updatedAt: data.createdAt,
+      guestId: data.guestId || data.userId || "guest-current",
+      hostId: data.hostId || "host-assigned",
+      createdAt: data.createdAt || new Date().toISOString(),
+      updatedAt: data.updatedAt || data.createdAt || new Date().toISOString(),
     };
   } catch {
     // Offline fallback for preview
@@ -236,32 +246,102 @@ export const getBookingReceipt = async (bookingRef: string): Promise<BookingRece
 
 /**
  * List all bookings for the currently authenticated guest.
+ * Supports both grouped (upcoming/active/recent/cancelled) and flat list responses.
  * GET /api/bookings/my-trips
  */
 export const getMyBookings = async (): Promise<BookingDTO[]> => {
   try {
-    const { data } = await apiClient.get<BookingResponseDTO[]>("/bookings/my-trips");
-    return data.map((b) => ({
-      id: b.bookingId,
+    const { data } = await apiClient.get<any>("/bookings/my-trips");
+    let items: any[] = [];
+
+    if (Array.isArray(data)) {
+      items = data;
+    } else if (data && typeof data === "object") {
+      // Grouped response: { upcoming: [], active: [], recent: [], cancelled: [] }
+      items = [
+        ...(Array.isArray(data.upcoming) ? data.upcoming : []),
+        ...(Array.isArray(data.active) ? data.active : []),
+        ...(Array.isArray(data.recent) ? data.recent : []),
+        ...(Array.isArray(data.cancelled) ? data.cancelled : []),
+      ];
+    }
+
+    return items.map((b: any) => ({
+      id: b.id || b.bookingId,
       bookingRef: b.bookingRef,
       tripId: `trip-${b.bookingRef}`,
       listingId: b.listingId,
       listingTitle: b.listingTitle,
       vertical: b.vertical,
       status: b.status,
-      checkIn: b.checkInDate,
-      checkOut: b.checkOutDate || null,
-      date: b.checkInDate,
-      guests: b.guestCount,
-      totalNgwee: b.totalAmountNgwee,
-      serviceFeeNgwee: 0,
-      guestId: "guest-current",
-      hostId: "host-assigned",
-      createdAt: b.createdAt,
-      updatedAt: b.createdAt,
+      checkIn: b.checkInDate || b.checkIn || null,
+      checkOut: b.checkOutDate || b.checkOut || null,
+      date: b.date || b.checkInDate || b.checkIn || null,
+      guests: b.guestsCount || b.guests || b.guestCount || 1,
+      totalNgwee: b.totalNgwee || b.totalAmountNgwee || 0,
+      serviceFeeNgwee: b.serviceFeeNgwee || 0,
+      guestId: b.guestId || "guest-current",
+      hostId: b.hostId || "host-assigned",
+      createdAt: b.createdAt || new Date().toISOString(),
+      updatedAt: b.updatedAt || b.createdAt || new Date().toISOString(),
     }));
   } catch {
     return [];
+  }
+};
+
+/**
+ * Fetch grouped bookings directly (upcoming, active, recent, cancelled, stats).
+ * GET /api/bookings/my-trips
+ */
+export const getGroupedMyBookings = async (): Promise<{
+  upcoming: BookingDTO[];
+  active: BookingDTO[];
+  recent: BookingDTO[];
+  cancelled: BookingDTO[];
+  stats?: any;
+}> => {
+  try {
+    const { data } = await apiClient.get<any>("/bookings/my-trips");
+    const mapItem = (b: any): BookingDTO => ({
+      id: b.id || b.bookingId,
+      bookingRef: b.bookingRef,
+      tripId: `trip-${b.bookingRef}`,
+      listingId: b.listingId,
+      listingTitle: b.listingTitle,
+      vertical: b.vertical,
+      status: b.status,
+      checkIn: b.checkInDate || b.checkIn || null,
+      checkOut: b.checkOutDate || b.checkOut || null,
+      date: b.date || b.checkInDate || b.checkIn || null,
+      guests: b.guestsCount || b.guests || b.guestCount || 1,
+      totalNgwee: b.totalNgwee || b.totalAmountNgwee || 0,
+      serviceFeeNgwee: b.serviceFeeNgwee || 0,
+      guestId: b.guestId || "guest-current",
+      hostId: b.hostId || "host-assigned",
+      createdAt: b.createdAt || new Date().toISOString(),
+      updatedAt: b.updatedAt || b.createdAt || new Date().toISOString(),
+    });
+
+    if (data && typeof data === "object" && !Array.isArray(data)) {
+      return {
+        upcoming: (data.upcoming || []).map(mapItem),
+        active: (data.active || []).map(mapItem),
+        recent: (data.recent || []).map(mapItem),
+        cancelled: (data.cancelled || []).map(mapItem),
+        stats: data.stats,
+      };
+    }
+
+    const all = (Array.isArray(data) ? data : []).map(mapItem);
+    return {
+      upcoming: all.filter((b) => b.status === "confirmed"),
+      active: all.filter((b) => b.status === "checked_in"),
+      recent: all.filter((b) => b.status === "completed"),
+      cancelled: all.filter((b) => b.status === "cancelled"),
+    };
+  } catch {
+    return { upcoming: [], active: [], recent: [], cancelled: [] };
   }
 };
 

@@ -63,11 +63,16 @@ const SheetContent = React.forwardRef<
 >(({ side = "right", overlayClassName, className, children, ...props }, ref) => {
   const innerRef = React.useRef<HTMLDivElement | null>(null);
 
-  // Reset sheet scroll to top on mount
+  // Reset sheet scroll to top on mount and ensure pointer-events are restored on unmount
   React.useEffect(() => {
     if (innerRef.current) {
       innerRef.current.scrollTop = 0;
     }
+    return () => {
+      if (typeof document !== "undefined") {
+        document.body.style.pointerEvents = "";
+      }
+    };
   }, []);
 
   return (
