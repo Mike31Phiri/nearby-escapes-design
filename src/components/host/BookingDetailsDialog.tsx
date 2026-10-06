@@ -100,6 +100,7 @@ export function BookingDetailsDialog({
   onOpenChange,
   onAccept,
   onDecline,
+  onCheckIn,
   processing,
 }: {
   booking: BookingDetailsData | null;
@@ -107,6 +108,7 @@ export function BookingDetailsDialog({
   onOpenChange: (open: boolean) => void;
   onAccept?: (id: string) => void;
   onDecline?: (id: string) => void;
+  onCheckIn?: (id: string) => void;
   processing?: string | null;
 }) {
   const [imgError, setImgError] = useState(false);
@@ -246,6 +248,23 @@ export function BookingDetailsDialog({
               <Loader2 className="h-4 w-4 animate-spin mx-auto" />
             ) : (
               "Accept reservation"
+            )}
+          </button>
+        </div>
+      )}
+
+      {/* Check In action for confirmed bookings */}
+      {booking.status === "confirmed" && onCheckIn && (
+        <div className="shrink-0 border-t border-neutral-200/80 bg-white p-3 sm:p-4">
+          <button
+            onClick={() => onCheckIn(booking.id)}
+            disabled={processing === booking.id}
+            className="w-full h-9 sm:h-10 rounded-xl bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700 transition-colors disabled:opacity-50 shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+          >
+            {processing === booking.id ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              "Check In Guest"
             )}
           </button>
         </div>

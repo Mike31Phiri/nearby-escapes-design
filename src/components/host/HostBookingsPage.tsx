@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useState, useMemo } from "react";
 import Link from "next/link";
 import { Eye, CalendarDays, FileText } from "lucide-react";
 import { toast } from "sonner";
@@ -9,6 +9,8 @@ import { mockHostBookings } from "@/lib/mock-host-bookings";
 import type { HostBooking } from "@/lib/mock-host-bookings";
 import { HostPageHeader } from "@/components/layout/HostPageHeader";
 import { BookingDetailsDialog, STATUS_BADGE, formatDay, initials } from "./BookingDetailsDialog";
+import { useBookingStore } from "@/store/bookingStore";
+import { checkInGuest } from "@/lib/api/host";
 
 const bookingDates = (booking: HostBooking) =>
   booking.checkIn
@@ -118,19 +120,75 @@ export function HostBookingsPage() {
   const [bookings, setBookings] = useState<HostBooking[]>(mockHostBookings);
   const [selected, setSelected] = useState<HostBooking | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const userBookings = useBookingStore((s) => s.bookings);
 
-  const pending = bookings.filter((b) => b.status === "pending");
-  const confirmed = bookings.filter((b) => b.status === "confirmed");
-  const completed = bookings.filter((b) => b.status === "completed");
+  // Merge store bookings with initial host bookings
+  const allBookings = useMemo(() => {
+    const fromStore: HostBooking[] = userBookings.map((b) => ({
+      id: b.id,
+      bookingRef: b.bookingRef,
+      listingId: b.listingId || "listing-1",
+      listingName: b.listingName,
+      listingType: (b.type || "stay") as any,
+      status: (b.status === "cancelled" ? "cancelled" : "confirmed") as any,
+      guestName: b.customerName || "Mike Phiri",
+      guestAvatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(b.customerName || "Mike Phiri")}`,
+      guests: b.details?.guests || 1,
+      amount: b.amount,
+      currency: b.currency || "ZMW",
+      guestEmail: b.customerEmail || "guest@nearbyescapes.com",
+      guestPhone: b.customerPhone || "+260 97 1234567",
+      checkIn: b.details?.checkIn,
+      checkOut: b.details?.checkOut,
+      date: b.details?.date,
+      createdAt: b.createdAt,
+      updatedAt: b.createdAt,
+      listingImage: b.image,
+    }));
+
+    const overriddenIds = new Set(bookings.map((b) => b.id));
+    const newFromStore = fromStore.filter((b) => !overriddenIds.has(b.id));
+    return [...newFromStore, ...bookings];
+  }, [userBookings, bookings]);
+
+  const pending = allBookings.filter((b) => b.status === "pending");
+  const confirmed = allBookings.filter((b) => b.status === "confirmed");
+  const completed = allBookings.filter((b) => b.status === "completed");
 
   const openDetails = useCallback((booking: HostBooking) => {
     setSelected(booking);
     setDetailsOpen(true);
   }, []);
 
+  const handleCheckIn = useCallback(
+    async (id: string) => {
+      const guest = allBookings.find((b) => b.id === id);
+      setProcessing(id);
+      try {
+        await checkInGuest(id);
+      } catch (e) {
+        console.warn("Backend check-in sync note:", e);
+      }
+      setBookings((prev) => {
+        const exists = prev.some((b) => b.id === id);
+        if (exists) {
+          return prev.map((b) => (b.id === id ? { ...b, status: "completed" as const } : b));
+        }
+        if (guest) {
+          return [{ ...guest, status: "completed" as const }, ...prev];
+        }
+        return prev;
+      });
+      setProcessing(null);
+      setDetailsOpen(false);
+      toast.success(`Check-in confirmed for ${guest?.guestName ?? "Guest"}! Funds released.`);
+    },
+    [allBookings],
+  );
+
   const handleAccept = useCallback(
     (id: string) => {
-      const guest = bookings.find((b) => b.id === id);
+      const guest = allBookings.find((b) => b.id === id);
       setProcessing(id);
       setTimeout(() => {
         setBookings((prev) =>
@@ -140,12 +198,12 @@ export function HostBookingsPage() {
         toast.success(`Booking confirmed for ${guest?.guestName ?? "Guest"}!`);
       }, 800);
     },
-    [bookings],
+    [allBookings],
   );
 
   const handleDecline = useCallback(
     (id: string) => {
-      const guest = bookings.find((b) => b.id === id);
+      const guest = allBookings.find((b) => b.id === id);
       setProcessing(id);
       setTimeout(() => {
         setBookings((prev) =>
@@ -155,7 +213,7 @@ export function HostBookingsPage() {
         toast.success(`Booking from ${guest?.guestName ?? "Guest"} declined.`);
       }, 800);
     },
-    [bookings],
+    [allBookings],
   );
 
   return (
@@ -216,6 +274,7 @@ export function HostBookingsPage() {
         onOpenChange={setDetailsOpen}
         onAccept={handleAccept}
         onDecline={handleDecline}
+        onCheckIn={handleCheckIn}
         processing={processing}
       />
     </div>

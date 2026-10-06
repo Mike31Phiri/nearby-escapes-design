@@ -358,13 +358,13 @@ export function TransportPage() {
                     : "bg-white border-neutral-300 text-neutral-800 hover:border-neutral-400 hover:bg-neutral-50",
                 )}
               >
-                <div className="relative flex items-center">
-                  <SlidersHorizontal className="h-4 w-4 shrink-0" />
-                  {chips.length > 0 && (
-                    <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-purple ring-2 ring-white" />
-                  )}
-                </div>
+                <SlidersHorizontal className="h-4 w-4 shrink-0" />
                 <span>Filters</span>
+                {chips.length > 0 && (
+                  <span className="inline-flex items-center justify-center h-4.5 min-w-[18px] px-1.5 rounded-full bg-purple text-white text-[11px] font-bold tabular-nums">
+                    {chips.length}
+                  </span>
+                )}
               </button>
               <div className="h-5 w-px bg-neutral-200 ml-3 shrink-0" />
             </div>

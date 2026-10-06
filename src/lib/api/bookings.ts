@@ -78,6 +78,8 @@ export const createBooking = async (payload: CreateBookingPayload): Promise<Book
     customerPhone: payload.customerPhone,
     customerEmail: payload.customerEmail || "",
     specialRequests: payload.specialRequests,
+    simulatePayment: true,
+    paymentMethod: "SIMULATED",
     guestDetails: {
       fullName: payload.customerName,
       email: payload.customerEmail || "",

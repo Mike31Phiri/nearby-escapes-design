@@ -1,5 +1,11 @@
 "use client";
 
+import { CookieConsent } from "@/components/ui/CookieConsent";
+
 export function ClientModals() {
-  return null;
+  return (
+    <>
+      <CookieConsent />
+    </>
+  );
 }
