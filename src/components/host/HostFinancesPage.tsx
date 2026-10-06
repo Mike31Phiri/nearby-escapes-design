@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { mockFinances } from "@/lib/mock-host-finances";
@@ -9,6 +9,7 @@ import { mockPayouts, payoutSummary, sumLedger } from "@/lib/mock-payout-data";
 import { ROUTES } from "@/lib/constants/routes";
 import { toast } from "sonner";
 import { HostPageHeader } from "@/components/layout/HostPageHeader";
+import { getMyProperties } from "@/lib/api/host";
 import {
   TrendingUp,
   TrendingDown,
@@ -36,7 +37,15 @@ import {
 
 export function HostFinancesPage() {
   const router = useRouter();
-  const [finances, setFinances] = useState(mockFinances);
+  const [finances, setFinances] = useState({
+    totalEarnings: 0,
+    totalEarnedYTD: 0,
+    expectedPayouts: 0,
+    availableBalance: 0,
+    monthlyData: [] as typeof mockFinances.monthlyData,
+    recentTransactions: [] as Transaction[],
+  });
+  const [payoutsList, setPayoutsList] = useState<typeof mockPayouts>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<"payouts" | "transactions">("payouts");
   const [txTab, setTxTab] = useState<"all" | "booking" | "payout" | "refund">("all");
@@ -44,10 +53,48 @@ export function HostFinancesPage() {
     mode: "automated",
     frequency: "weekly",
     payoutDay: "Tuesday",
-    channel: "Airtel Money",
-    account: "+260 97X XXX XXX",
+    channel: "Bank Transfer",
+    account: "Not configured yet",
   });
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
+
+  useEffect(() => {
+    getMyProperties()
+      .then((props) => {
+        if (props && props.length > 0) {
+          setFinances({
+            totalEarnings: mockFinances.totalEarnedYTD,
+            totalEarnedYTD: mockFinances.totalEarnedYTD,
+            expectedPayouts: mockFinances.expectedPayouts,
+            availableBalance: mockFinances.totalEarnedYTD - mockFinances.platformFeesYTD,
+            monthlyData: mockFinances.monthlyData,
+            recentTransactions: mockFinances.recentTransactions,
+          });
+          setPayoutsList(mockPayouts);
+        } else {
+          setFinances({
+            totalEarnings: 0,
+            totalEarnedYTD: 0,
+            expectedPayouts: 0,
+            availableBalance: 0,
+            monthlyData: [],
+            recentTransactions: [],
+          });
+          setPayoutsList([]);
+        }
+      })
+      .catch(() => {
+        setFinances({
+          totalEarnings: 0,
+          totalEarnedYTD: 0,
+          expectedPayouts: 0,
+          availableBalance: 0,
+          monthlyData: [],
+          recentTransactions: [],
+        });
+        setPayoutsList([]);
+      });
+  }, []);
 
   // Date range + sorting for the transaction log
   const [dateFrom, setDateFrom] = useState("");
@@ -102,6 +149,7 @@ export function HostFinancesPage() {
     setFinances((prev) => ({
       ...prev,
       totalEarnedYTD: prev.totalEarnedYTD + payoutAmount,
+      totalEarnings: prev.totalEarnings + payoutAmount,
       expectedPayouts: 0,
       recentTransactions: [newTx, ...prev.recentTransactions],
     }));
@@ -343,27 +391,36 @@ export function HostFinancesPage() {
             </div>
 
             {activeTab === "payouts" ? (
-              /* Monthly payout table */
-              <div className="bg-white border border-neutral-200/80 rounded-2xl rounded-tl-none shadow-2xs overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-neutral-200/80 bg-neutral-50/70">
-                        {["Month", "Bookings", "Gross", "Net Payout", "Status"].map((h) => (
-                          <th
-                            key={h}
-                            className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-neutral-500 whitespace-nowrap"
-                          >
-                            {h}
-                          </th>
-                        ))}
-                        <th className="w-10" />
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-neutral-100">
-                      {[...mockPayouts]
-                        .sort((a, b) => b.label.localeCompare(a.label))
-                        .map((payout) => (
+              payoutsList.length === 0 ? (
+                <div className="bg-white border border-neutral-200/80 rounded-2xl rounded-tl-none p-12 text-center shadow-2xs">
+                  <Landmark className="h-10 w-10 text-neutral-300 mx-auto mb-2" />
+                  <p className="text-sm text-neutral-800 font-semibold">No payouts yet</p>
+                  <p className="text-xs text-neutral-500 mt-1 max-w-sm mx-auto">
+                    When you list properties and receive bookings, your payout schedules and monthly statements will appear here.
+                  </p>
+                </div>
+              ) : (
+                /* Monthly payout table */
+                <div className="bg-white border border-neutral-200/80 rounded-2xl rounded-tl-none shadow-2xs overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-neutral-200/80 bg-neutral-50/70">
+                          {["Month", "Bookings", "Gross", "Net Payout", "Status"].map((h) => (
+                            <th
+                              key={h}
+                              className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-neutral-500 whitespace-nowrap"
+                            >
+                              {h}
+                            </th>
+                          ))}
+                          <th className="w-10" />
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-neutral-100">
+                        {[...payoutsList]
+                          .sort((a, b) => b.label.localeCompare(a.label))
+                          .map((payout) => (
                           <tr
                             key={payout.id}
                             onClick={() => router.push(ROUTES?.host?.financeLedger ? ROUTES.host.financeLedger(payout.id) : `/host/finances/ledger/${payout.id}`)}
@@ -417,7 +474,7 @@ export function HostFinancesPage() {
                   Click any month to open its ledger breakdown with booking-level fees.
                 </div>
               </div>
-            ) : (
+            )) : (
               /* Transaction Log */
               <div className="bg-white border border-neutral-200/80 rounded-2xl shadow-2xs">
                 <div className="p-6">

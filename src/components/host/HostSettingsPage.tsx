@@ -388,30 +388,8 @@ function PayoutMethodsSection({
               </button>
             </div>
           </div>
-        ) : (
+        ) : bank ? (
           <div className="space-y-3">
-            {/* Mobile Money — default */}
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-xl bg-neutral-50 border border-neutral-200/80">
-              <div className="h-11 w-11 rounded-xl bg-purple/10 text-purple flex items-center justify-center shrink-0">
-                <Smartphone className="h-5 w-5" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-sm font-bold text-neutral-900">Mobile Money</span>
-                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-purple bg-purple/10 border border-purple/20 rounded-full px-2.5 py-0.5 tracking-wide">
-                    Default
-                  </span>
-                </div>
-                <p className="text-xs text-neutral-600 mt-1">+260 97 765 4321 · Airtel Money</p>
-              </div>
-              <button
-                onClick={() => toast.info("Edit payment method — feature coming soon")}
-                className="inline-flex items-center gap-1.5 h-9 px-4 rounded-xl border border-neutral-200/80 text-xs font-semibold text-neutral-700 hover:border-purple/40 hover:text-purple transition-all shrink-0 shadow-2xs"
-              >
-                Edit
-              </button>
-            </div>
-
             {/* Bank */}
             <div className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-xl bg-neutral-50 border border-neutral-200/80">
               <div className="h-11 w-11 rounded-xl bg-purple/10 text-purple flex items-center justify-center shrink-0">
@@ -420,7 +398,7 @@ function PayoutMethodsSection({
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-sm font-bold text-neutral-900">
-                    {bank?.bankName ?? "No bank set"}
+                    {bank.bankName}
                   </span>
                   {pending ? (
                     <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-2.5 py-0.5 tracking-wide">
@@ -433,9 +411,9 @@ function PayoutMethodsSection({
                   )}
                 </div>
                 <p className="text-xs text-neutral-600 mt-1 font-mono">
-                  {bank ? maskIban(bank.iban) : "—"}
+                  {maskIban(bank.iban)}
                   <span className="text-neutral-400 font-sans ml-2">
-                    SWIFT {bank?.swift ? bank.swift.toUpperCase() : "—"}
+                    SWIFT {bank.swift ? bank.swift.toUpperCase() : "—"}
                   </span>
                 </p>
               </div>
@@ -446,6 +424,20 @@ function PayoutMethodsSection({
                 Edit
               </button>
             </div>
+          </div>
+        ) : (
+          <div className="rounded-xl border border-dashed border-neutral-300 bg-neutral-50/50 p-6 text-center">
+            <Banknote className="h-8 w-8 text-neutral-400 mx-auto mb-2" />
+            <p className="text-sm font-semibold text-neutral-800">No payout method configured</p>
+            <p className="text-xs text-neutral-500 mt-1 max-w-sm mx-auto">
+              You haven&apos;t added your bank or payout details yet. Add your bank details to receive payouts.
+            </p>
+            <button
+              onClick={onEdit}
+              className="mt-3.5 inline-flex items-center gap-1.5 h-9 px-4 rounded-xl bg-purple text-white text-xs font-semibold hover:bg-purple-hover transition-all shadow-xs"
+            >
+              Set Up Bank Details
+            </button>
           </div>
         )}
       </div>

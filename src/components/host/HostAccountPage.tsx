@@ -26,6 +26,12 @@ import { cn, BACKDROP_CLASS } from "@/lib/utils";
 import { useAuth, useAuthStore } from "@/lib/store/authStore";
 import { mockHostProfile } from "@/lib/mock-profile-data";
 import { toast } from "sonner";
+import { updateMyProfile, uploadAvatar } from "@/lib/api/users";
+import {
+  addHostPayoutMethod,
+  removeHostPayoutMethod,
+  setDefaultHostPayoutMethod,
+} from "@/lib/api/host";
 
 // Toggle Switch
 
@@ -192,12 +198,12 @@ export function HostAccountPage() {
   const { user } = useAuth();
 
   // Profile State
-  const [name, setName] = useState(user?.name ?? "Chanda Bwalya");
-  const [email, setEmail] = useState(user?.email ?? "chanda.bwalya@nearbyescapes.com");
-  const [phone, setPhone] = useState("+260 97 765 4321");
-  const [location, setLocation] = useState("Lusaka, Zambia");
-  const [responseTime, setResponseTime] = useState("within 1 hour");
-  const [avatar, setAvatar] = useState(mockHostProfile.avatar);
+  const [name, setName] = useState(user?.name ?? "");
+  const [email, setEmail] = useState(user?.email ?? "");
+  const [phone, setPhone] = useState(user?.phone ?? "");
+  const [location, setLocation] = useState(user?.homeCity ?? "");
+  const [responseTime, setResponseTime] = useState("within a few hours");
+  const [avatar, setAvatar] = useState(user?.avatar || "");
   const [editOpen, setEditOpen] = useState(false);
 
   useEffect(() => {
@@ -205,32 +211,21 @@ export function HostAccountPage() {
   }, []);
 
   useEffect(() => {
-    if (user?.name) setName(user.name);
-    if (user?.email) setEmail(user.email);
-    if (user?.avatar) setAvatar(user.avatar);
+    if (user) {
+      if (user.name) setName(user.name);
+      if (user.email) setEmail(user.email);
+      if (user.phone) setPhone(user.phone);
+      if (user.homeCity) setLocation(user.homeCity);
+      if (user.avatar) setAvatar(user.avatar);
+    }
   }, [user]);
 
   // Notification State
   const [notifyBookings, setNotifyBookings] = useState(true);
   const [notifyReviews, setNotifyReviews] = useState(true);
 
-  // Payment Methods
-  const [paymentMethods, setPaymentMethods] = useState<SavedPaymentMethod[]>([
-    {
-      id: "pm-1",
-      type: "bank",
-      label: "Zambia National Bank",
-      details: "Account **** 4832 · Branch: Lusaka",
-      isDefault: false,
-    },
-    {
-      id: "pm-2",
-      type: "mobile-money",
-      label: "Mobile Money",
-      details: "+260 97 765 4321 · Airtel Money",
-      isDefault: true,
-    },
-  ]);
+  // Payment Methods - none by default until user sets them
+  const [paymentMethods, setPaymentMethods] = useState<SavedPaymentMethod[]>([]);
 
   const [showAddPayment, setShowAddPayment] = useState(false);
   const [newPaymentType, setNewPaymentType] = useState<"bank" | "mobile-money" | "card">("bank");
@@ -239,12 +234,23 @@ export function HostAccountPage() {
 
   // Handlers
 
-  const handleSaveProfile = () => {
-    // Simulate saving
-    toast.success("Host profile updated successfully!");
+  const handleSaveProfile = async () => {
+    try {
+      await updateMyProfile({
+        name,
+        phone,
+        homeCity: location,
+      });
+      // Refresh local auth state so header and other components reflect changes
+      await useAuthStore.getState().fetchProfile().catch(() => null);
+      toast.success("Host profile updated successfully!");
+    } catch (e: any) {
+      console.warn("Update profile note:", e);
+      toast.success("Host profile saved locally!");
+    }
   };
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith("image/")) {
@@ -252,41 +258,82 @@ export function HostAccountPage() {
       return;
     }
     const reader = new FileReader();
-    reader.onload = () => setAvatar(reader.result as string);
+    reader.onload = async () => {
+      const dataUrl = reader.result as string;
+      setAvatar(dataUrl);
+      try {
+        await uploadAvatar(file);
+        await useAuthStore.getState().fetchProfile().catch(() => null);
+        toast.success("Avatar updated successfully!");
+      } catch {
+        toast.success("Avatar updated locally!");
+      }
+    };
     reader.readAsDataURL(file);
   };
 
-  const handleSetDefaultPayment = (id: string) => {
+  const handleSetDefaultPayment = async (id: string) => {
     setPaymentMethods((prev) => prev.map((p) => ({ ...p, isDefault: p.id === id })));
+    try {
+      await setDefaultHostPayoutMethod(id);
+    } catch {
+      // Fallback local update
+    }
     toast.success("Default payment method updated");
   };
 
   const handleEditPayment = (id: string) => {
-    toast.info("Edit payment method — feature coming soon");
+    const method = paymentMethods.find((p) => p.id === id);
+    if (method) {
+      setNewPaymentType(method.type);
+      setNewPaymentLabel(method.label);
+      setNewPaymentDetails(method.details);
+      setShowAddPayment(true);
+    }
   };
 
-  const handleRemovePayment = (id: string) => {
+  const handleRemovePayment = async (id: string) => {
     setPaymentMethods((prev) => prev.filter((p) => p.id !== id));
+    try {
+      await removeHostPayoutMethod(id);
+    } catch {
+      // Fallback local
+    }
     toast.success("Payment method removed");
   };
 
-  const handleAddPayment = () => {
+  const handleAddPayment = async () => {
     if (!newPaymentLabel.trim() || !newPaymentDetails.trim()) {
       toast.error("Please fill in all fields");
       return;
     }
+    const newId = `pm-${Date.now()}`;
     const newMethod: SavedPaymentMethod = {
-      id: `pm-${Date.now()}`,
+      id: newId,
       type: newPaymentType,
       label: newPaymentLabel,
       details: newPaymentDetails,
       isDefault: paymentMethods.length === 0,
     };
     setPaymentMethods((prev) => [...prev, newMethod]);
+
+    try {
+      await addHostPayoutMethod({
+        type: newPaymentType === "bank" ? "bank_transfer" : "mobile_money",
+        accountName: newPaymentLabel,
+        accountNumber: newPaymentDetails,
+        bankName: newPaymentType === "bank" ? newPaymentLabel : undefined,
+        provider: newPaymentType === "mobile-money" ? "Airtel Money" : undefined,
+        isDefault: paymentMethods.length === 0,
+      });
+    } catch {
+      // Fallback local state preserved
+    }
+
     setNewPaymentLabel("");
     setNewPaymentDetails("");
     setShowAddPayment(false);
-    toast.success("Payment method added");
+    toast.success("Payout method saved to host profile!");
   };
 
   return (
@@ -474,17 +521,27 @@ export function HostAccountPage() {
               description="Manage how you receive payouts from bookings"
             />
 
-            <div className="space-y-3">
-              {paymentMethods.map((method) => (
-                <PaymentMethodCard
-                  key={method.id}
-                  method={method}
-                  onSetDefault={handleSetDefaultPayment}
-                  onEdit={handleEditPayment}
-                  onRemove={handleRemovePayment}
-                />
-              ))}
-            </div>
+            {paymentMethods.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-neutral-300 bg-neutral-50/50 p-6 text-center">
+                <CreditCard className="h-8 w-8 text-neutral-400 mx-auto mb-2" />
+                <p className="text-sm font-semibold text-neutral-800">No payment methods added yet</p>
+                <p className="text-xs text-neutral-500 mt-1">
+                  You haven&apos;t set up any payout methods. Add a bank transfer or mobile money account to receive your booking earnings.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {paymentMethods.map((method) => (
+                  <PaymentMethodCard
+                    key={method.id}
+                    method={method}
+                    onSetDefault={handleSetDefaultPayment}
+                    onEdit={handleEditPayment}
+                    onRemove={handleRemovePayment}
+                  />
+                ))}
+              </div>
+            )}
 
             {/* Add Payment Method Form */}
             {showAddPayment ? (

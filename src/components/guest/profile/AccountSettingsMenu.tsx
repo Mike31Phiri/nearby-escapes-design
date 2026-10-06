@@ -31,13 +31,6 @@ export function AccountSettingsMenu() {
       href: "/settings/history",
     },
     {
-      id: "payments",
-      icon: CreditCard,
-      title: "Payment methods",
-      description: "Manage mobile money, cards, and payment options",
-      href: "/settings/payments",
-    },
-    {
       id: "support",
       icon: ShieldQuestion,
       title: "Support & safety",

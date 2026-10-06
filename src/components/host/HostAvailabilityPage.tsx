@@ -11,9 +11,10 @@ import { useAvailabilityStore } from "@/store/availabilityStore";
 import { useInventoryStore } from "@/store/inventoryStore";
 import { PricingRulesModal } from "@/components/host/availability/PricingRulesModal";
 import { toast } from "sonner";
-import { Lock, Boxes, CircleCheck, Users, ArrowRight, RotateCcw, Clock, Sparkles, AlertCircle } from "lucide-react";
+import { Lock, Boxes, CircleCheck, Users, ArrowRight, RotateCcw, Clock, Sparkles, AlertCircle, Calendar, Plus } from "lucide-react";
 import Link from "next/link";
 import { inventoryCounts } from "@/lib/mock-inventory";
+import { getMyProperties } from "@/lib/api/host";
 
 function toKey(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
@@ -47,9 +48,26 @@ export function HostAvailabilityPage() {
   const [rangeTo, setRangeTo] = useState("");
   const [unitsToBlock, setUnitsToBlock] = useState<number>(1);
 
-  const hostListings = mockHostProfile.listings;
-  const [selectedId, setSelectedId] = useState(hostListings[0]?.id || "");
+  const [hostListings, setHostListings] = useState<any[]>([]);
+  const [selectedId, setSelectedId] = useState("");
   const [pricingModalOpen, setPricingModalOpen] = useState(false);
+
+  useEffect(() => {
+    getMyProperties()
+      .then((props) => {
+        if (props && props.length > 0) {
+          setHostListings(props);
+          setSelectedId(props[0].id);
+        } else {
+          setHostListings([]);
+          setSelectedId("");
+        }
+      })
+      .catch(() => {
+        setHostListings([]);
+        setSelectedId("");
+      });
+  }, []);
 
   // Store
   const availability = useAvailabilityStore((s) => s.availability);
@@ -246,9 +264,28 @@ export function HostAvailabilityPage() {
         title="Availability Calendar"
       />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 py-8 space-y-8">
-        {/* Listing selector */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="w-full sm:max-w-md">
+        {hostListings.length === 0 ? (
+          <div className="bg-white border border-neutral-200/80 rounded-2xl p-12 text-center shadow-2xs">
+            <div className="h-16 w-16 rounded-2xl bg-purple/10 text-purple flex items-center justify-center mx-auto mb-4">
+              <Calendar className="h-8 w-8" />
+            </div>
+            <h3 className="text-lg font-bold text-black mb-1">No listings available</h3>
+            <p className="text-xs text-neutral-500 max-w-sm mx-auto mb-6">
+              You haven&apos;t created any listings yet. Create a stay, experience, or transport to manage availability and calendar dates.
+            </p>
+            <Link
+              href="/host/create"
+              className="inline-flex items-center gap-1.5 h-10 px-5 rounded-xl bg-purple text-white text-xs font-semibold hover:bg-purple-hover transition-all shadow-xs"
+            >
+              <Plus className="h-4 w-4" />
+              Create your first listing
+            </Link>
+          </div>
+        ) : (
+          <>
+            {/* Listing selector */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="w-full sm:max-w-md">
             <label className="block text-xs font-semibold uppercase tracking-wide text-black-muted mb-1.5">
               Select Listing/Property
             </label>
@@ -552,6 +589,8 @@ export function HostAvailabilityPage() {
             </div>
           </div>
         </div>
+        </>
+        )}
       </div>
 
       {/* Pricing Rules Editor Modal */}

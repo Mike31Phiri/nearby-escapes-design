@@ -46,8 +46,8 @@ export function isValidSwift(swift: string): boolean {
 export const usePayoutSettingsStore = create<PayoutSettingsState>()(
   persist(
     (set) => ({
-      bank: DEFAULT_BANK,
-      verificationStatus: "verified",
+      bank: null,
+      verificationStatus: "pending",
       updatedAt: null,
       setBankDetails: (details) =>
         set({

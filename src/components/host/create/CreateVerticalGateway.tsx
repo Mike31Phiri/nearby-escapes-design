@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { STAY_STORAGE_KEY } from "./stay/stayConstants";
 import { EXPERIENCE_STORAGE_KEY } from "./experience/experienceConstants";
 import { TRANSPORT_STORAGE_KEY } from "./transport/transportConstants";
+import { HostVerificationGuard } from "./HostVerificationGuard";
 
 type VerticalId = "stay" | "experience" | "transport";
 
@@ -78,7 +79,8 @@ export function CreateVerticalGateway() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background font-sans">
+    <HostVerificationGuard>
+      <div className="min-h-screen flex flex-col bg-background font-sans">
       <main className="flex-1">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 md:px-8 pt-8 pb-20">
           {/* Header navigation bar */}
@@ -177,6 +179,7 @@ export function CreateVerticalGateway() {
           </div>
         </div>
       </main>
-    </div>
+      </div>
+    </HostVerificationGuard>
   );
 }

@@ -18,6 +18,7 @@ import {
   PlayCircle,
   ArrowRight,
   ChevronRight,
+  ShieldAlert,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +31,8 @@ import { mockHostBookings } from "@/lib/mock-host-bookings";
 import { ROUTES } from "@/lib/constants/routes";
 import { selectHostDrafts, useListingDraftStore } from "@/store/listingDraftStore";
 import type { ListingDraft } from "@/types/listing";
+import { getMyProperties } from "@/lib/api/host";
+import { useAuth } from "@/lib/store/authStore";
 
 // Type helpers
 const typeIcons: Record<string, React.ElementType> = {
@@ -225,15 +228,47 @@ function ListingCard({ listing }: { listing: HostListing }) {
 }
 
 export function HostListingsPage() {
-  const host = mockHostProfile;
   const [mounted, setMounted] = useState(false);
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [serverListings, setServerListings] = useState<HostListing[]>([]);
+  const { user } = useAuth();
+  const isHostVerified = Boolean(user?.isHostVerified || user?.verificationStatus === "VERIFIED");
 
   const draftsMap = useListingDraftStore((s) => s.drafts);
 
   useEffect(() => {
     setMounted(true);
+    getMyProperties()
+      .then((properties) => {
+        if (properties && properties.length > 0) {
+          setServerListings(
+            properties.map((p) => ({
+              id: p.id,
+              name: p.name,
+              type: p.type as any,
+              location: p.location || "Zambia",
+              status: (p.status?.toLowerCase() === "active"
+                ? "active"
+                : p.status?.toLowerCase() === "pending"
+                  ? "pending"
+                  : "draft") as any,
+              image:
+                p.images?.[0] ||
+                "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=800",
+              price: p.price,
+              bookings: p.bookings ?? 0,
+              rating: p.rating ?? 5.0,
+              revenue: p.revenue ?? 0,
+            })),
+          );
+        } else {
+          setServerListings([]);
+        }
+      })
+      .catch(() => {
+        setServerListings([]);
+      });
   }, []);
 
   const rawDrafts = useMemo(() => {
@@ -276,8 +311,11 @@ export function HostListingsPage() {
   }, [rawDrafts]);
 
   const allListings = useMemo(() => {
-    return [...publishedListings, ...host.listings];
-  }, [publishedListings, host.listings]);
+    // Only actual server listings + user's published drafts — NO fake listings if server returns empty
+    const serverIds = new Set(serverListings.map((s) => s.id));
+    const uniquePublished = publishedListings.filter((p) => !serverIds.has(p.id));
+    return [...serverListings, ...uniquePublished];
+  }, [serverListings, publishedListings]);
 
   const stats = useMemo(() => {
     return {
@@ -327,6 +365,26 @@ export function HostListingsPage() {
       />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 py-8 space-y-8">
+        {/* Verification banner if unverified */}
+        {!isHostVerified && (
+          <div className="bg-amber-50 border border-amber-200/80 rounded-2xl p-4 sm:p-5 flex items-start gap-4 shadow-2xs">
+            <div className="p-2.5 rounded-xl bg-amber-100 text-amber-800 shrink-0 mt-0.5">
+              <ShieldAlert className="w-5 h-5" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-bold text-amber-900">Host Verification Required</h3>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-200/60 text-amber-900">
+                  {user?.verificationStatus ?? "UNVERIFIED"}
+                </span>
+              </div>
+              <p className="text-xs text-amber-800/90 mt-1 leading-relaxed">
+                Your host account is currently unverified. You cannot create new listings or host properties until an administrator approves your verification.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Filters + Search bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide pb-1">

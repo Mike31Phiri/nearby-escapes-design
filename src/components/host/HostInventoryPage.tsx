@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
@@ -64,9 +64,9 @@ export interface ManagedHostListing {
 export function HostInventoryPage() {
   const draftMap = useListingDraftStore((s) => s.drafts);
 
-  // Combine mock profile listings with drafts
+  // Only user drafts - NO fake mock listings when server returns empty
   const baseListings: ManagedHostListing[] = useMemo(() => {
-    const customListings: ManagedHostListing[] = Object.values(draftMap).map((d) => ({
+    return Object.values(draftMap).map((d) => ({
       id: d.id,
       name:
         d.title ||
@@ -84,10 +84,6 @@ export function HostInventoryPage() {
       rating: 5.0,
       revenue: 0,
     }));
-
-    const ids = new Set(mockHostProfile.listings.map((l) => l.id));
-    const uniqueCustom = customListings.filter((l) => !ids.has(l.id));
-    return [...(mockHostProfile.listings as ManagedHostListing[]), ...uniqueCustom];
   }, [draftMap]);
 
   // Local listings state so updates (name, price, status, images, deletions) reflect immediately
@@ -100,52 +96,32 @@ export function HostInventoryPage() {
   useEffect(() => {
     let isMounted = true;
     getMyProperties().then((serverProperties) => {
-      if (!isMounted || !serverProperties || serverProperties.length === 0) return;
-      setListings((prev) => {
-        const serverMap = new Map(serverProperties.map((p) => [p.id, p]));
-        const updated = prev.map((local) => {
-          const match = serverMap.get(local.id);
-          if (match) {
-            return {
-              ...local,
-              name: match.name || local.name,
-              status: match.status as any,
-              price: match.price || local.price,
-              image: match.images?.[0] || local.image,
-              bookings: match.bookings ?? local.bookings,
-              revenue: match.revenue ?? local.revenue,
-            };
-          }
-          return local;
-        });
-
-        // Add any server properties not already in local
-        const localIds = new Set(prev.map((l) => l.id));
-        const newFromServer: ManagedHostListing[] = serverProperties
-          .filter((p) => !localIds.has(p.id))
-          .map((p) => ({
-            id: p.id,
-            name: p.name,
-            type: p.type,
-            location: p.location,
-            status: p.status as any,
-            image:
-              p.images?.[0] ||
-              "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80",
-            price: p.price,
-            bookings: p.bookings,
-            rating: p.rating,
-            revenue: p.revenue,
-          }));
-
-        return [...updated, ...newFromServer];
-      });
+      if (!isMounted) return;
+      if (!serverProperties || serverProperties.length === 0) {
+        setListings(baseListings);
+        return;
+      }
+      const mapped: ManagedHostListing[] = serverProperties.map((p) => ({
+        id: p.id,
+        name: p.name,
+        type: p.type as any,
+        location: p.location || "Zambia",
+        status: (p.status?.toLowerCase() === "active" ? "active" : "inactive") as any,
+        image:
+          p.images?.[0] ||
+          "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80",
+        price: p.price,
+        bookings: p.bookings ?? 0,
+        rating: p.rating ?? 5.0,
+        revenue: p.revenue ?? 0,
+      }));
+      setListings(mapped);
+      if (mapped[0]) setSelectedId(mapped[0].id);
     });
     return () => {
       isMounted = false;
     };
-  }, []);
-
+  }, [baseListings]);
 
   const [selectedId, setSelectedId] = useState<string>(listings[0]?.id || "");
 
@@ -368,11 +344,32 @@ export function HostInventoryPage() {
       />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 py-8 space-y-8">
-        {/* Property Switcher Tabs */}
-        <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-neutral-500 mb-2.5">
-            Select Listing / Property
-          </label>
+        {listings.length === 0 ? (
+          <div className="bg-white border border-neutral-200/80 rounded-2xl p-12 text-center shadow-2xs">
+            <div className="h-16 w-16 rounded-2xl bg-purple/10 text-purple flex items-center justify-center mx-auto mb-4">
+              <Boxes className="h-8 w-8" />
+            </div>
+            <h3 className="text-lg font-bold text-black mb-1">
+              No properties in inventory
+            </h3>
+            <p className="text-xs text-neutral-500 max-w-sm mx-auto mb-6">
+              You haven&apos;t listed any properties yet. Once you create a stay, experience, or transport, you can manage inventory and pricing here.
+            </p>
+            <Link
+              href="/host/create"
+              className="inline-flex items-center gap-1.5 h-10 px-5 rounded-xl bg-purple text-white text-xs font-semibold hover:bg-purple-hover transition-all shadow-xs"
+            >
+              <Plus className="h-4 w-4" />
+              Create your first listing
+            </Link>
+          </div>
+        ) : (
+          <>
+            {/* Property Switcher Tabs */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-500 mb-2.5">
+                Select Listing / Property
+              </label>
           <div className="flex gap-2.5 overflow-x-auto scrollbar-hide pb-1">
             {listings.map((l) => {
               const active = l.id === selectedId;
@@ -781,6 +778,8 @@ export function HostInventoryPage() {
             </div>
           </div>
         </div>
+        </>
+        )}
       </div>
 
       {/* Delete Confirmation Modal */}

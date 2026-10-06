@@ -798,3 +798,41 @@ export const removePropertyImage = async (
   }
 };
 
+export interface HostPayoutMethodPayload {
+  type: "bank_transfer" | "mobile_money";
+  bankName?: string;
+  accountNumber?: string;
+  accountName?: string;
+  provider?: "Airtel Money" | "MTN Mobile Money";
+  mobileNumber?: string;
+  isDefault?: boolean;
+}
+
+/**
+ * Add or update host payout method
+ * POST /api/host/payout-methods
+ */
+export const addHostPayoutMethod = async (payload: HostPayoutMethodPayload) => {
+  const { data } = await apiClient.post("/host/payout-methods", payload);
+  return data;
+};
+
+/**
+ * Remove host payout method
+ * DELETE /api/host/payout-methods/:id
+ */
+export const removeHostPayoutMethod = async (id: string) => {
+  const { data } = await apiClient.delete(`/host/payout-methods/${id}`);
+  return data;
+};
+
+/**
+ * Set default host payout method
+ * PATCH /api/host/payout-methods/:id/default
+ */
+export const setDefaultHostPayoutMethod = async (id: string) => {
+  const { data } = await apiClient.patch(`/host/payout-methods/${id}/default`);
+  return data;
+};
+
+

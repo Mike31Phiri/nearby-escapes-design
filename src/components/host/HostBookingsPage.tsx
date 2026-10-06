@@ -1,16 +1,14 @@
 "use client";
 
-import { useCallback, useState, useMemo } from "react";
+import { useCallback, useState, useEffect } from "react";
 import Link from "next/link";
 import { Eye, CalendarDays, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { mockHostBookings } from "@/lib/mock-host-bookings";
 import type { HostBooking } from "@/lib/mock-host-bookings";
 import { HostPageHeader } from "@/components/layout/HostPageHeader";
 import { BookingDetailsDialog, STATUS_BADGE, formatDay, initials } from "./BookingDetailsDialog";
-import { useBookingStore } from "@/store/bookingStore";
-import { checkInGuest } from "@/lib/api/host";
+import { checkInGuest, getHostBookings } from "@/lib/api/host";
 
 const bookingDates = (booking: HostBooking) =>
   booking.checkIn
@@ -117,39 +115,47 @@ function GroupSection({
 
 export function HostBookingsPage() {
   const [processing, setProcessing] = useState<string | null>(null);
-  const [bookings, setBookings] = useState<HostBooking[]>(mockHostBookings);
+  const [bookings, setBookings] = useState<HostBooking[]>([]);
   const [selected, setSelected] = useState<HostBooking | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const userBookings = useBookingStore((s) => s.bookings);
 
-  // Merge store bookings with initial host bookings
-  const allBookings = useMemo(() => {
-    const fromStore: HostBooking[] = userBookings.map((b) => ({
-      id: b.id,
-      bookingRef: b.bookingRef,
-      listingId: b.listingId || "listing-1",
-      listingName: b.listingName,
-      listingType: (b.type || "stay") as any,
-      status: (b.status === "cancelled" ? "cancelled" : "confirmed") as any,
-      guestName: b.customerName || "Mike Phiri",
-      guestAvatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(b.customerName || "Mike Phiri")}`,
-      guests: b.details?.guests || 1,
-      amount: b.amount,
-      currency: b.currency || "ZMW",
-      guestEmail: b.customerEmail || "guest@nearbyescapes.com",
-      guestPhone: b.customerPhone || "+260 97 1234567",
-      checkIn: b.details?.checkIn,
-      checkOut: b.details?.checkOut,
-      date: b.details?.date,
-      createdAt: b.createdAt,
-      updatedAt: b.createdAt,
-      listingImage: b.image,
-    }));
+  useEffect(() => {
+    getHostBookings()
+      .then((serverBookings) => {
+        if (serverBookings && serverBookings.length > 0) {
+          setBookings(
+            serverBookings.map((b) => ({
+              id: b.id,
+              bookingRef: b.bookingRef,
+              listingId: b.listingId,
+              listingName: b.listingTitle,
+              listingType: b.vertical as any,
+              status: b.status as any,
+              guestName: b.guestName,
+              guestAvatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(b.guestName)}`,
+              guests: b.guests || 1,
+              amount: b.totalNgwee ? Math.round(b.totalNgwee / 100) : 0,
+              currency: "ZMW",
+              guestEmail: "guest@nearbyescapes.com",
+              guestPhone: b.guestPhone || "+260 97 1234567",
+              checkIn: b.checkIn || undefined,
+              checkOut: b.checkOut || undefined,
+              date: b.date || undefined,
+              createdAt: b.createdAt,
+              updatedAt: b.createdAt,
+              listingImage: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80",
+            })),
+          );
+        } else {
+          setBookings([]);
+        }
+      })
+      .catch(() => {
+        setBookings([]);
+      });
+  }, []);
 
-    const overriddenIds = new Set(bookings.map((b) => b.id));
-    const newFromStore = fromStore.filter((b) => !overriddenIds.has(b.id));
-    return [...newFromStore, ...bookings];
-  }, [userBookings, bookings]);
+  const allBookings = bookings;
 
   const pending = allBookings.filter((b) => b.status === "pending");
   const confirmed = allBookings.filter((b) => b.status === "confirmed");

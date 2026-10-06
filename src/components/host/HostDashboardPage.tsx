@@ -14,6 +14,7 @@ import {
   Mail,
   Calendar,
   UserCheck,
+  ShieldAlert,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -26,6 +27,8 @@ import { BookingDetailsDialog } from "./BookingDetailsDialog";
 import type { BookingDetailsData } from "./BookingDetailsDialog";
 import { HostTodaySchedule, type ScheduleTabKey, type ScheduleItem, INITIAL_SCHEDULE_ITEMS } from "./HostTodaySchedule";
 import { BlockDateDialog } from "./BlockDateDialog";
+import { useAuth } from "@/lib/store/authStore";
+import { getMyProperties, getTodaySchedule } from "@/lib/api/host";
 
 function greeting() {
   const h = new Date().getHours();
@@ -268,7 +271,8 @@ function CheckOutDialog({
 // ---------------------------------------------------------------------------
 
 export function HostDashboardPage() {
-  const host = mockHostProfile;
+  const { user } = useAuth();
+  const isHostVerified = Boolean(user?.isHostVerified || user?.verificationStatus === "VERIFIED");
   const [mounted, setMounted] = useState(false);
   const { getUnreadCount } = useNotificationStore();
   const unread = getUnreadCount();
@@ -280,11 +284,72 @@ export function HostDashboardPage() {
   const [checkOutOpen, setCheckOutOpen] = useState(false);
   const [scheduleTab, setScheduleTab] = useState<ScheduleTabKey>("arriving");
 
-  // Local schedule state — shared between the dialogs and HostTodaySchedule
-  const [scheduleItems, setScheduleItems] = useState<ScheduleItem[]>(INITIAL_SCHEDULE_ITEMS);
+  // Local schedule state — starts empty so hosts without properties see 0 items
+  const [scheduleItems, setScheduleItems] = useState<ScheduleItem[]>([]);
+  const [myProperties, setMyProperties] = useState<any[]>([]);
 
   useEffect(() => {
     setMounted(true);
+    getMyProperties()
+      .then((props) => {
+        if (props && props.length > 0) {
+          setMyProperties(props);
+          // If the host has properties, fetch their operational schedule
+          getTodaySchedule()
+            .then((res) => {
+              if (res) {
+                const combined: ScheduleItem[] = [
+                  ...(res.arriving || []).map((b: any) => ({
+                    id: b.bookingId || b.id,
+                    guestName: b.guestName || "Guest",
+                    guestPhone: b.guestPhone,
+                    listingName: b.listingTitle || b.unitName || b.listingName || "Property",
+                    listingType: (b.listingType || "stay") as any,
+                    listingImage: b.listingImage || "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80",
+                    timeSlot: b.timeSlot || "14:00 - 18:00",
+                    status: (b.status === "checked_in" ? "checked_in" : "pending") as any,
+                    type: "arriving" as const,
+                    guests: b.guestCount || b.guests || 1,
+                  })),
+                  ...((res.hosting || (res as any).currentlyHosting || [])).map((b: any) => ({
+                    id: b.bookingId || b.id,
+                    guestName: b.guestName || "Guest",
+                    guestPhone: b.guestPhone,
+                    listingName: b.listingTitle || b.unitName || b.listingName || "Property",
+                    listingType: (b.listingType || "stay") as any,
+                    listingImage: b.listingImage || "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80",
+                    status: "confirmed" as const,
+                    type: "hosting" as const,
+                    guests: b.guestCount || b.guests || 1,
+                  })),
+                  ...(res.departing || []).map((b: any) => ({
+                    id: b.bookingId || b.id,
+                    guestName: b.guestName || "Guest",
+                    guestPhone: b.guestPhone,
+                    listingName: b.listingTitle || b.unitName || b.listingName || "Property",
+                    listingType: (b.listingType || "stay") as any,
+                    listingImage: b.listingImage || "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80",
+                    timeSlot: b.timeSlot || "10:00 - 11:00",
+                    status: (b.status === "checked_out" ? "checked_out" : "pending") as any,
+                    type: "departing" as const,
+                    guests: b.guestCount || b.guests || 1,
+                  })),
+                ];
+                setScheduleItems(combined);
+              }
+            })
+            .catch(() => {
+              setScheduleItems([]);
+            });
+        } else {
+          setMyProperties([]);
+          setScheduleItems([]);
+        }
+      })
+      .catch(() => {
+        setMyProperties([]);
+        setScheduleItems([]);
+      });
   }, []);
 
   const handleCheckIn = (id: string) => {
@@ -335,7 +400,7 @@ export function HostDashboardPage() {
   return (
     <div className="min-h-screen bg-background pb-28 sm:pb-20 xl:pb-16 font-sans">
       <HostPageHeader
-        title={`${mounted ? greeting() : "Hello"}, ${host.name.split(" ")[0]}`}
+        title={`${mounted ? greeting() : "Hello"}, ${(user?.name || "Host").split(" ")[0]}`}
         actions={
           <Link
             href={ROUTES?.host?.create ?? "/host/create"}
@@ -348,7 +413,27 @@ export function HostDashboardPage() {
       />
 
       {/* Main Content */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 py-5 sm:py-8 md:py-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 py-5 sm:py-8 md:py-10 space-y-6">
+        {/* Verification banner if unverified */}
+        {!isHostVerified && (
+          <div className="bg-amber-50 border border-amber-200/80 rounded-2xl p-4 sm:p-5 flex items-start gap-4 shadow-2xs">
+            <div className="p-2.5 rounded-xl bg-amber-100 text-amber-800 shrink-0 mt-0.5">
+              <ShieldAlert className="w-5 h-5" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-bold text-amber-900">Host Verification Required</h3>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-200/60 text-amber-900">
+                  {user?.verificationStatus ?? "UNVERIFIED"}
+                </span>
+              </div>
+              <p className="text-xs text-amber-800/90 mt-1 leading-relaxed">
+                Your host account is currently unverified. You cannot create new listings or host properties until your identity is verified by the admin team.
+              </p>
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-start">
           {/* Left/Main Column: Today's Operational Schedule Queue */}
           <div className="lg:col-span-2 min-w-0">
@@ -411,7 +496,7 @@ export function HostDashboardPage() {
       <BlockDateDialog
         open={blockDialogOpen}
         onOpenChange={setBlockDialogOpen}
-        listings={host.listings}
+        listings={myProperties}
       />
 
       {/* Check In dialog */}
