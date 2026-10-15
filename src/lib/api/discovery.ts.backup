@@ -1,0 +1,1588 @@
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+export async function fetchStays(query?: {
+  q?: string;
+  city?: string;
+  province?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  limit?: number;
+}): Promise<Stay[]> {
+  const params: Record<string, any> = { type: "stay", limit: query?.limit || 50 };
+  if (query?.q) params.q = query.q;
+  if (query?.city) params.city = query.city;
+  if (query?.province) params.province = query.province;
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
+onst res = await apiClient.get<{ data: BackendListing[] }>("/listings", { params });
+  const items = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+  return items.map(mapListingToStay);
+}
+
