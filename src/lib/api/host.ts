@@ -77,42 +77,21 @@ export interface BlockDatesPayload {
  * GET /api/host/overview
  */
 export const getHostDashboard = async (): Promise<HostDashboardDTO> => {
-  try {
-    const { data } = await apiClient.get<HostOverviewResponse>("/host/overview");
-    return {
-      stats: {
-        totalListings: data.stats.activeListingsCount,
-        activeListings: data.stats.activeListingsCount,
-        totalBookings: data.stats.todayCheckInsCount + data.stats.currentlyHostingCount,
-        totalRevenueNgwee: data.stats.totalRevenueNgwee,
-        averageRating: data.stats.averageRating,
-        reviewCount: 24,
-      },
-      recentBookings: [],
-      earningsByMonth: [],
-    };
-  } catch {
-    // Graceful offline fallback
-    return {
-      stats: {
-        totalListings: 5,
-        activeListings: 4,
-        totalBookings: 18,
-        totalRevenueNgwee: 4850000,
-        averageRating: 4.92,
-        reviewCount: 38,
-      },
-      recentBookings: [],
-      earningsByMonth: [
-        { month: "2026-03", amountNgwee: 1250000, bookingCount: 6 },
-        { month: "2026-04", amountNgwee: 1480000, bookingCount: 8 },
-        { month: "2026-05", amountNgwee: 2120000, bookingCount: 11 },
-      ],
-    };
-  }
-};
+  const { data } = await apiClient.get<HostOverviewResponse>("/host/overview");
+  return {
+    stats: {
+      totalListings: data.stats.activeListingsCount,
+      activeListings: data.stats.activeListingsCount,
+      totalBookings: data.stats.todayCheckInsCount + data.stats.currentlyHostingCount,
+      totalRevenueNgwee: data.stats.totalRevenueNgwee,
+      averageRating: data.stats.averageRating,
+      reviewCount: data.stats.reviewCount,
+    },
+    recentBookings: [],
+    earningsByMonth: [],
+  };
+}
 
-/**
  * Fetch Today's Operational Schedule queue (Arriving, Hosting, Departing)
  * GET /api/host/schedule/today
  */
@@ -128,29 +107,25 @@ export const getTodaySchedule = async (): Promise<HostScheduleQueueResponse> => 
 export const checkInGuest = async (bookingId: string): Promise<CheckInGuestResponse> => {
   try {
     const { data } = await apiClient.patch<CheckInGuestResponse>(`/host/schedule/${bookingId}/check-in`);
-    return data;
-  } catch {
-    return {
-      bookingRef: bookingId,
-      status: "checked_in",
-      checkInTimestamp: new Date().toISOString(),
-    };
-  }
-};
+/**
+ * Check in guest
+ * PATCH /api/host/schedule/:bookingId/check-in
+ */
+export const checkInGuest = async (bookingId: string): Promise<CheckInGuestResponse> => {
+  const { data } = await apiClient.patch<CheckInGuestResponse>(`/host/schedule/${bookingId}/check-in`);
+  return data;
+}
 
+ * Check out guest
 /**
  * Check out guest
  * PATCH /api/host/schedule/:bookingId/check-out
  */
 export const checkOutGuest = async (bookingId: string): Promise<CheckOutGuestResponse> => {
-  try {
-    const { data } = await apiClient.patch<CheckOutGuestResponse>(`/host/schedule/${bookingId}/check-out`);
-    return data;
-  } catch {
-    return {
-      bookingRef: bookingId,
-      status: "checked_out",
-      checkOutTimestamp: new Date().toISOString(),
+  const { data } = await apiClient.patch<CheckOutGuestResponse>(`/host/schedule/${bookingId}/check-out`);
+  return data;
+}
+
     };
   }
 };
@@ -159,17 +134,15 @@ export const checkOutGuest = async (bookingId: string): Promise<CheckOutGuestRes
  * Fetch all bookings for the host's listings
  * GET /api/host/bookings
  */
-export const getHostBookings = async (): Promise<HostBookingDTO[]> => {
-  try {
-    const { data } = await apiClient.get<HostBookingDTO[]>("/host/bookings");
-    return data;
-  } catch {
-    return [];
-  }
-};
-
 /**
- * Block a date range on a listing/property calendar with configurable unit reduction
+ * Fetch all bookings for the host's listings
+ * GET /api/host/bookings
+ */
+export const getHostBookings = async (): Promise<HostBookingDTO[]> => {
+  const { data } = await apiClient.get<HostBookingDTO[]>("/host/bookings");
+  return data;
+}
+
  * POST /api/availability/block-dates
  */
 export const blockDates = async (payload: BlockDatesPayload): Promise<{ success: boolean; blockedRangeId?: string }> => {
@@ -181,15 +154,10 @@ export const blockDates = async (payload: BlockDatesPayload): Promise<{ success:
     count: payload.count,
     reason: payload.reason,
   };
-  try {
-    const { data } = await apiClient.post<BlockDatesResponse>("/availability/block-dates", body);
-    return { success: true, blockedRangeId: data?.blockedRangeId };
-  } catch {
-    return { success: true, blockedRangeId: `blk-${Date.now()}` };
-  }
-};
+  const { data } = await apiClient.post<BlockDatesResponse>("/availability/block-dates", body);
+  return { success: true, blockedRangeId: data?.blockedRangeId };
+}
 
-/**
  * Unblock a previously blocked date range (restores inventory)
  * POST /api/availability/unblock-dates
  */
@@ -201,13 +169,10 @@ export const unblockDates = async (payload: BlockDatesPayload): Promise<{ succes
     endDate: payload.dateTo,
     count: payload.count,
   };
-  try {
-    await apiClient.post("/availability/unblock-dates", body);
-    return { success: true };
-  } catch {
-    return { success: true };
-  }
-};
+  await apiClient.post("/availability/unblock-dates", body);
+  return { success: true };
+}
+
 
 export interface PropertyCalendarDay {
   date: string;
@@ -289,40 +254,19 @@ export interface SeasonalPricingResponseDto {
 export const addSeasonalPricingOverride = async (
   payload: SeasonalPricingDto,
 ): Promise<SeasonalPricingResponseDto> => {
-  try {
-    const { data } = await apiClient.post<SeasonalPricingResponseDto>(
-      "/availability/seasonal-pricing",
-      payload,
-    );
-    return data;
-  } catch {
-    return {
-      id: `season_${Date.now()}`,
-      listingId: payload.listingId,
-      from: payload.from,
-      to: payload.to,
-      price: payload.price,
-      label: payload.label,
-      createdAt: new Date().toISOString(),
-    };
-  }
-};
+  const { data } = await apiClient.post<SeasonalPricingResponseDto>("/availability/seasonal-pricing", payload);
+  return data;
+}
 
 /**
  * Remove seasonal pricing override
  * DELETE /api/availability/seasonal-pricing/:id
  */
 export const removeSeasonalPricingOverride = async (id: string): Promise<{ success: boolean }> => {
-  try {
-    await apiClient.delete(`/availability/seasonal-pricing/${id}`);
-    return { success: true };
-  } catch {
-    return { success: true };
-  }
-};
+  await apiClient.delete("/availability/seasonal-pricing/" + id);
+  return { success: true };
+}
 
-export interface AdjustInventoryDto {
-  inventoryCount?: number;          // e.g. 14 (sets absolute active count)
   operation?: "increase" | "decrease" | "set";
   amount?: number;                  // e.g. 1
 }
@@ -385,7 +329,7 @@ export const updatePropertyPricing = async (
 ): Promise<UpdatePropertyPricingResponseDto> => {
   try {
     const { data } = await apiClient.patch<UpdatePropertyPricingResponseDto>(
-      `/properties/${propertyId}/pricing`,
+      `/problems//pricing`,
       {
         pricePerUnitNgwee: dto.pricePerUnitNgwee,
         currency: dto.currency || "ZMW",
@@ -393,41 +337,28 @@ export const updatePropertyPricing = async (
     );
     return data;
   } catch {
-    try {
-      const { data } = await apiClient.patch<UpdatePropertyPricingResponseDto>(
-        `/listings/${propertyId}/pricing`,
-        {
-          pricePerUnitNgwee: dto.pricePerUnitNgwee,
-          currency: dto.currency || "ZMW",
-        },
-      );
-      return data;
-    } catch {
-      return {
-        propertyId,
-        propertyName: "Mukuni River Chalets",
+    // Fallback to listings endpoint
+    const { data } = await apiClient.patch<UpdatePropertyPricingResponseDto>(
+      `/listings//pricing`,
+      {
         pricePerUnitNgwee: dto.pricePerUnitNgwee,
         currency: dto.currency || "ZMW",
-        historicalBookingsPreserved: true,
-        updatedAt: new Date().toISOString(),
-      };
-    }
+      },
+    );
+    return data;
   }
-};
-
 export const updatePropertyPrice = async (
   propertyId: string,
   priceNgwee: number,
 ): Promise<{ success: boolean; priceNgwee: number }> => {
-  try {
-    await updatePropertyPricing(propertyId, { pricePerUnitNgwee: priceNgwee });
-    return { success: true, priceNgwee };
-  } catch {
-    return { success: true, priceNgwee };
-  }
-};
+  await updatePropertyPricing(propertyId, { pricePerUnitNgwee: priceNgwee });
+  return { success: true, priceNgwee };
+}
 
-
+/**
+ * Update property status ("active" | "draft" | "paused" | "archived" | "inactive")
+ * PATCH /api/properties/:id/status (with fallback to /api/listings/:id/status)
+ */
 /**
  * Update property status ("active" | "draft" | "paused" | "archived" | "inactive")
  * PATCH /api/properties/:id/status (with fallback to /api/listings/:id/status)
@@ -437,46 +368,30 @@ export const updateListingStatus = async (
   status: "active" | "draft" | "paused" | "archived" | "inactive",
 ): Promise<{ id: string; status: string; updatedAt: string }> => {
   try {
-    const { data } = await apiClient.patch(`/properties/${listingId}/status`, { status });
+    const { data } = await apiClient.patch(`/problems/${listingId}/status`, { status });
     return data;
   } catch {
-    try {
-      const { data } = await apiClient.patch(`/listings/${listingId}/status`, { status });
-      return data;
-    } catch {
-      return {
-        id: listingId,
-        status,
-        updatedAt: new Date().toISOString(),
-      };
-    }
+    // Fallback to listings endpoint
+    const { data } = await apiClient.patch(`/listings/${listingId}/status`, { status });
+    return data;
   }
-};
+}
 
-/**
- * Fetch monthly earnings breakdown
- * GET /api/host/earnings
  */
 export interface HostEarningsResponse {
   total: number;
   monthly: Array<{ month: string; amount: number }>;
 }
 
+/**
+ * Fetch monthly earnings breakdown
+ * GET /api/host/earnings
+ */
 export const getHostEarningsBreakdown = async (): Promise<HostEarningsResponse> => {
-  try {
-    const { data } = await apiClient.get<HostEarningsResponse>("/host/earnings");
-    return data;
-  } catch {
-    return {
-      total: 18450000,
-      monthly: [
-        { month: "2026-10", amount: 3840000 },
-        { month: "2026-09", amount: 8200000 },
-        { month: "2026-08", amount: 6410000 },
-      ],
-    };
-  }
-};
+  const { data } = await apiClient.get<HostEarningsResponse>("/host/earnings");
+  return data;
+}
+
 
 /**
  * Update host general settings & default payout method
@@ -507,42 +422,14 @@ export const updateHostSettings = async (
  * Fetch host finances summary (available balance, upcoming payouts, accounts)
  * GET /api/host/finances/summary
  */
+/**
+ * Fetch host finances summary (available balance, upcoming payouts, accounts)
+ * GET /api/host/finances/summary
+ */
 export const getHostFinancesSummary = async (): Promise<HostFinancesSummaryResponse> => {
-  try {
-    const { data } = await apiClient.get<HostFinancesSummaryResponse>("/host/finances/summary");
-    return data;
-  } catch {
-    return {
-      currency: "ZMW",
-      availableBalanceNgwee: 3840000,
-      pendingPayoutsNgwee: 1200000,
-      lifetimeEarningsNgwee: 18450000,
-      nextPayoutDate: "2026-06-25",
-      payoutMethods: [
-        {
-          id: "pm-1",
-          type: "bank_transfer",
-          isDefault: true,
-          details: {
-            bankName: "Absa Bank Zambia",
-            accountNumber: "•••• 4892",
-            accountName: "Mike Phiri",
-          },
-        },
-        {
-          id: "pm-2",
-          type: "mobile_money",
-          isDefault: false,
-          details: {
-            provider: "Airtel Money",
-            mobileNumber: "+260 97 •••• 567",
-            accountName: "Mike Phiri",
-          },
-        },
-      ],
-    };
-  }
-};
+  const { data } = await apiClient.get<HostFinancesSummaryResponse>("/host/finances/summary");
+  return data;
+}
 
 /**
  * Submit a host support ticket
@@ -551,19 +438,9 @@ export const getHostFinancesSummary = async (): Promise<HostFinancesSummaryRespo
 export const submitHostSupportTicket = async (
   payload: CreateHostSupportTicketRequest,
 ): Promise<HostSupportTicketResponse> => {
-  try {
-    const { data } = await apiClient.post<HostSupportTicketResponse>("/host/support/tickets", payload);
-    return data;
-  } catch {
-    return {
-      ticketId: `tkt-${Date.now()}`,
-      referenceNumber: `TKT-${Math.floor(1000 + Math.random() * 9000)}`,
-      status: "open",
-      estimatedResponseTime: "Within 2 hours",
-      createdAt: new Date().toISOString(),
-    };
-  }
-};
+  const { data } = await apiClient.post<HostSupportTicketResponse>("/host/support/tickets", payload);
+  return data;
+}
 
 /**
  * Submit host KYC & business onboarding application
@@ -572,45 +449,20 @@ export const submitHostSupportTicket = async (
 export const submitHostOnboarding = async (
   payload: HostOnboardingRequest,
 ): Promise<HostOnboardingResponse> => {
-  try {
-    const { data } = await apiClient.post<HostOnboardingResponse>("/host/onboard", payload);
-    return data;
-  } catch {
-    return {
-      applicationId: `app_${Math.random().toString(36).substring(2, 9)}`,
-      userId: "usr_guest",
-      businessName: payload.businessName,
-      status: "pending_review",
-      submittedAt: new Date().toISOString(),
-      message:
-        "Application submitted. Our verification team will review your documents within 1–3 business days.",
-    };
-  }
-};
+  const { data } = await apiClient.post<HostOnboardingResponse>("/host/onboard", payload);
+  return data;
+}
 
+ */
 /**
  * Check host onboarding application status
  * GET /api/host/application-status
  */
 export const fetchHostApplicationStatus = async (): Promise<HostApplicationStatusResponse> => {
-  try {
-    const { data } = await apiClient.get<HostApplicationStatusResponse>("/host/application-status");
-    return data;
-  } catch {
-    return {
-      applicationId: "app_44910",
-      status: "pending_review",
-      businessName: "Nearby Escapes Host Partner",
-      submittedAt: new Date().toISOString(),
-      reviewerNotes: undefined,
-    };
-  }
-};
+  const { data } = await apiClient.get<HostApplicationStatusResponse>("/host/application-status");
+  return data;
+}
 
-export {
-  type ReviewItemDto,
-  type CreateReviewInput,
-  createGuestReview as createReview,
   getPropertyReviews,
   getMyGuestReviews as getMyReviews,
 } from "./reviews";
