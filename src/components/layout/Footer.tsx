@@ -6,15 +6,13 @@ import { useState } from "react";
 import { useAuth } from "@/lib/store/authStore";
 import { DiscoveryDirectory } from "@/components/layout/DiscoveryDirectory";
 import {
-  Facebook,
-  Instagram,
-  Twitter,
+  Share2,
+  XIcon,
   Mail,
   MapPin,
   Phone,
   ChevronDown,
   ChevronUp,
-  Youtube,
   Music2,
   ArrowRight,
 } from "lucide-react";
@@ -175,7 +173,7 @@ export function Footer() {
               <div className="flex items-center gap-2.5">
                 {(["Facebook", "Instagram", "Twitter", "Youtube", "TikTok"] as const).map(
                   (label, i) => {
-                    const icons = [Facebook, Instagram, Twitter, Youtube, Music2];
+                    const icons = [Share2, XIcon, Music2, ArrowRight, Music2];
                     const Icon = icons[i];
                     return (
                       <a

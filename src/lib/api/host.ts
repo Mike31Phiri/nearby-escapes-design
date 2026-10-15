@@ -85,7 +85,7 @@ export const getHostDashboard = async (): Promise<HostDashboardDTO> => {
       totalBookings: data.stats.todayCheckInsCount + data.stats.currentlyHostingCount,
       totalRevenueNgwee: data.stats.totalRevenueNgwee,
       averageRating: data.stats.averageRating,
-      reviewCount: data.stats.reviewCount,
+      reviewCount: 0,
     },
     recentBookings: [],
     earningsByMonth: [],
@@ -254,6 +254,7 @@ export const removeSeasonalPricingOverride = async (id: string): Promise<{ succe
 export interface AdjustInventoryRequestDto {
   operation?: "increase" | "decrease" | "set";
   amount?: number;
+  inventoryCount?: number;
 }
 
 export interface AdjustInventoryResponseDto {
@@ -270,7 +271,7 @@ export interface AdjustInventoryResponseDto {
  */
 export const adjustPropertyInventory = async (
   propertyId: string,
-  dto: AdjustInventoryDto,
+   dto: AdjustInventoryRequestDto,
 ): Promise<AdjustInventoryResponseDto> => {
   try {
     const { data } = await apiClient.patch<AdjustInventoryResponseDto>(

@@ -14,7 +14,7 @@ export interface UploadResponse {
 
 export interface UploadedImage {
   id: string;
-  [key: string]: string; // stayId, experienceId, or transportId
+  [key: string]: string | number | null; // stayId, experienceId, or transportId
   url: string;
   altText: string | null;
   sortOrder: number;
@@ -41,7 +41,7 @@ export interface DeleteImageResponse {
 
 export interface RemainingImagesResponse {
   id: string;
-  [key: string]: string; // stayId, experienceId, or transportId
+  [key: string]: string | number | null; // stayId, experienceId, or transportId
   url: string;
   altText: string | null;
   sortOrder: number;

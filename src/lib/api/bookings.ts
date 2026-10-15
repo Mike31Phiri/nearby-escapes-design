@@ -135,35 +135,37 @@ export const getBooking = async (bookingRef: string): Promise<BookingDTO> => {
     guests: data.guestCount,
     totalNgwee: data.totalAmountNgwee,
     serviceFeeNgwee: 0,
-    guestId: data.guestId || "guest-current",
-    hostId: data.hostId || "host-assigned",
+    guestId: data.guestPhone || "guest-current",
+    hostId: data.listingId || "host-assigned",
+    createdAt: data.createdAt || new Date().toISOString(),
+    updatedAt: data.createdAt || new Date().toISOString(),
   };
 };
 
 /**
  * GET /api/bookings/:bookingRef (or GET /api/bookings/:id)
  */
-export const getBookingReceipt = async (bookingRef: string): Promise<BookingReceiptDTO> => {
+export const getBookingReceipt = async (bookingRef: string): Promise<BookingDTO> => {
     try {
     const { data } = await apiClient.get<BookingResponseDTO>(`/bookings/${bookingRef}`);
     return {
-      id: data.bookingId || data.id,
+      id: data.bookingId,
       bookingRef: data.bookingRef,
       tripId: `trip-${data.bookingRef}`,
-      listingId: data.listingId || data.propertyId,
-      listingTitle: data.listingTitle || data.name || "Reservation",
-      vertical: (data.vertical || data.listingType) as ListingVertical,
-      status: data.status || "confirmed",
-      checkIn: data.checkIn || data.checkInDate || null,
-      checkOut: data.checkOut || data.checkOutDate || null,
-      date: data.date || data.checkInDate || null,
-      guests: data.guests || data.guestCount || 1,
-      totalNgwee: data.totalNgwee || data.totalAmountNgwee || 0,
-      serviceFeeNgwee: data.serviceFeeNgwee || 0,
-      guestId: data.guestId || "guest-current",
-      hostId: data.hostId || "host-assigned",
-      createdAt: data.createdAt || new Date().toISOString(),
-      updatedAt: data.updatedAt || data.createdAt || new Date().toISOString(),
+      listingId: data.listingId,
+      listingTitle: data.listingTitle,
+      vertical: data.vertical,
+      status: data.status,
+      checkIn: data.checkInDate,
+      checkOut: data.checkOutDate || null,
+      date: data.checkInDate,
+      guests: data.guestCount,
+      totalNgwee: data.totalAmountNgwee,
+      serviceFeeNgwee: 0,
+      guestId: data.guestPhone || "guest-current",
+      hostId: data.listingId || "host-assigned",
+      createdAt: data.createdAt,
+      updatedAt: data.createdAt,
     };
   } catch {
     return {
@@ -185,29 +187,6 @@ export const getBookingReceipt = async (bookingRef: string): Promise<BookingRece
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-  }
-    try {
-    return items.map((b: any) => ({
-    id: b.id || b.bookingId,
-    bookingRef: b.bookingRef,
-    tripId: "trip-" + b.bookingRef,
-    listingId: b.listingId,
-    listingTitle: b.listingTitle,
-    vertical: b.vertical,
-    status: b.status,
-    checkIn: b.checkInDate || b.checkIn || null,
-    checkOut: b.checkOutDate || b.checkOut || null,
-    date: b.date || b.checkInDate || b.checkIn || null,
-    guests: b.guestsCount || b.guests || b.guestCount || 1,
-    totalNgwee: b.totalNgwee || b.totalAmountNgwee || 0,
-    serviceFeeNgwee: b.serviceFeeNgwee || 0,
-    guestId: b.guestId || "guest-current",
-    hostId: b.hostId || "host-assigned",
-    createdAt: b.createdAt || new Date().toISOString(),
-    updatedAt: b.updatedAt || b.createdAt || new Date().toISOString(),
-  }));
-} catch {
-  return [];
   }
 }
 
