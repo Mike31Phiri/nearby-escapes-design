@@ -1,92 +1,102 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { mockUserStore, verifySession } from "@/lib/mock-auth";
 import { uploadToS3, uploadConfig } from "@/lib/upload";
 
 // POST /api/uploads/stay/:stayId/images - Upload stay images
 export async function POST(
   request: NextRequest,
-  { params }: { params: { stayId: string } }
+  { params }: { params: Promise<{ stayId: string }> },
 ) {
   try {
-    const session = await getServerSession(authOptions);
-    
-    // Only hosts can upload stay images
-    if (!session || session.user.role !== "host") {
+    await mockUserStore.ensureReady();
+
+    let token = request.cookies.get("ne_session")?.value;
+    if (!token) {
+      const authHeader = request.headers.get("authorization");
+      if (authHeader?.startsWith("Bearer ")) {
+        token = authHeader.substring(7).trim();
+      }
+    }
+
+    if (!token) {
       return NextResponse.json(
-        { error: "Unauthorized: Only hosts can upload stay images" },
-        { status: 403 }
+        { error: "Unauthorized" },
+        { status: 401 },
       );
     }
 
-    const { stayId } = params;
-    
-    // In a real implementation, we would verify that the stay belongs to the host
-    // For now, we'll assume the stayId is valid
+    const userId = await verifySession(token);
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Invalid or expired session." },
+        { status: 401 },
+      );
+    }
+
+    const record = mockUserStore.findById(userId);
+    if (!record || record.role !== "host") {
+      return NextResponse.json(
+        { error: "Unauthorized: Only hosts can upload stay images" },
+        { status: 403 },
+      );
+    }
+
+    const { stayId } = await params;
 
     const formData = await request.formData();
     const files = formData.getAll("files") as File[];
-    
+
     if (!files || files.length === 0) {
       return NextResponse.json(
         { error: "No files provided" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    // Validate each file
     const uploadedImages = [];
     const config = uploadConfig.images;
-    
+
     for (const file of files) {
-      // Validate file type
       if (!config.allowedTypes.includes(file.type)) {
         return NextResponse.json(
-          { 
-            error: `Invalid file type for file ${file.name}. Allowed types: ${config.allowedTypes.join(", ")}` 
+          {
+            error: `Invalid file type for file ${file.name}. Allowed types: ${config.allowedTypes.join(", ")}`,
           },
-          { status: 400 }
+          { status: 400 },
         );
       }
 
-      // Validate file size
       if (file.size > config.maxSize) {
         return NextResponse.json(
-          { 
-            error: `File size too large for file ${file.name}. Maximum size is ${config.maxSize / (1024 * 1024)}MB` 
+          {
+            error: `File size too large for file ${file.name}. Maximum size is ${config.maxSize / (1024 * 1024)}MB`,
           },
-          { status: 400 }
+          { status: 400 },
         );
       }
 
-      // Upload to S3
       const result = await uploadToS3(file, `stays/${stayId}`);
-      
-      // Generate a mock ID for the image
+
       const id = `img-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-      
+
       uploadedImages.push({
         id,
         stayId,
         url: result.url,
-        altText: null, // Would be provided in a real implementation
-        sortOrder: uploadedImages.length // Simple sequential ordering
+        altText: null,
+        sortOrder: uploadedImages.length,
       });
     }
 
-    // In a real implementation, we would save these images to the database
-    // and return the full list of images for this stay
-    // For simulation, we'll just return what we just uploaded
-
     return NextResponse.json({
       stayId,
-      images: uploadedImages
+      images: uploadedImages,
     });
   } catch (error) {
     console.error("Stay images upload error:", error);
     return NextResponse.json(
       { error: "Failed to upload stay images" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -94,46 +104,59 @@ export async function POST(
 // DELETE /api/uploads/stay/:stayId/images?url=... - Delete stay image
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { stayId: string } }
+  { params }: { params: Promise<{ stayId: string }> },
 ) {
   try {
-    const session = await getServerSession(authOptions);
-    
-    // Only hosts can delete stay images
-    if (!session || session.user.role !== "host") {
+    await mockUserStore.ensureReady();
+
+    let token = request.cookies.get("ne_session")?.value;
+    if (!token) {
+      const authHeader = request.headers.get("authorization");
+      if (authHeader?.startsWith("Bearer ")) {
+        token = authHeader.substring(7).trim();
+      }
+    }
+
+    if (!token) {
       return NextResponse.json(
-        { error: "Unauthorized: Only hosts can delete stay images" },
-        { status: 403 }
+        { error: "Unauthorized" },
+        { status: 401 },
       );
     }
 
-    const { stayId } = params;
+    const userId = await verifySession(token);
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Invalid or expired session." },
+        { status: 401 },
+      );
+    }
+
+    const record = mockUserStore.findById(userId);
+    if (!record || record.role !== "host") {
+      return NextResponse.json(
+        { error: "Unauthorized: Only hosts can delete stay images" },
+        { status: 403 },
+      );
+    }
+
+    const { stayId } = await params;
     const url = new URL(request.url);
     const imageUrl = url.searchParams.get("url");
-    
+
     if (!imageUrl) {
       return NextResponse.json(
         { error: "Image URL parameter is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    // In a real implementation, we would:
-    // 1. Find the image record by URL in the database
-    // 2. Extract the S3 key from the record
-    // 3. Delete the file from S3
-    // 4. Remove the database record
-    // 5. Return the remaining images
-    
-    // For simulation, we'll just return an empty array
-    // indicating no remaining images (since we don't have a real DB)
-    
     return NextResponse.json([]);
   } catch (error) {
     console.error("Stay image delete error:", error);
     return NextResponse.json(
       { error: "Failed to delete stay image" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

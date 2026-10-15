@@ -1,46 +1,63 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { mockUserStore, verifySession } from "@/lib/mock-auth";
 import { deleteFromS3 } from "@/lib/upload";
 
 // DELETE /api/uploads/:key - Delete file by S3 key
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { key: string } }
+  { params }: { params: Promise<{ key: string }> },
 ) {
   try {
-    const session = await getServerSession(authOptions);
-    
-    // Only hosts and admins can delete files by key
-    // In a real implementation, we might have more granular permissions
-    if (!session || (session.user.role !== "host" && session.user.role !== "admin")) {
+    await mockUserStore.ensureReady();
+
+    let token = request.cookies.get("ne_session")?.value;
+    if (!token) {
+      const authHeader = request.headers.get("authorization");
+      if (authHeader?.startsWith("Bearer ")) {
+        token = authHeader.substring(7).trim();
+      }
+    }
+
+    if (!token) {
       return NextResponse.json(
-        { error: "Unauthorized: Only hosts and admins can delete files by key" },
-        { status: 403 }
+        { error: "Unauthorized" },
+        { status: 401 },
       );
     }
 
-    const { key } = params;
-    
+    const userId = await verifySession(token);
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Invalid or expired session." },
+        { status: 401 },
+      );
+    }
+
+    const record = mockUserStore.findById(userId);
+    if (!record || (record.role !== "host" && record.role !== "admin")) {
+      return NextResponse.json(
+        { error: "Unauthorized: Only hosts and admins can delete files by key" },
+        { status: 403 },
+      );
+    }
+
+    const { key } = await params;
+
     if (!key) {
       return NextResponse.json(
         { error: "Key parameter is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    // In a real implementation, we would verify that the user has permission to delete this file
-    // For now, we'll allow hosts and admins to delete any file (not ideal for production)
-
-    // Delete from S3
     const result = await deleteFromS3(key);
-    
+
     return NextResponse.json(result);
   } catch (error) {
     console.error("File delete by key error:", error);
     return NextResponse.json(
       { error: "Failed to delete file" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

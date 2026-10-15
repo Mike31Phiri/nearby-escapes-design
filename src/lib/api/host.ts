@@ -105,18 +105,10 @@ export const getTodaySchedule = async (): Promise<HostScheduleQueueResponse> => 
  * PATCH /api/host/schedule/:bookingId/check-in
  */
 export const checkInGuest = async (bookingId: string): Promise<CheckInGuestResponse> => {
-  try {
-    const { data } = await apiClient.patch<CheckInGuestResponse>(`/host/schedule/${bookingId}/check-in`);
-/**
- * Check in guest
- * PATCH /api/host/schedule/:bookingId/check-in
- */
-export const checkInGuest = async (bookingId: string): Promise<CheckInGuestResponse> => {
   const { data } = await apiClient.patch<CheckInGuestResponse>(`/host/schedule/${bookingId}/check-in`);
   return data;
 }
 
- * Check out guest
 /**
  * Check out guest
  * PATCH /api/host/schedule/:bookingId/check-out
@@ -126,10 +118,6 @@ export const checkOutGuest = async (bookingId: string): Promise<CheckOutGuestRes
   return data;
 }
 
-    };
-  }
-};
-
 /**
  * Fetch all bookings for the host's listings
  * GET /api/host/bookings
@@ -138,7 +126,7 @@ export const getHostBookings = async (): Promise<HostBookingDTO[]> => {
   const { data } = await apiClient.get<HostBookingDTO[]>("/host/bookings");
   return data;
 }
-
+/**
  * POST /api/availability/block-dates
  */
 export const blockDates = async (payload: BlockDatesPayload): Promise<{ success: boolean; blockedRangeId?: string }> => {
@@ -153,7 +141,7 @@ export const blockDates = async (payload: BlockDatesPayload): Promise<{ success:
   const { data } = await apiClient.post<BlockDatesResponse>("/availability/block-dates", body);
   return { success: true, blockedRangeId: data?.blockedRangeId };
 }
-
+/**
  * Unblock a previously blocked date range (restores inventory)
  * POST /api/availability/unblock-dates
  */
@@ -263,8 +251,9 @@ export const removeSeasonalPricingOverride = async (id: string): Promise<{ succe
   return { success: true };
 }
 
+export interface AdjustInventoryRequestDto {
   operation?: "increase" | "decrease" | "set";
-  amount?: number;                  // e.g. 1
+  amount?: number;
 }
 
 export interface AdjustInventoryResponseDto {
@@ -343,6 +332,8 @@ export const updatePropertyPricing = async (
     );
     return data;
   }
+}
+
 export const updatePropertyPrice = async (
   propertyId: string,
   priceNgwee: number,
@@ -373,7 +364,6 @@ export const updateListingStatus = async (
   }
 }
 
- */
 export interface HostEarningsResponse {
   total: number;
   monthly: Array<{ month: string; amount: number }>;
@@ -446,7 +436,8 @@ export const submitHostOnboarding = async (
   return data;
 }
 
- */
+/**
+ * Check host onboarding application status
 /**
  * Check host onboarding application status
  * GET /api/host/application-status
@@ -456,6 +447,7 @@ export const fetchHostApplicationStatus = async (): Promise<HostApplicationStatu
   return data;
 }
 
+import {
   getPropertyReviews,
   getMyGuestReviews as getMyReviews,
 } from "./reviews";
