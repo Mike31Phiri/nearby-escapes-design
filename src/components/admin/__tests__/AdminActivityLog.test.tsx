@@ -86,9 +86,10 @@ describe("AdminActivityLog", () => {
 
   it("toggles type filter when clicking a type chip", async () => {
     render(<AdminActivityLog />);
-    // Find the Payment chip (not inside the mocked Select) by filtering out select items
-    const paymentElements = screen.getAllByText(/Payment\s*\(\d+\)/);
-    const chipBtn = paymentElements.find((el) => !el.closest('[data-testid="mock-select"]'));
+    // Find the Payment chip button (real <button>, not the mocked SelectItem)
+    const chipBtn = screen
+      .getAllByRole("button")
+      .find((el) => /Payment\s*\(\d+\)/.test(el.textContent || "") && !el.getAttribute("data-testid"));
     expect(chipBtn).toBeTruthy();
     if (chipBtn) await userEvent.click(chipBtn);
     // After filtering by 'payment', "Admin User" should still be present
