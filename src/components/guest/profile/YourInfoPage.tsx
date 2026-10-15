@@ -53,7 +53,7 @@ export function YourInfoPage() {
     setIsUploadingAvatar(true);
     try {
       const res = await uploadAvatar(file);
-      const newAvatarUrl = res.avatarUrl;
+      const { url: newAvatarUrl, key } = res;
       if (newAvatarUrl) {
         setAvatar(newAvatarUrl);
         if (user) {
