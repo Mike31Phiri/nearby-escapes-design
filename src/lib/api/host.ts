@@ -91,7 +91,7 @@ export const getHostDashboard = async (): Promise<HostDashboardDTO> => {
     earningsByMonth: [],
   };
 }
-
+/**
  * Fetch Today's Operational Schedule queue (Arriving, Hosting, Departing)
  * GET /api/host/schedule/today
  */
@@ -130,10 +130,6 @@ export const checkOutGuest = async (bookingId: string): Promise<CheckOutGuestRes
   }
 };
 
-/**
- * Fetch all bookings for the host's listings
- * GET /api/host/bookings
- */
 /**
  * Fetch all bookings for the host's listings
  * GET /api/host/bookings
@@ -384,6 +380,7 @@ export interface HostEarningsResponse {
 }
 
 /**
+/**
  * Fetch monthly earnings breakdown
  * GET /api/host/earnings
  */
@@ -418,10 +415,6 @@ export const updateHostSettings = async (
   }
 };
 
-/**
- * Fetch host finances summary (available balance, upcoming payouts, accounts)
- * GET /api/host/finances/summary
- */
 /**
  * Fetch host finances summary (available balance, upcoming payouts, accounts)
  * GET /api/host/finances/summary
