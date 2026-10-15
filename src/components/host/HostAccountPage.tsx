@@ -262,7 +262,7 @@ export function HostAccountPage() {
       const dataUrl = reader.result as string;
       setAvatar(dataUrl);
       try {
-        await uploadAvatar(file);
+        const { url, key } = await uploadAvatar(file);
         await useAuthStore.getState().fetchProfile().catch(() => null);
         toast.success("Avatar updated successfully!");
       } catch {
