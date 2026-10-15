@@ -101,6 +101,9 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 }
 
 // Session tokens (HMAC-SHA256)
+// Token format: base64(`${userId}:${issuedAt}:${expiresAt}|${signature}`)
+const ABSOLUTE_MAX_AGE_SECONDS = 60 * 60 * 24 * 7; // 7 days absolute max
+
 async function hmac(message: string): Promise<string> {
   const key = await crypto.subtle.importKey(
     "raw",
@@ -114,7 +117,9 @@ async function hmac(message: string): Promise<string> {
 }
 
 export async function signSession(userId: string): Promise<string> {
-  const payload = `${userId}:${Date.now()}`;
+  const issuedAt = Date.now();
+  const expiresAt = issuedAt + (ABSOLUTE_MAX_AGE_SECONDS * 1000);
+  const payload = `${userId}:${issuedAt}:${expiresAt}`;
   const sig = await hmac(payload);
   return btoa(`${payload}|${sig}`);
 }
@@ -129,7 +134,19 @@ export async function verifySession(token: string): Promise<string | null> {
     const sig = decoded.slice(lastPipe + 1);
     const expected = await hmac(payload);
     if (sig !== expected) return null;
-    const userId = payload.split(":")[0];
+    
+    const parts = payload.split(":");
+    if (parts.length !== 3) return null;
+    
+    const userId = parts[0];
+    const issuedAt = parseInt(parts[1], 10);
+    const expiresAt = parseInt(parts[2], 10);
+    
+    // Check if token has absolutely expired
+    if (Date.now() > expiresAt) {
+      return null;
+    }
+    
     return userId || null;
   } catch {
     return null;
