@@ -47,6 +47,7 @@ export async function POST(req: NextRequest) {
       sameSite: "lax",
       path: "/",
       maxAge: 60 * 60 * 24 * 7, // 7 days
+      secure: process.env.NODE_ENV === "production",
     });
 
     res.cookies.set("access_token", token, {
@@ -54,6 +55,7 @@ export async function POST(req: NextRequest) {
       sameSite: "lax",
       path: "/",
       maxAge: 60 * 60 * 24 * 7,
+      secure: process.env.NODE_ENV === "production",
     });
 
     return res;

@@ -40,11 +40,13 @@ export async function POST(req: NextRequest) {
       { status: 200 },
     );
 
+    // Set HttpOnly session cookie with same absolute expiration
     res.cookies.set("ne_session", newToken, {
       httpOnly: true,
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24 * 7,
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      secure: process.env.NODE_ENV === "production",
     });
 
     return res;
