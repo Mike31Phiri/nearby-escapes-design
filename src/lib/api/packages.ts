@@ -5,7 +5,7 @@
  * All prices are integers in Ngwee (ZMW × 100). Never float.
  * Packages use Instant Book — no pending approval flow.
  *
- * TODO: Connect to real API
+ * Connected to real API
  */
 
 import apiClient from "./client";
@@ -49,48 +49,41 @@ export interface CreatePackagePayload {
 }
 
 /** Search / list packages with optional filters. */
-// TODO: Connect to real API
-export const searchPackages = async (query: PackageSearchQuery): Promise<PackageSearchResult> => {
-  void apiClient;
-  void query;
-  return {
-    data: [],
-    meta: { page: 1, limit: 20, total: 0, totalPages: 0 },
-  };
+// Connected to real API
+/** Search packages with optional filters. */
+export const searchPackages = async (
+  query: PackageSearchQuery,
+): Promise<PackageSearchResult> => {
+  const { data } = await apiClient.get<PackageSearchResult>(
+    "/admin/packages",
+    { params: query },
+  );
+  return data;
 };
 
 /** Fetch a single package by ID or slug. */
-// TODO: Connect to real API
 export const getPackage = async (idOrSlug: string): Promise<Package> => {
-  void apiClient;
-  void idOrSlug;
-  return {} as Package;
+  const { data } = await apiClient.get<Package>(`/admin/packages/${idOrSlug}`);
+  return data;
 };
 
 /** Create a new package (admin only). */
-// TODO: Connect to real API
 export const createPackage = async (payload: CreatePackagePayload): Promise<Package> => {
-  void apiClient;
-  void payload;
-  return {} as Package;
+  const { data } = await apiClient.post<Package>("/admin/packages", payload);
+  return data;
 };
 
 /** Update an existing package (admin only). */
-// TODO: Connect to real API
 export const updatePackage = async (
   id: string,
   payload: Partial<CreatePackagePayload>,
 ): Promise<Package> => {
-  void apiClient;
-  void id;
-  void payload;
-  return {} as Package;
+  const { data } = await apiClient.patch<Package>(`/admin/packages/${id}`, payload);
+  return data;
 };
 
 /** Delete / archive a package (admin only). */
-// TODO: Connect to real API
 export const deletePackage = async (id: string): Promise<{ success: boolean }> => {
-  void apiClient;
-  void id;
-  return { success: true };
+  const { data } = await apiClient.delete<{ success: boolean }>(`/admin/packages/${id}`);
+  return data;
 };

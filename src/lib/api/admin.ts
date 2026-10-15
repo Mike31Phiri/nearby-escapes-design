@@ -3,7 +3,7 @@
  *
  * All revenue figures are integers in Ngwee (ZMW × 100). Never float.
  *
- * TODO: Connect to real API
+ * Connected to real API
  */
 
 import apiClient from "./client";
@@ -75,93 +75,74 @@ export interface AdminDashboardDTO {
 }
 
 /** Fetch the admin dashboard overview. */
-// TODO: Connect to real API
+// Connected to real API
+/** Fetch the admin dashboard overview. */
 export const getAdminDashboard = async (): Promise<AdminDashboardDTO> => {
-  void apiClient;
-  return {
-    stats: {
-      totalUsers: 0,
-      totalHosts: 0,
-      totalGuests: 0,
-      totalListings: 0,
-      totalBookings: 0,
-      totalRevenueNgwee: 0,
-      pendingListingReviews: 0,
-    },
-    recentUsers: [],
-    recentBookings: [],
-    revenueByMonth: [],
-  };
+  const { data } = await apiClient.get<AdminDashboardDTO>("/admin/overview");
+  return data;
 };
 
 /** List all users (paginated). */
-// TODO: Connect to real API
 export const listUsers = async (
   page = 1,
   limit = 20,
 ): Promise<{ data: AdminUserDTO[]; total: number }> => {
-  void apiClient;
-  void page;
-  void limit;
-  return { data: [], total: 0 };
+  const { data } = await apiClient.get<{ data: AdminUserDTO[]; total: number }>(
+    "/admin/users",
+    { params: { page, limit } },
+  );
+  return data;
 };
 
 /** Suspend a user account. */
-// TODO: Connect to real API
 export const suspendUser = async (userId: string): Promise<{ success: boolean }> => {
-  void apiClient;
-  void userId;
-  return { success: true };
+  const { data } = await apiClient.patch<{ success: boolean }>(`/admin/users/${userId}/suspend`);
+  return data;
 };
 
 /** Reinstate a suspended user account. */
-// TODO: Connect to real API
 export const reinstateUser = async (userId: string): Promise<{ success: boolean }> => {
-  void apiClient;
-  void userId;
-  return { success: true };
+  const { data } = await apiClient.patch<{ success: boolean }>(`/admin/users/${userId}/reactivate`);
+  return data;
 };
 
 /** List all listings for admin review (paginated). */
-// TODO: Connect to real API
 export const listListings = async (
   page = 1,
   limit = 20,
 ): Promise<{ data: AdminListingDTO[]; total: number }> => {
-  void apiClient;
-  void page;
-  void limit;
-  return { data: [], total: 0 };
+  const { data } = await apiClient.get<{ data: AdminListingDTO[]; total: number }>(
+    "/admin/listings",
+    { params: { page, limit } },
+  );
+  return data;
 };
 
 /** Approve a listing — sets status to 'active'. */
-// TODO: Connect to real API
 export const approveListing = async (listingId: string): Promise<{ success: boolean }> => {
-  void apiClient;
-  void listingId;
-  return { success: true };
+  const { data } = await apiClient.patch<{ success: boolean }>(`/admin/listings/${listingId}/approve`);
+  return data;
 };
 
 /** Reject a listing with an optional reason. */
-// TODO: Connect to real API
 export const rejectListing = async (
   listingId: string,
   reason?: string,
 ): Promise<{ success: boolean }> => {
-  void apiClient;
-  void listingId;
-  void reason;
-  return { success: true };
+  const { data } = await apiClient.patch<{ success: boolean }>(`/admin/listings/${listingId}/reject`, {
+    reason,
+  });
+  return data;
 };
 
 /** List all bookings platform-wide (paginated). */
-// TODO: Connect to real API
 export const listAllBookings = async (
   page = 1,
   limit = 20,
 ): Promise<{ data: AdminBookingDTO[]; total: number }> => {
-  void apiClient;
-  void page;
-  void limit;
-  return { data: [], total: 0 };
+  const { data } = await apiClient.get<{ data: AdminBookingDTO[]; total: number }>(
+    "/admin/bookings",
+    { params: { page, limit } },
+  );
+  return data;
 };

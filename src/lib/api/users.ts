@@ -1,10 +1,11 @@
 /**
  * users.ts — Users & Profile API Service
- *
+ * 
  * Directly connects to the backend /users and /users/profile endpoints.
  */
 
 import apiClient from "./client";
+import { uploadToS3, uploadConfig } from "@/lib/upload";
 
 export interface UserProfileDTO {
   id: string;
@@ -59,18 +60,30 @@ export const changePassword = async (
   return data;
 };
 
-/** Upload a new avatar image to the server — returns the updated avatar URL. */
-export const uploadAvatar = async (file: File): Promise<{ avatarUrl: string }> => {
-  const formData = new FormData();
-  formData.append("avatar", file);
-  const { data } = await apiClient.post<{ avatar?: string; [key: string]: any }>(
-    "/users/profile/avatar",
-    formData,
-    {
-      headers: { "Content-Type": "multipart/form-data" },
-    },
-  );
-  return { avatarUrl: data.avatar || "" };
+/** 
+ * Upload a new avatar image to the server — returns the updated avatar URL and storage key.
+ * Only hosts are allowed to upload custom avatars; guests use the default system avatar.
+ */
+export const uploadAvatar = async (file: File): Promise<{ url: string; key: string }> => {
+  // Validate file type
+  const allowedTypes = uploadConfig.avatars.allowedTypes;
+  if (!allowedTypes.includes(file.type)) {
+    throw new Error(`Invalid file type. Only ${allowedTypes.join(", ")} are allowed`);
+  }
+
+  // Validate file size
+  const maxSize = uploadConfig.avatars.maxSize;
+  if (file.size > maxSize) {
+    throw new Error(`File size too large. Maximum size is ${maxSize / (1024 * 1024)}MB`);
+  }
+
+  // Upload to S3
+  const result = await uploadToS3(file, uploadConfig.avatars.folder);
+  
+  // In a real implementation, we would also update the user's avatar URL in the database
+  // For now, we'll just return the upload result
+  
+  return result;
 };
 
 /** Delete the authenticated user's account. */

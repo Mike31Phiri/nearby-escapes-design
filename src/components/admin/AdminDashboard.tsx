@@ -14,11 +14,9 @@ import {
   BarChart3,
   ShieldCheck,
   ChevronRight,
-  Scale,
   Sparkles,
   Settings,
 } from "lucide-react";
-import { mockDisputes } from "@/lib/mock-admin-data";
 import { Button } from "@/components/ui/button";
 import { AdminPageHeader } from "@/components/layout/AdminPageHeader";
 import { cn } from "@/lib/utils";
@@ -140,7 +138,6 @@ function ActivityItem({ log }: { log: ActivityLog }) {
 export function AdminDashboard() {
   const stats = mockPlatformStats;
   const pendingListingsCount = mockPendingListings.filter((l) => l.status === "pending_review").length;
-  const openDisputesCount = mockDisputes.filter((d) => d.status === "open" || d.status === "investigating").length;
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-background pb-16">
@@ -179,7 +176,7 @@ export function AdminDashboard() {
               <div>
                 <h2 className="text-sm font-semibold text-neutral-900">Administrator Daily Triage</h2>
                 <p className="text-xs text-neutral-500 mt-0.5">
-                  {pendingListingsCount} listings awaiting review · {openDisputesCount} active disputes requiring moderation
+                  {pendingListingsCount} listings awaiting review
                 </p>
               </div>
             </div>
@@ -189,12 +186,6 @@ export function AdminDashboard() {
                 className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white border border-neutral-200/80 text-neutral-700 hover:text-neutral-900 hover:bg-neutral-50 transition-colors"
               >
                 Listings ({pendingListingsCount})
-              </Link>
-              <Link
-                href="/admin/disputes"
-                className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white border border-neutral-200/80 text-neutral-700 hover:text-neutral-900 hover:bg-neutral-50 transition-colors"
-              >
-                Disputes ({openDisputesCount})
               </Link>
               <Link
                 href="/admin/payouts"
@@ -404,25 +395,11 @@ export function AdminDashboard() {
                   color: "#7c3aed",
                 },
                 {
-                  icon: Scale,
-                  label: "Disputes & Resolution",
-                  desc: "Handle guest claims & refunds",
-                  href: "/admin/disputes",
-                  color: "#e11d48",
-                },
-                {
                   icon: DollarSign,
                   label: "Payout Processing",
                   desc: "Disburse host mobile money & bank sums",
                   href: "/admin/payouts",
                   color: "#059669",
-                },
-                {
-                  icon: Sparkles,
-                  label: "Promotions & Codes",
-                  desc: "Promo codes & featured listings",
-                  href: "/admin/promotions",
-                  color: "#d97706",
                 },
                 {
                   icon: Activity,

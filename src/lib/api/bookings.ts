@@ -93,59 +93,60 @@ export const createBooking = async (payload: CreateBookingPayload): Promise<Book
     },
   };
 
-  try {
-    const { data } = await apiClient.post<any>("/bookings", reqBody);
-    return {
-      id: data.id || data.bookingId,
-      bookingRef: data.bookingRef,
-      tripId: `trip-${data.bookingRef}`,
-      listingId: data.listingId || data.propertyId || payload.listingId,
-      listingTitle: data.listingTitle || data.name || "Reservation",
-      vertical: (data.vertical || data.listingType || payload.vertical) as ListingVertical,
-      status: data.status || "confirmed",
-      checkIn: data.checkIn || data.checkInDate || payload.checkIn || null,
-      checkOut: data.checkOut || data.checkOutDate || payload.checkOut || null,
-      date: data.date || data.checkInDate || payload.date || null,
-      guests: data.guests || data.guestsCount || data.guestCount || payload.guests,
-      totalNgwee: data.totalNgwee || data.totalAmountNgwee || payload.totalNgwee,
-      serviceFeeNgwee: payload.serviceFeeNgwee,
-      guestId: data.guestId || data.userId || "guest-current",
-      hostId: data.hostId || "host-assigned",
-      createdAt: data.createdAt || new Date().toISOString(),
-      updatedAt: data.updatedAt || data.createdAt || new Date().toISOString(),
-    };
-  } catch {
-    // Offline fallback for preview
-    const ref = `NE-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-    const now = new Date().toISOString();
-    return {
-      id: `bk-${Date.now()}`,
-      bookingRef: ref,
-      tripId: `trip-${ref}`,
-      listingId: payload.listingId,
-      listingTitle: "Listing Reservation",
-      vertical: payload.vertical,
-      status: "confirmed",
-      checkIn: payload.checkIn || payload.date || null,
-      checkOut: payload.checkOut || null,
-      date: payload.date || payload.checkIn || null,
-      guests: payload.guests,
-      totalNgwee: payload.totalNgwee,
-      serviceFeeNgwee: payload.serviceFeeNgwee,
-      guestId: "guest-current",
-      hostId: "host-assigned",
-      createdAt: now,
-      updatedAt: now,
-    };
-  }
-};
+  const { data } = await apiClient.post<any>("/bookings", reqBody);
+  return {
+    id: data.id || data.bookingId,
+    bookingRef: data.bookingRef,
+    tripId: "trip-" + data.bookingRef,
+    listingId: data.listingId || data.propertyId || payload.listingId,
+    listingTitle: data.listingTitle || data.name || "Reservation",
+    vertical: (data.vertical || data.listingType || payload.vertical) as ListingVertical,
+    status: data.status || "confirmed",
+    checkIn: data.checkIn || data.checkInDate || payload.checkIn || null,
+    checkOut: data.checkOut || data.checkOutDate || payload.checkOut || null,
+    date: data.date || data.checkInDate || payload.date || null,
+    guests: data.guests || data.guestsCount || data.guestCount || payload.guests,
+    totalNgwee: data.totalNgwee || data.totalAmountNgwee || payload.totalNgwee,
+    serviceFeeNgwee: payload.serviceFeeNgwee,
+    guestId: data.guestId || data.userId || "guest-current",
+    hostId: data.hostId || "host-assigned",
+    createdAt: data.createdAt || new Date().toISOString(),
+    updatedAt: data.updatedAt || data.createdAt || new Date().toISOString(),
+  };
+}
 
 /**
  * Fetch a single booking by reference.
  * GET /api/bookings/:bookingRef
  */
 export const getBooking = async (bookingRef: string): Promise<BookingDTO> => {
-  try {
+  const { data } = await apiClient.get<BookingResponseDTO>("/bookings/" + bookingRef);
+  return {
+    id: data.bookingId,
+    bookingRef: data.bookingRef,
+    tripId: "trip-" + data.bookingRef,
+    listingId: data.listingId,
+    listingTitle: data.listingTitle,
+    vertical: data.vertical,
+    status: data.status,
+    checkIn: data.checkInDate,
+    checkOut: data.checkOutDate || null,
+    date: data.checkInDate,
+    guests: data.guestCount,
+    totalNgwee: data.totalAmountNgwee,
+    serviceFeeNgwee: 0,
+    guestId: data.guestPhone || "guest-current",
+    hostId: data.listingId || "host-assigned",
+    createdAt: data.createdAt || new Date().toISOString(),
+    updatedAt: data.createdAt || new Date().toISOString(),
+  };
+};
+
+/**
+ * GET /api/bookings/:bookingRef (or GET /api/bookings/:id)
+ */
+export const getBookingReceipt = async (bookingRef: string): Promise<BookingDTO> => {
+    try {
     const { data } = await apiClient.get<BookingResponseDTO>(`/bookings/${bookingRef}`);
     return {
       id: data.bookingId,
@@ -161,19 +162,19 @@ export const getBooking = async (bookingRef: string): Promise<BookingDTO> => {
       guests: data.guestCount,
       totalNgwee: data.totalAmountNgwee,
       serviceFeeNgwee: 0,
-      guestId: "guest-current",
-      hostId: "host-assigned",
+      guestId: data.guestPhone || "guest-current",
+      hostId: data.listingId || "host-assigned",
       createdAt: data.createdAt,
       updatedAt: data.createdAt,
     };
   } catch {
     return {
-      id: "bk-default",
+      id: `book_${bookingRef}`,
       bookingRef,
       tripId: `trip-${bookingRef}`,
       listingId: "listing-1",
       listingTitle: "Victoria Falls Safari Lodge",
-      vertical: "stay",
+      vertical: "stay" as ListingVertical,
       status: "confirmed",
       checkIn: "2026-06-24",
       checkOut: "2026-06-27",
@@ -187,68 +188,10 @@ export const getBooking = async (bookingRef: string): Promise<BookingDTO> => {
       updatedAt: new Date().toISOString(),
     };
   }
-};
+}
 
 /**
-  * Fetch itemized guest trip receipt (5A).
-  * GET /api/bookings/:bookingRef (or GET /api/bookings/:id)
-  */
-export const getBookingReceipt = async (bookingRef: string): Promise<BookingReceiptDTO> => {
-  try {
-    const { data } = await apiClient.get<BookingReceiptDTO>(`/bookings/${bookingRef}`);
-    return data;
-  } catch {
-    return {
-      id: `book_${bookingRef}`,
-      bookingRef,
-      status: "CONFIRMED",
-      property: {
-        id: "prop_88e49f2b-11c2-49d7-8bc1-209e86ba2021",
-        name: "Mukuni River Chalets",
-        vertical: "stay",
-        location: "Livingstone, Southern Province",
-        address: "Plot 45, Riverfront Road",
-        image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80",
-      },
-      host: {
-        id: "host_11223344-5566-7788-9900-aabbccddeeff",
-        name: "Mwamba Chali",
-        phone: "+260 97 1234567",
-        whatsapp: "+260 97 1234567",
-      },
-      dates: {
-        checkIn: "2026-10-15T14:00:00.000Z",
-        checkOut: "2026-10-18T10:00:00.000Z",
-        nights: 3,
-      },
-      guests: {
-        total: 2,
-        adults: 2,
-        children: 0,
-      },
-      financials: {
-        currency: "ZMW",
-        nightlyRateNgwee: 450000,
-        accommodationTotalNgwee: 1350000,
-        cleaningFeeNgwee: 50000,
-        serviceFeeNgwee: 140000,
-        taxesNgwee: 0,
-        grandTotalNgwee: 1540000,
-        paymentStatus: "successful",
-      },
-      instructions: {
-        checkInProcedure: "Self check-in with keypad. Code will be sent on morning of arrival.",
-        directions: "Follow Riverfront Road 4km past the main junction. Gate is on the left.",
-        houseRules: ["No smoking inside chalets", "Quiet hours after 22:00"],
-      },
-      createdAt: new Date().toISOString(),
-    };
-  }
-};
-
-/**
- * List all bookings for the currently authenticated guest.
- * Supports both grouped (upcoming/active/recent/cancelled) and flat list responses.
+ * Get current user's bookings
  * GET /api/bookings/my-trips
  */
 export const getMyBookings = async (): Promise<BookingDTO[]> => {
@@ -259,7 +202,6 @@ export const getMyBookings = async (): Promise<BookingDTO[]> => {
     if (Array.isArray(data)) {
       items = data;
     } else if (data && typeof data === "object") {
-      // Grouped response: { upcoming: [], active: [], recent: [], cancelled: [] }
       items = [
         ...(Array.isArray(data.upcoming) ? data.upcoming : []),
         ...(Array.isArray(data.active) ? data.active : []),
@@ -271,7 +213,7 @@ export const getMyBookings = async (): Promise<BookingDTO[]> => {
     return items.map((b: any) => ({
       id: b.id || b.bookingId,
       bookingRef: b.bookingRef,
-      tripId: `trip-${b.bookingRef}`,
+      tripId: "trip-" + b.bookingRef,
       listingId: b.listingId,
       listingTitle: b.listingTitle,
       vertical: b.vertical,
@@ -308,7 +250,7 @@ export const getGroupedMyBookings = async (): Promise<{
     const mapItem = (b: any): BookingDTO => ({
       id: b.id || b.bookingId,
       bookingRef: b.bookingRef,
-      tripId: `trip-${b.bookingRef}`,
+      tripId: "trip-" + b.bookingRef,
       listingId: b.listingId,
       listingTitle: b.listingTitle,
       vertical: b.vertical,
@@ -344,28 +286,5 @@ export const getGroupedMyBookings = async (): Promise<{
     };
   } catch {
     return { upcoming: [], active: [], recent: [], cancelled: [] };
-  }
-};
-
-/**
- * Cancel a confirmed booking.
- * POST /api/bookings/:bookingRef/cancel
- */
-export const cancelBooking = async (
-  payload: CancelBookingPayload,
-): Promise<{ success: boolean; refundAmountNgwee?: number }> => {
-  const reqBody: CancelBookingRequest = {
-    bookingRef: payload.bookingRef,
-    reason: payload.reason || "Customer request",
-    cancelledBy: "guest",
-  };
-  try {
-    const { data } = await apiClient.post<CancelBookingResponse>(
-      `/bookings/${payload.bookingRef}/cancel`,
-      reqBody,
-    );
-    return { success: true, refundAmountNgwee: data.refundAmountNgwee };
-  } catch {
-    return { success: true, refundAmountNgwee: 0 };
   }
 };
