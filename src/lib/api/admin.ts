@@ -3,7 +3,7 @@
  *
  * All revenue figures are integers in Ngwee (ZMW × 100). Never float.
  *
- * TODO: Connect to real API
+ * Connected to real API
  */
 
 import apiClient from "./client";
@@ -75,7 +75,7 @@ export interface AdminDashboardDTO {
 }
 
 /** Fetch the admin dashboard overview. */
-// TODO: Connect to real API
+// Connected to real API
 /** Fetch the admin dashboard overview. */
 export const getAdminDashboard = async (): Promise<AdminDashboardDTO> => {
   const { data } = await apiClient.get<AdminDashboardDTO>("/admin/overview");

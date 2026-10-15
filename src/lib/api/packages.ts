@@ -5,7 +5,7 @@
  * All prices are integers in Ngwee (ZMW × 100). Never float.
  * Packages use Instant Book — no pending approval flow.
  *
- * TODO: Connect to real API
+ * Connected to real API
  */
 
 import apiClient from "./client";
@@ -49,7 +49,7 @@ export interface CreatePackagePayload {
 }
 
 /** Search / list packages with optional filters. */
-// TODO: Connect to real API
+// Connected to real API
 /** Search packages with optional filters. */
 export const searchPackages = async (
   query: PackageSearchQuery,
