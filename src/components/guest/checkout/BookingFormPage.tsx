@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -146,6 +146,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
   const { addBooking } = useBookingStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(true);
+  const submissionRef = useRef(false);
 
   const isStay = listing.type === "stay";
   const isExperience = listing.type === "experience";
@@ -457,21 +458,29 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
 
+    // Prevent double submission with ref
+    if (submissionRef.current) return;
+    submissionRef.current = true;
+
     const fullName = `${personalInfo.firstName} ${personalInfo.lastName}`.trim();
     if (!personalInfo.firstName.trim() || !personalInfo.lastName.trim()) {
       toast.error("Please enter the lead traveler's first and last name.");
+      submissionRef.current = false;
       return;
     }
     if (!personalInfo.email.trim() || !personalInfo.email.includes("@")) {
       toast.error("Please provide a valid email address for your confirmation.");
+      submissionRef.current = false;
       return;
     }
     if (!personalInfo.phone.trim()) {
       toast.error("Please provide a contact phone number.");
+      submissionRef.current = false;
       return;
     }
     if (!agreedToTerms) {
       toast.error("Please check the box to agree to the Terms & Cancellation Policy.");
+      submissionRef.current = false;
       return;
     }
 
@@ -603,6 +612,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
     } catch (err) {
       toast.error("Something went wrong. Please try again.");
       setIsSubmitting(false);
+      submissionRef.current = false;
     }
   };
 
