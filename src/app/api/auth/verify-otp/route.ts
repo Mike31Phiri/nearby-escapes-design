@@ -46,12 +46,13 @@ export async function POST(req: NextRequest) {
         { status: 200 },
       );
 
-      res.cookies.set("ne_session", token, {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        maxAge: 60 * 60 * 24 * 7,
-      });
+       res.cookies.set("ne_session", token, {
+         httpOnly: true,
+         sameSite: "lax",
+         path: "/",
+         maxAge: 60 * 60 * 24 * 7,
+         secure: process.env.NODE_ENV === "production",
+       });
 
       return res;
     }

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { verifySession } from "@/lib/mock-auth";
 
 interface TokenPayload {
   sub?: string;
@@ -53,12 +54,16 @@ function inspectToken(token: string | undefined): { isValid: boolean; payload: T
     }
   }
 
-  // 2. Custom or mock session token (e.g. userId:timestamp:signature)
-  if (clean.includes(":")) {
-    const segments = clean.split(":");
-    if (segments.length >= 2 && segments[0]) {
-      return { isValid: true, payload: { id: segments[0] } };
+  // 2. Custom or mock session token (our format: base64(userId:issuedAt:expiresAt|signature))
+  // We'll delegate to verifySession for proper validation including absolute expiration
+  try {
+    // VerifySession expects the base64 encoded token
+    const userId = verifySession(clean);
+    if (userId) {
+      return { isValid: true, payload: { id: userId } };
     }
+  } catch {
+    // If verifySession throws, treat as invalid
   }
 
   // 3. Fallback bearer token string (at least 8 chars)
