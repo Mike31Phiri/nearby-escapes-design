@@ -1,28 +1,28 @@
-﻿import Link from "next/link";
+import Link from "next/link";
+import { MapPinOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-4 text-center py-20">
-      <div className="max-w-md w-full space-y-8 animate-in fade-in zoom-in duration-700">
-        <div className="relative">
-          <h1 className="text-[150px] leading-none font-bold text-primary/10 select-none">404</h1>
-        </div>
+    <main className="flex min-h-[calc(100dvh-4rem)] items-center justify-center bg-[#faf8f4] px-4 py-16 sm:px-6">
+      <div className="w-full max-w-xl text-center">
+        <MapPinOff aria-hidden="true" className="mx-auto mb-7 size-12 text-purple" />
+        <h1 className="text-balance text-3xl font-semibold text-black sm:text-4xl">
+          Destination off the map.
+        </h1>
+        <p className="mx-auto mt-4 max-w-md text-pretty text-base leading-relaxed text-neutral-600 sm:text-lg">
+          We couldn&apos;t find the page you were looking for. Head back to Explore and find
+          somewhere new.
+        </p>
 
-        <div className="space-y-4">
-          <h2 className="text-4xl font-bold tracking-tight">Looks like you&apos;re lost</h2>
-          <p className="text-muted-foreground text-xl">
-            We can&apos;t seem to find the page you&apos;re looking for. It might have been removed
-            or the link is incorrect.
-          </p>
-        </div>
-
-        <Link href="/" className="inline-block mt-8">
-          <Button className="h-14 rounded-2xl px-12 bg-primary font-bold text-xl shadow-xl">
-            Back to Exploration
-          </Button>
-        </Link>
+        <Button
+          asChild
+          variant="outline"
+          className="mt-8 h-auto rounded-xl border-purple/40 bg-white px-10 py-4 text-base font-medium text-purple shadow-[0_4px_14px_rgba(107,43,184,0.14)] hover:border-purple hover:bg-purple hover:text-white sm:px-12"
+        >
+          <Link href="/explore">Explore</Link>
+        </Button>
       </div>
-    </div>
+    </main>
   );
 }

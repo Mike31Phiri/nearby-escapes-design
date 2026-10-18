@@ -106,10 +106,12 @@ function Carousel({ children, seeAllHref }: { children: React.ReactNode; seeAllH
 }
 
 // Place Card (City / area card)
-function PlaceCard({ place }: { place: PlaceToVisit }) {
+function PlaceCard({ place, provinceId }: { place: PlaceToVisit; provinceId?: string }) {
+  const placeHref = provinceId ? `/explore/${provinceId}/${place.id}` : `/explore/${place.id}`;
+
   return (
     <Link
-      href={`/explore/${place.id}`}
+      href={placeHref}
       className="group block min-w-[160px] sm:min-w-[180px] md:min-w-[200px] shrink-0 rounded-2xl overflow-hidden border border-neutral-200/80 shadow-xs snap-start"
     >
       <div className="relative aspect-[3/4]">
@@ -129,10 +131,26 @@ function PlaceCard({ place }: { place: PlaceToVisit }) {
 }
 
 // Attraction Card
-function AttractionCard({ attraction }: { attraction: AttractionItem }) {
+function AttractionCard({
+  attraction,
+  provinceId,
+  cityId,
+}: {
+  attraction: AttractionItem;
+  provinceId?: string;
+  cityId?: string;
+}) {
+  const targetHref = provinceId && cityId
+    ? `/explore/${provinceId}/${cityId}/${attraction.id}`
+    : provinceId
+      ? `/explore/${provinceId}/${attraction.id}`
+      : cityId
+        ? `/explore/${cityId}/${attraction.id}`
+        : `/explore/${attraction.id}`;
+
   return (
     <Link
-      href="#"
+      href={targetHref}
       className="group block min-w-[240px] sm:min-w-[260px] md:min-w-[280px] shrink-0 rounded-2xl bg-white border border-neutral-200/80 shadow-xs overflow-hidden snap-start"
     >
       <div className="relative aspect-[16/10] overflow-hidden">
@@ -334,7 +352,7 @@ export function ExploreHub({
             <SectionHeading title="Places to Visit" subtitle="Explore the surrounding area" />
             <Carousel>
               {placesToVisit.map((place) => (
-                <PlaceCard key={place.id} place={place} />
+                <PlaceCard key={place.id} place={place} provinceId={provinceId} />
               ))}
             </Carousel>
           </div>
@@ -348,7 +366,7 @@ export function ExploreHub({
             <SectionHeading title="Top Attractions" subtitle="Must-see landmarks & highlights" />
             <Carousel>
               {attractions.map((attraction) => (
-                <AttractionCard key={attraction.id} attraction={attraction} />
+                <AttractionCard key={attraction.id} attraction={attraction} provinceId={provinceId} cityId={cityId} />
               ))}
             </Carousel>
           </div>
