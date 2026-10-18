@@ -74,11 +74,16 @@ interface DPOConfig {
   paymentBaseUrl: string;
 }
 
+export function isDpoMockMode(): boolean {
+  const value = (process.env.NEXT_PUBLIC_DPO_MOCK_MODE ?? "true").trim().toLowerCase();
+  return !["false", "0", "no", "off"].includes(value);
+}
+
 const config: DPOConfig = {
-  // Replace with actual credentials in production
+  // Keep payment in simulation mode by default for local/demo environments.
   companyToken: process.env.NEXT_PUBLIC_DPO_COMPANY_TOKEN || "MOCK_TOKEN",
   serviceTypeId: Number(process.env.NEXT_PUBLIC_DPO_SERVICE_TYPE_ID) || 6666,
-  mockMode: process.env.NEXT_PUBLIC_DPO_MOCK_MODE !== "false",
+  mockMode: isDpoMockMode(),
   paymentBaseUrl: "https://secure.directpay.online",
 };
 

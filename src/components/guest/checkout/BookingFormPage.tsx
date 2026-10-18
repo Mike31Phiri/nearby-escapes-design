@@ -46,7 +46,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/store/authStore";
-import { createPaymentToken, generateBookingRef } from "@/lib/dpo";
+import { createPaymentToken, generateBookingRef, isDpoMockMode } from "@/lib/dpo";
 import { createBooking } from "@/lib/api/bookings";
 import { useBookingStore } from "@/store/bookingStore";
 import { useProfileStore } from "@/store/profileStore";
@@ -269,6 +269,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
   // DPO Payment Options
   const [dpoIframeUrl, setDpoIframeUrl] = useState<string | null>(null);
   const [dpoBookingRef, setDpoBookingRef] = useState<string | null>(null);
+  const paymentSimulationEnabled = isDpoMockMode();
   const [promoCode, setPromoCode] = useState("");
   const [promoApplied, setPromoApplied] = useState(false);
   const [promoDiscount, setPromoDiscount] = useState(0);
@@ -1029,7 +1030,9 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                 <div>
                   <h2 className="font-bold text-lg text-neutral-900 leading-none">Payment with DPO Pay</h2>
                   <p className="text-xs text-neutral-500 mt-1">
-                    Transactions are processed securely via DPO Pay (Direct Pay Online Africa).
+                    {paymentSimulationEnabled
+                      ? "Simulation mode is enabled — this demo keeps payment in test mode and does not charge real money."
+                      : "Transactions are processed securely via DPO Pay (Direct Pay Online Africa)."}
                   </p>
                 </div>
               </div>
@@ -1081,11 +1084,13 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                           <div className="flex items-center gap-2">
                             <span className="font-bold text-sm text-neutral-900">Direct Pay Online</span>
                             <span className="text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                              DPO Pay
+                              {paymentSimulationEnabled ? "Simulation" : "DPO Pay"}
                             </span>
                           </div>
                           <p className="text-xs text-neutral-500 mt-0.5">
-                            Official Secure Payment Gateway for Africa &amp; Zambia
+                            {paymentSimulationEnabled
+                              ? "Demo checkout flow — no real charge is processed."
+                              : "Official Secure Payment Gateway for Africa & Zambia"}
                           </p>
                         </div>
                       </div>
@@ -1096,7 +1101,9 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                     </div>
 
                     <p className="text-xs text-neutral-600 leading-relaxed">
-                      Complete your booking securely using our embedded DPO Pay gateway. You can pay with any major credit or debit card, or your preferred Zambian mobile money wallet.
+                      {paymentSimulationEnabled
+                        ? "This payment step is intentionally left in simulation mode so the checkout can be tested without charging a real card or wallet."
+                        : "Complete your booking securely using our embedded DPO Pay gateway. You can pay with any major credit or debit card, or your preferred Zambian mobile money wallet."}
                     </p>
 
                     {/* Supported Methods Badges */}
