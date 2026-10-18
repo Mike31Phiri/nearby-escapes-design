@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { verifySession } from "@/lib/mock-auth";
+import { verifySession } from "@/lib/session";
 
 interface TokenPayload {
   sub?: string;
@@ -15,7 +15,9 @@ interface TokenPayload {
  * Parses and verifies basic expiration of a JWT or session token.
  * Completely edge-runtime compatible (uses standard web APIs).
  */
-function inspectToken(token: string | undefined): { isValid: boolean; payload: TokenPayload | null } {
+async function inspectToken(
+  token: string | undefined,
+): Promise<{ isValid: boolean; payload: TokenPayload | null }> {
   if (!token || typeof token !== "string") {
     return { isValid: false, payload: null };
   }
@@ -58,7 +60,7 @@ function inspectToken(token: string | undefined): { isValid: boolean; payload: T
   // We'll delegate to verifySession for proper validation including absolute expiration
   try {
     // VerifySession expects the base64 encoded token
-    const userId = verifySession(clean);
+    const userId = await verifySession(clean);
     if (userId) {
       return { isValid: true, payload: { id: userId } };
     }
@@ -86,7 +88,7 @@ const PROTECTED_ROUTE_PREFIXES = [
 
 const AUTH_PAGES = ["/auth/login", "/auth/register"];
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
   // Retrieve token from request cookies
@@ -96,7 +98,7 @@ export function middleware(request: NextRequest) {
     request.cookies.get("nearby_access_token")?.value ||
     request.cookies.get("token")?.value;
 
-  const { isValid, payload } = inspectToken(token);
+  const { isValid, payload } = await inspectToken(token);
 
   const isProtectedRoute = PROTECTED_ROUTE_PREFIXES.some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
