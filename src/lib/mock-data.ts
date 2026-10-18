@@ -62,13 +62,13 @@ export const categoryLabels: Record<ExperienceCategory, string> = {
 };
 
 export const categoryIcons: Record<ExperienceCategory, string> = {
-  cultural: "🎭",
-  wildlife: "🦁",
-  farm: "🌾",
-  industrial: "⚙️",
-  adventure: "🧗",
-  water: "🌊",
-  general: "📍",
+  cultural: "",
+  wildlife: "",
+  farm: "",
+  industrial: "",
+  adventure: "",
+  water: "",
+  general: "",
 };
 
 export interface ExperienceItineraryStop {

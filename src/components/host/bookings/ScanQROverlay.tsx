@@ -98,7 +98,7 @@ export function ScanQROverlay({ open, onClose, onScanned }: ScanQROverlayProps) 
             <p className="mt-6 text-white text-lg font-bold">Guest matched!</p>
             <p className="mt-1 text-emerald-300 text-[14px] font-semibold">{matched.name}</p>
             <p className="mt-0.5 text-white/50 text-[12px]">
-              Party of {matched.partySize} · Checked in ✓
+              Party of {matched.partySize} · Checked in
             </p>
           </div>
         )}

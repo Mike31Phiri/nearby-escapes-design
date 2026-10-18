@@ -47,9 +47,7 @@ export function ReviewDialog({
       toast.success("Thank you! Your review has been submitted.");
       onClose();
     } catch (err: any) {
-      toast.error(
-        err?.response?.data?.message || "Failed to submit review. Please try again.",
-      );
+      toast.error(err?.response?.data?.message || "Failed to submit review. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -70,8 +68,9 @@ export function ReviewDialog({
                   type="button"
                   onClick={() => setRating(i + 1)}
                   className={`text-2xl ${i < rating ? "text-yellow-400" : "text-gray-300"}`}
+                  aria-label={`Rate ${i + 1} out of 5`}
                 >
-                  ★
+                  {i + 1}
                 </button>
               ))}
             </div>

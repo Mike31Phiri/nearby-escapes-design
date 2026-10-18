@@ -126,7 +126,13 @@ export function AdminReports() {
       setLoadingMessage,
       async () => {
         await new Promise((r) => setTimeout(r, 600));
-        const headers = ["Month", "Gross Revenue (ZMW)", "Commission (ZMW)", "Bookings", "New Users"];
+        const headers = [
+          "Month",
+          "Gross Revenue (ZMW)",
+          "Commission (ZMW)",
+          "Bookings",
+          "New Users",
+        ];
         const rows = monthlyData.map((m) => [
           m.month,
           m.revenue,
@@ -142,7 +148,10 @@ export function AdminReports() {
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);
-        link.setAttribute("download", `nearbyescapes-report-${period}-${new Date().toISOString().split("T")[0]}.csv`);
+        link.setAttribute(
+          "download",
+          `nearbyescapes-report-${period}-${new Date().toISOString().split("T")[0]}.csv`,
+        );
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -219,10 +228,10 @@ export function AdminReports() {
         <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-2xs">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-sm font-semibold text-neutral-900">
-                Revenue & Bookings Trend
-              </h3>
-              <p className="text-xs text-neutral-500 mt-0.5">Month-over-month performance analysis</p>
+              <h3 className="text-sm font-semibold text-neutral-900">Revenue & Bookings Trend</h3>
+              <p className="text-xs text-neutral-500 mt-0.5">
+                Month-over-month performance analysis
+              </p>
             </div>
             <div className="flex items-center gap-4 text-xs text-neutral-600">
               <span className="flex items-center gap-1.5">
@@ -255,9 +264,7 @@ export function AdminReports() {
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute -top-9 left-1/2 -translate-x-1/2 bg-neutral-900 text-white text-[10px] font-semibold px-2 py-1 rounded-lg whitespace-nowrap pointer-events-none z-10 shadow-md">
                     K{(m.revenue / 1000).toFixed(0)}k · {m.newBookings} bookings
                   </div>
-                  <span className="text-[10px] font-semibold text-neutral-500 mt-1">
-                    {m.month}
-                  </span>
+                  <span className="text-[10px] font-semibold text-neutral-500 mt-1">{m.month}</span>
                 </div>
               );
             })}
@@ -269,9 +276,7 @@ export function AdminReports() {
           {/* Monthly Breakdown */}
           <div className="rounded-2xl border border-neutral-200/80 bg-white shadow-2xs overflow-hidden">
             <div className="p-5 border-b border-neutral-100 flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-neutral-900">
-                Monthly Breakdown Table
-              </h3>
+              <h3 className="text-sm font-semibold text-neutral-900">Monthly Breakdown Table</h3>
               <span className="text-xs text-neutral-400">{monthlyData.length} billing cycles</span>
             </div>
             <div className="overflow-x-auto">
@@ -297,10 +302,7 @@ export function AdminReports() {
                 </thead>
                 <tbody className="divide-y divide-neutral-100">
                   {monthlyData.map((m) => (
-                    <tr
-                      key={m.month}
-                      className="hover:bg-neutral-50/60 transition-colors"
-                    >
+                    <tr key={m.month} className="hover:bg-neutral-50/60 transition-colors">
                       <td className="px-5 py-3 font-semibold text-neutral-900">{m.month}</td>
                       <td className="px-5 py-3 text-right font-medium text-neutral-900">
                         K{(m.revenue / 1000).toFixed(0)}k
@@ -308,7 +310,9 @@ export function AdminReports() {
                       <td className="px-5 py-3 text-right text-purple font-medium">
                         K{(m.commission / 1000).toFixed(0)}k
                       </td>
-                      <td className="px-5 py-3 text-right font-medium text-neutral-700">{m.newBookings}</td>
+                      <td className="px-5 py-3 text-right font-medium text-neutral-700">
+                        {m.newBookings}
+                      </td>
                       <td className="px-5 py-3 text-right text-neutral-500">{m.newUsers}</td>
                     </tr>
                   ))}
@@ -322,8 +326,12 @@ export function AdminReports() {
                     <td className="px-5 py-3 text-right font-semibold text-purple">
                       K{(totalCommission / 1000).toFixed(0)}k
                     </td>
-                    <td className="px-5 py-3 text-right font-semibold text-neutral-900">{totalBookings}</td>
-                    <td className="px-5 py-3 text-right font-semibold text-neutral-600">{totalNewUsers}</td>
+                    <td className="px-5 py-3 text-right font-semibold text-neutral-900">
+                      {totalBookings}
+                    </td>
+                    <td className="px-5 py-3 text-right font-semibold text-neutral-600">
+                      {totalNewUsers}
+                    </td>
                   </tr>
                 </tfoot>
               </table>
@@ -340,12 +348,16 @@ export function AdminReports() {
                 <div className="flex items-start gap-3 p-3.5 rounded-xl bg-emerald-50/60 border border-emerald-200/60">
                   <TrendingUp className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-xs font-semibold text-emerald-900">Positive Growth Trajectory</p>
+                    <p className="text-xs font-semibold text-emerald-900">
+                      Positive Growth Trajectory
+                    </p>
                     <p className="text-xs text-emerald-700 mt-0.5 leading-relaxed">
-                      Revenue has expanded {revenueGrowth}% over the selected period. Peak monthly volume was in July with K
+                      Revenue has expanded {revenueGrowth}% over the selected period. Peak monthly
+                      volume was in July with K
                       {monthlyData
                         .reduce((max, m) => (m.revenue > max.revenue ? m : max), monthlyData[0])
-                        .revenue.toLocaleString()} transacted.
+                        .revenue.toLocaleString()}{" "}
+                      transacted.
                     </p>
                   </div>
                 </div>
@@ -354,7 +366,9 @@ export function AdminReports() {
                   <div>
                     <p className="text-xs font-semibold text-blue-900">User Network Expansion</p>
                     <p className="text-xs text-blue-700 mt-0.5 leading-relaxed">
-                      Platform boasts {stats.totalGuests} registered guests and {stats.totalHosts} active hosts across Zambia, sustaining a {stats.growthRate}% monthly new user growth rate.
+                      Platform boasts {stats.totalGuests} registered guests and {stats.totalHosts}{" "}
+                      active hosts across Zambia, sustaining a {stats.growthRate}% monthly new user
+                      growth rate.
                     </p>
                   </div>
                 </div>
@@ -363,7 +377,9 @@ export function AdminReports() {
                   <div>
                     <p className="text-xs font-semibold text-purple">High Booking Conversion</p>
                     <p className="text-xs text-purple/80 mt-0.5 leading-relaxed">
-                      {((stats.completedBookings / stats.totalBookings) * 100).toFixed(0)}% completion rate across {stats.totalBookings.toLocaleString()} total platform bookings processed.
+                      {((stats.completedBookings / stats.totalBookings) * 100).toFixed(0)}%
+                      completion rate across {stats.totalBookings.toLocaleString()} total platform
+                      bookings processed.
                     </p>
                   </div>
                 </div>
@@ -373,34 +389,26 @@ export function AdminReports() {
             {/* Quick Stats Grid */}
             <div className="grid grid-cols-2 gap-3">
               <div className="rounded-2xl border border-neutral-200/80 bg-white p-4 shadow-2xs text-center">
-                <p className="text-xs font-medium text-neutral-500 mb-1">
-                  Avg Revenue / Mo
-                </p>
+                <p className="text-xs font-medium text-neutral-500 mb-1">Avg Revenue / Mo</p>
                 <p className="text-xl font-semibold text-neutral-900">
                   K{(totalRevenue / monthlyData.length / 1000).toFixed(0)}k
                 </p>
               </div>
               <div className="rounded-2xl border border-neutral-200/80 bg-white p-4 shadow-2xs text-center">
-                <p className="text-xs font-medium text-neutral-500 mb-1">
-                  Avg Bookings / Mo
-                </p>
+                <p className="text-xs font-medium text-neutral-500 mb-1">Avg Bookings / Mo</p>
                 <p className="text-xl font-semibold text-neutral-900">
                   {Math.round(totalBookings / monthlyData.length)}
                 </p>
               </div>
               <div className="rounded-2xl border border-neutral-200/80 bg-white p-4 shadow-2xs text-center">
-                <p className="text-xs font-medium text-neutral-500 mb-1">
-                  Platform Margin
-                </p>
+                <p className="text-xs font-medium text-neutral-500 mb-1">Platform Margin</p>
                 <p className="text-xl font-semibold text-purple">
                   {((stats.platformCommission / stats.totalRevenue) * 100).toFixed(0)}%
                 </p>
               </div>
               <div className="rounded-2xl border border-neutral-200/80 bg-white p-4 shadow-2xs text-center">
-                <p className="text-xs font-medium text-neutral-500 mb-1">
-                  Guest Satisfaction
-                </p>
-                <p className="text-xl font-semibold text-emerald-600">{stats.avgRating} ★</p>
+                <p className="text-xs font-medium text-neutral-500 mb-1">Guest Satisfaction</p>
+                <p className="text-xl font-semibold text-emerald-600">{stats.avgRating}</p>
               </div>
             </div>
           </div>

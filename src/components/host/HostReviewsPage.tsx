@@ -170,9 +170,7 @@ export function HostReviewsPage() {
                           style={{ width: `${pct}%` }}
                         />
                       </div>
-                      <span className="font-semibold text-neutral-900 w-6 text-right">
-                        {count}
-                      </span>
+                      <span className="font-semibold text-neutral-900 w-6 text-right">{count}</span>
                     </div>
                   );
                 })}
@@ -468,7 +466,7 @@ export function HostReviewsPage() {
                 onClick={() => setShowDisputeModal(false)}
                 className="h-8 w-8 rounded-lg hover:bg-neutral-100 text-neutral-500 flex items-center justify-center text-sm font-bold"
               >
-                ✕
+                Close
               </button>
             </div>
 

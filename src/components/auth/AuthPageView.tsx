@@ -74,7 +74,7 @@ function PasswordStrength({ password }: { password: string }) {
       return { score: 2, label: "Weak", color: "text-amber-500", bar: "bg-amber-500" };
     if (val.length < 12)
       return { score: 3, label: "Good", color: "text-emerald-600", bar: "bg-emerald-600" };
-    return { score: 4, label: "Strong ✓", color: "text-emerald-600", bar: "bg-emerald-600" };
+    return { score: 4, label: "Strong", color: "text-emerald-600", bar: "bg-emerald-600" };
   };
   const strength = getStrength(password);
   return (

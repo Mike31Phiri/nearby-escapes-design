@@ -52,9 +52,7 @@ export function DailyManifestPage() {
 
   const manifest = useMemo(
     () =>
-      listing && slotKey
-        ? getManifestSlot(listing.id, listing.name, listing.emoji, date, time, checkIns)
-        : null,
+      listing && slotKey ? getManifestSlot(listing.id, listing.name, date, time, checkIns) : null,
     [listing, slotKey, date, time, checkIns],
   );
 
@@ -87,7 +85,7 @@ export function DailyManifestPage() {
 
   const handleScan = () => {
     const guest = checkInFirstUnchecked(slotKey, date, time);
-    if (guest) toast.success(`${guest.name} checked in ✓`, { position: "top-center" });
+    if (guest) toast.success(`${guest.name} checked in`, { position: "top-center" });
     return guest;
   };
 
@@ -123,7 +121,7 @@ export function DailyManifestPage() {
         {allIn && (
           <div className="rounded-2xl bg-emerald-600 text-white px-4 py-3 flex items-center gap-3 animate-celebrate-pop shadow-sm">
             <PartyPopper className="h-5 w-5 shrink-0" />
-            <p className="text-[13px] font-bold">All guests checked in! 🎉</p>
+            <p className="text-[13px] font-bold">All guests checked in</p>
           </div>
         )}
 

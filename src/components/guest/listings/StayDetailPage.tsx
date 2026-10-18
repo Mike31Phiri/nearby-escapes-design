@@ -64,39 +64,146 @@ import {
 } from "@/components/host/create/stay/stayConstants";
 
 // Icon lookup for standard and host-created amenities
-const ALL_STAY_AMENITY_SPECS: Record<string, { label: string; icon: React.ReactNode; category: "favourites" | "standouts" | "safety" }> = {
+const ALL_STAY_AMENITY_SPECS: Record<
+  string,
+  { label: string; icon: React.ReactNode; category: "favourites" | "standouts" | "safety" }
+> = {
   // Guest favourites
-  wifi: { label: "Fast Wi-Fi", icon: <Wifi className="h-4 w-4 text-purple" />, category: "favourites" },
-  air_conditioning: { label: "Air Conditioning", icon: <Wind className="h-4 w-4 text-purple" />, category: "favourites" },
-  kitchen: { label: "Kitchen", icon: <UtensilsCrossed className="h-4 w-4 text-purple" />, category: "favourites" },
-  parking: { label: "Free Parking", icon: <Car className="h-4 w-4 text-purple" />, category: "favourites" },
-  hot_water: { label: "Hot Water", icon: <Droplets className="h-4 w-4 text-purple" />, category: "favourites" },
-  workspace: { label: "Dedicated Workspace", icon: <Laptop className="h-4 w-4 text-purple" />, category: "favourites" },
+  wifi: {
+    label: "Fast Wi-Fi",
+    icon: <Wifi className="h-4 w-4 text-purple" />,
+    category: "favourites",
+  },
+  air_conditioning: {
+    label: "Air Conditioning",
+    icon: <Wind className="h-4 w-4 text-purple" />,
+    category: "favourites",
+  },
+  kitchen: {
+    label: "Kitchen",
+    icon: <UtensilsCrossed className="h-4 w-4 text-purple" />,
+    category: "favourites",
+  },
+  parking: {
+    label: "Free Parking",
+    icon: <Car className="h-4 w-4 text-purple" />,
+    category: "favourites",
+  },
+  hot_water: {
+    label: "Hot Water",
+    icon: <Droplets className="h-4 w-4 text-purple" />,
+    category: "favourites",
+  },
+  workspace: {
+    label: "Dedicated Workspace",
+    icon: <Laptop className="h-4 w-4 text-purple" />,
+    category: "favourites",
+  },
   tv: { label: "TV / DStv", icon: <Tv className="h-4 w-4 text-purple" />, category: "favourites" },
-  swimming_pool: { label: "Swimming Pool", icon: <Waves className="h-4 w-4 text-purple" />, category: "favourites" },
-  laundry: { label: "Laundry Service", icon: <Shirt className="h-4 w-4 text-purple" />, category: "favourites" },
-  housekeeping: { label: "Daily Housekeeping", icon: <Sparkles className="h-4 w-4 text-purple" />, category: "favourites" },
+  swimming_pool: {
+    label: "Swimming Pool",
+    icon: <Waves className="h-4 w-4 text-purple" />,
+    category: "favourites",
+  },
+  laundry: {
+    label: "Laundry Service",
+    icon: <Shirt className="h-4 w-4 text-purple" />,
+    category: "favourites",
+  },
+  housekeeping: {
+    label: "Daily Housekeeping",
+    icon: <Sparkles className="h-4 w-4 text-purple" />,
+    category: "favourites",
+  },
 
   // Standouts
-  solar_power: { label: "Solar Backup Power", icon: <Sun className="h-4 w-4 text-purple" />, category: "standouts" },
-  borehole_water: { label: "Borehole Water", icon: <Droplets className="h-4 w-4 text-purple" />, category: "standouts" },
-  private_pool: { label: "Private Pool", icon: <Waves className="h-4 w-4 text-purple" />, category: "standouts" },
-  fire_pit: { label: "Fire Pit / Boma", icon: <Flame className="h-4 w-4 text-purple" />, category: "standouts" },
-  viewing_deck: { label: "Wildlife Viewing Deck", icon: <Eye className="h-4 w-4 text-purple" />, category: "standouts" },
-  braai_area: { label: "Braai / BBQ Grill", icon: <Flame className="h-4 w-4 text-purple" />, category: "standouts" },
-  river_front: { label: "River / Lake Frontage", icon: <Anchor className="h-4 w-4 text-purple" />, category: "standouts" },
-  private_chef: { label: "Private Chef Service", icon: <Coffee className="h-4 w-4 text-purple" />, category: "standouts" },
-  patio_balcony: { label: "Patio / Balcony", icon: <Home className="h-4 w-4 text-purple" />, category: "standouts" },
-  outdoor_shower: { label: "Outdoor Safari Shower", icon: <ShowerHead className="h-4 w-4 text-purple" />, category: "standouts" },
+  solar_power: {
+    label: "Solar Backup Power",
+    icon: <Sun className="h-4 w-4 text-purple" />,
+    category: "standouts",
+  },
+  borehole_water: {
+    label: "Borehole Water",
+    icon: <Droplets className="h-4 w-4 text-purple" />,
+    category: "standouts",
+  },
+  private_pool: {
+    label: "Private Pool",
+    icon: <Waves className="h-4 w-4 text-purple" />,
+    category: "standouts",
+  },
+  fire_pit: {
+    label: "Fire Pit / Boma",
+    icon: <Flame className="h-4 w-4 text-purple" />,
+    category: "standouts",
+  },
+  viewing_deck: {
+    label: "Wildlife Viewing Deck",
+    icon: <Eye className="h-4 w-4 text-purple" />,
+    category: "standouts",
+  },
+  braai_area: {
+    label: "Braai / BBQ Grill",
+    icon: <Flame className="h-4 w-4 text-purple" />,
+    category: "standouts",
+  },
+  river_front: {
+    label: "River / Lake Frontage",
+    icon: <Anchor className="h-4 w-4 text-purple" />,
+    category: "standouts",
+  },
+  private_chef: {
+    label: "Private Chef Service",
+    icon: <Coffee className="h-4 w-4 text-purple" />,
+    category: "standouts",
+  },
+  patio_balcony: {
+    label: "Patio / Balcony",
+    icon: <Home className="h-4 w-4 text-purple" />,
+    category: "standouts",
+  },
+  outdoor_shower: {
+    label: "Outdoor Safari Shower",
+    icon: <ShowerHead className="h-4 w-4 text-purple" />,
+    category: "standouts",
+  },
 
   // Safety
-  security_guard: { label: "24/7 Security Guard", icon: <ShieldCheck className="h-4 w-4 text-purple" />, category: "safety" },
-  electric_fence: { label: "Electric Perimeter Fence", icon: <Lock className="h-4 w-4 text-purple" />, category: "safety" },
-  first_aid: { label: "First Aid Kit", icon: <HeartPulse className="h-4 w-4 text-purple" />, category: "safety" },
-  fire_extinguisher: { label: "Fire Extinguisher", icon: <Flame className="h-4 w-4 text-purple" />, category: "safety" },
-  smoke_detector: { label: "Smoke Detector", icon: <Bell className="h-4 w-4 text-purple" />, category: "safety" },
-  safe_box: { label: "In-room Digital Safe", icon: <Key className="h-4 w-4 text-purple" />, category: "safety" },
-  backup_lighting: { label: "Emergency LED Lights", icon: <Zap className="h-4 w-4 text-purple" />, category: "safety" },
+  security_guard: {
+    label: "24/7 Security Guard",
+    icon: <ShieldCheck className="h-4 w-4 text-purple" />,
+    category: "safety",
+  },
+  electric_fence: {
+    label: "Electric Perimeter Fence",
+    icon: <Lock className="h-4 w-4 text-purple" />,
+    category: "safety",
+  },
+  first_aid: {
+    label: "First Aid Kit",
+    icon: <HeartPulse className="h-4 w-4 text-purple" />,
+    category: "safety",
+  },
+  fire_extinguisher: {
+    label: "Fire Extinguisher",
+    icon: <Flame className="h-4 w-4 text-purple" />,
+    category: "safety",
+  },
+  smoke_detector: {
+    label: "Smoke Detector",
+    icon: <Bell className="h-4 w-4 text-purple" />,
+    category: "safety",
+  },
+  safe_box: {
+    label: "In-room Digital Safe",
+    icon: <Key className="h-4 w-4 text-purple" />,
+    category: "safety",
+  },
+  backup_lighting: {
+    label: "Emergency LED Lights",
+    icon: <Zap className="h-4 w-4 text-purple" />,
+    category: "safety",
+  },
 };
 
 interface StayDetailPageProps {
@@ -315,7 +422,8 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
       if (matchedKey) {
         const spec = ALL_STAY_AMENITY_SPECS[matchedKey];
         if (spec.category === "favourites") favourites.push({ label: spec.label, icon: spec.icon });
-        else if (spec.category === "standouts") standouts.push({ label: spec.label, icon: spec.icon });
+        else if (spec.category === "standouts")
+          standouts.push({ label: spec.label, icon: spec.icon });
         else safety.push({ label: spec.label, icon: spec.icon });
       } else {
         other.push({ label: item, icon: <Sparkles className="h-4 w-4 text-purple" /> });
@@ -811,7 +919,10 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
               .filter((s) => s.id !== stay.id)
               .slice(0, 4)
               .map((item) => {
-                const img = item.images?.[0] || item.image || "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=70";
+                const img =
+                  item.images?.[0] ||
+                  item.image ||
+                  "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=70";
                 const title = item.name || item.title || "Stay";
                 const ratingNum = typeof item.rating === "number" ? item.rating : 5.0;
 
@@ -853,7 +964,9 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
       <div
         className={cn(
           "lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 px-5 py-3.5 flex items-center justify-between shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-50 transition-all duration-300",
-          isBookingSectionVisible ? "opacity-0 pointer-events-none translate-y-full" : "opacity-100 translate-y-0",
+          isBookingSectionVisible
+            ? "opacity-0 pointer-events-none translate-y-full"
+            : "opacity-100 translate-y-0",
         )}
       >
         <div>
@@ -1084,8 +1197,10 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
             <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
               <div>
                 <h3 className="text-xl font-bold text-neutral-900">
-                  <span className="text-purple">{avgRating.toFixed(1)} ★</span>{" "}
-                  <span className="text-neutral-500 font-normal text-sm">({reviewCount} reviews)</span>
+                  <span className="text-purple">{avgRating.toFixed(1)}</span>{" "}
+                  <span className="text-neutral-500 font-normal text-sm">
+                    ({reviewCount} reviews)
+                  </span>
                 </h3>
                 <p className="text-xs text-neutral-500">Verified guest reviews for {title}</p>
               </div>
@@ -1107,7 +1222,7 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                     </span>
                     <span className="text-[10px] text-neutral-400">{r.date}</span>
                   </div>
-                  <div className="text-[10px] text-amber-500 font-bold">★★★★★ 5.0</div>
+                  <div className="text-[10px] text-amber-500 font-bold">5.0/5 rating</div>
                   <p className="text-xs text-neutral-700 leading-relaxed">
                     &quot;{r.comment}&quot;
                   </p>
@@ -1149,7 +1264,8 @@ export function StayDetailPage({ stay, backHref = "/stays" }: StayDetailPageProp
                 </div>
                 <h4 className="text-base font-bold text-neutral-900">Message Sent!</h4>
                 <p className="text-xs text-neutral-500 max-w-xs mx-auto">
-                  {hostName} has received your inquiry and will reply to your registered email/phone.
+                  {hostName} has received your inquiry and will reply to your registered
+                  email/phone.
                 </p>
                 <button
                   type="button"

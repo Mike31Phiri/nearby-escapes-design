@@ -59,14 +59,35 @@ import {
 
 const ALL_TRANSPORT_FEATURE_SPECS: Record<string, { label: string; icon: React.ReactNode }> = {
   ac: { label: "Dual Cabin Air Conditioning", icon: <Wind className="h-4 w-4 text-purple" /> },
-  pro_driver: { label: "Licensed Professional Chauffeur", icon: <Navigation className="h-4 w-4 text-purple" /> },
+  pro_driver: {
+    label: "Licensed Professional Chauffeur",
+    icon: <Navigation className="h-4 w-4 text-purple" />,
+  },
   fuel_included: { label: "Fuel Included in Rate", icon: <Fuel className="h-4 w-4 text-purple" /> },
-  chilled_water: { label: "Complimentary Chilled Water", icon: <Droplets className="h-4 w-4 text-purple" /> },
-  usb_charging: { label: "Fast USB & 12V Phone Charging", icon: <Zap className="h-4 w-4 text-purple" /> },
-  wifi: { label: "High-Speed Mobile Onboard Wi-Fi", icon: <Wifi className="h-4 w-4 text-purple" /> },
-  luggage_capacity: { label: "Luggage Trailer / Roof Rack", icon: <Luggage className="h-4 w-4 text-purple" /> },
-  passenger_insurance: { label: "Full Passenger Liability Cover", icon: <ShieldCheck className="h-4 w-4 text-purple" /> },
-  child_seat: { label: "Infant / Child Booster Seat", icon: <HeartPulse className="h-4 w-4 text-purple" /> },
+  chilled_water: {
+    label: "Complimentary Chilled Water",
+    icon: <Droplets className="h-4 w-4 text-purple" />,
+  },
+  usb_charging: {
+    label: "Fast USB & 12V Phone Charging",
+    icon: <Zap className="h-4 w-4 text-purple" />,
+  },
+  wifi: {
+    label: "High-Speed Mobile Onboard Wi-Fi",
+    icon: <Wifi className="h-4 w-4 text-purple" />,
+  },
+  luggage_capacity: {
+    label: "Luggage Trailer / Roof Rack",
+    icon: <Luggage className="h-4 w-4 text-purple" />,
+  },
+  passenger_insurance: {
+    label: "Full Passenger Liability Cover",
+    icon: <ShieldCheck className="h-4 w-4 text-purple" />,
+  },
+  child_seat: {
+    label: "Infant / Child Booster Seat",
+    icon: <HeartPulse className="h-4 w-4 text-purple" />,
+  },
 };
 
 interface TransportDetailPageProps {
@@ -74,10 +95,7 @@ interface TransportDetailPageProps {
   backHref?: string;
 }
 
-export function TransportDetailPage({
-  route,
-  backHref = "/transport",
-}: TransportDetailPageProps) {
+export function TransportDetailPage({ route, backHref = "/transport" }: TransportDetailPageProps) {
   const router = useRouter();
 
   const [activeImg, setActiveImg] = useState(0);
@@ -155,9 +173,7 @@ export function TransportDetailPage({
   // Availability & Booking state
   const today = new Date().toISOString().split("T")[0];
   const [selectedDate, setSelectedDate] = useState("");
-  const [selectedPickupTime, setSelectedPickupTime] = useState(
-    route.departureTime || "08:30 AM",
-  );
+  const [selectedPickupTime, setSelectedPickupTime] = useState(route.departureTime || "08:30 AM");
   const [passengers, setPassengers] = useState(1);
   const [checkingAvailability, setCheckingAvailability] = useState(false);
   const [availabilityResult, setAvailabilityResult] = useState<
@@ -249,7 +265,9 @@ export function TransportDetailPage({
   const title =
     route.title ||
     route.name ||
-    (route.from && route.to ? `${route.from} to ${route.to} Express` : "Zambia Chauffeur & Transfer");
+    (route.from && route.to
+      ? `${route.from} to ${route.to} Express`
+      : "Zambia Chauffeur & Transfer");
   const hostName = route.operator || route.hostName || "Professional Transport Partner";
   const locationString =
     route.location || (route.from ? `${route.from} (Depot), Zambia` : "Lusaka, Zambia");
@@ -553,7 +571,9 @@ export function TransportDetailPage({
 
             {/* Depot & Pickup Location with Google Maps */}
             <div className="pt-8">
-              <h2 className="text-lg font-semibold text-neutral-900">Depot &amp; pickup location</h2>
+              <h2 className="text-lg font-semibold text-neutral-900">
+                Depot &amp; pickup location
+              </h2>
               <p className="text-xs font-normal text-neutral-500 leading-relaxed mt-1.5">
                 {route.address ? `${route.address}, ` : ""}
                 {locationString}. Base depot and pickup point on Google Maps below.
@@ -694,7 +714,8 @@ export function TransportDetailPage({
                   <div className="py-1 px-2.5 bg-emerald-50 border border-emerald-200/60 rounded-lg flex items-center gap-1.5 text-emerald-800 text-[11px] font-normal">
                     <CheckCircle2 className="h-3 w-3 shrink-0 text-emerald-600" />
                     <span>
-                      {availableVehiclesCount} vehicle{availableVehiclesCount !== 1 ? "s" : ""} ready for dispatch on this date
+                      {availableVehiclesCount} vehicle{availableVehiclesCount !== 1 ? "s" : ""}{" "}
+                      ready for dispatch on this date
                     </span>
                   </div>
                 )}
@@ -798,7 +819,9 @@ export function TransportDetailPage({
               <h2 className="text-lg font-semibold text-neutral-900">
                 Similar transport options in Zambia
               </h2>
-              <p className="text-xs text-neutral-500 mt-0.5">Explore popular connections and vehicles</p>
+              <p className="text-xs text-neutral-500 mt-0.5">
+                Explore popular connections and vehicles
+              </p>
             </div>
             <Link
               href="/transport"
@@ -813,7 +836,10 @@ export function TransportDetailPage({
               .filter((t) => t.id !== route.id)
               .slice(0, 4)
               .map((item) => {
-                const img = item.images?.[0] || item.image || "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=70";
+                const img =
+                  item.images?.[0] ||
+                  item.image ||
+                  "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=70";
                 const fromCity = item.fromCity || item.from || "Lusaka";
                 const toCity = item.toCity || item.to || "Livingstone";
                 const operatorName = item.operator || "Express Transport";
@@ -856,7 +882,9 @@ export function TransportDetailPage({
       <div
         className={cn(
           "lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 px-5 py-3.5 flex items-center justify-between shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-50 transition-all duration-300",
-          isBookingSectionVisible ? "opacity-0 pointer-events-none translate-y-full" : "opacity-100 translate-y-0",
+          isBookingSectionVisible
+            ? "opacity-0 pointer-events-none translate-y-full"
+            : "opacity-100 translate-y-0",
         )}
       >
         <div>
@@ -1091,8 +1119,10 @@ export function TransportDetailPage({
             <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
               <div>
                 <h3 className="text-xl font-bold text-neutral-900">
-                  <span className="text-purple">{avgRating.toFixed(1)} ★</span>{" "}
-                  <span className="text-neutral-500 font-normal text-sm">({reviewCount} reviews)</span>
+                  <span className="text-purple">{avgRating.toFixed(1)}</span>{" "}
+                  <span className="text-neutral-500 font-normal text-sm">
+                    ({reviewCount} reviews)
+                  </span>
                 </h3>
                 <p className="text-xs text-neutral-500">Verified passenger reviews for {title}</p>
               </div>
@@ -1114,7 +1144,7 @@ export function TransportDetailPage({
                     </span>
                     <span className="text-[10px] text-neutral-400">{r.date}</span>
                   </div>
-                  <div className="text-[10px] text-amber-500 font-bold">★★★★★ 5.0</div>
+                  <div className="text-[10px] text-amber-500 font-bold">5.0/5 rating</div>
                   <p className="text-xs text-neutral-700 leading-relaxed">
                     &quot;{r.comment}&quot;
                   </p>
@@ -1156,7 +1186,8 @@ export function TransportDetailPage({
                 </div>
                 <h4 className="text-base font-bold text-neutral-900">Message Sent!</h4>
                 <p className="text-xs text-neutral-500 max-w-xs mx-auto">
-                  {hostName} has received your inquiry and will reply to your registered contact info.
+                  {hostName} has received your inquiry and will reply to your registered contact
+                  info.
                 </p>
                 <button
                   type="button"

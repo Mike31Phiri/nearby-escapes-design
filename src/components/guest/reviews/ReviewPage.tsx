@@ -101,7 +101,7 @@ export function ReviewPage({ bookingRef }: ReviewPageProps) {
               <CheckCircle2 className="h-10 w-10 text-emerald-500" />
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-[#334155] mb-2">
-              Review Submitted! 🎉
+              Review Submitted
             </h1>
             <p className="text-[#64748B] text-base mb-2">
               Thank you for reviewing{""}

@@ -168,23 +168,26 @@ export function BookingDetailsPage() {
         <div className="bg-white border border-neutral-200/90 rounded-2xl p-3.5 sm:p-4 shadow-2xs">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="h-10 w-10 sm:h-12 sm:w-12 shrink-0 rounded-xl bg-[#FAF7F2] border border-[#E8E3DC] flex items-center justify-center text-xl sm:text-2xl">
-                {booking.emoji}
+              <div className="h-10 w-10 sm:h-12 sm:w-12 shrink-0 rounded-xl bg-[#FAF7F2] border border-[#E8E3DC] flex items-center justify-center text-sm sm:text-base font-bold uppercase tracking-[0.12em] text-neutral-600">
+                {booking.listingName.slice(0, 2)}
               </div>
               <div className="min-w-0">
                 <p className="text-sm sm:text-[15px] font-bold text-neutral-900 leading-snug">
                   {booking.listingName}
                 </p>
                 <p className="text-xs text-neutral-500 mt-0.5 flex items-center gap-1">
-                  <CalendarDays className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> {formatDayLabel(booking.date)} ·{" "}
-                  <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> {formatTime12h(booking.time)}
+                  <CalendarDays className="h-3 w-3 sm:h-3.5 sm:w-3.5" />{" "}
+                  {formatDayLabel(booking.date)} · <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5" />{" "}
+                  {formatTime12h(booking.time)}
                 </p>
               </div>
             </div>
             <span
               className={cn(
                 "shrink-0 rounded-full px-2 sm:px-2.5 py-0.5 sm:py-1 text-[11px] font-semibold uppercase tracking-wide",
-                cancelled ? "bg-rose-50 text-rose-600 border border-rose-200" : "bg-emerald-50 text-emerald-700 border border-emerald-200",
+                cancelled
+                  ? "bg-rose-50 text-rose-600 border border-rose-200"
+                  : "bg-emerald-50 text-emerald-700 border border-emerald-200",
               )}
             >
               {cancelled ? "Cancelled" : "Confirmed"}
@@ -197,7 +200,9 @@ export function BookingDetailsPage() {
           <SectionLabel label="Guest" />
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1 space-y-0.5">
-              <p className="text-xs sm:text-sm font-bold text-neutral-900 leading-tight">{booking.guestName}</p>
+              <p className="text-xs sm:text-sm font-bold text-neutral-900 leading-tight">
+                {booking.guestName}
+              </p>
               <p className="text-xs text-neutral-500 truncate">{booking.guestEmail}</p>
               <p className="text-xs text-neutral-500">{booking.guestPhone}</p>
             </div>
@@ -247,7 +252,9 @@ export function BookingDetailsPage() {
           <SectionLabel label="Payment" />
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-base sm:text-lg font-bold text-neutral-900">{formatKw(booking.total)}</p>
+              <p className="text-base sm:text-lg font-bold text-neutral-900">
+                {formatKw(booking.total)}
+              </p>
               <p className="text-[11px] font-semibold text-black-muted tracking-wide">
                 {formatKw(booking.total / partyTotal)} per person
               </p>

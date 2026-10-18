@@ -20,7 +20,6 @@ export interface ManifestGuestRow extends ManifestGuest {
 export interface ManifestSlot {
   listingId: string;
   listingName: string;
-  emoji: string;
   date: string;
   time: string;
   guests: ManifestGuestRow[];
@@ -41,7 +40,6 @@ export interface BookingRecord {
   ref: string;
   listingId: string;
   listingName: string;
-  emoji: string;
   guestName: string;
   guestEmail: string;
   guestPhone: string;
@@ -104,14 +102,13 @@ export function getSlotKey(listingId: string, date: string, time: string): strin
   return `${listingId}|${date}|${time}`;
 }
 
- /**
+/**
  * Build the full manifest slot for a listing/date/time, applying the
  * persisted check-in overrides on top of the deterministic guest list.
  */
 export function getManifestSlot(
   listingId: string,
   listingName: string,
-  emoji: string,
   date: string,
   time: string,
   checkIns: Record<string, Record<string, boolean>>,
@@ -126,7 +123,7 @@ export function getManifestSlot(
   const checkedInPeople = guests
     .filter((g) => g.checkedIn)
     .reduce((sum, g) => sum + g.partySize, 0);
-  return { listingId, listingName, emoji, date, time, guests, totalPeople, checkedInPeople };
+  return { listingId, listingName, date, time, guests, totalPeople, checkedInPeople };
 }
 
 /* Refund logic */
@@ -170,7 +167,6 @@ function seedBookings(): BookingRecord[] {
       ref: "NE-4821",
       listingId: "t-sunset-kayak",
       listingName: "Sunset Kayak Tour",
-      emoji: "🛶",
       guestName: "Amina Zulu",
       guestEmail: "amina.zulu@email.com",
       guestPhone: "+260 97 555 0192",
@@ -185,7 +181,6 @@ function seedBookings(): BookingRecord[] {
       ref: "NE-4817",
       listingId: "t-city-food-walk",
       listingName: "City Food Walk",
-      emoji: "🍜",
       guestName: "Brian Tembo",
       guestEmail: "brian.tembo@work.com",
       guestPhone: "+260 96 555 2211",
@@ -200,7 +195,6 @@ function seedBookings(): BookingRecord[] {
       ref: "NE-4805",
       listingId: "t-pottery-workshop",
       listingName: "Pottery Workshop",
-      emoji: "🏺",
       guestName: "Chanda Mwansa",
       guestEmail: "chanda.mwansa@example.com",
       guestPhone: "+260 97 555 8834",
@@ -215,7 +209,6 @@ function seedBookings(): BookingRecord[] {
       ref: "NE-4798",
       listingId: "t-sunset-kayak",
       listingName: "Sunset Kayak Tour",
-      emoji: "🛶",
       guestName: "Natasha Banda",
       guestEmail: "natasha.banda@travelzambia.com",
       guestPhone: "+260 95 555 7719",
@@ -230,7 +223,6 @@ function seedBookings(): BookingRecord[] {
       ref: "NE-4786",
       listingId: "t-city-food-walk",
       listingName: "City Food Walk",
-      emoji: "🍜",
       guestName: "Given Chisala",
       guestEmail: "given.chisala@email.com",
       guestPhone: "+260 96 555 4420",
@@ -245,7 +237,6 @@ function seedBookings(): BookingRecord[] {
       ref: "NE-4772",
       listingId: "t-pottery-workshop",
       listingName: "Pottery Workshop",
-      emoji: "🏺",
       guestName: "Sipho Ngoma",
       guestEmail: "sipho.ngoma@example.com",
       guestPhone: "+260 97 555 3358",
@@ -260,7 +251,6 @@ function seedBookings(): BookingRecord[] {
       ref: "NE-4760",
       listingId: "t-sunset-kayak",
       listingName: "Sunset Kayak Tour",
-      emoji: "🛶",
       guestName: "Lushomo Phiri",
       guestEmail: "lushomo.phiri@safari.co.zm",
       guestPhone: "+260 95 555 6074",
@@ -275,7 +265,6 @@ function seedBookings(): BookingRecord[] {
       ref: "NE-4751",
       listingId: "t-city-food-walk",
       listingName: "City Food Walk",
-      emoji: "🍜",
       guestName: "Mwila Lungu",
       guestEmail: "mwila.lungu@email.com",
       guestPhone: "+260 96 555 1093",
@@ -362,7 +351,7 @@ export const useHostBookingsStore = create<HostBookingsState>()(
         bookings: state.bookings,
         seededOn: state.seededOn,
       }),
-// Booking dates are relative to "today" — re-seed on a new day so the
+      // Booking dates are relative to "today" — re-seed on a new day so the
       // 48-hour refund calculation stays honest (cancellations reset overnight).
       merge: (persisted, current) => {
         const p = persisted as Partial<HostBookingsState> | null | undefined;

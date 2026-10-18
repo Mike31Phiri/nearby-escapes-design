@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { Star, MapPin, Clock, Users, ChevronLeft, Compass } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Experience, ExperienceCategory } from "@/lib/mock-data";
-import { categoryLabels, categoryIcons } from "@/lib/mock-data";
+import { categoryLabels } from "@/lib/mock-data";
 
 interface ExperienceCategoryPageProps {
   category: ExperienceCategory;
@@ -25,7 +25,7 @@ const categoryHero: Record<
 > = {
   farm: {
     title: "Farm Visits & Agri-Tourism",
-    tagline: "🌾 Countryside living",
+    tagline: "Countryside living",
     description:
       "Escape to the countryside and experience Zambian farm life. Milk cows, harvest crops, tour organic farms, and taste the freshest produce straight from the earth.",
     gradient: "from-[#2D4A2D] via-[#3D5A3D] to-[#2D4A2D]",
@@ -33,7 +33,7 @@ const categoryHero: Record<
   },
   wildlife: {
     title: "Wildlife & Nature Day Trips",
-    tagline: "🦁 Into the wild",
+    tagline: "Into the wild",
     description:
       "Get up close with Zambia's incredible wildlife. From walking safaris in South Luangwa to game drives in Kafue — these are experiences you'll carry forever.",
     gradient: "from-[#3A2810] via-[#4A3820] to-[#3A2810]",
@@ -41,7 +41,7 @@ const categoryHero: Record<
   },
   cultural: {
     title: "Cultural & Community Experiences",
-    tagline: "🎭 Meet the people",
+    tagline: "Meet the people",
     description:
       "Connect with Zambia's rich cultural heritage. Visit traditional villages, learn ancient crafts, taste local cuisine, and dance to the rhythm of African drums.",
     gradient: "from-[#4A2A1A] via-[#5A3A2A] to-[#4A2A1A]",
@@ -49,7 +49,7 @@ const categoryHero: Record<
   },
   industrial: {
     title: "Industrial Heritage Tours",
-    tagline: "⚙️ Mining & engineering marvels",
+    tagline: "Mining & engineering marvels",
     description:
       "Discover Zambia's industrial backbone. Tour active copper mines, stand at the foot of the massive Kariba Dam, and learn how engineering shaped the nation.",
     gradient: "from-[#3A3020] via-[#4A4030] to-[#3A3020]",
@@ -57,7 +57,7 @@ const categoryHero: Record<
   },
   adventure: {
     title: "Adventure & Tours",
-    tagline: "🧗 Thrills & excitement",
+    tagline: "Thrills & excitement",
     description:
       "For the adrenaline seekers and explorers. Raft the Zambezi's legendary rapids, soar above Victoria Falls in a helicopter, or hike to hidden waterfalls.",
     gradient: "from-[#1f1433] via-[#3A2B4D] to-[#1f1433]",
@@ -65,7 +65,7 @@ const categoryHero: Record<
   },
   water: {
     title: "Water Sports & Lakes",
-    tagline: "🌊 Lakes, rivers & adventure",
+    tagline: "Lakes, rivers & adventure",
     description:
       "Zambia's lakes and rivers offer world-class water experiences. Snorkel in Lake Tanganyika, canoe the Zambezi, or cruise the serene waters of Lake Kariba at sunset.",
     gradient: "from-[#1A3A4A] via-[#2A4A5A] to-[#1A3A4A]",
@@ -73,7 +73,7 @@ const categoryHero: Record<
   },
   general: {
     title: "General Attractions",
-    tagline: "📍 Discover Zambia",
+    tagline: "Discover Zambia",
     description:
       "Browse all experiences, tours, and activities across Zambia. From city tours to wilderness adventures — find your next unforgettable experience.",
     gradient: "from-[#1f1433] via-[#3A2B4D] to-[#1f1433]",
@@ -93,7 +93,6 @@ const allCategorySlugs: ExperienceCategory[] = [
 
 export function ExperienceCategoryPage({ category, experiences }: ExperienceCategoryPageProps) {
   const hero = categoryHero[category];
-  const icon = categoryIcons[category];
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -146,7 +145,6 @@ export function ExperienceCategoryPage({ category, experiences }: ExperienceCate
                     : "text-[#64748B] hover:text-[#1f1433] hover:bg-[#F9F7F2]",
                 )}
               >
-                <span>{categoryIcons[slug]}</span>
                 {categoryLabels[slug]}
               </Link>
             ))}
@@ -177,12 +175,14 @@ export function ExperienceCategoryPage({ category, experiences }: ExperienceCate
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {experiences.map((exp: any) => {
-                const img = exp.images?.[0] || exp.image || "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=70";
+                const img =
+                  exp.images?.[0] ||
+                  exp.image ||
+                  "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=70";
                 const title = exp.title || exp.name || "Experience";
                 const ratingNum = typeof exp.rating === "number" ? exp.rating : 5.0;
                 const cat = exp.category || "general";
                 const catLabel = categoryLabels[cat as ExperienceCategory] || cat;
-                const catIcon = categoryIcons[cat as ExperienceCategory] || "📍";
 
                 return (
                   <Link
@@ -200,7 +200,7 @@ export function ExperienceCategoryPage({ category, experiences }: ExperienceCate
                       />
                       <div className="absolute top-3 left-3">
                         <span className="inline-flex items-center gap-1 bg-[#f2ba0d]/80 text-white text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-md backdrop-blur-sm">
-                          {catIcon} {catLabel}
+                          {catLabel}
                         </span>
                       </div>
                     </div>

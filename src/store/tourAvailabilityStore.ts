@@ -11,7 +11,6 @@ export interface TourListing {
   id: string;
   name: string;
   category: string;
-  emoji: string;
   baseCapacity: number;
 }
 
@@ -87,21 +86,18 @@ export const TOUR_LISTINGS: TourListing[] = [
     id: "t-sunset-kayak",
     name: "Sunset Kayak Tour",
     category: "Water activities",
-    emoji: "🛶",
     baseCapacity: 15,
   },
   {
     id: "t-city-food-walk",
     name: "City Food Walk",
     category: "Food & drink",
-    emoji: "🍜",
     baseCapacity: 12,
   },
   {
     id: "t-pottery-workshop",
     name: "Pottery Workshop",
     category: "Workshops",
-    emoji: "🏺",
     baseCapacity: 8,
   },
 ];
@@ -181,7 +177,7 @@ export function scheduleApplies(schedule: TourSchedule | undefined, date: string
   return schedule.daysOfWeek.includes(getWeekdayIndex(date));
 }
 
- /**
+/**
  * Deterministic mock bookings for a listing on a date — same input always
  * yields the same bookings, so no state is needed to render them.
  */
@@ -218,7 +214,7 @@ export function getMockBookings(
   return bookings.sort((a, b) => a.time.localeCompare(b.time));
 }
 
- /**
+/**
  * Slots for a date. Effective capacity = host capacity override if set,
  * otherwise 0 if zeroed out, otherwise the schedule default.
  */

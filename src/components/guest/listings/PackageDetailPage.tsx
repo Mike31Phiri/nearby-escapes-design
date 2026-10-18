@@ -499,7 +499,9 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                     </span>
                     <span className="text-xs font-normal text-neutral-500">/ person</span>
                   </div>
-                  <span className="text-[11px] text-neutral-400 font-medium">All-inclusive safari package</span>
+                  <span className="text-[11px] text-neutral-400 font-medium">
+                    All-inclusive safari package
+                  </span>
                 </div>
                 <span className="text-xs font-semibold text-purple bg-purple/10 px-2.5 py-1 rounded-full">
                   Instant Booking
@@ -598,7 +600,7 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                             key={i}
                             className="text-[11px] font-semibold bg-neutral-100 text-neutral-700 px-2.5 py-0.5 rounded-full"
                           >
-                            ✓ {h}
+                            {h}
                           </span>
                         ))}
                       </div>
@@ -754,7 +756,9 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
               <div className="space-y-3">
                 {/* Start Date */}
                 <div className="space-y-1">
-                  <label className="text-[10px] font-semibold text-neutral-500 block uppercase tracking-wider">Tour Start Date</label>
+                  <label className="text-[10px] font-semibold text-neutral-500 block uppercase tracking-wider">
+                    Tour Start Date
+                  </label>
                   <div className="relative">
                     <CalendarDays className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-neutral-400" />
                     <input
@@ -772,7 +776,9 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
 
                 {/* Room Category */}
                 <div className="space-y-1">
-                  <label className="text-[10px] font-semibold text-neutral-500 block uppercase tracking-wider">Accommodation Tier</label>
+                  <label className="text-[10px] font-semibold text-neutral-500 block uppercase tracking-wider">
+                    Accommodation Tier
+                  </label>
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       type="button"
@@ -948,7 +954,7 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
                 )}
 
                 <p className="text-center text-[10px] text-neutral-400">
-                  ⚡ Instant Confirmation • Free Cancellation up to 7 days
+                  Instant confirmation • Free cancellation up to 7 days
                 </p>
               </div>
             </div>
@@ -960,7 +966,9 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
       <div
         className={cn(
           "lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 px-5 py-3.5 flex items-center justify-between shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-50 transition-all duration-300",
-          isBookingSectionVisible ? "opacity-0 pointer-events-none translate-y-full" : "opacity-100 translate-y-0",
+          isBookingSectionVisible
+            ? "opacity-0 pointer-events-none translate-y-full"
+            : "opacity-100 translate-y-0",
         )}
       >
         <div>
@@ -971,7 +979,9 @@ export function PackageDetailPage({ packageItem, backHref = "/packages" }: Packa
             <span className="text-xs font-medium text-neutral-500">total</span>
           </div>
           <div className="text-xs text-neutral-600 flex items-center gap-1 font-medium mt-0.5">
-            <span className="text-purple font-semibold">{totalGuests} traveler{totalGuests > 1 ? "s" : ""}</span>
+            <span className="text-purple font-semibold">
+              {totalGuests} traveler{totalGuests > 1 ? "s" : ""}
+            </span>
             {travelDate && (
               <>
                 <span>·</span>

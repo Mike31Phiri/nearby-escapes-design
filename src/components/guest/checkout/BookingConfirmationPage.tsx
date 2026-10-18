@@ -10,8 +10,6 @@ import {
   CalendarDays,
   Users,
   CreditCard,
-  Download,
-  Share2,
   Home,
   Search,
   ArrowLeft,
@@ -19,7 +17,6 @@ import {
   Mail,
   User,
   CheckCheck,
-  MessageSquare,
   Phone,
   Clock,
   ChevronRight,
@@ -79,9 +76,9 @@ export function BookingConfirmationPage() {
             </p>
             <Link
               href="/"
-              className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-purple text-white font-bold text-base"
+              className="inline-flex items-center h-11 px-5 rounded-xl bg-purple text-white font-medium text-base"
             >
-              <Home className="h-4 w-4" /> Go to Home
+              Home
             </Link>
           </div>
         </main>
@@ -105,11 +102,7 @@ export function BookingConfirmationPage() {
           )}
 
           <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900 mb-2">
-            {isSuccess
-              ? "You're all set! 🎉"
-              : isCancelled
-                ? "Booking Cancelled"
-                : "Payment Failed"}
+            {isSuccess ? "You're all set!" : isCancelled ? "Booking Cancelled" : "Payment Failed"}
           </h1>
           <p className="text-neutral-500 text-sm md:text-base max-w-md mx-auto font-normal">
             {isSuccess
@@ -231,60 +224,6 @@ export function BookingConfirmationPage() {
                 <p className="text-sm text-black-faint">{booking.customerPhone}</p>
               </div>
 
-              {/* Extras */}
-              {booking.details.extras && Object.keys(booking.details.extras).length > 0 && (
-                <>
-                  <div className="h-px bg-black/[0.06]" />
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-black-faint mb-2">
-                      Extras Selected
-                    </p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {Object.entries(booking.details.extras).map(([key, val]) => (
-                        <span
-                          key={key}
-                          className="text-[11px] font-medium bg-black/[0.04] px-2.5 py-1 rounded-full text-black-soft"
-                        >
-                          {key.replace(/([A-Z])/g, " $1").trim()}: {String(val)}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </>
-              )}
-
-              <div className="h-px bg-black/[0.06]" />
-
-              {/* What's Next Section */}
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-black-faint mb-3">
-                  What happens next
-                </p>
-                <div className="space-y-3">
-                  <NextStep
-                    icon={<Mail className="h-4 w-4 text-emerald-600" />}
-                    iconBg="bg-emerald-500/10"
-                    title="Check your email"
-                    desc="We've sent a detailed confirmation to your inbox"
-                    step={1}
-                  />
-                  <NextStep
-                    icon={<MessageSquare className="h-4 w-4 text-purple" />}
-                    iconBg="bg-purple/10"
-                    title="Message your host"
-                    desc="Introduce yourself and share any arrival details"
-                    step={2}
-                  />
-                  <NextStep
-                    icon={<CalendarDays className="h-4 w-4 text-[var(--color-yellow)]" />}
-                    iconBg="bg-[var(--color-yellow)]/10"
-                    title="Prepare for your trip"
-                    desc="Review the listing details and pack your bags!"
-                    step={3}
-                  />
-                </div>
-              </div>
-
               <div className="h-px bg-black/[0.06]" />
 
               {/* Email Receipt Section */}
@@ -389,40 +328,10 @@ export function BookingConfirmationPage() {
                 )}
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-1">
-                <Button
-                  variant="outline"
-                  className="flex-1 h-11 rounded-xl border-black/[0.12] font-semibold"
-                  onClick={() => {
-                    const text = `Booking Confirmed! 🎉\nRef: ${booking.bookingRef}\n${booking.listingName}\n${booking.location}\nAmount: K${booking.amount.toLocaleString()}`;
-                    navigator.clipboard?.writeText(text);
-                    toast.success("Booking details copied!");
-                  }}
-                >
-                  <Copy className="h-4 w-4 mr-1.5" />
-                  Copy Details
-                </Button>
-                <Button
-                  variant="outline"
-                  className="flex-1 h-11 rounded-xl border-black/[0.12] font-semibold"
-                  onClick={() => {
-                    if (navigator.share) {
-                      navigator.share({
-                        title: `Booking Confirmed: ${booking.listingName}`,
-                        text: `I just booked ${booking.listingName} on Nearby Escapes! Ref: ${booking.bookingRef}`,
-                      });
-                    } else {
-                      toast.info("Share not supported on this device");
-                    }
-                  }}
-                >
-                  <Share2 className="h-4 w-4 mr-1.5" />
-                  Share
-                </Button>
+              <div className="pt-1">
                 <Link
                   href={`/account/reviews/${booking.bookingRef}`}
-                  className="flex-1 h-11 rounded-xl border border-black/[0.12] font-semibold flex items-center justify-center gap-1.5 hover:bg-black/[0.02] transition-colors text-sm"
+                  className="w-full h-11 rounded-xl border border-black/[0.12] font-semibold flex items-center justify-center gap-1.5 hover:bg-black/[0.02] transition-colors text-sm"
                 >
                   <Star className="h-4 w-4 fill-[var(--color-yellow)] text-[var(--color-yellow)]" />
                   Leave a Review
@@ -431,10 +340,9 @@ export function BookingConfirmationPage() {
 
               <Link
                 href="/"
-                className="w-full h-11 rounded-xl bg-purple hover:bg-purple-hover text-white font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"
+                className="w-full h-11 rounded-xl bg-purple hover:bg-purple-hover text-white font-medium text-sm flex items-center justify-center transition-colors"
               >
-                <Home className="h-4 w-4" />
-                Back to Home
+                Home
               </Link>
             </div>
           </div>
@@ -468,10 +376,9 @@ export function BookingConfirmationPage() {
               </Button>
               <Link
                 href="/"
-                className="h-11 rounded-xl bg-purple text-white font-bold text-sm inline-flex items-center justify-center gap-2 px-5"
+                className="h-11 rounded-xl bg-purple text-white font-medium text-sm inline-flex items-center justify-center px-5"
               >
-                <Home className="h-4 w-4" />
-                Go Home
+                Home
               </Link>
             </div>
           </div>
@@ -529,34 +436,6 @@ function DetailCard({
         {label}
       </div>
       <p className={`text-sm font-bold ${highlight ? "text-purple" : "text-black"}`}>{value}</p>
-    </div>
-  );
-}
-
-function NextStep({
-  icon,
-  iconBg,
-  title,
-  desc,
-  step,
-}: {
-  icon: React.ReactNode;
-  iconBg: string;
-  title: string;
-  desc: string;
-  step: number;
-}) {
-  return (
-    <div className="flex items-start gap-3">
-      <div className="relative">
-        <div className={`w-8 h-8 rounded-full ${iconBg} flex items-center justify-center shrink-0`}>
-          {icon}
-        </div>
-      </div>
-      <div className="min-w-0">
-        <p className="text-sm font-bold text-black">{title}</p>
-        <p className="text-[11px] text-black-faint mt-0.5 leading-relaxed">{desc}</p>
-      </div>
     </div>
   );
 }

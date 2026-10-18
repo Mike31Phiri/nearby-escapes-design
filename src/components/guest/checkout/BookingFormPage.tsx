@@ -241,7 +241,10 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
   });
 
   const [expOptions, setExpOptions] = useState({
-    date: paramDate && /^\d{4}-\d{2}-\d{2}$/.test(paramDate) ? paramDate : (parsedCheckIn || "2026-07-18"),
+    date:
+      paramDate && /^\d{4}-\d{2}-\d{2}$/.test(paramDate)
+        ? paramDate
+        : parsedCheckIn || "2026-07-18",
     timeSlot: initialSlot,
     adults: parsedAdults,
     children: parsedChildren,
@@ -585,12 +588,14 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
         const inv = useInventoryStore.getState().getInventory(listing.id);
         const availableUnit = inv.units.find((u) => u.status === "available");
         if (availableUnit) {
-          useInventoryStore.getState().setUnitStatus(
-            listing.id,
-            availableUnit.id,
-            "occupied",
-            `Booked by ${fullName} · Ref ${confirmedRef}`,
-          );
+          useInventoryStore
+            .getState()
+            .setUnitStatus(
+              listing.id,
+              availableUnit.id,
+              "occupied",
+              `Booked by ${fullName} · Ref ${confirmedRef}`,
+            );
         }
       } catch (e) {
         console.warn("Could not decrement inventory unit:", e);
@@ -647,17 +652,11 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                 isExpired ? "bg-amber-500" : "bg-purple",
               )}
             >
-              {isExpired ? (
-                <AlertTriangle className="h-4 w-4" />
-              ) : (
-                <Lock className="h-4 w-4" />
-              )}
+              {isExpired ? <AlertTriangle className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
             </div>
             <div>
               <span className="font-semibold text-sm text-neutral-900 block">
-                {isExpired
-                  ? "Your 10-minute hold has expired"
-                  : "We're holding this spot for you"}
+                {isExpired ? "Your 10-minute hold has expired" : "We're holding this spot for you"}
               </span>
               <p className="text-xs text-neutral-500 mt-0.5">
                 {isExpired
@@ -857,9 +856,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                       <div className="flex items-start gap-2.5">
                         <MapPin className="h-4 w-4 text-purple mt-0.5 shrink-0" />
                         <div>
-                          <div className="text-xs font-bold text-neutral-900">
-                            Meeting Point
-                          </div>
+                          <div className="text-xs font-bold text-neutral-900">Meeting Point</div>
                           <p className="text-xs text-neutral-600 mt-0.5 leading-relaxed">
                             {meetingPointDisplay}
                           </p>
@@ -991,7 +988,6 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                   </div>
                 )}
 
-
                 {/* Special Requests */}
                 <div className="space-y-1.5">
                   <Label className="text-xs font-bold text-neutral-700 flex items-center gap-1.5">
@@ -1012,13 +1008,18 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
             </section>
 
             {/* SECTION 3: Payment with DPO Pay */}
-            <section id="dpo-payment-section" className="bg-white rounded-2xl border border-black/[0.08] shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-6 md:p-7">
+            <section
+              id="dpo-payment-section"
+              className="bg-white rounded-2xl border border-black/[0.08] shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-6 md:p-7"
+            >
               <div className="flex items-center gap-3.5 mb-5">
                 <div className="w-8 h-8 rounded-full bg-purple text-white font-bold text-sm flex items-center justify-center shrink-0">
                   3
                 </div>
                 <div>
-                  <h2 className="font-bold text-lg text-neutral-900 leading-none">Payment with DPO Pay</h2>
+                  <h2 className="font-bold text-lg text-neutral-900 leading-none">
+                    Payment with DPO Pay
+                  </h2>
                   <p className="text-xs text-neutral-500 mt-1">
                     {paymentSimulationEnabled
                       ? "Simulation mode is enabled — this demo keeps payment in test mode and does not charge real money."
@@ -1057,7 +1058,9 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
 
                   <div className="flex items-center justify-center gap-2 text-[11px] text-neutral-500 font-medium pt-1">
                     <Lock className="h-3.5 w-3.5 text-emerald-600" />
-                    <span>256-Bit SSL Encrypted Connection • Powered by Direct Pay Online (DPO Group)</span>
+                    <span>
+                      256-Bit SSL Encrypted Connection • Powered by Direct Pay Online (DPO Group)
+                    </span>
                   </div>
                 </div>
               ) : (
@@ -1072,7 +1075,9 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="font-bold text-sm text-neutral-900">Direct Pay Online</span>
+                            <span className="font-bold text-sm text-neutral-900">
+                              Direct Pay Online
+                            </span>
                             <span className="text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
                               {paymentSimulationEnabled ? "Simulation" : "DPO Pay"}
                             </span>
@@ -1143,7 +1148,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
 
                     {promoApplied && (
                       <div className="flex items-center justify-between p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 font-bold">
-                        <span>✓ Promo Code Applied (-K{promoDiscount})</span>
+                        <span>Promo code applied (-K{promoDiscount})</span>
                         <button
                           type="button"
                           onClick={() => {
@@ -1167,7 +1172,8 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                         Free Cancellation up to 24 hours in advance
                       </div>
                       <p className="text-[11px] text-emerald-900/80 leading-relaxed mt-0.5">
-                        Cancel before {activeDateLabel} for a 100% full refund with zero questions asked.
+                        Cancel before {activeDateLabel} for a 100% full refund with zero questions
+                        asked.
                       </p>
                     </div>
                   </div>
@@ -1210,7 +1216,7 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                         : `Pay & Confirm Booking • K${priceBreakdown.total.toLocaleString()}`}
                     </Button>
                     <p className="text-center text-[11px] text-neutral-400 mt-2 font-medium">
-                      🔒 Simulated Instant Checkout • Backed by Nearby Escapes.
+                      Simulated instant checkout powered by Nearby Escapes.
                     </p>
                   </div>
                 </div>
@@ -1357,7 +1363,6 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
                     </div>
                   )}
 
-
                   {promoApplied && (
                     <div className="flex justify-between text-emerald-600 font-bold">
                       <span>Discount (Promo)</span>
@@ -1411,8 +1416,6 @@ export function BookingFormPage({ listing, backHref }: BookingFormPageProps) {
           </aside>
         </div>
       </main>
-
-
     </div>
   );
 }

@@ -229,7 +229,9 @@ export function ExperienceDetailPage({
     const hostMeetingPoint =
       item.meetingPoint ||
       item.address ||
-      (typeof item.location === "object" ? `${item.location.city}, ${item.location.province}` : item.location) ||
+      (typeof item.location === "object"
+        ? `${item.location.city}, ${item.location.province}`
+        : item.location) ||
       "Lusaka Showgrounds, Great East Road";
     params.set("meetingPoint", hostMeetingPoint);
     router.push(`/checkout/book?${params.toString()}`);
@@ -302,80 +304,109 @@ export function ExperienceDetailPage({
     if (Array.isArray(item.itinerary) && item.itinerary.length > 0) {
       return item.itinerary;
     }
-    if (Array.isArray(item.experienceDetails?.itinerary) && item.experienceDetails.itinerary.length > 0) {
+    if (
+      Array.isArray(item.experienceDetails?.itinerary) &&
+      item.experienceDetails.itinerary.length > 0
+    ) {
       return item.experienceDetails.itinerary;
     }
     const lowerTitle = title.toLowerCase();
     const lowerCategory = (item.category || "").toLowerCase();
-    if (lowerTitle.includes("flight") || lowerTitle.includes("helicopter") || lowerTitle.includes("falls") || lowerCategory.includes("vic_falls")) {
+    if (
+      lowerTitle.includes("flight") ||
+      lowerTitle.includes("helicopter") ||
+      lowerTitle.includes("falls") ||
+      lowerCategory.includes("vic_falls")
+    ) {
       return [
         {
           time: "08:00 AM",
           title: "Hotel Pick-up & Helipad Welcome",
-          description: "Convenient pick-up from your lodge followed by safety orientation, flight headset fitting, and pilot briefing.",
+          description:
+            "Convenient pick-up from your lodge followed by safety orientation, flight headset fitting, and pilot briefing.",
         },
         {
           time: "08:45 AM",
           title: "Scenic Flight Over Victoria Falls & Gorge",
-          description: "Take to the skies directly over the Batoka Gorge and Victoria Falls. Enjoy continuous 360-degree panoramic viewpoints and aerial photography.",
+          description:
+            "Take to the skies directly over the Batoka Gorge and Victoria Falls. Enjoy continuous 360-degree panoramic viewpoints and aerial photography.",
         },
         {
           time: "09:45 AM",
           title: "Zambezi National Park Low-Level Sweep",
-          description: "Low-altitude pass along the upper Zambezi River spotting elephants, hippos, and buffalo herds in their natural habitat.",
+          description:
+            "Low-altitude pass along the upper Zambezi River spotting elephants, hippos, and buffalo herds in their natural habitat.",
         },
         {
           time: "10:30 AM",
           title: "Touchdown, Route Certificate & Refreshments",
-          description: "Land back at the helipad, receive your personalized flight route certificate, enjoy chilled drinks, and return transfer to your hotel.",
+          description:
+            "Land back at the helipad, receive your personalized flight route certificate, enjoy chilled drinks, and return transfer to your hotel.",
         },
       ];
     }
-    if (lowerTitle.includes("boat") || lowerTitle.includes("cruise") || lowerTitle.includes("river") || lowerCategory.includes("water")) {
+    if (
+      lowerTitle.includes("boat") ||
+      lowerTitle.includes("cruise") ||
+      lowerTitle.includes("river") ||
+      lowerCategory.includes("water")
+    ) {
       return [
         {
           time: "15:30 PM",
           title: "Boarding & Welcome Refreshment",
-          description: "Board our spacious river vessel with comfortable seating and safety life jackets. Introduction to the river captain.",
+          description:
+            "Board our spacious river vessel with comfortable seating and safety life jackets. Introduction to the river captain.",
         },
         {
           time: "16:00 PM",
           title: "Zambezi Islands & Hippo Pods Cruise",
-          description: "Navigate upstream along palm-fringed islands observing hippo pods, sunbathing crocodiles, and exotic water birds.",
+          description:
+            "Navigate upstream along palm-fringed islands observing hippo pods, sunbathing crocodiles, and exotic water birds.",
         },
         {
           time: "17:30 PM",
           title: "African Sunset & Gourmet Canapés",
-          description: "Anchor in quiet calm waters to witness the legendary golden African sunset over the water while enjoying drinks and local snacks.",
+          description:
+            "Anchor in quiet calm waters to witness the legendary golden African sunset over the water while enjoying drinks and local snacks.",
         },
         {
           time: "18:30 PM",
           title: "Disembarkation & Transfer",
-          description: "Return to the jetty as twilight settles. Transfer back to your accommodation.",
+          description:
+            "Return to the jetty as twilight settles. Transfer back to your accommodation.",
         },
       ];
     }
-    if (lowerTitle.includes("village") || lowerTitle.includes("cultural") || lowerTitle.includes("art")) {
+    if (
+      lowerTitle.includes("village") ||
+      lowerTitle.includes("cultural") ||
+      lowerTitle.includes("art")
+    ) {
       return [
         {
           time: "09:00 AM",
           title: "Village Welcome & Chief Greeting",
-          description: "Arrive at the community gates, welcome greetings with local community elders, and historical background of the area.",
+          description:
+            "Arrive at the community gates, welcome greetings with local community elders, and historical background of the area.",
         },
         {
           time: "10:00 AM",
           title: "Traditional Crafts & Artisan Demonstrations",
-          description: "Hands-on participation in authentic basket weaving, pottery shaping, and traditional tool making.",
+          description:
+            "Hands-on participation in authentic basket weaving, pottery shaping, and traditional tool making.",
         },
         {
           time: "11:15 AM",
           title: "Community Tour & Folk Music",
-          description: "Experience community traditions, local instruments, folk songs, and educational projects.",
+          description:
+            "Experience community traditions, local instruments, folk songs, and educational projects.",
         },
         {
           time: "12:15 PM",
           title: "Traditional Feast & Farewell",
-          description: "Taste authentic Zambian Nshima, seasonal vegetables, and wild relish before concluding the cultural tour.",
+          description:
+            "Taste authentic Zambian Nshima, seasonal vegetables, and wild relish before concluding the cultural tour.",
         },
       ];
     }
@@ -384,22 +415,26 @@ export function ExperienceDetailPage({
         {
           time: "08:30 AM",
           title: "Farm Welcome & Dairy Barn Tour",
-          description: "Arrival at the farmhouse, morning orientation, and hands-on participation in organic dairy care and milking.",
+          description:
+            "Arrival at the farmhouse, morning orientation, and hands-on participation in organic dairy care and milking.",
         },
         {
           time: "09:45 AM",
           title: "Orchard & Crop Fields Walk",
-          description: "Walk through seasonal organic vegetable gardens and fruit orchards with tips on sustainable Zambian farming.",
+          description:
+            "Walk through seasonal organic vegetable gardens and fruit orchards with tips on sustainable Zambian farming.",
         },
         {
           time: "11:00 AM",
           title: "Harvesting & Farm-to-Table Workshop",
-          description: "Pick fresh produce and learn traditional bread baking and cheese making techniques in the outdoor kitchen.",
+          description:
+            "Pick fresh produce and learn traditional bread baking and cheese making techniques in the outdoor kitchen.",
         },
         {
           time: "12:15 PM",
           title: "Country Lunch & Tasting",
-          description: "Relaxed family-style farm lunch with ingredients picked fresh from the fields, fresh juice, and local honey.",
+          description:
+            "Relaxed family-style farm lunch with ingredients picked fresh from the fields, fresh juice, and local honey.",
         },
       ];
     }
@@ -408,31 +443,40 @@ export function ExperienceDetailPage({
       {
         time: "06:00 AM",
         title: "Sunrise Bush Departure & Gate Entry",
-        description: "Meet your licensed safari ranger in a custom open 4x4 vehicle. Enter the park as the morning light activates wildlife.",
+        description:
+          "Meet your licensed safari ranger in a custom open 4x4 vehicle. Enter the park as the morning light activates wildlife.",
       },
       {
         time: "07:00 AM",
         title: "Predator & Big Game Tracking",
-        description: "Navigate river loops and waterholes tracking lions, leopards, and large elephant herds during peak activity hours.",
+        description:
+          "Navigate river loops and waterholes tracking lions, leopards, and large elephant herds during peak activity hours.",
       },
       {
         time: "09:30 AM",
         title: "Bush Coffee & Traditional Snacks Break",
-        description: "Scenic stop along the riverbank for fresh Zambian coffee, tea, homemade rusks, and bird identification.",
+        description:
+          "Scenic stop along the riverbank for fresh Zambian coffee, tea, homemade rusks, and bird identification.",
       },
       {
         time: "10:30 AM",
         title: "Late Morning Wildlife Circuit & Return",
-        description: "Secondary wildlife circuit focusing on plains game and raptors before returning to the safari base camp.",
+        description:
+          "Secondary wildlife circuit focusing on plains game and raptors before returning to the safari base camp.",
       },
     ];
   }, [item, title]);
 
   // Inclusions & Rules parsing
   const whatsIncludedList: string[] = useMemo(() => {
-    if (Array.isArray(item.whatsIncluded) && item.whatsIncluded.length > 0) return item.whatsIncluded;
+    if (Array.isArray(item.whatsIncluded) && item.whatsIncluded.length > 0)
+      return item.whatsIncluded;
     if (Array.isArray(item.inclusions) && item.inclusions.length > 0) return item.inclusions;
-    if (Array.isArray(item.experienceDetails?.whatsIncluded) && item.experienceDetails.whatsIncluded.length > 0) return item.experienceDetails.whatsIncluded;
+    if (
+      Array.isArray(item.experienceDetails?.whatsIncluded) &&
+      item.experienceDetails.whatsIncluded.length > 0
+    )
+      return item.experienceDetails.whatsIncluded;
     return [
       "National Park Entry & Conservation Fees",
       "Professional Certified Safari Guide",
@@ -444,9 +488,14 @@ export function ExperienceDetailPage({
   }, [item]);
 
   const whatsNotIncludedList: string[] = useMemo(() => {
-    if (Array.isArray(item.whatsNotIncluded) && item.whatsNotIncluded.length > 0) return item.whatsNotIncluded;
+    if (Array.isArray(item.whatsNotIncluded) && item.whatsNotIncluded.length > 0)
+      return item.whatsNotIncluded;
     if (Array.isArray(item.exclusions) && item.exclusions.length > 0) return item.exclusions;
-    if (Array.isArray(item.experienceDetails?.whatsNotIncluded) && item.experienceDetails.whatsNotIncluded.length > 0) return item.experienceDetails.whatsNotIncluded;
+    if (
+      Array.isArray(item.experienceDetails?.whatsNotIncluded) &&
+      item.experienceDetails.whatsNotIncluded.length > 0
+    )
+      return item.experienceDetails.whatsNotIncluded;
     return [
       "Gratuities & tips for guides and drivers (discretionary)",
       "Alcoholic beverages & premium wine selections",
@@ -459,7 +508,11 @@ export function ExperienceDetailPage({
   const whatToBringList: string[] = useMemo(() => {
     if (Array.isArray(item.whatToBring) && item.whatToBring.length > 0) return item.whatToBring;
     if (Array.isArray(item.whatToCarry) && item.whatToCarry.length > 0) return item.whatToCarry;
-    if (Array.isArray(item.experienceDetails?.whatToBring) && item.experienceDetails.whatToBring.length > 0) return item.experienceDetails.whatToBring;
+    if (
+      Array.isArray(item.experienceDetails?.whatToBring) &&
+      item.experienceDetails.whatToBring.length > 0
+    )
+      return item.experienceDetails.whatToBring;
     return [
       "Valid ID or Passport for Gate Clearance",
       "Comfortable Closed Walking or Hiking Shoes",
@@ -471,8 +524,13 @@ export function ExperienceDetailPage({
   }, [item]);
 
   const whatNotToBringList: string[] = useMemo(() => {
-    if (Array.isArray(item.whatNotToBring) && item.whatNotToBring.length > 0) return item.whatNotToBring;
-    if (Array.isArray(item.experienceDetails?.whatNotToBring) && item.experienceDetails.whatNotToBring.length > 0) return item.experienceDetails.whatNotToBring;
+    if (Array.isArray(item.whatNotToBring) && item.whatNotToBring.length > 0)
+      return item.whatNotToBring;
+    if (
+      Array.isArray(item.experienceDetails?.whatNotToBring) &&
+      item.experienceDetails.whatNotToBring.length > 0
+    )
+      return item.experienceDetails.whatNotToBring;
     return [
       "Drones (Strictly Prohibited in National Parks)",
       "Single-Use Plastic Bags & Wrappers",
@@ -490,7 +548,10 @@ export function ExperienceDetailPage({
     if (Array.isArray(item.guidelines) && item.guidelines.length > 0) {
       return item.guidelines;
     }
-    if (Array.isArray(item.experienceDetails?.importantInformation) && item.experienceDetails.importantInformation.length > 0) {
+    if (
+      Array.isArray(item.experienceDetails?.importantInformation) &&
+      item.experienceDetails.importantInformation.length > 0
+    ) {
       return item.experienceDetails.importantInformation;
     }
     return [
@@ -509,7 +570,10 @@ export function ExperienceDetailPage({
     if (Array.isArray(item.suitability) && item.suitability.length > 0) {
       return item.suitability;
     }
-    if (Array.isArray(item.experienceDetails?.notSuitableFor) && item.experienceDetails.notSuitableFor.length > 0) {
+    if (
+      Array.isArray(item.experienceDetails?.notSuitableFor) &&
+      item.experienceDetails.notSuitableFor.length > 0
+    ) {
       return item.experienceDetails.notSuitableFor;
     }
     return [
@@ -521,7 +585,10 @@ export function ExperienceDetailPage({
   }, [item]);
 
   const totalInclusionsCount =
-    whatsIncludedList.length + whatsNotIncludedList.length + whatToBringList.length + whatNotToBringList.length;
+    whatsIncludedList.length +
+    whatsNotIncludedList.length +
+    whatToBringList.length +
+    whatNotToBringList.length;
 
   // Coordinates
   const lat = typeof item.lat === "number" ? item.lat : -17.8419;
@@ -720,9 +787,7 @@ export function ExperienceDetailPage({
                     </div>
 
                     <div>
-                      <span className="text-xs font-medium text-neutral-500">
-                        {stop.time}
-                      </span>
+                      <span className="text-xs font-medium text-neutral-500">{stop.time}</span>
                       <h3 className="text-sm font-semibold text-neutral-900 mt-0.5">
                         {stop.title}
                       </h3>
@@ -737,7 +802,9 @@ export function ExperienceDetailPage({
 
             {/* What's Included & What's Not Included */}
             <div className="pt-8">
-              <h2 className="text-lg font-semibold text-neutral-900">What&apos;s included &amp; not included</h2>
+              <h2 className="text-lg font-semibold text-neutral-900">
+                What&apos;s included &amp; not included
+              </h2>
               <p className="text-xs text-neutral-500 mt-0.5">
                 Everything provided by your host vs what you should budget for separately
               </p>
@@ -779,7 +846,9 @@ export function ExperienceDetailPage({
 
             {/* What to Bring & What's Not Allowed / What NOT to Bring */}
             <div className="pt-8">
-              <h2 className="text-lg font-semibold text-neutral-900">What to bring &amp; what&apos;s not allowed</h2>
+              <h2 className="text-lg font-semibold text-neutral-900">
+                What to bring &amp; what&apos;s not allowed
+              </h2>
               <p className="text-xs text-neutral-500 mt-0.5">
                 Essential packing recommendations and forbidden items
               </p>
@@ -821,7 +890,9 @@ export function ExperienceDetailPage({
 
             {/* Important Information & Suitability */}
             <div className="pt-8">
-              <h2 className="text-lg font-semibold text-neutral-900">Important information &amp; suitability</h2>
+              <h2 className="text-lg font-semibold text-neutral-900">
+                Important information &amp; suitability
+              </h2>
               <p className="text-xs text-neutral-500 mt-0.5">
                 Key guidelines, health recommendations, and accessibility notes
               </p>
@@ -863,7 +934,9 @@ export function ExperienceDetailPage({
 
             {/* Meeting Point & Location with Google Maps */}
             <div className="pt-8">
-              <h2 className="text-lg font-semibold text-neutral-900">Meeting point &amp; location</h2>
+              <h2 className="text-lg font-semibold text-neutral-900">
+                Meeting point &amp; location
+              </h2>
 
               {/* Host-Designated Rendezvous Banner */}
               <div className="mt-3.5 p-4 rounded-2xl bg-purple/5 border border-purple/20 flex items-start gap-3">
@@ -883,7 +956,8 @@ export function ExperienceDetailPage({
                       "Lusaka Showgrounds, Great East Road"}
                   </div>
                   <p className="text-xs text-neutral-600 leading-relaxed">
-                    Meet your host/guide at this location 15 minutes before departure. This meeting point is preset on your checkout and booking voucher.
+                    Meet your host/guide at this location 15 minutes before departure. This meeting
+                    point is preset on your checkout and booking voucher.
                   </p>
                 </div>
               </div>
@@ -1034,22 +1108,20 @@ export function ExperienceDetailPage({
                       !selectedDate || isSoldOut
                         ? "border-neutral-200 text-neutral-400 cursor-not-allowed bg-neutral-100/60"
                         : isSlotDropdownOpen
-                        ? "border-purple ring-1 ring-purple/30 bg-white text-neutral-900 shadow-2xs cursor-pointer"
-                        : "border-neutral-200 text-neutral-900 hover:border-neutral-300 hover:bg-neutral-100/50 cursor-pointer"
+                          ? "border-purple ring-1 ring-purple/30 bg-white text-neutral-900 shadow-2xs cursor-pointer"
+                          : "border-neutral-200 text-neutral-900 hover:border-neutral-300 hover:bg-neutral-100/50 cursor-pointer",
                     )}
                   >
                     <div className="flex items-center gap-2 truncate">
                       <Clock className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
                       <span className="truncate font-medium">
-                        {checkingAvailability ? (
-                          "Loading available times..."
-                        ) : !selectedDate ? (
-                          "Select date to view times"
-                        ) : selectedSlot ? (
-                          selectedSlot
-                        ) : (
-                          "Select time"
-                        )}
+                        {checkingAvailability
+                          ? "Loading available times..."
+                          : !selectedDate
+                            ? "Select date to view times"
+                            : selectedSlot
+                              ? selectedSlot
+                              : "Select time"}
                       </span>
                     </div>
                     {checkingAvailability ? (
@@ -1058,7 +1130,7 @@ export function ExperienceDetailPage({
                       <ChevronDown
                         className={cn(
                           "h-3.5 w-3.5 text-neutral-400 transition-transform duration-200",
-                          isSlotDropdownOpen && "rotate-180"
+                          isSlotDropdownOpen && "rotate-180",
                         )}
                       />
                     )}
@@ -1075,7 +1147,13 @@ export function ExperienceDetailPage({
                         {(timeSlots.length > 0
                           ? timeSlots
                           : [
-                              { id: "slot-default", label: "08:00 AM", timeSlot: "08:00 AM", status: "available" as const, capacity: 6 },
+                              {
+                                id: "slot-default",
+                                label: "08:00 AM",
+                                timeSlot: "08:00 AM",
+                                status: "available" as const,
+                                capacity: 6,
+                              },
                             ]
                         ).map((slot) => {
                           const timeText = slot.timeSlot || slot.label || "08:00 AM";
@@ -1098,8 +1176,8 @@ export function ExperienceDetailPage({
                                 !isAvail
                                   ? "opacity-35 bg-neutral-100/70 text-neutral-400 cursor-not-allowed select-none line-through"
                                   : isSelected
-                                  ? "bg-purple/10 text-purple font-semibold"
-                                  : "text-neutral-800 hover:bg-neutral-100 cursor-pointer"
+                                    ? "bg-purple/10 text-purple font-semibold"
+                                    : "text-neutral-800 hover:bg-neutral-100 cursor-pointer",
                               )}
                             >
                               <span>{timeText}</span>
@@ -1210,7 +1288,9 @@ export function ExperienceDetailPage({
               <h2 className="text-lg font-semibold text-neutral-900">
                 Similar experiences you might like
               </h2>
-              <p className="text-xs text-neutral-500 mt-0.5">Explore popular adventures in Zambia</p>
+              <p className="text-xs text-neutral-500 mt-0.5">
+                Explore popular adventures in Zambia
+              </p>
             </div>
             <Link
               href="/experiences"
@@ -1225,7 +1305,10 @@ export function ExperienceDetailPage({
               .filter((e) => e.id !== item.id)
               .slice(0, 4)
               .map((exp) => {
-                const img = exp.images?.[0] || exp.image || "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=70";
+                const img =
+                  exp.images?.[0] ||
+                  exp.image ||
+                  "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=70";
                 const title = exp.title || exp.name || "Experience";
                 const ratingNum = typeof exp.rating === "number" ? exp.rating : 5.0;
 
@@ -1267,7 +1350,9 @@ export function ExperienceDetailPage({
       <div
         className={cn(
           "lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 px-5 py-3.5 flex items-center justify-between shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-50 transition-all duration-300",
-          isBookingSectionVisible ? "opacity-0 pointer-events-none translate-y-full" : "opacity-100 translate-y-0",
+          isBookingSectionVisible
+            ? "opacity-0 pointer-events-none translate-y-full"
+            : "opacity-100 translate-y-0",
         )}
       >
         <div>
@@ -1287,7 +1372,9 @@ export function ExperienceDetailPage({
         </div>
         <button
           type="button"
-          onClick={availabilityResult === "available" ? handleProceedToBook : handleCheckAvailability}
+          onClick={
+            availabilityResult === "available" ? handleProceedToBook : handleCheckAvailability
+          }
           disabled={isSoldOut || (Boolean(selectedDate) && availabilityResult === "unavailable")}
           className={cn(
             "px-7 py-3 rounded-xl font-bold text-sm ml-4 cursor-pointer transition-colors",
@@ -1299,10 +1386,10 @@ export function ExperienceDetailPage({
           {isSoldOut || (Boolean(selectedDate) && availabilityResult === "unavailable")
             ? "Sold out"
             : !selectedDate
-            ? "Select date"
-            : selectedSlot
-            ? `Book ${selectedSlot}`
-            : "Book now"}
+              ? "Select date"
+              : selectedSlot
+                ? `Book ${selectedSlot}`
+                : "Book now"}
         </button>
       </div>
 
@@ -1489,8 +1576,10 @@ export function ExperienceDetailPage({
             <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
               <div>
                 <h3 className="text-xl font-bold text-neutral-900">
-                  <span className="text-purple">{avgRating.toFixed(1)} ★</span>{" "}
-                  <span className="text-neutral-500 font-normal text-sm">({reviewCount} reviews)</span>
+                  <span className="text-purple">{avgRating.toFixed(1)}</span>{" "}
+                  <span className="text-neutral-500 font-normal text-sm">
+                    ({reviewCount} reviews)
+                  </span>
                 </h3>
                 <p className="text-xs text-neutral-500">Verified guest reviews for {title}</p>
               </div>
@@ -1512,7 +1601,7 @@ export function ExperienceDetailPage({
                     </span>
                     <span className="text-[10px] text-neutral-400">{r.date}</span>
                   </div>
-                  <div className="text-[10px] text-amber-500 font-bold">★★★★★ 5.0</div>
+                  <div className="text-[10px] text-amber-500 font-bold">5.0/5 rating</div>
                   <p className="text-xs text-neutral-700 leading-relaxed">
                     &quot;{r.comment}&quot;
                   </p>
@@ -1554,7 +1643,8 @@ export function ExperienceDetailPage({
                 </div>
                 <h4 className="text-base font-bold text-neutral-900">Message Sent!</h4>
                 <p className="text-xs text-neutral-500 max-w-xs mx-auto">
-                  {hostName} has received your inquiry and will reply to your registered email/phone.
+                  {hostName} has received your inquiry and will reply to your registered
+                  email/phone.
                 </p>
                 <button
                   type="button"
